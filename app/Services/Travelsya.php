@@ -95,4 +95,17 @@ class Travelsya
             return json_decode($e->getResponse()->getBody()->getContents(), true);
         }
     }
+
+    public function pricelist()
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $request = new Request('get', $this->url . 'ppob', $headers);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
 }

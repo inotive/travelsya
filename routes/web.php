@@ -36,4 +36,5 @@ Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->na
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/product/pulsa', [ProductController::class, 'pulsa'])->name('product.pulsa');
+Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');

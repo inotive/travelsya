@@ -20,82 +20,23 @@
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" />
+                        <input type="text" id="notelp" class="form-control form-control-lg form-control-solid" name="name" placeholder="" value="" />
                         <!--end::Input-->
                     </div>
 
 
                 </div>
-                <div class="row">
+                <div class="row" id="row-pricelist">
 
-                    <a href="" class="col-xl-3 col-sm-6">
-                        <!--begin::Card widget 17-->
-                        <div class="card mb-5 mb-xl-10">
-                            <!--begin::Header-->
+                    <!-- '<a href="" class="col-xl-2 col-sm-2 card border border-warning pricelist me-xl-3 ">
+                        <div class="card">
                             <div class="card-header pt-5">
-                                <!--begin::Title-->
                                 <div class="card-title d-flex flex-column">
-                                    <!--begin::Info-->
-                                    <div class="d-flex align-items-center">
-
-                                        <!--begin::Amount-->
-                                        <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">100,000</span>
-                                        <!--end::Amount-->
-                                    </div>
-                                    <!--end::Info-->
-
-                                    <!--begin::Subtitle-->
-                                    <span class="text-gray-400 pt-1 fw-semibold fs-6">Pulsa
-                                        100,000</span>
-                                    <!--end::Subtitle-->
+                                    <div class="d-flex align-items-center"><span class=" fw-bold text-dark me-2 lh-1 ls-n2">100,000</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">Pulsa100,000</span>
                                 </div>
-                                <!--end::Title-->
                             </div>
-                            <!--end::Header-->
-
-                            <!--begin::Card body-->
-                            <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-
-                            </div>
-                            <!--end::Card body-->
                         </div>
-                        <!--end::Card widget 17-->
-                    </a>
-                    <div class="col-xl-3 col-sm-6"">
-                                            <!--begin::Card widget 17-->
-                                            <a href="" class=" card mb-5 mb-xl-10">
-                        <!--begin::Header-->
-                        <div class="card-header pt-5">
-                            <!--begin::Title-->
-                            <div class="card-title d-flex flex-column">
-                                <!--begin::Info-->
-                                <div class="d-flex align-items-center">
-
-                                    <!--begin::Amount-->
-                                    <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">100,000</span>
-                                    <!--end::Amount-->
-                                </div>
-                                <!--end::Info-->
-
-                                <!--begin::Subtitle-->
-                                <span class="text-gray-400 pt-1 fw-semibold fs-6">Pulsa
-                                    100,000</span>
-                                <!--end::Subtitle-->
-                            </div>
-                            <!--end::Title-->
-                        </div>
-                        <!--end::Header-->
-
-                        <!--begin::Card body-->
-                        <div class="card-body pt-2 pb-4 d-flex flex-wrap align-items-center">
-
-                        </div>
-                        <!--end::Card body-->
-                        </a>
-                        <!--end::Card widget 17-->
-                    </div>
-
-
+                    </a>' -->
                 </div>
             </div>
             <!--end::Body-->
@@ -106,3 +47,50 @@
     <!--end::Col-->
 </div>
 @endsection
+
+@push('add-style')
+<script src="{{asset('assets/js/custom/noTelp.js')}}"></script>
+@endpush
+
+@push('add-script')
+
+<script>
+    console.log('test js')
+    const {
+        getOperator
+    } = window.NoTelp;
+    $('#notelp').keyup(function(e) {
+        var notelp = e.target.value;
+        // console.log(userInput);
+        var operatorTelp1 = getOperator(notelp);
+        // console.log('operatorTelp1 : ', operatorTelp1.card);
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "{{ url('/ajax/ppob') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                operator: operatorTelp1.operator,
+                category: 'pulsa'
+            },
+            success: function(response) {
+                $('#row-pricelist').html('');
+
+                console.log(response)
+                if (response.message != 'not found') {
+                    $.each(response, function(key, val) {
+                        $('#row-pricelist').append(
+                            `<a href="" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.name}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.description}</span></div></div></div></a>`
+                        )
+                    });
+                }
+            }
+        });
+    })
+</script>
+@endpush
