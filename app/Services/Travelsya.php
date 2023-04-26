@@ -108,4 +108,57 @@ class Travelsya
             return json_decode($e->getResponse()->getBody()->getContents(), true);
         }
     }
+
+    public function pricelistId($id)
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $request = new Request('get', $this->url . 'ppob/' . $id, $headers);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
+
+    public function requestPpob($data = [])
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $body = json_encode($data);
+            $request = new Request('post', $this->url . 'ppob/transaction/request', $headers, $body);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
+
+    public function listTransaction()
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $request = new Request('post', $this->url . 'transaction/user', $headers);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
+
+    public function detailTransaction($no_inv)
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $request = new Request('post', $this->url . 'transaction/invoice?no_inv=' . $no_inv, $headers);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
 }

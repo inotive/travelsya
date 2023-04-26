@@ -76,7 +76,7 @@
                     dataType: 'json',
                     data: {
                         operator: operatorTelp1.operator,
-                        category: 'pulsa'
+                        category: 'data'
                     },
                     success: function(response) {
                         $('#row-pricelist').html('');
@@ -84,7 +84,7 @@
                         if (response.message != 'Unauthorized') {
                             $.each(response, function(key, val) {
                                 $('#row-pricelist').append(
-                                    `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.description}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.price}</span></div></div></div></div>`
+                                    `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.description}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.price}</span></div></div></div></div></div>`
                                 )
                             });
                         } else {

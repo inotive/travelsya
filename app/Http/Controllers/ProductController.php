@@ -18,6 +18,31 @@ class ProductController extends Controller
         return view('product.pulsa');
     }
 
+    public function data()
+    {
+        return view('product.data');
+    }
+
+    public function bpjs()
+    {
+        return view('product.bpjs');
+    }
+
+    public function pdam()
+    {
+        return view('product.pdam');
+    }
+
+    public function pln()
+    {
+        return view('product.pln');
+    }
+
+    public function tvInternet()
+    {
+        return view('product.tv');
+    }
+
     public function ajaxPpob(Request $request)
     {
         try {
@@ -26,6 +51,13 @@ class ProductController extends Controller
 
             if ($data['operator'] == 3)
                 $data['operator'] = "three";
+
+            if ($data['operator'] == "Indosat Ooredoo")
+                $data['operator'] = "indosat";
+
+            if ($data['operator'] == "XL Axiata")
+                $data['operator'] = "xl";
+
 
             $pricelist = $this->travelsya->pricelist();
 
@@ -44,7 +76,7 @@ class ProductController extends Controller
 
             return response()->json($pulsa);
         } catch (\Throwable $th) {
-            return response()->json(['message' => 'not found']);
+            return response()->json($pricelist);
         }
     }
 }
