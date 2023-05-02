@@ -127,6 +127,7 @@
                         <!--end::Col-->
                     </div>
 
+                    @if(last(request()->segments()) != 'hostel')
                     <!--begin::Row-->
                     <div class="row gy-5 g-xl-10">
                         <!--begin::Col-->
@@ -290,9 +291,9 @@
                                         <!--begin::Item-->
                                         <li class="nav-item mb-3 me-3 me-lg-6">
                                             <!--begin::Link-->
-                                            <a class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden w-125px h-125px py-5" data-bs-toggle="pill" href="#kt_stats_widget_2_tab_1">
+                                            <a class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden w-125px h-125px py-5" href="{{route('hostel.index')}}">
                                                 <!--begin::Icon-->
-                                                <div class="nav-icon">
+                                                <div class=" nav-icon">
                                                     <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-50px" />
                                                 </div>
                                                 <!--end::Icon-->
@@ -535,6 +536,7 @@
                         </div>
                         <!--end::Col-->
                     </div>
+                    @endif
                     <!--end::Row-->
                     @yield('content-web')
                 </div>

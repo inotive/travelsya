@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HostelController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
@@ -22,8 +23,10 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
-// Route::get('/', [AuthController::class, 'login'])->name('home');
+Route::get('/', [HomeController::class, 'home'])->name('home');
 
+// Route::get('/', [AuthController::class, 'login'])->name('home');
+//auth
 Route::get('/login', [AuthController::class, 'login'])->name('login.view');
 Route::post('/login', [AuthController::class, 'loginPost'])->name('login');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -33,18 +36,26 @@ Route::get('/reset-password/email', [AuthController::class, 'resetPasswordEmail'
 Route::post('/reset-password/email', [AuthController::class, 'resetPasswordEmailPost'])->name('reset.password.email.post');
 Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
 Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
-
-
-Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/product/pulsa', [ProductController::class, 'pulsa'])->name('product.pulsa');
-Route::get('/product/data', [ProductController::class, 'data'])->name('product.data');
-Route::get('/product/bpjs', [ProductController::class, 'bpjs'])->name('product.bpjs');
-Route::get('/product/pdam', [ProductController::class, 'pdam'])->name('product.pdam');
-Route::get('/product/pln', [ProductController::class, 'pln'])->name('product.pln');
-Route::get('/product/tv-internet', [ProductController::class, 'tvInternet'])->name('product.tvInternet');
-Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
 
+//ppob
+Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
+    Route::get('/pulsa', 'pulsa')->name('.pulsa');
+    Route::get('/data', 'data')->name('.data');
+    Route::get('/bpjs', 'bpjs')->name('.bpjs');
+    Route::get('/pdam', 'pdam')->name('.pdam');
+    Route::get('/pln', 'pln')->name('.pln');
+    Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
+});
+Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
+
+//hostel
+Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
+    Route::get('/', 'index')->name('.index');
+});
+
+
+//tranas
 Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');

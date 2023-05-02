@@ -161,4 +161,30 @@ class Travelsya
             return json_decode($e->getResponse()->getBody()->getContents(), true);
         }
     }
+
+    public function hostelPopuler()
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $request = new Request('get', $this->url . 'hostel/populer', $headers);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
+
+    public function hostelCity()
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            $request = new Request('get', $this->url . 'hostel/city', $headers);
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
 }
