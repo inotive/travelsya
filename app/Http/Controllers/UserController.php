@@ -13,6 +13,20 @@ class UserController extends Controller
     {
         $this->travelsya = $travelsya;
     }
+
+    public function transaction()
+    {
+        if (!session()->get('user'))
+            return redirect()->route('login.view');
+
+        $transaction = $this->travelsya->listTransaction();
+        $transactionData = $transaction['data'];
+        if ($transaction['meta']['code'] != 200) {
+            $transactionData = 'not found';
+        }
+
+        return view('user.transaction', ['transactions' => $transactionData]);
+    }
     public function profile()
     {
         if (!session()->get('user'))

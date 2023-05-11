@@ -38,6 +38,7 @@ Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('r
 Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
+Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
 
 //ppob
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
