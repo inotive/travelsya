@@ -974,8 +974,9 @@
                                                 <div class="col-md-6">
                                                     <!--begin::Input-->
                                                     <select name="lokasi" id="lokasi" class="form-control">
-                                                        <option value="Jakarta">Jakarta</option>
-                                                        <option value="Jakarta">Bandung</option>
+                                                        @foreach($cities as $city)
+                                                        <option value="{{$city}}">{{$city}}</option>
+                                                        @endforeach
                                                     </select>
                                                     <!--end::Input-->
                                                 </div>
@@ -1117,7 +1118,7 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="" class="form-control notelp" data-cat="data" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control mb-5 notelp" data-cat="data" name="notelp" placeholder="" value="" />
                                             <!--end::Input-->
                                             <!--begin::Input-->
                                             <select name="pricelist" id="row-pricelist-data" class="form-control mb-10">
@@ -1198,7 +1199,25 @@
 
 
     <div class="row justify-content-between">
+        @foreach($hostelPopulers as $key => $hostel)
+        @if($key == 4)
+        @break
+        @endif
         <div class="col-md-3">
+            <div class="card">
+                <img class="card-img-top h-200px" src="{{(count($hostel['hostel_image']) > 0) ? $hostel['hostel_image'][0]['image'] : '../assets/media/stock/food/img-2.jpg'}}" alt="Card image cap">
+                <div class="card-body p-5">
+                    <span class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hostel['name']}}</span>
+                    <span class="text-gray-400 fw-semibold d-block fs-6 mt-1">Tanah Abang, {{$hostel['city']}}</span>
+                    <span class="text-gray-400 fw-semibold d-block mt-5">Mulai dari <s>{{$hostel['price_avg']}}</s></span>
+                    <span class="text-danger text-end fw-bold fs-1 mt-2">IDR {{$hostel['price_avg']}}</span>
+                    <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
+                        <span class="fa fa-star fs-4" style="color: red;"></span> {{$hostel['rating_avg']}} <span class="text-gray-400">({{$hostel['rating_count']}})</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col-md-3">
             <div class="card">
                 <img class="card-img-top" src="../assets/media/stock/food/img-2.jpg" alt="Card image cap">
                 <div class="card-body p-5">
@@ -1239,21 +1258,8 @@
                     </span>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <img class="card-img-top" src="../assets/media/stock/food/img-2.jpg" alt="Card image cap">
-                <div class="card-body p-5">
-                    <span class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">Golden Boutique Hotel Melawai Blok M</span>
-                    <span class="text-gray-400 fw-semibold d-block fs-6 mt-1">Tanah Abang, Jakarta</span>
-                    <span class="text-gray-400 fw-semibold d-block mt-5">Mulai dari <s>750,000</s></span>
-                    <span class="text-danger text-end fw-bold fs-1 mt-2">IDR 570,000</span>
-                    <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
-                        <span class="fa fa-star fs-4" style="color: red;"></span> 4,3 <span class="text-gray-400">(436)</span>
-                    </span>
-                </div>
-            </div>
-        </div>
+        </div> -->
+        @endforeach
     </div>
 
 </div>
