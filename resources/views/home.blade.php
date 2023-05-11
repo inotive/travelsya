@@ -914,6 +914,7 @@
                                                     </select>
                                                     <!--end::Input-->
                                                 </div>
+
                                             </div>
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 mt-10">Cari Hotel</button>
@@ -967,6 +968,7 @@
                                     <div class="tab-pane fade form-menu " id="hostel">
                                         <!--begin::Table container-->
                                         <div class="">
+
                                             <h2 class="fw-bold text-gray-900 m-0 mb-10">Cari dan book hotel untuk hari spesialmu!</h2>
                                             <div class="row">
                                                 <div class="col-md-6">
@@ -998,6 +1000,7 @@
                                                     </select>
                                                     <!--end::Input-->
                                                 </div>
+
                                             </div>
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 mt-10">Cari Hotel</button>
@@ -1017,7 +1020,7 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control mb-10" name="notelp" placeholder="" value="" />
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1037,7 +1040,7 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control mb-10" name="notelp" placeholder="" value="" />
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1057,7 +1060,7 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control mb-10" name="notelp" placeholder="" value="" />
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1090,7 +1093,12 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="notelp" class="form-control mb-5 notelp" data-cat="pulsa" name="notelp" placeholder="" value="" />
+                                            <!--end::Input-->
+                                            <!--begin::Input-->
+                                            <select name="pricelist" id="row-pricelist-pulsa" class="form-control mb-10">
+                                                <option value="0">Nominal Pulsa</option>
+                                            </select>
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1109,7 +1117,12 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control notelp" data-cat="data" name="notelp" placeholder="" value="" />
+                                            <!--end::Input-->
+                                            <!--begin::Input-->
+                                            <select name="pricelist" id="row-pricelist-data" class="form-control mb-10">
+                                                <option value="0">Paket Data</option>
+                                            </select>
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1129,7 +1142,7 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control mb-10" name="notelp" placeholder="" value="" />
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1148,7 +1161,7 @@
                                             </label>
 
                                             <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-10" name="notelp" placeholder="" value="" />
+                                            <input type="text" id="" class="form-control mb-10" name="notelp" placeholder="" value="" />
                                             <!--end::Input-->
                                             <div class="text-end">
                                                 <button class="btn btn-danger py-4 ">Checkout</button>
@@ -1275,3 +1288,67 @@
 
 </div>
 @endsection
+
+@push('add-script')
+<script src="{{asset('assets/js/custom/noTelp.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+
+        const {
+            getOperator
+        } = window.NoTelp;
+        $('.notelp').on('keyup', function(e) {
+            var cat = $(this).data('cat');
+            var notelp = e.target.value;
+            var operatorTelp1 = getOperator(notelp);
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            if (operatorTelp1.valid) {
+                $.ajax({
+                    url: "{{ url('/ajax/ppob') }}",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        operator: operatorTelp1.operator,
+                        category: cat
+                    },
+                    success: function(response) {
+
+                        if (response.message != 'Unauthorized') {
+                            if (cat == "pulsa")
+                                $('#row-pricelist-pulsa').html('');
+
+                            if (cat == "data")
+                                $('#row-pricelist-data').html('');
+
+
+                            $.each(response, function(key, val) {
+                                if (cat == "pulsa") {
+
+                                    $('#row-pricelist-pulsa').append(
+                                        `<option value="${val.id}">${val.description} - ${val.price}</option>`
+                                    )
+                                }
+                                if (cat == "data") {
+
+                                    $('#row-pricelist-data').append(
+                                        `<option value="${val.id}">${val.description} - ${val.price}</option>`
+                                    )
+                                }
+
+                            });
+                        } else {
+                            `<option value=0>Login First</option>`
+                        }
+                    }
+                })
+            }
+        })
+
+    })
+</script>
+@endpush
