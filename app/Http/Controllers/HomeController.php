@@ -17,7 +17,7 @@ class HomeController extends Controller
     {
         $hostelPopulers = $this->travelsya->hostelPopuler();
         $cities = $this->travelsya->hostelCity();
-
-        return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data']]);
+        $ads = $this->travelsya->ads();
+        return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
     }
 }

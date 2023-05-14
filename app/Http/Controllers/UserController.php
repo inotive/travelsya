@@ -46,11 +46,10 @@ class UserController extends Controller
             return redirect()->route('login.view');
 
         $detailTransaction = $this->travelsya->detailTransaction($no_inv);
-        // dd($detailTransaction['data'])
         if ($detailTransaction['meta']['code'] != 200) {
-            return redirect()->bacn();
+            return redirect()->back();
         }
 
-        return view('user.detailtransaction', ['detail' => $detailTransaction['data'][0]]);
+        return view('user.detailtransaction', ['transaction' => $detailTransaction['data'][0]]);
     }
 }

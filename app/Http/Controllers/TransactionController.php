@@ -17,16 +17,14 @@ class TransactionController extends Controller
 
     public function cart(Request $request)
     {
-        $ppob = '';
-        header("Location: https://checkout-staging.xendit.co/web/6441800f6f99867059c461d0");
-        $product = $this->travelsya->pricelistId($request->id);
-        return view('cart', ['product' => $product['data'][0], 'no_hp' => $request->notelp]);
+        // header("Location: https://checkout-staging.xendit.co/web/6441800f6f99867059c461d0");
+        $product = $this->travelsya->pricelistId($request->pricelist);
+        return view('cart', ['product' => $product['data'][0], 'no_hp' => $request->notelp, 'service' => $request->service]);
     }
 
     public function requestPpob(Request $request)
     {
         try {
-
             $data = $request->all();
             if (isset($data['point'])) {
 
@@ -50,7 +48,7 @@ class TransactionController extends Controller
             }
 
             $ppob = $this->travelsya->requestPpob([
-                "service" => 'ppob',
+                "service" => $data['service'],
                 "payment" => $data['payment_method'],
                 "detail" => [
                     [

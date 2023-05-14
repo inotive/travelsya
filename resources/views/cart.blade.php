@@ -32,6 +32,7 @@
             <input type="text" name="kode" value="{{$product['description']}}" hidden>
             <input type="text" name="id" value="{{$product['id']}}" hidden>
             <input type="text" name="notelp" value="{{$no_hp}}" hidden>
+            <input type="text" name="service" value="{{$service}}" hidden>
             <div class="w-100 flex-lg-row-auto w-lg-300px mb-7 me-7 me-lg-10">
 
                 <!--begin::Order details-->
@@ -120,19 +121,15 @@
                                 <thead>
                                     <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
                                         <th class="min-w-200px">Product</th>
-                                        <th class="min-w-100px text-end pe-5">Qty</th>
+                                        <th class="min-w-100px pe-5">Qty</th>
+                                        <th class="min-w-100px pe-5">Harga</th>
+                                        <th class="min-w-100px text-end pe-5">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody class="fw-semibold text-gray-600">
                                     <tr>
                                         <td>
                                             <div class="d-flex align-items-center" data-kt-ecommerce-edit-order-filter="product" data-kt-ecommerce-edit-order-id="product_1">
-                                                <!--begin::Thumbnail-->
-                                                <!-- <a href="../catalog/edit-product.html" class="symbol symbol-50px">
-                                                    <span class="symbol-label" style="background-image:url(../../../assets/media/stock/ecommerce/1.gif);"></span>
-                                                </a> -->
-                                                <!--end::Thumbnail-->
-
                                                 <div class="ms-5">
                                                     <!--begin::Title-->
                                                     <a href="../catalog/edit-product.html" class="text-gray-800 text-hover-primary fs-5 fw-bold">{{$no_hp}}</a>
@@ -143,14 +140,17 @@
                                                     </div>
                                                     <!--end::Price-->
 
-                                                    <!--begin::SKU-->
-                                                    <!-- <div class="text-muted fs-7">SKU: 04819005</div> -->
-                                                    <!--end::SKU-->
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-end pe-5" data-order="18">
+                                        <td class="pe-5" data-order="18">
                                             <span class="fw-bold ms-3">1</span>
+                                        </td>
+                                        <td class="pe-5" data-order="18">
+                                            <span class="fw-bold ms-3">{{$product['price']}}</span>
+                                        </td>
+                                        <td class="text-end pe-5" data-order="18">
+                                            <span class="fw-bold ms-3">{{1*$product['price']}}</span>
                                         </td>
                                     </tr>
                                 </tbody>

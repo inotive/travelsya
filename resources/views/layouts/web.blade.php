@@ -68,6 +68,14 @@
             transform: scale(1);
         }
 
+        .menu-user a:hover {
+            color: #C02425 !important;
+        }
+
+        .menu-user a.active {
+            color: #C02425 !important;
+        }
+
         /* .footer {
             position: absolute;
             bottom: 0;

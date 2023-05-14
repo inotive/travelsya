@@ -1089,22 +1089,25 @@
                                     <div class="tab-pane fade form-menu " id="pulsa">
                                         <div class="">
                                             <h2 class="fw-bold text-gray-900 m-0 mb-10">Pulsa dengan harga terbaik</h2>
-                                            <label class="fs-5 fw-semibold mb-2">
-                                                <span class="required">No Ponsel</span>
-                                            </label>
+                                            <form action="{{route("cart")}}" method="post">
+                                                @csrf
+                                                <input type="text" name="service" id="service" value="pulsa" hidden>
+                                                <label class="fs-5 fw-semibold mb-2">
+                                                    <span class="required">No Ponsel</span>
+                                                </label>
 
-                                            <!--begin::Input-->
-                                            <input type="text" id="notelp" class="form-control mb-5 notelp" data-cat="pulsa" name="notelp" placeholder="" value="" />
-                                            <!--end::Input-->
-                                            <!--begin::Input-->
-                                            <select name="pricelist" id="row-pricelist-pulsa" class="form-control mb-10">
-                                                <option value="0">Nominal Pulsa</option>
-                                            </select>
-                                            <!--end::Input-->
-                                            <div class="text-end">
-                                                <button class="btn btn-danger py-4 ">Checkout</button>
-                                            </div>
-
+                                                <!--begin::Input-->
+                                                <input type="text" id="notelp" class="form-control mb-5 notelp" data-cat="pulsa" name="notelp" placeholder="" value="" />
+                                                <!--end::Input-->
+                                                <!--begin::Input-->
+                                                <select name="pricelist" id="row-pricelist-pulsa" class="form-control mb-10">
+                                                    <option value="0">Nominal Pulsa</option>
+                                                </select>
+                                                <!--end::Input-->
+                                                <div class="text-end">
+                                                    <button class="btn btn-danger py-4 ">Checkout</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <!--end::Tap pane-->
@@ -1113,21 +1116,25 @@
                                         <!--begin::Table container-->
                                         <div class="">
                                             <h2 class="fw-bold text-gray-900 m-0 mb-10">Paket Internet dengan harga terbaik</h2>
-                                            <label class="fs-5 fw-semibold mb-2">
-                                                <span class="required">No Ponsel</span>
-                                            </label>
+                                            <form action="{{route("cart")}}" method="post">
+                                                @csrf
+                                                <input type="text" name="service" id="service" value="data" hidden>
+                                                <label class="fs-5 fw-semibold mb-2">
+                                                    <span class="required">No Ponsel</span>
+                                                </label>
 
-                                            <!--begin::Input-->
-                                            <input type="text" id="" class="form-control mb-5 notelp" data-cat="data" name="notelp" placeholder="" value="" />
-                                            <!--end::Input-->
-                                            <!--begin::Input-->
-                                            <select name="pricelist" id="row-pricelist-data" class="form-control mb-10">
-                                                <option value="0">Paket Data</option>
-                                            </select>
-                                            <!--end::Input-->
-                                            <div class="text-end">
-                                                <button class="btn btn-danger py-4 ">Checkout</button>
-                                            </div>
+                                                <!--begin::Input-->
+                                                <input type="text" id="" class="form-control mb-5 notelp" data-cat="data" name="notelp" placeholder="" value="" />
+                                                <!--end::Input-->
+                                                <!--begin::Input-->
+                                                <select name="pricelist" id="row-pricelist-data" class="form-control mb-10">
+                                                    <option value="0">Paket Data</option>
+                                                </select>
+                                                <!--end::Input-->
+                                                <div class="text-end">
+                                                    <button class="btn btn-danger py-4 ">Checkout</button>
+                                                </div>
+                                            </form>
 
                                         </div>
                                         <!--end::Table container-->

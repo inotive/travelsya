@@ -92,6 +92,34 @@
                         <div class="col-md-12">
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="semua">
+                                    @foreach($transactions as $transaction)
+                                    <div class="card card-bordered mb-3">
+                                        <div class="card-body py-5">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <div class="p-3 bg-secondary rounded-circle bg-opacity-20 me-5">
+                                                    <img alt="" src="{{asset('assets/media/products-categories/icon-'.$transaction['service'].'.png')}}" class="w-35px" />
+                                                </div>
+                                                <div class="">
+
+                                                    <h3 class="fw-bold mb-3">{{($transaction['service']!='hostel')?$transaction['detail_transaction'][0]['product']['description']:'hostel'}}</h3>
+                                                    <p class="text-gray-500">{{($transaction['service']!='hostel')?$transaction['detail_transaction'][0]['no_hp'] : 'hostel'}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer py-5 d-flex justify-content-between">
+                                            @if($transaction['detail_transaction'][0]['status'] == 'PROCESS' && $transaction['status'] == 'PENDING')
+                                            <span class="fs-5 text-danger fw-bold">Menunggu Pembayaran</span>
+                                            @elseif($transaction['detail_transaction'][0]['status'] == 'SUCCESS' && $transaction['status'] == 'PAID')
+                                            <span class="fw-bold text-gray-500">Selesai</span>
+                                            @else
+                                            <span class="fw-bold text-gray-500">Cancel</span>
+                                            @endif
+                                            <a href="{{route('user.transaction.detail',$transaction['no_inv'])}}">
+                                                <i class="fa fa-chevron-right fa-lg text-dark"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endforeach
                                     <div class="card card-bordered mb-3">
                                         <div class="card-body py-5">
                                             <div class="d-flex align-items-start mb-3">
@@ -106,7 +134,7 @@
                                             </div>
                                         </div>
                                         <div class="card-footer py-5 d-flex justify-content-between">
-                                            <span class="fs-5 text-danger fw-bold">Menunggu Pembayaran</span>
+                                            <span class="fw-bold text-gray-500">Selesai</span>
                                             <a href="#">
                                                 <i class="fa fa-chevron-right fa-lg text-dark"></i>
                                             </a>
@@ -156,6 +184,76 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade show active" id="aktif">
+                                    @php
+                                    $transactionActive = array_filter($transactions, function($val){
+                                    return ($val['status'] == "PENDING");
+                                    })
+                                    @endphp
+                                    @foreach($transactionActive as $transaction)
+                                    <div class="card card-bordered mb-3">
+                                        <div class="card-body py-5">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <div class="p-3 bg-secondary rounded-circle bg-opacity-20 me-5">
+                                                    <img alt="" src="{{asset('assets/media/products-categories/icon-'.$transaction['service'].'.png')}}" class="w-35px" />
+                                                </div>
+                                                <div class="">
+
+                                                    <h3 class="fw-bold mb-3">{{($transaction['service']!='hostel')?$transaction['detail_transaction'][0]['product']['description']:'hostel'}}</h3>
+                                                    <p class="text-gray-500">{{($transaction['service']!='hostel')?$transaction['detail_transaction'][0]['no_hp'] : 'hostel'}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer py-5 d-flex justify-content-between">
+                                            @if($transaction['detail_transaction'][0]['status'] == 'PROCESS' && $transaction['status'] == 'PENDING')
+                                            <span class="fs-5 text-danger fw-bold">Menunggu Pembayaran</span>
+                                            @elseif($transaction['detail_transaction'][0]['status'] == 'SUCCESS' && $transaction['status'] == 'PAID')
+                                            <span class="fw-bold text-gray-500">Selesai</span>
+                                            @else
+                                            <span class="fw-bold text-gray-500">Cancel</span>
+                                            @endif
+                                            <a href="{{route('user.transaction.detail',$transaction['no_inv'])}}">
+                                                <i class="fa fa-chevron-right fa-lg text-dark"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                <div class="tab-pane fade show active" id="riwayat">
+                                    @php
+                                    $transactionHistory = array_filter($transactions, function($val){
+                                    return ($val['status'] != "PENDING");
+                                    })
+                                    @endphp
+                                    @foreach($transactionHistory as $transaction)
+                                    <div class="card card-bordered mb-3">
+                                        <div class="card-body py-5">
+                                            <div class="d-flex align-items-start mb-3">
+                                                <div class="p-3 bg-secondary rounded-circle bg-opacity-20 me-5">
+                                                    <img alt="" src="{{asset('assets/media/products-categories/icon-'.$transaction['service'].'.png')}}" class="w-35px" />
+                                                </div>
+                                                <div class="">
+
+                                                    <h3 class="fw-bold mb-3">{{($transaction['service']!='hostel')?$transaction['detail_transaction'][0]['product']['description']:'hostel'}}</h3>
+                                                    <p class="text-gray-500">{{($transaction['service']!='hostel')?$transaction['detail_transaction'][0]['no_hp'] : 'hostel'}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer py-5 d-flex justify-content-between">
+                                            @if($transaction['detail_transaction'][0]['status'] == 'PROCESS' && $transaction['status'] == 'PENDING')
+                                            <span class="fs-5 text-danger fw-bold">Menunggu Pembayaran</span>
+                                            @elseif($transaction['detail_transaction'][0]['status'] == 'SUCCESS' && $transaction['status'] == 'PAID')
+                                            <span class="fw-bold text-gray-500">Selesai</span>
+                                            @else
+                                            <span class="fw-bold text-gray-500">Cancel</span>
+                                            @endif
+                                            <a href="{{route('user.transaction.detail',$transaction['no_inv'])}}">
+                                                <i class="fa fa-chevron-right fa-lg text-dark"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -172,14 +270,6 @@
 <style>
     body {
         background-size: 100% 80px !important;
-    }
-
-    .menu-user a:hover {
-        color: blue !important;
-    }
-
-    .menu-user a.active {
-        color: blue !important;
     }
 </style>
 @endpush

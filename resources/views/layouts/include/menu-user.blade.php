@@ -1,11 +1,11 @@
 <div class="card menu-user">
     <div class="card-body fw-bold text-gray-800">
-        <h3 class="card-title mb-5">Nama User</h3>
+        <h3 class="card-title mb-5">{{session()->get('user')['data']['name']}}</h3>
         <div class="d-flex align-items-center mb-3">
             <img src="../assets/media/stock/food/img-2.jpg" class="w-30px rounded-3 me-3" alt="" />
             <div class="">
                 <div class="fw-bold text-gray-500"><small>Points Anda</small></div>
-                <div class="fs-5">1300</div>
+                <div class="fs-5">{{session()->get('user')['data']['point']}}</div>
             </div>
         </div>
         <div class="d-flex align-items-center mb-3">
