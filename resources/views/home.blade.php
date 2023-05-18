@@ -970,42 +970,44 @@
                                         <div class="">
 
                                             <h2 class="fw-bold text-gray-900 m-0 mb-10">Cari dan book hotel untuk hari spesialmu!</h2>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <!--begin::Input-->
-                                                    <select name="lokasi" id="lokasi" class="form-control">
-                                                        @foreach($cities as $city)
-                                                        <option value="{{$city}}">{{$city}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                    <!--end::Input-->
-                                                </div>
-                                                <div class="col-md-6 mb-5">
-                                                    <!--begin::Input-->
-                                                    <input type="text" class="form-control js-daterangepicker">
-                                                    <!--end::Input-->
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <!--begin::Input-->
-                                                    <select name="lokasi" id="kamar" class="form-control">
-                                                        @for($i=1;$i<5;$i++) <option value="1">{{$i}} Kamar</option>
-                                                            @endfor
-                                                    </select>
-                                                    <!--end::Input-->
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <!--begin::Input-->
-                                                    <select name="lokasi" id="tamu" class="form-control">
-                                                        @for($i=1;$i<5;$i++) <option value="1">{{$i}} Tamu</option>
-                                                            @endfor
-                                                    </select>
-                                                    <!--end::Input-->
-                                                </div>
+                                            <form action="{{route('hostel.index')}}" method="get">
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <!--begin::Input-->
+                                                        <select name="city" id="city" class="form-control">
+                                                            @foreach($cities as $city)
+                                                            <option value="{{$city}}">{{$city}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                        <!--end::Input-->
+                                                    </div>
+                                                    <div class="col-md-6 mb-5">
+                                                        <!--begin::Input-->
+                                                        <input type="text" name="date" class="form-control js-daterangepicker">
+                                                        <!--end::Input-->
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <!--begin::Input-->
+                                                        <select name="room" id="kamar" class="form-control">
+                                                            @for($i=1;$i<5;$i++) <option value="{{$i}}">{{$i}} Kamar</option>
+                                                                @endfor
+                                                        </select>
+                                                        <!--end::Input-->
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <!--begin::Input-->
+                                                        <select name="guest" id="tamu" class="form-control">
+                                                            @for($i=1;$i<5;$i++) <option value="{{$i}}">{{$i}} Tamu</option>
+                                                                @endfor
+                                                        </select>
+                                                        <!--end::Input-->
+                                                    </div>
 
-                                            </div>
-                                            <div class="text-end">
-                                                <button class="btn btn-danger py-4 mt-10">Cari Hotel</button>
-                                            </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button type="submit" class="btn btn-danger py-4 mt-10">Cari Hotel</button>
+                                                </div>
+                                            </form>
 
                                         </div>
                                         <!--end::Table container-->
@@ -1307,7 +1309,10 @@
 
 <script>
     $(document).ready(function() {
-
+        var today = new Date(); 
+        $('.js-daterangepicker').daterangepicker({
+minDate:today,
+});
         const {
             getOperator
         } = window.NoTelp;

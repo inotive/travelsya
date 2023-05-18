@@ -51,6 +51,7 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
 });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
+Route::post('/ajax/hostel', [HostelController::class, 'ajaxHostel']);
 
 //hostel
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {

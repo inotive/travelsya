@@ -175,6 +175,24 @@ class Travelsya
         }
     }
 
+    public function hostel($data = [])
+    {
+        try {
+            $client = new Client();
+            $headers = $this->auth();
+            if (count($data) != 0) {
+                $body = json_encode($data);
+                $request = new Request('get', $this->url . 'hostel', $headers, $body);
+            } else {
+                $request = new Request('get', $this->url . 'hostel', $headers);
+            }
+            $res = $client->sendAsync($request)->wait();
+            return json_decode($res->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            return json_decode($e->getResponse()->getBody()->getContents(), true);
+        }
+    }
+
     public function hostelCity()
     {
         try {

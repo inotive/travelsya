@@ -2,242 +2,215 @@
 
 @section('content-web')
 <!--begin::Container-->
+<div id="" class="row">
+            <img class="d-block w-100 h-300px"
+                src="//placehold.it/1200x300"
+                alt="First slide">
+</div>
 <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
 
     <!--begin::Post-->
-    <div class="content flex-row-fluid" id="kt_content">
-        <!--begin::Contact-->
-        <div class="card mb-4">
-            <!--begin::Body-->
-            <div class="card-body p-lg-17">
-                <!--begin::Row-->
-                <div class="row mb-3">
-                    <!--begin::Col-->
-                    <div class="col-md-12 pe-lg-10">
-                        <!--begin::Form-->
-                        <form action="#" class="form mb-15" method="post" id="kt_contact_form">
-                            <!--begin::Input group-->
-                            <div class="row mb-5">
+    <div class="content flex-row-fluid mb-10" id="kt_content">
+        <div class="row justify-content-between mb-5">
+            <div class="col-md-6">
+                <h2 class="fw-bold text-gray-900 mt-10">Hasil pencarian di {{$params['city']}}, Indonesia</h2>
+                <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1">{{date('d M Y',$params['start_date'])}} - {{date('d M Y',$params['end_date'])}} | {{$params['guest']}}  Tamu | {{$params['room']}} Kamar</span>
+            </div>
+            <div class="col-md-6 align-self-center text-end"><button class="btn btn-danger" id="button-refilter">Pencarian</button></div>
+        </div>
+        <div class="row card w-75 me-auto ms-auto mt-10" id="card-filter">
+            <form action="{{route('hostel.index')}}" method="get">
+                <div class="row card-body justify-content-center">
+                        <div class="col-md-6">
+                            <!--begin::Input-->
+                            <select name="city" id="city" class="form-control">
+                                @foreach($cities as $city)
+                                <option value="{{$city}}" {{($params['city'] == $city) ? 'selected' : '' }}>{{$city}}</option>
+                                @endforeach
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <div class="col-md-6 mb-5">
+                            <!--begin::Input-->
+                            <input type="text" name="date" class="form-control js-daterangepicker" id="js-daterangepicker">
+                            <!--end::Input-->
+                        </div>
+                        <div class="col-md-6">
+                            <!--begin::Input-->
+                            <select name="room" id="kamar" class="form-control">
+                                @for($i=1;$i<5;$i++) 
+                                <option value="{{$i}}" {{($params['room'] == $i) ? 'selected' : '' }}>{{$i}} Kamar</option>
+                                    @endfor
+                            </select>
+                            <!--end::Input-->
+                        </div>
+                        <div class="col-md-6">
+                            <!--begin::Input-->
+                            <select name="guest" id="tamu" class="form-control">
+                                @for($j=1;$j<5;$j++) <option value="{{$j}}" {{($params['guest'] == $j) ? 'selected' : '' }}>{{$j}} Tamu</option>
+                                    @endfor
+                            </select>
+                            <!--end::Input-->
+                        </div>
 
-                                <!--begin::Input group-->
-                                <div class="d-flex flex-column mb-5 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="fs-5 fw-semibold mb-2">Kota</label>
-                                    <!--end::Label-->
-
-                                    <!--begin::Input-->
-                                    <select class="form-control form-control-solid" name="durasi" id="durasi">
-                                        <option value="Jakarta">Jakarta</option>
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Col-->
-                                <div class="col-md-4 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="fs-5 fw-semibold mb-2">Check-in</label>
-                                    <!--end::Label-->
-
-                                    <!--begin::Input-->
-                                    <input type="date" class="form-control form-control-solid" placeholder="" name="start_date" />
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <div class="col-md-4 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="fs-5 fw-semibold mb-2">Durasi</label>
-                                    <!--end::Label-->
-
-                                    <!--begin::Input-->
-                                    <select class="form-control form-control-solid" name="durasi" id="durasi">
-                                        @for($i=1;$i<=30;$i++) <option value="$i">{{$i}} Malam</option>
-                                            @endfor
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <div class="col-md-4 fv-row">
-                                    <!--end::Label-->
-                                    <label class="fs-5 fw-semibold mb-2">Check-out</label>
-                                    <!--end::Label-->
-
-                                    <!--end::Input-->
-                                    <span type="date" class="form-control form-control-solid" placeholder="" name="end_date"> dummydate </span>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <div class="col-md-4 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="fs-5 fw-semibold mb-2">Kamar</label>
-                                    <!--end::Label-->
-
-                                    <!--begin::Input-->
-                                    <select class="form-control form-control-solid" name="durasi" id="durasi">
-                                        @for($i=1;$i<=5;$i++) <option value="$i">{{$i}} Kamar</option>
-                                            @endfor
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Col-->
-
-                                <!--begin::Col-->
-                                <div class="col-md-4 fv-row">
-                                    <!--begin::Label-->
-                                    <label class="fs-5 fw-semibold mb-2">Tamu</label>
-                                    <!--end::Label-->
-
-                                    <!--begin::Input-->
-                                    <select class="form-control form-control-solid" name="durasi" id="durasi">
-                                        @for($i=1;$i<=5;$i++) <option value="$i">{{$i}} Tamu</option>
-                                            @endfor
-                                    </select>
-                                    <!--end::Input-->
-                                </div>
-                                <!--end::Col-->
-
-                            </div>
-                            <!--end::Input group-->
-
-
-                            <!--begin::Submit-->
-                            <button type="submit" class="btn btn-primary" id="kt_contact_submit_button">
-
-                                <!--begin::Indicator label-->
-                                <span class="indicator-label">
-                                    Search</span>
-                                <!--end::Indicator label-->
-
-                                <!--begin::Indicator progress-->
-                                <span class="indicator-progress">
-                                    Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                </span>
-                                <!--end::Indicator progress--> </button>
-                            <!--end::Submit-->
-                        </form>
-                        <!--end::Form-->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-danger py-4 mt-10">Cari Hotel</button>
+                        </div>
                     </div>
-                    <!--end::Col-->
-                </div>
-                <!--end::Row-->
-            </div>
-            <!--end::Body-->
+                </form>
         </div>
-        <!--end::Contact-->
+        <div class="row mt-10 justify-content-center">
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-header py-5">
+                        <h3 class="fw-bold text-gray-900">Hasil Sort</h3>
+                        <span class="text-gray-400 fw-semibold d-block  mt-n1">Hasil pencarian berdasarkan:</span>
+                    </div>
+                    <div class="card-body form-inline">
+                        <input type="radio" class="form-check-input me-3 sortprice" value="highestprice" name="sortprice" ><label>Harga Tertinggi</label></br></br>
+                        <input type="radio" class="form-check-input me-3 sortprice" value="lowestprice" name="sortprice" ><label>Harga Terendah</label></br></br>
+                        <input type="radio" class="form-check-input me-3 sortprice" value="review" name="sortprice" ><label>Nilai Review</label></br></br>
+                    </div>
+                  </div>
+                  <div class="card mt-5">
+                    <div class="card-header py-5">
+                        <h3 class="fw-bold text-gray-900">Hasil Filter</h3>
+                        <span class="text-gray-400 fw-semibold d-block  mt-n1">Penampilkan hostel berdasarkan filter</span>
+                    </div>
+                    <div class="card-body form-inline">
+                        <div>
+                        <h4 class="fw-bold text-gray-900">Rating Star</h4>
+                        <div class="card-body form-inline">
+                            <input type="radio" class="form-check-input me-3 mb-2 rate" value="5" name="rate"><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span></br>
+                            <input type="radio" class="form-check-input me-3 mb-2 rate" value="4" name="rate"><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span></br>
+                            <input type="radio" class="form-check-input me-3 mb-2 rate" value="3" name="rate"><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span></br>
+                            <input type="radio" class="form-check-input me-3 mb-2 rate" value="2" name="rate"><span class="fa fa-star"style="color: orange;"></span><span class="fa fa-star"style="color: orange;"></span></br>
+                            <input type="radio" class="form-check-input me-3 mb-2 rate" value="1" name="rate"><span class="fa fa-star"style="color: orange;"></span></br>
+                        </div>
 
-        <!--begin::Table widget 2-->
-        <div class="h-md-100 mt-15">
-            <!--begin::Header-->
-            <div class="align-items-center border-0">
-                <!--begin::Title-->
-                <h3 class="fw-bold text-gray-900 m-0">Yang Paling Populer</h3>
-                <!--end::Title-->
+                        </div>
+                    </div>
+                  </div>
             </div>
-            <!--end::Header-->
-
-            <!--begin::Body-->
-            <div class="pt-2">
-                <!--begin::Nav-->
-                <ul class="nav nav-pills nav-pills-custom mb-3">
-                    <!--begin::Item-->
-                    @foreach($cities as $key => $city)
-                    <li class="nav-item mb-3 me-3 me-lg-6">
-                        <!--begin::Link-->
-                        <a class="nav-link d-flex justify-content-between flex-column flex-center {{($key == 0) ? 'active' : ''}} overflow-hidden py-4" data-bs-toggle="pill" href="#kt_stats_widget_2_tab_{{$city}}">
-
-                            <!--begin::Subtitle-->
-                            <span class="nav-text text-gray-700 fw-bold fs-6 lh-1">
-                                {{ $city }}
-                            </span>
-                            <!--end::Subtitle-->
-
-                            <!--begin::Bullet-->
-                            <span class="bullet-custom position-absolute bottom-0 w-100 h-4px bg-primary"></span>
-                            <!--end::Bullet-->
-                        </a>
-                        @endforeach
-                        <!--end::Link-->
-                    </li>
-                    <!--end::Item-->
-                </ul>
-                <!--end::Nav-->
-            </div>
-            <!--end: Card Body-->
-        </div>
-        <!--end::Table widget 2-->
-        <!--begin::Tab Content-->
-        <div class="tab-content ">
-            <!--begin::Tap pane-->
-
-            @foreach($cities as $key=> $city)
-            @php
-            $filterHostel = array_filter($hostelPopulers,function($val) use ($city){
-            return ($val['city'] == $city);
-            });
-            @endphp
-            @foreach($filterHostel as $key2 => $hostelPopuler)
-            <div class="tab-pane fade  {{($key2 == 0) ? 'show active' : ''}}" id="kt_stats_widget_2_tab_{{$city}}">
-
-                <div class="tns tns-default" style="direction: ltr">
-                    <!--begin::Slider-->
-                    <div data-tns="true" data-tns-loop="false" data-tns-autoPlay="false" data-tns-responsive='{"350":{"items": 1},"500":{"items": @php echo (count($filterHostel)-2 < 0) ? count($filterHostel)-2 : 1 @endphp},"970":{"items": @php echo count($filterHostel) @endphp}}' data-tns-rewind="true" data-tns-swipe-angle="true" data-tns-speed="1000" data-tns-controls="true" data-tns-nav="false" data-tns-items="4" data-tns-center="false" data-tns-dots="false" data-tns-prev-button="#kt_team_slider_prev{{$city}}" data-tns-next-button="#kt_team_slider_next{{$city}}">
-                        @for($i=1;$i<10;$i++) <!--begin::Item-->
-                            <div class="text-center px-5 py-5">
-                                <img src="{{$hostelPopuler['hostel_image'][0]['image']}}" class="rounded-3 mb-4 w-200px h-200px w-xxl-200px h-xxl-200px" alt="" />
-                                <!--begin::Info-->
-                                <div class="mb-2">
-                                    <!--begin::Title-->
-                                    <div class="text-center">
-                                        <span class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">
-                                            {{$hostelPopuler['name']}}
-                                        </span>
-                                        <span class="text-gray-600 cursor-pointer d-block">
-                                            @for($j=0;$j < $hostelPopuler['rating_avg']; $j++) <span class="fa fa-star" style="color: orange;"></span>
-                                        @endfor
-                                        ({{$hostelPopuler['rating_count']}})
-                                        </span>
-
-                                        <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1">
-                                            {{"Rp " . number_format($hostelPopuler['price_avg'],0,',','.');}}
-                                        </span>
+            <div class="col-md-6" id="listhostel">
+                    @foreach($hostels as $hostel)
+                    <a class="card card-hostel mb-3">
+                        <div class="row no-gutters">
+                            <div class="col-auto">
+                                <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{$hostel['hostel_image'][0]['image']}}');background-position: center;"></div>
+                            </div>
+                            <div class="col align-self-center">
+                                <div class="row px-2">
+                                    <h4 class="card-title text-gray-900">{{$hostel['name']}}</h4>
+                                    <div>
+                                        @for($j=0;$j < $hostel['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor
                                     </div>
-                                    <!--end::Title-->
+                                    <p class="card-text text-gray-500 mt-1">{{$hostel['kecamatan']}}, {{$hostel['city']}}</p>
+                                    <div class="text-gray-400 fw-semibold d-block fs-6"> <s>{{"Rp " . number_format($hostel['price_avg']-($hostel['price_avg']*0.5),0,',','.');}}R</s></div>
+                                    <p class="fw-semibold d-block fs-2 text-danger">{{"Rp " . number_format($hostel['price_avg'],0,',','.');}}</p>
                                 </div>
-                                <!--end::Info-->
                             </div>
-                            <!--end::Item-->
-                            @endfor
-                            ...
-                    </div>
-                    <!--end::Slider-->
-
-                    <!--begin::Slider button-->
-                    <button class="btn btn-icon btn-active-color-primary " id="kt_team_slider_prev{{$city}}">
-                        <span class="svg-icon fs-3x">
-                            < </span>
-                    </button>
-                    <!--end::Slider button-->
-
-                    <!--begin::Slider button-->
-                    <button class="btn btn-icon btn-active-color-primary" id="kt_team_slider_next{{$city}}">
-                        <span class="svg-icon fs-3x">
-                            > </span>
-                    </button>
-                    <!--end::Slider button-->
-                </div>
+                        </div>
+                    </a>
+                    @endforeach
             </div>
-            @endforeach
-            @endforeach
-            <!--end::Tap pane-->
         </div>
-        <!--end::Tab Content-->
     </div>
     <!--end::Post-->
 </div>
 <!--end::Container-->
 @endsection
+
+@push('add-style')
+<style>
+    body {
+        background-size: 100% 80px !important;
+    }
+
+    .card-hostel:hover{
+        border: 1px solid #D9214E;
+        cursor: pointer;
+    }
+
+
+
+</style>
+@endpush
+
+@push('add-script')
+<script>
+    $(document).ready(function() {
+
+  $("#card-filter").hide();
+    $("#button-refilter").click( function(){
+        $("#card-filter").toggle();
+    })
+    var today = new Date(); 
+    var start = new Date("{{date('m/d/Y',$params['start_date'])}}");
+    var end = new Date("{{date('m/d/Y',$params['end_date'])}}");
+    $('.js-daterangepicker').daterangepicker({
+        minDate:today,
+        startDate:start,
+         endDate:end
+    });
+
+    var optionsort='';
+    var optionrate='';
+
+    $(".sortprice").on('click',function(){
+        optionsort = $('input[name="sortprice"]:checked').val();
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+            url: "{{ url('/ajax/hostel') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                optionsort: optionsort,
+                optionrate: optionrate,
+                city: '{{$params['city']}}',
+                category: '{{$params['category']}}',
+                name: '{{$params['name']}}'
+            },
+            success: function(response) {
+                $("#listhostel").html('');
+                $.each(response, function(key,hostel){
+                    $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${hostel.hostel_image[0].image}');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg-(hostel.price_avg*0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);
+                })
+            }
+        })
+    })
+    $(".rate").on('click',function(){
+        optionrate = $('input[name="rate"]:checked').val();
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+            url: "{{ url('/ajax/hostel') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                optionsort: optionsort,
+                optionrate: optionrate,
+                city: '{{$params['city']}}',
+                category: '{{$params['category']}}',
+                name: '{{$params['name']}}'
+
+            },
+            success: function(response) {
+                console.log(response)
+                $("#listhostel").html('');
+                $.each(response, function(key,hostel){
+                    $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${hostel.hostel_image[0].image}');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg-(hostel.price_avg*0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);
+                })
+            }
+        })
+    })
+})
+</script>
+@endpush
