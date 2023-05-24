@@ -26,7 +26,7 @@
                     @endif
                 </ul>
                 <!--begin::Form-->
-                <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{route('home')}}" action="{{route('login')}}">
+                <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('admin.login.post')}}">
                     <!--begin::Heading-->
                     @csrf
                     <div class="text-center mb-11">

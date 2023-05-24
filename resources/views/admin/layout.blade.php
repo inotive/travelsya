@@ -15,6 +15,8 @@
 		<meta property="og:site_name" content="" />
 		<link rel="canonical" href="" />
 		<link rel="shortcut icon" href="{{asset('admin/assets/media/logos/favicon.ico')}}" />
+		<meta name="csrf-token" content="{{ csrf_token() }}">
+
 		<!--begin::Fonts(mandatory for all pages)-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -108,7 +110,7 @@
 		</div>
 		<!--end::App-->
 		
-		
+		@include('sweetalert::alert')
 		<!--begin::Javascript-->
 		<script>var hostUrl = "assets/";</script>
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
@@ -142,6 +144,7 @@
 		<script src="{{asset('admin/assets/js/custom/utilities/modals/users-search.js')}}"></script>
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
+		@stack("add-script")
 	</body>
 	<!--end::Body-->
 </html>

@@ -72,11 +72,32 @@ Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
 
 
-Route::get('/login/admin', [AdminAuthController::class, 'login'])->name('admin.login');
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
-Route::get('/admin/customer', [CustomerController::class, 'index'])->name('admin.customer');
-Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
-Route::get('/admin/user', [AdminUserController::class, 'index'])->name('admin.user');
-Route::get('/admin/mitra', [MitraController::class, 'index'])->name('admin.mitra');
-Route::get('/admin/point', [PointController::class, 'index'])->name('admin.point');
-Route::get('/admin/fee', [FeeController::class, 'index'])->name('admin.fee');
+Route::get('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login')->middleware('guest');
+Route::post('/admin/login', [AdminAuthController::class, 'authenticate'])->name('admin.login.post');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
+
+Route::middleware(['auth', 'role'])->group(function () {
+    Route::middleware('admin')->group(function () {
+        //user
+        Route::get('/admin/user', [AdminUserController::class, 'index'])->name('admin.user');
+        Route::post('/admin/user', [AdminUserController::class, 'create'])->name('admin.create');
+        Route::post('/admin/user/edit', [AdminUserController::class, 'editJson'])->name('admin.edit');
+        Route::put('/admin/user/update', [AdminUserController::class, 'update'])->name('admin.update');
+        Route::get('/admin/user/{id}/delete', [AdminUserController::class, 'delete'])->name('admin.delete');
+
+        //mitra
+        Route::get('/admin/mitra', [MitraController::class, 'index'])->name('admin.mitra');
+
+        //point
+        Route::get('/admin/point', [PointController::class, 'index'])->name('admin.point');
+
+        //fee
+        Route::get('/admin/fee', [FeeController::class, 'index'])->name('admin.fee');
+
+        //customer
+        Route::get('/admin/customer', [CustomerController::class, 'index'])->name('admin.customer');
+    });
+
+    Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
+});
