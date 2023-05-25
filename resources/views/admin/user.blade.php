@@ -68,6 +68,7 @@
                         </td>
                     </tr>
                     @endforeach
+                    {{-- {{$users->links('bootstrap')}} --}}
                 </tbody>
                 <!--end::Table body-->
             </table>
