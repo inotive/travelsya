@@ -14,4 +14,15 @@ class Transaction extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get all of the detailTransaction for the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function detailTransaction()
+    {
+        return $this->hasMany(DetailTransaction::class);
+    }
+    
 }

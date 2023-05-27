@@ -10,8 +10,14 @@ class TransactionController extends Controller
 {
     public function index(Request $request)
     {
-        $tr = Transaction::with('user');
-
+        if(auth()->user()->role == 0){
+            $tr = Transaction::with('user','detailTransaction');
+        }else{
+            $id = auth()->user()->id;
+            $tr = Transaction::with('user','detailTransaction')
+            ->whereIn('service'['hostel']);
+        }
+        
         if ($request->service != null)
             $tr = $tr->where('service', $request->service);
 

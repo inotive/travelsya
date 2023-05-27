@@ -75,6 +75,17 @@
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">{{$title}}</li>
                                             <!--end::Item-->
+
+											@if(isset($breadcrumb))
+											@foreach($breadcrumb as $br)
+											<li class="breadcrumb-item">
+                                                <span class="bullet bg-gray-400 w-5px h-2px"></span>
+                                            </li>
+											<!--begin::Item-->
+                                            <li class="breadcrumb-item text-muted">{{$br}}</li>
+                                            <!--end::Item-->
+											@endforeach
+											@endif
                                         </ul>
                                         <!--end::Breadcrumb-->
                                     </div>

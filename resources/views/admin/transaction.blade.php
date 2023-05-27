@@ -3,7 +3,7 @@
 @section('content-admin')
 
 <!--begin::Form-->
-<form action="#">
+<form action="#" method="get">
     <!--begin::Card-->
     <div class="card mb-7">
         <!--begin::Card body-->
@@ -19,11 +19,12 @@
                         <div class="col-lg-3">
                             <!--begin::Select-->
                             <select class="form-select form-select-solid" data-control="select2"
-                                data-placeholder="Layanan" data-hide-search="true">
+                                data-placeholder="Layanan" data-hide-search="true" name="service">
                                 <option value=""></option>
-                                <option value="1">Pulsa</option>
-                                <option value="2">Data</option>
-                                <option value="3">PLN</option>
+                                <option value="pulsa">Pulsa</option>
+                                <option value="data">Data</option>
+                                <option value="pln">PLN</option>
+                                <option value="hostel">Hostel</option>
                             </select>
                             <!--end::Select-->
 
@@ -52,199 +53,6 @@
                 <!--end::Col-->
             </div>
             <!--end::Compact form-->
-            <!--begin::Advance form-->
-            <div class="collapse" id="kt_advanced_search_form">
-                <!--begin::Separator-->
-                <div class="separator separator-dashed mt-9 mb-6"></div>
-                <!--end::Separator-->
-                <!--begin::Row-->
-                <div class="row g-8 mb-8">
-                    <!--begin::Col-->
-                    <div class="col-xxl-7">
-                        <label class="fs-6 form-label fw-bold text-dark">Tags</label>
-                        <input type="text" class="form-control form-control form-control-solid" name="tags"
-                            value="products, users, events" />
-                    </div>
-                    <!--end::Col-->
-                    <!--begin::Col-->
-                    <div class="col-xxl-5">
-                        <!--begin::Row-->
-                        <div class="row g-8">
-                            <!--begin::Col-->
-                            <div class="col-lg-6">
-                                <label class="fs-6 form-label fw-bold text-dark">Team Type</label>
-                                <!--begin::Select-->
-                                <select class="form-select form-select-solid" data-control="select2"
-                                    data-placeholder="In Progress" data-hide-search="true">
-                                    <option value=""></option>
-                                    <option value="1">Not started</option>
-                                    <option value="2" selected="selected">In Progress</option>
-                                    <option value="3">Done</option>
-                                </select>
-                                <!--end::Select-->
-                            </div>
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-lg-6">
-                                <label class="fs-6 form-label fw-bold text-dark">Select Group</label>
-                                <!--begin::Radio group-->
-                                <div class="nav-group nav-group-fluid">
-                                    <!--begin::Option-->
-                                    <label>
-                                        <input type="radio" class="btn-check" name="type" value="has"
-                                            checked="checked" />
-                                        <span
-                                            class="btn btn-sm btn-color-muted btn-active btn-active-primary fw-bold px-4">All</span>
-                                    </label>
-                                    <!--end::Option-->
-                                    <!--begin::Option-->
-                                    <label>
-                                        <input type="radio" class="btn-check" name="type" value="users" />
-                                        <span
-                                            class="btn btn-sm btn-color-muted btn-active btn-active-primary fw-bold px-4">Users</span>
-                                    </label>
-                                    <!--end::Option-->
-                                    <!--begin::Option-->
-                                    <label>
-                                        <input type="radio" class="btn-check" name="type" value="orders" />
-                                        <span
-                                            class="btn btn-sm btn-color-muted btn-active btn-active-primary fw-bold px-4">Orders</span>
-                                    </label>
-                                    <!--end::Option-->
-                                </div>
-                                <!--end::Radio group-->
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Row-->
-                    </div>
-                    <!--end::Col-->
-                </div>
-                <!--end::Row-->
-                <!--begin::Row-->
-                <div class="row g-8">
-                    <!--begin::Col-->
-                    <div class="col-xxl-7">
-                        <!--begin::Row-->
-                        <div class="row g-8">
-                            <!--begin::Col-->
-                            <div class="col-lg-4">
-                                <label class="fs-6 form-label fw-bold text-dark">Min. Amount</label>
-                                <!--begin::Dialer-->
-                                <div class="position-relative" data-kt-dialer="true" data-kt-dialer-min="1000"
-                                    data-kt-dialer-max="50000" data-kt-dialer-step="1000" data-kt-dialer-prefix="$"
-                                    data-kt-dialer-decimals="2">
-                                    <!--begin::Decrease control-->
-                                    <button type="button"
-                                        class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-50 start-0"
-                                        data-kt-dialer-control="decrease">
-                                        <i class="ki-duotone ki-minus-circle fs-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </button>
-                                    <!--end::Decrease control-->
-                                    <!--begin::Input control-->
-                                    <input type="text" class="form-control form-control-solid border-0 ps-12"
-                                        data-kt-dialer-control="input" placeholder="Amount" name="manageBudget"
-                                        readonly="readonly" value="$50" />
-                                    <!--end::Input control-->
-                                    <!--begin::Increase control-->
-                                    <button type="button"
-                                        class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-50 end-0"
-                                        data-kt-dialer-control="increase">
-                                        <i class="ki-duotone ki-plus-circle fs-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </button>
-                                    <!--end::Increase control-->
-                                </div>
-                                <!--end::Dialer-->
-                            </div>
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-lg-4">
-                                <label class="fs-6 form-label fw-bold text-dark">Max. Amount</label>
-                                <!--begin::Dialer-->
-                                <div class="position-relative" data-kt-dialer="true" data-kt-dialer-min="1000"
-                                    data-kt-dialer-max="50000" data-kt-dialer-step="1000" data-kt-dialer-prefix="$"
-                                    data-kt-dialer-decimals="2">
-                                    <!--begin::Decrease control-->
-                                    <button type="button"
-                                        class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-50 start-0"
-                                        data-kt-dialer-control="decrease">
-                                        <i class="ki-duotone ki-minus-circle fs-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </button>
-                                    <!--end::Decrease control-->
-                                    <!--begin::Input control-->
-                                    <input type="text" class="form-control form-control-solid border-0 ps-12"
-                                        data-kt-dialer-control="input" placeholder="Amount" name="manageBudget"
-                                        readonly="readonly" value="$100" />
-                                    <!--end::Input control-->
-                                    <!--begin::Increase control-->
-                                    <button type="button"
-                                        class="btn btn-icon btn-active-color-gray-700 position-absolute translate-middle-y top-50 end-0"
-                                        data-kt-dialer-control="increase">
-                                        <i class="ki-duotone ki-plus-circle fs-1">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </button>
-                                    <!--end::Increase control-->
-                                </div>
-                                <!--end::Dialer-->
-                            </div>
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-lg-4">
-                                <label class="fs-6 form-label fw-bold text-dark">Team Size</label>
-                                <input type="text" class="form-control form-control form-control-solid" name="city" />
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Row-->
-                    </div>
-                    <!--end::Col-->
-                    <!--begin::Col-->
-                    <div class="col-xxl-5">
-                        <!--begin::Row-->
-                        <div class="row g-8">
-                            <!--begin::Col-->
-                            <div class="col-lg-6">
-                                <label class="fs-6 form-label fw-bold text-dark">Category</label>
-                                <!--begin::Select-->
-                                <select class="form-select form-select-solid" data-control="select2"
-                                    data-placeholder="In Progress" data-hide-search="true">
-                                    <option value=""></option>
-                                    <option value="1">Not started</option>
-                                    <option value="2" selected="selected">Select</option>
-                                    <option value="3">Done</option>
-                                </select>
-                                <!--end::Select-->
-                            </div>
-                            <!--end::Col-->
-                            <!--begin::Col-->
-                            <div class="col-lg-6">
-                                <label class="fs-6 form-label fw-bold text-dark">Status</label>
-                                <div class="form-check form-switch form-check-custom form-check-solid mt-1">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexSwitchChecked"
-                                        checked="checked" />
-                                    <label class="form-check-label" for="flexSwitchChecked">Active</label>
-                                </div>
-                            </div>
-                            <!--end::Col-->
-                        </div>
-                        <!--end::Row-->
-                    </div>
-                    <!--end::Col-->
-                </div>
-                <!--end::Row-->
-            </div>
-            <!--end::Advance form-->
         </div>
         <!--end::Card body-->
     </div>
@@ -309,12 +117,8 @@
             <!--begin::Header-->
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
-                    <span class="card-label fw-bold fs-3 mb-1">List User</span>
+                    <span class="card-label fw-bold fs-3 mb-1">List Transaction</span>
                 </h3>
-                <div class="card-toolbar">
-                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                        <i class="ki-duotone ki-plus fs-2"></i>New Member</a>
-                </div>
             </div>
             <!--end::Header-->
             <!--begin::Body-->
@@ -330,7 +134,7 @@
                                 <th class="min-w-125px">No Invoice</th>
                                 <th class="min-w-125px">Service</th>
                                 <th class="min-w-125px">Payment</th>
-                                <th class="min-w-125px">Stats</th>
+                                <th class="min-w-125px">Status</th>
                                 <th class="min-w-200px text-end rounded-end"></th>
                             </tr>
                         </thead>
@@ -363,8 +167,8 @@
                                     </div>
                                 </td>
                                 <td class="text-end">
-                                    <a onclick="return confirm('are you sure?')"
-                                        class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
+                                    <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
+                                    data-id="{{$transaction->id}}" data-bs-toggle="modal" data-bs-target="#editstatus">
                                         <i class="ki-duotone ki-switch fs-2">
                                             <span class="path1"></span>
                                             <span class="path2"></span>
@@ -392,17 +196,21 @@
                             </tr>
                             @endforeach
                         </tbody>
-                        {{$transactions->links()}}
-                        
+                        <tfoot>
+                            <tr>
+                                <td>
+                                  {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
+                              </td>
+                            </tr>
+                          </tfoot>
                         <!--end::Table body-->
                     </table>
                     <!--end::Table-->
                 </div>
                 <!--end::Table container-->
                 <!--begin::Pagination-->
-                <div class="d-flex flex-stack flex-wrap pt-10">
+                {{-- <div class="d-flex flex-stack flex-wrap pt-10">
                     <div class="fs-6 fw-semibold text-gray-700">Showing 1 to 10 of 50 entries</div>
-                    <!--begin::Pages-->
                     <ul class="pagination">
                         <li class="page-item previous">
                             <a href="#" class="page-link">
@@ -434,7 +242,7 @@
                         </li>
                     </ul>
                     <!--end::Pages-->
-                </div>
+                </div> --}}
                 <!--end::Pagination-->
             </div>
             <!--begin::Body-->
@@ -445,4 +253,6 @@
     <!--end::Tab pane-->
 </div>
 <!--end::Tab Content-->
+
+
 @endsection
