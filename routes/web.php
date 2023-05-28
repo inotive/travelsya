@@ -93,9 +93,13 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         //point
         Route::get('/admin/point', [PointController::class, 'index'])->name('admin.point');
+        Route::put('/admin/point', [PointController::class, 'updatePoint'])->name('admin.point.update');
+        Route::post('/admin/point', [PointController::class, 'storePoint'])->name('admin.point.store');
 
         //fee
         Route::get('/admin/fee', [FeeController::class, 'index'])->name('admin.fee');
+        Route::put('/admin/fee', [FeeController::class, 'updateFee'])->name('admin.fee.update');
+        Route::post('/admin/fee', [FeeController::class, 'storeFee'])->name('admin.fee.store');
 
         //customer
         Route::get('/admin/customer', [CustomerController::class, 'index'])->name('admin.customer');
