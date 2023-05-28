@@ -100,6 +100,10 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
+    Route::post('/admin/transaction/', [AdminTransactionController::class, 'store'])->name('admin.transaction.store');
     Route::get('/admin/transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('admin.transaction.detail');
     Route::put('/admin/transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('admin.transaction.detail.update');
+
+    //hostel ajax
+    Route::post('/admin/hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('admin.hostelroom.ajax');
 });

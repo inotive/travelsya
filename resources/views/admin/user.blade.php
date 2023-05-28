@@ -68,7 +68,7 @@
                         </td>
                     </tr>
                     @endforeach
-                    {{-- {{$users->links('bootstrap')}} --}}
+                    {{$users->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
                 </tbody>
                 <!--end::Table body-->
             </table>

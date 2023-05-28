@@ -28,6 +28,8 @@
 		<link href="{{asset('admin/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<link href="{{asset('admin/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
+		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -158,6 +160,8 @@
 		<script src="{{asset('admin/assets/js/custom/utilities/modals/create-app.js')}}"></script>
 		<script src="{{asset('admin/assets/js/custom/utilities/modals/new-target.js')}}"></script>
 		<script src="{{asset('admin/assets/js/custom/utilities/modals/users-search.js')}}"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
 		@stack("add-script")
