@@ -87,6 +87,9 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         //mitra
         Route::get('/admin/mitra', [MitraController::class, 'index'])->name('admin.mitra');
+        Route::put('/admin/mitra', [MitraController::class, 'updateMitra'])->name('admin.mitra.update');
+        Route::post('/admin/mitra', [MitraController::class, 'storeMitra'])->name('admin.mitra.store');
+
 
         //point
         Route::get('/admin/point', [PointController::class, 'index'])->name('admin.point');

@@ -69,7 +69,7 @@
             <span class="text-gray-400 fs-6">by Recent Updates ↓</span></h3>
     </div>
     <!--end::Title-->
-    <!--begin::Controls-->
+    {{-- <!--begin::Controls-->
     <div class="d-flex flex-wrap my-1">
         <!--begin::Tab nav-->
         <ul class="nav nav-pills me-6 mb-2 mb-sm-0">
@@ -107,7 +107,7 @@
         </div>
         <!--end::Actions-->
     </div>
-    <!--end::Controls-->
+    <!--end::Controls--> --}}
 </div>
 <!--end::Toolbar-->
 <!--begin::Tab Content-->

@@ -47,4 +47,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Transaction::class);
     }
+
+    /**
+     * Get all of the hostelRoom for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function hostel()
+    {
+        return $this->hasMany(Hostel::class);
+    }
 }

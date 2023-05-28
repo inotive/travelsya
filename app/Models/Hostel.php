@@ -9,6 +9,8 @@ class Hostel extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     /**
      * Get all of the detailTransaction for the Hostel
      *
@@ -27,5 +29,15 @@ class Hostel extends Model
     public function hostelRoom()
     {
         return $this->hasMany(HostelRoom::class);
+    }
+
+    /**
+     * Get the user that owns the Hostel
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
