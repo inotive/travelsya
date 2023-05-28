@@ -24,5 +24,24 @@ class Transaction extends Model
     {
         return $this->hasMany(DetailTransaction::class);
     }
-    
+
+    /**
+     * Get all of the product for the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Get all of the guest for the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function guest()
+    {
+        return $this->hasMany(Guest::class);
+    }
 }

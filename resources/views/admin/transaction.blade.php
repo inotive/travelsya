@@ -135,7 +135,7 @@
                                 <th class="min-w-125px">Service</th>
                                 <th class="min-w-125px">Payment</th>
                                 <th class="min-w-125px">Status</th>
-                                <th class="min-w-200px text-end rounded-end"></th>
+                                <th class="min-w-150px text-end rounded-end"></th>
                             </tr>
                         </thead>
                         <!--end::Table head-->
@@ -174,8 +174,8 @@
                                             <span class="path2"></span>
                                         </i>
                                     </a>
-                                    <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
-                                        data-id="{{$transaction->id}}" data-bs-toggle="modal" data-bs-target="#edit">
+                                    <a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
+                                        data-id="{{$transaction->id}}">
                                         <i class="ki-duotone ki-pencil fs-2">
                                             <span class="path1"></span>
                                             <span class="path2"></span>
@@ -208,42 +208,6 @@
                     <!--end::Table-->
                 </div>
                 <!--end::Table container-->
-                <!--begin::Pagination-->
-                {{-- <div class="d-flex flex-stack flex-wrap pt-10">
-                    <div class="fs-6 fw-semibold text-gray-700">Showing 1 to 10 of 50 entries</div>
-                    <ul class="pagination">
-                        <li class="page-item previous">
-                            <a href="#" class="page-link">
-                                <i class="previous"></i>
-                            </a>
-                        </li>
-                        <li class="page-item active">
-                            <a href="#" class="page-link">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a href="#" class="page-link">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a href="#" class="page-link">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a href="#" class="page-link">4</a>
-                        </li>
-                        <li class="page-item">
-                            <a href="#" class="page-link">5</a>
-                        </li>
-                        <li class="page-item">
-                            <a href="#" class="page-link">6</a>
-                        </li>
-                        <li class="page-item next">
-                            <a href="#" class="page-link">
-                                <i class="next"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <!--end::Pages-->
-                </div> --}}
-                <!--end::Pagination-->
             </div>
             <!--begin::Body-->
         </div>

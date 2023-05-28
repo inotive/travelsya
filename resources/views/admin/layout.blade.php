@@ -64,7 +64,7 @@
                                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-                                                <a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Home</a>
+                                                <a href="{{route('admin.dashboard')}}" class="text-muted text-hover-primary">Home</a>
                                             </li>
                                             <!--end::Item-->
                                             <!--begin::Item-->
@@ -73,7 +73,9 @@
                                             </li>
                                             <!--end::Item-->
                                             <!--begin::Item-->
-                                            <li class="breadcrumb-item text-muted">{{$title}}</li>
+                                            <li class="breadcrumb-item text-muted">
+												<a href="{{$url}}" class="text-muted text-hover-primary">{{$title}}</a>
+												</li>
                                             <!--end::Item-->
 
 											@if(isset($breadcrumb))
@@ -82,7 +84,10 @@
                                                 <span class="bullet bg-gray-400 w-5px h-2px"></span>
                                             </li>
 											<!--begin::Item-->
-                                            <li class="breadcrumb-item text-muted">{{$br}}</li>
+                                            <li class="breadcrumb-item text-muted">
+												
+												<a href="#" class="text-muted text-hover-primary">{{$br}}</a>
+												</li>
                                             <!--end::Item-->
 											@endforeach
 											@endif

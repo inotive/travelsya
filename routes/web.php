@@ -100,4 +100,6 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
+    Route::get('/admin/transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('admin.transaction.detail');
+    Route::put('/admin/transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('admin.transaction.detail.update');
 });

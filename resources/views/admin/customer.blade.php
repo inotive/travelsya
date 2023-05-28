@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Customer'])
+@extends('admin.layout',['title' => 'Customer','url' => route('admin.customer')])
 
 @section('content-admin')
 <!--begin::Tables Widget 11-->
