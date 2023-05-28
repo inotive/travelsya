@@ -15,12 +15,13 @@ class TransactionController extends Controller
             $tr = Transaction::with('user', 'detailTransaction');
         } else {
             $id = auth()->user()->id;
-            $tr = Transaction::with('user', 'detailTransaction')
-                ->whereIn('service'['hostel']);
+            $tr = Transaction::with('user', 'detailTransaction')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
+                $q->where('user_id', $id);
+            })->where('service', 'hostel');
         }
 
         if ($request->service != null)
-            $tr = $tr->where('service', $request->service);
+            $tr = $tr->where('service', 'like', '%' . $request->service . '%');
 
         if ($request->start != null) {
             $tr = $tr->whereDate('created_at', '>=', $request->start)->whereDate('created_at', '<=', $request->end);
@@ -33,8 +34,14 @@ class TransactionController extends Controller
 
     public function detail($id)
     {
-        $transaction = Transaction::with('detailTransaction.product', 'detailTransaction.hostelRoom.hostel', 'guest')->find($id);
-        // dd($transaction);
+        if (auth()->user()->role == 0) {
+            $transaction = Transaction::with('detailTransaction.product', 'detailTransaction.hostelRoom.hostel', 'guest', 'bookDate')->findOrFail($id);
+        } else {
+            $idUser = auth()->user()->id;
+            $transaction = Transaction::with('detailTransaction.product', 'detailTransaction.hostelRoom.hostel', 'guest', 'bookDate')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($idUser) {
+                $q->where('user_id', $idUser);
+            })->findOrFail($id);
+        }
 
         return view('admin.transaction-detail', compact('transaction'));
     }

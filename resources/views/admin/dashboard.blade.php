@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Dashboard'])
+@extends('admin.layout',['title' => 'Dashboard',"url" => "#"])
 
 @section('content-admin')
 <!--begin::Row-->

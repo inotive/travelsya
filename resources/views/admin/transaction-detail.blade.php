@@ -4,7 +4,7 @@
 
 @if($transaction->service == 'hostel')
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
         <!--begin::Card-->
         <div class="card mb-7">
             <!--begin::Card body-->
@@ -51,7 +51,7 @@
         </div>
         <!--end::Card-->
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <!--begin::Card-->
         <div class="card mb-7">
             <!--begin::Card body-->
@@ -94,6 +94,49 @@
         </div>
         <!--end::Card-->
     </div>
+    <div class="col-md-4">
+        <!--begin::Card-->
+        <div class="card mb-7">
+            <!--begin::Card body-->
+            <div class="card-body">
+                <h3 class="card-title align-items-start flex-column">
+                    <span class="card-label fw-bold fs-3 mb-1">Book Date</span>
+                </h3>
+                 <!--begin::Table container-->
+                 <div class="table-responsive">
+                    <!--begin::Table-->
+                    <table class="table align-middle gs-0 gy-4">
+                        <!--begin::Table head-->
+                        <thead>
+                            <tr class="fw-bold text-muted bg-light">
+                                <th class="ps-4 min-w-125px rounded-start">Start</th>
+                                <th class="min-w-125px">End</th>
+                            </tr>
+                        </thead>
+                        <!--end::Table head-->
+                        <!--begin::Table body-->
+                        <tbody>
+                            @foreach($transaction->bookDate as $tr)
+                            <tr>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->start}}</div>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->end}}</div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                        <!--end::Table body-->
+                    </table>
+                    <!--end::Table-->
+                </div>
+                <!--end::Table container-->
+            </div>
+            <!--end::Card body-->
+        </div>
+        <!--end::Card-->
+    </div>
 </div>
 @endif
 <!--begin::Tab Content-->
@@ -120,6 +163,10 @@
                             <tr class="fw-bold text-muted bg-light">
                                 <th class="ps-4 min-w-125px rounded-start">Created</th>
                                 <th class="min-w-125px">Product</th>
+                                @if(str_contains($transaction->service,'ppob'))
+                                <th class="min-w-125px">No Pelanggan</th>
+                                <th class="min-w-125px">Category</th>
+                                @endif
                                 <th class="min-w-125px">Price</th>
                                 <th class="min-w-125px">Status</th>
                                 <th class="min-w-200px text-end rounded-end"></th>
@@ -134,8 +181,16 @@
                                     <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->created_at}}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{($tr->product) ? $tr->product->name : $tr->hostelRoom->hostel->name}}</div>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->product != null ? $tr->product->name : $tr->hostelRoom->hostel->name}}</div>
                                 </td>
+                                @if(str_contains($transaction->service,'ppob'))
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->no_hp}}</div>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->product->category}}</div>
+                                </td>
+                                @endif
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$tr->price}}</div>
                                 </td>

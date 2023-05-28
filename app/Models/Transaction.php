@@ -44,4 +44,14 @@ class Transaction extends Model
     {
         return $this->hasMany(Guest::class);
     }
+
+    /**
+     * Get all of the bookDate for the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bookDate()
+    {
+        return $this->hasMany(BookDate::class);
+    }
 }

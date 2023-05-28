@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Transaction'])
+@extends('admin.layout',['title' => 'Transaction','url' => route('admin.transaction')])
 
 @section('content-admin')
 
@@ -16,6 +16,7 @@
                     <!--begin::Row-->
                     <div class="row g-8">
                         <!--begin::Col-->
+                        @if(auth()->user()->role == 0)
                         <div class="col-lg-3">
                             <!--begin::Select-->
                             <select class="form-select form-select-solid" data-control="select2"
@@ -29,6 +30,7 @@
                             <!--end::Select-->
 
                         </div>
+                        @endif
                         <div class="col-lg-3">
                             <!--begin::Input-->
                             <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start">
@@ -63,7 +65,7 @@
 <div class="d-flex flex-wrap flex-stack pb-7">
     <!--begin::Title-->
     <div class="d-flex flex-wrap align-items-center my-1">
-        <h3 class="fw-bold me-5 my-1">57 Items Found
+        <h3 class="fw-bold me-5 my-1">{{$transactions->count()}} Items Found
             <span class="text-gray-400 fs-6">by Recent Updates ↓</span></h3>
     </div>
     <!--end::Title-->
