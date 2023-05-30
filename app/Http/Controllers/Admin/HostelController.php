@@ -14,4 +14,11 @@ class HostelController extends Controller
 
         return view('admin.hostel', compact('hostels'));
     }
+
+    public function show($id)
+    {
+        $hostel = Hostel::find($id);
+
+        return view('admin.hostel-show', compact('hostel'));
+    }
 }

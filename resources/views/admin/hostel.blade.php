@@ -42,8 +42,7 @@
                                 <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$hostel->is_active}}</div>
                             </td>
                             <td class="text-end">
-                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
-                                    data-id="{{$hostel->id}}" data-category="{{$hostel->category}}" data-name="{{$hostel->name}}" data-value="{{$hostel->value}}" data-is_percent="{{$hostel->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">
+                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit" href="{{route('admin.hostel.show',$hostel->id)}}">
                                     <i class="ki-duotone ki-pencil fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
