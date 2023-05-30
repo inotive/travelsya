@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FeeController;
+use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
@@ -105,11 +106,17 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('/admin/customer', [CustomerController::class, 'index'])->name('admin.customer');
     });
 
+    //dashboard
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+    //transaction
     Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
     Route::post('/admin/transaction/', [AdminTransactionController::class, 'store'])->name('admin.transaction.store');
     Route::get('/admin/transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('admin.transaction.detail');
     Route::put('/admin/transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('admin.transaction.detail.update');
+
+    //hostel
+    Route::get('admin/hostel', [AdminHostelController::class, 'index'])->name('admin.hostel');
 
     //hostel ajax
     Route::post('/admin/hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('admin.hostelroom.ajax');

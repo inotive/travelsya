@@ -59,6 +59,7 @@
                     <!--end:Menu link-->    
                 </a>
                 <!--end:Menu item-->
+                @if(auth()->user()->role == 0)
                 <!--begin:Menu item-->
                 <a href="{{route('admin.customer')}}" class="menu-item {{(Request::segment(2)=="customer") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
@@ -75,6 +76,7 @@
                     <!--end:Menu link-->
                 </a>
                 <!--end:Menu item-->
+                @endif
                 <!--begin:Menu item-->
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
                     <!--begin:Menu link-->
@@ -119,6 +121,7 @@
                     <!--end:Menu content-->
                 </div>
                 <!--end:Menu item-->
+                @if(auth()->user()->role == 0)
                 <!--begin:Menu item-->
                 <a href="{{route('admin.user')}}" class="menu-item {{(Request::segment(2)=="user") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
@@ -176,6 +179,21 @@
                             </i>
                         </span>
                         <span class="menu-title">Kelola Biaya Admin</span>
+                    </span>
+                    <!--end:Menu link-->
+                </a>
+                <!--end:Menu item-->
+                @endif
+                <a href="{{route('admin.hostel')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-color-swatch fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Manajemen Hotel</span>
                     </span>
                     <!--end:Menu link-->
                 </a>
