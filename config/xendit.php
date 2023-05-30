@@ -1,0 +1,6 @@
+<?php
+
+return  [
+    'API_KEY' => ENV('APIKEY_XENDIT_DEV'),
+    'TOKEN_CALLBACK' => ENV('TOKEN_CALLBACK_XENDIT_DEV'),
+];

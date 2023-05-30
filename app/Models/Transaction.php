@@ -56,4 +56,14 @@ class Transaction extends Model
     {
         return $this->hasMany(BookDate::class);
     }
+
+    public function rating()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function historyPoint()
+    {
+        return $this->hasMany(HistoryPoint::class);
+    }
 }

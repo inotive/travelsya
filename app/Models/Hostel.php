@@ -12,16 +12,6 @@ class Hostel extends Model
     protected $guarded = [];
 
     /**
-     * Get all of the detailTransaction for the Hostel
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function detailTransaction()
-    {
-        return $this->hasMany(DetailTransaction::class, 'id', 'hostel_room_id');
-    }
-
-    /**
      * Get the hostelRoom that owns the Hostel
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -39,5 +29,15 @@ class Hostel extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function hostelImage()
+    {
+        return $this->hasMany(HostelImage::class);
+    }
+
+    public function rating()
+    {
+        return $this->hasMany(Rating::class);
     }
 }

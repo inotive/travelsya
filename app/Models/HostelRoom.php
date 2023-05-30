@@ -9,6 +9,32 @@ class HostelRoom extends Model
 {
     use HasFactory;
 
+    public function getImage1Attribute($value)
+    {
+        return url('storage/' . $value);
+    }
+
+    public function getImage2Attribute($value)
+    {
+        if ($value) {
+            return url('storage/' . $value);
+        }
+    }
+
+    public function getImage3Attribute($value)
+    {
+        if ($value) {
+            return url('storage/' . $value);
+        }
+    }
+
+    public function getImage4Attribute($value)
+    {
+        if ($value) {
+            return url('storage/' . $value);
+        }
+    }
+
     /**
      * Get all of the detailTransaction for the Product
      *
@@ -27,5 +53,10 @@ class HostelRoom extends Model
     public function hostel()
     {
         return $this->belongsTo(Hostel::class);
+    }
+
+    public function bookDate()
+    {
+        return $this->hasMany(BookDate::class)->select('id', 'transaction_id', 'hostel_room_id', 'start', 'end');
     }
 }

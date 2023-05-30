@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'point'
     ];
 
     /**
@@ -56,5 +57,15 @@ class User extends Authenticatable
     public function hostel()
     {
         return $this->hasMany(Hostel::class);
+    }
+
+    public function rating()
+    {
+        return $this->hasMany(Rating::class);
+    }
+
+    public function historypoint()
+    {
+        return $this->hasMany(HistoryPoint::class);
     }
 }
