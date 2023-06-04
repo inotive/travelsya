@@ -148,8 +148,8 @@ class PpobController extends Controller
                     //create transaction
                     $transaction = Transaction::create([
                         'no_inv' => $data['no_inv'],
-                        'service' => $data['service'],
-                        'category_id' => $product->category_id,
+                        'service' => $product->service->name,
+                        'service_id' => $product->service_id,
                         'payment' => $data['payment'],
                         'user_id' => $request->user()->id,
                         'status' => $payoutsXendit['status'],

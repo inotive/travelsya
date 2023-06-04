@@ -132,7 +132,7 @@ class HostelController extends Controller
 
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
-                'service' => $data['service'],
+                'service' => $hostel->hostel->service->name,
                 'service_id' => $hostel->hostel->service_id,
                 'payment' => $data['payment'],
                 'user_id' => $request->user()->id,
