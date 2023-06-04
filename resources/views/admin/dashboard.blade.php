@@ -125,14 +125,14 @@
                         <!--end::Link-->
                     </li>
                     <!--end::Item-->
-                    @foreach($categories as $key => $category)
+                    @foreach($services as $key => $service)
                     <!--begin::Item-->
                     <li class="nav-item col-1 mx-0 p-0">
                         <!--begin::Link-->
                         <a class="nav-link d-flex justify-content-center w-100 border-0 h-100"
                             data-bs-toggle="pill" href="#{{$key}}">
                             <!--begin::Subtitle-->
-                            <span class="nav-text text-gray-800 fw-bold fs-6 mb-3">{{$category->name}}</span>
+                            <span class="nav-text text-gray-800 fw-bold fs-6 mb-3">{{$service->name}}</span>
                             <!--end::Subtitle-->
                             <!--begin::Bullet-->
                             <span
@@ -221,9 +221,9 @@
                         <!--end::Table container-->
                     </div>
                     <!--end::Tap pane-->
-                    @foreach($categories as $key => $category)
+                    @foreach($services as $key => $service)
                         @php
-                        $catId = $category->id;
+                        $catId = $service->id;
                         $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){
                         return ($val['category_id'] == $catId);
                         });
