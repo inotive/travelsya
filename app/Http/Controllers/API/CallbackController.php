@@ -102,7 +102,7 @@ class CallbackController extends Controller
                         }
                         $point->deductPoint($transaction->user_id, abs($feepoint), $transaction->id);
                     } else {
-                        $point->addPoint($transaction->user_id, $data['paid_amount'], $transaction->id, $transaction->servvice_id);
+                        $point->addPoint($transaction->user_id, $data['paid_amount'], $transaction->id, $transaction->service_id);
                     }
                 } else {
 
