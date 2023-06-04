@@ -108,7 +108,7 @@ class PpobController extends Controller
                 $price = $product->price;
             }
             $setting = new Setting();
-            $fees = $setting->getFees($data['point'], $product->category_id, $request->user()->id, $price);
+            $fees = $setting->getFees($data['point'], $product->service_id, $request->user()->id, $price);
             if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
             $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees);
 
