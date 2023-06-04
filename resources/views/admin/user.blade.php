@@ -23,7 +23,8 @@
                 <!--begin::Table head-->
                 <thead>
                     <tr class="fw-bold text-muted bg-light">
-                        <th class="ps-4 min-w-325px rounded-start">Email</th>
+                        <th class="ps-4 rounded-start">No</th>
+                        <th class="min-w-125px">Email</th>
                         <th class="min-w-125px">Name</th>
                         <th class="min-w-125px">Role</th>
                         <th class="min-w-200px text-end rounded-end"></th>
@@ -34,6 +35,9 @@
                 <tbody>
                     @foreach($users as $user)
                     <tr>
+                        <td>
+                            <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
+                        </td>
                         <td>
                             <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$user->email}}</div>
                         </td>

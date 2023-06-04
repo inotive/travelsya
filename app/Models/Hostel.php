@@ -40,4 +40,14 @@ class Hostel extends Model
     {
         return $this->hasMany(Rating::class);
     }
+
+    /**
+     * Get the service that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
 }

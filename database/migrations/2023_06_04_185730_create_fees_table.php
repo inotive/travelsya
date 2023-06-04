@@ -8,19 +8,14 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('fees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('service_id')->constrained();
-            $table->string('kode');
-            $table->string('name');
-            $table->string('description');
-            $table->integer('price');
-            $table->boolean('is_active', 1);
+            $table->float('value');
+            $table->boolean('percent');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,11 +23,9 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('fees');
     }
 };

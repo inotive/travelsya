@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Validator;
 use App\Models\DetailTransaction;
+use App\Services\Point;
 use App\Services\Setting;
+use Illuminate\Support\Facades\DB;
 
 class PpobController extends Controller
 {
@@ -90,19 +92,23 @@ class PpobController extends Controller
 
             //get data
             $data['user_id'] = $request->user()->id;
-            $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($data['service']) . "-" . time();
-            $product = Product::find($data['detail'][0]['product_id']);
+            $product = Product::with('service')->find($data['detail'][0]['product_id']);
+            $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
             if ($data['inquiry'] == 1) {
                 $inquiry = $this->mymili->inquiry([
                     'no_hp' => $data['detail'][0]['no_hp'],
                     'nom' => $data['detail'][0]['name_cek']
                 ]);
-                $price = $inquiry['tagihan'];
+                if (isset($inquiry['tagihan'])) {
+                    $price = $inquiry['tagihan'];
+                } else {
+                    return ResponseFormatter::error($inquiry, 'Inquiry invalid');
+                }
             } else {
                 $price = $product->price;
             }
             $setting = new Setting();
-            $fees = $setting->getFees($data['point'], $data['service'], $request->user()->id, $price);
+            $fees = $setting->getFees($data['point'], $product->category_id, $request->user()->id, $price);
             if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
             $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees);
 
@@ -134,16 +140,25 @@ class PpobController extends Controller
                 $data['link'] = $payoutsXendit['invoice_url'];
 
                 // create transaction
-                unset($data['detail']);
-                unset($data['fees']);
-                unset($data['inquiry']);
-                unset($data['point']);
-                $transaction = Transaction::create($data);
+                // unset($data['detail']);
+                // unset($data['fees']);
+                // unset($data['inquiry']);
+                // unset($data['point']);
+                DB::transaction(function () use ($data, $product, $request, $amount, $fees, $payoutsXendit) {
+                    //create transaction
+                    $transaction = Transaction::create([
+                        'no_inv' => $data['no_inv'],
+                        'service' => $data['service'],
+                        'category_id' => $product->category_id,
+                        'payment' => $data['payment'],
+                        'user_id' => $request->user()->id,
+                        'status' => $payoutsXendit['status'],
+                        'link' => $payoutsXendit['invoice_url'],
+                    ]);
 
-                if ($transaction) {
                     // create detail transaction
                     $data['detail'] = $request->input('detail');
-                    $detailTransaction = DetailTransaction::create([
+                    DetailTransaction::create([
                         'transaction_id' => $transaction->id,
                         'product_id' => $product['id'],
                         'price' => $amount,
@@ -151,15 +166,13 @@ class PpobController extends Controller
                         'no_hp' => $data['detail'][0]['no_hp'],
                         'status' => "PROCESS"
                     ]);
-                    if ($detailTransaction) {
-                        return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
-                    } else {
-                        return ResponseFormatter::error(null, 'Payment failed');
+                    if ($data['point']) {
+                        //deductpoint
+                        $point = new Point;
+                        $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
                     }
-                } else {
-                    $transaction->delete();
-                    return ResponseFormatter::error(null, 'Payment failed');
-                }
+                });
+                return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
             }
 
 

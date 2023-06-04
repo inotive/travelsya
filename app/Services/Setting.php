@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Helpers\ResponseFormatter;
+use App\Models\Fee;
 use App\Models\Setting as ModelsSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,8 +25,8 @@ class Setting
 
     public function getFees($point, $service, $userid, $price)
     {
-        $fee = ModelsSetting::where('category', 'fee')->where('name', $service)->first();
-        if ($fee->is_percent) {
+        $fee = Fee::where('service_id', $service)->first();
+        if ($fee->percent) {
             $feeValue = $price * ($fee->value / 100);
         } else {
             $feeValue = $fee->value;

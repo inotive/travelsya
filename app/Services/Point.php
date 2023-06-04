@@ -3,20 +3,21 @@
 namespace App\Services;
 
 use App\Models\HistoryPoint;
+use App\Models\Point as ModelsPoint;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class Point
 {
-    public function addPoint($id, $amount, $transid)
+    public function addPoint($id, $amount, $transid, $categoryid)
     {
-        $min = Setting::where('category', 'point')->where('name', 'min')->first();
+        $point = ModelsPoint::where('service_id', $categoryid)->first();
 
-        if ($amount >= $min->vavlue) {
+        if ($amount >= $point->multiple) {
             $user = User::find($id);
 
-            $calpoint = $this->calculatePoint($amount);
+            $calpoint = $this->calculatePoint($amount, $categoryid);
             $sumpoint = $user->point + $calpoint;
             $user->update(['point' => $sumpoint]);
             HistoryPoint::create([
@@ -52,12 +53,10 @@ class Point
         return $user->point;
     }
 
-    public function calculatePoint($amount)
+    public function calculatePoint($amount, $categoryid)
     {
-        $point = Setting::where('category', 'point')->where('name', 'point')->first();
-        $min = Setting::where('category', 'point')->where('name', 'min')->first();
+        $point = ModelsPoint::where('service_id', $categoryid)->first();
 
-
-        if ($amount >= $min->vavlue) return ($amount / $min) * $point->value;
+        return ($amount / $point->multiple) * $point->value;
     }
 }

@@ -23,13 +23,12 @@
                         <!--begin::Table head-->
                         <thead>
                             <tr class="fw-bold text-muted bg-light">
-                                <th class="min-w-75px rounded-start">Vendor User</th>
-                                <th class="min-w-125px">Email</th>
-                                <th class="min-w-125px">Hostel Name</th>
-                                <th class="min-w-125px">City</th>
-                                <th class="min-w-125px">Category</th>
-                                <th class="min-w-125px">Hostel Room</th>
-                                <th class="min-w-125px">Status</th>
+                                <th class="rounded-start">No</th>
+                                <th class="w-75px rounded-start">Image</th>
+                                <th class="min-w-75px rounded-start">Mitra</th>
+                                <th class="min-w-75px rounded-start">Phone</th>
+                                <th class="min-w-125px">Alamat</th>
+                                <th class="min-w-125px">Email Login</th>
                                 <th class="min-w-150px text-end rounded-end"></th>
                             </tr>
                         </thead>
@@ -39,37 +38,47 @@
                             @foreach($vendors as $vendor)
                             <tr>
                                 <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6"><img class="img-thumbnail" src="{{count($vendor->hostelImage) >0 ? $vendor->hostelImage[0]->image : 'not found'}}" alt="">{{count($vendor->hostelImage) >0 ? '': 'not found'}}</div>
+                                </td>
+                                <td>
                                     <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->user->name}}</div>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->user->phone}}</div>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{substr($vendor->address,0,24)}}</div>
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->user->email}}</div>
                                 </td>
-                                <td>
-                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->name}}</div>
-                                </td>
-                                <td>
-                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->city}}</div>
-                                </td>
-                                <td>
-                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->category}}</div>
-                                </td>
-                                <td>
-                                    <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$vendor->hostelRoom->count()}}
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{($vendor->is_active) ? "active" : 'in-active' }}
-                                    </div>
-                                </td>
                                 <td class="text-end">
-                                    <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
+                                    <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm btn-edit"
                                         data-id="{{$vendor->id}}" data-active="{{$vendor->is_active}}" data-bs-toggle="modal" data-bs-target="#edit">
                                         <i class="ki-duotone ki-pencil fs-2">
                                             <span class="path1"></span>
                                             <span class="path2"></span>
                                         </i>
                                     </a>
+                                </td>
+                                <td class="text-end">
+                                    <form action="{{route('admin.mitra.destroy')}}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                    <input type="hidden" name="id" value="{{$vendor->id}}">
+                                    <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit">
+                                        <i class="ki-duotone ki-trash fs-2">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                            <span class="path3"></span>
+                                            <span class="path4"></span>
+                                            <span class="path5"></span>
+                                        </i>
+                                    </button >
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

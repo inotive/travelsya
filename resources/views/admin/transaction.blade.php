@@ -116,7 +116,7 @@
     <div id="kt_project_users_table_pane" class="tab-pane fade show active">
         <!--begin::Tables Widget 11-->
         <div class="card mb-5 mb-xl-8">
-            <!--begin::Header-->
+            {{-- <!--begin::Header-->
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
                     <span class="card-label fw-bold fs-3 mb-1">List Transaction</span>
@@ -126,7 +126,7 @@
                     <i class="ki-duotone ki-plus fs-2"></i>New Transaction</a>
                 </div>
             </div>
-            <!--end::Header-->
+            <!--end::Header--> --}}
             <!--begin::Body-->
             <div class="card-body py-3">
                 <!--begin::Table container-->
@@ -205,7 +205,7 @@
 
 {{-- modal --}}
 <!--begin::Modal - New Target-->
-<div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
+{{-- <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <!--begin::Modal content-->
@@ -355,7 +355,7 @@
         <!--end::Modal content-->
     </div>
     <!--end::Modal dialog-->
-</div>
+</div> --}}
 <!--end::Modal - New Target-->
 @endsection
 @push('add-script')
