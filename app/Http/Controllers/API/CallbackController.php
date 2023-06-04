@@ -50,7 +50,7 @@ class CallbackController extends Controller
                 if ($data['status'] == 'PAID') {
                     // make trans Mymili
                     foreach ($transaction->detailTransaction as $detail) {
-                        if ($transaction->service_id != 7 || $transaction->service_id != 8) {
+                        if ($transaction->service_id <> 7 || $transaction->service_id <> 8) {
                             if ($detail->no_hp) {
                                 $requestMymili = $this->mymili->transaction([
                                     'no_hp' => $detail->no_hp,
@@ -69,7 +69,7 @@ class CallbackController extends Controller
                             } else {
                                 $status = "FAIL";
                             }
-                        } elseif ($transaction->service == "hostel") {
+                        } elseif ($transaction->service_id == 7 || $transaction->service_id == 8) {
                             $status = "SUCCESS";
                             $message = "SUCCESS HOSTEL";
                         } else {
