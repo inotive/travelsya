@@ -225,7 +225,7 @@
                         @php
                         $catId = $service->id;
                         $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){
-                        return ($val['category_id'] == $catId);
+                        return ($val['service_id'] == $catId);
                         });
                         // dd(collect($filterTransactions));
                         @endphp

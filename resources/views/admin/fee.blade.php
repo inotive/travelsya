@@ -114,12 +114,12 @@
                      <div class="row g-9 mb-8">
                         <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <select class="form-select form-select-solid" name="category_id">
+                            <select class="form-select form-select-solid" name="service_id">
                                 @foreach($services as $service)
                                 <option value="{{$service->id}}">{{$service->name}}</option>
                                 @endforeach
                             </select>
-                            @error('category_id')
+                            @error('service_id')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -213,12 +213,12 @@
                     <div class="row g-9 mb-8">
                         <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <select class="form-select form-select-solid" id="category_id" name="category_id">
+                            <select class="form-select form-select-solid" id="service_id" name="service_id">
                                 @foreach($services as $service)
                                 <option value="{{$service->id}}">{{$service->name}}</option>
                                 @endforeach
                             </select>
-                            @error('category_id')
+                            @error('service_id')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>

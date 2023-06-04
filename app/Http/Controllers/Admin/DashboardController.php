@@ -11,8 +11,8 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $transactions = Transaction::with('detailTransaction.hostelRoom.hostel', 'detailTransaction.product', 'service')->orderBy('created_at', 'desc')->get();
-        $categories = Service::all();
-        return view('admin.dashboard', compact('transactions', 'categories'));
+        $transactions = Transaction::with('detailTransaction.hostelRoom.hostel', 'detailTransaction.product', 'services')->orderBy('created_at', 'desc')->get();
+        $services = Service::all();
+        return view('admin.dashboard', compact('transactions', 'services'));
     }
 }

@@ -72,8 +72,8 @@ class Transaction extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function category()
+    public function services()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 }
