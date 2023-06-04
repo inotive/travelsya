@@ -9,10 +9,10 @@
     <!--end::Heaeder menu toggle-->
 
     <!--begin::Header Logo-->
-    <div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0">
+    <div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0 mt-3 mb-3">
         <a href="{{route('home')}}">
-            <img alt="Logo" src="{{asset('assets/media/logos/demo2.png')}}" class="logo-default h-25px" />
-            <img alt="Logo" src="{{asset('assets/media/logos/demo2-sticky.png')}}" class="logo-sticky h-25px" />
+            <img alt="Logo" src="{{asset('assets/media/logos/logo.png')}}" class="logo-default h-40px" />
+            <img alt="Logo" src="{{asset('assets/media/logos/logo.png')}}" class="logo-sticky h-40px" />
         </a>
     </div>
     <!--end::Header Logo-->

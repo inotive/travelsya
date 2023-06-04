@@ -1,7 +1,7 @@
 @extends('layouts.web')
 
 @section('content-web')
-@include('layouts.include.banner')
+@include('layouts.include.carousel')
 
 <!--end::Toolbar-->
 <div id="kt_content_container" class="container-xxl mb-30">
