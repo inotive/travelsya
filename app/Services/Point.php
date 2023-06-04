@@ -14,7 +14,7 @@ class Point
     {
         $point = ModelsPoint::where('service_id', $categoryid)->first();
 
-        if ($amount >= $point->multiple) {
+        if ((int)$amount >= (int)$point->multiple) {
             $user = User::find($id);
 
             $calpoint = $this->calculatePoint($amount, $categoryid);
