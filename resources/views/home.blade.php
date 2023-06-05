@@ -3,6 +3,10 @@
 @section('content-web')
 @include('layouts.include.carousel')
 
+<!-- start::Menubar -->
+@include('layouts.include.home.menu-bar')
+<!-- end::Menubar -->
+
 <!--end::Toolbar-->
 <div id="kt_content_container" class="container-xxl mb-30">
 

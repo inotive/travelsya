@@ -34325,6 +34325,7 @@ fieldset:disabled .btn {
   --bs-text-gray-700: #5E6278;
   --bs-text-gray-800: #3F4254;
   --bs-text-gray-900: #181C32;
+  --bs-text-red: #a91d23;
   --bs-border-color: #F4F4F4;
   --bs-border-dashed-color: #E1E3EA;
   --bs-component-active-color: #ffffff;
@@ -57879,6 +57880,10 @@ label.rating-label:hover~.rating-label>.svg-icon {
 
 .text-danger {
   color: var(--bs-text-danger) !important;
+}
+
+.text-red {
+  color: var(--bs-text-red) !important;
 }
 
 .text-inverse-danger {

@@ -43,7 +43,6 @@
       <img src="{{asset('assets/media/banner-2.jpg')}}" />
     </div>
   </div>
-  <div class="swiper-pagination"></div>
   <div class="swiper-button-prev"></div>
   <div class="swiper-button-next"></div>
   <div class="swiper-scrollbar"></div>
@@ -65,10 +64,6 @@
       autoplay: {
         delay: 2500,
         disableOnInteraction: false,
-      },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
       },
     });
 </script>
