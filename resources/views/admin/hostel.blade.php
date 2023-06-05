@@ -2,16 +2,47 @@
 
 @section('content-admin')
 <!--begin::Tables Widget 11-->
-<div class="card mb-5 mb-xl-8">
-    <!--begin::Header-->
-    <div class="card-header border-0 pt-5">
-        <h3 class="card-title align-items-start flex-column">
-            <span class="card-label fw-bold fs-3 mb-1">List Hostel</span>
-        </h3>
-        <div class="card-toolbar">
+<div class="d-flex justify-content-center gap-10">
+
+    <div class="card mb-5 mb-xl-8  w-50">
+        <!--begin::Header-->
+        <div class="card-header border-0 pt-5 flex-column">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bold fs-3 mb-1">List Hostel</span>
+            </h3>
+            <div class="d-flex justify-content-between">
+                <span>Bintang 3</span>
+                <span>10 Room</span>
+            </div>
+            <div class="card-toolbar">
+            </div>
         </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body py-3">
+            <div class="d-flex flex-wrap gap-10 flex-row">
+                <button class="btn btn-info flex-fill px-15">Detail Hotel</button>
+                <button class="btn btn-info flex-fill px-15">Setting Hotel</button>
+                <button class="btn btn-info flex-fill px-15">Setting Hotel Photo</button>
+                <button class="btn btn-info flex-fill px-15">Setting Hotel Room</button>
+            </div>
+        </div>
+        <!--begin::Body-->
     </div>
-    <!--end::Header-->
+    <div class="card mb-5 mb-xl-8 w-50">
+        <!--begin::Header-->
+        <div class="card-header border-0 pt-5 flex-column">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bold fs-3 mb-1">List Hostel</span>
+            </h3>
+            <div class="d-flex justify-content-between">
+                <span>Bintang 3</span>
+                <span>10 Room</span>
+            </div>
+            <div class="card-toolbar">
+            </div>
+        </div>
+        <!--end::Header-->
         <!--begin::Body-->
         <div class="card-body py-3">
             <!--begin::Table container-->
@@ -66,6 +97,7 @@
             <!--end::Table container-->
         </div>
         <!--begin::Body-->
+    </div>
 </div>
 <!--end::Tables Widget 11-->
 

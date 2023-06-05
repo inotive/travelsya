@@ -19,13 +19,11 @@ class TransactionController extends Controller
     {
         if (auth()->user()->role == 0) {
             $tr = Transaction::with('user', 'detailTransaction');
-            $hostels = Hostel::with('hostelRoom')->get();
         } else {
             $id = auth()->user()->id;
             $tr = Transaction::with('user', 'detailTransaction')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
                 $q->where('user_id', $id);
             })->where('service', 'hostel');
-            $hostels = Hostel::with('hostelRoom')->where('user_id', $id)->get();
         }
 
         if ($request->service != null)
@@ -36,7 +34,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $tr->orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.transaction', compact('transactions', 'hostels'));
+        return view('admin.transaction', compact('transactions'));
     }
 
     public function detail($id)

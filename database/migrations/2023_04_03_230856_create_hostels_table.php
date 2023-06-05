@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('contact')->nullable();
             $table->string('website')->nullable();
+            $table->string('star')->nullable();
             $table->boolean('is_active');
             $table->softDeletes();
             $table->timestamps();
