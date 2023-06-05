@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('hostels', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
+            $table->foreignId('service_id')->constrained();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->integer('price')->nullable();

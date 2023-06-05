@@ -66,4 +66,14 @@ class Transaction extends Model
     {
         return $this->hasMany(HistoryPoint::class);
     }
+
+    /**
+     * Get the category that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function services()
+    {
+        return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
 }

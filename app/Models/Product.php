@@ -18,4 +18,14 @@ class Product extends Model
     {
         return $this->hasMany(DetailTransaction::class, 'id', 'product_id');
     }
+
+    /**
+     * Get the service that owns the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
 }

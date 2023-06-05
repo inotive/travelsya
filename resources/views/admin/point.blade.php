@@ -23,10 +23,10 @@
                     <!--begin::Table head-->
                     <thead>
                         <tr class="fw-bold text-muted bg-light">
+                            <th class="ps-4 rounded-start">No</th>
                             <th class="min-w-75px ps-4 rounded-start">Category</th>
-                            <th class="min-w-125px">Name</th>
+                            <th class="min-w-125px">Kelipatan Transaksi</th>
                             <th class="min-w-125px">Value</th>
-                            <th class="min-w-125px">Percent</th>
                             <th class="min-w-150px text-end rounded-end"></th>
                         </tr>
                     </thead>
@@ -36,21 +36,20 @@
                         @foreach($points as $point)
                         <tr>
                             <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->category}}</div>
+                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
                             </td>
                             <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->name}}</div>
+                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->service->name}}</div>
+                            </td>
+                            <td>
+                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->multiple}}</div>
                             </td>
                             <td>
                                 <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->value}}</div>
                             </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($point->is_percent) ? "Yes" : "No"}}
-                                </div>
-                            </td>
                             <td class="text-end">
                                 <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
-                                    data-id="{{$point->id}}" data-category="{{$point->category}}" data-name="{{$point->name}}" data-value="{{$point->value}}" data-is_percent="{{$point->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">
+                                    data-id="{{$point->id}}" data-categoryid="{{$point->category_id}}" data-multiple="{{$point->multiple}}" data-value="{{$point->value}}" data-bs-toggle="modal" data-bs-target="#edit">
                                     <i class="ki-duotone ki-pencil fs-2">
                                         <span class="path1"></span>
                                         <span class="path2"></span>
@@ -105,25 +104,20 @@
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
                         <!--begin::Title-->
-                        <h1 class="mb-3">Create Fee Admin</h1>
+                        <h1 class="mb-3">Create Point</h1>
                         <!--end::Title-->
                     </div>
                     <!--end::Heading-->
                      <!--begin::Input group-->
                      <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
+                            <select class="form-select form-select-solid" name="service_id">
+                                @foreach($services as $service)
+                                <option value="{{$service->id}}">{{$service->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('service_id')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -135,22 +129,18 @@
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Value</label>
-                            <input type="text" name="value" class="form-control form-control-solid"  placeholder="Value">
-                            @error('value')
+                            <label class="required fs-6 fw-semibold mb-2">Kelipatan</label>
+                            <input type="text" name="multiple" class="form-control form-control-solid"  placeholder="Kelipatan">
+                            @error('multiple')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="is_percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
+                            <label class="required fs-6 fw-semibold mb-2">Value</label>
+                            <input type="text" name="value" class="form-control form-control-solid"  placeholder="Value">
+                            @error('value')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -209,51 +199,43 @@
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
                         <!--begin::Title-->
-                        <h1 class="mb-3">Update Fee Admin</h1>
+                        <h1 class="mb-3">Update Point</h1>
                         <!--end::Title-->
                     </div>
                     <!--end::Heading-->
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" id="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" id="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
+                        <div class="col-md-12 fv-row">
+
+                        <label class="required fs-6 fw-semibold mb-2">Category</label>
+                        <select class="form-select form-select-solid" id="service_id" name="service_id">
+                            @foreach($services as $service)
+                            <option value="{{$service->id}}">{{$service->name}}</option>
+                            @endforeach
+                        </select>
+                        @error('service_id')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{$message}}</strong>
+                            </span>
+                        @enderror
                         </div>
                     </div>
                     <!--end::Input group-->
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Value</label>
-                            <input type="text" name="value" id="value" class="form-control form-control-solid"  placeholder="Value">
-                            @error('value')
+                            <label class="required fs-6 fw-semibold mb-2">Kelipatan</label>
+                            <input type="text" name="multiple" id="multiple" class="form-control form-control-solid"  placeholder="Kelipatan">
+                            @error('multiple')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
+                            <label class="required fs-6 fw-semibold mb-2">Value</label>
+                            <input type="text" name="value" id="value" class="form-control form-control-solid"  placeholder="Value">
+                            @error('value')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -289,17 +271,16 @@
     $('#edit').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
-        var category = button.data('category');
-        var name = button.data('name');
+        var categoryid = button.data('categoryid');
+        var multiple = button.data('multiple');
         var value = button.data('value');
         var is_percent = button.data('is_percent');
 
         var modal = $(this);
         modal.find('#id').val(id);
-        modal.find('#category').val(category);
-        modal.find('#name').val(name);
+        modal.find('#multiple').val(multiple);
         modal.find('#value').val(value);
-        $(`#percent option[value=${is_percent}]`).attr('selected','selected');
+        $(`#category_id option[value=${categoryid}]`).attr('selected','selected');
 
     });
 });

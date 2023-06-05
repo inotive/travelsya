@@ -3,21 +3,23 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Setting;
+use App\Models\Fee;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class FeeController extends Controller
 {
     public function index()
     {
-        $fees = Setting::where('category', 'fee')->paginate(10);
+        $fees = Fee::with('service')->paginate(10);
+        $services = Service::all();
 
-        return view('admin.fee', compact('fees'));
+        return view('admin.fee', compact('fees', 'services'));
     }
 
     public function updateFee(Request $request)
     {
-        $setting = Setting::find($request->id);
+        $setting = Fee::find($request->id);
         $setting->update($request->all());
         toast('Fee admin has been updated', 'success');
         return redirect()->back();
@@ -25,7 +27,7 @@ class FeeController extends Controller
 
     public function storeFee(Request $request)
     {
-        Setting::create($request->all());
+        Fee::create($request->all());
         toast('Fee admin has been created', 'success');
         return redirect()->back();
     }

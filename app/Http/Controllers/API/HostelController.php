@@ -87,10 +87,10 @@ class HostelController extends Controller
         }
 
         $data = $request->all();
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($data['service']) . "-" . time();
-        $hostel = HostelRoom::find($data['hostel_room_id']);
+        $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $data['service'], $request->user()->id, $hostel->price);
+        $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->price);
 
         //cekpoint 
         if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
@@ -128,11 +128,12 @@ class HostelController extends Controller
         ]);
 
         // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees) {
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel) {
 
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
-                'service' => $data['service'],
+                'service' => $hostel->hostel->service->name,
+                'service_id' => $hostel->hostel->service_id,
                 'payment' => $data['payment'],
                 'user_id' => $request->user()->id,
                 'status' => $payoutsXendit['status'],
@@ -166,11 +167,13 @@ class HostelController extends Controller
                     'name' => $guest['name'],
                 ]);
             }
-
-            //deductpoint
-            $point = new Point;
-            $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+            if ($data['point']) {
+                //deductpoint
+                $point = new Point;
+                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+            }
         });
+
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }

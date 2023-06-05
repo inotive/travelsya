@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Point;
+use App\Models\Service;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
@@ -10,14 +13,16 @@ class PointController extends Controller
 {
     public function index()
     {
-        $points = Setting::where('category', 'point')->paginate(10);
+        $points = Point::with('service')->paginate(10);
+        $services = Service::all();
 
-        return view('admin.point', compact('points'));
+
+        return view('admin.point', compact('points', 'services'));
     }
 
     public function updatePoint(Request $request)
     {
-        $setting = Setting::find($request->id);
+        $setting = Point::find($request->id);
         $setting->update($request->all());
         toast('Point has been updated', 'success');
         return redirect()->back();
@@ -25,7 +30,7 @@ class PointController extends Controller
 
     public function storePoint(Request $request)
     {
-        Setting::create($request->all());
+        Point::create($request->all());
         toast('Point has been created', 'success');
         return redirect()->back();
     }

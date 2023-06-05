@@ -90,6 +90,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('/admin/mitra', [MitraController::class, 'index'])->name('admin.mitra');
         Route::put('/admin/mitra', [MitraController::class, 'updateMitra'])->name('admin.mitra.update');
         Route::post('/admin/mitra', [MitraController::class, 'storeMitra'])->name('admin.mitra.store');
+        Route::delete('/admin/mitra', [MitraController::class, 'destroyMitra'])->name('admin.mitra.destroy');
 
 
         //point
@@ -111,7 +112,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     //transaction
     Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
-    Route::post('/admin/transaction/', [AdminTransactionController::class, 'store'])->name('admin.transaction.store');
+    // Route::post('/admin/transaction/', [AdminTransactionController::class, 'store'])->name('admin.transaction.store');
     Route::get('/admin/transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('admin.transaction.detail');
     Route::put('/admin/transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('admin.transaction.detail.update');
 
