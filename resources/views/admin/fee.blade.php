@@ -8,68 +8,141 @@
         <h3 class="card-title align-items-start flex-column">
             <span class="card-label fw-bold fs-3 mb-1">List Fee Admin</span>
         </h3>
-        <div class="card-toolbar">
-            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-            <i class="ki-duotone ki-plus fs-2"></i>New Fee Admin</a>
-        </div>
+{{--        <div class="card-toolbar">--}}
+{{--            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">--}}
+{{--            <i class="ki-duotone ki-plus fs-2"></i>New Fee Admin</a>--}}
+{{--        </div>--}}
     </div>
     <!--end::Header-->
         <!--begin::Body-->
         <div class="card-body py-3">
             <!--begin::Table container-->
             <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle gs-0 gy-4">
-                    <!--begin::Table head-->
+                <table class="table table-bordered">
                     <thead>
-                        <tr class="fw-bold text-muted bg-light">
-                            <th class="min-w-75px ps-4 rounded-start">Category</th>
-                            <th class="min-w-125px">Name</th>
-                            <th class="min-w-125px">Value</th>
-                            <th class="min-w-125px">Percent</th>
-                            <th class="min-w-150px text-end rounded-end"></th>
-                        </tr>
+                    <tr class="fw-bold fs-6 text-gray-800">
+                        <th>No.</th>
+                        <th>Layanan</th>
+                        <th>Tipe Biaya Admin</th>
+                        <th>Besaran Biya Admin</th>
+                        <th>Aksi</th>
+                    </tr>
                     </thead>
-                    <!--end::Table head-->
-                    <!--begin::Table body-->
                     <tbody>
-                        @foreach($fees as $fee)
+                    @php
+                        $i = 1;
+                    @endphp
                         <tr>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->category}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->name}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->value}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($fee->is_percent) ? "Yes" : "No"}}
-                                </div>
-                            </td>
-                            <td class="text-end">
-                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
-                                    data-id="{{$fee->id}}" data-category="{{$fee->category}}" data-name="{{$fee->name}}" data-value="{{$fee->value}}" data-is_percent="{{$fee->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">
-                                    <i class="ki-duotone ki-pencil fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </a>
-                            </td>
+                            <td>1</td>
+                            <td>Hotel</td>
+                            <td>Presentase</td>
+                            <td>15 %</td>
+                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
                         </tr>
-                        @endforeach
+                    <tr>
+                        <td>2</td>
+                        <td>Hotel</td>
+                        <td>Presentase</td>
+                        <td>15 %</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Pulsa & Data</td>
+                        <td>Rupiah</td>
+                        <td>Rp. 2.500</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>PLN</td>
+                        <td>Rupiah</td>
+                        <td>Rp. 2.500</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>BPJS</td>
+                        <td>Rupiah</td>
+                        <td>Rp. 2.500</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>PDAM</td>
+                        <td>Rupiah</td>
+                        <td>Rp. 2.500</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>TV Berbayar</td>
+                        <td>Rupiah</td>
+                        <td>Rp. 2.500</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>Pajak</td>
+                        <td>Rupiah</td>
+                        <td>Rp. 2.500</td>
+                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                    </tr>
                     </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                {{$fees->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
-                            </td>
-                        </tr>
-                        </tfoot>
-                    <!--end::Table body-->
                 </table>
-                <!--end::Table-->
+{{--                <!--begin::Table-->--}}
+{{--                <table class="table align-middle gs-0 gy-4">--}}
+{{--                    <!--begin::Table head-->--}}
+{{--                    <thead>--}}
+{{--                        <tr class="fw-bold text-muted bg-light">--}}
+{{--                            <th class="min-w-75px ps-4 rounded-start">Category</th>--}}
+{{--                            <th class="min-w-125px">Layanan</th>--}}
+{{--                            <th class="min-w-125px">Value</th>--}}
+{{--                            <th class="min-w-125px">Percent</th>--}}
+{{--                            <th class="min-w-150px text-end rounded-end"></th>--}}
+{{--                        </tr>--}}
+{{--                    </thead>--}}
+{{--                    <!--end::Table head-->--}}
+{{--                    <!--begin::Table body-->--}}
+{{--                    <tbody>--}}
+
+{{--                        @foreach($fees as $fee)--}}
+{{--                        <tr>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->category}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->name}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->value}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($fee->is_percent) ? "Yes" : "No"}}--}}
+{{--                                </div>--}}
+{{--                            </td>--}}
+{{--                            <td class="text-end">--}}
+{{--                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"--}}
+{{--                                    data-id="{{$fee->id}}" data-category="{{$fee->category}}" data-name="{{$fee->name}}" data-value="{{$fee->value}}" data-is_percent="{{$fee->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">--}}
+{{--                                    <i class="ki-duotone ki-pencil fs-2">--}}
+{{--                                        <span class="path1"></span>--}}
+{{--                                        <span class="path2"></span>--}}
+{{--                                    </i>--}}
+{{--                                </a>--}}
+{{--                            </td>--}}
+{{--                        </tr>--}}
+{{--                        @endforeach--}}
+{{--                    </tbody>--}}
+{{--                    <tfoot>--}}
+{{--                        <tr>--}}
+{{--                            <td>--}}
+{{--                                {{$fees->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}--}}
+{{--                            </td>--}}
+{{--                        </tr>--}}
+{{--                        </tfoot>--}}
+{{--                    <!--end::Table body-->--}}
+{{--                </table>--}}
+{{--                <!--end::Table-->--}}
             </div>
             <!--end::Table container-->
         </div>
@@ -131,7 +204,7 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
@@ -158,7 +231,7 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>

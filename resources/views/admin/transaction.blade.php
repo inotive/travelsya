@@ -121,10 +121,10 @@
                 <h3 class="card-title align-items-start flex-column">
                     <span class="card-label fw-bold fs-3 mb-1">List Transaction</span>
                 </h3>
-                <div class="card-toolbar">
-                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>New Transaction</a>
-                </div>
+{{--                <div class="card-toolbar">--}}
+{{--                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">--}}
+{{--                    <i class="ki-duotone ki-plus fs-2"></i>New Transaction</a>--}}
+{{--                </div>--}}
             </div>
             <!--end::Header-->
             <!--begin::Body-->
@@ -156,7 +156,7 @@
                                     <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$transaction->no_inv}}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$transaction->service}}
+                                    <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{strtoupper($transaction->service)}}
                                     </div>
                                 </td>
                                 <td>
@@ -166,7 +166,12 @@
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{$transaction->status }}
+
+                                        @if($transaction->status == "SUCCESS")
+                                            <span class="badge badge-rounded badge-success">{{$transaction->status}}</span>
+                                        @elseif($transaction->status == "PENDING")
+                                            <span class="badge badge-rounded badge-warning">{{$transaction->status}}</span>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="text-end">
@@ -197,7 +202,7 @@
             <!--begin::Body-->
         </div>
         <!--end::Tables Widget 11-->
-        
+
     </div>
     <!--end::Tab pane-->
 </div>
@@ -252,7 +257,7 @@
                             <label class="required fs-6 fw-semibold mb-2">Room</label>
                             <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Select Room" name="hostel_room_id" id="hostel_room_id">
                                 <option id="hostel_room_0" value="">Select hostel...</option>
-                               
+
                             </select>
                         </div>
                     </div>
@@ -283,7 +288,7 @@
                         <!--end::Col-->
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-12 fv-row">
@@ -336,7 +341,7 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
@@ -360,7 +365,7 @@
 @endsection
 @push('add-script')
 <script>
-        var today = new Date(); 
+        var today = new Date();
         $('.js-daterangepicker').daterangepicker({
             minDate:today,
         });

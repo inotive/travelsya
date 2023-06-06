@@ -15,7 +15,11 @@ use App\Http\Controllers\HostelController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\Partner\DashboardPartnerController;
+use App\Http\Controllers\Partner\ManagementHotelController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\ProductController as ProductAdminController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -102,10 +106,32 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::put('/admin/fee', [FeeController::class, 'updateFee'])->name('admin.fee.update');
         Route::post('/admin/fee', [FeeController::class, 'storeFee'])->name('admin.fee.store');
 
+        //Product
+        Route::get('/admin/product', [ProductAdminController::class , 'index'])->name('admin.product');
+
+        //fee
+        Route::get('/admin/fee', [FeeController::class, 'index'])->name('admin.fee');
+        Route::put('/admin/fee', [FeeController::class, 'updateFee'])->name('admin.fee.update');
+        Route::post('/admin/fee', [FeeController::class, 'storeFee'])->name('admin.fee.store');
+
         //customer
         Route::get('/admin/customer', [CustomerController::class, 'index'])->name('admin.customer');
     });
+    Route::prefix('partner')
+        ->namespace('partner')
+        ->group(function () {
+            Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
 
+
+            Route::prefix('management-hotel')->group(function (){
+                Route::get('', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+                Route::get('detail-hotel', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
+//            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+                Route::get('setting-hotel-information', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
+                Route::get('setting-photo', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
+                Route::get('setting-room', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
+            });
+        });
     //dashboard
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 

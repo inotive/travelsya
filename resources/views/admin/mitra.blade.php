@@ -19,6 +19,41 @@
                 <!--begin::Table container-->
                 <div class="table-responsive">
                     <!--begin::Table-->
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr class="fw-bold fs-6 text-gray-800">
+                            <th>No.</th>
+                            <th>Vendor</th>
+                            <th>Email Login</th>
+                            <th>Hotel or Hostel</th>
+                            <th>No.Telp</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @for($i = 1; $i < 10; $i++)
+                            <tr>
+                                <td class="text-center">{{$i}}</td>
+                                <td class="text-center">Hemra Corp</td>
+                                <td class="text-center">userlogin{{$i}}@gmail.com</td>
+                                <td class="text-center"><span class="badge badge-info">Hotel Hemra</span></td>
+                                <td class="text-center">0812-1232-1232</td>
+                                <td class="text-center">
+                                    @if($i % 2 == 0)
+                                        <span class="badge badge-success">Aktif</span>
+                                    @else
+                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                    @endif
+                                </td>
+                                <td><button class="btn btn-warning btn-sm p-2">Edit Data</button></td>
+                            </tr>
+                        @endfor
+                        </tbody>
+                    </table>
+
                     <table class="table align-middle gs-0 gy-4">
                         <!--begin::Table head-->
                         <thead>
@@ -211,7 +246,7 @@
                         <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Name Hostel</label>
                             <input class="form-control form-control-solid" id="name" name="name" required/>
-                                
+
                             @error('name')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -254,7 +289,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">City</label>
                             <input class="form-control form-control-solid" id="city" name="city" required/>
-                                
+
                             @error('city')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -264,7 +299,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">category</label>
                             <input class="form-control form-control-solid" id="category" name="category" required/>
-                                
+
                             @error('category')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
