@@ -206,7 +206,7 @@ class Mymili
                     $messageArray["nama_pelanggan"] = $message[4];
                     $messageArray["bulan_tahun_tagihan"] = $message[10];
                     $messageArray["pemakaian"] = explode(' ', $message[11])[0];
-                } elseif ($data['nom'] = "CEKTELKOM") {
+                } elseif ($data['nom'] == "CEKTELKOM") {
                     $message = explode("/", $responseArray['MESSAGE']);
                     $messageArray["status"] = $message[0];
                     $messageArray["nama_pelanggan"] = $message[1];
