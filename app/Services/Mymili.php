@@ -194,18 +194,28 @@ class Mymili
 
             $responseArray = ResponseFormatter::namespacedXMLToArray($responseRaw);
 
-            $message = explode("|", $responseArray['MESSAGE']);
             $messageArray = [];
+            $message = [];
             if ($responseArray['RESPONSECODE'] == 00) {
-
-                for ($i = 0; $i < 11; $i++) {
+                if ($data['nom'] == "CEKPLN") {
+                    $message = explode("|", $responseArray['MESSAGE']);
+                    for ($i = 0; $i < 11; $i++) {
+                        $messageArray["status"] = $message[0];
+                        $messageArray["tagihan"] = $message[1];
+                        $messageArray["no_pelanggan"] = $message[2];
+                        $messageArray["ref_id"] = $message[3];
+                        $messageArray["nama_pelanggan"] = $message[4];
+                        $messageArray["bulan_tahun_tagihan"] = $message[10];
+                        $messageArray["pemakaian"] = $message[11];
+                    };
+                } elseif ($data['nom'] = "CEKTELKOM") {
+                    $message = explode("/", $responseArray['MESSAGE']);
                     $messageArray["status"] = $message[0];
-                    $messageArray["tagihan"] = $message[1];
-                    $messageArray["no_pelanggan"] = $message[2];
-                    $messageArray["ref_id"] = $message[3];
-                    $messageArray["nama_pelanggan"] = $message[4];
-                    $messageArray["bulan_tahun_tagihan"] = $message[10];
-                };
+                    $messageArray["nama_pelanggan"] = $message[1];
+                    $messageArray["tagihan"] = $message[2];
+                } else {
+                    $messageArray['status'] = 'none';
+                }
             } else {
                 $messageArray['status'] = $message[0];
             }
