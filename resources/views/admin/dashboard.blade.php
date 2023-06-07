@@ -1,6 +1,8 @@
 @extends('admin.layout',['title' => 'Dashboard',"url" => "#"])
 
 @section('content-admin')
+@if (auth()->user()->role == 0) 
+
 <!--begin::Row-->
 <div class="row gy-5 g-xl-10">
     <!--begin::Col-->
@@ -17,7 +19,7 @@
                 <!--begin::Section-->
                 <div class="d-flex flex-column my-7">
                     <!--begin::Number-->
-                    <h4 class="text-gray-800 lh-1 ls-n2">3 Partner</h4>
+                    <h4 class="text-gray-800">{{$card['partner']}} Partner</h4>
                     <!--end::Number-->
                 </div>
                 <!--end::Section-->
@@ -41,7 +43,7 @@
                 <!--begin::Section-->
                 <div class="d-flex flex-column my-7">
                     <!--begin::Number-->
-                    <h4 class="text-gray-800 lh-1 ls-n2">3 Transaksi</h4>
+                    <h4 class="text-gray-800">{{ $card['transactionToday']}} Transaksi</h4>
                     <!--end::Number-->
                 </div>
                 <!--end::Section-->
@@ -65,7 +67,7 @@
                 <!--begin::Section-->
                 <div class="d-flex flex-column my-7">
                     <!--begin::Number-->
-                    <h4 class=" text-gray-800 lh-1 ls-n2">Rp. 12.123.123</h4>
+                    <h4 class=" text-gray-800">{{ $card['sumDayTransaction']}}</h4>
                     <!--end::Number-->
                 </div>
                 <!--end::Section-->
@@ -89,7 +91,7 @@
                 <!--begin::Section-->
                 <div class="d-flex flex-column my-7">
                     <!--begin::Number-->
-                    <h4 class="text-gray-800 lh-1 ls-n2">Rp. 1.111.234</h4>
+                    <h4 class="text-gray-800">{{ $card['sumMonthTransaction']}}</h4>
                     <!--end::Number-->
                 </div>
                 <!--end::Section-->
@@ -100,6 +102,7 @@
     </div>
     <!--end::Col-->
 </div>
+
 <div class="row gy-5 g-xl-10">
     <!--begin::Col-->
     <div class="col-xl-12 mb-xl-10">
@@ -320,5 +323,6 @@
     </div>
     <!--end::Col-->
 </div>
+@endif
 <!--end::Row-->
 @endsection

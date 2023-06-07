@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('bed_type');
             $table->integer('price');
             $table->string('guest');
+            $table->integer('roomsize')->nullable();
+            $table->integer('maxextrabed')->nullable();
+            $table->integer('extrabedprice')->nullable();
             $table->string('image_1');
             $table->string('image_2')->nullable();
             $table->string('image_3')->nullable();

@@ -119,6 +119,8 @@ Route::middleware(['auth', 'role'])->group(function () {
     //hostel
     Route::get('admin/hostel', [AdminHostelController::class, 'index'])->name('admin.hostel');
     Route::get('admin/hostel/{id}', [AdminHostelController::class, 'show'])->name('admin.hostel.show');
+    Route::post('admin/hostel/main-image', [AdminHostelController::class, 'mainImage'])->name('admin.hostel.main-image');
+
 
     //hostel ajax
     Route::post('/admin/hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('admin.hostelroom.ajax');
