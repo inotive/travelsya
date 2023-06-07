@@ -206,13 +206,13 @@ class Mymili
                         $messageArray["ref_id"] = $message[3];
                         $messageArray["nama_pelanggan"] = $message[4];
                         $messageArray["bulan_tahun_tagihan"] = $message[10];
-                        $messageArray["pemakaian"] = $message[11];
+                        $messageArray["pemakaian"] = explode(' ', $message[11])[0];
                     };
                 } elseif ($data['nom'] = "CEKTELKOM") {
                     $message = explode("/", $responseArray['MESSAGE']);
                     $messageArray["status"] = $message[0];
                     $messageArray["nama_pelanggan"] = $message[1];
-                    $messageArray["tagihan"] = explode(' ', $message[2])[0];
+                    $messageArray["tagihan"] = $message[2];
                 } else {
                     $messageArray['status'] = 'none';
                 }
