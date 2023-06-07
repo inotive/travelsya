@@ -217,10 +217,10 @@ class Mymili
                     $messageArray["nama_pelanggan"] = explode("=", $message[7])[1];
                     $messageArray["tagihan"] = explode("=", $message[11])[1];
                 } else {
-                    $messageArray['status'] = 'none';
+                    $messageArray['status'] = 'NOM belum terdaftar';
                 }
             } else {
-                $messageArray['status'] = $message[0];
+                $messageArray['status'] = $responseArray['MESSAGE'];
             }
 
             $response = $messageArray;
