@@ -40948,6 +40948,10 @@ h6,
   width: calc(1.5em + 1.55rem + 2px);
 }
 
+.btn.btn-rounded {
+  border-radius: 2em;
+}
+
 .btn.btn-icon:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush) {
   border: 0;
 }

@@ -8,8 +8,7 @@
 <!-- end::Menubar -->
 
 <!--end::Toolbar-->
-<div id="kt_content_container" class="container-xxl mb-30">
-
+<div id="kt_content_container" class="container-xl mb-30">
     <!--begin::Row-->
     <div class="row gy-5 g-xl-10">
         <!--begin::Col-->
@@ -150,7 +149,7 @@
                                                         <a class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden w-125px h-125px py-6" data-bs-toggle="pill" href="#pesawat">
                                                             <!--begin::Icon-->
                                                             <div class="nav-icon">
-                                                                <img alt="" src="{{asset('assets/media/products-categories/icon-plan.png')}}" class="w-50px" />
+                                                                <img alt="" src="{{asset('assets/media/products-categories/icon-plane.png')}}" class="w-50px" />
                                                             </div>
                                                             <!--end::Icon-->
 
@@ -567,7 +566,7 @@
                                                     <a class="nav-link d-flex justify-content-between flex-column flex-center overflow-hidden w-125px h-125px py-6" data-bs-toggle="pill" href="#pesawat">
                                                         <!--begin::Icon-->
                                                         <div class="nav-icon">
-                                                            <img alt="" src="{{asset('assets/media/products-categories/icon-plan.png')}}" class="w-50px" />
+                                                            <img alt="" src="{{asset('assets/media/products-categories/icon-plane.png')}}" class="w-50px" />
                                                         </div>
                                                         <!--end::Icon-->
 
@@ -1218,7 +1217,7 @@
         @endif
         <div class="col-md-3">
             <div class="card">
-                <img class="card-img-top h-200px" src="{{(count($hostel['hostel_image']) > 0) ? $hostel['hostel_image'][0]['image'] : '../assets/media/stock/food/img-2.jpg'}}" alt="Card image cap">
+                <img class="card-img-top h-200px" src="{{(count($hostel['hostel_image']) > 0) ? $hostel['hostel_image'][0]['image'] : 'https://images.unsplash.com/photo-1596436889106-be35e843f974?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80'}}" alt="Card image cap">
                 <div class="card-body p-5">
                     <span class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hostel['name']}}</span>
                     <span class="text-gray-400 fw-semibold d-block fs-6 mt-1">Tanah Abang, {{$hostel['city']}}</span>
