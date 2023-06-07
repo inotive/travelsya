@@ -2,17 +2,17 @@
 
 @section('content-admin')
 <!--begin::Tables Widget 11-->
-<div class="d-flex justify-content-center gap-10">
-
-    <div class="card mb-5 mb-xl-8  w-50">
+<div class="d-flex gap-10 flex-row-auto flex-wrap">
+    @forelse($hostels as $hostel)
+    <div class="card mb-5 mb-xl-8" style="width:48%;">
         <!--begin::Header-->
         <div class="card-header border-0 pt-5 flex-column">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">List Hostel</span>
+                <span class="card-label fw-bold fs-3 mb-1">{{$hostel->name}}</span>
             </h3>
             <div class="d-flex justify-content-between">
-                <span>Bintang 3</span>
-                <span>10 Room</span>
+                <span>Bintang {{$hostel->star}}</span>
+                <span>{{$hostel->hostelRoom->count()}} Room</span>
             </div>
             <div class="card-toolbar">
             </div>
@@ -21,15 +21,20 @@
         <!--begin::Body-->
         <div class="card-body py-3">
             <div class="d-flex flex-wrap gap-10 flex-row">
-                <button class="btn btn-info flex-fill px-15">Detail Hotel</button>
-                <button class="btn btn-info flex-fill px-15">Setting Hotel</button>
-                <button class="btn btn-info flex-fill px-15">Setting Hotel Photo</button>
-                <button class="btn btn-info flex-fill px-15">Setting Hotel Room</button>
+                <a href="{{route('admin.hostel.show',$hostel->id)}}" class="btn btn-primary flex-fill px-15">Detail Hotel</a>
+                <a class="btn btn-primary flex-fill px-15">Setting Hotel</a>
+                <a class="btn btn-primary flex-fill px-15">Setting Hotel Photo</a>
+                <a class="btn btn-primary flex-fill px-15">Setting Hotel Room</a>
             </div>
         </div>
         <!--begin::Body-->
     </div>
-    <div class="card mb-5 mb-xl-8 w-50">
+    @empty
+    <div class="d-flex justify-content-center">
+        <span>Not Found</span>
+    </div>
+    @endforelse
+    <div class="card mb-5 mb-xl-8" style="width:48%;">
         <!--begin::Header-->
         <div class="card-header border-0 pt-5 flex-column">
             <h3 class="card-title align-items-start flex-column">
