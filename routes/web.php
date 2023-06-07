@@ -121,6 +121,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         ->namespace('partner')
         ->group(function () {
             Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
+            Route::get('riwayat-booking', [\App\Http\Controllers\Partner\RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
 
 
             Route::prefix('management-hotel')->group(function (){
@@ -128,8 +129,8 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::get('detail-hotel', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
 //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
                 Route::get('setting-hotel-information', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
-                Route::get('setting-photo', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
-                Route::get('setting-room', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
+                Route::get('setting-hotel-photo', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
+                Route::get('setting-hotel-room', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
             });
         });
     //dashboard

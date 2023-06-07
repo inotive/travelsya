@@ -43,12 +43,12 @@
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
 				@include('admin.include.header')
-                
+
 				<!--begin::Wrapper-->
                 <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
 
                     @include('admin.include.sidebar')
-                    
+
                     <!--begin::Main-->
                     <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
                         <!--begin::Content wrapper-->
@@ -87,7 +87,7 @@
                                             </li>
 											<!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-												
+
 												<a href="#" class="text-muted text-hover-primary">{{$br}}</a>
 												</li>
                                             <!--end::Item-->
@@ -105,7 +105,7 @@
                             <div id="kt_app_content" class="app-content flex-column-fluid">
                                 <!--begin::Content container-->
                                 <div id="kt_app_content_container" class="app-container container-fluid">
-                                  
+
                                     @yield('content-admin')
 
                                 </div>
@@ -115,7 +115,7 @@
                         </div>
                         <!--end::Content wrapper-->
                         <!--begin::Footer-->
-                        
+
                         @include('admin.include.footer')
 
                     </div>
@@ -127,7 +127,7 @@
 			<!--end::Page-->
 		</div>
 		<!--end::App-->
-		
+
 		@include('sweetalert::alert')
 		<!--begin::Javascript-->
 		<script>var hostUrl = "assets/";</script>
@@ -164,6 +164,7 @@
 
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
+
 		@stack("add-script")
 	</body>
 	<!--end::Body-->

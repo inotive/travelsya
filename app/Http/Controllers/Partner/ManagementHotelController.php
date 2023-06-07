@@ -24,7 +24,7 @@ class ManagementHotelController extends Controller
     }
     public function settingRoom()
     {
-        return view('admin.partner.management-hotel.setting-room');
+        return view('admin.partner.management-hotel.setting-rooms');
     }
     public function settingPhoto()
     {

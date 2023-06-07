@@ -42,10 +42,43 @@
                     <!--end:Menu content-->
                 </div>
                 <!--end:Menu item-->
-                <!--begin:Menu item-->
-                <a href="{{route('admin.dashboard')}}" class="menu-item {{(Request::segment(2)=="dashboard") ? 'here' : ''}} menu-accordion">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
+                @if(auth()->user()->role == 1)
+                    <!--begin:Menu item-->
+                    <a href="{{route('partner.dashboard')}}" class="menu-item {{(Request::segment(2)=="dashboard") ? 'here' : ''}} menu-accordion">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-home fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Dashboards</span>
+                    </span>
+                        <!--end:Menu link-->
+                    </a>
+                    <!--end:Menu item-->
+                    <a href="{{route('partner.riwayat-booking')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="ki-duotone ki-color-swatch fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Riwayat Booking</span>
+                    </span>
+                        <!--end:Menu link-->
+                    </a>
+                @endif
+                @if(auth()->user()->role == 0)
+                    <!--begin:Menu item-->
+                    <a href="{{route('admin.dashboard')}}" class="menu-item {{(Request::segment(2)=="dashboard") ? 'here' : ''}} menu-accordion">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-11 fs-2">
                                 <span class="path1"></span>
@@ -56,10 +89,9 @@
                         </span>
                         <span class="menu-title">Dashboards</span>
                     </span>
-                    <!--end:Menu link-->
-                </a>
-                <!--end:Menu item-->
-                @if(auth()->user()->role == 0)
+                        <!--end:Menu link-->
+                    </a>
+                    <!--end:Menu item-->
                 <!--begin:Menu item-->
                 <a href="{{route('admin.customer')}}" class="menu-item {{(Request::segment(2)=="customer") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
@@ -75,12 +107,10 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
-                <!--end:Menu item-->
-                @endif
-                <!--begin:Menu item-->
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
+                    <!--begin:Menu item-->
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
                         <span class="menu-icon">
                             <i class="ki-duotone ki-element-plus fs-2">
                                 <span class="path1"></span>
@@ -93,25 +123,29 @@
                         <span class="menu-title">Laporan</span>
                         <span class="menu-arrow"></span>
                     </span>
-                    <!--end:Menu link-->
-                    <!--begin:Menu sub-->
-                    <div class="menu-sub menu-sub-accordion">
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.transaction')}}" >
+                        <!--end:Menu link-->
+                        <!--begin:Menu sub-->
+                        <div class="menu-sub menu-sub-accordion">
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.transaction')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                <span class="menu-title">Riwayat Transaksi</span>
-                            </a>
-                            <!--end:Menu link-->
+                                    <span class="menu-title">Riwayat Transaksi</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
                         </div>
-                        <!--end:Menu item-->
+                        <!--end:Menu sub-->
                     </div>
-                    <!--end:Menu sub-->
-                </div>
+                    <!--end:Menu item-->
                 <!--end:Menu item-->
+
+                @endif
+
                 <!--begin:Menu item-->
                 <div class="menu-item pt-5">
                     <!--begin:Menu content-->
@@ -201,7 +235,7 @@
                 <!--end:Menu item-->
                 @endif
                 @if(auth()->user()->role == 1)
-                    <a href="{{route('admin.hostel')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
+                    <a href="{{route('partner.management.hotel')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
@@ -215,31 +249,7 @@
                         <!--end:Menu link-->
                     </a>
 
-                <a href="{{route('admin.hostel')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="ki-duotone ki-color-swatch fs-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                        </span>
-                        <span class="menu-title">Manajemen Hotel</span>
-                    </span>
-                    <!--end:Menu link-->
-                </a>
-                    <a href="{{route('admin.hostel')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="ki-duotone ki-color-swatch fs-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                        </span>
-                        <span class="menu-title">Riwayat Booking</span>
-                    </span>
-                        <!--end:Menu link-->
+
                     </a>
                 <!--end:Menu item-->
                 @endif
