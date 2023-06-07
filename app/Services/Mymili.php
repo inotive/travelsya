@@ -215,7 +215,7 @@ class Mymili
                     $message = explode(" ", $responseArray['MESSAGE']);
                     $messageArray["status"] = $message[3];
                     $messageArray["nama_pelanggan"] = explode("=", $message[7])[1];
-                    $messageArray["tagihan"] = explode("=", $message[10])[1];
+                    $messageArray["tagihan"] = explode("=", $message[11])[1];
                 } else {
                     $messageArray['status'] = 'none';
                 }
