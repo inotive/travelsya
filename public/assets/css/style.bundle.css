@@ -34325,6 +34325,7 @@ fieldset:disabled .btn {
   --bs-text-gray-700: #5E6278;
   --bs-text-gray-800: #3F4254;
   --bs-text-gray-900: #181C32;
+  --bs-text-red: #a91d23;
   --bs-border-color: #F4F4F4;
   --bs-border-dashed-color: #E1E3EA;
   --bs-component-active-color: #ffffff;
@@ -40945,6 +40946,10 @@ h6,
   padding: 0;
   height: calc(1.5em + 1.55rem + 2px);
   width: calc(1.5em + 1.55rem + 2px);
+}
+
+.btn.btn-rounded {
+  border-radius: 2em;
 }
 
 .btn.btn-icon:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush) {
@@ -57879,6 +57884,10 @@ label.rating-label:hover~.rating-label>.svg-icon {
 
 .text-danger {
   color: var(--bs-text-danger) !important;
+}
+
+.text-red {
+  color: var(--bs-text-red) !important;
 }
 
 .text-inverse-danger {
