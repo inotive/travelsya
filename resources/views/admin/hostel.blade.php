@@ -22,7 +22,7 @@
         <div class="card-body py-3">
             <div class="d-flex flex-wrap gap-10 flex-row">
                 <a href="{{route('admin.hostel.show',$hostel->id)}}" class="btn btn-primary flex-fill px-15">Detail Hotel</a>
-                <a class="btn btn-primary flex-fill px-15">Setting Hotel</a>
+                <a href="{{route('admin.hostel.edit',$hostel->id)}}" class="btn btn-primary flex-fill px-15">Setting Hotel</a>
                 <a class="btn btn-primary flex-fill px-15">Setting Hotel Photo</a>
                 <a class="btn btn-primary flex-fill px-15">Setting Hotel Room</a>
             </div>
@@ -107,107 +107,6 @@
 <!--end::Tables Widget 11-->
 
 
-{{-- modal --}}
-<!--begin::Modal - New Target-->
-<div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content rounded">
-            <!--begin::Modal header-->
-            <div class="modal-header pb-0 border-0 justify-content-end">
-                <!--begin::Close-->
-                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                </div>
-                <!--end::Close-->
-            </div>
-            <!--begin::Modal header-->
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.fee.store')}}">
-                    @csrf
-                    <!--begin::Heading-->
-                    <div class="mb-13 text-center">
-                        <!--begin::Title-->
-                        <h1 class="mb-3">Create Fee Admin</h1>
-                        <!--end::Title-->
-                    </div>
-                    <!--end::Heading-->
-                     <!--begin::Input group-->
-                     <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <!--end::Input group-->
-                    
-                    <!--begin::Input group-->
-                    <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Value</label>
-                            <input type="text" name="value" class="form-control form-control-solid"  placeholder="Value">
-                            @error('value')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="is_percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <!--end::Input group-->
-                    
-                    <!--begin::Actions-->
-                    <div class="text-center">
-                        <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
-                        <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                            <span class="indicator-label">Submit</span>
-                            <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                        </button>
-                    </div>
-                    <!--end::Actions-->
-                </form>
-                <!--end:Form-->
-            </div>
-            <!--end::Modal body-->
-        </div>
-        <!--end::Modal content-->
-    </div>
-    <!--end::Modal dialog-->
-</div>
-<!--end::Modal - New Target-->
 
 
 <!--begin::Modal - New Target-->
@@ -311,26 +210,3 @@
 </div>
 <!--end::Modal - New Target-->
 @endsection
-
-@push('add-script')
-<script>
- $(function() {
-    $('#edit').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var category = button.data('category');
-        var name = button.data('name');
-        var value = button.data('value');
-        var is_percent = button.data('is_percent');
-
-        var modal = $(this);
-        modal.find('#id').val(id);
-        modal.find('#category').val(category);
-        modal.find('#name').val(name);
-        modal.find('#value').val(value);
-        $(`#percent option[value=${is_percent}]`).attr('selected','selected');
-
-    });
-});
-</script>
-@endpush
