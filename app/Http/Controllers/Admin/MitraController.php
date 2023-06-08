@@ -12,7 +12,8 @@ class MitraController extends Controller
 {
     public function index()
     {
-        $vendors = Hostel::with('user', 'hostelRoom')->paginate(10);
+        $vendors = Hostel::with('user', 'hostelRoom', 'hostelImage')->paginate(10);
+        // dd($vendors);
         $users = User::where('role', 1)->get();
 
         return view('admin.mitra', compact('vendors', 'users'));
@@ -41,6 +42,13 @@ class MitraController extends Controller
         Hostel::create(['name' => ucwords($request->name), 'user_id' => $request->user_id, 'is_active' => $request->active, 'city' => $request->city, 'category' => $request->category]);
 
         toast('Mitra has been created', 'success');
+        return redirect()->back();
+    }
+
+    public function destroyMitra(Request $request)
+    {
+        Hostel::find($request->id)->delete();
+        toast('Hostel has been deleted', 'danger');
         return redirect()->back();
     }
 }

@@ -19,8 +19,10 @@
                 <!--begin::Table head-->
                 <thead>
                     <tr class="fw-bold text-muted bg-light">
-                        <th class="ps-4 min-w-325px rounded-start">Email</th>
+                        <th class="ps-4 rounded-start">No</th>
+                        <th class="min-w-125px">Email</th>
                         <th class="min-w-125px">Name</th>
+                        <th class="min-w-125px">Phone</th>
                         <th class="min-w-125px">Point</th>
                     </tr>
                 </thead>
@@ -30,10 +32,16 @@
                     @foreach($customers as $customer)
                     <tr>
                         <td>
+                            <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
+                        </td>
+                        <td>
                             <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$customer->email}}</div>
                         </td>
                         <td>
                             <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$customer->name}}</div>
+                        </td>
+                        <td>
+                            <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$customer->phone}}</div>
                         </td>
                         <td>
                             <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$customer->point}}</div>

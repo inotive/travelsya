@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaction_id')->constrained();
             $table->foreignId('product_id')->nullable()->constrained();
-            $table->foreignId('hostel_room_id')->nullable()->constrained();
+            $table->foreignId('hostel_room_id')->nullable()->constrained(table: 'hostel_rooms');
             $table->integer('qty');
             $table->integer('price');
             $table->string('no_hp')->nullable();

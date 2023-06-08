@@ -193,21 +193,34 @@ class Mymili
             ])->getBody()->getContents();
 
             $responseArray = ResponseFormatter::namespacedXMLToArray($responseRaw);
-
-            $message = explode("|", $responseArray['MESSAGE']);
+            // dd(ResponseFormatter::namespacedXMLToArray($responseRaw));
             $messageArray = [];
+            $message = [];
             if ($responseArray['RESPONSECODE'] == 00) {
-
-                for ($i = 0; $i < 11; $i++) {
+                if ($data['nom'] == "CEKPLN") {
+                    $message = explode("|", $responseArray['MESSAGE']);
                     $messageArray["status"] = $message[0];
                     $messageArray["tagihan"] = $message[1];
                     $messageArray["no_pelanggan"] = $message[2];
                     $messageArray["ref_id"] = $message[3];
                     $messageArray["nama_pelanggan"] = $message[4];
                     $messageArray["bulan_tahun_tagihan"] = $message[10];
-                };
+                    $messageArray["pemakaian"] = explode(' ', $message[11])[0];
+                } elseif ($data['nom'] == "CEKTELKOM") {
+                    $message = explode("/", $responseArray['MESSAGE']);
+                    $messageArray["status"] = $message[0];
+                    $messageArray["nama_pelanggan"] = $message[1];
+                    $messageArray["tagihan"] = $message[2];
+                } elseif (str_contains($data['nom'], "CEKPDAM")) {
+                    $message = explode(" ", $responseArray['MESSAGE']);
+                    $messageArray["status"] = $message[3];
+                    $messageArray["nama_pelanggan"] = explode("=", $message[7])[1];
+                    $messageArray["tagihan"] = explode("=", $message[11])[1];
+                } else {
+                    $messageArray['status'] = 'NOM belum terdaftar';
+                }
             } else {
-                $messageArray['status'] = $message[0];
+                $messageArray['status'] = $responseArray['MESSAGE'];
             }
 
             $response = $messageArray;

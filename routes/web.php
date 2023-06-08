@@ -94,6 +94,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('/admin/mitra', [MitraController::class, 'index'])->name('admin.mitra');
         Route::put('/admin/mitra', [MitraController::class, 'updateMitra'])->name('admin.mitra.update');
         Route::post('/admin/mitra', [MitraController::class, 'storeMitra'])->name('admin.mitra.store');
+        Route::delete('/admin/mitra', [MitraController::class, 'destroyMitra'])->name('admin.mitra.destroy');
 
 
         //point
@@ -138,13 +139,18 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     //transaction
     Route::get('/admin/transaction', [AdminTransactionController::class, 'index'])->name('admin.transaction');
-    Route::post('/admin/transaction/', [AdminTransactionController::class, 'store'])->name('admin.transaction.store');
+    // Route::post('/admin/transaction/', [AdminTransactionController::class, 'store'])->name('admin.transaction.store');
     Route::get('/admin/transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('admin.transaction.detail');
     Route::put('/admin/transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('admin.transaction.detail.update');
 
     //hostel
     Route::get('admin/hostel', [AdminHostelController::class, 'index'])->name('admin.hostel');
     Route::get('admin/hostel/{id}', [AdminHostelController::class, 'show'])->name('admin.hostel.show');
+    Route::post('admin/hostel/main-image', [AdminHostelController::class, 'mainImage'])->name('admin.hostel.main-image');
+    Route::delete('admin/hostel/delete-image', [AdminHostelController::class, 'deleteImage'])->name('admin.hostel.delete-image');
+    Route::get('admin/hostel/{id}/edit', [AdminHostelController::class, 'edit'])->name('admin.hostel.edit');
+    Route::put('admin/hostel/{id}/update', [AdminHostelController::class, 'update'])->name('admin.hostel.update');
+
 
     //hostel ajax
     Route::post('/admin/hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('admin.hostelroom.ajax');
