@@ -23,7 +23,7 @@
             <div class="d-flex flex-wrap gap-10 flex-row">
                 <a href="{{route('admin.hostel.show',$hostel->id)}}" class="btn btn-primary flex-fill px-15">Detail Hotel</a>
                 <a href="{{route('admin.hostel.edit',$hostel->id)}}" class="btn btn-primary flex-fill px-15">Setting Hotel</a>
-                <a class="btn btn-primary flex-fill px-15">Setting Hotel Photo</a>
+                <a href="{{route('admin.hostel.image',$hostel->id)}}" class="btn btn-primary flex-fill px-15">Setting Hotel Photo</a>
                 <a class="btn btn-primary flex-fill px-15">Setting Hotel Room</a>
             </div>
         </div>
@@ -34,75 +34,6 @@
         <span>Not Found</span>
     </div>
     @endforelse
-    <div class="card mb-5 mb-xl-8" style="width:48%;">
-        <!--begin::Header-->
-        <div class="card-header border-0 pt-5 flex-column">
-            <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">List Hostel</span>
-            </h3>
-            <div class="d-flex justify-content-between">
-                <span>Bintang 3</span>
-                <span>10 Room</span>
-            </div>
-            <div class="card-toolbar">
-            </div>
-        </div>
-        <!--end::Header-->
-        <!--begin::Body-->
-        <div class="card-body py-3">
-            <!--begin::Table container-->
-            <div class="table-responsive">
-                <!--begin::Table-->
-                <table class="table align-middle gs-0 gy-4">
-                    <!--begin::Table head-->
-                    <thead>
-                        <tr class="fw-bold text-muted bg-light">
-                            <th class="min-w-75px ps-4 rounded-start">Name</th>
-                            <th class="min-w-125px">Hostel Room</th>
-                            <th class="min-w-125px">Active</th>
-                            <th class="min-w-150px text-end rounded-end"></th>
-                        </tr>
-                    </thead>
-                    <!--end::Table head-->
-                    <!--begin::Table body-->
-                    <tbody>
-                        @foreach($hostels as $hostel)
-                        <tr>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$hostel->name}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$hostel->hostelRoom->count()}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$hostel->is_active}}</div>
-                            </td>
-                            <td class="text-end">
-                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit" href="{{route('admin.hostel.show',$hostel->id)}}">
-                                    <i class="ki-duotone ki-pencil fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                                {{$hostels->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
-                            </td>
-                        </tr>
-                        </tfoot>
-                    <!--end::Table body-->
-                </table>
-                <!--end::Table-->
-            </div>
-            <!--end::Table container-->
-        </div>
-        <!--begin::Body-->
-    </div>
 </div>
 <!--end::Tables Widget 11-->
 

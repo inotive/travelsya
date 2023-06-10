@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Setting Hostel','url'=> route('admin.hostel'),'breadcrumb'=>['Edit Hostel']])
+@extends('admin.layout',['title' => 'Setting Hostel','url'=> route('admin.hostel'),'breadcrumb'=>[$hostel->name]])
 
 @section('content-admin')
 <!--begin::Tables Widget 11-->

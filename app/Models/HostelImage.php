@@ -14,7 +14,7 @@ class HostelImage extends Model
 
     public function getImageAttribute($value)
     {
-        return url('storage/' . $value);
+        return url('storage/hostel/' . $value);
     }
 
     public function hostel()
