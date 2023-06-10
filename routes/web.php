@@ -120,6 +120,12 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::get('admin/hostel', [AdminHostelController::class, 'index'])->name('admin.hostel');
     Route::get('admin/hostel/{id}', [AdminHostelController::class, 'show'])->name('admin.hostel.show');
     Route::post('admin/hostel/main-image', [AdminHostelController::class, 'mainImage'])->name('admin.hostel.main-image');
+    Route::delete('admin/hostel/delete-image', [AdminHostelController::class, 'deleteImage'])->name('admin.hostel.delete-image');
+    Route::get('admin/hostel/{id}/edit', [AdminHostelController::class, 'edit'])->name('admin.hostel.edit');
+    Route::put('admin/hostel/{id}/update', [AdminHostelController::class, 'update'])->name('admin.hostel.update');
+    Route::get('admin/hostel/{id}/image', [AdminHostelController::class, 'showImage'])->name('admin.hostel.image');
+    Route::post('admin/hostel/store-image', [AdminHostelController::class, 'storeImage'])->name('admin.hostel.store-image');
+
 
 
     //hostel ajax
