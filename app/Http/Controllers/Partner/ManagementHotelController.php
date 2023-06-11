@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Hostel;
 use Illuminate\Http\Request;
 
 class ManagementHotelController extends Controller
@@ -11,23 +12,31 @@ class ManagementHotelController extends Controller
     // Daftar Hotel
     public function index()
     {
-        return view('admin.partner.management-hotel.index');
+        $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+
+        return view('admin.partner.management-hotel.index', compact('hostels'));
     }
 
-    public function detailHotel()
+    public function detailHotel($id)
     {
-        return view('admin.partner.management-hotel.detail-hotel');
+        $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
+
+        return view('admin.partner.management-hotel.detail-hotel', compact('hostel'));
     }
-    public function settingHotel()
+    public function settingHotel($id)
     {
-        return view('admin.partner.management-hotel.setting-hotel');
+        $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
+
+        return view('admin.partner.management-hotel.setting-hotel', compact('hostel'));
     }
     public function settingRoom()
     {
         return view('admin.partner.management-hotel.setting-rooms');
     }
-    public function settingPhoto()
+    public function settingPhoto($id)
     {
-        return view('admin.partner.management-hotel.setting-photo');
+        $hostel = Hostel::with('hostelImage')->find($id);
+
+        return view('admin.partner.management-hotel.setting-photo', compact('hostel'));
     }
 }

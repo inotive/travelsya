@@ -108,7 +108,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('/admin/fee', [FeeController::class, 'storeFee'])->name('admin.fee.store');
 
         //Product
-        Route::get('/admin/product', [ProductAdminController::class , 'index'])->name('admin.product');
+        Route::get('/admin/product', [ProductAdminController::class, 'index'])->name('admin.product');
 
         //fee
         Route::get('/admin/fee', [FeeController::class, 'index'])->name('admin.fee');
@@ -125,12 +125,12 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('riwayat-booking', [\App\Http\Controllers\Partner\RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
 
 
-            Route::prefix('management-hotel')->group(function (){
+            Route::prefix('management-hotel')->group(function () {
                 Route::get('', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
-                Route::get('detail-hotel', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
-//            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
-                Route::get('setting-hotel-information', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
-                Route::get('setting-hotel-photo', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
+                Route::get('detail-hotel/{id}', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
+                //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+                Route::get('setting-hotel-information/{id}', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
+                Route::get('setting-hotel-photo/{id}', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
                 Route::get('setting-hotel-room', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
             });
         });

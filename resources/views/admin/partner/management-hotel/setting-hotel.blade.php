@@ -1,68 +1,159 @@
 @extends('admin.layout',['title' => 'Setting Hotel - Hotel A' ,"url" => "#"])
 
 @section('content-admin')
-    <!--begin::Row-->
-    <div class="row gy-5 g-xl-10">
-        <!--begin::Col-->
-        <div class="col-sm-12">
-            <div class="card  card-xl-stretch mb-xl-8">
+   <!--begin::Tables Widget 11-->
+<div class="d-flex flex-row-auto flex-wrap">
+    <div class="row w-100">
+
+        <!--begin::Tables Widget 11-->
+        <div class="card mb-5 mb-xl-8">
+
+            <!--begin::List widget 10-->
+            <div class="card card-flush">
                 <!--begin::Body-->
-                <div class="card-body my-3">
-                    <div class="row gy-3">
-                        <div class="col-8">
-                            <label class="form-label">Nama Hotel</label>
-                                <input type="text" name="hotelname" class="form-control" placeholder="Masukan Nama Hotel">
+                <div class="card-body">
+                    <!--begin:Form-->
+                    <form id="kt_modal_new_target_form" class="form" method="post"
+                        action="{{route('admin.hostel.update',$hostel->id)}}">
+                        @method('put')
+                        @csrf
+                        <input type="hidden" name="id" value="{{$hostel->id}}">
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-8 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Nama Hostel</label>
+                                <input type="text" name="name" id="name" class="form-control form-control-solid"
+                                    placeholder="Masukan nama hostel" value="{{$hostel->name}}">
+                                @error('name')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-4 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Bintang</label>
+                                <input type="text" name="star" id="star" class="form-control form-control-solid"
+                                    placeholder="Bintang" value="{{$hostel->star}}">
+                                @error('star')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-4">
-                            <label class="form-label">Bintang</label>
-                            <select name="rating" id="" class="form-control form-control-lg">
-                                <option value="1">Bintang 1</option>
-                                <option value="2">Bintang 2</option>
-                                <option value="3">Bintang 3</option>
-                                <option value="4">Bintang 4</option>
-                                <option value="5">Bintang 5</option>
-                            </select>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Nomor Telfon</label>
+                                <input type="text" name="phone" id="phone" class="form-control form-control-solid"
+                                    placeholder="Masukan nomor telfon" value="{{$hostel->phone}}">
+                                @error('phone')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Email</label>
+                                <input type="text" name="email" id="email" class="form-control form-control-solid"
+                                    placeholder="Masukan email" value="{{$hostel->email}}">
+                                @error('email')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Nomor Telfon</label>
-                            <input type="number" name="no_telp" class="form-control" placeholder="Masukan nomor telfon">
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-12 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Alamat</label>
+                                <textarea type="text" name="address" id="address" class="form-control form-control-solid"
+                                    placeholder="Masukan alamat">{{$hostel->address}}</textarea>
+                                @error('address')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Email</label>
-                            <input type="number" name="email" class="form-control" placeholder="Masukan Email">
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Check in</label>
+                                <input type="time" name="checkin" id="checkin" class="form-control form-control-solid" value="{{$hostel->checkin}}">
+                                @error('checkin')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Check out</label>
+                                <input type="time" name="checkout" id="checkout" class="form-control form-control-solid" value="{{$hostel->checkout}}">
+                                @error('checkout')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label">Alamat</label>
-                            <textarea class="form-control" name="alamat" cols="2" rows="3" placeholder="Masukan Alamat"></textarea>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-12 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Website</label>
+                                <input type="text" name="website" id="website" class="form-control form-control-solid"
+                                    placeholder="Masukan alamat website berupa URL" value="{{$hostel->website}}">
+                                @error('website')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Check In</label>
-                            <input type="time" name="check_in" id="check_in" class="form-control">
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-12 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Status</label>
+                                <select class="form-select form-select-solid" name="is_active">
+                                    <option value="1" {{$hostel->is_active == 1 ? "selected" : ''}}>Aktif</option>
+                                    <option value="0" {{$hostel->is_active == 0 ? "selected" : ''}}>Tidak Aktif</option>
+                                </select>
+                                @error('is_active')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Check Out</label>
-                            <input type="time" name="check_out" id="check_in" class="form-control">
+                        <!--end::Input group-->
+                        <!--begin::Actions-->
+                        <div class="text-center d-flex flex-row-auto gap-5">
+                            
+                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary flex-fill">
+                                <span class="indicator-label">Simpan Data</span>
+                                <span class="indicator-progress">Please wait...
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                            </button>
+                            <a href="{{route('admin.hostel.show',$hostel->id)}}" type="reset" id="kt_modal_new_target_cancel"
+                                class="btn btn-light flex-fill">Back</a>
                         </div>
-                        <div class="col-12">
-                            <label class="form-label">Website</label>
-                            <input type="text" name="website" id="check_in" class="form-control" placeholder="Masukan Alamat Website Berupa URL">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Status</label>
-                            <select name="state" id="" class="form-control">
-                                <option value="1">Aktif</option>
-                                <option value="0">Tidak Aktif</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <!--end:: Body-->
-                <div class="card-footer d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary w-50">Simpan Data</button>
-                    <button type="button" class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</button>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end:Form-->
                 </div>
             </div>
+            <!--end: Card Body-->
         </div>
-        <!--end::Col-->
+        <!--end::List widget 10-->
     </div>
+    <!--end::Tables Widget 11-->
+</div>
+</div>
+<!--end::Tables Widget 11-->
 @endsection

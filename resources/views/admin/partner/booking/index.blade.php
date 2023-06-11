@@ -3,36 +3,28 @@
 @section('content-admin')
     <div class="card">
         <div class="card-body">
+        <form action="#" method="get">
             <div class="row">
                 <div class="col-3">
 
-                    <select name="hotel" id="" class="form-control" onchange="alert('refresh browser')">
-                        @for($i =0; $i<10; $i++)
-                            <option value="">Hotel {{$i}}</option>
-                        @endfor
+                    <select name="hotel" id="" class="form-control">
+                        @foreach($hostels as $hostel)
+                            <option value="{{$hostel->id}}" {{(isset($_GET['hotel']) && $_GET['hotel'] == $hostel->id) ? 'selected' : ''}}>{{$hostel->name}}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-3">
-                    <div class="input-group" id="kt_td_picker_date_only" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                        <input id="kt_td_picker_date_only_input" type="text" class="form-control" data-td-target="#kt_td_picker_date_only"/>
-                        <span class="input-group-text" data-td-target="#kt_td_picker_date_only" data-td-toggle="datetimepicker">
-        <i class="ki-duotone ki-calendar fs-2"><span class="path1"></span><span class="path2"></span></i>
-    </span>
-                    </div>
+                    <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start" value="{{isset($_GET['start']) ? $_GET['start'] : ''}}">
                 </div>
                 <div class="col-3">
-                    <div class="input-group" id="kt_td_picker_date_only" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                        <input id="kt_td_picker_date_only_input" type="text" class="form-control" data-td-target="#kt_td_picker_date_only"/>
-                        <span class="input-group-text" data-td-target="#kt_td_picker_date_only" data-td-toggle="datetimepicker">
-        <i class="ki-duotone ki-calendar fs-2"><span class="path1"></span><span class="path2"></span></i>
-    </span>
-                    </div>
+                    <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end" value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">
                 </div>
 
                 <div class="col-3">
-                    <button class="btn btn-primary w-100">Cari Data</button>
+                    <button type="submit" class="btn btn-primary w-100">Cari Data</button>
                 </div>
             </div>
+        </form>
         </div>
     </div>
 
@@ -61,27 +53,33 @@
                             </thead>
                             <tbody>
                             @php
-                                $i = 1;
                             @endphp
-                            @for($i; $i< 9; $i++)
+                            @foreach($transactions as $transaction)
                                 <tr>
-                                    <th>{{$i}}</th>
-                                    <th>INV - {{$i}}</th>
-                                    <th>ACS{{$i}}</th>
-                                    <th>{{$i}} Mei 2023</th>
-                                    <th>Customer {{$i}}</th>
-                                    <th>0812 5329 666{{$i}}</th>
-                                    <th>Superior</th>
+                                    <th>{{$loop->iteration}}</th>
+                                    <th>{{$transaction->no_inv}}</th>
+                                    <th>{{$transaction->req_id}}</th>
+                                    <th>{{$transaction->created_at}}</th>
+                                    <th>{{$transaction->user->name}}</th>
+                                    <th>{{$transaction->user->phone}}</th>
+                                    <th>{{$transaction->detailTransaction[0]->hostelRoom->name}}</th>
                                     <th>Room 1</th>
-                                    <th>20 Mei 2023 14:00</th>
-                                    <th>20 Mei 2023 17:50</th>
-                                    <th>Rp. 321.000</th>
-                                    <th><button class="btn btn-warning btn-sm p-4">Edit</button></th>
+                                    <th>{{$transaction->bookDate[0]->start}}</th>
+                                    <th>{{$transaction->bookDate[0]->end}}</th>
+                                    <th>{{$transaction->total}}</th>
+                                    <th><a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-warning btn-sm p-4">Edit</a></th>
                                 </tr>
-                            @endfor
+                            @endforeach
 
 
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="12">
+                                      {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
+                                  </td>
+                                </tr>
+                              </tfoot>
                         </table>
                         {{--                <!--begin::Table-->--}}
                         {{--                <table class="table align-middle gs-0 gy-4">--}}

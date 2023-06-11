@@ -70,14 +70,15 @@ class HostelController extends Controller
         ]);
         $hostel = Hostel::find($request->id);
         for ($i = 0; $i < count($request->image); $i++) {
+            // dd($request->all(), $request->file('image')[$i]);
             $request->file('image')[$i]->storeAs(
                 'hostel/' . Str::slug($hostel->name, '-'),
-                Str::slug($hostel->name) . '-' . time() . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
+                Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
                 'public',
             );
             HostelImage::create([
                 'hostel_id' => $request->id,
-                'image' => Str::slug($hostel->name) . '/' . Str::slug($hostel->name) . '-' . time() . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
+                'image' => Str::slug($hostel->name) . '/' . Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
                 'main' => 0
             ]);
         }

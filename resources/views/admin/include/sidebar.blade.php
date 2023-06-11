@@ -60,7 +60,7 @@
                         <!--end:Menu link-->
                     </a>
                     <!--end:Menu item-->
-                    <a href="{{route('partner.riwayat-booking')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
+                    <a href="{{route('partner.riwayat-booking')}}" class="menu-item {{(Request::segment(2)=="riwayat-booking") ? 'here' : ''}} menu-accordion">
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
@@ -235,7 +235,7 @@
                 <!--end:Menu item-->
                 @endif
                 @if(auth()->user()->role == 1)
-                    <a href="{{route('partner.management.hotel')}}" class="menu-item {{(Request::segment(2)=="hostel") ? 'here' : ''}} menu-accordion">
+                    <a href="{{route('partner.management.hotel')}}" class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">

@@ -10,27 +10,21 @@
                 <div class="card-body my-3">
                     <div class="row gy-3">
                         <div class="col-12">
-                            <h1 class="fw-bold text-primary">Hotel A</h1>
+                            <h1 class="fw-bold text-primary">{{$hostel->name}}</h1>
                         </div>
                         <div class="col-6">
                             <div class="rating">
+                                @for($i=0;$i<$hostel->star;$i++)
                                 <div class="rating-label checked">
                                     <i class="ki-duotone ki-star fs-6"></i>                                                    </div>
-                                <div class="rating-label checked">
-                                    <i class="ki-duotone ki-star fs-6"></i>                                                    </div>
-                                <div class="rating-label checked">
-                                    <i class="ki-duotone ki-star fs-6"></i>                                                    </div>
-                                <div class="rating-label checked">
-                                    <i class="ki-duotone ki-star fs-6"></i>                                                    </div>
-                                <div class="rating-label checked">
-                                    <i class="ki-duotone ki-star fs-6"></i>                                                    </div>
+                                    @endfor
                             </div>
                         </div>
 
-                        <div class="col-6 d-flex justify-content-end fw-medium">10 Rooms</div>
-                        <div class="col-12  fw-medium">Jl. MT Haryono No.5, RW No.85, Damai, Kec. Balikpapan Kota, Kota Balikpapan, Kalimantan Timur 76114</div>
-                        <div class="col-6  fw-medium"><span class="badge badge-info">0811-5555-6666</span></div>
-                        <div class="col-6 d-flex justify-content-end  fw-medium">hotel@gmail.com</div>
+                        <div class="col-6 d-flex justify-content-end fw-medium">{{$hostel->hostelRoom->count()}} Rooms</div>
+                        <div class="col-12  fw-medium">{{$hostel->address}}</div>
+                        <div class="col-6  fw-medium"><span class="badge badge-info">0{{$hostel->phone}}</span></div>
+                        <div class="col-6 d-flex justify-content-end  fw-medium">{{$hostel->email}}</div>
 
                     </div>
                 </div>
@@ -47,15 +41,15 @@
                         <tbody>
                             <tr>
                                 <td class="fw-bold text-dark">Check IN</td>
-                                <td class="text-center text-success fw-bold">20:00</td>
+                                <td class="text-center text-success fw-bold">{{date('H:i',strtotime($hostel->checkin))}}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold text-dark">Check Out</td>
-                                <td class="text-center text-danger fw-bold">20:00</td>
+                                <td class="text-center text-danger fw-bold">{{date('H:i',strtotime($hostel->checkout))}}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold text-dark">Status</td>
-                                <td class="text-center text-danger fw-bold"><span class="badge badge-success">Live</span></td>
+                                <td class="text-center text-danger fw-bold"><span class="badge {{$hostel->is_active == 1 ? 'badge-success' : 'badge-danger'}} ">{{$hostel->is_active == 1 ? 'live' : 'off'}}</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -79,20 +73,20 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
-                                @for($i = 1; $i< 10;$i++)
+                                @foreach($hostel->hostelRoom as $room)
                                     <div class="col-4">
                                         <div class="card border border-light-subtle">
                                             <div class="card-body">
-                                                <img src="{{asset('admin/assets/media/Rooms.jpg')}}" style="width: 100%; height: 150px;" alt="image">
+                                                <img src="{{$room->image_1}}" style="width: 100%; height: 150px;" alt="image">
                                                 <div class="row my-3 gy-2">
                                                     <div class="col-6">
-                                                        <h3 class="card-title fw-bolder">Room A</h3>
+                                                        <h3 class="card-title fw-bolder">{{$room->name}}</h3>
                                                     </div>
                                                     <div class="col-6 d-flex justify-content-end">
-                                                        <span class="badge badge-info">Room {{$i}}</span>
+                                                        <span class="badge badge-info">Room {{$room->totalroom}}</span>
                                                     </div>
                                                     <div class="col-12">
-                                                        <h5 class="fw-bold text-primary">Rp. {{number_format(720000,0,',','.')}}</h5>
+                                                        <h5 class="fw-bold text-primary">{{General::rp($room->price)}}</h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -101,23 +95,39 @@
                                             </div>
                                         </div>
                                     </div>
-                                    @endfor
+                                @endforeach
 
                             </div>
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                             <div class="row">
+                        @foreach($hostel->hostelImage as $image)
+
                                 <div class="col-4">
                                     <div class="card border border-light-subtle">
                                         <div class="card-body">
-                                            <img src="{{asset('admin/assets/media/Rooms.jpg')}}" style="width: 100%; height: 150px;" alt="image">
+                                            <img src="{{$image->image}}" style="width: 100%; height: 150px;" alt="image">
                                         </div>
                                         <div class="card-footer py-2">
+                                            <form action="{{route('admin.hostel.main-image')}}" method="post" class="d-flex flex-column">
+                                                @csrf
+                                                <input type="hidden" name="id" value="{{$image->id}}">
+                                                <input type="hidden" name="hostelid" value="{{$hostel->id}}">
+                                                
                                             <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama</button>
-                                            <button class="btn btn-outline btn-outline btn-sm btn-outline-danger text-dark  w-100">Delete Photo</button>
+
+                                            </form>
+                                            <form action="{{route('admin.hostel.delete-image')}}" method="post" class="d-flex flex-column">
+                                                @csrf
+                                                @method('delete')
+                                                <input type="hidden" name="id" value="{{$image->id}}">
+                                                <button class="btn btn-outline btn-outline btn-sm btn-outline-danger text-dark  w-100">Delete Photo</button>
+                                            </form>
+                                            
                                         </div>
                                     </div>
                                 </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

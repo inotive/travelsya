@@ -116,17 +116,17 @@
     <div id="kt_project_users_table_pane" class="tab-pane fade show active">
         <!--begin::Tables Widget 11-->
         <div class="card mb-5 mb-xl-8">
-            {{-- <!--begin::Header-->
+            <!--begin::Header-->
             <div class="card-header border-0 pt-5">
                 <h3 class="card-title align-items-start flex-column">
                     <span class="card-label fw-bold fs-3 mb-1">List Transaction</span>
                 </h3>
-{{--                <div class="card-toolbar">--}}
-{{--                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">--}}
-{{--                    <i class="ki-duotone ki-plus fs-2"></i>New Transaction</a>--}}
-{{--                </div>--}}
+               {{-- <div class="card-toolbar">
+                   <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
+                   <i class="ki-duotone ki-plus fs-2"></i>New Transaction</a>
+               </div> --}}
             </div>
-            <!--end::Header--> --}}
+            <!--end::Header-->
             <!--begin::Body-->
             <div class="card-body py-3">
                 <!--begin::Table container-->
