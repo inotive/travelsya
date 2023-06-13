@@ -112,8 +112,13 @@
                                             <td>{{$transaction->no_inv}}</td>
                                             <td>{{$transaction->req_id}}</td>
                                             <td>{{$transaction->user->name}}</td>
+                                            @if(isset($transaction['bookDate']))
                                             <td>{{$transaction->bookDate[0]->start}}</td>
                                             <td>{{$transaction->bookDate[0]->end}}</td>
+                                            @else
+                                            <td></td>
+                                            <td></td>
+                                            @endif
                                             <td>{{$transaction->payment_channel}}</td>
                                             <td>{{$transaction->total}}</td>
                                             <td><span class="badge {{($transaction->status == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction->status == "SUCCESS" ? "Lunas" : $transaction->status)}}</span></td>
