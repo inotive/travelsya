@@ -11,7 +11,7 @@ class FeeController extends Controller
 {
     public function index()
     {
-        $fees = Fee::with('service')->paginate(10);
+        $fees = Fee::with('service')->get();
         $services = Service::all();
 
         return view('admin.fee', compact('fees', 'services'));

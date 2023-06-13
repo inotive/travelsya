@@ -300,7 +300,7 @@
  $(function() {
     $('#updateStatus').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
-        var status = button.data('status');
+        var status = button.data('status') != ?:"";
         var id = button.data('id');
         var idtr = button.data('idtr');
         var modal = $(this);

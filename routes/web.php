@@ -131,7 +131,8 @@ Route::middleware(['auth', 'role'])->group(function () {
                 //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
                 Route::get('setting-hotel-information/{id}', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
                 Route::get('setting-hotel-photo/{id}', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
-                Route::get('setting-hotel-room', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
+                Route::get('setting-hotel-room/{id}', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
+                Route::post('setting-hotel-room/{id}', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
             });
         });
     //dashboard

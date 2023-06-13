@@ -13,7 +13,7 @@ class PointController extends Controller
 {
     public function index()
     {
-        $points = Point::with('service')->paginate(10);
+        $points = Point::with('service')->get();
         $services = Service::all();
 
 

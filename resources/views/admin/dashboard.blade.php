@@ -10,7 +10,7 @@
                     <h3  class="card-title fw-bold text-success fs-5  d-block">Jumlah Partner</h3>
                     <div class="py-1">
                         <span  class=" fw-bold text-dark fs-8  d-block">Keseluruhan</span>
-                        <span class="text-dark fs-1 fw-bold me-2">250</span>
+                        <span class="text-dark fs-1 fw-bold me-2">{{$card['partner']}}</span>
                         <span class="fw-semibold text-muted fs-7">Partner</span>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                     <span  class=" fw-bold text-dark fs-8  d-block">Hari Ini</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-1 fw-bold me-2">3</span>
+                        <span class="text-dark fs-1 fw-bold me-2">{{$card['transactionToday']}}</span>
 
                         <span class="fw-semibold text-muted fs-7">Transaksi</span>
                     </div>
@@ -45,7 +45,7 @@
                     <span  class=" fw-bold text-dark fs-8  d-block">Hari Ini</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-5 fw-bold me-2">Rp. 561.000</span>
+                        <span class="text-dark fs-5 fw-bold me-2">{{General::rp((int)$card['sumDayTransaction'])}}</span>
                     </div>
                 </div>
                 <!--end:: Body-->
@@ -61,7 +61,7 @@
                     <span  class=" fw-bold text-dark fs-8  d-block">Bulan Ini</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-5 fw-bold me-2">Rp. 10.000.000</span>
+                        <span class="text-dark fs-5 fw-bold me-2">{{General::rp((int)$card['sumMonthTransaction'])}}</span>
                     </div>
                 </div>
                 <!--end:: Body-->
@@ -76,36 +76,64 @@
                 <div class="card-header">
                     <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-5 fs-6 fw-bold text-dark">
                         <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_4">Semua Transaksi</a>
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi</a>
                         </li>
+                        @foreach($services as $key => $service)
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5">Hotel</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_{{$key}}">{{ucfirst($service->name)}}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_6">Hostel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_7">Pulsa & Data</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_8">PLN</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_9">PDAM</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_10">TV Berbayar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_11">Pajak</a>
-                        </li>
+                        @endforeach
                     </ul>
                 </div>
                 <div class="card-body">
 
 
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade show active" id="kt_tab_pane_4" role="tabpanel">
+                        <div class="tab-pane fade show active" id="kt_tab_pane_all" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr class="fw-bold fs-6 text-gray-800">
+                                        <th>Tanggal</th>
+                                        <th>Invoice</th>
+                                        <th>Code Booking</th>
+                                        <th>Customer</th>
+                                        <th>Check IN</th>
+                                        <th>Check Out</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Grand Total</th>
+                                        <th>Status</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($transactions as $key => $transaction)
+                                        <tr>
+                                            <td>{{date('d/m/y',strtotime($transaction->created_at))}}</td>
+                                            <td>{{$transaction->no_inv}}</td>
+                                            <td>{{$transaction->req_id}}</td>
+                                            <td>{{$transaction->user->name}}</td>
+                                            <td>{{$transaction->bookDate[0]->start}}</td>
+                                            <td>{{$transaction->bookDate[0]->end}}</td>
+                                            <td>{{$transaction->payment_channel}}</td>
+                                            <td>{{$transaction->total}}</td>
+                                            <td><span class="badge {{($transaction->status == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction->status == "SUCCESS" ? "Lunas" : $transaction->status)}}</span></td>
+                                        </tr>
+                                            @php
+                                        if($key == 4) break;
+                                        @endphp
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @foreach($services as $key => $service)
+                        @php
+                        $catId = $service->id;
+                        $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){
+                        return ($val['service_id'] == $catId);
+                        });
+                        @endphp
+                        <div class="tab-pane fade" id="kt_tab_pane_{{$key}}" role="tabpanel">
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
@@ -123,58 +151,36 @@
                                     </thead>
                                     <tbody>
 
-                                    @for($i = 0; $i < 10; $i++)
+                                    @forelse($filterTransactions as $key2 => $transaction)
                                         <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>CTB1</td>
-                                            <td>Customer {{$i}}</td>
-                                            <td>23 Mei 2023 12:00</td>
-                                            <td>25 Mei 2023 14:00</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 1.500.000</td>
-                                            <td><span class="badge badge-success">Lunas</span></td>
+                                            <td>{{date('d/m/y',strtotime($transaction["created_at"]))}}</td>
+                                            <td>{{$transaction['no_inv']}}</td>
+                                            <td>{{$transaction['req_id']}}</td>
+                                            <td>{{$transaction['user']['name']}}</td>
+                                            @if(isset($transaction['bookDate']))
+                                            <td>{{$transaction['bookDate'][0]['start']}}</td>
+                                            <td>{{$transaction['bookDate'][0]['end']}}</td>
+                                            @else
+                                            <td></td>
+                                            <td></td>
+                                            @endif
+                                            <td>{{$transaction['payment_channel']}}</td>
+                                            <td>{{$transaction['total']}}</td>
+                                            <td><span class="badge {{($transaction['status'] == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction['status'] == "SUCCESS" ? "Lunas" : $transaction['status'])}}</span></td>
                                         </tr>
-                                    @endfor
+                                    @php
+                                    if($key2 == 4) break;
+                                    @endphp
+                                    @empty
+                                        <tr>
+                                            <td colspan="8" class="text-center">Not found</td>
+                                        </tr>
+                                    @endforelse
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal</th>
-                                        <th>Invoice</th>
-                                        <th>Code Booking</th>
-                                        <th>Customer</th>
-                                        <th>Check IN</th>
-                                        <th>Check Out</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
-                                        <th>Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>CTB1</td>
-                                            <td>Customer {{$i}}</td>
-                                            <td>23 Mei 2023 12:00</td>
-                                            <td>25 Mei 2023 14:00</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 1.500.000</td>
-                                            <td><span class="badge badge-success">Lunas</span></td>
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        @endforeach
                         <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
                             <div class="table-responsive">
                                 <table class="table table-bordered">

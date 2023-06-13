@@ -8,10 +8,10 @@
         <h3 class="card-title align-items-start flex-column">
             <span class="card-label fw-bold fs-3 mb-1">List Point</span>
         </h3>
-{{--        <div class="card-toolbar">--}}
-{{--            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">--}}
-{{--            <i class="ki-duotone ki-plus fs-2"></i>New Point</a>--}}
-{{--        </div>--}}
+       {{-- <div class="card-toolbar">
+           <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
+           <i class="ki-duotone ki-plus fs-2"></i>New Point</a>
+       </div> --}}
     </div>
     <!--end::Header-->
         <!--begin::Body-->
@@ -33,63 +33,15 @@
                         @php
                             $i = 1;
                         @endphp
+                        @foreach($points as $point)
                         <tr>
-                            <td>1</td>
-                            <td>Hotel</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Data</button></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Hotel</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Pulsa & Data</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>PLN</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>BPJS</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>PDAM</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td>TV Berbayar</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td>Pajak</td>
-                            <td>10.000</td>
-                            <td>100 Point / Rp. 10.000</td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                        </tr>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$point->service->name}}</td>
+                            <td>{{$point->multiple}}</td>
+                            <td>{{$point->value}} Point / {{General::rp($point->multiple)}}</td>
+                            <td><button class="btn btn-sm btn-primary" data-id="{{$point->id}}" data-categoryid="{{$point->category_id}}" data-multiple="{{$point->multiple}}" data-value="{{$point->value}}" data-bs-toggle="modal" data-bs-target="#edit">Edit Data</button></td>
                         </tbody>
+                        @endforeach
                     </table>
 {{--                <!--begin::Table-->--}}
 {{--                <table class="table align-middle gs-0 gy-4">--}}
@@ -153,7 +105,7 @@
 
 {{-- modal --}}
 <!--begin::Modal - New Target-->
-<div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
+{{-- <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <!--begin::Modal content-->
@@ -178,25 +130,20 @@
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
                         <!--begin::Title-->
-                        <h1 class="mb-3">Create Fee Admin</h1>
+                        <h1 class="mb-3">Create Point</h1>
                         <!--end::Title-->
                     </div>
                     <!--end::Heading-->
                      <!--begin::Input group-->
                      <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
+                            <select class="form-select form-select-solid" name="service_id">
+                                @foreach($services as $service)
+                                <option value="{{$service->id}}">{{$service->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('service_id')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -204,9 +151,18 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-
+                    
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+                            <label class="required fs-6 fw-semibold mb-2">Kelipatan</label>
+                            <input type="text" name="multiple" class="form-control form-control-solid"  placeholder="Kelipatan">
+                            @error('multiple')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                            @enderror
+                        </div>
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Value</label>
                             <input type="text" name="value" class="form-control form-control-solid"  placeholder="Value">
@@ -216,22 +172,9 @@
                                 </span>
                             @enderror
                         </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="is_percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
                     </div>
                     <!--end::Input group-->
-
+                    
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
@@ -250,7 +193,7 @@
         <!--end::Modal content-->
     </div>
     <!--end::Modal dialog-->
-</div>
+</div> --}}
 <!--end::Modal - New Target-->
 
 
@@ -282,51 +225,25 @@
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
                         <!--begin::Title-->
-                        <h1 class="mb-3">Update Fee Admin</h1>
+                        <h1 class="mb-3">Update Point</h1>
                         <!--end::Title-->
                     </div>
                     <!--end::Heading-->
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" id="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
+                            <label class="required fs-6 fw-semibold mb-2">Kelipatan</label>
+                            <input type="text" name="multiple" id="multiple" class="form-control form-control-solid"  placeholder="Kelipatan">
+                            @error('multiple')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
                             @enderror
                         </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" id="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                    </div>
-                    <!--end::Input group-->
-                    <!--begin::Input group-->
-                    <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Value</label>
                             <input type="text" name="value" id="value" class="form-control form-control-solid"  placeholder="Value">
                             @error('value')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -362,16 +279,17 @@
     $('#edit').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);
         var id = button.data('id');
-        var category = button.data('category');
+        var multiple = button.data('multiple');
         var name = button.data('name');
         var value = button.data('value');
         var is_percent = button.data('is_percent');
 
         var modal = $(this);
         modal.find('#id').val(id);
-        modal.find('#category').val(category);
         modal.find('#name').val(name);
+        modal.find('#multiple').val(multiple);
         modal.find('#value').val(value);
+
         $(`#percent option[value=${is_percent}]`).attr('selected','selected');
 
     });
