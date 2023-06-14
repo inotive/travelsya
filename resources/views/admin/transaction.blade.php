@@ -132,16 +132,17 @@
                 <!--begin::Table container-->
                 <div class="table-responsive">
                     <!--begin::Table-->
-                    <table class="table align-middle gs-0 gy-4">
+                    <table class="table table-bordered gs-0 gy-4 text-center">
                         <!--begin::Table head-->
                         <thead>
                             <tr class="fw-bold text-muted bg-light">
-                                <th class="min-w-75px rounded-start">Created</th>
-                                <th class="min-w-125px">No Invoice</th>
-                                <th class="min-w-125px">Service</th>
-                                <th class="min-w-125px">Payment</th>
-                                <th class="min-w-125px">Status</th>
-                                <th class="min-w-150px text-end rounded-end"></th>
+                                <th  style="width:15%">Created</th>
+                                <th style="width:20%">No Invoice</th>
+                                <th style="width:10%">Service</th>
+                                <th style="width:15%">Metode Pembayaran</th>
+                                <th style="width:15%">Channel Pembayaran</th>
+                                <th style="width:15%">Grand Total</th>
+                                <th style="width:10%">Status</th>
                             </tr>
                         </thead>
                         <!--end::Table head-->
@@ -150,51 +151,56 @@
                             @foreach($transactions as $transaction)
                             <tr>
                                 <td>
-                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$transaction->created_at}}</div>
+                                    <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{\Carbon\Carbon::parse($transaction->created_at)->format('d M y h:m')}}</div>
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$transaction->no_inv}}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{strtoupper($transaction->service)}}
+                                   <span class="badge badge-rounded badge-primary">
+                                       {{strtoupper($transaction->service)}}
+                                   </span>
+                                </td>
+                                <td>
+                                    <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
+                                        {{ $transaction->payment_method  }}
                                     </div>
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{$transaction->payment }}
+                                        {{ $transaction->payment_channel  }}
                                     </div>
+                                </td>
+                                <td>
+                                    Rp. {{number_format($transaction->total,0,',','.')}}
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
 
                                         @if($transaction->status == "SUCCESS")
-                                            <span class="badge badge-rounded badge-success">{{$transaction->status}}</span>
+                                            <span class="badge badge-rounded badge-success">Sukses</span>
                                         @elseif($transaction->status == "PENDING")
-                                            <span class="badge badge-rounded badge-warning">{{$transaction->status}}</span>
+                                            <span class="badge badge-rounded badge-warning">Pending</span>
+                                        @else
+                                            <span class="badge badge-rounded badge-danger">Gagal</span>
                                         @endif
                                     </div>
                                 </td>
-                                <td class="text-end">
-                                    <a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
-                                        data-id="{{$transaction->id}}">
-                                        <i class="ki-duotone ki-pencil fs-2">
-                                            <span class="path1"></span>
-                                            <span class="path2"></span>
-                                        </i>
-                                    </a>
-                                </td>
+{{--                                <td class="text-end">--}}
+{{--                                    <a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"--}}
+{{--                                        data-id="{{$transaction->id}}">--}}
+{{--                                        <i class="ki-duotone ki-pencil fs-2">--}}
+{{--                                            <span class="path1"></span>--}}
+{{--                                            <span class="path2"></span>--}}
+{{--                                        </i>--}}
+{{--                                    </a>--}}
+{{--                                </td>--}}
                             </tr>
                             @endforeach
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td>
-                                  {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
-                              </td>
-                            </tr>
-                          </tfoot>
                         <!--end::Table body-->
                     </table>
+                    {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
                     <!--end::Table-->
                 </div>
                 <!--end::Table container-->

@@ -121,7 +121,7 @@
                                             @endif
                                             <td>{{$transaction->payment_channel}}</td>
                                             <td>{{$transaction->total}}</td>
-                                            <td><span class="badge {{($transaction->status == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction->status == "SUCCESS" ? "Lunas" : $transaction->status)}}</span></td>
+                                            <td><span class="badge {{($transaction->status == 'PAID') ? 'badge-success' : 'badge-danger'}} ">{{($transaction->status == "PAID" ? "Lunas" : $transaction->status)}}</span></td>
                                         </tr>
                                             @php
                                         if($key == 4) break;

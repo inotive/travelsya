@@ -15,7 +15,7 @@
         <!--begin::Table container-->
         <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table align-middle gs-0 gy-4">
+            <table class="table table-bordered gs-0 gy-4 text-center">
                 <!--begin::Table head-->
                 <thead>
                     <tr class="fw-bold text-muted bg-light">
@@ -32,26 +32,27 @@
                     @foreach($customers as $customer)
                     <tr>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
+                            <div class="text-dark fw-bold  mb-1 fs-6">{{$loop->iteration}}</div>
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$customer->email}}</div>
+                            <div class="text-dark fw-bold  mb-1 fs-6">{{$customer->email}}</div>
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$customer->name}}</div>
+                            <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->name}}</div>
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$customer->phone}}</div>
+                            <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->phone}}</div>
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$customer->point}}</div>
+                            <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->point}}</div>
                         </td>
                     </tr>
                     @endforeach
-                    {{$customers->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
+
                 </tbody>
                 <!--end::Table body-->
             </table>
+            {{$customers->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
             <!--end::Table-->
         </div>
         <!--end::Table container-->
