@@ -80,14 +80,14 @@
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-element-11 fs-2">
+                            <i class="ki-duotone ki-home fs-2">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                                 <span class="path3"></span>
                                 <span class="path4"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Dashboards</span>
+                        <span class="menu-title">Dashboard</span>
                     </span>
                         <!--end:Menu link-->
                     </a>
@@ -112,7 +112,7 @@
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-element-plus fs-2">
+                            <i class="fas fa-clipboard-list fs-2">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                                 <span class="path3"></span>
@@ -161,7 +161,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-user fs-2">
+                            <i class="fas fa-users fs-3">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>
@@ -176,7 +176,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-user fs-2">
+                            <i class="fas fa-users fs-3">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>
@@ -192,7 +192,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-39 fs-2">
+                            <i class="fas fa-coins fs-2">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>
@@ -208,7 +208,7 @@
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-abstract-39 fs-2">
+                            <i class="fas fa-money-bill-alt fs-2">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>
@@ -223,7 +223,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="ki-duotone ki-color-swatch fs-2">
+                            <i class="fas fa-money-check-alt fs-2">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>

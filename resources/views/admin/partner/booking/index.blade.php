@@ -44,7 +44,6 @@
                                 <th>Customer</th>
                                 <th>Contact</th>
                                 <th>Name Room</th>
-                                <th>Room</th>
                                 <th>Check In</th>
                                 <th>Check Out</th>
                                 <th>Grand Total</th>
@@ -63,7 +62,6 @@
                                     <th>{{$transaction->user->name}}</th>
                                     <th>{{$transaction->user->phone}}</th>
                                     <th>{{$transaction->detailTransaction[0]->hostelRoom->name}}</th>
-                                    <th>Room 1</th>
                                     <th>{{$transaction->bookDate[0]->start}}</th>
                                     <th>{{$transaction->bookDate[0]->end}}</th>
                                     <th>{{$transaction->total}}</th>

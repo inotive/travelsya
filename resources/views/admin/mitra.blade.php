@@ -20,7 +20,7 @@
                 <div class="table-responsive">
                     <!--begin::Table-->
 
-                    <table class="table table-bordered">
+                    <table class="table table-bordered gs-0 gy-4 text-center">
                         <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th>No.</th>

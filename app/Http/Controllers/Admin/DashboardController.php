@@ -18,7 +18,6 @@ class DashboardController extends Controller
     {
         if (auth()->user()->role == 0) {
             $transactions = Transaction::with('detailTransaction.hostelRoom.hostel', 'detailTransaction.product', 'services', 'user', 'bookDate')->orderBy('created_at', 'desc')->get();
-
             //card
             $card['partner'] = User::where('role', 1)->count();
             $card['transactionToday'] = Transaction::where('created_at', date('y-m-d'))->count();

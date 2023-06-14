@@ -18,7 +18,7 @@
         <div class="card-body py-3">
             <!--begin::Table container-->
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered gs-0 gy-4 text-center">
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
                         <th>No.</th>
@@ -32,9 +32,16 @@
                         @foreach($fees as $fee)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$fee->service->name}}</td>
+                            <td>{{strtoupper($fee->service->name)}}</td>
                             <td>{{$fee->percent == 1 ? "Presentase" : "Rupiah" }}</td>
-                            <td>{{$fee->value}} {{$fee->percent == 1 ?  "%" : "" }} </td>
+                            <td>
+                                @if($fee->percent == 1)
+                                    {{$fee->value}} %
+                                @else
+                                    Rp. {{number_format($fee->value,0,',','.')}}
+                                @endif
+
+                            </td>
                             <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
                         </tr>
                         @endforeach
@@ -149,7 +156,7 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
@@ -173,10 +180,10 @@
                                 </span>
                             @enderror
                         </div>
-                        
+
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>

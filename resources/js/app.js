@@ -1,4 +1,5 @@
 import './bootstrap';
 
-import './components/home/MenuBar';
-import './components/home/ExploreCity';
+import Alpine from "alpinejs"
+window.Alpine = Alpine
+Alpine.start()

@@ -19,7 +19,7 @@
         <!--begin::Table container-->
         <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table align-middle gs-0 gy-4">
+            <table class="table table-bordered gs-0 gy-4 text-center">
                 <!--begin::Table head-->
                 <thead>
                     <tr class="fw-bold text-muted bg-light">
@@ -27,7 +27,7 @@
                         <th class="min-w-125px">Email</th>
                         <th class="min-w-125px">Name</th>
                         <th class="min-w-125px">Role</th>
-                        <th class="min-w-200px text-end rounded-end"></th>
+                        <th class="min-w-200px rounded-end"></th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
@@ -47,13 +47,13 @@
                         <td>
                             <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($user->role == 0 ? 'admin' : ($user->role == 1 ? 'vendor' : 'customer'))}}</div>
                         </td>
-                        <td class="text-end">
-                            <a onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">
-                                <i class="ki-duotone ki-switch fs-2">
-                                    <span class="path1"></span>
-                                    <span class="path2"></span>
-                                </i>
-                            </a>
+                        <td>
+{{--                            <a onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">--}}
+{{--                                <i class="ki-duotone ki-switch fs-2">--}}
+{{--                                    <span class="path1"></span>--}}
+{{--                                    <span class="path2"></span>--}}
+{{--                                </i>--}}
+{{--                            </a>--}}
                             <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit" data-id="{{$user->id}}" data-bs-toggle="modal" data-bs-target="#edit">
                                 <i class="ki-duotone ki-pencil fs-2">
                                     <span class="path1"></span>
@@ -188,7 +188,7 @@
                             @enderror
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
@@ -311,7 +311,7 @@
                             @enderror
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>

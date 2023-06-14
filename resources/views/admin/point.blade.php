@@ -19,13 +19,13 @@
             <!--begin::Table container-->
             <div class="table-responsive">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered gs-0 gy-4 text-center">
                         <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th>No.</th>
-                            <th>Layanan</th>
-                            <th>Kelipatan Transaksi</th>
-                            <th>Jumlah Point Yang Di Dapat Oleh Customer</th>
+                            <th class="text-center">Layanan</th>
+                            <th class="text-center">Kelipatan Transaksi</th>
+                            <th class="text-center">Jumlah Point Yang Di Dapat Oleh Customer</th>
                             <th>Aksi</th>
                         </tr>
                         </thead>
@@ -36,9 +36,9 @@
                         @foreach($points as $point)
                         <tr>
                             <td>{{$loop->iteration}}</td>
-                            <td>{{$point->service->name}}</td>
-                            <td>{{$point->multiple}}</td>
-                            <td>{{$point->value}} Point / {{General::rp($point->multiple)}}</td>
+                            <td class="text-center">{{strtoupper($point->service->name)}}</td>
+                            <td class="text-center">Rp. {{number_format($point->multiple,0,',','.')}}</td>
+                            <td class="text-center">{{$point->value}} Point / {{General::rp($point->multiple)}}</td>
                             <td><button class="btn btn-sm btn-primary" data-id="{{$point->id}}" data-categoryid="{{$point->category_id}}" data-multiple="{{$point->multiple}}" data-value="{{$point->value}}" data-bs-toggle="modal" data-bs-target="#edit">Edit Data</button></td>
                         </tbody>
                         @endforeach
@@ -151,7 +151,7 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
@@ -174,7 +174,7 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-                    
+
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>

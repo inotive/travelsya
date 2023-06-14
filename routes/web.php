@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\TransactionController as AdminTransactionControll
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HotelController;
 use App\Http\Controllers\HostelController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
@@ -65,6 +66,11 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
 });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 Route::post('/ajax/hostel', [HostelController::class, 'ajaxHostel']);
+
+//hotel
+Route::controller(HotelController::class)->name('hotel')->prefix('hotel')->group(function () {
+    Route::get('/', 'index')->name('.index');
+});
 
 //hostel
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
