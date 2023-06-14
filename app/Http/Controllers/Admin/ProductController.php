@@ -14,7 +14,8 @@ class ProductController extends Controller
     public function index()
     {
         $products = DB::table('products')->get();
-        return view('admin.product.index', compact('products'));
+        $productName = $products->groupBy('name');
+        return view('admin.product.index', compact('products','productName'));
     }
 
     /**

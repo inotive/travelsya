@@ -1,29 +1,6 @@
 @extends('admin.layout',['title' => 'Product','url' => route('admin.customer')])
 
 @section('content-admin')
-    <div class="card mb-3">
-        <div class="card-body">
-            <form action="" method="get">
-                <div class="row">
-                    <div class="col-6">
-                        <label for="" class="form-label">Product</label>
-                        <select class="form-control select2" id="kt_select2_1" name="param" style="cursor : pointer">
-
-                            @foreach($productName as $item)
-                                <option value="{{$item->first()->name}}">{{$item->first()->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-primary ms-3 mt-8">Cari Data</button>
-                    </div>
-                </div>
-            </form>
-
-
-
-        </div>
-    </div>
     <!--begin::Tables Widget 11-->
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
@@ -51,7 +28,7 @@
                     </thead>
                     <tbody>
                     @php
-                    $i = 1;
+                        $i = 1;
                     @endphp
                     @foreach($products as $product)
                         <tr>
@@ -433,15 +410,4 @@
         <!--end::Modal dialog-->
     </div>
     <!--end::Modal - New Target-->
-@endsection
-
-@section('script')
-    <script>
-        $( document ).ready(function() {
-            $('#kt_select2_1').select2({
-                placeholder: "Select a state"
-            });
-        });
-    </script>
-
 @endsection
