@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->role == 0) {
-            $transactions = Transaction::with('detailTransaction.hostelRoom.hostel', 'detailTransaction.product', 'services')->orderBy('created_at', 'desc')->get();
+            $transactions = Transaction::with('detailTransaction.hostelRoom.hostel', 'detailTransaction.product', 'services', 'user', 'bookDate')->orderBy('created_at', 'desc')->get();
 
             //card
             $card['partner'] = User::where('role', 1)->count();

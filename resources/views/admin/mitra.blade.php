@@ -34,27 +34,27 @@
                         </thead>
                         <tbody>
 
-                        @for($i = 1; $i < 10; $i++)
+                        @foreach($vendors as $vendor)
                             <tr>
-                                <td class="text-center">{{$i}}</td>
-                                <td class="text-center">Hemra Corp</td>
-                                <td class="text-center">userlogin{{$i}}@gmail.com</td>
-                                <td class="text-center"><span class="badge badge-info">Hotel Hemra</span></td>
-                                <td class="text-center">0812-1232-1232</td>
+                                <td class="text-center">{{$loop->iteration}}</td>
+                                <td class="text-center">{{$vendor->user->name}}</td>
+                                <td class="text-center">{{$vendor->user->email}}</td>
+                                <td class="text-center"><span class="badge badge-info">{{$vendor->name}}</span></td>
+                                <td class="text-center">{{$vendor->user->phone}}</td>
                                 <td class="text-center">
-                                    @if($i % 2 == 0)
+                                    @if($vendor->is_active == 1)
                                         <span class="badge badge-success">Aktif</span>
                                     @else
                                         <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
-                                <td><button class="btn btn-warning btn-sm p-2">Edit Data</button></td>
+                                <td><button class="btn btn-warning btn-sm p-2" data-id="{{$vendor->id}}" data-active="{{$vendor->is_active}}" data-bs-toggle="modal" data-bs-target="#edit">Edit Data</button></td>
                             </tr>
-                        @endfor
+                        @endforeach
                         </tbody>
                     </table>
 
-                    <table class="table align-middle gs-0 gy-4">
+                    {{-- <table class="table align-middle gs-0 gy-4">
                         <!--begin::Table head-->
                         <thead>
                             <tr class="fw-bold text-muted bg-light">
@@ -126,7 +126,7 @@
                             </tr>
                           </tfoot>
                         <!--end::Table body-->
-                    </table>
+                    </table> --}}
                     <!--end::Table-->
                 </div>
                 <!--end::Table container-->

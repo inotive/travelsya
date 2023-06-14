@@ -67,6 +67,56 @@ class HostelController extends Controller
         }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Hostel  $hostel
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request, $id)
+    {
+        try {
+            // $hostel = Hostel::find($hostel->id);
+            $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating')->where('is_active', 1)->where('id', $id);
+
+
+            if ($request->start_date) {
+                $date = [
+                    'start' => $request->start_date,
+                    'end' => $request->end_date
+                ];
+                $hostel->with(['hostelRoom' => function ($query) use ($date) {
+                    $query->withCount(['bookDate as existsDate' => function ($q) use ($date) {
+                        $q->where('start', '>=', $date['start']);
+                        $q->where('end', '<=', $date['end']);
+                        $q->select(DB::raw('count(id)'));
+                    }])->with('bookDate');
+                }]);
+                // $hostelCollect =  collect($bookdate);
+
+                // $filter =  array_filter($hostelCollect->toArray(), function ($var) {
+                //     foreach ($var['hostel_room'] as $value) {
+                //         return ($value['existsDate'] == 0);
+                //     }
+                // });
+
+                // return $filter;
+            }
+            $hostelGet = $hostel->get();
+
+            if (count($hostelGet)) {
+                return ResponseFormatter::success($hostelGet, 'Data successfully loaded');
+            } else {
+                return ResponseFormatter::error(null, 'Data not found');
+            }
+        } catch (Exception $th) {
+            return ResponseFormatter::error([
+                $th,
+                'message' => 'Something wrong',
+            ], 'Hostel process failed', 500);
+        }
+    }
+
     public function requestTransaction(Request $request)
     {
         // handle validation

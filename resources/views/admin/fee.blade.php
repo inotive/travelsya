@@ -8,10 +8,10 @@
         <h3 class="card-title align-items-start flex-column">
             <span class="card-label fw-bold fs-3 mb-1">List Fee Admin</span>
         </h3>
-{{--        <div class="card-toolbar">--}}
-{{--            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">--}}
-{{--            <i class="ki-duotone ki-plus fs-2"></i>New Fee Admin</a>--}}
-{{--        </div>--}}
+       <div class="card-toolbar">
+           <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
+           <i class="ki-duotone ki-plus fs-2"></i>New Fee Admin</a>
+       </div>
     </div>
     <!--end::Header-->
         <!--begin::Body-->
@@ -29,65 +29,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @php
-                        $i = 1;
-                    @endphp
+                        @foreach($fees as $fee)
                         <tr>
-                            <td>1</td>
-                            <td>Hotel</td>
-                            <td>Presentase</td>
-                            <td>15 %</td>
+                            <td>{{$loop->iteration}}</td>
+                            <td>{{$fee->service->name}}</td>
+                            <td>{{$fee->percent == 1 ? "Presentase" : "Rupiah" }}</td>
+                            <td>{{$fee->value}} {{$fee->percent == 1 ?  "%" : "" }} </td>
                             <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
                         </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Hotel</td>
-                        <td>Presentase</td>
-                        <td>15 %</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
-                    <tr>
-                        <td>3</td>
-                        <td>Pulsa & Data</td>
-                        <td>Rupiah</td>
-                        <td>Rp. 2.500</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
-                    <tr>
-                        <td>4</td>
-                        <td>PLN</td>
-                        <td>Rupiah</td>
-                        <td>Rp. 2.500</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
-                    <tr>
-                        <td>5</td>
-                        <td>BPJS</td>
-                        <td>Rupiah</td>
-                        <td>Rp. 2.500</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
-                    <tr>
-                        <td>6</td>
-                        <td>PDAM</td>
-                        <td>Rupiah</td>
-                        <td>Rp. 2.500</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
-                    <tr>
-                        <td>7</td>
-                        <td>TV Berbayar</td>
-                        <td>Rupiah</td>
-                        <td>Rp. 2.500</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
-                    <tr>
-                        <td>8</td>
-                        <td>Pajak</td>
-                        <td>Rupiah</td>
-                        <td>Rp. 2.500</td>
-                        <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
-                    </tr>
+                        @endforeach
                     </tbody>
                 </table>
 {{--                <!--begin::Table-->--}}
@@ -184,19 +134,14 @@
                     <!--end::Heading-->
                      <!--begin::Input group-->
                      <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
+                            <select class="form-select form-select-solid" name="service_id">
+                                @foreach($services as $service)
+                                <option value="{{$service->id}}">{{$service->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('service_id')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -204,9 +149,21 @@
                         </div>
                     </div>
                     <!--end::Input group-->
-
+                    
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+                            <label class="required fs-6 fw-semibold mb-2">Type</label>
+                            <select class="form-select form-select-solid" name="percent">
+                                <option value="0">Rupiah</option>
+                                <option value="1">Presentase</option>
+                            </select>
+                            @error('percent')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                            @enderror
+                        </div>
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Value</label>
                             <input type="text" name="value" class="form-control form-control-solid"  placeholder="Value">
@@ -216,22 +173,10 @@
                                 </span>
                             @enderror
                         </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="is_percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
+                        
                     </div>
                     <!--end::Input group-->
-
+                    
                     <!--begin::Actions-->
                     <div class="text-center">
                         <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
@@ -288,19 +233,14 @@
                     <!--end::Heading-->
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
-                            <input type="text" name="category" id="category" class="form-control form-control-solid"  placeholder="Category">
-                            @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Name</label>
-                            <input type="text" name="name" id="name" class="form-control form-control-solid"  placeholder="Name">
-                            @error('name')
+                            <select class="form-select form-select-solid" id="service_id" name="service_id">
+                                @foreach($services as $service)
+                                <option value="{{$service->id}}">{{$service->name}}</option>
+                                @endforeach
+                            </select>
+                            @error('service_id')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
@@ -311,22 +251,21 @@
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Value</label>
-                            <input type="text" name="value" id="value" class="form-control form-control-solid"  placeholder="Value">
-                            @error('value')
+                            <label class="required fs-6 fw-semibold mb-2">Type</label>
+                            <select class="form-select form-select-solid" id="percent" name="percent">
+                                <option value="0">Rupiah</option>
+                                <option value="1">Presentase</option>
+                            </select>
+                            @error('percent')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>
                             @enderror
                         </div>
                         <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Percent ?</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Percent" name="is_percent" id="percent">
-                                <option value="">Select percent...</option>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
-                            </select>
-                            @error('is_percent')
+                            <label class="required fs-6 fw-semibold mb-2">Value</label>
+                            <input type="text" name="value" class="form-control form-control-solid" id="value" placeholder="Value">
+                            @error('value')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>

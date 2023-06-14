@@ -203,7 +203,7 @@
                 </a>
                 <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <a href="{{route('admin.product')}}" class="menu-item {{(Request::segment(2)=="harga") ? 'here' : ''}} menu-accordion">
+                    <a href="{{route('admin.product')}}" class="menu-item {{(Request::segment(2)=="product") ? 'here' : ''}} menu-accordion">
 
                         <!--begin:Menu link-->
                         <span class="menu-link">

@@ -29,9 +29,10 @@ class ManagementHotelController extends Controller
 
         return view('admin.partner.management-hotel.setting-hotel', compact('hostel'));
     }
-    public function settingRoom()
+    public function settingRoom($id)
     {
-        return view('admin.partner.management-hotel.setting-rooms');
+
+        return view('admin.partner.management-hotel.setting-rooms', ['id' => $id]);
     }
     public function settingPhoto($id)
     {

@@ -216,6 +216,11 @@ class Mymili
                     $messageArray["status"] = $message[3];
                     $messageArray["nama_pelanggan"] = explode("=", $message[7])[1];
                     $messageArray["tagihan"] = explode("=", $message[11])[1];
+                } elseif ($data['nom'] == "CEKBPJSKS") {
+                    $message = explode("/", $responseArray['MESSAGE']);
+                    $messageArray["status"] = explode(" ", $message[0])[3];
+                    $messageArray["nama_pelanggan"] = $message[1];
+                    $messageArray["tagihan"] = explode(" ", $message[4])[0];
                 } else {
                     $messageArray['status'] = 'NOM belum terdaftar';
                 }
