@@ -22,10 +22,9 @@
                             <select class="form-select form-select-solid" data-control="select2"
                                 data-placeholder="Layanan" data-hide-search="true" name="service">
                                 <option value=""></option>
-                                <option value="pulsa">Pulsa</option>
-                                <option value="data">Data</option>
-                                <option value="pln">PLN</option>
-                                <option value="hostel">Hostel</option>
+                                @foreach($services as $service)
+                                <option value="{{$service->id}}" {{$service->id == $_GET['service'] ? 'selected' : ''}}>{{ucfirst($service->name)}}</option>
+                                @endforeach
                             </select>
                             <!--end::Select-->
 
@@ -33,13 +32,13 @@
                         @endif
                         <div class="col-lg-3">
                             <!--begin::Input-->
-                            <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start">
+                            <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start" value="{{isset($_GET['start']) ? $_GET['start'] : ''}}">
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
                         <div class="col-lg-3">
                             <!--begin::Input-->
-                            <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end">
+                            <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end" value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->

@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
+use App\Models\HostelRoom;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use File;
 
 class ManagementHotelController extends Controller
 {
@@ -31,8 +34,49 @@ class ManagementHotelController extends Controller
     }
     public function settingRoom($id)
     {
+        $hostel = Hostel::with('hostelRoom')->find($id);
 
-        return view('admin.partner.management-hotel.setting-rooms', ['id' => $id]);
+        return view('admin.partner.management-hotel.setting-rooms', compact('hostel'));
+    }
+
+    public function settingRoomPost(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'price' => 'required',
+            'name' => 'required',
+            'sellingprice' => 'required',
+            'totalroom' => 'required',
+            'roomsize' => 'required',
+            'guest' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $facilities = [];
+        if ($request->breakfastIncluded == 'on')
+            array_push($facilities, 'breakfast');
+
+        if ($request->wifiIncluded == 'on')
+            array_push($facilities, 'wifi');
+
+        $facstring = '[';
+        foreach ($facilities as $key => $facility) {
+            $facstring .= $facility;
+            if (array_key_last($facilities) != $key)
+                $facstring .= ',';
+        }
+
+        $request['facilities'] = $facstring . ']';
+
+        $hostel = Hostel::find($request->hostel_id);
+        $request['image_1'] = $request->file('image')->store(
+            'hostel/' . Str::slug($hostel->name, '-') . '/' . Str::slug($request->name, '-'),
+            'public',
+        );
+
+        HostelRoom::create($request->except('image', 'wifiIncluded', 'breakfastIncluded'));
+        toast('Hostelroom berhasil dibuat', 'success');
+        return redirect()->back();
     }
     public function settingPhoto($id)
     {

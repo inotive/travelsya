@@ -9,6 +9,7 @@ use App\Models\DetailTransaction;
 use App\Models\Guest;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
+use App\Models\Service;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -27,14 +28,15 @@ class TransactionController extends Controller
         }
 
         if ($request->service != null)
-            $tr = $tr->where('service', 'like', '%' . $request->service . '%');
+            $tr = $tr->where('service_id', $request->service);
 
         if ($request->start != null) {
             $tr = $tr->whereDate('created_at', '>=', $request->start)->whereDate('created_at', '<=', $request->end);
         }
 
         $transactions = $tr->orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.transaction', compact('transactions'));
+        $services = Service::all();
+        return view('admin.transaction', compact('transactions', 'services'));
     }
 
     public function detail($id)

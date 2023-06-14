@@ -9,6 +9,8 @@ class HostelRoom extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function getImage1Attribute($value)
     {
         return url('storage/' . $value);
