@@ -112,7 +112,7 @@
                                             <td>{{$transaction->no_inv}}</td>
                                             <td>{{$transaction->req_id}}</td>
                                             <td>{{$transaction->user->name}}</td>
-                                            @if(isset($transaction->bookDate))
+                                            @if(isset($transaction->bookDate) && count($transaction->bookDate) != 0)
                                             <td>{{$transaction->bookDate[0]->start}}</td>
                                             <td>{{$transaction->bookDate[0]->end}}</td>
                                             @else
