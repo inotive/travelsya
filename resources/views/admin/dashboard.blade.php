@@ -135,7 +135,7 @@
                         @php
                         $catId = $service->id;
                         $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){
-                        return ($val['service_id'] == 7);
+                        return ($val['service_id'] == $catId);
                     });
                         @endphp
                         <div class="tab-pane fade" id="kt_tab_pane_{{$key}}" role="tabpanel">
@@ -158,12 +158,11 @@
 
                                     @forelse($filterTransactions as $key2 => $transaction)
                                         <tr>
-                                            {{-- {{print_r($transaction['book_date'])}} --}}
                                             <td>{{date('d/m/y',strtotime($transaction["created_at"]))}}</td>
                                             <td>{{$transaction['no_inv']}}</td>
                                             <td>{{$transaction['req_id']}}</td>
                                             <td>{{$transaction['user']['name']}}</td>
-                                            @if(isset($transaction['book_date']))
+                                            @if(isset($transaction['book_date'])  && count($transaction['book_date']) != 0)
                                             <td>{{$transaction['book_date'][0]['start']}}</td>
                                             <td>{{$transaction['book_date'][0]['end']}}</td>
                                             @else

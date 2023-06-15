@@ -48,6 +48,23 @@ class HostelController extends Controller
             if ($request->category)
                 $hostels->where('category', 'like', '%' . $request->category . '%');
 
+            if ($request->property)
+                $hostels->where('property', $request->property);
+
+            if ($request->furnish) {
+                $furnish = $request->furnish;
+                $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
+                    $q->where('furnish', $furnish);
+                });
+            }
+
+            if ($request->roomtype) {
+                $roomtype = $request->roomtype;
+                $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
+                    $q->where('roomtype', $roomtype);
+                });
+            }
+
             $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(price),0)'));
             }])->withCount(["rating as rating_avg" => function ($q) {
@@ -182,12 +199,14 @@ class HostelController extends Controller
 
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
+                'req_id' => 'HST-' . time(),
                 'service' => $hostel->hostel->service->name,
                 'service_id' => $hostel->hostel->service_id,
                 'payment' => $data['payment'],
                 'user_id' => $request->user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
+                'total' => $amount
             ]);
 
 
