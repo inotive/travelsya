@@ -104,11 +104,25 @@
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <div class="col-md-12 fv-row">
+                            <div class="col-md-6 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Website</label>
                                 <input type="text" name="website" id="website" class="form-control form-control-solid"
                                     placeholder="Masukan alamat website berupa URL" value="{{$hostel->website}}">
                                 @error('website')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{$message}}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="col-md-6 fv-row">
+                                <label class="required fs-6 fw-semibold mb-2">Tipe</label>
+                                <select class="form-select form-select-solid" name="property">
+                                    <option value="apartemen" {{$hostel->property == 'apartemen' ? "selected" : ''}}>Apartemen</option>
+                                    <option value="rumah" {{$hostel->property == 'rumah' ? "selected" : ''}}>Rumah</option>
+                                    <option value="villa" {{$hostel->property == 'villa' ? "selected" : ''}}>Villa</option>
+                                    <option value="residence" {{$hostel->property == 'residence' ? "selected" : ''}}>Residence</option>
+                                </select>
+                                @error('property')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
                                 </span>

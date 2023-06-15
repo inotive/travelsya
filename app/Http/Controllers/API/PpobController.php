@@ -154,6 +154,7 @@ class PpobController extends Controller
                         'user_id' => $request->user()->id,
                         'status' => $payoutsXendit['status'],
                         'link' => $payoutsXendit['invoice_url'],
+                        'total' => $amount
                     ]);
 
                     // create detail transaction
