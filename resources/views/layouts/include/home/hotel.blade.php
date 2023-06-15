@@ -1,8 +1,8 @@
-<div class="row" x-data="hotel">
+<div class="row" x-data>
   <div class="col-md-3 mb-5">
     <label class="form-label fw-bold fs-6">Pilih Kota</label>
     <select name="location" id="location" class="form-select">
-      <template x-for="data in cities">
+      <template x-for="data in $store.hotel.data">
         <option x-bind:value="data.name" x-text="data.label"></option>
       </template>
     </select>
@@ -36,7 +36,7 @@
     </select>
   </div>
   <div class="col-md-12 mb-5 text-end">
-    <button style="margin-right: '1em'" type="button" class="btn btn-flush" data-bs-dismiss="modal">Kembali</button>
+    <button style="margin-right: 1em" type="button" class="btn btn-flush" data-bs-dismiss="modal">Kembali</button>
     <button type="button" class="btn btn-danger">Cari Hotel</button>
   </div>
 </div>
