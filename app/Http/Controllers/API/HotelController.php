@@ -38,7 +38,7 @@ class HotelController extends Controller
     public function index(Request $request)
     {
         try {
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'rating');
+            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
             if ($request->name)
                 $hotel->where('name', 'like', '%' . $request->name . '%');
 
@@ -94,7 +94,7 @@ class HotelController extends Controller
     {
         try {
             // $hotel = Hotel::find($hotel->id);
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'rating')->where('is_active', 1)->where('id', $id);
+            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')->where('is_active', 1)->where('id', $id);
 
 
             if ($request->start_date) {
@@ -259,7 +259,7 @@ class HotelController extends Controller
 
     public function hotelPopuler()
     {
-        $hotelPopuler = Hotel::with('hotelImage', 'rating')
+        $hotelPopuler = Hotel::with('hotelImage', 'hotelRating')
             ->withCount(["hotelRoom as price_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(price),0)'));
             }])->withCount(["hotelRating as rating_avg" => function ($q) {
