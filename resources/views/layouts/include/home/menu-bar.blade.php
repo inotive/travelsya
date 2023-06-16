@@ -1,14 +1,14 @@
-<div x-data="menubar">
-  <div class="mt-10 mb-5">
+<div>
+  <div class="mt-10 mb-5" x-data>
     <div id="" class="container-xl bg-transparent">
       <div class="card shadow-sm">
         <div class="card-body">
-          <div class="row gy-3" x-data="{menus}">
-            <template x-for="data in menus">
+          <div class="row gy-3">
+            <template x-for="data in $store.menubar.data">
               <div 
                 data-bs-toggle="modal" 
                 x-bind:data-bs-target="data.isActive ? '#modal_action_feature' : '' "
-                @click="handleClickMenu(data)"
+                @click="$store.menubar.selected = data"
                 class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
               >
                 <div class="row">
@@ -35,13 +35,13 @@
     </div>
   </div>
 
-  <div class="modal bg-body" tabIndex="-1" id="modal_action_feature">
+  <div class="modal bg-body" tabIndex="-1" id="modal_action_feature" x-data>
     <div class="modal-dialog modal-fullscreen">
       <div class="modal-content shadow-none">
         <div 
           class="card border-transparent header-image" 
           data-bs-theme="light"
-          x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${mode.imageHeader}) no-repeat center center`"
+          x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
         >
           <div class="card-body d-flex ps-xl-20">
             <div class="m-0">
@@ -50,7 +50,7 @@
                   <i class="las la-angle-left"></i>
                 </button>
                 <div>
-                  <span class="me-2" x-html="mode.label"></span>
+                  <span class="me-2" x-html="$store.menubar.selected.label"></span>
                   <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
                 </div>
               </div>

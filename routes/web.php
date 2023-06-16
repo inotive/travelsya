@@ -68,12 +68,12 @@ Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 Route::post('/ajax/hostel', [HostelController::class, 'ajaxHostel']);
 
 //hotel
-Route::controller(HotelController::class)->name('hotel')->prefix('hotel')->group(function () {
+Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->group(function () {
     Route::get('/', 'index')->name('.index');
 });
 
 //hostel
-Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
+Route::controller(HostelController::class)->name('hostels')->prefix('hostels')->group(function () {
     Route::get('/', 'index')->name('.index');
 });
 

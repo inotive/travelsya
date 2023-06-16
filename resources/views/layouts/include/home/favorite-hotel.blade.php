@@ -9,8 +9,8 @@
     </div>
   </div>
 
-  <div class="row justify-content-between" x-data="favoritehotel">
-    <template x-for="data in favoriteHotel">
+  <div class="row justify-content-between" x-data>
+    <template x-for="data in $store.favoritehotel.data">
       <div class="col-md-3">
         <div class="card">
           <img 

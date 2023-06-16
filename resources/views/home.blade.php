@@ -154,7 +154,7 @@
       titleHeader: "Bayar Pajak sekarang lebih mudah melalui Travelsya!",
       classImage: "w-30px"
     }
-  ]
+  ];
 
   var dummyCities = [
     {
@@ -182,7 +182,7 @@
       name: 'banjarmasin',
       label: 'Banjarmasin'
     }
-  ]
+  ];
 
   var dummyExploreCities = [
     {
@@ -210,7 +210,7 @@
       label: "Welcome to Bandung",
       image: "https://service.travelsya.com/bahan/kota_5.png"
     },
-  ]
+  ];
 
   var dummyFavoriteHotel = [
     {
@@ -253,26 +253,7 @@
       rate: 3,
       totalRate: 12
     }
-  ]
-
-  document.addEventListener('alpine:init', () => {
-    Alpine.data('menubar', () => ({
-      menus: dummyMenus,
-      mode: {}, 
-      handleClickMenu(data) {
-        this.mode = data
-      },
-    })),
-    Alpine.data('hotel', () => ({
-      cities: dummyCities
-    })),
-    Alpine.data('explorecity', () => ({
-      exploreCities: dummyExploreCities
-    })),
-    Alpine.data('favoritehotel', () => ({
-      favoriteHotel: dummyFavoriteHotel
-    }))
-  })
+  ];
 
   $(document).ready(function() {
     var today = new Date(); 
@@ -333,6 +314,22 @@
         }
     })
 
+  })
+
+  document.addEventListener('alpine:init', () => {
+    Alpine.store('menubar', {
+      data: dummyMenus,
+      selected: {},
+    }),
+    Alpine.store('hotel', {
+      data: dummyCities
+    }),
+    Alpine.store('explorecity', {
+      data: dummyExploreCities
+    }),
+    Alpine.store('favoritehotel', {
+      data: dummyFavoriteHotel
+    })
   })
 </script>
 @endpush
