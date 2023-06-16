@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\HostelController;
+use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
@@ -45,6 +46,12 @@ route::get('/hostel/city', [HostelController::class, 'hostelCity']);
 route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
 
+//hostel
+route::get('/hotel', [HotelController::class, 'index']);
+route::get('/hotel/city', [HotelController::class, 'hotelCity']);
+route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
+route::get('/hotel/{id}', [HotelController::class, 'show']);
+
 //ads
 route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
@@ -71,6 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
+    route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);
