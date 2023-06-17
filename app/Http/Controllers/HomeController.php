@@ -15,9 +15,10 @@ class HomeController extends Controller
     }
     public function home()
     {
-        $hostelPopulers = $this->travelsya->hostelPopuler();
-        $cities = $this->travelsya->hostelCity();
-        $ads = $this->travelsya->ads();
-        return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
+        // $hostelPopulers = $this->travelsya->hostelPopuler();
+        // $cities = $this->travelsya->hostelCity();
+        // $ads = $this->travelsya->ads();
+        // return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
+        return view('home');
     }
 }
