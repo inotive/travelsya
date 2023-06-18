@@ -103,11 +103,11 @@ class HotelController extends Controller
                     'end' => $request->end_date
                 ];
                 $hotel->with(['hotelRoom' => function ($query) use ($date) {
-                    $query->withCount(['bookDate as existsDate' => function ($q) use ($date) {
+                    $query->withCount(['hotelBookDate as existsDate' => function ($q) use ($date) {
                         $q->where('start', '>=', $date['start']);
                         $q->where('end', '<=', $date['end']);
                         $q->select(DB::raw('count(id)'));
-                    }])->with('bookDate');
+                    }])->with('hotelBookDate');
                 }]);
                 // $hotelCollect =  collect($bookdate);
 

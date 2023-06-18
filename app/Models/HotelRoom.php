@@ -57,8 +57,8 @@ class HotelRoom extends Model
         return $this->belongsTo(Hotel::class);
     }
 
-    public function bookDate()
+    public function hotelBookDate()
     {
-        return $this->hasMany(BookDate::class)->select('id', 'transaction_id', 'hostel_room_id', 'start', 'end');
+        return $this->hasMany(HotelBookDate::class)->select('id', 'transaction_id', 'hotel_room_id', 'start', 'end');
     }
 }
