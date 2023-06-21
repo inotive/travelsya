@@ -2,8 +2,8 @@
   x-data="{ 
     totalDuration: 32,
     durationValue: 0,
-    totalRoom: 10,
-    totalGuest: 30,
+    totalRoom: 11,
+    totalGuest: 31,
     checkinValue: '',
     checkoutValue: '',
     handleSelectCheckin(e) {
@@ -25,7 +25,8 @@
       }
     },
     handleSelectRoom(e) {
-
+      var value = parseInt(e.target.value)
+      this.totalGuest = value * 3 + 1;
     },
     handleSelectGuest(e) {
 
@@ -71,7 +72,7 @@
   </div>
   <div class="col-md-3 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Total Kamar</label>
-    <select name="room" id="room" class="form-select">
+    <select name="room" id="room" class="form-select"  x-on:change="handleSelectRoom">
       <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
         <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Kamar` : `${data} Kamar`">-</option>
       </template>
