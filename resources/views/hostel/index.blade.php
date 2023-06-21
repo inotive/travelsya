@@ -2,7 +2,8 @@
 
 @section('content-web')
 <!--begin::Container-->
-<div id="" class="row">
+<div id="" class="row"
+>
             <img class="d-block w-100 h-300px"
                 src="//placehold.it/1200x300"
                 alt="First slide">
@@ -13,7 +14,7 @@
     <div class="content flex-row-fluid mb-10" id="kt_content">
         <div class="row justify-content-between mb-5">
             <div class="col-md-6">
-                <h2 class="fw-bold text-gray-900 mt-10">Hasil pencarian di {{$params['city']}}, Indonesia</h2>
+                <h2 class="fw-bold text-gray-900 mt-10">Hasil pencarian di {{$params['location']}}, Indonesia</h2>
                 <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1">{{date('d M Y',$params['start_date'])}} - {{date('d M Y',$params['end_date'])}} | {{$params['guest']}}  Tamu | {{$params['room']}} Kamar</span>
             </div>
             <div class="col-md-6 align-self-center text-end"><button class="btn btn-danger" id="button-refilter">Pencarian</button></div>
@@ -25,7 +26,7 @@
                             <!--begin::Input-->
                             <select name="city" id="city" class="form-control">
                                 @foreach($cities as $city)
-                                <option value="{{$city}}" {{($params['city'] == $city) ? 'selected' : '' }}>{{$city}}</option>
+                                <option value="{{$city}}" {{($params['location'] == $city) ? 'selected' : '' }}>{{$city}}</option>
                                 @endforeach
                             </select>
                             <!--end::Input-->
@@ -97,7 +98,7 @@
                     <a class="card card-hostel mb-3">
                         <div class="row no-gutters">
                             <div class="col-auto">
-                                <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{$hostel['hostel_image'][0]['image']}}');background-position: center;"></div>
+                                <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{isset($hostel['hostel_image']) ? $hostel['hostel_image'][0]['image'] : ''}}');background-position: center;"></div>
                             </div>
                             <div class="col align-self-center">
                                 <div class="row px-2">
@@ -171,7 +172,7 @@
             data: {
                 optionsort: optionsort,
                 optionrate: optionrate,
-                city: '{{$params['city']}}',
+                city: '{{$params['location']}}',
                 category: '{{$params['category']}}',
                 name: '{{$params['name']}}'
             },
@@ -197,7 +198,7 @@
             data: {
                 optionsort: optionsort,
                 optionrate: optionrate,
-                city: '{{$params['city']}}',
+                city: '{{$params['location']}}',
                 category: '{{$params['category']}}',
                 name: '{{$params['name']}}'
 

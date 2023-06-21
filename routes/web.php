@@ -65,7 +65,6 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
 });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
-Route::post('/ajax/hostel', [HostelController::class, 'ajaxHostel']);
 
 //hotel
 Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->group(function () {
@@ -73,8 +72,10 @@ Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->gro
 });
 
 //hostel
-Route::controller(HostelController::class)->name('hostels')->prefix('hostels')->group(function () {
+Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
     Route::get('/', 'index')->name('.index');
+    Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
+    Route::post('/ajax/hostel', 'ajaxHostel');
 });
 
 

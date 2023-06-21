@@ -162,6 +162,7 @@ class HotelController extends Controller
         //cekpoint 
         if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+        if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
         $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
 
         // cek book date
