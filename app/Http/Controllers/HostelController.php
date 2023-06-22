@@ -117,7 +117,6 @@ class HostelController extends Controller
             "url" => "linkproduct"
 
         ]);
-        dd($hostel);
         if ($hostel['meta']['code'] != 200) {
             toast($hostel['meta']['message'], 'error');
             return redirect()->back();
