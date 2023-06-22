@@ -61,7 +61,7 @@ x-data="{
     <label class="form-label fw-bold fs-6">Duration</label>
     <select name="duration" id="duration" class="form-select" x-bind:value="durationValue" x-on:change="handleSelectDuration">
       <template x-for="data in [ ...Array(totalDuration).keys() ]" key="data">
-        <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Malam` : `${data} Malam`">-</option>
+        <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Bulan` : `${data} Bulan`">-</option>
       </template>
     </select>
   </div>
@@ -85,6 +85,33 @@ x-data="{
       </template>
     </select>
   </div>
+  <div class="col-md-3 col-6 mb-5">
+    <label class="form-label fw-bold fs-6">Tipe Properti</label>
+    <select name="property" id="property" class="form-select">
+        <option value="">Semua</option>
+        <option value="apartemen">Apartemen</option>
+        <option value="villa">Villa</option>
+        <option value="residence">Residence</option>
+        <option value="rumah">Rumah</option>
+    </select>
+  </div>
+  <div class="col-md-3 col-6 mb-5">
+    <label class="form-label fw-bold fs-6">Tipe Kamar</label>
+    <select name="roomtype" id="roomtype" class="form-select">
+        <option value="">Semua</option>
+        <option value="1BR">1BR</option>
+        <option value="2BR">2BR</option>
+        <option value="3BR+">3BR+</option>
+    </select>
+  </div>
+  <div class="col-md-3 col-6 mb-5">
+    <label class="form-label fw-bold fs-6">Tipe Furnish</label>
+    <select name="furnish" id="furnish" class="form-select">
+        <option value="">Semua</option>
+        <option value="fullfurnished">Full Furnished</option>
+        <option value="unfurnished">Unfurnished</option>
+    </select>
+  </div>
   <div class="col-md-12 mb-5 text-end">
     <button style="margin-right: 1em" type="button" class="btn btn-flush" data-bs-dismiss="modal">Kembali</button>
     <button type="submit" class="btn btn-danger">Cari Hotel</button>
@@ -100,7 +127,7 @@ x-data="{
   // Subtracting 1 to match JavaScript months (0-11)
   var year = parseInt(parts[2], 10);
   var date = new Date(year, month, day);
-  date.setDate(date.getDate() + parseInt(duration));
+  date.setMonth(date.getMonth() + parseInt(duration));
   var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + date.getFullYear();
   return formattedDate;
 }

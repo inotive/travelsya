@@ -95,24 +95,45 @@
             </div>
             <div class="col-md-6" id="listhostel">
                     @foreach($hostels as $hostel)
-                    <a class="card card-hostel mb-3">
+                    <div class="card card-hostel mb-3">
                         <div class="row no-gutters">
                             <div class="col-auto">
-                                <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{isset($hostel['hostel_image']) ? $hostel['hostel_image'][0]['image'] : ''}}');background-position: center;"></div>
+                                <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{(count($hostel['hostelImage']) != null) ? $hostel['hostelImage'][0]['image'] : ''}}');background-position: center;"></div>
                             </div>
-                            <div class="col align-self-center">
-                                <div class="row px-2">
-                                    <h4 class="card-title text-gray-900">{{$hostel['name']}}</h4>
-                                    <div>
-                                        @for($j=0;$j < $hostel['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor
+                            <div class="col align-self-center ">
+                                <div class="row justify-content-between pe-10">
+                                    <div class="col-md-6">
+                                        <h4 class="card-title text-gray-900">{{$hostel['name']}}</h4>
+                                        
+                                        <div>
+                                            @for($j=0;$j < $hostel['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                            @if($hostel['rating_avg'] == 0)
+                                            @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                            @endif
+                                        </div>
+                                        <p class="card-text text-gray-500 mt-1">{{$hostel['kecamatan']}}, {{$hostel['city']}}</p>
+                                        
+                                        <p class="fw-semibold d-block fs-2 text-danger">{{General::rp($hostel['price_avg'])}}</p>
                                     </div>
-                                    <p class="card-text text-gray-500 mt-1">{{$hostel['kecamatan']}}, {{$hostel['city']}}</p>
-                                    <div class="text-gray-400 fw-semibold d-block fs-6"> <s>{{"Rp " . number_format($hostel['price_avg']-($hostel['price_avg']*0.5),0,',','.');}}R</s></div>
-                                    <p class="fw-semibold d-block fs-2 text-danger">{{"Rp " . number_format($hostel['price_avg'],0,',','.');}}</p>
+                                    <div class="col-md-6">
+                                        <div class="d-flex flex-column gap-20">
+                                            <div class="d-flex flex-row justify-content-between">
+                                                @foreach($hostel['facilities'] as $fac)
+                                                <div class="d-flex flex-column align-items-center">
+                                                    <span class="{{$fac['icon']}}"></span>
+                                                    <span>{{$fac['name']}}</span>
+                                                </div>
+                                                @endforeach
+                                            </div>
+                                            <a href="{{route('hostel.room',$hostel['id'])."?start=".$_GET['start']."&duration=".$_GET['duration']."&room=".$_GET['room']."&guest=".$_GET['guest']}}" class="btn btn-danger flex-fill">
+                                                Lihat
+                                            </a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                     @endforeach
             </div>
         </div>
@@ -166,7 +187,7 @@
                 }
             });
         $.ajax({
-            url: "{{ url('/ajax/hostel') }}",
+            url: "{{ url('/hostel/ajax') }}",
             type: "POST",
             dataType: 'json',
             data: {
@@ -178,8 +199,9 @@
             },
             success: function(response) {
                 $("#listhostel").html('');
+                console.log(response);
                 $.each(response, function(key,hostel){
-                    $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${hostel.hostel_image[0].image}');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg-(hostel.price_avg*0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);
+                    $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${(hostel.hostel_image.length == 0) ?"" : hostel.hostel_image[0].image }');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg-(hostel.price_avg*0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);
                 })
             }
         })
@@ -192,7 +214,7 @@
                 }
             });
         $.ajax({
-            url: "{{ url('/ajax/hostel') }}",
+            url: "{{ url('/hostel/ajax') }}",
             type: "POST",
             dataType: 'json',
             data: {
