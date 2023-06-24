@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\Travelsya;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HotelController extends Controller
 {
@@ -15,7 +16,18 @@ class HotelController extends Controller
 
     public function index(Request $request)
     {
-        $hotels = $this->travelsya->hostel(['location' => ($request->city) ?: '', 'name' => ($request->name) ?: '', 'category' => ($request->category) ?: '']);
+
+        return view('hotel.index');
+    }
+
+    public function show()
+    {
+        return view('hotel.show');
+    }
+
+    public function indexAgil(Request $request)
+    {
+        $hotels = $this->travelsya->hostel(['location' => ($request->city) ?: '', 'name' => ($request->name) ?: '']);
         $cities = $this->travelsya->hostelCity();
         $date = explode(" ", $request->date);
         $params = $request->all();

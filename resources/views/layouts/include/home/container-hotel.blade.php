@@ -1,5 +1,5 @@
 <div class="row"
-  x-data="{ 
+  x-data="{
     totalDuration: 32,
     durationValue: 0,
     totalRoom: 11,
@@ -13,7 +13,7 @@
         this.checkoutValue = formatDateAndAddOneDay(date, this.durationValue);
       }
     },
-    handleSelectDuration(e) { 
+    handleSelectDuration(e) {
       var duration = parseInt(e.target.value);
       this.durationValue = duration;
       if(duration == 0) {
@@ -49,7 +49,7 @@
   <div class="col-md-3 mb-5">
     <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
     <div class="input-group" id="js_datepicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
-      <input id="checkin" type="text" class="form-control" data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"/>
+      <input id="checkin" type="text" name="start_date" class="form-control" data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"/>
       <span class="input-group-text" data-td-target="#js_datepicker" data-td-toggle="datetimepicker">
         <i class="ki-duotone ki-calendar fs-2">
           <span class="path1"></span>
@@ -68,7 +68,7 @@
   </div>
   <div class="col-md-3 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
-    <input type="text" class="form-control" disabled x-bind:value="checkoutValue" />
+    <input type="text" class="form-control" name="end_date" disabled x-bind:value="checkoutValue" />
   </div>
   <div class="col-md-3 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Total Kamar</label>
@@ -88,7 +88,7 @@
   </div>
   <div class="col-md-12 mb-5 text-end">
     <button style="margin-right: 1em" type="button" class="btn btn-flush" data-bs-dismiss="modal">Kembali</button>
-    <button type="button" class="btn btn-danger">Cari Hotel</button>
+    <a href="{{route('hotels.index')}}" class="btn btn-danger">Cari Hotel</a>
   </div>
 </div>
 
@@ -97,7 +97,7 @@
   function formatDateAndAddOneDay(dateString, duration = 0) {
   var parts = dateString.split('-');
   var day = parseInt(parts[0], 10);
-  var month = parseInt(parts[1], 10) - 1; 
+  var month = parseInt(parts[1], 10) - 1;
   // Subtracting 1 to match JavaScript months (0-11)
   var year = parseInt(parts[2], 10);
   var date = new Date(year, month, day);
