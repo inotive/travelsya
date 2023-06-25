@@ -10,7 +10,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body d-flex flex-column">
-                        @if((session()->get('user')))
+                        @if(session()->get('user') != null)
                         <h4>Detail Pesanan</h4>
                         <div class="mt-10">
                             <label class="form-label fw-bold fs-6">Nama Lengkap</label>
@@ -74,7 +74,7 @@
                                 <input type="hidden" name="start" value="{{date('Y-m-d', $params['start_date'])}}">
                                 <input type="hidden" name="end" value="{{date('Y-m-d', strtotime($params['end_date']))}}">
                                 <input type="hidden" name="end" value="{{date('Y-m-d', strtotime($params['end_date']))}}">
-                                <input type="hidden" name="name" value="{{session()->get('user')['data']['name']}}">
+                                <input type="hidden" name="name" value="{{session()->get('user') != null ? session()->get('user')['data']['name'] : ''}}">
                                 <button type="submit" class="btn btn-danger flex-fill">
                                     Lanjut ke pembayaran
                                 </button>
