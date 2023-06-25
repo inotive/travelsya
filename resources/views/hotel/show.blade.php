@@ -19,11 +19,9 @@
                         <div class="col-md-3">
                             <!--begin::Input-->
                             <select name="city" id="city" class="form-control">
-                                {{--              @foreach($cities as $city)--}}
-                                {{--              <option value="{{$city}}" {{($params['city']==$city) ? 'selected' : '' }}>{{$city}}</option>--}}
-                                {{--              @endforeach--}}
-                                <option value="">Balikpapan</option>
-                                <option value="">Bontang</option>
+                                @foreach($cities as $city)
+                                <option value="{{$city}}" {{($params['location']==$city) ? 'selected' : '' }}>{{$city}}</option>
+                                @endforeach
                             </select>
                             <!--end::Input-->
                         </div>
@@ -63,29 +61,30 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-4">
-                                    <img src="https://service.travelsya.com/storage/hotel/image3.webp"
+                                    <img src="{{$hotelget['hostelImage'] != null ? $hostelget['hostelImage'][0]['image'] : 'https://service.travelsya.com/storage/hotel/image3.webp'}}"
                                          style="max-width: 250px; max-height: 250px" alt="">
                                 </div>
                                 <div class="col-8 d-flex flex-column ">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="d-flex justify-content-between">
-                                                <h1 class="fw-bold">OVAL GUEST HOUSE</h1>
+                                                <h1 class="fw-bold">{{$hotelget->name}}</h1>
                                                 <div id="bintang">
-                                                    @for($j=0;$j < rand(3,4); $j++)
+                                                    
+                                                    @for($j=0;$j < $hotelget->rating_avg; $j++)
                                                         <span class="card-text fa fa-star" style="color: orange;">
                                                        </span>
                                                     @endfor
                                                 </div>
                                             </div>
-                                            <p style="font-size: 13px">Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
-                                            <div class="badge badge-primary">Balikpapan Tengah</div>
+                                            <p style="font-size: 13px">{{$hotelget->address}}</p>
+                                            <div class="badge badge-primary">{{$hotelget->city}}</div>
                                         </div>
 
                                     </div>
                                     <div class="row mt-auto">
                                         <div class="col-12">
-                                            <h2 class="mt-15 fw-bold d-flex align-self-end" style="color: #c02425">Rp. {{number_format(123123,0,',','.')}} - Rp. {{number_format(323123,0,',','.')}}</h2>
+                                            <h2 class="mt-15 fw-bold d-flex align-self-end" style="color: #c02425">{{General::rp($hotelget->minprice)}} - {{General::rp($hotelget->maxprice)}}</h2>
                                         </div>
                                     </div>
 
@@ -123,30 +122,29 @@
                 </div>
             </div>
             <div class="row w-75 me-auto ms-auto mt-10">
-                @for($i =0; $i< 4;$i++)
+                @foreach($hotelget->hotelRoom as $room)
                     <div class="col-6">
                         <div class="card card-hostel mb-3">
                             <div class="row mb-2">
                                 <div class="col-4">
                                     <div class="img-fluid rounded-1 w-150px h-150px m-3"
-                                         style="background-image:url('https://service.travelsya.com/storage/kamar/Lnw9eol8C1F759cRDf16qgdLBnsMgKLqjngpfw3H.jpg');background-position: center; ">
+                                         style="background-image:url('{{$room['image_1'] != null ? $room['image_1'] : "https://service.travelsya.com/storage/kamar/Lnw9eol8C1F759cRDf16qgdLBnsMgKLqjngpfw3H.jpg"}}');background-position: center; ">
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="row px-2 mt-5">
-                                        <h4 class="card-title text-gray-900">Tipe Kamar  {{$i}}</h4>
-                                        <p class="card-text text-gray-500 mt-1">Ukuran Kamar : 1{{$i}} m2</p>
+                                        <h4 class="card-title text-gray-900">{{$room->name}}</h4>
+                                        <p class="card-text text-gray-500 mt-1">Ukuran Kamar : {{$room->roomsize}} m2</p>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-footer d-flex justify-content-between">
-                                <p class="fw-semibold d-block fs-2 text-danger">{{"Rp " .
-                  number_format(132000,0,',','.')}}</p>
-                                <a href="{{route('reservation.hotel')}}" class="btn btn-danger px-4 py-2">Pesan Kamar</a>
+                                <p class="fw-semibold d-block fs-2 text-danger">{{General::rp($room->sellingprice)}}</p>
+                                <a href="{{route('hotels.reservation',$room['id'])."?start=".$_GET['start']."&duration=".$_GET['duration']."&room=".$_GET['room']."&guest=".$_GET['guest']}}" class="btn btn-danger px-4 py-2">Pesan Kamar</a>
                             </div>
                         </div>
                     </div>
-                @endfor
+                @endforeach
 
 
             </div>

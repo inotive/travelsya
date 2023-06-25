@@ -14,19 +14,17 @@
 {{--        <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1">{{date('d M Y',$params['start_date'])}} - {{date('d M--}}
 {{--          Y',$params['end_date'])}} | {{$params['guest']}} Tamu | {{$params['room']}} Kamar</span>--}}
       </div>
-      <div class="col-md-6 align-self-center text-end"><button class="btn btn-danger" id="button-refilter">Pencarian</button></div>
+      {{-- <div class="col-md-6 align-self-center text-end"><button class="btn btn-danger" id="button-refilter">Pencarian</button></div> --}}
     </div>
     <div class="row card w-75 me-auto ms-auto mt-10" id="card-filter">
-      <form action="{{route('hostel.index')}}" method="get">
+      <form action="{{route('hotels.index')}}" method="get">
         <div class="row card-body justify-content-center">
           <div class="col-md-6">
             <!--begin::Input-->
             <select name="city" id="city" class="form-control">
-{{--              @foreach($cities as $city)--}}
-{{--              <option value="{{$city}}" {{($params['city']==$city) ? 'selected' : '' }}>{{$city}}</option>--}}
-{{--              @endforeach--}}
-                <option value="">Balikpapan</option>
-                <option value="">Bontang</option>
+             @foreach($cities as $city)
+             <option value="{{$city}}" {{($params['city']==$city) ? 'selected' : '' }}>{{$city}}</option>
+             @endforeach
             </select>
             <!--end::Input-->
           </div>
@@ -114,31 +112,47 @@
         </div>
       </div>
       <div class="col-md-6" id="listhostel">
-          @for($i = 0; $i <100; $i++)
-              <a href="{{route('hotels.show')}}" class="card card-hostel mb-3">
-                  <div class="row no-gutters">
-                      <div class="col-auto">
-                          <div class="img-fluid rounded-1 w-150px h-200px"
-                               style="background-image:url('');background-position: center;">
-                          </div>
-                      </div>
-                      <div class="col align-self-center">
-                          <div class="row px-2">
-                              <h4 class="card-title text-gray-900">Hotel A</h4>
+        @foreach($hotels as $hotel)
+          <div class="card card-hotel mb-3">
+              <div class="row no-gutters">
+                  <div class="col-auto">
+                      <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{(count($hotel['hotelImage']) != null) ? $hotel['hotelImage'][0]['image'] : ''}}');background-position: center;"></div>
+                  </div>
+                  <div class="col align-self-center ">
+                      <div class="row justify-content-between pe-10">
+                          <div class="col-md-6">
+                              <h4 class="card-title text-gray-900">{{$hotel['name']}}</h4>
+                              
                               <div>
-                                  @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;">
-                    </span>@endfor
+                                  @for($j=0;$j < $hotel['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                  @if($hotel['rating_avg'] == 0)
+                                  @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                  @endif
                               </div>
-                              <p class="card-text text-gray-500 mt-1">Balikpapan Utara, Balikpapan</p>
-                              <div class="text-gray-400 fw-semibold d-block fs-6"> <s>{{"Rp " .
-                    number_format(132000,0,',','.')}}</s></div>
-                              <p class="fw-semibold d-block fs-2 text-danger">{{"Rp " .
-                  number_format(132000,0,',','.')}}</p>
+                              <p class="card-text text-gray-500 mt-1">{{$hotel['kecamatan']}}, {{$hotel['city']}}</p>
+                              
+                              <p class="fw-semibold d-block fs-2 text-danger">{{General::rp($hotel['price_avg'])}}</p>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="d-flex flex-column gap-20">
+                                  <div class="d-flex flex-row justify-content-between">
+                                      @foreach($hotel['facilities'] as $fac)
+                                      <div class="d-flex flex-column align-items-center">
+                                          <span class="{{$fac['icon']}}"></span>
+                                          <span>{{$fac['name']}}</span>
+                                      </div>
+                                      @endforeach
+                                  </div>
+                                  <a href="{{route('hotels.room',$hotel['id'])."?location=".$_GET['location']."&start=".$_GET['start']."&duration=".$_GET['duration']."&room=".$_GET['room']."&guest=".$_GET['guest']}}" class="btn btn-danger flex-fill">
+                                      Lihat
+                                  </a>
+                              </div>
                           </div>
                       </div>
                   </div>
-              </a>
-          @endfor
+              </div>
+          </div>
+        @endforeach
 
 
 {{--          @foreach($hotels as $hostel)--}}
@@ -187,80 +201,78 @@
 </style>
 @endpush
 
-{{--@push('add-script')--}}
-{{--<script>--}}
-{{--  $(document).ready(function () {--}}
+@push('add-script')
+<script>
+    $(document).ready(function() {
 
-{{--    $("#card-filter").hide();--}}
-{{--    $("#button-refilter").click(function () {--}}
-{{--      $("#card-filter").toggle();--}}
-{{--    })--}}
-{{--    var today = new Date();--}}
-{{--    var start = new Date("{{date('m/d/Y',$params['start_date'])}}");--}}
-{{--    var end = new Date("{{date('m/d/Y',$params['end_date'])}}");--}}
-{{--    $('.js-daterangepicker').daterangepicker({--}}
-{{--      minDate: today,--}}
-{{--      startDate: start,--}}
-{{--      endDate: end--}}
-{{--    });--}}
+    $("#button-refilter").click( function(){
+        $("#card-filter").toggle();
+    })
+    var today = new Date(); 
+    var start = new Date("{{date('m/d/Y',$params['start_date'])}}");
+    var end = new Date("{{date('m/d/Y',$params['end_date'])}}");
+    $('.js-daterangepicker').daterangepicker({
+        minDate:today,
+        startDate:start,
+         endDate:end
+    });
 
-{{--    var optionsort = '';--}}
-{{--    var optionrate = '';--}}
+    var optionsort='';
+    var optionrate='';
 
-{{--    $(".sortprice").on('click', function () {--}}
-{{--      optionsort = $('input[name="sortprice"]:checked').val();--}}
-{{--      $.ajaxSetup({--}}
-{{--        headers: {--}}
-{{--          'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')--}}
-{{--        }--}}
-{{--      });--}}
-{{--      $.ajax({--}}
-{{--        url: "{{ url('/ajax/hostel') }}",--}}
-{{--        type: "POST",--}}
-{{--        dataType: 'json',--}}
-{{--        data: {--}}
-{{--          optionsort: optionsort,--}}
-{{--          optionrate: optionrate,--}}
-{{--          city: '{{$params['city']}}',--}}
-{{--          category: '{{$params['category']}}',--}}
-{{--          name: '{{$params['name']}}'--}}
-{{--            },--}}
-{{--        success: function (response) {--}}
-{{--          $("#listhostel").html('');--}}
-{{--          $.each(response, function (key, hostel) {--}}
-{{--            $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${hostel.hostel_image[0].image}');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg - (hostel.price_avg * 0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);--}}
-{{--          })--}}
-{{--        }--}}
-{{--      })--}}
-{{--    })--}}
-{{--    $(".rate").on('click', function () {--}}
-{{--      optionrate = $('input[name="rate"]:checked').val();--}}
-{{--      $.ajaxSetup({--}}
-{{--        headers: {--}}
-{{--          'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')--}}
-{{--        }--}}
-{{--      });--}}
-{{--      $.ajax({--}}
-{{--        url: "{{ url('/ajax/hostel') }}",--}}
-{{--        type: "POST",--}}
-{{--        dataType: 'json',--}}
-{{--        data: {--}}
-{{--          optionsort: optionsort,--}}
-{{--          optionrate: optionrate,--}}
-{{--          city: '{{$params['city']}}',--}}
-{{--          category: '{{$params['category']}}',--}}
-{{--          name: '{{$params['name']}}'--}}
+    $(".sortprice").on('click',function(){
+        optionsort = $('input[name="sortprice"]:checked').val();
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+            url: "{{ url('/hotel/ajax') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                optionsort: optionsort,
+                optionrate: optionrate,
+                city: '{{$params['location']}}',
+                name: '{{$params['name']}}'
+            },
+            success: function(response) {
+                $("#listhostel").html('');
+                console.log(response);
+                $.each(response, function(key,hostel){
+                    $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${(hostel.hostel_image.length == 0) ?"" : hostel.hostel_image[0].image }');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg-(hostel.price_avg*0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);
+                })
+            }
+        })
+    })
+    $(".rate").on('click',function(){
+        optionrate = $('input[name="rate"]:checked').val();
+        $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        $.ajax({
+            url: "{{ url('/hotel/ajax') }}",
+            type: "POST",
+            dataType: 'json',
+            data: {
+                optionsort: optionsort,
+                optionrate: optionrate,
+                city: '{{$params['location']}}',
+                name: '{{$params['name']}}'
 
-{{--            },--}}
-{{--        success: function (response) {--}}
-{{--          console.log(response)--}}
-{{--          $("#listhostel").html('');--}}
-{{--          $.each(response, function (key, hostel) {--}}
-{{--            $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${hostel.hostel_image[0].image}');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg - (hostel.price_avg * 0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);--}}
-{{--          })--}}
-{{--        }--}}
-{{--      })--}}
-{{--    })--}}
-{{--  })--}}
-{{--</script>--}}
-{{--@endpush--}}
+            },
+            success: function(response) {
+                console.log(response)
+                $("#listhostel").html('');
+                $.each(response, function(key,hostel){
+                    $("#listhostel").append(`<a class="card card-hostel mb-3"><div class="row no-gutters"><div class="col-auto"><div class="img-fluid rounded-1 w-150px h-200px"style="background-image:url('${hostel.hostel_image[0].image}');background-position: center;"></div></div><div class="col align-self-center"><div class="row px-2"><h4 class="card-title text-gray-900">${hostel.name}</h4><div><span class="card-text fa fa-star" style="color: orange;"></span></div><p class="card-text text-gray-500 mt-1">${hostel.kecamatan}, ${hostel.city}</p><div class="text-gray-400 fw-semibold d-block fs-6"> <s>${hostel.price_avg-(hostel.price_avg*0.5)}</s></div><p class="fw-semibold d-block fs-2 text-danger">${hostel.price_avg}</p></div></div></div></a>`);
+                })
+            }
+        })
+    })
+})
+</script>
+@endpush

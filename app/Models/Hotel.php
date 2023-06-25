@@ -11,6 +11,24 @@ class Hotel extends Model
 
     protected $guarded = [];
 
+
+    public function getFacilitiesAttribute($value)
+    {
+        $arrays = explode(',', $value);
+        $fac = [];
+        foreach ($arrays as $array) {
+            if ($array == "TV")
+                array_push($fac, ['icon' => 'fa fa-tv', 'name' => "TV"]);
+
+            if ($array == "Breakfast")
+                array_push($fac, ['icon' => 'fa fa-coffee', 'name' => "Breakfast"]);
+
+            if ($array == "Wifi")
+                array_push($fac, ['icon' => 'fa fa-wifi', 'name' => "Wifi"]);
+        }
+        return $fac;
+    }
+
     /**
      * Get the hotelRoom that owns the Hostel
      *
