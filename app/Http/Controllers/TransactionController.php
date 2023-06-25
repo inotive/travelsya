@@ -73,6 +73,10 @@ class TransactionController extends Controller
         }
     }
 
+    public function reservation()
+    {
+        return view('reservation.index');
+    }
     public function requestHostel(Request $request)
     {
         try {

@@ -69,7 +69,10 @@ Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 //hotel
 Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->group(function () {
     Route::get('/', 'index')->name('.index');
+    Route::get('/detail-hotel', 'show')->name('.show');
+
 });
+
 
 //hostel
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
@@ -85,7 +88,7 @@ Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->gr
 //tranas
 Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
-
+Route::get('reservation', [TransactionController::class, 'reservation'])->name('reservation.hotel');
 
 Route::get('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login')->middleware('guest');
 Route::post('/admin/login', [AdminAuthController::class, 'authenticate'])->name('admin.login.post');
