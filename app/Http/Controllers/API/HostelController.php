@@ -235,9 +235,11 @@ class HostelController extends Controller
             foreach ($data['guest'] as $guest) {
                 $storeGuest = Guest::create([
                     'transaction_id' => $storeTransaction->id,
-                    'type_id' => $guest['type_id'],
-                    'identity' => $guest['identity'],
+                    // 'type_id' => $guest['type_id'],
+                    // 'identity' => $guest['identity'],
                     'name' => $guest['name'],
+                    'email' => $guest['email'],
+                    'phone' => $guest['phone'],
                 ]);
             }
             if ($data['point']) {

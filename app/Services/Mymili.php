@@ -238,7 +238,7 @@ class Mymili
         return $response;
     }
 
-    public function saldo($data)
+    public function saldo()
     {
         $xml = '<?xml version="1.0"?> 
         <methodCall> 

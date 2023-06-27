@@ -4,11 +4,19 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Service;
 use App\Models\Setting;
+use App\Services\Mymili;
 use Illuminate\Http\Request;
 
 class SettingController extends Controller
 {
+    protected $mymili, $xendit;
+    public function __construct(Mymili $mymili)
+    {
+        $this->mymili = $mymili;
+    }
+
     // public function getPoint()
     // {
     //     try {
@@ -22,4 +30,25 @@ class SettingController extends Controller
     //         ], 'Fetch data failed', 500);
     //     }
     // }
+
+    public function getSaldo()
+    {
+
+        $transaction = $this->mymili->saldo();
+        if ($transaction['RESPONSECODE'] == 00) {
+            return ResponseFormatter::success($transaction, 'Saldo request success');
+        } else {
+            return ResponseFormatter::error(null, $transaction['MESSAGE']);
+        }
+    }
+
+    public function getService()
+    {
+        $service = Service::get();
+        if (count($service)) {
+            return ResponseFormatter::success($service, 'Service successfully loaded');
+        } else {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+    }
 }
