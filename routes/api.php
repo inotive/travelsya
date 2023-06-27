@@ -95,6 +95,8 @@ Route::middleware('auth:sanctum')->group(function () {
 });
 //setting
 route::get('/saldo', [SettingController::class, 'getSaldo']);
+route::get('/service', [SettingController::class, 'getService']);
+
 
 //webhook
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
