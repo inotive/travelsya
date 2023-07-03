@@ -266,6 +266,65 @@
 		}
 	];
 
+	var dummyHostel = {
+		typeProperty: [
+			{
+				id: 0,
+				name: "apartement",
+				label: "Apartemen"
+			},
+			{
+				id: 1,
+				name: "house",
+				label: "Rumah"
+			},
+			{
+				id: 2,
+				name: "villa",
+				label: "Villa"
+			},
+			{
+				id: 3,
+				name: "residence",
+				label: "Residence"
+			}
+		],
+		typeBed: [
+			{
+				id: 0,
+				name: "studio",
+				label: "studio"
+			},
+			{
+				id: 1,
+				name: "1br",
+				label: "1BR"
+			},
+			{
+				id: 2,
+				name: "2br",
+				label: "2BR"
+			},
+			{
+				id: 3,
+				name: "3br",
+				label: "3BR+"
+			}
+		],
+		typeFurnish: [
+			{
+				id: 0,
+				name: "fullfurnished",
+				label: "Full Furnish"
+			},
+			{
+				id: 1,
+				name: "unfurnished",
+				label: "Unfurnished"
+			}
+		]
+	}
+
 	var dummyExploreCities = [
 		{
 			id: 0,
@@ -428,6 +487,10 @@
 			Alpine.store("hotel", {
 				cities: dummyCities,
 				hotels: dummyHotels,
+			}),
+			Alpine.store("hostel", {
+				cities: dummyCities,
+				...dummyHostel
 			}),
 			Alpine.store("explorecity", {
 				data: dummyExploreCities,

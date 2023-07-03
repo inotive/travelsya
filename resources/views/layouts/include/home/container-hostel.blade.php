@@ -1,13 +1,40 @@
-<div class="row">
+<div class="row"
+  x-data="{ 
+    totalDuration: 32,
+    durationValue: 0,
+    totalRoom: 11,
+    totalGuest: 31,
+    checkinValue: '',
+    checkoutValue: '',
+    handleSelectCheckin(e) {
+      var date = e.target.value
+      this.checkinValue = date;
+      if(this.durationValue > 0) {
+        this.checkoutValue = formatDateAndAddOneDay(date, this.durationValue);
+      }
+    },
+    handleSelectDuration(e) { 
+      var duration = parseInt(e.target.value);
+      this.durationValue = duration;
+      if(duration == 0) {
+        this.checkoutValue = '';
+      }else if(this.checkinValue !== '') {
+        this.checkoutValue = formatDateAndAddOneDay(this.checkinValue, duration);
+      }else{
+        return
+      }
+    },
+    handleSelectRoom(e) {
+      var value = parseInt(e.target.value)
+      this.totalGuest = value * 3 + 1;
+    }
+  }"
+>
   <div class="col-md-3 mb-5">
     <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
     <select id="location" class="form-select select" data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
       <optgroup label="Kota"></optgroup>
-      <template x-for="data in $store.hotel.cities">
-        <option x-bind:value="data.name" x-text="data.label"></option>
-      </template>
-      <optgroup label="Hotel"></optgroup>
-      <template x-for="data in $store.hotel.hotels">
+      <template x-for="data in $store.hostel.cities">
         <option x-bind:value="data.name" x-text="data.label"></option>
       </template>
     </select>
