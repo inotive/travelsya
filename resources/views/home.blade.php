@@ -57,7 +57,7 @@
 			classImage: "w-35px",
 		},
 		{
-			id: 8,
+			id: 4,
 			isActive: true,
 			code: "bpjs",
 			label: "BPJS",
@@ -68,7 +68,7 @@
 			classImage: "w-30px",
 		},
 		{
-			id: 7,
+			id: 5,
 			isActive: true,
 			code: "pln",
 			label: "PLN",
@@ -78,7 +78,7 @@
 			classImage: "w-30px",
 		},
 		{
-			id: 9,
+			id: 6,
 			isActive: true,
 			code: "pdam",
 			label: "PDAM",
@@ -89,7 +89,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 11,
+			id: 7,
 			isActive: true,
 			code: "e-wallet",
 			label: "E-Wallet",
@@ -99,7 +99,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 12,
+			id: 8,
 			isActive: true,
 			code: "pulsa-data",
 			label: "Pulsa & Data",
@@ -110,7 +110,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 13,
+			id: 9,
 			isActive: true,
 			code: "tv",
 			label: "TV Berbayar",
@@ -133,7 +133,7 @@
 			classImage: "w-30px",
 		},
 		{
-			id: 1,
+			id: 10,
 			isActive: false,
 			code: "plane",
 			label: "Pesawat",
@@ -144,7 +144,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 2,
+			id: 11,
 			isActive: false,
 			code: "train",
 			label: "Kereta Api",
@@ -154,7 +154,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 3,
+			id: 12,
 			isActive: false,
 			code: "bus-travel",
 			label: "Bus & Travel",
@@ -164,7 +164,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 5,
+			id: 13,
 			isActive: false,
 			code: "rent-car",
 			label: "Rental Mobil",
@@ -174,7 +174,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 10,
+			id: 14,
 			isActive: false,
 			code: "bank-transfer",
 			label: "Transfer Bank",
