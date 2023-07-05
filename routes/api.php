@@ -92,10 +92,11 @@ Route::middleware('auth:sanctum')->group(function () {
         route::post('/hostel/{id}/update', [HostelController::class, 'update']);
         route::post('/hostel/{id}/destroy', [HostelController::class, 'destroy']);
     });
-
-    //setting
-    // route::get('/setting/poin', [SettingController::class, 'getPoint']);
 });
+//setting
+route::get('/saldo', [SettingController::class, 'getSaldo']);
+route::get('/service', [SettingController::class, 'getService']);
+
 
 //webhook
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);

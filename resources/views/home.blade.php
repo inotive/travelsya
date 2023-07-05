@@ -1,7 +1,4 @@
-@extends('layouts.web') 
-
-@section('content-web')
-
+@extends('layouts.web') @section('content-web')
 @include('layouts.include.carousel')
 
 <!-- start::Menubar -->
@@ -9,10 +6,7 @@
 <!-- end::Menubar -->
 
 @include('layouts.include.home.favorite-hotel')
-@include('layouts.include.home.explore-city') 
-
-@endsection 
-@push('add-script')
+@include('layouts.include.home.explore-city') @endsection @push('add-script')
 <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 
 <script>
@@ -178,54 +172,6 @@
 			titleHeader: "",
 			classImage: "w-40px",
 		},
-	];
-
-	var dummyCities = [
-		{
-			id: 1,
-			name: "Balikpapan",
-			label: "Balikpapan"
-		},
-		{
-			id: 2,
-			name: "Sangatta",
-			label: "Sangatta"
-		},
-		{
-			id: 3,
-			name: "Bontang",
-			label: "Bontang"
-		},
-		{
-			id: 4,
-			name: "Samarinda",
-			label: "Samarinda"
-		},
-		{
-			id: 9,
-			name: "Bali",
-			label: "Bali"
-		},
-		{
-			id: 10,
-			name: "Yogyakarta",
-			label: "Yogyakarta"
-		},
-		{
-			id: 11,
-			name: "Jakarta",
-			label: "Jakarta"
-		},
-		{
-			id: 12,
-			name: "Surabaya",
-			label: "Surabaya"
-		},
-		{
-			id: 13,
-			name: "Bandung",
-			label: "Bandung"
-		}
 	];
 
 	var dummyHotels = [
@@ -396,11 +342,39 @@
 		},
 	];
 
+	var today = new Date();
+	$(".js-daterangepicker").daterangepicker({
+		minDate: today,
+	});
+
+	var dummyCities;
+	$.ajax({
+		url: "{{ route('hostel.ajax.city') }}",
+		async:false,
+		type: "GET",
+		dataType: "json",
+		success: function (response) {
+			dummyCities = response.map((item, id) => ({
+					id: id,
+					name: item?.city.toLowerCase() || '',
+					label: item?.city || ''
+			}));
+		},
+	});
+
+	$.ajaxSetup({
+		headers: {
+			"X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr(
+				"content"
+			)
+		}
+	})
+
 	$(document).ready(function () {
 		$('.form-select.select:not(.normal)').each(function () {
-				$(this).select2({
-						dropdownParent: $(this).parent()
-				});
+			$(this).select2({
+				dropdownParent: $(this).parent()
+			});
 		});
 		var today = new Date();
 		$(".js-daterangepicker").daterangepicker({
@@ -408,39 +382,54 @@
 		});
 
 		new tempusDominus.TempusDominus(
-			document.getElementById("js_datepicker"),
-			{
-				display: {
-					viewMode: "calendar",
-					components: {
-            date: true,
-            hours: false,
-            minutes: false,
-            seconds: false
-        }
-				},
-				localization: {
-					locale: "id",
-					format: "dd-MM-yyyy",
-				},
-				restrictions: {
-        	minDate: today,
-        },
-			}
-		);
+			document.getElementById("js_datepicker"), {
+			display: {
+				viewMode: "calendar",
+				components: {
+					date: true,
+					hours: false,
+					minutes: false,
+					seconds: false
+				}
+			},
+			localization: {
+				locale: "id",
+				format: "dd-MM-yyyy",
+			},
+			restrictions: {
+				minDate: today,
+			},
+		});
 
-		const { getOperator } = window.NoTelp;
+		new tempusDominus.TempusDominus(
+			document.getElementById("js_datepickerhostel"), {
+			display: {
+				viewMode: "calendar",
+				components: {
+					date: true,
+					hours: false,
+					minutes: false,
+					seconds: false
+				}
+			},
+			localization: {
+				locale: "id",
+				format: "dd-MM-yyyy",
+			},
+			restrictions: {
+				minDate: today,
+			},
+		});
+
+		const {
+			getOperator
+		} = window.NoTelp;
+
 		$(".notelp").on("keyup", function (e) {
 			var cat = $(this).data("cat");
 			var notelp = e.target.value;
 			var operatorTelp1 = getOperator(notelp);
-			$.ajaxSetup({
-				headers: {
-					"X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr(
-						"content"
-					),
-				},
-			});
+
 			if (operatorTelp1.valid) {
 				$.ajax({
 					url: "{{ url('/ajax/ppob') }}",
@@ -483,21 +472,21 @@
 		Alpine.store("menubar", {
 			data: dummyMenus,
 			selected: {},
+		})
+		Alpine.store("hotel", {
+			cities: dummyCities,
+			hotels: dummyHotels,
 		}),
-			Alpine.store("hotel", {
-				cities: dummyCities,
-				hotels: dummyHotels,
-			}),
-			Alpine.store("hostel", {
-				cities: dummyCities,
-				...dummyHostel
-			}),
-			Alpine.store("explorecity", {
-				data: dummyExploreCities,
-			}),
-			Alpine.store("favoritehotel", {
-				data: dummyFavoriteHotel,
-			});
+		Alpine.store("hostel", {
+			cities: dummyCities,
+			...dummyHostel
+		}),
+		Alpine.store("explorecity", {
+			data: dummyExploreCities,
+		}),
+		Alpine.store("favoritehotel", {
+			data: dummyFavoriteHotel,
+		});
 	});
 </script>
 @endpush

@@ -65,23 +65,33 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
 });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
-Route::post('/ajax/hostel', [HostelController::class, 'ajaxHostel']);
 
 //hotel
 Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->group(function () {
     Route::get('/', 'index')->name('.index');
+    Route::get('/detail-hotel', 'show')->name('.show');
+    Route::get('/{id}/room/', 'room')->name('.room');
+    Route::get('/{idroom}/reservation', 'reservation')->name('.reservation');
+    Route::post('/{idroom}/request', 'request')->name('.request');
+    Route::post('/ajax', 'ajaxHotel');
 });
 
+
 //hostel
-Route::controller(HostelController::class)->name('hostels')->prefix('hostels')->group(function () {
+Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
     Route::get('/', 'index')->name('.index');
+    Route::get('/{id}/room/', 'room')->name('.room');
+    Route::get('/{idroom}/checkout', 'checkout')->name('.checkout');
+    Route::post('/{idroom}/request', 'request')->name('.request');
+    Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
+    Route::post('/ajax', 'ajaxHostel');
 });
 
 
 //tranas
 Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
-
+Route::get('reservation', [TransactionController::class, 'reservation'])->name('reservation.hotel');
 
 Route::get('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login')->middleware('guest');
 Route::post('/admin/login', [AdminAuthController::class, 'authenticate'])->name('admin.login.post');

@@ -72,4 +72,37 @@ class TransactionController extends Controller
             return $th;
         }
     }
+
+    public function reservation()
+    {
+        return view('reservation.index');
+    }
+    public function requestHostel(Request $request)
+    {
+        try {
+            $data = $request->all();
+            dd($request->all());
+            $hostel = $this->travelsya->requestHostel([
+                "service" => $data['service'],
+                "payment" => $data['payment_method'],
+                "hostel_room_id" => $data['hostel_room_id'],
+                "point" => 0,
+                "guest" => [[
+                    "type_id" => "KTP",
+                    "identity" => 123456,
+                    "name" => "budi"
+                ]],
+                "start" => "2023-08-13", //"2023-08-13"
+                "end" => "2023-08-13",
+                "url" => "linkproduct"
+
+            ]);
+            if ($hostel['meta']['code'] != 200)
+                return view('product.pulsa');
+
+            return redirect()->to($hostel['data']['invoice_url'])->send();
+        } catch (ValidationException $th) {
+            return $th;
+        }
+    }
 }

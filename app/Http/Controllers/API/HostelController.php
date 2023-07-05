@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Xendit;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -161,7 +162,10 @@ class HostelController extends Controller
 
         //cekpoint 
         if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
-        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) ?: 1;
+        $start = new DateTime($data['start']);
+        $end = new DateTime($data['end']);
+        $interval = $end->diff($start);
+        $qty = $interval->format('%m');
         $amount = $setting->getAmount($hostel->sellingprice, $qty, $fees);
 
         // cek book date
@@ -231,9 +235,11 @@ class HostelController extends Controller
             foreach ($data['guest'] as $guest) {
                 $storeGuest = Guest::create([
                     'transaction_id' => $storeTransaction->id,
-                    'type_id' => $guest['type_id'],
-                    'identity' => $guest['identity'],
+                    // 'type_id' => $guest['type_id'],
+                    // 'identity' => $guest['identity'],
                     'name' => $guest['name'],
+                    'email' => $guest['email'],
+                    'phone' => $guest['phone'],
                 ]);
             }
             if ($data['point']) {

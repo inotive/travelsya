@@ -109,6 +109,9 @@ class CallbackController extends Controller
                     if ($transaction->service == "hostel") {
                         BookDate::where("hostel_room_id", $transaction->detailTransaction['hostel_room_id'])->delete();
                     }
+                    if ($transaction->service == "hotel") {
+                        BookDate::where("hotel_room_id", $transaction->detailTransaction['hotel_room_id'])->delete();
+                    }
                     //EXPIRED
                     $updateTransaction = $transaction->update([
                         'status' => "EXPIRED"
@@ -118,14 +121,16 @@ class CallbackController extends Controller
                     ]);
 
                     //add back point
-                    HistoryPoint::create([
-                        'user_id' => $transaction->user_id,
-                        'point' => $data['fees'][1]['value'],
-                        'transaction_id' => $transaction->id,
-                        'date' => now(),
-                        'flow' => "debit"
-                    ]);
-                    User::find($transaction->user_id)->update(['point' => $data['fees'][1]['value']]);
+                    if (count($data['fees']) > 0) {
+                        HistoryPoint::create([
+                            'user_id' => $transaction->user_id,
+                            'point' => $data['fees'][1]['value'],
+                            'transaction_id' => $transaction->id,
+                            'date' => now(),
+                            'flow' => "debit"
+                        ]);
+                        User::find($transaction->user_id)->update(['point' => $data['fees'][1]['value']]);
+                    }
                 }
             }
         }
