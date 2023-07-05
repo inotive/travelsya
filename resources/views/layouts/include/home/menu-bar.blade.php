@@ -70,6 +70,9 @@
                 <div x-show="$store.menubar.selected.code==='attraction'">
                   @include('layouts.include.home.container-attraction')
                 </div>
+                <div x-show="$store.menubar.selected.code==='beauty'">
+                  @include('layouts.include.home.container-beauty')
+                </div>
                 <div x-show="$store.menubar.selected.code==='bpjs'">
                   @include('layouts.include.home.container-bpjs')
                 </div>

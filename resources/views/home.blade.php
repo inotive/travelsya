@@ -23,7 +23,7 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 6,
+			id: 1,
 			isActive: true,
 			code: "hostel",
 			label: "Hostel",
@@ -35,15 +35,26 @@
 			classImage: "w-40px",
 		},
 		{
-			id: 16,
+			id: 2,
 			isActive: true,
 			code: "attraction",
 			label: "Rekreasi",
-			image: "../assets/media/products-categories/icon-rekreasi.png",
+			image: "../assets/media/products-categories/icon-attraction.png",
 			imageHeader:
 				"https://images.unsplash.com/photo-1535764558463-30f3af596bee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
 			titleHeader: "Cari destinasi rekreasi anda disini!",
-			classImage: "w-45px",
+			classImage: "w-35px",
+		},
+		{
+			id: 3,
+			isActive: true,
+			code: "beauty",
+			label: "Health & Beauty",
+			image: "../assets/media/products-categories/icon-beauty.png",
+			imageHeader:
+				"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80",
+			titleHeader: "Cari kebutuhan kesehatan & kecantiikan anda disini!",
+			classImage: "w-35px",
 		},
 		{
 			id: 8,
