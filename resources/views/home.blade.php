@@ -416,6 +416,7 @@
 			website: "-"
 		},
 	]
+	
 	var today = new Date();
 	$(".js-daterangepicker").daterangepicker({
 		minDate: today,

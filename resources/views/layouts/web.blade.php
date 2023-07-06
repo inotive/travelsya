@@ -178,6 +178,7 @@
                                     <div class="col md-4">
                                         <p class="fw-bold fs-5">Dukungan</p>
                                         <p>Tentang Kami</p>
+                                        <a href="/partner-hotel" class="text-white"><p>Partner</p></a>
                                         <p>Layanan Pelanggan</p>
                                         <p>Kebijakan Privasi</p>
                                         <p>Syarat & Ketentuan</p>

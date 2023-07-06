@@ -47,10 +47,10 @@
             <div class="h-40px">
               <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-baseå" x-html="data.label"></a>
             </div>
-            <p class="fs-6 text-gray-600 text-dark mt-3" x-html="data.address"></p>
+            <!-- <p class="fs-6 text-gray-600 text-dark mt-3" x-html="data.address"></p>
             <p class="fs-7 text-gray-800 text-dark mt-3 mb-0">Telp: <span x-html="data.telp"></span></p>
             <p class="fs-7 text-gray-800 text-dark mb-0">Email: <span x-html="data.email"></span></p>
-            <p class="fs-7 text-gray-800 text-dark mb-0">Website: <span x-html="data.website"></span></p>
+            <p class="fs-7 text-gray-800 text-dark mb-0">Website: <span x-html="data.website"></span></p> -->
           </div>
         </div>
 

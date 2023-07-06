@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\TransactionController as AdminTransactionControll
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PartnerHotelController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\HostelController;
 use App\Http\Controllers\ProductController;
@@ -38,6 +39,7 @@ Route::get('/welcome', function () {
 })->name('welcome');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 
 // Route::get('/', [AuthController::class, 'login'])->name('home');
 //auth
