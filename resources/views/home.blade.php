@@ -4,9 +4,13 @@
 <!-- start::Menubar -->
 @include('layouts.include.home.menu-bar')
 <!-- end::Menubar -->
-
 @include('layouts.include.home.favorite-hotel')
-@include('layouts.include.home.explore-city') @endsection @push('add-script')
+@include('layouts.include.home.partner-hotel') 
+@include('layouts.include.home.explore-city') 
+
+@endsection 
+
+@push('add-script')
 <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 
 <script>
@@ -353,6 +357,65 @@
 		},
 	];
 
+	var dummyPartnerHotel = [
+		{
+			id: 0,
+			label: "Oval Kost",
+			image: "../assets/media/partner/oval.png",
+			address: "Jin. Mekar Sari RT.19 NO.67 Gn. Sari Ilir, Balikpapan, Kalimantan Timur",
+			email: "ovalkost@gmail.com",
+			telp: "+6282166888766",
+			website: "www.ovalkost.com"
+		},{
+			id: 1,
+			label: "Hemra Hotel",
+			image: "../assets/media/partner/hemra.png",
+			address: "JI. MT Haryono No.5 No.85, Damai, Balikpapan, Kalimantan Timur",
+			email: "-",
+			telp: "0542-762290",
+			website: "-"
+		},{
+			id: 2,
+			label: "Her Mandiri Guest House",
+			image: "../assets/media/partner/her.png",
+			address: "JI. Syarifuddin Yoes No.88, Sepinggan, Balikpapan, Kalimantan Timur",
+			email: "-",
+			telp: "0542-8514339",
+			website: "-"
+		},{
+			id: 3,
+			label: "Hotel Ayu",
+			image: "../assets/media/partner/ayu.png",
+			address: "JI. P. Antasari, No.18 RT.001, Karang Rejo, Balikpapan, Kalimantan Timur",
+			email: "-",
+			telp: "0542-425290",
+			website: "-"
+		},{
+			id: 4,
+			label: "Royal Suite",
+			image: "../assets/media/partner/royal.png",
+			address: "JI. Syarifuddin Yoes No.125, Sepinggan, Balikpapan, Kalimantan Timur",
+			email: "-",
+			telp: "+6282211852013",
+			website: "www.royalsuitehotels.com"
+		},{
+			id: 5,
+			label: "De' Radja Guest House",
+			image: "../assets/media/partner/de-radja.png",
+			address: "-",
+			email: "-",
+			telp: "-",
+			website: "-"
+		},{
+			id: 6,
+			label: "Radja",
+			image: "../assets/media/partner/radja.png",
+			address: "-",
+			email: "-",
+			telp: "-",
+			website: "-"
+		},
+	]
 	var today = new Date();
 	$(".js-daterangepicker").daterangepicker({
 		minDate: today,
@@ -497,6 +560,9 @@
 		}),
 		Alpine.store("favoritehotel", {
 			data: dummyFavoriteHotel,
+		});
+		Alpine.store("partnerhotel", {
+			data: dummyPartnerHotel,
 		});
 	});
 </script>
