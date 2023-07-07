@@ -43,6 +43,12 @@ class ProductController extends Controller
         return view('product.tv');
     }
 
+    public function show($product)
+    {
+
+        return view('product.detail-product');
+    }
+
     public function ajaxPpob(Request $request)
     {
         try {

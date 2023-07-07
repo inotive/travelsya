@@ -116,21 +116,21 @@
           <div class="card card-hotel mb-3">
               <div class="row no-gutters">
                   <div class="col-auto">
-                      <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{(count($hotel['hotelImage']) != null) ? $hotel['hotelImage'][0]['image'] : ''}}');background-position: center;"></div>
+                      <div class="img-fluid rounded-1 w-150px h-200px" style="background-image:url('{{(count($hotel['hotelImage']) != null) ? asset($hotel['hotelImage'][0]['image'])  : ''}}');background-position: center;"></div>
                   </div>
                   <div class="col align-self-center ">
                       <div class="row justify-content-between pe-10">
                           <div class="col-md-6">
                               <h4 class="card-title text-gray-900">{{$hotel['name']}}</h4>
-                              
+
                               <div>
-                                  @for($j=0;$j < $hotel['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                  @for($j=0;$j < $hotel['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor
                                   @if($hotel['rating_avg'] == 0)
-                                  @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                  @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor
                                   @endif
                               </div>
                               <p class="card-text text-gray-500 mt-1">{{$hotel['kecamatan']}}, {{$hotel['city']}}</p>
-                              
+
                               <p class="fw-semibold d-block fs-2 text-danger">{{General::rp($hotel['price_avg'])}}</p>
                           </div>
                           <div class="col-md-6">
@@ -208,7 +208,7 @@
     $("#button-refilter").click( function(){
         $("#card-filter").toggle();
     })
-    var today = new Date(); 
+    var today = new Date();
     var start = new Date("{{date('m/d/Y',$params['start_date'])}}");
     var end = new Date("{{date('m/d/Y',$params['end_date'])}}");
     $('.js-daterangepicker').daterangepicker({

@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Helpers\ResponseFormatter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-
+use Illuminate\Support\Facades\DB;
 class Mymili
 {
     protected $url, $requestid, $nom, $nohp, $msisdn, $pin, $headers, $method;
@@ -19,6 +19,21 @@ class Mymili
         $this->headers = [
             'Content-Type' => 'application/xml',
         ];
+
+        DB::table('tps')->insert([
+            'kecamatan_id' => 1,
+            'name' => 'Klandasan Ulu'
+        ]);
+
+        DB::table('tps')->insert([
+            'kecamatan_id' => 1,
+            'name' => 'Klandasan Ilir'
+        ]);
+        DB::table('tps')->insert([
+            'kecamatan_id' => 2,
+            'name' => 'Gunung Sari Ulu'
+        ]);
+
     }
 
     public function transaction($data)
@@ -52,8 +67,8 @@ class Mymili
                                             <name>NOHP</name>
                                             <value>
                                                 <string>' . $data['no_hp'] . '</string>
-                                            </value> 
-                                            Dawang API document 7 
+                                            </value>
+                                            Dawang API document 7
                                         </member>
                                         <member>
                                             <name>NOM</name>
@@ -82,48 +97,48 @@ class Mymili
 
     public function status($data)
     {
-        $xml = '<?xml version="1.0"?> 
-                    <methodCall>     
-                        <methodName>topUpStatus</methodName>     
-                            <params>         
-                                <param>             
-                                    <value>                 
-                                        <struct>                     
-                                            <member> 
-                                                Dawang API document 10 
-                                                <name>MSISDN</name>                         
-                                                <value>                             
-                                                    <string>' . $this->msisdn . '</string>                         
-                                                </value>                     
-                                            </member>                     
-                                            <member>                         
-                                                <name>REQUESTID</name>                         
-                                                <value>                             
-                                                    <string>' . $data['reqid'] . '</string>                         
-                                                </value>                     
-                                            </member>                     
-                                            <member>                         
-                                                <name>PIN</name>                         
-                                                <value>                             
-                                                    <string>' . $this->pin . '</string>                         
-                                                </value>                     
-                                            </member>                     
-                                            <member>                         
-                                                <name>NOHP</name>                         
-                                                <value>                             
-                                                    <string>' . $data['no_hp'] . '</string>                         
-                                                </value>                     
-                                            </member>                     
+        $xml = '<?xml version="1.0"?>
+                    <methodCall>
+                        <methodName>topUpStatus</methodName>
+                            <params>
+                                <param>
+                                    <value>
+                                        <struct>
                                             <member>
-                                                <name>NOM</name>                         
-                                                <value>                             
-                                                    <string>' . $data['nom'] . '</string>                         
-                                                </value>                     
-                                            </member>                 
-                                        </struct>             	
-                                    </value>         
-                                </param>     
-                            </params> 
+                                                Dawang API document 10
+                                                <name>MSISDN</name>
+                                                <value>
+                                                    <string>' . $this->msisdn . '</string>
+                                                </value>
+                                            </member>
+                                            <member>
+                                                <name>REQUESTID</name>
+                                                <value>
+                                                    <string>' . $data['reqid'] . '</string>
+                                                </value>
+                                            </member>
+                                            <member>
+                                                <name>PIN</name>
+                                                <value>
+                                                    <string>' . $this->pin . '</string>
+                                                </value>
+                                            </member>
+                                            <member>
+                                                <name>NOHP</name>
+                                                <value>
+                                                    <string>' . $data['no_hp'] . '</string>
+                                                </value>
+                                            </member>
+                                            <member>
+                                                <name>NOM</name>
+                                                <value>
+                                                    <string>' . $data['nom'] . '</string>
+                                                </value>
+                                            </member>
+                                        </struct>
+                                    </value>
+                                </param>
+                            </params>
                     </methodCall>';
 
         $client = new Client();
@@ -170,8 +185,8 @@ class Mymili
                                             <name>NOHP</name>
                                             <value>
                                                 <string>' . $data['no_hp'] . '</string>
-                                            </value> 
-                                            Dawang API document 7 
+                                            </value>
+                                            Dawang API document 7
                                         </member>
                                         <member>
                                             <name>NOM</name>
@@ -240,29 +255,29 @@ class Mymili
 
     public function saldo()
     {
-        $xml = '<?xml version="1.0"?> 
-        <methodCall> 
-         <methodName>checkBalance</methodName> 
-         <params> 
-         <param> 
-         <value> 
-         <struct> 
-         <member> 
-         <name>MSISDN</name> 
-         <value> 
-         <string>' . $this->msisdn . '</string> 
-         </value> 
-         </member> 
-         <member> 
-         <name>PIN</name> 
-         <value> 
-         <string>' . $this->pin . '</string> 
-         </value> 
-         </member> 
-         </struct> 
-         </value> 
-         </param> 
-         </params> 
+        $xml = '<?xml version="1.0"?>
+        <methodCall>
+         <methodName>checkBalance</methodName>
+         <params>
+         <param>
+         <value>
+         <struct>
+         <member>
+         <name>MSISDN</name>
+         <value>
+         <string>' . $this->msisdn . '</string>
+         </value>
+         </member>
+         <member>
+         <name>PIN</name>
+         <value>
+         <string>' . $this->pin . '</string>
+         </value>
+         </member>
+         </struct>
+         </value>
+         </param>
+         </params>
         </methodCall>
         ';
 

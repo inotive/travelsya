@@ -66,6 +66,13 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/pln', 'pln')->name('.pln');
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
 });
+Route::prefix('checkout')
+    ->group(function () {
+        Route::get('detail/product/{product}', [ProductController::class,'show'])->name('checkout.product');
+        Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
+        Route::get('riwayat-booking', [\App\Http\Controllers\Partner\RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
+
+    });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 
 //hotel
@@ -153,6 +160,8 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::post('setting-hotel-room', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
             });
         });
+
+
     //dashboard
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
@@ -171,6 +180,7 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::put('admin/hostel/{id}/update', [AdminHostelController::class, 'update'])->name('admin.hostel.update');
     Route::get('admin/hostel/{id}/image', [AdminHostelController::class, 'showImage'])->name('admin.hostel.image');
     Route::post('admin/hostel/store-image', [AdminHostelController::class, 'storeImage'])->name('admin.hostel.store-image');
+
 
 
 
