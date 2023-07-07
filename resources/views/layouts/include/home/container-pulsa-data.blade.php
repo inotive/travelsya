@@ -1,51 +1,55 @@
-<div class="text-center">
-    <div class="row gy-3" >
-        <div class="col-12">
-            <h3>Nomor Handphone</h3>
-        </div>
-        <div class="col-12">
-            <input type="text"  class="form-control form-control-lg" placeholder="Masukan Nomor Telfon">
-        </div>
-        <div class="col-12">
-            <h3>Nominal</h3>
-        </div>
-        <div class="row" id="row-pricelist">
+<div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
+    <!--begin::Col-->
+    <div class="col-xl-12">
 
-            <!-- '<a href="" class="col-xl-2 col-sm-2 card border border-warning pricelist me-xl-3 ">
-                <div class="card">
-                    <div class="card-header pt-5">
-                        <div class="card-title d-flex flex-column">
-                            <div class="d-flex align-items-center"><span class=" fw-bold text-dark me-2 lh-1 ls-n2">100,000</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">Pulsa100,000</span>
-                        </div>
+        <!--begin::Tiles Widget 2-->
+        <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+
+            <!--begin::Body-->
+            <div class="card-body d-flex flex-column justify-content-between">
+                <!--begin::Title-->
+                <h2 class="fw-bold mb-5">Pulsa</h2>
+                <!--end::Title-->
+                <div class="fv-row mb-5">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">No Ponsel</span>
+                        </label>
+
+                        <!--begin::Input-->
+                        <input type="text" id="notelp" class="form-control form-control-lg form-control-solid"
+                            name="notelp" placeholder="" value="" />
+                        <!--end::Input-->
                     </div>
+
+
                 </div>
-            </a>' -->
-        </div>
-        @for($i= 1; $i< 10;$i++)
-            <div class="col-3 ">
-                <div class="card bg-light">
-                    <div class="card-body">
-                        {{number_format($i*10000,0,',','.')}}
-                        <p class="d-block text-success">Rp. {{number_format(($i*10000) + 2500,0,',','.')}}</p>
-                    </div>
+                <div class="row" id="row-pricelist">
+
+                    <!-- '<a href="" class="col-xl-2 col-sm-2 card border-warning pricelist me-xl-3 border">
+                        <div class="card">
+                            <div class="card-header pt-5">
+                                <div class="card-title d-flex flex-column">
+                                    <div class="d-flex align-items-center"><span class="fw-bold text-dark me-2 lh-1 ls-n2">100,000</span></div><span class="fw-semibold fs-6 pt-1 text-gray-400">Pulsa100,000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>' -->
                 </div>
             </div>
-        @endfor
-        <div class="col-12 w-100">
-            <a href="{{route('checkout.product', ['product' => 'pulsa'])}}" type="button" class="btn btn-danger" >
-                Beli Pulsa
-            </a>
+            <!--end::Body-->
         </div>
+        <!--end::Tiles Widget 2-->
+
     </div>
+    <!--end::Col-->
 </div>
 
-
 @push('add-style')
-    <script src="{{asset('assets/js/custom/noTelp.js')}}"></script>
+    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-
     <script>
         $(document).ready(function() {
 
@@ -80,7 +84,9 @@
                                     )
                                 });
                             } else {
-                                $('#row-pricelist').append('<div class="col-md-12"><a href="{{route("login.view")}}">Login first</a></div>')
+                                $('#row-pricelist').append(
+                                    '<div class="col-md-12"><a href="{{ route('login.view') }}">Login first</a></div>'
+                                )
                             }
                         }
                     }).done(function() {
@@ -89,7 +95,7 @@
                             const notelp = $('#notelp').val();
 
                             $('#row-pricelist').append(
-                                `<form id="form_id" method="post" action="{{route("cart")}}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `
+                                `<form id="form_id" method="post" action="{{ route('cart') }}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `
                             ).click(function() {
                                 $('#form_id').submit();
                             });
