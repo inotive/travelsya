@@ -10,31 +10,52 @@
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
-                <div class="fv-row mb-5">
-                    <div class="col-xl-6">
+                <div class="row mb-5 gy-4">
+                    <div class="col-xl-8">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">No Pdam</span>
+                            <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg form-control-solid"
-                            name="notelp" placeholder="" value="" />
+                        <input type="text" id="notelp" class="form-control form-control-lg"
+                               name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
                         <!--end::Input-->
                     </div>
+                    <div class="col-4">
+                        <button class="btn btn-danger mt-8 w-100">Periksa</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="fs-5 fw-semibold my-3">
+                            <span>Detail Pelanggan</span>
+                        </label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                    <td class="text-right" colspan="3">Rp. {{number_format(1312312,0,',','.')}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-danger w-100">Pembayaran</button>
+                    </div>
 
-                </div>
-                <div class="row" id="row-pricelist">
-
-                    <!-- '<a href="" class="col-xl-2 col-sm-2 card border-warning pricelist me-xl-3 border">
-                            <div class="card">
-                                <div class="card-header pt-5">
-                                    <div class="card-title d-flex flex-column">
-                                        <div class="d-flex align-items-center"><span class="fw-bold text-dark me-2 lh-1 ls-n2">100,000</span></div><span class="fw-semibold fs-6 pt-1 text-gray-400">Pulsa100,000</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>' -->
                 </div>
             </div>
             <!--end::Body-->
@@ -52,8 +73,8 @@
 
 @push('add-script')
     <script>
-        $(document).ready(function() {
-            $('#notelp').on('keyup', function(e) {
+        $(document).ready(function () {
+            $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
                     headers: {
@@ -68,11 +89,11 @@
                         operator: 'pdam',
                         category: 'negara'
                     },
-                    success: function(response) {
+                    success: function (response) {
                         $('#row-pricelist').html('');
 
                         if (response.message != 'Unauthorized') {
-                            $.each(response, function(key, val) {
+                            $.each(response, function (key, val) {
                                 $('#row-pricelist').append(
                                     `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.name}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.description}</span></div></div></div></div>`
                                 )
@@ -83,14 +104,14 @@
                             )
                         }
                     }
-                }).done(function() {
-                    $('.pricelist').on('click', function(e) {
+                }).done(function () {
+                    $('.pricelist').on('click', function (e) {
                         const id = $(this).data('product');
                         const notelp = $('#notelp').val();
 
                         $('#row-pricelist').append(
                             `<form id="form_id" method="post" action="{{ route('cart') }}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `
-                        ).click(function() {
+                        ).click(function () {
                             $('#form_id').submit();
                         });
 

@@ -8,33 +8,47 @@
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
-                <h2 class="fw-bold mb-5">Pulsa</h2>
+                <h2 class="fw-bold mb-5">Pulsa & Data</h2>
                 <!--end::Title-->
-                <div class="fv-row mb-5">
+                <div class="row mb-5 gy-4">
+                    <div class="col-12">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span >Produk</span>
+                        </label>
+
+                        <select name="" id="" class="form-control form-control-lg">
+                            <option value="">Pulsa</option>
+                            <option value="">Paket Data</option>
+                        </select>
+                    </div>
                     <div class="col-xl-6">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">No Ponsel</span>
+                            <span >Nomor Handphone</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg form-control-solid"
-                            name="notelp" placeholder="" value="" />
+                        <input type="text" id="notelp" class="form-control form-control-lg"
+                               name="notelp" placeholder="Masukan nomor telfon" value=""/>
                         <!--end::Input-->
                     </div>
+                    <div class="col-6">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span>Produk</span>
+                        </label>
 
+                        <select name="" id="" class="form-control form-control-lg">
+                            @for($i = 1; $i <11; $i++)
+                            <option value="">Rp. {{number_format($i *10000,0,',','.')}}</option>
+                            @endfor
+                        </select>
+                    </div>
 
                 </div>
-                <div class="row" id="row-pricelist">
 
-                    <!-- '<a href="" class="col-xl-2 col-sm-2 card border-warning pricelist me-xl-3 border">
-                        <div class="card">
-                            <div class="card-header pt-5">
-                                <div class="card-title d-flex flex-column">
-                                    <div class="d-flex align-items-center"><span class="fw-bold text-dark me-2 lh-1 ls-n2">100,000</span></div><span class="fw-semibold fs-6 pt-1 text-gray-400">Pulsa100,000</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>' -->
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-danger w-100">Bayar</button>
+                    </div>
                 </div>
             </div>
             <!--end::Body-->

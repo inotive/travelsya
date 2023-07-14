@@ -10,31 +10,61 @@
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">BPJS</h2>
                 <!--end::Title-->
-                <div class="fv-row mb-5">
-                    <div class="col-xl-6">
+                <div class="row mb-5 gy-4">
+                    <div class="col-12">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">No Bpjs</span>
+                            <span class="required">Produk</span>
+                        </label>
+
+                        <select name="" id="" class="form-control form-control-lg">
+                            <option value="">BPJS Kesehatan</option>
+                        </select>
+                    </div>
+                    <div class="col-xl-8">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg form-control-solid"
-                            name="notelp" placeholder="" value="" />
+                        <input type="text" id="notelp" class="form-control form-control-lg"
+                               name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
                         <!--end::Input-->
                     </div>
+                    <div class="col-4">
+                        <button class="btn btn-danger mt-8 w-100">Periksa</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="fs-5 fw-semibold my-3">
+                            <span>Detail Pelanggan</span>
+                        </label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                    <td class="text-right" colspan="3">Rp. {{number_format(1312312,0,',','.')}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-danger w-100">Pembayaran</button>
+                    </div>
 
-                </div>
-                <div class="row" id="row-pricelist">
-
-                    <!-- '<a href="" class="col-xl-2 col-sm-2 card border-warning pricelist me-xl-3 border">
-                            <div class="card">
-                                <div class="card-header pt-5">
-                                    <div class="card-title d-flex flex-column">
-                                        <div class="d-flex align-items-center"><span class="fw-bold text-dark me-2 lh-1 ls-n2">100,000</span></div><span class="fw-semibold fs-6 pt-1 text-gray-400">Pulsa100,000</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>' -->
                 </div>
             </div>
             <!--end::Body-->
