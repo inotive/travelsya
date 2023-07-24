@@ -41,31 +41,37 @@ class HotelController extends Controller
         return view('hotel.index', ['hotels' => $hotelsget, 'cities' => $cities, 'params' => $params]);
     }
 
-    public function room(Request $request, $id)
+    public function listHotel()
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
-        $params['location'] = ($request->location) ?: '';
-        $params['start_date'] = strtotime($request->start);
-        $params['end_date'] = strtotime($request->end);
-        $params['room'] = ($request->room) ?: '';
-        $params['guest'] = ($request->guest) ?: '';
-        $params['property'] = ($request->property) ?: '';
-        $params['roomtype'] = ($request->roomtype) ?: '';
-        $params['furnish'] = ($request->furnish) ?: '';
-        $params['name'] = ($request->name) ?: '';
-        $cities = Hotel::distinct()->pluck('city');
+        return view('hotel.list-hotel');
+    }
 
-        $hotelget = $hotel->withCount(["hotelRoom as price_avg" => function ($q) {
-            $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-        }])->withCount(["hotelRoom as minprice" => function ($q) {
-            $q->select(DB::raw('min(sellingprice)'));
-        }])->withCount(["hotelRoom as maxprice" => function ($q) {
-            $q->select(DB::raw('max(sellingprice)'));
-        }])->withCount(["hotelRating as rating_avg" => function ($q) {
-            $q->select(DB::raw('coalesce(avg(rate),0)'));
-        }])->withCount("hotelRating as rating_count")->find($id);
+    public function room(Request $request)
+    {
+//        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
+//        $params['location'] = ($request->location) ?: '';
+//        $params['start_date'] = strtotime($request->start);
+//        $params['end_date'] = strtotime($request->end);
+//        $params['room'] = ($request->room) ?: '';
+//        $params['guest'] = ($request->guest) ?: '';
+//        $params['property'] = ($request->property) ?: '';
+//        $params['roomtype'] = ($request->roomtype) ?: '';
+//        $params['furnish'] = ($request->furnish) ?: '';
+//        $params['name'] = ($request->name) ?: '';
+//        $cities = Hotel::distinct()->pluck('city');
+//
+//        $hotelget = $hotel->withCount(["hotelRoom as price_avg" => function ($q) {
+//            $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+//        }])->withCount(["hotelRoom as minprice" => function ($q) {
+//            $q->select(DB::raw('min(sellingprice)'));
+//        }])->withCount(["hotelRoom as maxprice" => function ($q) {
+//            $q->select(DB::raw('max(sellingprice)'));
+//        }])->withCount(["hotelRating as rating_avg" => function ($q) {
+//            $q->select(DB::raw('coalesce(avg(rate),0)'));
+//        }])->withCount("hotelRating as rating_count")->find($id);
 
-        return view('hotel.show', compact('hotelget', 'params', 'cities'));
+//        return view('hotel.show', compact('hotelget', 'params', 'cities'));
+        return view('hotel.show');
     }
 
     public function reservation(Request $request, $id)
@@ -117,7 +123,6 @@ class HotelController extends Controller
 
         return response()->json(($hostelCity));
     }
-
     // public function indexAgil(Request $request)
     // {
     //     $hotels = $this->travelsya->hostel(['location' => ($request->city) ?: '', 'name' => ($request->name) ?: '']);

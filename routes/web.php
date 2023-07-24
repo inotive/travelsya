@@ -78,8 +78,9 @@ Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 //hotel
 Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->group(function () {
     Route::get('/', 'index')->name('.index');
-    Route::get('/detail-hotel', 'show')->name('.show');
-    Route::get('/{id}/room/', 'room')->name('.room');
+    Route::get('/list-hotel', 'listHotel')->name('.list-hotel');
+//    Route::get('/detail-hotel', 'show')->name('.show');
+    Route::get('/room/', 'room')->name('.room');
     Route::get('/{idroom}/reservation', 'reservation')->name('.reservation');
     Route::post('/{idroom}/request', 'request')->name('.request');
     Route::post('/ajax', 'ajaxHotel');

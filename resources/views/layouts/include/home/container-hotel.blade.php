@@ -35,9 +35,9 @@
     }
   }"
 >
-  <div class="col-md-3 mb-5">
+  <div class="col-md-12 mb-5">
     <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
-    <select name="location" id="location" class="form-select select" data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
+    <select name="location" id="location" class="form-select" data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
       <optgroup label="Kota"></optgroup>
       <template x-for="data in $store.hotel.cities">
         <option x-bind:value="data.name" x-text="data.label"></option>
@@ -48,7 +48,7 @@
       </template>
     </select>
   </div>
-  <div class="col-md-3 mb-5">
+  <div class="col-md-4 mb-5">
     <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
     <div class="input-group" id="js_datepicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
       <input id="checkin" type="text" name="start" class="form-control" data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"/>
@@ -60,7 +60,7 @@
       </span>
     </div>
   </div>
-  <div class="col-md-3 col-6 mb-5">
+  <div class="col-md-4 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Duration</label>
     <select name="duration" id="duration" class="form-select" x-bind:value="durationValue" x-on:change="handleSelectDuration">
       <template x-for="data in [ ...Array(totalDuration).keys() ]" key="data">
@@ -68,11 +68,11 @@
       </template>
     </select>
   </div>
-  <div class="col-md-3 col-6 mb-5">
+  <div class="col-md-4 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
     <input type="text" class="form-control" name="end_date" disabled x-bind:value="checkoutValue" />
   </div>
-  <div class="col-md-3 col-6 mb-5">
+  <div class="col-md-6 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Total Kamar</label>
     <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom">
       <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
@@ -80,7 +80,7 @@
       </template>
     </select>
   </div>
-  <div class="col-md-3 col-6 mb-5">
+  <div class="col-md-6 col-6 mb-5">
     <label class="form-label fw-bold fs-6">Total Tamu</label>
     <select name="guest" id="guest" class="form-select">
       <template x-for="data in [ ...Array(totalGuest).keys() ]" key="data">
@@ -90,7 +90,7 @@
   </div>
   <div class="col-md-12 mb-5 text-end">
     <button style="margin-right: 1em" type="button" class="btn btn-flush" data-bs-dismiss="modal">Kembali</button>
-    <button type="submit" class="btn btn-danger">Cari Hotel</button>
+    <a href="{{route('hotels.list-hotel')}}" type="button" class="btn btn-danger">Cari Hotel</a>
   </div>
 </div>
 </form>
