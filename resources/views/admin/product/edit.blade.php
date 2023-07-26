@@ -4,9 +4,9 @@
     <!--begin::Tables Widget 11-->
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
-        <div class="card-header border-0 pt-5">
+        <div class="card-header pt-5">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">List Product</span>
+                <span class="card-label fw-bold fs-3 mb-1">Daftar Product</span>
             </h3>
         </div>
         <!--end::Header-->
@@ -14,7 +14,7 @@
         <div class="card-body py-3">
             <!--begin::Table container-->
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
                         <th>No.</th>
@@ -37,8 +37,8 @@
                             <td>{{$product->kode}}</td>
                             <td>{{$product->name}}</td>
                             <td>{{$product->description}}</td>
-                            <td>Rp. {{number_format($product->price,0,',','.')}}</td>
-                            <td><span class="badge badge-{{$product->price == 1 ? 'success' : 'danger'}}">{{$product->price == 1 ? 'Aktif' : 'Non Aktif'}}</span></td>
+                            <td><input type="text" value="{{number_format($product->price,0,',','.')}}" class="form-control form-control-sm"></td>
+                            <td><span class="badge badge-{{$product->is_active == 1 ? 'success' : 'danger'}}">{{$product->is_active == 1 ? 'Aktif' : 'Non Aktif'}}</span></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -410,4 +410,58 @@
         <!--end::Modal dialog-->
     </div>
     <!--end::Modal - New Target-->
+@endsection
+@push('add-script')
+    <script>
+        $(document).ready(function() {
+            $('#kt_datatable_zero_configuration').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+        });
+    </script>
+@endpush
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#kt_select2_1').select2({
+                placeholder: "Select a state"
+            });
+            $('#kt_datatable_zero_configuration').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+        });
+    </script>
+
 @endsection

@@ -6,11 +6,11 @@
     <!--begin::Header-->
     <div class="card-header border-0 pt-5">
         <h3 class="card-title align-items-start flex-column">
-            <span class="card-label fw-bold fs-3 mb-1">List User</span>
+            <span class="card-label fw-bold fs-3 mb-1">Daftar User Login</span>
         </h3>
         <div class="card-toolbar">
             <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-            <i class="ki-duotone ki-plus fs-2"></i>New Member</a>
+            <i class="ki-duotone ki-plus fs-2"></i>Tambah Data User</a>
         </div>
     </div>
     <!--end::Header-->
@@ -19,35 +19,38 @@
         <!--begin::Table container-->
         <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table table-bordered gs-0 gy-4 text-center">
+            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                 <!--begin::Table head-->
                 <thead>
                     <tr class="fw-bold text-muted bg-light">
                         <th class="ps-4 rounded-start">No</th>
                         <th class="min-w-125px">Email</th>
                         <th class="min-w-125px">Name</th>
-                        <th class="min-w-125px">Role</th>
-                        <th class="min-w-200px rounded-end"></th>
+                        <th class="min-w-125px">Tanggal Di Tambahkan</th>
+                        <th class="min-w-200px text-center"> Aksi</th>
                     </tr>
                 </thead>
                 <!--end::Table head-->
                 <!--begin::Table body-->
                 <tbody>
+                    @php
+                        $i = 1;
+                    @endphp
                     @foreach($users as $user)
                     <tr>
-                        <td>
-                            <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
+                        <td class="text-center">
+                            {{$i++}}
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$user->email}}</div>
+                            <div class="">{{$user->email}}</div>
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{$user->name}}</div>
+                            <div class="">{{$user->name}}</div>
                         </td>
                         <td>
-                            <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($user->role == 0 ? 'admin' : ($user->role == 1 ? 'vendor' : 'customer'))}}</div>
+                            {{\Carbon\Carbon::parse($user->created_at)->format('d M Y')}}
                         </td>
-                        <td>
+                        <td class="text-center">
 {{--                            <a onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">--}}
 {{--                                <i class="ki-duotone ki-switch fs-2">--}}
 {{--                                    <span class="path1"></span>--}}
@@ -72,7 +75,6 @@
                         </td>
                     </tr>
                     @endforeach
-                    {{$users->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
                 </tbody>
                 <!--end::Table body-->
             </table>
@@ -335,6 +337,27 @@
 @endsection
 @push('add-script')
 <script>
+    $(document).ready( function () {
+        $('#kt_datatable_zero_configuration').DataTable({
+            "scrollY": "500px",
+            "scrollCollapse": true,
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom":
+                "<'row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">"
+        });
+    } );
     $('.btn-edit').on('click', function(){
         const id = $(this).data('id');
         $.ajaxSetup({

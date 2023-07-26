@@ -19,7 +19,7 @@
             <!--begin::Table container-->
             <div class="table-responsive">
                 <div class="table-responsive">
-                    <table class="table table-bordered gs-0 gy-4 text-center">
+                    <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                         <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th>No.</th>
@@ -294,5 +294,26 @@
 
     });
 });
+ $(document).ready( function () {
+     $('#kt_datatable_zero_configuration').DataTable({
+         "scrollY": "500px",
+         "scrollCollapse": true,
+         "language": {
+             "lengthMenu": "Show _MENU_",
+         },
+         "dom":
+             "<'row'" +
+             "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+             "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+             ">" +
+
+             "<'table-responsive'tr>" +
+
+             "<'row'" +
+             "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+             "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+             ">"
+     });
+ } );
 </script>
 @endpush

@@ -15,42 +15,100 @@
             {{--            </div>--}}
             <div class="row card w-75 me-auto ms-auto mt-10" id="card-filter">
                 <form action="{{route('hostel.index')}}" method="get">
-                    <div class="row card-body justify-content-center">
-                        <div class="col-md-3">
-                            <!--begin::Input-->
-                            <select name="city" id="city" class="form-control">
+{{--                    <div class="row card-body justify-content-center">--}}
+{{--                        <div class="col-md-3">--}}
+{{--                            <!--begin::Input-->--}}
+{{--                            <select name="city" id="city" class="form-control">--}}
 {{--                                @foreach($cities as $city)--}}
 {{--                                <option value="{{$city}}" {{($params['location']==$city) ? 'selected' : '' }}>{{$city}}</option>--}}
 {{--                                @endforeach--}}
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <div class="col-md-3 mb-5">
-                            <!--begin::Input-->
-                            <input type="text" name="date" class="form-control js-daterangepicker"
-                                   id="js-daterangepicker">
-                            <!--end::Input-->
-                        </div>
-                        <div class="col-md-2">
-                            <!--begin::Input-->
-                            <select name="room" id="kamar" class="form-control">
+{{--                            </select>--}}
+{{--                            <!--end::Input-->--}}
+{{--                        </div>--}}
+{{--                        <div class="col-md-3 mb-5">--}}
+{{--                            <!--begin::Input-->--}}
+{{--                            <input type="text" name="date" class="form-control js-daterangepicker"--}}
+{{--                                   id="js-daterangepicker">--}}
+{{--                            <!--end::Input-->--}}
+{{--                        </div>--}}
+{{--                        <div class="col-md-2">--}}
+{{--                            <!--begin::Input-->--}}
+{{--                            <select name="room" id="kamar" class="form-control">--}}
 {{--                                @for($i=1;$i<5;$i++)--}}
 {{--                                    <option value="{{$i}}">{{$i}} Kamar</option>--}}
 {{--                                @endfor--}}
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <div class="col-md-2">
-                            <!--begin::Input-->
-                            <select name="guest" id="tamu" class="form-control">
+{{--                            </select>--}}
+{{--                            <!--end::Input-->--}}
+{{--                        </div>--}}
+{{--                        <div class="col-md-2">--}}
+{{--                            <!--begin::Input-->--}}
+{{--                            <select name="guest" id="tamu" class="form-control">--}}
 {{--                                @for($j=1;$j<5;$j++)--}}
 {{--                                    <option value="{{$j}}">{{$j}} Tamu</option>--}}
 {{--                                @endfor--}}
-                            </select>
-                            <!--end::Input-->
-                        </div>
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-danger py-4 w-100">Cari Hotel</button>
+{{--                            </select>--}}
+{{--                            <!--end::Input-->--}}
+{{--                        </div>--}}
+{{--                        <div class="col-md-2">--}}
+{{--                            <button type="submit" class="btn btn-danger py-4 w-100">Cari Hotel</button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body h-100">
+                                    <div class="row g-4">
+                                        <div class="col-12">
+                                            <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
+                                            <select name="location" id="location" class="form-select select" data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
+                                                <optgroup label="Kota"></optgroup>
+                                                <template x-for="data in $store.hotel.cities">
+                                                    <option x-bind:value="data.name" x-text="data.label"></option>
+                                                </template>
+                                                <optgroup label="Hotel"></optgroup>
+                                                <template x-for="data in $store.hotel.hotels">
+                                                    <option x-bind:value="data.name" x-text="data.label"></option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
+                                            <div class="input-group" id="js_datepicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
+                                                <input id="checkin" type="text" name="start" class="form-control" data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"/>
+                                                <span class="input-group-text" data-td-target="#js_datepicker" data-td-toggle="datetimepicker">
+                                                    <i class="ki-duotone ki-calendar fs-2">
+                                                      <span class="path1"></span>
+                                                      <span class="path2"></span>
+                                                    </i>
+                                                  </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
+                                            <input type="text" class="form-control" name="end_date" />
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Total Kamar</label>
+                                            <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom">
+                                                <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
+                                                    <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Kamar` : `${data} Kamar`">-</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Total Tamu</label>
+                                            <select name="guest" id="guest" class="form-select">
+                                                <template x-for="data in [ ...Array(totalGuest).keys() ]" key="data">
+                                                    <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Tamu` : `${data} Tamu`">-</option>
+                                                </template>
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <button class="w-100 btn-danger btn">Cari Data</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -94,16 +152,20 @@
                                         <div class="col-12">
                                             <div class="d-flex justify-content-between">
                                                 <h1 class="fw-bold">OVAL GUEST HOUSE</h1>
-                                                <div id="bintang">
-
-                                                    @for($j=0;$j < 5; $j++)
-                                                        <span class="card-text fa fa-star" style="color: orange;">
-                                                       </span>
-                                                    @endfor
-                                                </div>
+                                                <div class="badge badge-primary">Balikpapan</div>
                                             </div>
                                             <p style="font-size: 13px">Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
-                                            <div class="badge badge-primary">Balikpapan</div>
+
+                                            <div id="bintang ">
+                                                @for($j=0;$j < 5; $j++)
+                                                    <span class="card-text fa fa-star" style="color: orange;">
+                                                       </span>
+                                                @endfor
+                                            </div>
+
+                                            <span class="badge badge-danger mt-4">4.4</span>
+                                            <span class="badge badge-danger">(123 Rating)</span>
+
                                         </div>
 
                                     </div>

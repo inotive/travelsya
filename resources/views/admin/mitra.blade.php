@@ -20,16 +20,16 @@
                 <div class="table-responsive">
                     <!--begin::Table-->
 
-                    <table class="table table-bordered gs-0 gy-4 text-center">
+                    <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                         <thead>
-                        <tr class="fw-bold fs-6 text-gray-800">
-                            <th>No.</th>
-                            <th>Vendor</th>
-                            <th>Email Login</th>
-                            <th>Hotel or Hostel</th>
-                            <th>No.Telp</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
+                        <tr class="fw-bold fs-6 text-gray-800 ">
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Vendor</th>
+                            <th class="text-center">Email Login</th>
+                            <th class="text-center">Hotel or Hostel</th>
+                            <th class="text-center">No.Telp</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -342,6 +342,27 @@
 
 @push('add-script')
 <script>
+    $(document).ready( function () {
+        $('#kt_datatable_zero_configuration').DataTable({
+            "scrollY": "500px",
+            "scrollCollapse": true,
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom":
+                "<'row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">"
+        });
+    } );
  $(function() {
     $('#edit').on('show.bs.modal', function(event) {
         var button = $(event.relatedTarget);

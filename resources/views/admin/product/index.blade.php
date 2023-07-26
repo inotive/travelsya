@@ -3,33 +3,17 @@
 @section('content-admin')
     <div class="card mb-3">
         <div class="card-body">
-            <form action="" method="get">
-                <div class="row">
-                    <div class="col-6">
-                        <label for="" class="form-label">Product</label>
-                        <select class="form-control select2" id="kt_select2_1" name="param" style="cursor : pointer">
-
-                            @foreach($productName as $item)
-                                <option value="{{$item->first()->name}}">{{$item->first()->name}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <button class="btn btn-primary ms-3 mt-8">Cari Data</button>
-                    </div>
-                </div>
-            </form>
-
-
-
+            <div class="col-6">
+                <a href="{{route('admin.product.edit')}}" class="btn btn-primary ms-3 mt-8">Edit Data Product</a>
+            </div>
         </div>
     </div>
     <!--begin::Tables Widget 11-->
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
-        <div class="card-header border-0 pt-5">
+        <div class="card-header pt-5">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">List Product</span>
+                <span class="card-label fw-bold fs-3 mb-1">Daftar Product</span>
             </h3>
         </div>
         <!--end::Header-->
@@ -37,7 +21,7 @@
         <div class="card-body py-3">
             <!--begin::Table container-->
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
                         <th>No.</th>
@@ -45,7 +29,8 @@
                         <th>Kode</th>
                         <th>Name</th>
                         <th>Description</th>
-                        <th>Price</th>
+                        <th>Harga Pokok</th>
+                        <th>Harga Jual (+Admin)</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -61,7 +46,8 @@
                             <td>{{$product->name}}</td>
                             <td>{{$product->description}}</td>
                             <td>Rp. {{number_format($product->price,0,',','.')}}</td>
-                            <td><span class="badge badge-{{$product->price == 1 ? 'success' : 'danger'}}">{{$product->price == 1 ? 'Aktif' : 'Non Aktif'}}</span></td>
+                            <td>Rp. {{number_format($product->price+2500,0,',','.')}}</td>
+                            <td><span class="badge badge-{{$product->is_active == 1 ? 'success' : 'danger'}}">{{$product->is_active == 1 ? 'Aktif' : 'Non Aktif'}}</span></td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -434,12 +420,55 @@
     </div>
     <!--end::Modal - New Target-->
 @endsection
+@push('add-script')
+    <script>
+        $(document).ready(function() {
+            $('#kt_datatable_zero_configuration').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
 
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+        });
+    </script>
+@endpush
 @section('script')
     <script>
-        $( document ).ready(function() {
+        $(document).ready(function() {
             $('#kt_select2_1').select2({
                 placeholder: "Select a state"
+            });
+            $('#kt_datatable_zero_configuration').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
             });
         });
     </script>
