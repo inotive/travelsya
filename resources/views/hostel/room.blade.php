@@ -33,7 +33,7 @@
                         <div class="col-md-6">
                             <!--begin::Input-->
                             <select name="room" id="kamar" class="form-control">
-                                @for($i=1;$i<5;$i++) 
+                                @for($i=1;$i<5;$i++)
                                 <option value="{{$i}}" {{($params['room'] == $i) ? 'selected' : '' }}>{{$i}} Kamar</option>
                                     @endfor
                             </select>
@@ -66,7 +66,7 @@
                                 <img src="{{$image['image']}}" width="100" alt="">
                                 <img src="{{$image['image']}}" width="100" alt="">
                                 @endforeach
-    
+
                                 </div>
                             </div>
                         </div>
@@ -83,9 +83,9 @@
                         <div class="col-md-4">
                             <div class="d-flex flex-column align-items-center gap-20">
                                 <div>
-                                    @for($j=0;$j < $hostelget['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                    @for($j=0;$j < $hostelget['rating_avg']; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor
                                     @if($hostelget['rating_avg'] == 0)
-                                    @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor 
+                                    @for($j=0;$j < 4; $j++) <span class="card-text fa fa-star" style="color: orange;"></span>@endfor
                                     @endif
                                 </div>
                                 <p class="card-text text-gray-500 mt-auto">{{$hostelget['phone']}}</p>
@@ -106,7 +106,7 @@
                                 <div class="d-flex flex-row gap-5">
                                     <img src="{{$hostel['image_1']}}" width="200" alt="">
                                     <div class="d-flex flex-column gap-4 align-items-end">
-        
+
                                     </div>
                                 </div>
                             </div>

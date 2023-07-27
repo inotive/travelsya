@@ -91,7 +91,7 @@ Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->gro
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/room/', 'room')->name('.room');
-    Route::get('/{idroom}/checkout', 'checkout')->name('.checkout');
+    Route::get('/{idroom}/start/{start}/duration/{duration}/jumlah-kamar/{room}/jumlah-tamu/{guest}', 'checkout')->name('.checkout');
     Route::post('/{idroom}/request', 'request')->name('.request');
     Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
     Route::post('/ajax', 'ajaxHostel');
@@ -138,7 +138,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 //                Route::resource('product', ProductAdminController::class);
                 Route::get('product', [ProductAdminController::class, 'index'])->name('admin.product');
                 Route::get('product/edit-data', [ProductAdminController::class, 'edit'])->name('admin.product.edit');
-//                Route::get('product', [ProductAdminController::class, 'index'])->name('admin.product');
+                Route::post('product/update-product', [ProductAdminController::class, 'update'])->name('admin.product.update-product');
 
 //                //fee
 //                Route::get('fee', [FeeController::class, 'index'])->name('admin.fee');

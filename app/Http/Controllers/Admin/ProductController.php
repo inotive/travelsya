@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Response;
 class ProductController extends Controller
 {
     /**
@@ -55,9 +55,20 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        DB::table('products')
+            ->where('id', $request->id)
+            ->update([
+                'price' => $request->price,
+                'is_active' => $request->state,
+            ]);
+
+        return \response()->json([
+            'status' => 'success',
+            'message' => 'Berhasil Update Data',
+            'status_code' => 200
+        ]);
     }
 
     /**

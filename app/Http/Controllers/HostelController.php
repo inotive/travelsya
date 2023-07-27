@@ -65,6 +65,7 @@ class HostelController extends Controller
 
     public function room($id, Request $request)
     {
+        dd($request->all());
         $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
         $params['location'] = ($request->location) ?: '';
         $params['start_date'] = strtotime($request->start);
@@ -91,10 +92,10 @@ class HostelController extends Controller
     {
         $hostelRoom = HostelRoom::with('hostel', 'bookDate')->find($id);
         $params['start_date'] = strtotime($request->start);
-        $params['end_date'] = date('d-m-Y', strtotime("+" . $request->duration . " month", strtotime($request->start)));
-        $params['room'] = ($request->room) ?: '';
+        $params['end_date'] =($request->room) ?: '';
         $params['guest'] = ($request->guest) ?: '';
-        $params['duration'] = ($request->duration) ?: '';
+        $params['duration'] =  date('d-m-Y', strtotime("+" . $request->duration . " month", strtotime($request->start)));
+        $params['room'] = ($request->duration) ?: '';
         return view('hostel.checkout', compact('hostelRoom', 'params'));
     }
 
