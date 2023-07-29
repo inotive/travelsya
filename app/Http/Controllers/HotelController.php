@@ -74,6 +74,10 @@ class HotelController extends Controller
         return view('hotel.show');
     }
 
+    public function reservationExample()
+    {
+        return view('reservation.index');
+    }
     public function reservation(Request $request, $id)
     {
         $hotelRoom = HotelRoom::with(['hotel' => function ($q1) {

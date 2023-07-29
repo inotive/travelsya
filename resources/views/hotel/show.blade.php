@@ -104,7 +104,7 @@
                                             </select>
                                         </div>
                                         <div class="col-12">
-                                            <button class="w-100 btn-danger btn">Cari Data</button>
+                                            <button class="w-100 btn-danger btn">Ubah Pesanan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -208,7 +208,36 @@
                     {{--        @endforeach--}}
                 </div>
             </div>
-            <div class="row w-75 me-auto ms-auto mt-10">
+            <div class="row w-75 me-auto ms-auto my-5">
+                <div class="col-12">
+                    <!--begin::Alert-->
+                    <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row p-5 mb-10">
+                        <!--begin::Icon-->
+                        <i class="ki-duotone ki-notification-bing fs-2hx text-dark me-4 mb-5 mb-sm-0"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                        <!--end::Icon-->
+
+                        <!--begin::Wrapper-->
+                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                            <!--begin::Title-->
+                            <h4 class="fw-semibold">Anda Belum Login</h4>
+                            <!--end::Title-->
+
+                            <!--begin::Content-->
+                            <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a role="button" class="d-inline-block fw-bold" data-toggle="modal" data-target="#exampleModal" >Login Disini</a></span>
+                            <!--end::Content-->
+                        </div>
+                        <!--end::Wrapper-->
+
+                        <!--begin::Close-->
+                        <button type="button" class="position-absolute position-sm-relative m-2 m-sm-0 top-0 end-0 btn btn-icon ms-sm-auto" data-bs-dismiss="alert">
+                            <i class="ki-duotone ki-cross fs-1 text-primary"><span class="path1"></span><span class="path2"></span></i>
+                        </button>
+                        <!--end::Close-->
+                    </div>
+                    <!--end::Alert-->
+                </div>
+            </div>
+            <div class="row w-75 me-auto ms-auto">
 {{--                @foreach($hotelget->hotelRoom as $room)--}}
 {{--                    <div class="col-6">--}}
 {{--                        <div class="card card-hostel mb-3">--}}
@@ -232,6 +261,60 @@
 {{--                        </div>--}}
 {{--                    </div>--}}
 {{--                @endforeach--}}
+                <div class="col-6">
+                    <div class="card card-hostel mb-3">
+                        <div class="row mb-2">
+                            <div class="col-4">
+                                <div class="img-fluid rounded-1 w-150px h-150px m-3"
+                                     style="background-image:url('https://service.travelsya.com/storage/kamar/Lnw9eol8C1F759cRDf16qgdLBnsMgKLqjngpfw3H.jpg');background-position: center; ">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="row px-2 mt-5">
+                                    <h4 class="card-title text-gray-900">Kamar 2</h4>
+                                    <p class="card-text text-gray-500 mt-1">Ukuran Kamar : 12 m2</p>
+                                    <p class="card-text text-gray-500 mt-1">Maximal Penghuni : 1 Orang</p>
+                                    <p class="card-text text-gray-500 mt-1"><b class="text-danger">Tersisa 2 Kamar </b></p>
+                                    <div>
+                                        <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-between">
+                            <p class="fw-semibold d-block fs-2 text-danger">Rp. 131.123</p>
+                            <a href="{{route('hotels.reservation.example')}}" class="btn btn-danger px-4 py-2" data-toggle="modal" data-target="#exampleModal">Pesan Kamar</a>
+                        </div>
+                    </div>
+                </div>
+                        <div class="col-6">
+                            <div class="card card-hostel mb-3">
+                                <div class="row mb-2">
+                                    <div class="col-4">
+                                        <div class="img-fluid rounded-1 w-150px h-150px m-3"
+                                             style="background-image:url('https://service.travelsya.com/storage/kamar/Lnw9eol8C1F759cRDf16qgdLBnsMgKLqjngpfw3H.jpg');background-position: center; ">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row px-2 mt-5">
+                                            <h4 class="card-title text-gray-900">Kamar 1</h4>
+                                            <p class="card-text text-gray-500 mt-1">Ukuran Kamar : 12 m2</p>
+                                            <p class="card-text text-gray-500 mt-1">Maximal Penghuni : 1 Orang</p>
+                                            <p class="card-text text-gray-500 mt-1"><b class="text-danger">Tersisa 5 Kamar </b></p>
+                                            <div>
+                                                <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                                <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between">
+                                    <p class="fw-semibold d-block fs-2 text-danger">Rp. 131.123</p>
+                                    <a role="button" class="btn btn-light px-4 py-2" disabled>Kapasitas Tidak Mencukupi</a>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="col-6">
                             <div class="card card-hostel mb-3">
@@ -245,12 +328,17 @@
                                         <div class="row px-2 mt-5">
                                             <h4 class="card-title text-gray-900">Kamar 1</h4>
                                             <p class="card-text text-gray-500 mt-1">Ukuran Kamar : 12 m2</p>
+                                            <p class="card-text text-gray-500 mt-1">Maximal Penghuni : 1 Orang</p>
+                                            <div>
+                                                <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                                <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between">
                                     <p class="fw-semibold d-block fs-2 text-danger">Rp. 131.123</p>
-                                    <a href="{{}}" class="btn btn-danger px-4 py-2">Pesan Kamar</a>
+                                    <a role="button" class="btn btn-light px-4 py-2" disabled>Sedang Terisi Full</a>
                                 </div>
                             </div>
                         </div>
@@ -259,6 +347,58 @@
             </div>
         </div>
         <!--end::Post-->
+        <!-- Modal-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Login Terlebih Dahulu</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row gy-4">
+                            <div class="col-12">
+                                <label for="" class="form-label">Email</label>
+                                <input type="text" class="form-control form-control-lg" placeholder="Masukan Email Anda">
+                            </div>
+                            <div class="col-12">
+                                <label for="" class="form-label">Password</label>
+                                <input type="password" class="form-control form-control-lg" placeholder="Masukan Password Anda">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-lg btn-light" >Kembali</button>
+                        <button class="btn btn-lg text-white"  style="background-color: #c02425">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal-->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Login Terlebih Dahulu</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row gy-4">
+                            <div class="col-12">
+                                <label for="" class="form-label">Email</label>
+                                <input type="text" class="form-control form-control-lg" placeholder="Masukan Email Anda">
+                            </div>
+                            <div class="col-12">
+                                <label for="" class="form-label">Password</label>
+                                <input type="password" class="form-control form-control-lg" placeholder="Masukan Password Anda">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-lg text-white"  style="background-color: #c02425">Register</button>
+                        <button class="btn btn-lg text-white"  style="background-color: #c02425">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!--end::Container-->
 @endsection

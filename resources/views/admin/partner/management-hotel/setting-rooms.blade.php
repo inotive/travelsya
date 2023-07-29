@@ -4,7 +4,7 @@
 <!--begin::Row-->
 <div class="row gy-5 g-xl-10">
     <!--begin::Col-->
-    <div class="col-8">
+    <div class="col-12">
         <div class="card  mb-xl-8">
             <!--begin::Body-->
             <div class="card-body my-3">
@@ -23,14 +23,15 @@
                         <!--end::Alert-->
                     </div>
                 </div>
-                <div class="row gy-4">
-                    <form action="{{route('partner.management.hotel.setting.room.post')}}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="hostel_id" value="{{$hostel->id}}">
+                <form action="{{route('partner.management.hotel.setting.room.post')}}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="hostel_id" value="{{$hostel->id}}">
+                    <div class="row gy-5">
+
 
                         <div class="col-12">
                             <label class="form-label">Room Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Masukan Nama Hotel" >
+                            <input type="text" name="name" class="form-control" placeholder="Masukan Kamar" >
                         </div>
                         <div class="col-6">
                             <label class="form-label">Room Price</label>
@@ -39,7 +40,7 @@
                         <div class="col-6">
                             <label class="form-label">Room Selling Price</label>
                             <input type="text" name="sellingprice" id="roomSellingPrice" class="form-control"
-                                placeholder="Masukan Harga Jual">
+                                   placeholder="" disabled>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Furnish</label>
@@ -52,10 +53,10 @@
                         </div>
                         <div class="col-6">
                             <label class="form-label">Room Type</label>
-                                <select  class="form-control" name="furnish" id="furnish">
-                                    <option value="fullfurnished">Full Furnished</option>
-                                    <option value="unfurnished+">Unfurnished</option>
-                                </select>
+                            <select  class="form-control" name="furnish" id="furnish">
+                                <option value="fullfurnished">Full Furnished</option>
+                                <option value="unfurnished+">Unfurnished</option>
+                            </select>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Number of Rooms</label>
@@ -78,7 +79,7 @@
                         <div class="col-12">
                             <label class="form-label">Size (m2)</label>
                             <input type="text" name="roomsize" class="form-control"
-                                placeholder="Masukan total ukuran kamar dalam bentuk m2 (pxl)">
+                                   placeholder="Masukan total ukuran kamar dalam bentuk m2 (pxl)">
                         </div>
                         <div class="col-12">
                             <!--begin::Alert-->
@@ -96,7 +97,7 @@
                         <div class="col-6">
                             <label class="form-label">Max Occopuncy</label>
                             <input type="text" name="guest" class="form-control"
-                                placeholder="Masukan total ukuran kamar dalam bentuk m2 (pxl)">
+                                   placeholder="Masukan Maximal Jumlah Tamu Yang Bisa Menginap">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Max Extra Bed</label>
@@ -143,23 +144,24 @@
                         <div class="col-6 d-flex justify-content-around">
                             <div class="form-check me-3">
                                 <input class="form-check-input" type="checkbox" name="breakfastIncluded"
-                                    id="flexCheckDefault" />
+                                       id="flexCheckDefault" />
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Breakfast Included
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="wifiIncluded"
-                                    id="flexCheckDefault" />
+                                       id="flexCheckDefault" />
                                 <label class="form-check-label" for="flexCheckDefault">
                                     Wifi Included
                                 </label>
                             </div>
                         </div>
-                        
+
+                        {{--                    </div>--}}
                     </div>
-                </div>
-                <!--end:: Body-->
+                    <!--end:: Body-->
+                </form>
                 <div class="card-footer d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary w-50">Simpan Data</button>
                     <a href="{{route('partner.management.hotel')}}"
@@ -168,38 +170,5 @@
             </form>
         </div>
     </div>
-    <!--end::Col-->
-    <div class="col-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Number of Rooms</h5>
-            </div>
-            <div class="card-body">
-                @for($i = 0; $i < 15; $i++) <div class="d-flex mb-7 bg-light-info p-5 rounded">
-                    <!--begin::Section-->
-                    <div class="d-flex align-items-center flex-wrap flex-grow-1 mt-n2 mt-lg-n1">
-                        <!--begin::Title-->
-                        <div class="d-flex flex-column flex-grow-1 my-lg-0 my-2 pe-3">
-                            <a href="#" class="fs-5 text-gray-800 text-hover-primary fw-bold">Room Suite - {{$i}}</a>
-
-                            </span>
-                        </div>
-                        <!--end::Title-->
-
-                        <!--begin::Info-->
-                        <div class="text-end py-lg-0 py-2">
-                            <span class="text-gray-800 fw-bolder fs-7">Rp. 256.000</span>
-
-                            <span class="text-gray-400 fs-7 fw-semibold d-block">Selling Price</span>
-                        </div>
-                        <!--end::Info-->
-                    </div>
-                    <!--end::Section-->
-            </div>
-            @endfor
-
-        </div>
-    </div>
-</div>
 </div>
 @endsection

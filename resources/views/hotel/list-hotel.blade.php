@@ -58,6 +58,76 @@ Harga Terendah
                                     </div>
                                 </div>
                                 <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Breakfast
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Breakfast
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="" class="form-label">Bintang</label>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
                                     <button class="w-100 btn-danger btn">Terapkan</button>
                                 </div>
                             </div>
@@ -122,6 +192,9 @@ Harga Terendah
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+                    <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body h-100">
@@ -156,7 +229,14 @@ Harga Terendah
                                             <a href="{{route('hotels.room')}}" class="btn btn-danger text-white mt-10 d-block">Lihat Room</a>
                                         </div>
                                     </div>
-                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body h-100">
                                     <div class="row my-4">
                                         <div class="col-3">
                                             <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt="" height="200" width="200">
@@ -185,14 +265,111 @@ Harga Terendah
                                             <h3 class="mb-4">Fasilitas</h3>
                                             <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
                                             <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
-                                            <a class="btn btn-danger text-white mt-10 d-block">Lihat Room</a>
+                                            <a href="{{route('hotels.room')}}" class="btn btn-danger text-white mt-10 d-block">Lihat Room</a>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body h-100">
+                                    <div class="row my-4">
+                                        <div class="col-3">
+                                            <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt="" height="200" width="200">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row gy-4">
+                                                <div class="col-12"><h3>OVAL GUEST HOUSE</h3></div>
+                                                <div class="col-12">
+                                                    <span class="badge badge-danger">4.4</span>
+                                                    <span class="badge badge-danger">(123 Rating)</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
+                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
+                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <p>Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <h2 class=" card-title text-danger">Rp 124.000 - Rp 324.000 </h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <h3 class="mb-4">Fasilitas</h3>
+                                            <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                            <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                            <a href="{{route('hotels.room')}}" class="btn btn-danger text-white mt-10 d-block">Lihat Room</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body h-100">
+                                    <div class="row my-4">
+                                        <div class="col-3">
+                                            <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt="" height="200" width="200">
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="row gy-4">
+                                                <div class="col-12"><h3>OVAL GUEST HOUSE</h3></div>
+                                                <div class="col-12">
+                                                    <span class="badge badge-danger">4.4</span>
+                                                    <span class="badge badge-danger">(123 Rating)</span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
+                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
+                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
+                                                </div>
+                                                <div class="col-12">
+                                                    <p>Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
+                                                </div>
+                                                <div class="col-12">
+                                                    <h2 class=" card-title text-danger">Rp 124.000 - Rp 324.000 </h2>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-3">
+                                            <h3 class="mb-4">Fasilitas</h3>
+                                            <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                            <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                            <a href="{{route('hotels.room')}}" class="btn btn-danger text-white mt-10 d-block">Lihat Room</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="card border border-2 border-light" >
+                                <div class="card-body">
+                                    <ul class="pagination pagination-circle pagination-outline">
+                                        <li class="page-item previous disabled m-1"><a href="#" class="page-link"><i class="previous"></i></a></li>
+                                        <li class="page-item m-1"><a href="#" class="page-link">1</a></li>
+                                        <li class="page-item active m-1"><a href="#" class="page-link">2</a></li>
+                                        <li class="page-item m-1"><a href="#" class="page-link">3</a></li>
+                                        <li class="page-item m-1"><a href="#" class="page-link">4</a></li>
+                                        <li class="page-item m-1"><a href="#" class="page-link">5</a></li>
+                                        <li class="page-item m-1"><a href="#" class="page-link">6</a></li>
+                                        <li class="page-item next m-1"><a href="#"  class="page-link"><i class="next"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 {{--            <div class="row justify-content-between mb-5">--}}
 {{--                <div class="col-md-6">--}}
