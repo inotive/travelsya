@@ -18,9 +18,9 @@
                     @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                     @endforeach
-                    @if($message)
-                    <li>{{ $message }}</li>
-                    @endif
+{{--                    @if($message)--}}
+{{--                    <li>{{ $message }}</li>--}}
+{{--                    @endif--}}
                 </ul>
                 <!--begin::Form-->
                 <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{route('login')}}" action="{{route('register')}}">
@@ -68,7 +68,7 @@
                         <div></div>
 
                         <!--begin::Link-->
-                        <a href="{{route('reset.password.email')}}" class="link-primary">
+                        <a href="{{route('password.request')}}" class="link-primary">
                             Forgot Password ?
                         </a>
                         <!--end::Link-->
@@ -96,7 +96,7 @@
                     <div class="text-gray-500 text-center fw-semibold fs-6">
                         Have a Member?
 
-                        <a href="{{route('login.view')}}" class="link-primary">
+                        <a href="{{route('login')}}" class="link-primary">
                             Sign In
                         </a>
                     </div>

@@ -6,7 +6,7 @@
     <!--begin::Wrapper-->
     <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10">
         <!--begin::Content-->
-        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
+        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-475px">
             <!--begin::Wrapper-->
             <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
                 @if($errors->all())
@@ -32,13 +32,13 @@
                     <div class="text-center mb-11">
                         <!--begin::Title-->
                         <h1 class="text-dark fw-bolder mb-3">
-                            Sign In Admin
+                            Ekstranet Travelsya
                         </h1>
                         <!--end::Title-->
 
                         <!--begin::Subtitle-->
                         <div class="text-gray-500 fw-semibold fs-6">
-                            Your Account
+                            Masukan email dan password untuk login
                         </div>
                         <!--end::Subtitle--->
                     </div>
@@ -46,15 +46,18 @@
 
                     <!--begin::Input group--->
                     <div class="fv-row mb-8">
+                        <label for="email" class="form-label">Eamil</label>
                         <!--begin::Email-->
-                        <input type="text" placeholder="Email" name="email" autocomplete="off" class="form-control bg-transparent" />
+                        <input type="text" placeholder="Masukan email anda" name="email" autocomplete="off" class="form-control form-control-lg p-5 " />
                         <!--end::Email-->
                     </div>
 
                     <!--end::Input group--->
                     <div class="fv-row mb-3">
+                        <label for="email" class="form-label">Password</label>
                         <!--begin::Password-->
-                        <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control bg-transparent" />
+
+                        <input type="password" placeholder="Masukan password" name="password" autocomplete="off" class="form-control form-control-lg p-5 " />
                         <!--end::Password-->
                     </div>
                     <!--end::Input group--->
@@ -63,21 +66,20 @@
                     <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
                         <div></div>
 
-                        <!--begin::Link-->
-                        <a href="{{route('reset.password.email')}}" class="link-primary">
-                            Forgot Password ?
-                        </a>
-                        <!--end::Link-->
+{{--                        <!--begin::Link-->--}}
+{{--                        <a href="{{route('password.reset')}}" class="link-primary">--}}
+{{--                            Forgot Password ?--}}
+{{--                        </a>--}}
+{{--                        <!--end::Link-->--}}
                     </div>
                     <!--end::Wrapper-->
 
                     <!--begin::Submit button-->
                     <div class="d-grid mb-10">
-                        <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                        <button type="submit" id="kt_sign_in_submit" class="btn btn-primary py-5">
 
                             <!--begin::Indicator label-->
-                            <span class="indicator-label">
-                                Sign In</span>
+                            <span class="indicator-label">Masuk</span>
                             <!--end::Indicator label-->
 
                             <!--begin::Indicator progress-->
@@ -86,41 +88,25 @@
                             </span>
                             <!--end::Indicator progress--> </button>
                     </div>
+
                     <!--end::Submit button-->
 
-                    <!--begin::Sign up-->
-                    <div class="text-gray-500 text-center fw-semibold fs-6">
-                        Not a Member yet?
-
-                        <a href="{{route('register.view')}}" class="link-primary">
-                            Sign up
-                        </a>
-                    </div>
-                    <!--end::Sign up-->
                 </form>
+                    <a href="" type="role" id="kt_sign_in_submit" class="btn btn-primary py-5">
+
+                        <!--begin::Indicator label-->
+                        <span class="indicator-label">Masuk</span>
+                        <!--end::Indicator label-->
+
+                        <!--begin::Indicator progress-->
+                        <span class="indicator-progress">
+                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        <!--end::Indicator progress--> </a>
                 <!--end::Form-->
 
             </div>
             <!--end::Wrapper-->
-
-            <!--begin::Footer-->
-            <div class=" d-flex flex-stack">
-                <!--begin::Languages-->
-                <div class="me-10">
-                </div>
-                <!--end::Languages-->
-
-                <!--begin::Links-->
-                <div class="d-flex fw-semibold text-primary fs-base gap-5">
-                    <a href="../../../pages/team.html" target="_blank">Terms</a>
-
-                    <a href="../../../pages/pricing/column.html" target="_blank">Plans</a>
-
-                    <a href="../../../pages/contact.html" target="_blank">Contact Us</a>
-                </div>
-                <!--end::Links-->
-            </div>
-            <!--end::Footer-->
         </div>
         <!--end::Content-->
     </div>

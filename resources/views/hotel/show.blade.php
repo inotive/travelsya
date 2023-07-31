@@ -368,7 +368,7 @@
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-lg btn-light" >Kembali</button>
-                        <button class="btn btn-lg text-white"  style="background-color: #c02425">Login</button>
+                        <a href="{{route('hotels.reservation.example')}}" class="btn btn-lg text-white"  style="background-color: #c02425">Login</a>
                     </div>
                 </div>
             </div>

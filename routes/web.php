@@ -44,15 +44,15 @@ Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('pa
 
 // Route::get('/', [AuthController::class, 'login'])->name('home');
 //auth
-Route::get('/login', [AuthController::class, 'login'])->name('login.view');
-Route::post('/login', [AuthController::class, 'loginPost'])->name('login');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/register', [AuthController::class, 'register'])->name('register.view');
-Route::post('/register', [AuthController::class, 'registerPost'])->name('register');
-Route::get('/reset-password/email', [AuthController::class, 'resetPasswordEmail'])->name('reset.password.email');
-Route::post('/reset-password/email', [AuthController::class, 'resetPasswordEmailPost'])->name('reset.password.email.post');
-Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
-Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
+//Route::get('/login', [AuthController::class, 'login'])->name('login.view');
+//Route::post('/login', [AuthController::class, 'loginPost'])->name('login');
+//Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+//Route::get('/register', [AuthController::class, 'register'])->name('register.view');
+//Route::post('/register', [AuthController::class, 'registerPost'])->name('register');
+//Route::get('/reset-password/email', [AuthController::class, 'resetPasswordEmail'])->name('reset.password.email');
+//Route::post('/reset-password/email', [AuthController::class, 'resetPasswordEmailPost'])->name('reset.password.email.post');
+//Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
+//Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
@@ -194,3 +194,7 @@ Route::middleware(['auth', 'role'])->group(function () {
     //hostel ajax
     Route::post('/admin/hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('admin.hostelroom.ajax');
 });
+
+Auth::routes();
+
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -100,7 +100,7 @@
                             });
                         } else {
                             $('#row-pricelist').append(
-                                '<div class="col-md-12"><a href="{{ route('login.view') }}">Login first</a></div>'
+                                '<div class="col-md-12"><a href="{{ route('login') }}">Login first</a></div>'
                             )
                         }
                     }

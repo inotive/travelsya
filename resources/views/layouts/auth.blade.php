@@ -76,26 +76,27 @@
                 <!--begin::Content-->
                 <div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
                     <!--begin::Image-->
-                    <img class="theme-light-show mx-auto mw-100 w-150px w-lg-300px mb-10 mb-lg-20" src="../../../assets/media/auth/agency.png" alt="" />
-                    <img class="theme-dark-show mx-auto mw-100 w-150px w-lg-300px mb-10 mb-lg-20" src="../../../assets/media/auth/agency-dark.png" alt="" />
+                    <img class="theme-light-show mx-auto  mb-10 mb-lg-20" style="width : 85%" src="{{asset('assets/media/banner-1.jpg')}}" alt="" />
+{{--                    <img class="d-block w-100 h-400px" src="https://fastly.picsum.photos/id/861/1200/400.jpg?hmac=oEEp9Zqn58JvH4Jr3KtUz1MIhsZl__Xh-W8RZIqv4a4" alt="second slide">--}}
+                    <img class="theme-dark-show mx-auto  mb-10 mb-lg-20" src="{{asset('assets/media/banner-1.jpg')}}" alt="" />
                     <!--end::Image-->
 
-                    <!--begin::Title-->
-                    <h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7">
-                        Fast, Efficient and Productive
-                    </h1>
-                    <!--end::Title-->
+{{--                    <!--begin::Title-->--}}
+{{--                    <h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7">--}}
+{{--                        Fast, Efficient and Productive--}}
+{{--                    </h1>--}}
+{{--                    <!--end::Title-->--}}
 
-                    <!--begin::Text-->
-                    <div class="text-gray-600 fs-base text-center fw-semibold">
-                        In this kind of post, <a href="#" class="opacity-75-hover text-primary me-1">the blogger</a>
+{{--                    <!--begin::Text-->--}}
+{{--                    <div class="text-gray-600 fs-base text-center fw-semibold">--}}
+{{--                        In this kind of post, <a href="#" class="opacity-75-hover text-primary me-1">the blogger</a>--}}
 
-                        introduces a person they’ve interviewed <br /> and provides some background information about
+{{--                        introduces a person they’ve interviewed <br /> and provides some background information about--}}
 
-                        <a href="#" class="opacity-75-hover text-primary me-1">the interviewee</a>
-                        and their <br /> work following this is a transcript of the interview.
-                    </div>
-                    <!--end::Text-->
+{{--                        <a href="#" class="opacity-75-hover text-primary me-1">the interviewee</a>--}}
+{{--                        and their <br /> work following this is a transcript of the interview.--}}
+{{--                    </div>--}}
+{{--                    <!--end::Text-->--}}
                 </div>
                 <!--end::Content-->
             </div>

@@ -25,15 +25,17 @@
                         <label class="fs-5 fw-semibold mb-2">
                             <span >Nomor Handphone</span>
                         </label>
-
-                        <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor telfon" value=""/>
-                        <!--end::Input-->
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text" id="inputGroup-sizing-lg">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/1200px-Telkomsel_2021_icon.svg.png" id="logo_provider" alt="" height="25" width="25">
+                            </span>
+                            <input type="text" id="no_telp" name="notelp" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
+                        </div>
                     </div>
+
                     <div class="col-6">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span>Produk</span>
+                            <span>Nominal</span>
                         </label>
 
                         <select name="" id="" class="form-control form-control-lg">
@@ -99,7 +101,7 @@
                                 });
                             } else {
                                 $('#row-pricelist').append(
-                                    '<div class="col-md-12"><a href="{{ route('login.view') }}">Login first</a></div>'
+                                    '<div class="col-md-12"><a href="{{ route('login') }}">Login first</a></div>'
                                 )
                             }
                         }
