@@ -195,6 +195,8 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::post('/admin/hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('admin.hostelroom.ajax');
 });
 
-Auth::routes();
+
+
+//Auth::routes();
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

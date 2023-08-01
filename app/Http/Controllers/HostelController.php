@@ -65,7 +65,6 @@ class HostelController extends Controller
 
     public function room($id, Request $request)
     {
-        dd($request->all());
         $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
         $params['location'] = ($request->location) ?: '';
         $params['start_date'] = strtotime($request->start);
