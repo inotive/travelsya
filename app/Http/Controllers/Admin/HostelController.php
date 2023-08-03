@@ -14,13 +14,13 @@ class HostelController extends Controller
     public function index()
     {
         $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+
         return view('admin.hostel', compact('hostels'));
     }
 
     public function show($id)
     {
         $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
-
         return view('admin.hostel-show', compact('hostel'));
     }
 
@@ -43,7 +43,6 @@ class HostelController extends Controller
     public function edit($id)
     {
         $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
-
         return view('admin.hostel-edit', compact('hostel'));
     }
 
@@ -58,7 +57,6 @@ class HostelController extends Controller
     public function showImage($id)
     {
         $hostel = Hostel::with('hostelImage')->find($id);
-
         return view('admin.hostel-image', compact('hostel'));
     }
 
@@ -69,20 +67,27 @@ class HostelController extends Controller
             'image.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
         $hostel = Hostel::find($request->id);
+
+        $destinationPath = 'media/hostel';
+
+
+
         for ($i = 0; $i < count($request->image); $i++) {
+            $myimage = url($destinationPath).'/'. $request->image[$i]->hashName();
+            $request->image[$i]->move(public_path($destinationPath), $myimage);
             // dd($request->all(), $request->file('image')[$i]);
-            $request->file('image')[$i]->storeAs(
-                'hostel/' . Str::slug($hostel->name, '-'),
-                Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
-                'public',
-            );
+//            $request->file('image')[$i]->storeAs(
+//                'hostel/' . Str::slug($hostel->name, '-'),
+//                Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
+//                'public',
+//            );
             HostelImage::create([
                 'hostel_id' => $request->id,
-                'image' => Str::slug($hostel->name) . '/' . Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
+                'image' => $myimage,
                 'main' => 0
             ]);
         }
-        toast('Hostel has been updated', 'success');
+        toast('Hostel has been updateds', 'success');
         return redirect()->back();
     }
 }

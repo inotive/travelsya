@@ -81,7 +81,6 @@ class ManagementHotelController extends Controller
     public function settingPhoto($id)
     {
         $hostel = Hostel::with('hostelImage')->find($id);
-
         return view('admin.partner.management-hotel.setting-photo', compact('hostel'));
     }
 }

@@ -21,7 +21,7 @@
                                     <!--begin::Message-->
                                     <div class="dz-message needsclick">
                                         <i class="ki-duotone ki-file-up fs-3x text-primary"><span class="path1"></span><span class="path2"></span></i>
-                                        
+
                                         <!--begin::Info-->
                                         <div class="ms-4">
                                             <h3 class="fs-5 fw-bold text-gray-900 mb-1">Drop files here or click to upload.</h3>
@@ -61,14 +61,13 @@
                         <div class="col-6">
                             <div class="card border border-light-subtle">
                                 <div class="card-body">
-                                    <img src="{{$image->image}}" style="width: 100%; height: 150px;" alt="image">
+                                    <img src="{{$image->image}}"  style="width: 100%; height: 150px; bac" alt="image">
                                 </div>
                                 <div class="card-footer py-2">
                                     <form action="{{route('admin.hostel.main-image')}}" method="post" class="d-flex flex-column">
                                         @csrf
                                         <input type="hidden" name="id" value="{{$image->id}}">
                                         <input type="hidden" name="hostelid" value="{{$hostel->id}}">
-                                        
                                     <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama</button>
 
                                     </form>
@@ -78,7 +77,7 @@
                                         <input type="hidden" name="id" value="{{$image->id}}">
                                         <button class="btn btn-outline btn-outline btn-sm btn-outline-danger text-dark  w-100">Delete Photo</button>
                                     </form>
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -114,6 +113,6 @@
         //     }
         // });
 
-        
+
     </script>
 @endpush

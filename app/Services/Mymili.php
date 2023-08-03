@@ -20,20 +20,6 @@ class Mymili
             'Content-Type' => 'application/xml',
         ];
 
-        DB::table('tps')->insert([
-            'kecamatan_id' => 1,
-            'name' => 'Klandasan Ulu'
-        ]);
-
-        DB::table('tps')->insert([
-            'kecamatan_id' => 1,
-            'name' => 'Klandasan Ilir'
-        ]);
-        DB::table('tps')->insert([
-            'kecamatan_id' => 2,
-            'name' => 'Gunung Sari Ulu'
-        ]);
-
     }
 
     public function transaction($data)
