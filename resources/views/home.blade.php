@@ -1,570 +1,565 @@
 @extends('layouts.web') @section('content-web')
-@include('layouts.include.carousel')
+    @include('layouts.include.carousel')
 
-<!-- start::Menubar -->
-@include('layouts.include.home.menu-bar')
-<!-- end::Menubar -->
-@include('layouts.include.home.favorite-hotel')
-@include('layouts.include.home.partner-hotel') 
-@include('layouts.include.home.explore-city') 
+    <!-- start::Menubar -->
+    @include('layouts.include.home.menu-bar')
+    <!-- end::Menubar -->
 
-@endsection 
+    @include('layouts.include.home.favorite-hotel')
+    @include('layouts.include.home.partner-hotel')
+    @include('layouts.include.home.explore-city')
+@endsection
 
 @push('add-script')
-<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 
-<script>
-	var dummyMenus = [
-		{
-			id: 0,
-			isActive: true,
-			code: "hotel",
-			label: "Hotel",
-			image: "../assets/media/products-categories/icon-hotel.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80",
-			titleHeader: "Cari dan book Hotel untuk hari spesialmu!",
-			classImage: "w-40px",
-		},
-		{
-			id: 1,
-			isActive: true,
-			code: "hostel",
-			label: "Hostel",
-			image: "../assets/media/products-categories/icon-hostel.png",
-			imageHeader:
-				"https://plus.unsplash.com/premium_photo-1661963540233-94097ba21f27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2062&q=80",
-			titleHeader:
-				"Cari dan book Hostel untuk harian, mingguan, bulanan disini!",
-			classImage: "w-40px",
-		},
-		{
-			id: 2,
-			isActive: true,
-			code: "attraction",
-			label: "Rekreasi",
-			image: "../assets/media/products-categories/icon-attraction.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1535764558463-30f3af596bee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
-			titleHeader: "Cari destinasi rekreasi anda disini!",
-			classImage: "w-35px",
-		},
-		{
-			id: 3,
-			isActive: true,
-			code: "beauty",
-			label: "Health & Beauty",
-			image: "../assets/media/products-categories/icon-beauty.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80",
-			titleHeader: "Cari kebutuhan kesehatan & kecantiikan anda disini!",
-			classImage: "w-35px",
-		},
-		{
-			id: 4,
-			isActive: true,
-			code: "bpjs",
-			label: "BPJS",
-			image: "../assets/media/products-categories/icon-bpjs.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1528642474498-1af0c17fd8c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1769&q=80",
-			titleHeader: "Bayar BPJS sekarang lebih mudah melalui Travelsya!",
-			classImage: "w-30px",
-		},
-		{
-			id: 5,
-			isActive: true,
-			code: "pln",
-			label: "PLN",
-			image: "../assets/media/products-categories/icon-pln.png",
-			imageHeader: "",
-			titleHeader: "",
-			classImage: "w-30px",
-		},
-		{
-			id: 6,
-			isActive: true,
-			code: "pdam",
-			label: "PDAM",
-			image: "../assets/media/products-categories/icon-pdam.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1526599256864-6bedb9d7dfb5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
-			titleHeader: "Bayar PDAM sekarang lebih mudah melalui Travelsya!",
-			classImage: "w-40px",
-		},
-		{
-			id: 7,
-			isActive: true,
-			code: "e-wallet",
-			label: "E-Wallet",
-			image: "../assets/media/products-categories/icon-wallet.png",
-			imageHeader: "",
-			titleHeader: "",
-			classImage: "w-40px",
-		},
-		{
-			id: 8,
-			isActive: true,
-			code: "pulsa-data",
-			label: "Pulsa & Data",
-			image: "../assets/media/products-categories/icon-pulsa.png",
-			imageHeader:
-				"https://plus.unsplash.com/premium_photo-1664195539623-e25ce8e8d64b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
-			titleHeader: "Isi pulsa dan paket datamu disini!",
-			classImage: "w-40px",
-		},
-		{
-			id: 9,
-			isActive: true,
-			code: "tv",
-			label: "TV Berbayar",
-			image: "../assets/media/products-categories/icon-tv.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1595935736128-db1f0a261263?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2971&q=80",
-			titleHeader:
-				"Bayar TV kabel sekarang lebih mudah melalui Travelsya!",
-			classImage: "w-30px",
-		},
-		{
-			id: 14,
-			isActive: true,
-			code: "tax",
-			label: "Pajak",
-			image: "../assets/media/products-categories/icon-pajak.png",
-			imageHeader:
-				"https://images.unsplash.com/photo-1598432439250-0330f9130e14?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
-			titleHeader: "Bayar Pajak sekarang lebih mudah melalui Travelsya!",
-			classImage: "w-30px",
-		},
-		{
-			id: 10,
-			isActive: false,
-			code: "plane",
-			label: "Pesawat",
-			image: "../assets/media/products-categories/icon-plane.png",
-			imageHeader:
-				"https://plus.unsplash.com/premium_photo-1679758630312-a3d601c411d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
-			titleHeader: "",
-			classImage: "w-40px",
-		},
-		{
-			id: 11,
-			isActive: false,
-			code: "train",
-			label: "Kereta Api",
-			image: "../assets/media/products-categories/icon-kai.png",
-			imageHeader: "",
-			titleHeader: "",
-			classImage: "w-40px",
-		},
-		{
-			id: 12,
-			isActive: false,
-			code: "bus-travel",
-			label: "Bus & Travel",
-			image: "../assets/media/products-categories/icon-bus.png",
-			imageHeader: "",
-			titleHeader: "",
-			classImage: "w-40px",
-		},
-		{
-			id: 13,
-			isActive: false,
-			code: "rent-car",
-			label: "Rental Mobil",
-			image: "../assets/media/products-categories/icon-mobil.png",
-			imageHeader: "",
-			titleHeader: "",
-			classImage: "w-40px",
-		},
-		{
-			id: 14,
-			isActive: false,
-			code: "bank-transfer",
-			label: "Transfer Bank",
-			image: "../assets/media/products-categories/icon-transfer.png",
-			imageHeader: "",
-			titleHeader: "",
-			classImage: "w-40px",
-		},
-	];
+    <script>
+        var dummyMenus = [{
+                id: 0,
+                isActive: true,
+                code: "hotel",
+                label: "Hotel",
+                image: "../assets/media/products-categories/icon-hotel.png",
+                imageHeader: "https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80",
+                titleHeader: "Cari dan book Hotel untuk hari spesialmu!",
+                classImage: "w-40px",
+            },
+            {
+                id: 1,
+                isActive: true,
+                code: "hostel",
+                label: "Hostel",
+                image: "../assets/media/products-categories/icon-hostel.png",
+                imageHeader: "https://plus.unsplash.com/premium_photo-1661963540233-94097ba21f27?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2062&q=80",
+                titleHeader: "Cari dan book Hostel untuk harian, mingguan, bulanan disini!",
+                classImage: "w-40px",
+            },
+            {
+                id: 2,
+                isActive: true,
+                code: "attraction",
+                label: "Rekreasi",
+                image: "../assets/media/products-categories/icon-attraction.png",
+                imageHeader: "https://images.unsplash.com/photo-1535764558463-30f3af596bee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
+                titleHeader: "Cari destinasi rekreasi anda disini!",
+                classImage: "w-35px",
+            },
+            {
+                id: 3,
+                isActive: true,
+                code: "beauty",
+                label: "Health & Beauty",
+                image: "../assets/media/products-categories/icon-beauty.png",
+                imageHeader: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1774&q=80",
+                titleHeader: "Cari kebutuhan kesehatan & kecantiikan anda disini!",
+                classImage: "w-35px",
+            },
+            {
+                id: 4,
+                isActive: true,
+                code: "bpjs",
+                label: "BPJS",
+                image: "../assets/media/products-categories/icon-bpjs.png",
+                imageHeader: "https://images.unsplash.com/photo-1528642474498-1af0c17fd8c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1769&q=80",
+                titleHeader: "Bayar BPJS sekarang lebih mudah melalui Travelsya!",
+                classImage: "w-30px",
+            },
+            {
+                id: 5,
+                isActive: true,
+                code: "pln",
+                label: "PLN",
+                image: "../assets/media/products-categories/icon-pln.png",
+                imageHeader: "",
+                titleHeader: "",
+                classImage: "w-30px",
+            },
+            {
+                id: 6,
+                isActive: true,
+                code: "pdam",
+                label: "PDAM",
+                image: "../assets/media/products-categories/icon-pdam.png",
+                imageHeader: "https://images.unsplash.com/photo-1526599256864-6bedb9d7dfb5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1771&q=80",
+                titleHeader: "Bayar PDAM sekarang lebih mudah melalui Travelsya!",
+                classImage: "w-40px",
+            },
+            {
+                id: 7,
+                isActive: true,
+                code: "e-wallet",
+                label: "E-Wallet",
+                image: "../assets/media/products-categories/icon-wallet.png",
+                imageHeader: "",
+                titleHeader: "",
+                classImage: "w-40px",
+            },
+            {
+                id: 8,
+                isActive: true,
+                code: "pulsa-data",
+                label: "Pulsa & Data",
+                image: "../assets/media/products-categories/icon-pulsa.png",
+                imageHeader: "https://plus.unsplash.com/premium_photo-1664195539623-e25ce8e8d64b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1740&q=80",
+                titleHeader: "Isi pulsa dan paket datamu disini!",
+                classImage: "w-40px",
+            },
+            {
+                id: 9,
+                isActive: true,
+                code: "tv",
+                label: "TV Berbayar",
+                image: "../assets/media/products-categories/icon-tv.png",
+                imageHeader: "https://images.unsplash.com/photo-1595935736128-db1f0a261263?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2971&q=80",
+                titleHeader: "Bayar TV kabel sekarang lebih mudah melalui Travelsya!",
+                classImage: "w-30px",
+            },
+            {
+                id: 14,
+                isActive: true,
+                code: "tax",
+                label: "Pajak",
+                image: "../assets/media/products-categories/icon-pajak.png",
+                imageHeader: "https://images.unsplash.com/photo-1598432439250-0330f9130e14?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1770&q=80",
+                titleHeader: "Bayar Pajak sekarang lebih mudah melalui Travelsya!",
+                classImage: "w-30px",
+            },
+            {
+                id: 10,
+                isActive: false,
+                code: "plane",
+                label: "Pesawat",
+                image: "../assets/media/products-categories/icon-plane.png",
+                imageHeader: "https://plus.unsplash.com/premium_photo-1679758630312-a3d601c411d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
+                titleHeader: "",
+                classImage: "w-40px",
+            },
+            {
+                id: 11,
+                isActive: false,
+                code: "train",
+                label: "Kereta Api",
+                image: "../assets/media/products-categories/icon-kai.png",
+                imageHeader: "",
+                titleHeader: "",
+                classImage: "w-40px",
+            },
+            {
+                id: 12,
+                isActive: false,
+                code: "bus-travel",
+                label: "Bus & Travel",
+                image: "../assets/media/products-categories/icon-bus.png",
+                imageHeader: "",
+                titleHeader: "",
+                classImage: "w-40px",
+            },
+            {
+                id: 13,
+                isActive: false,
+                code: "rent-car",
+                label: "Rental Mobil",
+                image: "../assets/media/products-categories/icon-mobil.png",
+                imageHeader: "",
+                titleHeader: "",
+                classImage: "w-40px",
+            },
+            {
+                id: 14,
+                isActive: false,
+                code: "bank-transfer",
+                label: "Transfer Bank",
+                image: "../assets/media/products-categories/icon-transfer.png",
+                imageHeader: "",
+                titleHeader: "",
+                classImage: "w-40px",
+            },
+        ];
 
-	var dummyHotels = [
-		{
-			id: "041a1f7d-d6ce-4a46-b59c-7b8ed1fc1409",
-			name: "OVAL GUEST HOUSE",
-			label: "OVAL GUEST HOUSE"
-		},
-		{
-			id: "adadadssfdfdfwefwewcczcsaaaasdaadsds",
-			name: "Her Mandiri Guest House",
-			label: "Her Mandiri Guest House"
-		},
-		{
-			id: "adadadssfdfdfwefwewcczcsaaasda222023",
-			name: "Royal Suite Hotel",
-			label: "Royal Suite Hotel"
-		},
-		{
-			id: "adadadssfdfdfwefwewcczcsaaasdad42023",
-			name: "de radja",
-			label: "de radja"
-		},
-		{
-			id: "adadadssfdfdfwefwewcczcsaaasdada2023",
-			name: "Hotel Ayu",
-			label: "Hotel Ayu"
-		},
-		{
-			id: "adadadssfdfdfwefwewcczcsaaasdada3202",
-			name: "radja kost",
-			label: "radja kost"
-		},
-		{
-			id: "adadadssfdfdfwefwewcczcsaaasdadaasds",
-			name: "Hemra Hotel",
-			label: "Hemra Hotel"
-		}
-	];
+        // var dummyHotels = [{
+        //         id: "041a1f7d-d6ce-4a46-b59c-7b8ed1fc1409",
+        //         name: "OVAL GUEST HOUSE",
+        //         label: "OVAL GUEST HOUSE"
+        //     },
+        //     {
+        //         id: "adadadssfdfdfwefwewcczcsaaaasdaadsds",
+        //         name: "Her Mandiri Guest House",
+        //         label: "Her Mandiri Guest House"
+        //     },
+        //     {
+        //         id: "adadadssfdfdfwefwewcczcsaaasda222023",
+        //         name: "Royal Suite Hotel",
+        //         label: "Royal Suite Hotel"
+        //     },
+        //     {
+        //         id: "adadadssfdfdfwefwewcczcsaaasdad42023",
+        //         name: "de radja",
+        //         label: "de radja"
+        //     },
+        //     {
+        //         id: "adadadssfdfdfwefwewcczcsaaasdada2023",
+        //         name: "Hotel Ayu",
+        //         label: "Hotel Ayu"
+        //     },
+        //     {
+        //         id: "adadadssfdfdfwefwewcczcsaaasdada3202",
+        //         name: "radja kost",
+        //         label: "radja kost"
+        //     },
+        //     {
+        //         id: "adadadssfdfdfwefwewcczcsaaasdadaasds",
+        //         name: "Hemra Hotel",
+        //         label: "Hemra Hotel"
+        //     }
+        // ];
+        var dummyHotels = @json($hotels);
 
-	var dummyHostel = {
-		typeProperty: [
-			{
-				id: 0,
-				name: "apartement",
-				label: "Apartemen"
-			},
-			{
-				id: 1,
-				name: "house",
-				label: "Rumah"
-			},
-			{
-				id: 2,
-				name: "villa",
-				label: "Villa"
-			},
-			{
-				id: 3,
-				name: "residence",
-				label: "Residence"
-			}
-		],
-		typeBed: [
-			{
-				id: 0,
-				name: "studio",
-				label: "studio"
-			},
-			{
-				id: 1,
-				name: "1br",
-				label: "1BR"
-			},
-			{
-				id: 2,
-				name: "2br",
-				label: "2BR"
-			},
-			{
-				id: 3,
-				name: "3br",
-				label: "3BR+"
-			}
-		],
-		typeFurnish: [
-			{
-				id: 0,
-				name: "fullfurnished",
-				label: "Full Furnish"
-			},
-			{
-				id: 1,
-				name: "unfurnished",
-				label: "Unfurnished"
-			}
-		]
-	}
+        var dummyHostel = {
+            typeProperty: [{
+                    id: 0,
+                    name: "apartement",
+                    label: "Apartemen"
+                },
+                {
+                    id: 1,
+                    name: "house",
+                    label: "Rumah"
+                },
+                {
+                    id: 2,
+                    name: "villa",
+                    label: "Villa"
+                },
+                {
+                    id: 3,
+                    name: "residence",
+                    label: "Residence"
+                }
+            ],
+            typeBed: [{
+                    id: 0,
+                    name: "studio",
+                    label: "studio"
+                },
+                {
+                    id: 1,
+                    name: "1br",
+                    label: "1BR"
+                },
+                {
+                    id: 2,
+                    name: "2br",
+                    label: "2BR"
+                },
+                {
+                    id: 3,
+                    name: "3br",
+                    label: "3BR+"
+                }
+            ],
+            typeFurnish: [{
+                    id: 0,
+                    name: "fullfurnished",
+                    label: "Full Furnish"
+                },
+                {
+                    id: 1,
+                    name: "unfurnished",
+                    label: "Unfurnished"
+                }
+            ]
+        }
 
-	var dummyExploreCities = [
-		{
-			id: 0,
-			label: "Welcome to Bali",
-			image: "https://service.travelsya.com/bahan/kota_1.png",
-		},
-		{
-			id: 1,
-			label: "Welcome to Yogyakarta",
-			image: "https://service.travelsya.com/bahan/kota_2.png",
-		},
-		{
-			id: 2,
-			label: "Welcome to Jakarta",
-			image: "https://service.travelsya.com/bahan/kota_3.png",
-		},
-		{
-			id: 3,
-			label: "Welcome to Surabaya",
-			image: "https://service.travelsya.com/bahan/kota_4.png",
-		},
-		{
-			id: 4,
-			label: "Welcome to Bandung",
-			image: "https://service.travelsya.com/bahan/kota_5.png",
-		},
-	];
+        var dummyExploreCities = [{
+                id: 0,
+                label: "Welcome to Bali",
+                image: "https://service.travelsya.com/bahan/kota_1.png",
+            },
+            {
+                id: 1,
+                label: "Welcome to Yogyakarta",
+                image: "https://service.travelsya.com/bahan/kota_2.png",
+            },
+            {
+                id: 2,
+                label: "Welcome to Jakarta",
+                image: "https://service.travelsya.com/bahan/kota_3.png",
+            },
+            {
+                id: 3,
+                label: "Welcome to Surabaya",
+                image: "https://service.travelsya.com/bahan/kota_4.png",
+            },
+            {
+                id: 4,
+                label: "Welcome to Bandung",
+                image: "https://service.travelsya.com/bahan/kota_5.png",
+            },
+        ];
 
-	var dummyFavoriteHotel = [
-		{
-			id: 0,
-			label: "Hotel Mulia Jakarta",
-			city: "Jakarta",
-			image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-			price: 1300000,
-			realPrice: 825000,
-			rate: 3,
-			totalRate: 12,
-		},
-		{
-			id: 1,
-			label: "Hotel Mulia Jakarta",
-			city: "Jakarta",
-			image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-			price: 1300000,
-			realPrice: 825000,
-			rate: 3,
-			totalRate: 12,
-		},
-		{
-			id: 2,
-			label: "Hotel Mulia Jakarta",
-			city: "Jakarta",
-			image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-			price: 1300000,
-			realPrice: 825000,
-			rate: 3,
-			totalRate: 12,
-		},
-		{
-			id: 3,
-			label: "Hotel Mulia Jakarta",
-			city: "Jakarta",
-			image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-			price: 1300000,
-			realPrice: 825000,
-			rate: 3,
-			totalRate: 12,
-		},
-	];
+        var dummyFavoriteHotel = [{
+                id: 0,
+                label: "Hotel Mulia Jakarta",
+                city: "Jakarta",
+                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+                price: 1300000,
+                realPrice: 825000,
+                rate: 3,
+                totalRate: 12,
+            },
+            {
+                id: 1,
+                label: "Hotel Mulia Jakarta",
+                city: "Jakarta",
+                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+                price: 1300000,
+                realPrice: 825000,
+                rate: 3,
+                totalRate: 12,
+            },
+            {
+                id: 2,
+                label: "Hotel Mulia Jakarta",
+                city: "Jakarta",
+                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+                price: 1300000,
+                realPrice: 825000,
+                rate: 3,
+                totalRate: 12,
+            },
+            {
+                id: 3,
+                label: "Hotel Mulia Jakarta",
+                city: "Jakarta",
+                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+                price: 1300000,
+                realPrice: 825000,
+                rate: 3,
+                totalRate: 12,
+            },
+        ];
 
-	var dummyPartnerHotel = [
-		{
-			id: 0,
-			label: "Oval Kost",
-			image: "../assets/media/partner/oval.png",
-			address: "Jin. Mekar Sari RT.19 NO.67 Gn. Sari Ilir, Balikpapan, Kalimantan Timur",
-			email: "ovalkost@gmail.com",
-			telp: "+6282166888766",
-			website: "www.ovalkost.com"
-		},{
-			id: 1,
-			label: "Hemra Hotel",
-			image: "../assets/media/partner/hemra.png",
-			address: "JI. MT Haryono No.5 No.85, Damai, Balikpapan, Kalimantan Timur",
-			email: "-",
-			telp: "0542-762290",
-			website: "-"
-		},{
-			id: 2,
-			label: "Her Mandiri Guest House",
-			image: "../assets/media/partner/her.png",
-			address: "JI. Syarifuddin Yoes No.88, Sepinggan, Balikpapan, Kalimantan Timur",
-			email: "-",
-			telp: "0542-8514339",
-			website: "-"
-		},{
-			id: 3,
-			label: "Hotel Ayu",
-			image: "../assets/media/partner/ayu.png",
-			address: "JI. P. Antasari, No.18 RT.001, Karang Rejo, Balikpapan, Kalimantan Timur",
-			email: "-",
-			telp: "0542-425290",
-			website: "-"
-		},{
-			id: 4,
-			label: "Royal Suite",
-			image: "../assets/media/partner/royal.png",
-			address: "JI. Syarifuddin Yoes No.125, Sepinggan, Balikpapan, Kalimantan Timur",
-			email: "-",
-			telp: "+6282211852013",
-			website: "www.royalsuitehotels.com"
-		},{
-			id: 5,
-			label: "De' Radja Guest House",
-			image: "../assets/media/partner/de-radja.png",
-			address: "-",
-			email: "-",
-			telp: "-",
-			website: "-"
-		},{
-			id: 6,
-			label: "Radja",
-			image: "../assets/media/partner/radja.png",
-			address: "-",
-			email: "-",
-			telp: "-",
-			website: "-"
-		},
-	]
-	
-	var today = new Date();
-	$(".js-daterangepicker").daterangepicker({
-		minDate: today,
-	});
+        var dummyPartnerHotel = [{
+            id: 0,
+            label: "Oval Kost",
+            image: "../assets/media/partner/oval.png",
+            address: "Jin. Mekar Sari RT.19 NO.67 Gn. Sari Ilir, Balikpapan, Kalimantan Timur",
+            email: "ovalkost@gmail.com",
+            telp: "+6282166888766",
+            website: "www.ovalkost.com"
+        }, {
+            id: 1,
+            label: "Hemra Hotel",
+            image: "../assets/media/partner/hemra.png",
+            address: "JI. MT Haryono No.5 No.85, Damai, Balikpapan, Kalimantan Timur",
+            email: "-",
+            telp: "0542-762290",
+            website: "-"
+        }, {
+            id: 2,
+            label: "Her Mandiri Guest House",
+            image: "../assets/media/partner/her.png",
+            address: "JI. Syarifuddin Yoes No.88, Sepinggan, Balikpapan, Kalimantan Timur",
+            email: "-",
+            telp: "0542-8514339",
+            website: "-"
+        }, {
+            id: 3,
+            label: "Hotel Ayu",
+            image: "../assets/media/partner/ayu.png",
+            address: "JI. P. Antasari, No.18 RT.001, Karang Rejo, Balikpapan, Kalimantan Timur",
+            email: "-",
+            telp: "0542-425290",
+            website: "-"
+        }, {
+            id: 4,
+            label: "Royal Suite",
+            image: "../assets/media/partner/royal.png",
+            address: "JI. Syarifuddin Yoes No.125, Sepinggan, Balikpapan, Kalimantan Timur",
+            email: "-",
+            telp: "+6282211852013",
+            website: "www.royalsuitehotels.com"
+        }, {
+            id: 5,
+            label: "De' Radja Guest House",
+            image: "../assets/media/partner/de-radja.png",
+            address: "-",
+            email: "-",
+            telp: "-",
+            website: "-"
+        }, {
+            id: 6,
+            label: "Radja",
+            image: "../assets/media/partner/radja.png",
+            address: "-",
+            email: "-",
+            telp: "-",
+            website: "-"
+        }, ]
 
-	var dummyCities;
-	$.ajax({
-		url: "{{ route('hostel.ajax.city') }}",
-		async:false,
-		type: "GET",
-		dataType: "json",
-		success: function (response) {
-			dummyCities = response.map((item, id) => ({
-					id: id,
-					name: item?.city.toLowerCase() || '',
-					label: item?.city || ''
-			}));
-		},
-	});
+        var today = new Date();
+        $(".js-daterangepicker").daterangepicker({
+            minDate: today,
+        });
 
-	$.ajaxSetup({
-		headers: {
-			"X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr(
-				"content"
-			)
-		}
-	})
+        var hotelCities;
+        $.ajax({
+            url: "{{ route('hotels.ajax.city') }}",
+            async: false,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                hotelCities = response.map((item, id) => ({
+                    id: id,
+                    name: item?.city.toLowerCase() || '',
+                    label: item?.city || ''
+                }));
+            },
+        });
 
-	$(document).ready(function () {
-		$('.form-select.select:not(.normal)').each(function () {
-			$(this).select2({
-				dropdownParent: $(this).parent()
-			});
-		});
-		var today = new Date();
-		$(".js-daterangepicker").daterangepicker({
-			minDate: today,
-		});
+        var dummyCities;
+        $.ajax({
+            url: "{{ route('hostel.ajax.city') }}",
+            async: false,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                dummyCities = response.map((item, id) => ({
+                    id: id,
+                    name: item?.city.toLowerCase() || '',
+                    label: item?.city || ''
+                }));
+            },
+        });
 
-		new tempusDominus.TempusDominus(
-			document.getElementById("js_datepicker"), {
-			display: {
-				viewMode: "calendar",
-				components: {
-					date: true,
-					hours: false,
-					minutes: false,
-					seconds: false
-				}
-			},
-			localization: {
-				locale: "id",
-				format: "dd-MM-yyyy",
-			},
-			restrictions: {
-				minDate: today,
-			},
-		});
+        $.ajaxSetup({
+            headers: {
+                "X-CSRF-TOKEN": jQuery('meta[name="csrf-token"]').attr(
+                    "content"
+                )
+            }
+        })
 
-		new tempusDominus.TempusDominus(
-			document.getElementById("js_datepickerhostel"), {
-			display: {
-				viewMode: "calendar",
-				components: {
-					date: true,
-					hours: false,
-					minutes: false,
-					seconds: false
-				}
-			},
-			localization: {
-				locale: "id",
-				format: "dd-MM-yyyy",
-			},
-			restrictions: {
-				minDate: today,
-			},
-		});
+        $(document).ready(function() {
+            $('.form-select.select:not(.normal)').each(function() {
+                $(this).select2({
+                    dropdownParent: $(this).parent()
+                });
+            });
+            var today = new Date();
+            $(".js-daterangepicker").daterangepicker({
+                minDate: today,
+            });
 
-		const {
-			getOperator
-		} = window.NoTelp;
+            new tempusDominus.TempusDominus(
+                document.getElementById("js_datepicker"), {
+                    display: {
+                        viewMode: "calendar",
+                        components: {
+                            date: true,
+                            hours: false,
+                            minutes: false,
+                            seconds: false
+                        }
+                    },
+                    localization: {
+                        locale: "id",
+                        format: "dd-MM-yyyy",
+                    },
+                    restrictions: {
+                        minDate: today,
+                    },
+                });
 
-		$(".notelp").on("keyup", function (e) {
-			var cat = $(this).data("cat");
-			var notelp = e.target.value;
-			var operatorTelp1 = getOperator(notelp);
+            new tempusDominus.TempusDominus(
+                document.getElementById("js_datepickerhostel"), {
+                    display: {
+                        viewMode: "calendar",
+                        components: {
+                            date: true,
+                            hours: false,
+                            minutes: false,
+                            seconds: false
+                        }
+                    },
+                    localization: {
+                        locale: "id",
+                        format: "dd-MM-yyyy",
+                    },
+                    restrictions: {
+                        minDate: today,
+                    },
+                });
 
-			if (operatorTelp1.valid) {
-				$.ajax({
-					url: "{{ url('/ajax/ppob') }}",
-					type: "POST",
-					dataType: "json",
-					data: {
-						operator: operatorTelp1.operator,
-						category: cat,
-					},
-					success: function (response) {
-						if (response.message != "Unauthorized") {
-							if (cat == "pulsa")
-								$("#row-pricelist-pulsa").html("");
+            const {
+                getOperator
+            } = window.NoTelp;
 
-							if (cat == "data")
-								$("#row-pricelist-data").html("");
+            $(".notelp").on("keyup", function(e) {
+                var cat = $(this).data("cat");
+                var notelp = e.target.value;
+                var operatorTelp1 = getOperator(notelp);
 
-							$.each(response, function (key, val) {
-								if (cat == "pulsa") {
-									$("#row-pricelist-pulsa").append(
-										`<option value="${val.id}">${val.description} - ${val.price}</option>`
-									);
-								}
-								if (cat == "data") {
-									$("#row-pricelist-data").append(
-										`<option value="${val.id}">${val.description} - ${val.price}</option>`
-									);
-								}
-							});
-						} else {
-							`<option value=0>Login First</option>`;
-						}
-					},
-				});
-			}
-		});
-	});
+                if (operatorTelp1.valid) {
+                    $.ajax({
+                        url: "{{ url('/ajax/ppob') }}",
+                        type: "POST",
+                        dataType: "json",
+                        data: {
+                            operator: operatorTelp1.operator,
+                            category: cat,
+                        },
+                        success: function(response) {
+                            if (response.message != "Unauthorized") {
+                                if (cat == "pulsa")
+                                    $("#row-pricelist-pulsa").html("");
 
-	document.addEventListener("alpine:init", () => {
-		Alpine.store("menubar", {
-			data: dummyMenus,
-			selected: {},
-		})
-		Alpine.store("hotel", {
-			cities: dummyCities,
-			hotels: dummyHotels,
-		}),
-		Alpine.store("hostel", {
-			cities: dummyCities,
-			...dummyHostel
-		}),
-		Alpine.store("explorecity", {
-			data: dummyExploreCities,
-		}),
-		Alpine.store("favoritehotel", {
-			data: dummyFavoriteHotel,
-		});
-		Alpine.store("partnerhotel", {
-			data: dummyPartnerHotel,
-		});
-	});
-</script>
+                                if (cat == "data")
+                                    $("#row-pricelist-data").html("");
+
+                                $.each(response, function(key, val) {
+                                    if (cat == "pulsa") {
+                                        $("#row-pricelist-pulsa").append(
+                                            `<option value="${val.id}">${val.description} - ${val.price}</option>`
+                                        );
+                                    }
+                                    if (cat == "data") {
+                                        $("#row-pricelist-data").append(
+                                            `<option value="${val.id}">${val.description} - ${val.price}</option>`
+                                        );
+                                    }
+                                });
+                            } else {
+                                `<option value=0>Login First</option>`;
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        document.addEventListener("alpine:init", () => {
+            Alpine.store("menubar", {
+                data: dummyMenus,
+                selected: {},
+            })
+            Alpine.store("hotel", {
+                    cities: hotelCities,
+                    hotels: dummyHotels,
+                }),
+                Alpine.store("hostel", {
+                    cities: dummyCities,
+                    ...dummyHostel
+                }),
+                Alpine.store("explorecity", {
+                    data: dummyExploreCities,
+                }),
+                Alpine.store("favoritehotel", {
+                    data: dummyFavoriteHotel,
+                });
+            Alpine.store("partnerhotel", {
+                data: dummyPartnerHotel,
+            });
+        });
+    </script>
 @endpush
