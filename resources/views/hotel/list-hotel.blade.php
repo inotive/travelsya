@@ -291,7 +291,7 @@
                                                 <h3 class="mb-4">Fasilitas</h3>
                                                 <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
                                                 <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
-                                                <a href="{{ route('hotels.room') }}"
+                                                <a href="{{ route('hotels.room', ['id_hotel' => $hotel->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&end_date={{ $request['end_date'] }}&room={{ $request['room'] }}&guest={{ $request['guest'] }}"
                                                     class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
                                             </div>
                                         </div>

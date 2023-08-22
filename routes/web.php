@@ -79,7 +79,7 @@ Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->gro
     Route::get('/', 'index')->name('.index');
     Route::get('/list-hotel', 'listHotel')->name('.list-hotel');
     //    Route::get('/detail-hotel', 'show')->name('.show');
-    Route::get('/room/', 'room')->name('.room');
+    Route::get('/room/{id_hotel}', 'room')->name('.room');
     Route::get('/reservation-example/', 'reservationExample')->name('.reservation.example');
     Route::get('/{idroom}/reservation', 'reservation')->name('.reservation');
     Route::post('/{idroom}/request', 'request')->name('.request');

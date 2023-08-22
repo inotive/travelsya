@@ -98,7 +98,7 @@ class HotelController extends Controller
         return view('hotel.list-hotel');
     }
 
-    public function room(Request $request)
+    public function room($id_hotel, Request $request)
     {
         //        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
         //        $params['location'] = ($request->location) ?: '';
@@ -123,7 +123,37 @@ class HotelController extends Controller
         //        }])->withCount("hotelRating as rating_count")->find($id);
 
         //        return view('hotel.show', compact('hotelget', 'params', 'cities'));
-        return view('hotel.show');
+
+
+        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+            ->findOrFail($id_hotel);
+
+        $minPrice = $hotel->hotelRoom->min('sellingprice');
+        $maxPrice = $hotel->hotelRoom->max('sellingprice');
+        $jumlahTransaksi = $hotel->hotelRating->count();
+        $totalRating = $hotel->hotelRating->sum('rate');
+
+        // Rating 5
+        if ($jumlahTransaksi > 0) {
+            $avgRating = $totalRating / $jumlahTransaksi;
+            $resultRating = ($avgRating / 10) * 5;
+        } else {
+            $avgRating = 0;
+            $resultRating = 0;
+        }
+
+        $data['request'] = $request->all();
+        $data['hotel'] = $hotel;
+        $data['min_price'] = $minPrice;
+        $data['max_price'] = $maxPrice;
+        $data['total_rating'] = $totalRating;
+        $data['result_rating'] = $resultRating;
+        $data['star_rating'] = floor($resultRating);
+
+        $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
+        $data['listHotel'] = Hotel::all();
+
+        return view('hotel.show', $data);
     }
 
     public function reservationExample()
