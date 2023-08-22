@@ -47,25 +47,48 @@ class HotelController extends Controller
         // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
         //     ->withAvg('hotelRating', 'rate')
         //     ->orderByDesc('hotel_rating_avg_rate');
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
-
-        if ($request->room) {
-            $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+            ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where('totalroom', '>', $request->room)
                     ->where('guest', '>=', 3);
-            });
-        }
-
-        if ($request->location) {
-            $hotels->where(function ($query) use ($request) {
+            })->where(function ($query) use ($request) {
                 $query->where('city', 'like', '%' . $request->location . '%')
                     ->orWhere('name', 'like', '%' . $request->location . '%');
-            });
+            })->get();
+
+        $hotelDetails = [];
+
+        foreach ($hotels as $hotel) {
+            $minPrice = $hotel->hotelRoom->min('sellingprice');
+            $maxPrice = $hotel->hotelRoom->max('sellingprice');
+            $jumlahTransaksi = $hotel->hotelRating->count();
+            $totalRating = $hotel->hotelRating->sum('rate');
+
+            // Rating 5
+            if ($jumlahTransaksi > 0) {
+                $avgRating = $totalRating / $jumlahTransaksi;
+                $resultRating = ($avgRating / 10) * 5;
+            } else {
+                $avgRating = 0;
+                $resultRating = 0;
+            }
+
+            $hotelDetails[$hotel->id] = [
+                'min_price' => $minPrice,
+                'max_price' => $maxPrice,
+                'total_rating' => $totalRating,
+                'result_rating' => $resultRating,
+                'star_rating' => floor($resultRating),
+            ];
         }
 
-        $data['hotels'] = $hotels->get();
+        $data['hotels'] = $hotels;
+        $data['hotelDetails'] = $hotelDetails;
         $data['request'] = $request->all();
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
+        $data['listHotel'] = Hotel::all();
+
+        // dd($hotelPrices);
 
         return view('hotel.list-hotel', $data);
     }

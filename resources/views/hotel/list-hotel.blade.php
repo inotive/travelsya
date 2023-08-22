@@ -150,7 +150,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body h-100">
-                                    <div class="row g-4">
+                                    <form method="GET" action="{{ route('hotels.index') }}" class="row g-4">
                                         <div class="col-12">
                                             <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
                                             <select name="location" id="location" class="form-select select"
@@ -161,14 +161,20 @@
                                                 </template> --}}
 
                                                 @foreach ($citiesHotel as $city)
-                                                    <option value="{{ $city->city }}">{{ $city->city }}</option>
+                                                    <option value="{{ $city->city }}"
+                                                        {{ $request['location'] == $city->city ? 'selected' : '' }}>
+                                                        {{ $city->city }}</option>
                                                 @endforeach
 
-
                                                 <optgroup label="Hotel"></optgroup>
-                                                <template x-for="data in $store.hotel.hotels">
+                                                @foreach ($listHotel as $hotel)
+                                                    <option value="{{ $hotel->name }}"
+                                                        {{ $request['location'] == $hotel->name ? 'selected' : '' }}>
+                                                        {{ $hotel->name }}</option>
+                                                @endforeach
+                                                {{-- <template x-for="data in $store.hotel.hotels">
                                                     <option x-bind:value="data.name" x-text="data.label"></option>
-                                                </template>
+                                                </template> --}}
                                             </select>
                                         </div>
                                         <div class="col-3">
@@ -187,41 +193,115 @@
                                                 </span>
                                             </div>
                                         </div>
+                                        <input type="hidden" name="duration" value="{{ $request['duration'] }}">
+                                        @php
+                                            $checkin = \Carbon\Carbon::parse($request['start']);
+                                            $duration = $request['duration'];
+                                            
+                                            // Hitung tanggal checkout
+                                            $checkout = $checkin->copy()->addDays($duration);
+                                        @endphp
                                         <div class="col-3">
                                             <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
-                                            <input type="text" class="form-control" name="end_date" />
+                                            <input type="text" class="form-control" name="end_date"
+                                                value="{{ $checkout->format('d-m-Y') }}" />
                                         </div>
                                         <div class="col-3">
                                             <label class="form-label fw-bold fs-6">Total Kamar</label>
-                                            <select name="room" id="room" class="form-select"
-                                                x-on:change="handleSelectRoom">
-                                                <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
+                                            <select name="room" id="room" class="form-select">
+                                                @for ($i = 1; $i <= 11; $i++)
+                                                    <option value="{{ $i }}"
+                                                        {{ $request['room'] == $i ? 'selected' : '' }}>
+                                                        {{ $i }}</option>
+                                                @endfor
+                                                {{-- <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
                                                     <option x-bind:value="data"
                                                         x-text="data === 0 ? `Pilih Jumlah Kamar` : `${data} Kamar`">-
                                                     </option>
-                                                </template>
+                                                </template> --}}
                                             </select>
                                         </div>
                                         <div class="col-3">
                                             <label class="form-label fw-bold fs-6">Total Tamu</label>
                                             <select name="guest" id="guest" class="form-select">
-                                                <template x-for="data in [ ...Array(totalGuest).keys() ]" key="data">
+                                                @for ($i = 1; $i <= 31; $i++)
+                                                    <option value="{{ $i }}"
+                                                        {{ $request['guest'] == $i ? 'selected' : '' }}>
+                                                        {{ $i }}</option>
+                                                @endfor
+                                                {{-- <template x-for="data in [ ...Array(totalGuest).keys() ]" key="data">
                                                     <option x-bind:value="data"
                                                         x-text="data === 0 ? `Pilih Jumlah Tamu` : `${data} Tamu`">-
                                                     </option>
-                                                </template>
+                                                </template> --}}
                                             </select>
                                         </div>
                                         <div class="col-12">
-                                            <button class="w-100 btn-danger btn">Cari Data</button>
+                                            <button type="submit" class="w-100 btn-danger btn">Cari Data</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach ($hotels as $hotel)
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body h-100">
+                                        <div class="row my-4">
+                                            <div class="col-3">
+                                                <img src="https://service.travelsya.com/storage/hotel/image3.webp"
+                                                    alt="" height="200" width="200">
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="row gy-4">
+                                                    <div class="col-12">
+                                                        <h3>{{ $hotel->name }}</h3>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <span class="badge badge-danger">
+                                                            {{ $hotelDetails[$hotel->id]['result_rating'] }}
+                                                        </span>
+                                                        <span
+                                                            class="badge badge-danger">({{ $hotelDetails[$hotel->id]['total_rating'] }}
+                                                            Rating)</span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        @for ($i = 0; $i <= $hotelDetails[$hotel->id]['star_rating']; $i++)
+                                                            <span class="card-text fa fa-star"
+                                                                style="color: orange;"></span>
+                                                        @endfor
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <p>{{ $hotel->address ?? 'Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan' }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <h2 class="card-title text-danger">
+                                                            Rp
+                                                            {{ number_format($hotelDetails[$hotel->id]['min_price'], 0, ',', '.') }}
+                                                            - Rp
+                                                            {{ number_format($hotelDetails[$hotel->id]['max_price'], 0, ',', '.') }}
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <h3 class="mb-4">Fasilitas</h3>
+                                                <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                                <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                                <a href="{{ route('hotels.room') }}"
+                                                    class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    @endforeach
 
-                    </div>
-                    <div class="row mt-4">
+                    {{-- <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-body h-100">
@@ -264,49 +344,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body h-100">
-                                    <div class="row my-4">
-                                        <div class="col-3">
-                                            <img src="https://service.travelsya.com/storage/hotel/image3.webp"
-                                                alt="" height="200" width="200">
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="row gy-4">
-                                                <div class="col-12">
-                                                    <h3>OVAL GUEST HOUSE</h3>
-                                                </div>
-                                                <div class="col-12">
-                                                    <span class="badge badge-danger">4.4</span>
-                                                    <span class="badge badge-danger">(123 Rating)</span>
-                                                </div>
-                                                <div class="col-12">
-                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                    <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                </div>
-                                                <div class="col-12">
-                                                    <p>Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
-                                                </div>
-                                                <div class="col-12">
-                                                    <h2 class="card-title text-danger">Rp 124.000 - Rp 324.000 </h2>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-3">
-                                            <h3 class="mb-4">Fasilitas</h3>
-                                            <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                            <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
-                                            <a href="{{ route('hotels.room') }}"
-                                                class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">
@@ -412,7 +450,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
             </div>

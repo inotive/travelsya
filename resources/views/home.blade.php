@@ -411,7 +411,7 @@
             success: function(response) {
                 hotelCities = response.map((item, id) => ({
                     id: id,
-                    name: item?.city.toLowerCase() || '',
+                    name: item?.city || '',
                     label: item?.city || ''
                 }));
             },
