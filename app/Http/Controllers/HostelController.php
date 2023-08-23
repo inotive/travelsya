@@ -165,6 +165,7 @@ class HostelController extends Controller
         $params['guest'] = ($request->guest) ?: '';
         $params['duration'] =  date('d-m-Y', strtotime("+" . $request->duration . " month", strtotime($request->start)));
         $params['room'] = ($request->duration) ?: '';
+        $params['duration'] = ($request->duration) ?: '';
         return view('hostel.checkout', compact('hostelRoom', 'params'));
     }
 
