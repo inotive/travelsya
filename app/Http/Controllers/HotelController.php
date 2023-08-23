@@ -98,7 +98,7 @@ class HotelController extends Controller
         return view('hotel.list-hotel');
     }
 
-    public function room($id_hotel, Request $request)
+    public function room(Request $request, $id_hotel)
     {
         //        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
         //        $params['location'] = ($request->location) ?: '';
@@ -160,20 +160,49 @@ class HotelController extends Controller
     {
         return view('reservation.index');
     }
-    public function reservation(Request $request, $id)
+
+    public function reservation(Request $request, $idroom)
     {
-        $hotelRoom = HotelRoom::with(['hotel' => function ($q1) {
-            $q1->withCount(["hotelRating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }]);
-        }], 'hotelBookDate')->find($id);
-        $params['start_date'] = strtotime($request->start);
-        $params['end_date'] = date('d-m-Y', strtotime("+" . $request->duration . " days", strtotime($request->start)));
-        $params['room'] = ($request->room) ?: '';
-        $params['guest'] = ($request->guest) ?: '';
-        $params['duration'] = ($request->duration) ?: '';
+        // $hotelRoom = HotelRoom::with(['hotel' => function ($q1) {
+        //     $q1->withCount(["hotelRating as rating_avg" => function ($q) {
+        //         $q->select(DB::raw('coalesce(avg(rate),0)'));
+        //     }]);
+        // }], 'hotelBookDate')->find($idroom);
+
+        // $params['start_date'] = strtotime($request->start);
+        // $params['end_date'] = date('d-m-Y', strtotime("+" . $request->duration . " days", strtotime($request->start)));
+        // $params['room'] = ($request->room) ?: '';
+        // $params['guest'] = ($request->guest) ?: '';
+        // $params['duration'] = ($request->duration) ?: '';
         // dd($hotelRoom);
-        return view('hotel.reservation', compact('hotelRoom', 'params'));
+        // return view('hotel.reservation', compact('hotelRoom', 'params'));
+
+
+        $hotelRoom = HotelRoom::with('hotel')->findOrFail($idroom);
+
+        // $minPrice = $hotel->hotelRoom->min('sellingprice');
+        // $maxPrice = $hotel->hotelRoom->max('sellingprice');
+        // $jumlahTransaksi = $hotel->hotelRating->count();
+        // $totalRating = $hotel->hotelRating->sum('rate');
+
+        // // Rating 5
+        // if ($jumlahTransaksi > 0) {
+        //     $avgRating = $totalRating / $jumlahTransaksi;
+        //     $resultRating = ($avgRating / 10) * 5;
+        // } else {
+        //     $avgRating = 0;
+        //     $resultRating = 0;
+        // }
+
+        $data['params'] = $request->all();
+        $data['hotelRoom'] = $hotelRoom;
+        // $data['min_price'] = $minPrice;
+        // $data['max_price'] = $maxPrice;
+        // $data['total_rating'] = $totalRating;
+        // $data['result_rating'] = $resultRating;
+        // $data['star_rating'] = floor($resultRating);
+
+        return view('hotel.reservation', $data);
     }
 
     public function request(Request $request)

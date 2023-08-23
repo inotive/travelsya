@@ -211,8 +211,8 @@
                                     <div class="row mt-auto">
                                         <div class="col-12">
                                             <h2 class="mt-15 fw-bold d-flex align-self-end" style="color: #c02425">Rp
-                                                {{ number_format($min_price, 0, ',', '.') }} - Rp
-                                                {{ number_format($max_price, 0, ',', '.') }}</h2>
+                                                {{ General::rp($min_price) }} - Rp
+                                                {{ General::rp($max_price) }}</h2>
                                         </div>
                                     </div>
 
@@ -249,8 +249,9 @@
                     {{--        @endforeach --}}
                 </div>
             </div>
+
             @guest
-                <div class="row w-75 my-5 me-auto ms-auto">
+                <div class="row w-75 me-auto ms-auto mt-5">
                     <div class="col-12">
                         <!--begin::Alert-->
                         <div class="alert alert-dismissible bg-light-warning d-flex flex-column flex-sm-row mb-10 p-5">
@@ -286,8 +287,9 @@
                     </div>
                 </div>
             @endguest
-            <div class="row w-75 me-auto ms-auto">
-                {{--                @foreach ($hotelget->hotelRoom as $room) --}}
+
+            <div class="row w-75 me-auto ms-auto mt-5">
+                {{-- @foreach ($hotelget->hotelRoom as $room) --}}
                 {{--                    <div class="col-6"> --}}
                 {{--                        <div class="card card-hostel mb-3"> --}}
                 {{--                            <div class="row mb-2"> --}}
@@ -327,7 +329,9 @@
                                         </p>
                                         <p class="card-text mt-1 text-gray-500">Maximal Penghuni : {{ $room->guest }}
                                             Orang</p>
-                                        <p class="card-text mt-1 text-gray-500"><b class="text-danger">Tersisa 2 Kamar
+                                        <p class="card-text mt-1 text-gray-500">
+                                            <b class="text-danger">
+                                                Tersisa 2 Kamar
                                             </b>
                                         </p>
                                         <div>
@@ -340,8 +344,15 @@
                             <div class="card-footer d-flex justify-content-between">
                                 <p class="fw-semibold d-block fs-2 text-danger">Rp.
                                     {{ number_format($room->sellingprice, 0, ',', '.') }}</p>
-                                <a href="{{ route('hotels.reservation.example') }}" class="btn btn-danger px-4 py-2"
-                                    data-toggle="modal" data-target="#exampleModal">Pesan Kamar</a>
+                                @guest
+                                    <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
+                                        data-target="#exampleModal">Pesan Kamar</a>
+                                @endguest
+                                @auth
+                                    <a href="{{ route('hotels.reservation', ['idroom' => $room->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] }}&guest={{ $request['guest'] }}"
+                                        class="btn btn-danger px-4 py-2">Pesan
+                                        Kamar</a>
+                                @endauth
                             </div>
                         </div>
                     </div>
