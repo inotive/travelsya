@@ -426,7 +426,7 @@
             success: function(response) {
                 dummyCities = response.map((item, id) => ({
                     id: id,
-                    name: item?.city.toLowerCase() || '',
+                    name: item?.city || '',
                     label: item?.city || ''
                 }));
             },

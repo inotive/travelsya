@@ -20,47 +20,89 @@ class HostelController extends Controller
     public function index(Request $request)
     {
         // $hostels = $this->travelsya->hostel(['location' => ($request->city) ?: '', 'name' => ($request->name) ?: '', 'category' => ($request->category) ?: '']);
-        $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
-        if ($request->name)
-            $hostels->where('name', 'like', '%' . $request->name . '%');
+        // $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+        // if ($request->name)
+        //     $hostels->where('name', 'like', '%' . $request->name . '%');
 
-        if ($request->location)
-            $hostels->where('city', 'like', '%' . $request->location . '%');
+        // if ($request->location)
+        //     $hostels->where('city', 'like', '%' . $request->location . '%');
 
-        if ($request->category)
-            $hostels->where('category', 'like', '%' . $request->category . '%');
+        // if ($request->category)
+        //     $hostels->where('category', 'like', '%' . $request->category . '%');
 
-        if ($request->property)
-            $hostels->where('property', $request->property);
+        // if ($request->property)
+        //     $hostels->where('property', $request->property);
 
-        if ($request->furnish) {
-            $furnish = $request->furnish;
-            $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
-                $q->where('furnish', $furnish);
-            });
-        }
+        // if ($request->furnish) {
+        //     $furnish = $request->furnish;
+        //     $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
+        //         $q->where('furnish', $furnish);
+        //     });
+        // }
 
-        if ($request->roomtype) {
-            $roomtype = $request->roomtype;
-            $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
-                $q->where('roomtype', $roomtype);
-            });
-        }
+        // if ($request->roomtype) {
+        //     $roomtype = $request->roomtype;
+        //     $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
+        //         $q->where('roomtype', $roomtype);
+        //     });
+        // }
 
-        $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
-            $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-        }])->withCount(["rating as rating_avg" => function ($q) {
-            $q->select(DB::raw('coalesce(avg(rate),0)'));
-        }])->withCount("rating as rating_count")->get();
-        // dd($hostelsget);
-        $cities = Hostel::distinct()->pluck('city');
-        $params = $request->all();
-        $params['start_date'] = strtotime($request->start);
-        $params['end_date'] = strtotime($request->end);
-        $params['category'] = ($request->category) ?: '';
-        $params['name'] = ($request->name) ?: '';
+        // $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
+        //     $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+        // }])->withCount(["rating as rating_avg" => function ($q) {
+        //     $q->select(DB::raw('coalesce(avg(rate),0)'));
+        // }])->withCount("rating as rating_count")->get();
+        // // dd($hostelsget);
+        // $cities = Hostel::distinct()->pluck('city');
+        // $params = $request->all();
+        // $params['start_date'] = strtotime($request->start);
+        // $params['end_date'] = strtotime($request->end);
+        // $params['category'] = ($request->category) ?: '';
+        // $params['name'] = ($request->name) ?: '';
 
-        return view('hostel.index', ['hostels' => $hostelsget, 'cities' => $cities, 'params' => $params]);
+        // return view('hostel.index', ['hostels' => $hostelsget, 'cities' => $cities, 'params' => $params]);
+
+        $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating')
+            ->where('city', 'like', '%' . $request->location . '%')
+            ->withCount(["hostelRoom as price_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+            }])->withCount(["rating as rating_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(rate),0)'));
+            }])->withCount("rating as rating_count")
+            ->get();
+
+        // $hostelDetails = [];
+
+        // foreach ($hostels as $hostel) {
+        //     $minPrice = $hostel->hostelRoom->min('sellingprice');
+        //     $maxPrice = $hostel->hostelRoom->max('sellingprice');
+        //     $jumlahTransaksi = $hostel->hostelRating->count();
+        //     $totalRating = $hostel->hostelRating->sum('rate');
+
+        //     // Rating 5
+        //     if ($jumlahTransaksi > 0) {
+        //         $avgRating = $totalRating / $jumlahTransaksi;
+        //         $resultRating = ($avgRating / 10) * 5;
+        //     } else {
+        //         $avgRating = 0;
+        //         $resultRating = 0;
+        //     }
+
+        //     $hostelDetails[$hostel->id] = [
+        //         'min_price' => $minPrice,
+        //         'max_price' => $maxPrice,
+        //         'total_rating' => $totalRating,
+        //         'result_rating' => $resultRating,
+        //         'star_rating' => floor($resultRating),
+        //     ];
+        // }
+
+        // $data['hostelDetails'] = $hostelDetails;
+        $data['hostels'] = $hostels;
+        $data['params']  = $request->all();
+        $data['cities']  = Hostel::distinct()->pluck('city');
+
+        return view('hostel.index', $data);
     }
 
     public function room($id, Request $request)
@@ -91,7 +133,7 @@ class HostelController extends Controller
     {
         $hostelRoom = HostelRoom::with('hostel', 'bookDate')->find($id);
         $params['start_date'] = strtotime($request->start);
-        $params['end_date'] =($request->room) ?: '';
+        $params['end_date'] = ($request->room) ?: '';
         $params['guest'] = ($request->guest) ?: '';
         $params['duration'] =  date('d-m-Y', strtotime("+" . $request->duration . " month", strtotime($request->start)));
         $params['room'] = ($request->duration) ?: '';
