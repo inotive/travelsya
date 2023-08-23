@@ -107,7 +107,40 @@ class HostelController extends Controller
 
     public function room($id, Request $request)
     {
+        // $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+        // $params['location'] = ($request->location) ?: '';
+        // $params['start_date'] = strtotime($request->start);
+        // $params['end_date'] = strtotime($request->end);
+        // $params['room'] = ($request->room) ?: '';
+        // $params['guest'] = ($request->guest) ?: '';
+        // $params['property'] = ($request->property) ?: '';
+        // $params['roomtype'] = ($request->roomtype) ?: '';
+        // $params['furnish'] = ($request->furnish) ?: '';
+        // $params['name'] = ($request->name) ?: '';
+        // $cities = Hostel::distinct()->pluck('city');
+
+        // $hostelget = $hostel->withCount(["hostelRoom as price_avg" => function ($query) {
+        //     $query->select(DB::raw('coalesce(avg(sellingprice),0)'));
+        // }])
+        //     ->withCount(["rating as rating_avg" => function ($query) {
+        //         $query->select(DB::raw('coalesce(avg(rate),0)'));
+        //     }])
+        //     ->withCount("rating as rating_count")
+        //     ->find($id);
+
+        // return view('hostel.room', compact('hostelget', 'params', 'cities'));
+
         $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+
+        $data['hostelget'] = $hostel->withCount(["hostelRoom as price_avg" => function ($query) {
+            $query->select(DB::raw('coalesce(avg(sellingprice),0)'));
+        }])
+            ->withCount(["rating as rating_avg" => function ($query) {
+                $query->select(DB::raw('coalesce(avg(rate),0)'));
+            }])
+            ->withCount("rating as rating_count")
+            ->find($id);
+
         $params['location'] = ($request->location) ?: '';
         $params['start_date'] = strtotime($request->start);
         $params['end_date'] = strtotime($request->end);
@@ -117,16 +150,11 @@ class HostelController extends Controller
         $params['roomtype'] = ($request->roomtype) ?: '';
         $params['furnish'] = ($request->furnish) ?: '';
         $params['name'] = ($request->name) ?: '';
-        $cities = Hostel::distinct()->pluck('city');
 
-        $hostelget = $hostel->withCount(["hostelRoom as price_avg" => function ($q) {
-            $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-        }])->withCount(["rating as rating_avg" => function ($q) {
-            $q->select(DB::raw('coalesce(avg(rate),0)'));
-        }])->withCount("rating as rating_count")->find($id);
-        // dd($hostelget);
+        $data['params'] = $params;
+        $data['cities'] = Hostel::distinct()->pluck('city');
 
-        return view('hostel.room', compact('hostelget', 'params', 'cities'));
+        return view('hostel.room', $data);
     }
 
     public function checkout($id, Request $request)
