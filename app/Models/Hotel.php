@@ -68,4 +68,9 @@ class Hotel extends Model
     {
         return $this->belongsTo(Service::class);
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
