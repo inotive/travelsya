@@ -19,7 +19,7 @@
                                         <!--begin::Radio-->
                                         <label class="btn btn-outline btn-color-muted active fs-9" data-kt-button="true">
                                             <!--begin::Input-->
-                                            <input class="btn-check" type="radio" name="method" value="1" />
+                                            <input class="btn-check" type="radio" name="method" value="1" checked="checked" />
                                             <!--end::Input-->
                                             Harga Tertinggi
                                         </label>
@@ -29,7 +29,7 @@
                                         <label class="btn btn-outline btn-color-muted btn-active-danger fs-9"
                                             data-kt-button="true">
                                             <!--begin::Input-->
-                                            <input class="btn-check" type="radio" name="method" checked="checked"
+                                            <input class="btn-check" type="radio" name="method"
                                                 value="2" />
                                             <!--end::Input-->
                                             Harga Terendah
@@ -197,7 +197,7 @@
                                         @php
                                             $checkin = \Carbon\Carbon::parse($request['start']);
                                             $duration = $request['duration'];
-                                            
+
                                             // Hitung tanggal checkout
                                             $checkout = $checkin->copy()->addDays($duration);
                                         @endphp
@@ -344,7 +344,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">

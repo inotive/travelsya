@@ -14,7 +14,7 @@ class FeeController extends Controller
         $fees = Fee::with('service')->get();
         $services = Service::all();
 
-        return view('admin.fee', compact('fees', 'services'));
+        return view('admin.management-fee.index', compact('fees', 'services'));
     }
 
     public function updateFee(Request $request)

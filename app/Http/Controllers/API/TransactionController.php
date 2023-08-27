@@ -8,6 +8,7 @@ use App\Models\Transaction;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Xendit\Xendit;
 
 class TransactionController extends Controller
 {
@@ -34,6 +35,17 @@ class TransactionController extends Controller
         }
     }
 
+    public function __construct()
+    {
+        Xendit::setApiKey("xnd_development_720yPHpZAyEfNzCycBS6I6nnREM6JrieSYS4zdytWdptFMn68JEyEsoBvPYs");
+    }
+
+//    public function createInvoice(Request $request)
+//    {
+//        $param = [
+//            'external_id' =>
+//        ]
+//    }
     public function getTransactionInv(Request $request)
     {
         try {
