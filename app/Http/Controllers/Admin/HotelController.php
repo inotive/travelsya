@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 
 class HotelController extends Controller
@@ -50,7 +51,7 @@ class HotelController extends Controller
             'address' => $request->address,
             'city' => $request->city,
             'star' => $request->star,
-            'website' => $request->website,
+            'website' => $request->website
             ]
         );
 
@@ -60,9 +61,13 @@ class HotelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Hotel $hotel)
     {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Hotel',
+            'data' => $hotel
+        ]);
     }
 
     /**
@@ -76,9 +81,53 @@ class HotelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Hotel $hotel)
     {
-        //
+        // $hotel = Hotel::findOrFail($id);
+
+        // $hotel->update($request,[
+        //     'user_id' => $request->user_id,
+        //     'is_active' => $request->is_active,
+        //     'checkin' => $request->checkin,
+        //     'checkout' => $request->checkout,
+        //     'service_id' => 8,
+        //     'name' => $request->name,
+        //     'address' => $request->address,
+        //     'city' => $request->city,
+        //     'star' => $request->star,
+        // ]);
+
+
+        $validator = Validator::make($request->all(), [
+        'name' =>'required',
+        'address' =>'required',
+        'star' =>'required',
+        'city' =>'required',
+        'website' =>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $hotel->update([
+            'user_id' => $request->user_id,
+            'is_active' => 1,
+            'checkin' => "11:00:00",
+            'checkout' => "12:00:00",
+            'service_id' => 8,
+            'name' => $request->name,
+            'address' => $request->address,
+            'city' => $request->city,
+            'star' => $request->star,
+            'website' => $request->website,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diudapte!',
+            'data'    => $hotel
+        ]);
     }
 
     /**
@@ -86,6 +135,11 @@ class HotelController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Hotel::where('id', $id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Dihapus!'
+        ]);
     }
 }

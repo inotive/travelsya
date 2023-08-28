@@ -1,6 +1,9 @@
 @extends('admin.layout',['title' => 'Daftar Hotel', 'url' => ''])
 
 @section('content-admin')
+    <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
+    <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
     <!--begin::Tables Widget 11-->
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
@@ -33,7 +36,7 @@
                     </thead>
                     <tbody>
                         @foreach ($hotels as $hotel)
-                        <tr>
+                        <tr id="index_{{ $hotel->id }}">
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $hotel->user_name }}</td>
                             <td class="text-center">{{ $hotel->name }}</td>
@@ -66,14 +69,14 @@
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3 text-warning" data-kt-customer-table-filter="delete_row">
+                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $hotel->id }}" data-bs-toggle="modal">
                                             Edit
                                         </a>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3 text-danger" data-kt-customer-table-filter="delete_row">
+                                        <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $hotel->id }}" data-bs-toggle="modal" class="menu-link px-3 text-danger">
                                             Delete
                                         </a>
                                     </div>
@@ -89,110 +92,9 @@
                         </tr>
                         @endforeach
 
-                        {{--                    @foreach($vendors as $vendor)--}}
-{{--                        <tr>--}}
-{{--                            <td class="text-center">{{$loop->iteration}}</td>--}}
-{{--                            <td>--}}
-{{--                                <p>{{$vendor->user->name}}</p>--}}
-{{--                                <p style="font-size : 9px;">{{$vendor->user->email}}</p>--}}
-{{--                            </td>--}}
-{{--                            <td class="text-center"><span class="badge badge-info">{{$vendor->name}}</span></td>--}}
-{{--                            <td class="text-center">{{$vendor->user->phone ?? 'Belum Ada'}}</td>--}}
-{{--                            <td class="text-center">--}}
-{{--                                @if($vendor->is_active == 1)--}}
-{{--                                    <span class="badge badge-success">Aktif</span>--}}
-{{--                                @else--}}
-{{--                                    <span class="badge badge-danger">Tidak Aktif</span>--}}
-{{--                                @endif--}}
-{{--                            </td>--}}
-{{--                            <td class="text-center">--}}
-{{--                                <button class="btn btn-warning btn-sm p-2" data-id="{{$vendor->id}}"--}}
-{{--                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"--}}
-{{--                                        data-bs-target="#edit">Edit--}}
-{{--                                </button>--}}
-{{--                                <button class="btn btn-danger btn-sm p-2" data-id="{{$vendor->id}}"--}}
-{{--                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"--}}
-{{--                                        data-bs-target="#edit">Delete--}}
-{{--                                </button>--}}
-{{--                            </td>--}}
-{{--                        </tr>--}}
-{{--                    @endforeach--}}
+
                     </tbody>
                 </table>
-
-                {{-- <table class="table align-middle gs-0 gy-4">
-                    <!--begin::Table head-->
-                    <thead>
-                        <tr class="fw-bold text-muted bg-light">
-                            <th class="rounded-start">No</th>
-                            <th class="w-75px rounded-start">Image</th>
-                            <th class="min-w-75px rounded-start">Mitra</th>
-                            <th class="min-w-75px rounded-start">Phone</th>
-                            <th class="min-w-125px">Alamat</th>
-                            <th class="min-w-125px">Email Login</th>
-                            <th class="min-w-150px text-end rounded-end"></th>
-                        </tr>
-                    </thead>
-                    <!--end::Table head-->
-                    <!--begin::Table body-->
-                    <tbody>
-                        @foreach($vendors as $vendor)
-                        <tr>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$loop->iteration}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6"><img class="img-thumbnail" src="{{count($vendor->hostelImage) >0 ? $vendor->hostelImage[0]->image : 'not found'}}" alt="">{{count($vendor->hostelImage) >0 ? '': 'not found'}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->user->name}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->user->phone}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{substr($vendor->address,0,24)}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$vendor->user->email}}</div>
-                            </td>
-                            <td class="text-end">
-                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm btn-edit"
-                                    data-id="{{$vendor->id}}" data-active="{{$vendor->is_active}}" data-bs-toggle="modal" data-bs-target="#edit">
-                                    <i class="ki-duotone ki-pencil fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                    </i>
-                                </a>
-                            </td>
-                            <td class="text-end">
-                                <form action="{{route('admin.mitra.destroy')}}" method="post">
-                                @csrf
-                                @method('delete')
-                                <input type="hidden" name="id" value="{{$vendor->id}}">
-                                <button class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit">
-                                    <i class="ki-duotone ki-trash fs-2">
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        <span class="path4"></span>
-                                        <span class="path5"></span>
-                                    </i>
-                                </button >
-                                </form>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td>
-                              {{$vendors->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
-                          </td>
-                        </tr>
-                      </tfoot>
-                    <!--end::Table body-->
-                </table> --}}
                 <!--end::Table-->
             </div>
             <!--end::Table container-->
@@ -203,91 +105,8 @@
 
 
     {{-- modal --}}
-    <!--begin::Modal - New Target-->
-    <div class="modal fade" id="edit" tabindex="-1" aria-hidden="true">
-        <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered mw-650px">
-            <!--begin::Modal content-->
-            <div class="modal-content rounded">
-                <!--begin::Modal header-->
-                <div class="modal-header pb-0 border-0 justify-content-end">
-                    <!--begin::Close-->
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
-                </div>
-                <!--begin::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                    <!--begin:Form-->
-                    <form id="kt_modal_new_target_form" class="form" method="post"
-                          action="{{route('admin.mitra.update')}}">
-                        @method('put')
-                        @csrf
-                        {{-- <input type="hidden" name="service_id" id="service_id">
-                        <input type="hidden" name="is_active" id="is_active"> --}}
-                        <input type="hidden" name="id" id="id">
-                        <!--begin::Heading-->
-                        <div class="mb-13 text-center">
-                            <!--begin::Title-->
-                            <h1 class="mb-3">Update Mitra</h1>
-                            <!--end::Title-->
-                        </div>
-                        <!--end::Heading-->
-                        <!--begin::Input group-->
-                        <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
-                                <select class="form-select form-select-solid" id="user_id" name="user_id">
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('user_id')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Active</label>
-                                <select class="form-select form-select-solid" id="active" name="active">
-                                    <option value="1">Yes</option>
-                                    <option value="0">No</option>
-                                </select>
-                                @error('active')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Actions-->
-                        <div class="text-center">
-                            <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
-                            </button>
-                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                                <span class="indicator-label">Submit</span>
-                                <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
-                        <!--end::Actions-->
-                    </form>
-                    <!--end:Form-->
-                </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
-        </div>
-        <!--end::Modal dialog-->
-    </div>
-    <!--end::Modal - New Target-->
+    @include('admin.management-mitra.hotel.edit')
+    @include('admin.management-mitra.hotel.delete')
 
     <!--begin::Modal - New Target-->
     <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
@@ -313,8 +132,6 @@
                     <form id="kt_modal_new_target_form" class="form" method="post"
                           action="{{route('admin.hotel.store')}}">
                         @csrf
-                        <input type="hidden" name="id" id="id">
-
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
                             <!--begin::Title-->
@@ -477,69 +294,4 @@
             });
         } );
     </script>
-{{-- <script>
-    $('#store').click(function(e) {
-        e.preventDefault();
-
-        //define variable
-        let name   = $('#name').val();
-        let user_id = $('#user_id').val();
-        let city = $('#city').val();
-        let address = $('#address').val();
-        let website = $('#website').val();
-        let star = $('#star').val();
-        let service_id = $('#service_id').val();
-        let status = $('#status').val();
-        let token = $("meta[name='csrf-token']").attr("content");
-
-        //ajax
-        $.ajax({
-
-            url: `/admin/management-mitra/hotel`,
-            type: "POST",
-            cache: false,
-            data: {
-                "name": name,
-                "user_id": user_id,
-                "status": status;
-                "city": city,
-                "address": address,
-                "website": website,
-                "star": star,
-                "service_id": service_id,
-                "_token": token
-            },
-            success:function(response){
-
-                //show success message
-                Swal.fire({
-                    type: 'success',
-                    icon: 'success',
-                    title: `${response.message}`,
-                    showConfirmButton: false,
-                    timer: 3000
-                });
-
-                //data post
-                let hotel = `
-                    <tr id="index_${response.data.id}">
-                        <td>${response.data.name}</td>
-                        <td>${response.data.content}</td>
-                        <td class="text-center">
-                            <a href="javascript:void(0)" id="btn-edit-post" data-id="${response.data.id}" class="btn btn-primary btn-sm">EDIT</a>
-                            <a href="javascript:void(0)" id="btn-delete-post" data-id="${response.data.id}" class="btn btn-danger btn-sm">DELETE</a>
-                        </td>
-                    </tr>
-                `;
-                //close modal
-                $('#modal-create').modal('hide');
-
-
-            },
-
-        });
-
-    });
-
-</script> --}}
 @endpush
