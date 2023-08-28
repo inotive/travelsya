@@ -19,8 +19,8 @@
                 <a href="#" target="_blank" class="menu-link px-2">Purchase</a>
             </li>
         </ul>
-        <select name="kecamatan" id="field-kecamatan" class="form-control">
-            @foreach($kecamatans => as $kecamatan)
+        {{-- <select name="kecamatan" id="field-kecamatan" class="form-control">
+            @foreach($kecamatans as $kecamatan)
             <option value="{{$kecamatan->id}}">{{$kecamatan->name}}</option>
             @endforeach
         </select>
@@ -28,7 +28,7 @@
         <select name="tipe_caleg" id="field-wilayah-caleg" class="form-control">
             <option value="kecamatan">Kecamatan</option>
             <option value="kota">Provinsi</option>
-        </select>
+        </select> --}}
         <!--end::Menu-->
     </div>
     <!--end::Footer container-->

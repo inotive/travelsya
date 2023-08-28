@@ -32,14 +32,22 @@
                     </tr>
                     </thead>
                     <tbody>
+                        @foreach ($hotels as $hotel)
                         <tr>
-                            <td>1</td>
-                            <td class="text-center">Vendor A</td>
-                            <td class="text-center">Hotel A</td>
-                            <td class="text-center">JL.MT Haryono</td>
-                            <td class="text-center"><a href="">Link Website</a></td>
-                            <td class="text-center"><span class="badge badge-warning">Bintang 3</span></td>
-                            <td class="text-center"><span class="badge badge-success">Aktif</span></td>
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ $hotel->user_name }}</td>
+                            <td class="text-center">{{ $hotel->service_name }}</td>
+                            <td class="text-center">{{ $hotel->address }}</td>
+                            <td class="text-center"><a href="{{ $hotel->website }}">Link Website</a></td>
+                            <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }}</span></td>
+                            <td class="text-center">
+
+                                @if ($hotel->is_active)
+                                <span class="badge badge-success">{{ $hotel->is_active }}</span>
+                                @else
+                                <span class="badge badge-danger">{{ $hotel->is_active }}</span>
+                                @endif
+                            </td>
                             <td class="text-center">
                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">
                                     <!--begin::Menu item-->
@@ -79,7 +87,9 @@
                                 <!--end::Menu-->
                             </td>
                         </tr>
-{{--                    @foreach($vendors as $vendor)--}}
+                        @endforeach
+
+                        {{--                    @foreach($vendors as $vendor)--}}
 {{--                        <tr>--}}
 {{--                            <td class="text-center">{{$loop->iteration}}</td>--}}
 {{--                            <td>--}}
@@ -218,6 +228,8 @@
                           action="{{route('admin.mitra.update')}}">
                         @method('put')
                         @csrf
+                        {{-- <input type="hidden" name="service_id" id="service_id">
+                        <input type="hidden" name="is_active" id="is_active"> --}}
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
@@ -299,9 +311,10 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                          action="{{route('admin.mitra.store')}}">
+                          action="{{route('admin.hotel.store')}}">
                         @csrf
                         <input type="hidden" name="id" id="id">
+
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
                             <!--begin::Title-->
@@ -350,11 +363,11 @@
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="" id="" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
                             </div>
                             <div class="col-12">
-                                <label for="" class="form-label">Website</label>
-                                <input type="text" class="form-control" placeholder="Masukan website">
+                                <label for="website" class="form-label">Website</label>
+                                <input type="text" id="website" name="website" class="form-control" placeholder="Masukan website">
                             </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Bintang</label>
@@ -364,7 +377,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="method" value="1"/>
+                                        <input class="btn-check" type="radio" name="star" id="star" value="1"/>
                                         <!--end::Input-->
                                         1
                                     </label>
@@ -373,7 +386,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="method" checked="checked" value="2"/>
+                                        <input class="btn-check" type="radio" name="star" id="star" checked="checked" value="2"/>
                                         <!--end::Input-->
                                         2
                                     </label>
@@ -382,7 +395,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="method" value="3" />
+                                        <input class="btn-check" type="radio" name="star" id="star" value="3" />
                                         <!--end::Input-->
                                         3
                                     </label>
@@ -391,7 +404,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="method" value="4"  />
+                                        <input class="btn-check" type="radio" name="star" id="star" value="4"  />
                                         <!--end::Input-->
                                         4
                                     </label>
@@ -399,14 +412,13 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="method" value="5"  />
+                                        <input class="btn-check" type="radio" name="star" id="star" value="5"  />
                                         <!--end::Input-->
                                         5
                                     </label>
                                     <!--end::Radio-->
                                 </div>
                                 <!--end::Radio group-->
-                                <input type="hidden" name="status" value="1">
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -465,4 +477,69 @@
             });
         } );
     </script>
+{{-- <script>
+    $('#store').click(function(e) {
+        e.preventDefault();
+
+        //define variable
+        let name   = $('#name').val();
+        let user_id = $('#user_id').val();
+        let city = $('#city').val();
+        let address = $('#address').val();
+        let website = $('#website').val();
+        let star = $('#star').val();
+        let service_id = $('#service_id').val();
+        let status = $('#status').val();
+        let token = $("meta[name='csrf-token']").attr("content");
+
+        //ajax
+        $.ajax({
+
+            url: `/admin/management-mitra/hotel`,
+            type: "POST",
+            cache: false,
+            data: {
+                "name": name,
+                "user_id": user_id,
+                "status": status;
+                "city": city,
+                "address": address,
+                "website": website,
+                "star": star,
+                "service_id": service_id,
+                "_token": token
+            },
+            success:function(response){
+
+                //show success message
+                Swal.fire({
+                    type: 'success',
+                    icon: 'success',
+                    title: `${response.message}`,
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+
+                //data post
+                let hotel = `
+                    <tr id="index_${response.data.id}">
+                        <td>${response.data.name}</td>
+                        <td>${response.data.content}</td>
+                        <td class="text-center">
+                            <a href="javascript:void(0)" id="btn-edit-post" data-id="${response.data.id}" class="btn btn-primary btn-sm">EDIT</a>
+                            <a href="javascript:void(0)" id="btn-delete-post" data-id="${response.data.id}" class="btn btn-danger btn-sm">DELETE</a>
+                        </td>
+                    </tr>
+                `;
+                //close modal
+                $('#modal-create').modal('hide');
+
+
+            },
+
+        });
+
+    });
+
+</script> --}}
 @endpush

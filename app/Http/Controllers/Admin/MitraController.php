@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
+use App\Models\Hotel;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -40,8 +41,7 @@ class MitraController extends Controller
 
     public function storeMitra(Request $request)
     {
-        Hostel::create(['name' => ucwords($request->name), 'user_id' => $request->user_id, 'is_active' => $request->active, 'city' => $request->city, 'category' => $request->category]);
-
+        Hotel::create(['name' => ucwords($request->name), 'user_id' => $request->user_id, 'is_active' => $request->active, 'city' => $request->city, 'category' => $request->category]);
         toast('Mitra has been created', 'success');
         return redirect()->back();
     }
