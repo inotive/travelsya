@@ -19,7 +19,7 @@ class UserController extends Controller
     public function transaction()
     {
         if (!session()->get('user'))
-            return redirect()->route('login.view');
+            return redirect()->route('login');
 
         $transaction = $this->travelsya->listTransaction();
         $transactionData = $transaction['data'];

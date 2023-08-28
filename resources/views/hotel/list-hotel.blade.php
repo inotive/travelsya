@@ -1,5 +1,7 @@
 @extends('layouts.web')
 
+@section('title', 'Daftar Hotel')
+
 @section('content-web')
     <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
         <!--begin::Post-->
@@ -197,7 +199,7 @@
                                         @php
                                             $checkin = \Carbon\Carbon::parse($request['start']);
                                             $duration = $request['duration'];
-                                            
+
                                             // Hitung tanggal checkout
                                             $checkout = $checkin->copy()->addDays($duration);
                                         @endphp
@@ -344,7 +346,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="card">

@@ -159,7 +159,7 @@ class HotelController extends Controller
         $setting = new Setting();
         $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
 
-        //cekpoint 
+        //cekpoint
         if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
         if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
@@ -167,6 +167,7 @@ class HotelController extends Controller
 
         // cek book date
         $checkBook = HotelBookDate::where("hotel_room_id", $data['hotel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
+
         if ($checkBook) {
             return ResponseFormatter::error($checkBook, 'Book dates is not available');
         }

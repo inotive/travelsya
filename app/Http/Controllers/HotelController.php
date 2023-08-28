@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DetailTransaction;
+use App\Models\Guest;
 use App\Models\Hotel;
+use App\Models\HotelBookDate;
 use App\Models\HotelRoom;
+use App\Models\Transaction;
+use App\Services\Point;
+use App\Services\Setting;
 use App\Services\Travelsya;
+use App\Services\Xendit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HotelController extends Controller
 {
-    protected $travelsya;
+    protected $travelsya, $xendit;
 
-    public function __construct(Travelsya $travelsya)
+    public function __construct(Travelsya $travelsya, Xendit $xendit)
     {
         $this->travelsya = $travelsya;
+        $this->xendit = $xendit;
     }
 
     public function index(Request $request)
@@ -44,17 +52,19 @@ class HotelController extends Controller
         // return view('hotel.index', ['hotels' => $hotelsget, 'cities' => $cities, 'params' => $params]);
 
 
-        // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-        //     ->withAvg('hotelRating', 'rate')
-        //     ->orderByDesc('hotel_rating_avg_rate');
+        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+            ->withAvg('hotelRating', 'rate')
+            ->orderByDesc('hotel_rating_avg_rate');
         $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
             ->whereHas('hotelRoom', function ($query) use ($request) {
-                $query->where('totalroom', '>', $request->room)
-                    ->where('guest', '>=', 3);
+                $query->where([
+                    ['totalroom', '>', $request->room],
+                    ['guest', '>=', 3],
+                ]);
             })->where(function ($query) use ($request) {
                 $query->where('city', 'like', '%' . $request->location . '%')
                     ->orWhere('name', 'like', '%' . $request->location . '%');
-            })->get();
+        })->get();
 
         $hotelDetails = [];
 
@@ -88,7 +98,7 @@ class HotelController extends Controller
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::all();
 
-        // dd($hotelPrices);
+        // dd($hotels);
 
         return view('hotel.list-hotel', $data);
     }
@@ -143,7 +153,7 @@ class HotelController extends Controller
         }
 
         $data['request'] = $request->all();
-        $data['hotel'] = $hotel;
+        $data['detailHotel'] = $hotel;
         $data['min_price'] = $minPrice;
         $data['max_price'] = $maxPrice;
         $data['total_rating'] = $totalRating;
@@ -152,6 +162,8 @@ class HotelController extends Controller
 
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::all();
+
+        // dd($data['hotel']);
 
         return view('hotel.show', $data);
     }
@@ -196,40 +208,159 @@ class HotelController extends Controller
 
         $data['params'] = $request->all();
         $data['hotelRoom'] = $hotelRoom;
+        $point = new Point;
+        $data['point'] = $point->cekPoint(auth()->user()->id);
         // $data['min_price'] = $minPrice;
         // $data['max_price'] = $maxPrice;
         // $data['total_rating'] = $totalRating;
         // $data['result_rating'] = $resultRating;
         // $data['star_rating'] = floor($resultRating);
 
+
         return view('hotel.reservation', $data);
     }
 
     public function request(Request $request)
     {
+        // $data = $request->all();
+
+        // $hotel = $this->travelsya->requestHotel([
+        //     "service" => $data['service'],
+        //     "payment" => $data['payment_method'],
+        //     "hotel_room_id" => $data['hostel_room_id'],
+        //     "point" => 0,
+        //     "guest" => [
+        //         [
+        //             "type_id" => "KTP",
+        //             "identity" => 123456,
+        //             "name" => $data['name']
+        //         ]
+        //     ],
+        //     "start" => $data['start'],
+        //     "end" => $data['end'],
+        //     "url" => "linkproduct"
+
+        // ]);
+
+        // dd($data);
+
+        // if ($hotel['meta']['code'] != 200) {
+        //     toast($hotel['meta']['message'], 'error');
+        //     return redirect()->back();
+        // }
+
+        // return redirect()->to($hotel['data']['invoice_url'])->send();
+
         $data = $request->all();
-        // dd($request->all());
-        $hotel = $this->travelsya->requestHotel([
-            "service" => $data['service'],
-            "payment" => $data['payment_method'],
-            "hotel_room_id" => $data['hostel_room_id'],
-            "point" => 0,
-            "guest" => [[
-                "type_id" => "KTP",
-                "identity" => 123456,
-                "name" => $data['name']
-            ]],
-            "start" => $data['start'], //"2023-08-13"
-            "end" => $data['end'],
-            "url" => "linkproduct"
 
+        // dd($data);
+        $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hotel->hotel->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
+
+        //cekpoint
+        // if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
+        // $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+        // if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
+        // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
+        if (!$fees) return 'Point invalid';
+        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
+        if ($qty < 0) return 'Date must be forward';
+        $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, $data['room']);
+
+        // dd($data);
+
+        // cek book date
+        $checkBook = HotelBookDate::where("hotel_room_id", $data['hostel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
+
+        // if ($checkBook) {
+        //     return ResponseFormatter::error($checkBook, 'Book dates is not available');
+        // }
+
+        // ceate xendit
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $data['hostel_room_id'],
+                    "name" => $hotel['name'],
+                    "price" => $hotel->sellingprice,
+                    "quantity" => $qty,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
         ]);
-        if ($hotel['meta']['code'] != 200) {
-            toast($hotel['meta']['message'], 'error');
-            return redirect()->back();
-        }
 
-        return redirect()->to($hotel['data']['invoice_url'])->send();
+        // dd($payoutsXendit);
+
+        // true buat trans
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
+
+            $storeTransaction = Transaction::create([
+                'no_inv' => $invoice,
+                'req_id' => 'HTL-' . time(),
+                'service' => $hotel->hotel->service->name,
+                'service_id' => $hotel->hotel->service_id,
+                // 'payment' => $payoutsXendit['payment'],
+                'payment' => 'xendit',
+                'user_id' => $request->user()->id,
+                'status' => $payoutsXendit['status'],
+                'link' => $payoutsXendit['invoice_url'],
+                'total' => $amount
+            ]);
+
+
+            // true buat detail
+            $storeDetailTransaction = DetailTransaction::create([
+                'transaction_id' => $storeTransaction->id,
+                'hotel_room_id' => $data['hostel_room_id'],
+                "qty" => $qty,
+                "price" => $hotel->sellingprice
+            ]);
+
+
+            // true buat bookdate
+            $storeBookDate = HotelBookDate::create([
+                'start' => date_create($data['start']),
+                'end' => date_create($data['end']),
+                'hotel_room_id' => $data["hostel_room_id"],
+                'transaction_id' => $storeTransaction->id
+            ]);
+
+            // true buat guest
+            // foreach ($data['guest'] as $guest) {
+            //     $storeGuest = Guest::create([
+            //         'transaction_id' => $storeTransaction->id,
+            //         // 'type_id' => $guest['type_id'],
+            //         // 'identity' => $guest['identity'],
+            //         'name' => $guest['name'],
+            //         'email' => $guest['email'],
+            //         'phone' => $guest['phone'],
+            //     ]);
+            // }
+
+            if ($data['point']) {
+                //deductpoint
+                $point = new Point;
+                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+            }
+        });
+
+        return redirect($payoutsXendit['invoice_url']);
+
+
+        // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }
 
     public function ajaxCity()

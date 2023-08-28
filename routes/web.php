@@ -100,7 +100,7 @@ Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->gr
 
 
 //tranas
-Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
+Route::get('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
 Route::get('reservation', [TransactionController::class, 'reservation'])->name('reservation.hotel');
 

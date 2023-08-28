@@ -104,7 +104,7 @@
                                         @php
                                             $checkin = \Carbon\Carbon::parse($request['start']);
                                             $duration = $request['duration'];
-                                            
+
                                             // Hitung tanggal checkout
                                             $checkout = $checkin->copy()->addDays($duration);
                                         @endphp
@@ -191,10 +191,10 @@
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="d-flex justify-content-between">
-                                                <h1 class="fw-bold">{{ $hotel->name }}</h1>
-                                                <div class="badge badge-primary">{{ $hotel->city }}</div>
+                                                <h1 class="fw-bold">{{ $detailHotel->name }}</h1>
+                                                <div class="badge badge-primary">{{ $detailHotel->city }}</div>
                                             </div>
-                                            <p style="font-size: 13px">{{ $hotel->address }}</p>
+                                            <p style="font-size: 13px">{{ $detailHotel->address }}</p>
 
                                             <div id="bintang ">
                                                 @for ($j = 0; $j <= $star_rating; $j++)
@@ -313,7 +313,7 @@
                 {{--                    </div> --}}
                 {{--                @endforeach --}}
 
-                @foreach ($hotel->hotelRoom as $room)
+                @foreach ($detailHotel->hotelRoom as $room)
                     <div class="col-6">
                         <div class="card card-hostel mb-3">
                             <div class="row mb-2">
@@ -391,7 +391,7 @@
             </div>
         </div>
         <!-- Modal-->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        {{-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -418,7 +418,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
     <!--end::Container-->
 @endsection
