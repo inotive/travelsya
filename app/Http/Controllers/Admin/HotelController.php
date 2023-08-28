@@ -102,8 +102,12 @@ class HotelController extends Controller
         'name' =>'required',
         'address' =>'required',
         'star' =>'required',
-        'city' =>'required',
         'website' =>'required',
+        'user_id' =>'required',
+        'city' =>'required',
+        'is_active' =>'required',
+        
+
         ]);
 
         if ($validator->fails()) {
