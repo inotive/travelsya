@@ -39,7 +39,7 @@
                             <td class="text-center">{{ $hotel->name }}</td>
                             <td class="text-center">{{ $hotel->address }}</td>
                             <td class="text-center"><a href="{{ $hotel->website }}">Link Website</a></td>
-                            <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }}</span></td>
+                            <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }} Bintang</span></td>
                             <td class="text-center">
 
                                 @if ($hotel->is_active)
