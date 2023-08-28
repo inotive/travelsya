@@ -36,16 +36,16 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $hotel->user_name }}</td>
-                            <td class="text-center">{{ $hotel->service_name }}</td>
+                            <td class="text-center">{{ $hotel->name }}</td>
                             <td class="text-center">{{ $hotel->address }}</td>
                             <td class="text-center"><a href="{{ $hotel->website }}">Link Website</a></td>
                             <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }}</span></td>
                             <td class="text-center">
 
                                 @if ($hotel->is_active)
-                                <span class="badge badge-success">{{ $hotel->is_active }}</span>
+                                <span class="badge badge-success">Aktif</span>
                                 @else
-                                <span class="badge badge-danger">{{ $hotel->is_active }}</span>
+                                <span class="badge badge-danger">Tidak Aktif</span>
                                 @endif
                             </td>
                             <td class="text-center">
