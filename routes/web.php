@@ -61,6 +61,7 @@ Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransa
 //ppob
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
     Route::get('/pulsa', 'pulsa')->name('.pulsa');
+    Route::get('/{category}/{provider}', 'pulsaData');
     Route::get('/data', 'data')->name('.data');
     Route::get('/bpjs', 'bpjs')->name('.bpjs');
     Route::get('/pdam', 'pdam')->name('.pdam');

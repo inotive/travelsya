@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Services\Travelsya;
 use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
@@ -16,6 +17,17 @@ class ProductController extends Controller
     public function pulsa()
     {
         return view('product.pulsa');
+    }
+
+    public function pulsaData($category, $provider)
+    {
+        $data = Product::where([
+            ['category', '=', $category],
+            ['name', 'like', '%' . strtoupper($provider) . '%'],
+            ['is_active', '=', 1],
+        ])->get();
+
+        return response()->json($data);
     }
 
     public function data()

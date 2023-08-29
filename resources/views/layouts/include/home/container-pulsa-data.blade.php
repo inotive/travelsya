@@ -16,9 +16,9 @@
                             <span >Produk</span>
                         </label>
 
-                        <select name="" id="" class="form-control form-control-lg">
-                            <option value="">Pulsa</option>
-                            <option value="">Paket Data</option>
+                        <select name="category" id="category" class="form-control form-control-lg" onchange="checkOperator()">
+                            <option value="pulsa" selected>Pulsa</option>
+                            <option value="data">Paket Data</option>
                         </select>
                     </div>
                     <div class="col-xl-6">
@@ -27,9 +27,9 @@
                         </label>
                         <div class="input-group input-group-lg">
                             <span class="input-group-text" id="inputGroup-sizing-lg">
-                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/1200px-Telkomsel_2021_icon.svg.png" id="logo_provider" alt="" height="25" width="25">
+                                <img src="https://image.gambarpng.id/pngs/gambar-transparent-pin-code_60985.png" id="logo_provider" alt="" height="25" width="25">
                             </span>
-                            <input type="text" id="no_telp" name="notelp" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg"/>
+                            <input type="text" id="no_telp" name="notelp" class="form-control" placeholder="08xx" onkeyup="checkOperator()"/>
                         </div>
                     </div>
 
@@ -38,7 +38,7 @@
                             <span>Nominal</span>
                         </label>
 
-                        <select name="" id="" class="form-control form-control-lg">
+                        <select name="nominal" id="nominal" class="form-control form-control-lg">
                             @for($i = 1; $i <11; $i++)
                             <option value="">Rp. {{number_format($i *10000,0,',','.')}}</option>
                             @endfor
@@ -52,11 +52,12 @@
                         <button class="btn btn-danger w-100">Bayar</button>
                     </div>
                 </div>
+
+                <div class="row" id="row-pricelist"></div>
             </div>
             <!--end::Body-->
         </div>
         <!--end::Tiles Widget 2-->
-
     </div>
     <!--end::Col-->
 </div>
@@ -67,12 +68,81 @@
 
 @push('add-script')
     <script>
+        function checkOperator() {
+            var category = $('#category').val();
+            var nomerHP = $('#no_telp').val();
+            var provider = '';
+
+            // Empty Provider
+            if (nomerHP == null || nomerHP == "" || nomerHP < 4) {
+                $('#logo_provider').attr('src', 'https://image.gambarpng.id/pngs/gambar-transparent-pin-code_60985.png');
+                provider = '';
+            }
+
+            // Telkomsel
+            if (/^0812|^0822|^0852|^0853|^0811|^0813|^0851|^0821/.test(nomerHP)) {
+                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/1200px-Telkomsel_2021_icon.svg.png');
+                provider = 'telkomsel'
+            }
+
+            // Indosat
+            if (/^0857|^0856/.test(nomerHP)) {
+                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Indosat_Ooredoo_logo_%282017%29.svg');
+                provider = 'indosat'
+            }
+
+            // Three
+            if (/^0896|^0895|^0897|^0898|^0899/.test(nomerHP)) {
+                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Three_logo.svg/370px-Three_logo.svg.png');
+                provider = 'three'
+            }
+
+            // XL
+            if (/^0817|^0818|^0819|^0859|^0877|^0878/.test(nomerHP)) {
+                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/en/5/55/XL_logo_2016.svg');
+                provider = 'xl'
+            }
+
+            // AXIS
+            if (/^0831|^0832|^0833|^0838/.test(nomerHP)) {
+                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/2560px-Axis_logo_2015.svg.png');
+                provider = 'axis'
+            }
+
+            // Smartfren
+            if (/^0881|^0882|^0883|^0884|^0885|^0886|^0887|^0888|^0889/.test(nomerHP)) {
+                $('#logo_provider').attr('src', 'https://seeklogo.com/images/S/smartfren-logo-A978AD9193-seeklogo.com.png');
+                provider = 'smartfren'
+            }
+
+            if (nomerHP.length <= 4) {
+                if(provider !== '') {
+                    $.ajax({
+                        type: "GET",
+                        url: "/product/"+category+"/"+provider,
+                        success: function (response) {
+                            console.log(response)
+
+                            $('#nominal').empty();
+
+                            // Menambahkan pilihan berdasarkan respons
+                            $.each(response, function (key, value) {
+                                $('#nominal').append($('<option>', {
+                                    value: value.id,
+                                    text: value.description+ ' - Rp. '+value.price
+                                }));
+                            });
+                        }
+                    });
+                }
+            }
+        }
+
         $(document).ready(function() {
 
-            const {
-                getOperator
-            } = window.NoTelp;
-            $('#notelp').on('keyup', function(e) {
+            const { getOperator} = window.NoTelp;
+
+            $('#no_telp').on('keyup', function(e) {
                 var notelp = e.target.value;
                 var operatorTelp1 = getOperator(notelp);
 
@@ -81,6 +151,7 @@
                         'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
                     }
                 });
+
                 if (operatorTelp1.valid) {
                     $.ajax({
                         url: "{{ url('/ajax/ppob') }}",
