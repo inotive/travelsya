@@ -52,9 +52,9 @@ class HotelController extends Controller
         // return view('hotel.index', ['hotels' => $hotelsget, 'cities' => $cities, 'params' => $params]);
 
 
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-            ->withAvg('hotelRating', 'rate')
-            ->orderByDesc('hotel_rating_avg_rate');
+        // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+        //     ->withAvg('hotelRating', 'rate')
+        //     ->orderByDesc('hotel_rating_avg_rate');
         $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where([

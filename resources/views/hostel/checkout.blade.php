@@ -1,5 +1,7 @@
 @extends('layouts.web')
 
+@section('title', 'Ruangan Pribadi')
+
 @section('content-web')
     <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
 
@@ -9,26 +11,6 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-body d-flex flex-column">
-                            {{-- @if (session()->get('user') != null)
-                        <h4>Detail Pesanan</h4>
-                        <div class="mt-10">
-                            <label class="form-label fw-bold fs-6">Nama Lengkap</label>
-                            <input type="name" class="form-control" value="{{session()->get('user')['data']['name']}}">
-                        </div>
-                        <div class="mt-10">
-                            <label class="form-label fw-bold fs-6">Email Address</label>
-                            <input type="email" class="form-control" value="{{session()->get('user')['data']['email']}}">
-                        </div>
-                        <div class="mt-10">
-                            <label class="form-label fw-bold fs-6">Nomor Telepon</label>
-                            <input type="phone" class="form-control" value="{{session()->get('user')['data']['phone']}}">
-                        </div>
-                        @else
-                            <div class="align-self-center">
-                                <a href="{{route('login.view')}}">Login First</a>
-                            </div>
-                        @endif --}}
-
                             @auth
                                 <div class="">
                                     <label class="form-label fw-bold fs-6">Nama Lengkap</label>
@@ -58,12 +40,19 @@
                             <h4 class="card-title text-gray-900">{{ $hostelRoom->hostel->name }}</h4>
                             <p class="card-text mt-1 text-gray-500">{{ $hostelRoom->hostel->address }}</p>
                             <div>
-                                @for ($j = 0; $j < $hostelRoom->hostel->star; $j++)
+                                @for ($j = 1; $j < $hostelRoom->hostel->star; $j++)
                                     <span class="card-text fa fa-star" style="color: orange;"></span>
                                 @endfor
                             </div>
+
+                            @php
+                                $checkin = \Carbon\Carbon::parse($params['start']);
+                                $duration = $params['duration'];
+                                $checkout = $checkin->copy()->addMonths($duration);
+                            @endphp
+
                             <p class="card-text mt-4 text-gray-500"><span class="fa fa-calendar me-3"></span>
-                                {{ date('d-m-Y', $params['start_date']) }} - {{ $params['end_date'] }}
+                                {{ date('d-m-Y', strtotime($params['start'])) }} - {{ $checkout->format('d-m-Y') }}
                                 ({{ $params['duration'] }} Bulan)</p>
                             <p class="card-text mt-1 text-gray-500">Room : {{ $hostelRoom->name }} (Maks
                                 {{ $hostelRoom->guest }} Tamu)</p>
@@ -87,9 +76,11 @@
                                     <td>{{ General::rp($params['duration'] * (int) $hostelRoom->extrabedprice) }}</td>
                                 </tr>
                                 <tr>
+                                    @php
+                                        $grandTotal = $params['duration'] * (int) $hostelRoom->extrabedprice + $params['duration'] * (int) $hostelRoom->sellingprice;
+                                    @endphp
                                     <td>Grand Total :</td>
-                                    <td>{{ General::rp($params['duration'] * (int) $hostelRoom->extrabedprice + $params['duration'] * (int) $hostelRoom->sellingprice) }}
-                                    </td>
+                                    <td>{{ General::rp($grandTotal) }}</td>
                                 </tr>
                             </table>
                             <div class="mt-10">
@@ -100,13 +91,13 @@
                                     <input type="hidden" name="payment_method" value="xendit">
                                     <input type="hidden" name="hostel_room_id" value="{{ $hostelRoom->id }}">
                                     <input type="hidden" name="start"
-                                        value="{{ date('Y-m-d', $params['start_date']) }}">
-                                    <input type="hidden" name="end"
-                                        value="{{ date('Y-m-d', strtotime($params['end_date'])) }}">
-                                    <input type="hidden" name="end"
-                                        value="{{ date('Y-m-d', strtotime($params['end_date'])) }}">
-                                    <input type="hidden" name="name"
-                                        value="{{ session()->get('user') != null ? session()->get('user')['data']['name'] : '' }}">
+                                        value="{{ date('d-m-Y', strtotime($params['start'])) }}">
+                                    <input type="hidden" name="end" value="{{ $checkout->format('d-m-Y') }}">
+                                    <input type="hidden" name="name" value="{{ Auth::user()->name }}">
+                                    <input type="hidden" name="duration" value="{{ $params['duration'] }}">
+                                    <input type="hidden" name="grand_total" value="{{ $grandTotal }}">
+                                     <input type="hidden" name="point" value="{{ $point }}">
+                                     <input type="hidden" name="room" value="{{ $params['room'] }}">
                                     <button type="submit" class="btn btn-danger flex-fill">
                                         Lanjut ke pembayaran
                                     </button>

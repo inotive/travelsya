@@ -1,11 +1,13 @@
 @extends('layouts.web')
 
+@section('title', 'Daftar Hostel')
+
 @section('content-web')
     <!--begin::Container-->
     {{-- <div id="" class="row">
         <img class="d-block w-100 h-300px" src="//placehold.it/1200x300" alt="First slide">
     </div> --}}
-    <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+    {{-- <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
 
         <!--begin::Post-->
         <div class="content flex-row-fluid mb-10" id="kt_content">
@@ -64,7 +66,7 @@
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-danger mt-10 py-4">Cari Hotel</button>
+                            <button type="submit" class="btn btn-danger mt-10 py-4">Cari Hostel</button>
                         </div>
                     </div>
                 </form>
@@ -176,11 +178,292 @@
             </div>
         </div>
         <!--end::Post-->
-    </div>
+    </div> --}}
     <!--end::Container-->
+
+    <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
+        <!--begin::Post-->
+        <div class="content flex-row-fluid mb-10" id="kt_content">
+            <div class="row">
+                <div class="col-3">
+                    <div class="card border-1 border-light">
+                        <div class="card-body h-100">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <label for="" class="form-label">Urutan Harga</label>
+                                </div>
+                                <div class="col-12">
+                                    <!--begin::Radio group-->
+                                    <div class="btn-group w-100" data-kt-buttons="true"
+                                        data-kt-buttons-target="[data-kt-button]">
+                                        <!--begin::Radio-->
+                                        <label class="btn btn-outline btn-color-muted active fs-9" data-kt-button="true">
+                                            <!--begin::Input-->
+                                            <input class="btn-check" type="radio" name="method" value="1" />
+                                            <!--end::Input-->
+                                            Harga Tertinggi
+                                        </label>
+                                        <!--end::Radio-->
+
+                                        <!--begin::Radio-->
+                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9"
+                                            data-kt-button="true">
+                                            <!--begin::Input-->
+                                            <input class="btn-check" type="radio" name="method" checked="checked"
+                                                value="2" />
+                                            <!--end::Input-->
+                                            Harga Terendah
+                                        </label>
+                                        <!--end::Radio-->
+                                    </div>
+                                    <!--end::Radio group-->
+                                </div>
+                            </div>
+                            <div class="row gy-5">
+                                <div class="col-12">
+                                    <label for="" class="form-label">Fasilitas</label>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Wifi
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Breakfast
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Breakfast
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Breakfast
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="" class="form-label">Bintang</label>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="w-100 btn-danger btn">Terapkan</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-9">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body h-100">
+                                    <form method="GET" action="{{ route('hostel.index') }}" class="row g-4">
+                                        <input type="hidden" name="property" value="{{ $params['property'] }}">
+                                        <input type="hidden" name="roomtype" value="{{ $params['roomtype'] }}">
+                                        <input type="hidden" name="furnish" value="{{ $params['furnish'] }}">
+                                        <div class="col-12">
+                                            <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
+                                            <select name="location" id="location" class="form-select select"
+                                                data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
+                                                @foreach ($cities as $city)
+                                                    <option value="{{ $city->city }}"
+                                                        {{ $params['location'] == $city->city ? 'selected' : '' }}>
+                                                        {{ $city->city }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
+                                            <div class="input-group" id="js_datepicker" data-td-target-input="nearest"
+                                                data-td-target-toggle="nearest">
+                                                <input id="checkin" type="text" name="start" class="form-control"
+                                                    data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"
+                                                    value="{{ $params['start'] ?? '' }}" />
+                                                <span class="input-group-text" data-td-target="#js_datepicker"
+                                                    data-td-toggle="datetimepicker">
+                                                    <i class="ki-duotone ki-calendar fs-2">
+                                                        <span class="path1"></span>
+                                                        <span class="path2"></span>
+                                                    </i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="duration" value="{{ $params['duration'] }}">
+                                        @php
+                                            $checkin = \Carbon\Carbon::parse($params['start']);
+                                            $duration = $params['duration'];
+
+                                            // Hitung tanggal checkout
+                                            $checkout = $checkin->copy()->addDays($duration);
+                                        @endphp
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
+                                            <input type="text" class="form-control" name="end_date"
+                                                value="{{ $checkout->format('d-m-Y') }}" />
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Total Kamar</label>
+                                            <select name="room" id="room" class="form-select">
+                                                @for ($i = 1; $i <= 11; $i++)
+                                                    <option value="{{ $i }}"
+                                                        {{ $params['room'] == $i ? 'selected' : '' }}>
+                                                        {{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Total Tamu</label>
+                                            <select name="guest" id="guest" class="form-select">
+                                                @for ($i = 1; $i <= 31; $i++)
+                                                    <option value="{{ $i }}"
+                                                        {{ $params['guest'] == $i ? 'selected' : '' }}>
+                                                        {{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="w-100 btn-danger btn">Cari Data</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach ($hostels as $hostel)
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body h-100">
+                                        <div class="row my-4">
+                                            <div class="col-3">
+                                                <img src="https://service.travelsya.com/storage/hotel/image3.webp"
+                                                    alt="" height="200" width="200">
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="row gy-4">
+                                                    <div class="col-12">
+                                                        <h3>{{ $hostel->name }}</h3>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        {{-- <span class="badge badge-danger">
+                                                            {{ $hostelDetails[$hostel->id]['result_rating'] }}
+                                                        </span> --}}
+                                                        <span class="badge badge-danger">
+                                                            ({{ floor($hostel->rating_avg) }} Rating)
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        @for ($j = 1; $j <= floor($hostel->rating_avg); $j++)
+                                                            <span class="card-text fa fa-star"
+                                                                style="color: orange;"></span>
+                                                        @endfor
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <p>{{ $hostel->address ?? 'Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan' }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <h2 class="card-title text-danger">
+                                                            {{ General::rp($hostel->price_avg) }}
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-3">
+                                                <h3 class="mb-4">Fasilitas</h3>
+                                                <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                                <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                                <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $_GET['location'] . '&start=' . $_GET['start'] . '&duration=' . $_GET['duration'] . '&room=' . $_GET['room'] . '&guest=' . $_GET['guest'] . '&property=' . $_GET['property'] . '&roomtype=' . $_GET['roomtype'] . '&furnish=' . $_GET['furnish'] }}"
+                                                    class="btn btn-danger d-block mt-10 text-white">
+                                                    Lihat
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
-@push('add-style')
+{{-- @push('add-style')
     <style>
         body {
             background-size: 100% 80px !important;
@@ -273,4 +556,4 @@
             })
         })
     </script>
-@endpush
+@endpush --}}

@@ -153,7 +153,7 @@
                     </div>
                 </form>
             </div>
-            <div class="row w-75 me-auto ms-auto mt-10">
+            <div class="row card w-75 me-auto ms-auto mt-10">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
@@ -360,6 +360,7 @@
             </div>
         </div>
         <!--end::Post-->
+
         <!-- Modal-->
         <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
