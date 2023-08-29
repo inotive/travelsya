@@ -41,7 +41,7 @@
                             <td class="text-center">{{ $hotel->user_name }}</td>
                             <td class="text-center">{{ $hotel->name }}</td>
                             <td class="text-center">{{ $hotel->address }}</td>
-                            <td class="text-center"><a href="{{ $hotel->website }}">Link Website</a></td>
+                            <td class="text-center"><a href="{{ $hotel->website }}" target="_blank">Link Website</a></td>
                             <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }} Bintang</span></td>
                             <td class="text-center">
 
