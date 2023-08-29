@@ -62,9 +62,29 @@ class HotelController extends Controller
                     ['guest', '>=', 3],
                 ]);
             })->where(function ($query) use ($request) {
-                $query->where('city', 'like', '%' . $request->location . '%')
-                    ->orWhere('name', 'like', '%' . $request->location . '%');
-        })->get();
+                $query->where('hotels.city', 'like', '%' . $request->location . '%')
+                    ->orWhere('hotels.name', 'like', '%' . $request->location . '%');
+            });
+
+        if ($request->has('harga')) {
+            if ($request->harga == 'tertinggi') {
+                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+                    $query->orderByDesc('sellingprice');
+                });
+            }
+
+            if ($request->harga == 'terendah') {
+                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+                    $query->orderBy('sellingprice');
+                });
+            }
+        }
+
+        if ($request->has('star')) {
+            $hotels->where('star', $request->star);
+        }
+
+        $hotels = $hotels->get();
 
         $hotelDetails = [];
 

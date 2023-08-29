@@ -9,7 +9,12 @@
             <div class="row">
                 <div class="col-3">
                     <div class="card border-1 border-light">
-                        <div class="card-body h-100">
+                        <form class="card-body h-100" method="GET" action="">
+                            <input type="hidden" name="location" value="{{ $request['location']}}">
+                            <input type="hidden" name="start" value="{{ $request['start']}}">
+                            <input type="hidden" name="duration" value="{{ $request['duration']}}">
+                            <input type="hidden" name="room" value="{{ $request['room']}}">
+                            <input type="hidden" name="guest" value="{{ $request['guest']}}">
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <label for="" class="form-label">Urutan Harga</label>
@@ -19,20 +24,19 @@
                                     <div class="btn-group w-100" data-kt-buttons="true"
                                         data-kt-buttons-target="[data-kt-button]">
                                         <!--begin::Radio-->
-                                        <label class="btn btn-outline btn-color-muted active fs-9" data-kt-button="true">
+                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9 {{ ($request['harga'] ?? null) === 'tertinggi' ? 'active' : ''}}" data-kt-button="true">
                                             <!--begin::Input-->
-                                            <input class="btn-check" type="radio" name="method" value="1" />
+                                            <input class="btn-check" type="radio" name="harga" value="tertinggi" {{ ($request['harga'] ?? null) === 'tertinggi' ? 'checked' : ''}} />
                                             <!--end::Input-->
                                             Harga Tertinggi
                                         </label>
                                         <!--end::Radio-->
 
                                         <!--begin::Radio-->
-                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9"
+                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9 {{ ($request['harga'] ?? null) === 'terendah' ? 'active' : ''}}"
                                             data-kt-button="true">
                                             <!--begin::Input-->
-                                            <input class="btn-check" type="radio" name="method" checked="checked"
-                                                value="2" />
+                                            <input class="btn-check" type="radio" name="harga" value="terendah" {{ ($request['harga'] ?? null) === 'terendah' ? 'checked' : ''}}/>
                                             <!--end::Input-->
                                             Harga Terendah
                                         </label>
@@ -87,8 +91,8 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="1"
+                                            id="flexCheckDefault"  {{ ($request['star'] ?? null) == 1 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                         </label>
@@ -96,8 +100,8 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="2"
+                                            id="flexCheckDefault"  {{ ($request['star'] ?? null) == 2 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -106,21 +110,9 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="3"
+                                            id="flexCheckDefault"  {{ ($request['star'] ?? null) == 3 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -129,8 +121,20 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="4"
+                                            id="flexCheckDefault"  {{ ($request['star'] ?? null) == 4 ? 'checked' : ''}} />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star" value="5"
+                                            id="flexCheckDefault"  {{ ($request['star'] ?? null) == 5 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -144,7 +148,7 @@
                                     <button class="w-100 btn-danger btn">Terapkan</button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class="col-9">
@@ -158,10 +162,6 @@
                                             <select name="location" id="location" class="form-select select"
                                                 data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
                                                 <optgroup label="Kota"></optgroup>
-                                                {{-- <template x-for="data in $store.hotel.cities">
-                                                    <option x-bind:value="data.name" x-text="data.label"></option>
-                                                </template> --}}
-
                                                 @foreach ($citiesHotel as $city)
                                                     <option value="{{ $city->city }}"
                                                         {{ $request['location'] == $city->city ? 'selected' : '' }}>
@@ -174,9 +174,6 @@
                                                         {{ $request['location'] == $hotel->name ? 'selected' : '' }}>
                                                         {{ $hotel->name }}</option>
                                                 @endforeach
-                                                {{-- <template x-for="data in $store.hotel.hotels">
-                                                    <option x-bind:value="data.name" x-text="data.label"></option>
-                                                </template> --}}
                                             </select>
                                         </div>
                                         <div class="col-3">
@@ -199,8 +196,6 @@
                                         @php
                                             $checkin = \Carbon\Carbon::parse($request['start']);
                                             $duration = $request['duration'];
-
-                                            // Hitung tanggal checkout
                                             $checkout = $checkin->copy()->addDays($duration);
                                         @endphp
                                         <div class="col-3">
@@ -216,11 +211,6 @@
                                                         {{ $request['room'] == $i ? 'selected' : '' }}>
                                                         {{ $i }}</option>
                                                 @endfor
-                                                {{-- <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
-                                                    <option x-bind:value="data"
-                                                        x-text="data === 0 ? `Pilih Jumlah Kamar` : `${data} Kamar`">-
-                                                    </option>
-                                                </template> --}}
                                             </select>
                                         </div>
                                         <div class="col-3">
@@ -231,11 +221,6 @@
                                                         {{ $request['guest'] == $i ? 'selected' : '' }}>
                                                         {{ $i }}</option>
                                                 @endfor
-                                                {{-- <template x-for="data in [ ...Array(totalGuest).keys() ]" key="data">
-                                                    <option x-bind:value="data"
-                                                        x-text="data === 0 ? `Pilih Jumlah Tamu` : `${data} Tamu`">-
-                                                    </option>
-                                                </template> --}}
                                             </select>
                                         </div>
                                         <div class="col-12">
@@ -270,10 +255,14 @@
                                                             Rating)</span>
                                                     </div>
                                                     <div class="col-12">
-                                                        @for ($i = 0; $i <= $hotelDetails[$hotel->id]['star_rating']; $i++)
+                                                        @for ($i = 1; $i <= $hotel->star; $i++)
                                                             <span class="card-text fa fa-star"
                                                                 style="color: orange;"></span>
                                                         @endfor
+                                                        {{-- @for ($i = 0; $i <= $hotelDetails[$hotel->id]['star_rating']; $i++)
+                                                            <span class="card-text fa fa-star"
+                                                                style="color: orange;"></span>
+                                                        @endfor --}}
                                                     </div>
                                                     <div class="col-12">
                                                         <p>{{ $hotel->address ?? 'Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan' }}

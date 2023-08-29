@@ -54,7 +54,6 @@ class ProductController extends Controller
         try {
             $data = $request->all();
 
-
             if ($data['operator'] == 3)
                 $data['operator'] = "three";
 
@@ -64,9 +63,7 @@ class ProductController extends Controller
             if ($data['operator'] == "XL Axiata")
                 $data['operator'] = "xl";
 
-
             $pricelist = $this->travelsya->pricelist();
-
 
             if ($pricelist['meta']['code'] != 200)
                 return response()->json(['message' => 'not found']);
