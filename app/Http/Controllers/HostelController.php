@@ -75,11 +75,25 @@ class HostelController extends Controller
             ->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
             }])
-            ->withCount("rating as rating_count")
-            ->get();
+            ->withCount("rating as rating_count");
 
 
-        $data['hostels'] = $hostels;
+        if ($request->has('harga')) {
+            if ($request->harga == 'tertinggi') {
+                $hostels->orderByDesc('price_avg');
+            }
+
+            if ($request->harga == 'terendah') {
+                $hostels->orderBy('price_avg');
+            }
+        }
+
+        if ($request->has('star')) {
+            $hostels->where('star', $request->star);
+        }
+
+
+        $data['hostels'] = $hostels->get();
         $data['params']  = $request->all();
         $data['cities']  = Hostel::distinct()->select('city')->get();
 

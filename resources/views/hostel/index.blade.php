@@ -187,7 +187,15 @@
             <div class="row">
                 <div class="col-3">
                     <div class="card border-1 border-light">
-                        <div class="card-body h-100">
+                        <form class="card-body h-100" method="GET" action="">
+                            <input type="hidden" name="location" value="{{ $params['location']}}">
+                            <input type="hidden" name="start" value="{{ $params['start']}}">
+                            <input type="hidden" name="duration" value="{{ $params['duration']}}">
+                            <input type="hidden" name="room" value="{{ $params['room']}}">
+                            <input type="hidden" name="guest" value="{{ $params['guest']}}">
+                            <input type="hidden" name="property" value="{{ $params['property'] }}">
+                            <input type="hidden" name="roomtype" value="{{ $params['roomtype'] }}">
+                            <input type="hidden" name="furnish" value="{{ $params['furnish'] }}">
                             <div class="row mb-4">
                                 <div class="col-12">
                                     <label for="" class="form-label">Urutan Harga</label>
@@ -197,20 +205,19 @@
                                     <div class="btn-group w-100" data-kt-buttons="true"
                                         data-kt-buttons-target="[data-kt-button]">
                                         <!--begin::Radio-->
-                                        <label class="btn btn-outline btn-color-muted active fs-9" data-kt-button="true">
+                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9 {{ ($params['harga'] ?? null) === 'tertinggi' ? 'active' : ''}}" data-kt-button="true">
                                             <!--begin::Input-->
-                                            <input class="btn-check" type="radio" name="method" value="1" />
+                                            <input class="btn-check" type="radio" name="harga" value="tertinggi" {{ ($params['harga'] ?? null) === 'tertinggi' ? 'checked' : ''}} />
                                             <!--end::Input-->
                                             Harga Tertinggi
                                         </label>
                                         <!--end::Radio-->
 
                                         <!--begin::Radio-->
-                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9"
+                                        <label class="btn btn-outline btn-color-muted btn-active-danger fs-9 {{ ($params['harga'] ?? null) === 'terendah' ? 'active' : ''}}"
                                             data-kt-button="true">
                                             <!--begin::Input-->
-                                            <input class="btn-check" type="radio" name="method" checked="checked"
-                                                value="2" />
+                                            <input class="btn-check" type="radio" name="harga" value="terendah" {{ ($params['harga'] ?? null) === 'terendah' ? 'checked' : ''}}/>
                                             <!--end::Input-->
                                             Harga Terendah
                                         </label>
@@ -265,8 +272,8 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="1"
+                                            id="flexCheckDefault"  {{ ($params['star'] ?? null) == 1 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                         </label>
@@ -274,8 +281,8 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="2"
+                                            id="flexCheckDefault"  {{ ($params['star'] ?? null) == 2 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -284,21 +291,9 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="3"
+                                            id="flexCheckDefault"  {{ ($params['star'] ?? null) == 3 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -307,8 +302,20 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" type="checkbox" name="star" value="4"
+                                            id="flexCheckDefault"  {{ ($params['star'] ?? null) == 4 ? 'checked' : ''}} />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star" value="5"
+                                            id="flexCheckDefault"  {{ ($params['star'] ?? null) == 5 ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
                                             <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -322,7 +329,7 @@
                                     <button class="w-100 btn-danger btn">Terapkan</button>
                                 </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class="col-9">
@@ -426,7 +433,7 @@
                                                         </span>
                                                     </div>
                                                     <div class="col-12">
-                                                        @for ($j = 1; $j <= floor($hostel->rating_avg); $j++)
+                                                        @for ($j = 1; $j <= $hostel->star; $j++)
                                                             <span class="card-text fa fa-star"
                                                                 style="color: orange;"></span>
                                                         @endfor
