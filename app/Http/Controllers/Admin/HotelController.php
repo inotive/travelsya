@@ -18,7 +18,7 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $users = User::where('role',2)->get();
+        $users = DB::table('users')->where('role',2)->get();
         $hotels = DB::table('hotels')
             ->join('services', 'services.id', '=', 'hotels.service_id')
             ->join('users', 'users.id', '=', 'hotels.user_id')
@@ -40,7 +40,20 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-            $hotel = Hotel::create(
+        $validator = Validator::make($request->all(), [
+            'name' =>'required',
+            'address' =>'required',
+            'star' =>'required',
+            'website' =>'required',
+            'user_id' =>'required',
+            'city' =>'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        DB::table('hotels')->insert(
             [
             'user_id' => $request->user_id,
             'is_active' => 1,
@@ -54,6 +67,7 @@ class HotelController extends Controller
             'website' => $request->website
             ]
         );
+        toast('Hotel Has Been Added', 'success');
 
         return redirect()->route('admin.hotel.index')->with('success', 'Data Berhasil Disimpan');
     }
@@ -83,21 +97,6 @@ class HotelController extends Controller
      */
     public function update(Request $request, Hotel $hotel)
     {
-        // $hotel = Hotel::findOrFail($id);
-
-        // $hotel->update($request,[
-        //     'user_id' => $request->user_id,
-        //     'is_active' => $request->is_active,
-        //     'checkin' => $request->checkin,
-        //     'checkout' => $request->checkout,
-        //     'service_id' => 8,
-        //     'name' => $request->name,
-        //     'address' => $request->address,
-        //     'city' => $request->city,
-        //     'star' => $request->star,
-        // ]);
-
-
         $validator = Validator::make($request->all(), [
         'name' =>'required',
         'address' =>'required',
@@ -106,8 +105,6 @@ class HotelController extends Controller
         'user_id' =>'required',
         'city' =>'required',
         'is_active' =>'required',
-        
-
         ]);
 
         if ($validator->fails()) {
@@ -116,7 +113,7 @@ class HotelController extends Controller
 
         $hotel->update([
             'user_id' => $request->user_id,
-            'is_active' => 1,
+            'is_active' => $request->is_active,
             'checkin' => "11:00:00",
             'checkout' => "12:00:00",
             'service_id' => 8,
@@ -126,6 +123,8 @@ class HotelController extends Controller
             'star' => $request->star,
             'website' => $request->website,
         ]);
+
+        toast('Hotel Has Been Updated', 'success');
 
         return response()->json([
             'success' => true,
@@ -139,8 +138,8 @@ class HotelController extends Controller
      */
     public function destroy(string $id)
     {
-        Hotel::where('id', $id)->delete();
-
+        DB::table('hotels')->where('id', $id)->delete();
+        toast('Hotel Has Been Removed', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Dihapus!'

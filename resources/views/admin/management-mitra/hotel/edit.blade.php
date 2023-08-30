@@ -69,18 +69,18 @@
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea id="address-edit" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea id="address-edit" cols="30" rows="5" class="form-control" required></textarea>
                                 <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
                             </div>
                             <div class="col-md-12">
                                 <label for="website" class="form-label">Website</label>
-                                <input type="text" id="website-edit" class="form-control" placeholder="Masukan website">
+                                <input type="text" id="website-edit" class="form-control" placeholder="Masukan website" required>
                                 <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-website-edit"></div>
                             </div>
 
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2" >City</label>
-                                <select name="city-edit" id="city-edit" class="form-control">
+                                <select name="city-edit" id="city-edit" class="form-control" required>
                                     <option value="Balikpapan">Balikpapan</option>
                                     <option value="Samarinda">Samarinda</option>
                                     <option value="Banjarmasin">Banjarmasin</option>
@@ -99,7 +99,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success input-star-1" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check input-star-1" type="radio" id="star-edit" value="1"/>
+                                        <input class="btn-check input-star-1" type="radio" name="star-edit" id="star-edit-1" value="1"/>
                                         <!--end::Input-->
                                         1
                                     </label>
@@ -108,7 +108,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success input-star-2" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check input-star-2" type="radio" id="star-edit" checked="checked" value="2"/>
+                                        <input class="btn-check input-star-2" type="radio" name="star-edit" id="star-edit-2" checked="checked" value="2"/>
                                         <!--end::Input-->
                                         2
                                     </label>
@@ -117,7 +117,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success input-star-3" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check input-star-3" type="radio" id="star-edit" value="3" />
+                                        <input class="btn-check input-star-3" type="radio" name="star-edit" id="star-edit-3" value="3" />
                                         <!--end::Input-->
                                         3
                                     </label>
@@ -126,7 +126,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success input-star-4" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check input-star-4" type="radio" id="star-edit" value="4"  />
+                                        <input class="btn-check input-star-4" type="radio" name="star-edit" id="star-edit-4" value="4"  />
                                         <!--end::Input-->
                                         4
                                     </label>
@@ -134,7 +134,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success input-star-5" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check input-star-5" type="radio" id="star-edit" value="5"  />
+                                        <input class="btn-check input-star-5" type="radio" name="star-edit" id="star-edit-5" value="5"  />
                                         <!--end::Input-->
                                         5
                                     </label>
@@ -212,7 +212,7 @@
         let is_active = $('#is_active-edit').val();
         let address = $('#address-edit').val();
         let website = $('#website-edit').val();
-        let star = $('#star-edit').val();
+        let star = $('input[name="star-edit"]:checked').val();
         let city = $('#city-edit').val();
         let token   = $("meta[name='csrf-token']").attr("content");
 
@@ -235,7 +235,17 @@
             success:function(response){
 
                 $('#modal-edit').modal('hide');
-                location.reload();
+
+// Swal.fire({
+//     type: 'success',
+//     icon: 'success',
+//     title: `${response.message}`,
+//     showConfirmButton: false,
+//     timer: 1000
+// }).then(() => {
+//     location.reload();
+// });
+
 
                 //data post
                 // let hotel = `
@@ -254,8 +264,8 @@
                 //     </tr>
                 // `;
                 // $(`#index_${response.data.id}`).replaceWith(hotel);
-                // $('#modal-edit').modal('hide');
-                // location.reload();
+
+                location.reload();
 
 
             },
@@ -266,30 +276,46 @@
                     //show alert
                     $('#alert-name-edit').removeClass('d-none');
                     $('#alert-name-edit').addClass('d-block');
-                    $('#alert-user_id-edit').removeClass('d-none');
-                    $('#alert-user_id-edit').addClass('d-block');
-                    $('#alert-website-edit').removeClass('d-none');
-                    $('#alert-website-edit').addClass('d-block');
-                    $('#alert-star-edit').removeClass('d-none');
-                    $('#alert-star-edit').addClass('d-block');
-                    $('#alert-is_active-edit').removeClass('d-none');
-                    $('#alert-is_active-edit').addClass('d-block');
-                    $('#alert-address-edit').removeClass('d-none');
-                    $('#alert-address-edit').addClass('d-block');
-                    $('#alert-city-edit').removeClass('d-none');
-                    $('#alert-city-edit').addClass('d-block');
-
-
                     //add message to alert
                     $('#alert-name-edit').html(error.responseJSON.name[0]);
-                    $('#alert-user_id-edit').html(error.responseJSON.name[0]);
-                    $('#alert-website-edit').html(error.responseJSON.name[0]);
-                    $('#alert-star-edit').html(error.responseJSON.name[0]);
-                    $('#alert-is_active-edit').html(error.responseJSON.name[0]);
-                    $('#alert-address-edit').html(error.responseJSON.name[0]);
-                    $('#alert-city-edit').html(error.responseJSON.name[0]);
                 }
 
+                if(error.responseJSON.user_id[0]) {
+                    $('#alert-user_id-edit').removeClass('d-none');
+                    $('#alert-user_id-edit').addClass('d-block');
+                    $('#alert-user_id-edit').html(error.responseJSON.user_id[0]);
+                }
+
+                if(error.responseJSON.star[0]) {
+                    $('#alert-star-edit').removeClass('d-none');
+                    $('#alert-star-edit').addClass('d-block');
+                    $('#alert-star-edit').html(error.responseJSON.star[0]);
+                }
+                if(error.responseJSON.website[0]) {
+                    $('#alert-website-edit').removeClass('d-none');
+                    $('#alert-website-edit').addClass('d-block');
+                    $('#alert-website-edit').html(error.responseJSON.website[0]);
+                }
+                if(error.responseJSON.name[0]) {
+                    $('#alert-user_id-edit').removeClass('d-none');
+                    $('#alert-user_id-edit').addClass('d-block');
+                    $('#alert-user_id-edit').html(error.responseJSON.name[0]);
+                }
+                if(error.responseJSON.is_active[0]) {
+                    $('#alert-is_active-edit').removeClass('d-none');
+                    $('#alert-is_active-edit').addClass('d-block');
+                    $('#alert-is_active-edit').html(error.responseJSON.is_active[0]);
+                }
+                if(error.responseJSON.city[0]) {
+                    $('#alert-city-edit').removeClass('d-none');
+                    $('#alert-city-edit').addClass('d-block');
+                    $('#alert-city-edit').html(error.responseJSON.city[0]);
+                }
+                if(error.responseJSON.address[0]) {
+                    $('#alert-address-edit').removeClass('d-none');
+                    $('#alert-address-edit').addClass('d-block');
+                    $('#alert-address-edit').html(error.responseJSON.address[0]);
+                }
             }
 
         });
