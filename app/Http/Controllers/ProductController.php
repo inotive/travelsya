@@ -2,20 +2,89 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Transaction;
+use App\Services\Point;
+use App\Services\Setting;
 use App\Services\Travelsya;
+use App\Services\Xendit;
 use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    protected $travelsya;
-    public function __construct(Travelsya $travelsya)
+    protected $travelsya, $xendit;
+
+    public function __construct(Travelsya $travelsya, Xendit $xendit)
     {
         $this->travelsya = $travelsya;
+        $this->xendit = $xendit;
     }
+
     public function pulsa()
     {
         return view('product.pulsa');
+    }
+
+    public function pulsaData($category, $provider)
+    {
+        $data = Product::where([
+            ['category', '=', $category],
+            ['name', 'like', '%' . strtoupper($provider) . '%'],
+            ['is_active', '=', 1],
+        ])->get();
+
+        return response()->json($data);
+    }
+
+    public function paymentPulsaData(Request $request)
+    {
+        $data = $request->all();
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find($data['product']);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $amount = $setting->getAmount($product->price, 1, $fees, 1);
+
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $product->id,
+                    "name" => $product->description,
+                    "price" => $product->price,
+                    "quantity" => 1,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
+        ]);
+
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'PULSA-' . time(),
+            'service' => $product->service->name,
+            'service_id' => $product->service->id,
+            'payment' => 'xendit',
+            'user_id' => $request->user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => $amount
+        ]);
+
+        return redirect($payoutsXendit['invoice_url']);
     }
 
     public function data()
@@ -54,7 +123,6 @@ class ProductController extends Controller
         try {
             $data = $request->all();
 
-
             if ($data['operator'] == 3)
                 $data['operator'] = "three";
 
@@ -64,9 +132,7 @@ class ProductController extends Controller
             if ($data['operator'] == "XL Axiata")
                 $data['operator'] = "xl";
 
-
             $pricelist = $this->travelsya->pricelist();
-
 
             if ($pricelist['meta']['code'] != 200)
                 return response()->json(['message' => 'not found']);

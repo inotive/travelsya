@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 
 class Setting
 {
-    public function getAmount($price, $qty, $fees)
+    public function getAmount($price, $qty, $fees, $room)
     {
         $total = 0;
 
@@ -18,7 +18,7 @@ class Setting
         if (count($fees) == 2) {
             $point = $fees[1]['value'];
         }
-        $total = $total + ($price * $qty);
+        $total = $total + ($price * $qty * $room);
         $grandTotal = $total + $admin + (isset($point) ? $point : 0);
         return $grandTotal;
     }
@@ -37,6 +37,7 @@ class Setting
             'type' => 'admin',
             'value' => $feeValue,
         ]);
+
         if ($point == 1) {
             // cek point
             $user = User::find($userid);
