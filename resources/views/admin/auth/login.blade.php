@@ -92,10 +92,10 @@
                     <!--end::Submit button-->
 
                 </form>
-                    <a href="" type="role" id="kt_sign_in_submit" class="btn btn-primary py-5">
+                    <a href="" type="role" id="kt_sign_in_submit" class="btn btn-success w-100 py-5">
 
                         <!--begin::Indicator label-->
-                        <span class="indicator-label">Masuk</span>
+                        <span class="indicator-label">Pendaftaran Mitra</span>
                         <!--end::Indicator label-->
 
                         <!--begin::Indicator progress-->

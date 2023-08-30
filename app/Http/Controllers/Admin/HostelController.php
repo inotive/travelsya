@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelImage;
 use App\Models\HostelRoom;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -14,8 +15,8 @@ class HostelController extends Controller
     public function index()
     {
         $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
-
-        return view('admin.hostel', compact('hostels'));
+        $users = User::where('role',2)->get();
+        return view('admin.management-mitra.hostel.index', compact('hostels','users'));
     }
 
     public function show($id)

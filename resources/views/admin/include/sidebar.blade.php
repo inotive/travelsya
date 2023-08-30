@@ -171,21 +171,62 @@
                     <!--end:Menu link-->
                 </a>
                 <!--end:Menu item-->
-                <!--begin:Menu item-->
-                <a href="{{route('admin.mitra')}}" class="menu-item {{(Request::segment(2)=="mitra") ? 'here' : ''}} menu-accordion">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
+                    <!--begin:Menu item-->
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="fas fa-users fs-3">
+                             <i class="fas fa-users fs-3">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament Mitra</span>
+                        <span class="menu-title">Management Mitra</span>
+                        <span class="menu-arrow"></span>
                     </span>
-                    <!--end:Menu link-->
-                </a>
-                <!--end:Menu item-->
+                        <!--end:Menu link-->
+                        <!--begin:Menu sub-->
+                        <div class="menu-sub menu-sub-accordion">
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.mitra')}}" >
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                    <span class="menu-title">Semua Mitra</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.hotel.index')}}" >
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                    <span class="menu-title">Hotel</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <!--begin:Menu link-->
+                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.hostel.index')}}" >
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                    <span class="menu-title">Hostel</span>
+                                </a>
+                                <!--end:Menu link-->
+                            </div>
+                            <!--end:Menu item-->
+                        </div>
+                        <!--end:Menu sub-->
+                    </div>
+                    <!--end:Menu item-->
                 <!--begin:Menu item-->
                 <a href="{{route('admin.point')}}" class="menu-item {{(Request::segment(2)=="point") ? 'here' : ''}} menu-accordion">
 
@@ -213,13 +254,29 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament Harga</span>
+                        <span class="menu-title">Managament Produk</span>
+                    </span>
+                        <!--end:Menu link-->
+                    </a>
+                    <!--end:Menu item-->
+                    <!--begin:Menu item-->
+                    <a href="{{route('admin.product')}}" class="menu-item {{(Request::segment(2)=="product") ? 'here' : ''}} menu-accordion">
+
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-money-bill-alt fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Managament Fasilitas Hotel</span>
                     </span>
                         <!--end:Menu link-->
                     </a>
                     <!--end:Menu item-->
                 <!--begin:Menu item-->
-                <a href="{{route('admin.fee')}}" class="menu-item {{(Request::segment(2)=="fee") ? 'here' : ''}} menu-accordion">
+                <a href="{{route('admin.management-fee')}}" class="menu-item {{(Request::segment(2)=="management-fee") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -228,7 +285,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Kelola Biaya Admin</span>
+                        <span class="menu-title">Management Biaya Admin</span>
                     </span>
                     <!--end:Menu link-->
                 </a>

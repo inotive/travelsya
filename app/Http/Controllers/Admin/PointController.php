@@ -17,7 +17,7 @@ class PointController extends Controller
         $services = Service::all();
 
 
-        return view('admin.point', compact('points', 'services'));
+        return view('admin.management-point.index', compact('points', 'services'));
     }
 
     public function updatePoint(Request $request)

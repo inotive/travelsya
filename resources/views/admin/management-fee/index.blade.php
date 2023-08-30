@@ -63,24 +63,24 @@
 {{--                    <!--begin::Table body-->--}}
 {{--                    <tbody>--}}
 
-{{--                        @foreach($fees as $fee)--}}
+{{--                        @foreach($fees as $management-fee)--}}
 {{--                        <tr>--}}
 {{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->category}}</div>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$management-fee->category}}</div>--}}
 {{--                            </td>--}}
 {{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->name}}</div>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$management-fee->name}}</div>--}}
 {{--                            </td>--}}
 {{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$fee->value}}</div>--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$management-fee->value}}</div>--}}
 {{--                            </td>--}}
 {{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($fee->is_percent) ? "Yes" : "No"}}--}}
+{{--                                <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($management-fee->is_percent) ? "Yes" : "No"}}--}}
 {{--                                </div>--}}
 {{--                            </td>--}}
 {{--                            <td class="text-end">--}}
 {{--                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"--}}
-{{--                                    data-id="{{$fee->id}}" data-category="{{$fee->category}}" data-name="{{$fee->name}}" data-value="{{$fee->value}}" data-is_percent="{{$fee->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">--}}
+{{--                                    data-id="{{$management-fee->id}}" data-category="{{$management-fee->category}}" data-name="{{$management-fee->name}}" data-value="{{$management-fee->value}}" data-is_percent="{{$management-fee->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">--}}
 {{--                                    <i class="ki-duotone ki-pencil fs-2">--}}
 {{--                                        <span class="path1"></span>--}}
 {{--                                        <span class="path2"></span>--}}
@@ -130,7 +130,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.fee.store')}}">
+                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.management-fee.store')}}">
                     @csrf
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
@@ -227,7 +227,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.fee.update')}}">
+                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.management-fee.update')}}">
                     @method('put')
                     @csrf
                     <input type="hidden" name="id" id="id">

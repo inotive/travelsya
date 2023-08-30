@@ -27,6 +27,7 @@
                                         <label class="btn btn-outline btn-color-muted btn-active-danger fs-9 {{ ($request['harga'] ?? null) === 'tertinggi' ? 'active' : ''}}" data-kt-button="true">
                                             <!--begin::Input-->
                                             <input class="btn-check" type="radio" name="harga" value="tertinggi" {{ ($request['harga'] ?? null) === 'tertinggi' ? 'checked' : ''}} />
+
                                             <!--end::Input-->
                                             Harga Tertinggi
                                         </label>
@@ -36,7 +37,9 @@
                                         <label class="btn btn-outline btn-color-muted btn-active-danger fs-9 {{ ($request['harga'] ?? null) === 'terendah' ? 'active' : ''}}"
                                             data-kt-button="true">
                                             <!--begin::Input-->
+
                                             <input class="btn-check" type="radio" name="harga" value="terendah" {{ ($request['harga'] ?? null) === 'terendah' ? 'checked' : ''}}/>
+
                                             <!--end::Input-->
                                             Harga Terendah
                                         </label>
@@ -196,6 +199,10 @@
                                         @php
                                             $checkin = \Carbon\Carbon::parse($request['start']);
                                             $duration = $request['duration'];
+
+
+                                            // Hitung tanggal checkout
+
                                             $checkout = $checkin->copy()->addDays($duration);
                                         @endphp
                                         <div class="col-3">

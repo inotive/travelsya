@@ -15,7 +15,7 @@ class ProductController extends Controller
     {
         $products = DB::table('products')->get();
         $productName = $products->groupBy('name');
-        return view('admin.product.index', compact('products','productName'));
+        return view('admin.management-product.index', compact('products','productName'));
     }
 
     /**
@@ -49,7 +49,7 @@ class ProductController extends Controller
     {
         $products = DB::table('products')->get();
 //        $productName = $products->groupBy('name');
-        return view('admin.product.edit', compact('products'));
+        return view('admin.management-product.edit', compact('products'));
     }
 
     /**
