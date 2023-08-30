@@ -6,7 +6,7 @@
         <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
-            <div class="card-body d-flex flex-column justify-content-between">
+            <form action="{{ route('product.payment.pulsa.data') }}" method="GET" class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">Pulsa & Data</h2>
                 <!--end::Title-->
@@ -38,28 +38,61 @@
                             <span>Nominal</span>
                         </label>
 
-                        <select name="nominal" id="nominal" class="form-control form-control-lg">
-                            @for($i = 1; $i <11; $i++)
-                            <option value="">Rp. {{number_format($i *10000,0,',','.')}}</option>
-                            @endfor
-                        </select>
+                        <select name="product" id="product" class="form-control form-control-lg"></select>
                     </div>
 
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <button class="btn btn-danger w-100">Bayar</button>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100">Bayar</button>
+                        @endauth
+
+                        @guest
+                            <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </button>
+                        @endguest
                     </div>
                 </div>
-
-                <div class="row" id="row-pricelist"></div>
-            </div>
+            </form>
             <!--end::Body-->
         </div>
         <!--end::Tiles Widget 2-->
     </div>
     <!--end::Col-->
+
+    <!-- modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Login Terlebih Dahulu</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row gy-4">
+                        <div class="col-12">
+                            <label for="" class="form-label">Email</label>
+                            <input type="text" class="form-control form-control-lg"
+                                placeholder="Masukan Email Anda">
+                        </div>
+                        <div class="col-12">
+                            <label for="" class="form-label">Password</label>
+                            <input type="password" class="form-control form-control-lg"
+                                placeholder="Masukan Password Anda">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-lg btn-light">Kembali</button>
+                    <a href="{{ route('login') }}" class="btn btn-lg text-white"
+                        style="background-color: #c02425">Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @push('add-style')
@@ -121,13 +154,13 @@
                         type: "GET",
                         url: "/product/"+category+"/"+provider,
                         success: function (response) {
-                            console.log(response)
+                            // console.log(response)
 
-                            $('#nominal').empty();
+                            $('#product').empty();
 
                             // Menambahkan pilihan berdasarkan respons
                             $.each(response, function (key, value) {
-                                $('#nominal').append($('<option>', {
+                                $('#product').append($('<option>', {
                                     value: value.id,
                                     text: value.description+ ' - Rp. '+value.price
                                 }));
