@@ -56,10 +56,8 @@
 @push('add-script')
     <script>
         $(document).ready(function() {
+            const { getOperator } = window.NoTelp;
 
-            const {
-                getOperator
-            } = window.NoTelp;
             $('#notelp').on('keyup', function(e) {
                 var notelp = e.target.value;
                 var operatorTelp1 = getOperator(notelp);
@@ -89,7 +87,7 @@
                                 });
                             } else {
                                 $('#row-pricelist').append(
-                                    '<div class="col-md-12"><a href="{{ route('login.view') }}">Login first</a></div>'
+                                    '<div class="col-md-12"><a href="{{ route('login') }}">Login first</a></div>'
                                     )
                             }
                         }
