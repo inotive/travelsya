@@ -27,6 +27,7 @@
                         <th class="text-center">No.</th>
                         <th class="text-center">Vendor</th>
                         <th class="text-center">Hotel</th>
+                        <th class="text-center">Kota</th>
                         <th class="text-center">Alamat</th>
                         <th class="text-center">Website</th>
                         <th class="text-center">Bintang</th>
@@ -40,6 +41,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $hotel->user_name }}</td>
                             <td class="text-center">{{ $hotel->name }}</td>
+                            <td class="text-center">{{ $hotel->city }}</td>
                             <td class="text-center">{{ $hotel->address }}</td>
                             <td class="text-center"><a href="{{ $hotel->website }}" target="_blank">Link Website</a></td>
                             <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }} Bintang</span></td>
@@ -180,11 +182,11 @@
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="website" class="form-label">Website</label>
-                                <input type="text" id="website" name="website" class="form-control" placeholder="Masukan website">
+                                <input type="text" id="website" name="website" class="form-control" placeholder="Masukan website" required>
                             </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Bintang</label>
@@ -194,7 +196,7 @@
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="1"/>
+                                        <input class="btn-check" type="radio" name="star" id="star" value="1" required/>
                                         <!--end::Input-->
                                         1
                                     </label>
@@ -294,4 +296,5 @@
             });
         } );
     </script>
+
 @endpush

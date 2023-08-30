@@ -29,20 +29,9 @@
                     },
                     success:function(response){
 
-                        Swal.fire({
-                            type: 'success',
-                            icon: 'success',
-                            title: `${response.message}`,
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-
                         //remove post on table
                         $(`#index_${hotel_id}`).remove();
-
-                            setTimeout(function() {
                                 location.reload();
-                            }, 3000);
                     }
                 });
             }
