@@ -40,7 +40,7 @@ class Service extends Model
     }
 
     /**
-     * Get all of the fee for the Category
+     * Get all of the management-fee for the Category
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

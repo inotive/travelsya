@@ -54,7 +54,7 @@ function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.export
     Copyright (c) Microsoft Corporation.
 
     Permission to use, copy, modify, and/or distribute this software for any
-    purpose with or without fee is hereby granted.
+    purpose with or without management-fee is hereby granted.
 
     THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
     REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY

@@ -134,6 +134,7 @@ class PpobController extends Controller
                 ],
                 'fees' => $fees
             ]);
+
             if (isset($payoutsXendit['status'])) {
 
                 $data['status'] = $payoutsXendit['status'];

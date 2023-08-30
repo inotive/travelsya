@@ -63,7 +63,7 @@
                                     <span class="path2"></span>
                                 </i>
                             </a>
-                            <a href="{{route('admin.delete',$user->id)}}" onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                            <a href="{{route('admin.user.delete',$user->id)}}" onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
                                 <i class="ki-duotone ki-trash fs-2">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
@@ -109,7 +109,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.create')}}">
+                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.user.create')}}">
                     @csrf
                     <!--begin::Heading-->
                     <div class="mb-13 text-center">
@@ -234,7 +234,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.update')}}">
+                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.user.update')}}">
                     @method('put')
                     @csrf
                     <input type="hidden" name="id" id="id">
@@ -366,7 +366,7 @@
                 }
             });
         $.ajax({
-            url: "{{ route('admin.edit') }}",
+            url: "{{ route('admin.user.edit') }}",
                 type: "POST",
                 dataType: 'json',
                 data: {
