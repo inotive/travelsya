@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\FeeController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
+
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
@@ -61,6 +62,10 @@ Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransa
 //ppob
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
     Route::get('/pulsa', 'pulsa')->name('.pulsa');
+
+    Route::get('/{category}/{provider}', 'pulsaData');
+    Route::get('/payment-pulsa-data', 'paymentPulsaData')->name('.payment.pulsa.data');
+
     Route::get('/data', 'data')->name('.data');
     Route::get('/bpjs', 'bpjs')->name('.bpjs');
     Route::get('/pdam', 'pdam')->name('.pdam');
@@ -92,7 +97,7 @@ Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->gro
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/room/', 'room')->name('.room');
-    Route::get('/{idroom}/start/{start}/duration/{duration}/jumlah-kamar/{room}/jumlah-tamu/{guest}', 'checkout')->name('.checkout');
+    Route::get('/{idroom}/checkout', 'checkout')->name('.checkout');
     Route::post('/{idroom}/request', 'request')->name('.request');
     Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
     Route::post('/ajax', 'ajaxHostel');
@@ -100,7 +105,7 @@ Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->gr
 
 
 //tranas
-Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
+Route::get('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
 Route::get('reservation', [TransactionController::class, 'reservation'])->name('reservation.hotel');
 
@@ -115,6 +120,10 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::prefix('management-mitra')->group(function (){
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
                 Route::resource('hostel', \App\Http\Controllers\Admin\HostelController::class);
+                Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
+                Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
+
+
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
@@ -198,6 +207,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::post('setting-hotel-room', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
         });
     });
+    
 
 
 
