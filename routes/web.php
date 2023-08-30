@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\FeeController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
+
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
@@ -119,6 +120,10 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::prefix('management-mitra')->group(function (){
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
                 Route::resource('hostel', \App\Http\Controllers\Admin\HostelController::class);
+                Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
+                Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
+
+
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
@@ -202,6 +207,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::post('setting-hotel-room', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
         });
     });
+    
 
 
 
