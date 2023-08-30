@@ -3,7 +3,7 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pln') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
@@ -15,13 +15,17 @@
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
-                        <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
+                        <input type="text" id="noPelanggan" class="form-control form-control-lg"
                                name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
-                        <!--end::Input-->
+                               <small class="text-danger" style="display: none" id="textAlert">No. Pelanggan harus terisi</small>
+
+                        <input type="hidden" name="namaPelanggan" id="inputNamaPelanggan">
+                        <input type="hidden" name="totalTagihan" id="inputTotalTagihan">
+                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdmin">
+                        <input type="hidden" name="totalBayar" id="inputTotalBayar">
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-danger mt-8 w-100">Periksa</button>
+                        <button type="button" class="btn btn-danger mt-8 w-100" id="btn-periksa">Periksa</button>
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -32,17 +36,17 @@
                                 <tbody>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3">Gusti Bagus Wahyu Saputra</td>
+                                    <td class="text-right" colspan="3"><span id="namaPelanggan"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td>Rp. <span id="totalTagihan"></span></td>
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td>Rp. <span id="biayaAdmin"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td colspan="2">Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td colspan="2">Rp. <span id="totalBayar"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -56,7 +60,7 @@
                 </div>
             </div>
             <!--end::Body-->
-        </div>
+        </form>
         <!--end::Tiles Widget 2-->
 
     </div>
@@ -64,11 +68,55 @@
 </div>
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script> --}}
 @endpush
 
 @push('add-script')
     <script>
+       $(document).ready(function () {
+            $('#noPelanggan').on('keyup', function () {
+                $('#textAlert').hide();
+            });
+
+            $('#btn-periksa').on('click', function () {
+                var noPelanggan = $('#noPelanggan').val();
+
+                if(noPelanggan == '') {
+                    $('#textAlert').show();
+                    return false;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('product.pln') }}",
+                    data: {
+                        'no_pelanggan': noPelanggan,
+                        'nom': 'CEKPLN',
+                    },
+                    success: function (response) {
+                        // console.log(response)
+
+                        // SIMULASI!!!
+                        var simulateAmount = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
+                        var simulateFee = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
+                        var simulateTotal = simulateAmount + simulateFee;
+
+                        $('#namaPelanggan').text('Joko Susilo');
+                        $('#totalTagihan').text(new Intl.NumberFormat('id-ID').format(simulateAmount));
+                        $('#biayaAdmin').text(new Intl.NumberFormat('id-ID').format(simulateFee));
+                        $('#totalBayar').text(new Intl.NumberFormat('id-ID').format(simulateTotal));
+
+                        $('#inputNamaPelanggan').val('Joko Susilo');
+                        $('#inputTotalTagihan').val(simulateAmount);
+                        $('#inputBiayaAdmin').val(simulateFee);
+                        $('#inputTotalBayar').val(simulateTotal);
+
+                    }
+                });
+            });
+       });
+    </script>
+    {{-- <script>
         $(document).ready(function() {
             $('#notelp').on('keyup', function(e) {
 
@@ -116,5 +164,5 @@
             })
 
         })
-    </script>
+    </script> --}}
 @endpush
