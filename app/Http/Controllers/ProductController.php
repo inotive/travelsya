@@ -127,7 +127,53 @@ class ProductController extends Controller
     public function paymentPln(Request $request)
     {
         $data = $request->all();
-        dd($data);
+        // dd($data);
+
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find(459);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $product->id,
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelanggan']),
+                    "price" => $data['totalTagihan'],
+                    "quantity" => 1,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
+        ]);
+
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'PLN-' . time(),
+            'service' => $product->service->name,
+            'service_id' => $product->service->id,
+            'payment' => 'xendit',
+            'user_id' => $request->user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => $amount
+        ]);
+
+        return redirect($payoutsXendit['invoice_url']);
     }
 
     public function tvInternet()
