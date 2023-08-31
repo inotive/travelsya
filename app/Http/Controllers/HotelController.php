@@ -322,7 +322,6 @@ class HotelController extends Controller
             'fees' => $fees
         ]);
 
-        // dd($payoutsXendit);
 
         // true buat trans
         DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {

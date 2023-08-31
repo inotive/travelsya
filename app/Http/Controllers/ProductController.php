@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Services\Mymili;
 use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Travelsya;
@@ -13,12 +15,13 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    protected $travelsya, $xendit;
+    protected $travelsya, $xendit, $mymili;
 
-    public function __construct(Travelsya $travelsya, Xendit $xendit)
+    public function __construct(Travelsya $travelsya, Xendit $xendit, Mymili $mymili)
     {
         $this->travelsya = $travelsya;
         $this->xendit = $xendit;
+        $this->mymili = $mymili;
     }
 
     public function pulsa()
@@ -102,9 +105,29 @@ class ProductController extends Controller
         return view('product.pdam');
     }
 
-    public function pln()
+    public function pln(Request $request)
     {
-        return view('product.pln');
+        // return view('product.pln');
+
+
+        $data = $request->all();
+
+        $requestMymili = $this->mymili->inquiry([
+            'no_hp' => $data['no_pelanggan'],
+            'nom' => $data['nom'],
+        ]);
+
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
+    }
+
+    public function paymentPln(Request $request)
+    {
+        $data = $request->all();
+        dd($data);
     }
 
     public function tvInternet()

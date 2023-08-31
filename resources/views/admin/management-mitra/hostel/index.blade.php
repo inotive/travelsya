@@ -24,6 +24,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Vendor</th>
                             <th class="text-center">Hostel</th>
+                            <th class="text-center">Kota</th>
                             <th class="text-center">Alamat</th>
                             <th class="text-center">Website</th>
                             <th class="text-center">Bintang</th>
@@ -37,11 +38,22 @@
                                 <td>{{ $hostel->id }}</td>
                                 <td class="text-center">{{ $hostel->user_name }}</td>
                                 <td class="text-center">{{ $hostel->name }}</td>
+                                <td class="text-center">{{ $hostel->city }}</td>
                                 <td class="text-center">{{ $hostel->address }}</td>
-                                <td class="text-center"><a href="{{ $hostel->website }}" target="_blank">LINK WEBSITE</a></td>
+                                <td class="text-center"><a href="{{ $hostel->website }}" target="_blank">LINK WEBSITE</a>
+                                </td>
                                 <td class="text-center"><span class="badge badge-warning">{{ $hostel->star }} Bintang</span>
                                 </td>
-                                <td class="text-center"><span class="badge badge-success">Aktif</span></td>
+
+                                
+
+                                <td class="text-center">
+                                    @if ($hostel->is_active)
+                                    <span class="badge badge-success">Aktif</span>
+                                    @else
+                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                    @endif
+                                </td>
 
                                 <td class="text-center">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
@@ -65,10 +77,10 @@
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
                                             <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
-                                            class="menu-link px-3 text-warning" id="btn-edit-post"
-                                             data-id="{{ $hostel->id }}">
-                                            Edit
-                                        </a>
+                                                class="menu-link px-3 text-warning" id="btn-edit-post"
+                                                data-id="{{ $hostel->id }}">
+                                                Edit
+                                            </a>
                                         </div>
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
@@ -230,7 +242,7 @@
             </div>
             <!--end::Table container-->
         </div>
-        
+
         <!--begin::Body-->
     </div>
     <!--end::Tables Widget 11-->
@@ -679,10 +691,7 @@
     </div>
 
     @push('add-script')
-    <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
-    <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
@@ -704,145 +713,8 @@
                         ">"
                 });
 
-                // function EditData(id) {
 
-
-
-                //     $.ajax({
-                //         // Ganti dengan URL endpoint yang sesuai di backend Anda untuk mendapatkan data TPS
-                //         type: 'POST',
-                //         data: {
-
-                //             '_token': '<?php echo csrf_token(); ?>',
-                //             'id': id,
-
-                //         },
-                //         success: function(response) {
-                //             // Tangani respons sukses dari server
-                //             var hostelData = response.data;
-                //             console.log(hostelData.hostel.user_id);
-                //             // Isi formulir dengan data yang akan diedit
-                //             // $('#edit-id').val(tpsData.id);
-                //             $('.edit-name').val(response.hostel.name);
-                //             $('.edit_user_id').val(response.hostel.user_id);
-                //             $('.edit-city').val(response.hostel.city);
-                //             $('.edit-alamat').val(response.hostel.address);
-                //             $('.edit-website').val(response.hostel.website);
-                //             $('.edit-bintang').val(response.hostel.star);
-                //             // $('.edit-status').val(response.tps.status);
-                //             // Tambahkan bidang lainnya jika diperlukan
-                //         },
-                //         error: function(xhr) {
-                //             // Tangani respons error dari server
-                //             console.error(xhr.responseText);
-                //         }
-                //     });
-                // };
-
-
-                // // $(document).ready(function() {
-                //     $('body').on('click', '#btn-edit-post', function() {
-                //         let hostel_id = $(this).data('id');
-
-                //         $.ajax({
-                //             url: `admin/management-mitra/hostel/${hostel_id}`,
-                //             type: "GET",
-                //             cache: false,
-                //             success: function(response) {
-                //                 $('#hostel_id').val(response.data.id);
-                //                 $('#edit-name').val(response.data.name);
-                //                 $('#edit-user-id').val(response.data.user_id);
-                //                 $('#edit-city').val(response.data.city);
-                //                 $('#edit-alamat').val(response.data.address);
-                //                 $('#edit-bintang').val(response.data.star);
-
-                //                 $('#edit_mitra').modal('show');
-                //             }
-                //         });
-                //     });
-
-                //     $('#update').click(function(e) {
-                //         e.preventDefault();
-
-                //         // Define variables
-                //         let hostel_id = $('#hostel_id').val();
-                //         let name = $('#edit-name').val();
-                //         let user_id = $('#edit-user-id').val();
-                //         let city = $('#edit-city').val();
-                //         let address = $('#edit-alamat').val();
-                //         let star = $('#edit-bintang').val();
-                //         let token = $("meta[name='csrf-token']").attr("content");
-
-                //         // AJAX for update
-                //         $.ajax({
-                //             url: `admin/management-mitra/hostel/${hostel_id}`, // Change to correct URL
-                //             type: "PUT",
-                //             cache: false,
-                //             data: {
-                //                 "name": name,
-                //                 "user_id": user_id,
-                //                 "city": city,
-                //                 "address": alamat,
-                //                 "website": website,
-                //                 "star": method,
-                //                 "_token": token,
-                //             },
-                //             success: function(response) {
-                //                 Swal.fire({
-                //                     type: 'success',
-                //                     icon: 'success',
-                //                     title: `${response.message}`,
-                //                     showConfirmButton: false,
-                //                     timer: 3000
-                //                 });
-                //                 // Update row in table
-                //                 let hostel = `
-                //     <tr id="index_${response.data.id}">
-                //         <td>${response.data.name}</td>
-                //         <td>${response.data.user_id}</td>
-                //         <td class="text-center">
-                //             <a href="javascript:void(0)" id="btn-edit-post" data-id="${response.data.id}" class="btn btn-primary btn-sm">EDIT</a>
-                //             <a href="javascript:void(0)" id="btn-delete-post" data-id="${response.data.id}" class="btn btn-danger btn-sm">DELETE</a>
-                //         </td>
-                //     </tr>
-                // `;
-
-                //                 $(`#index_${response.data.id}`).replaceWith(hostel);
-
-                //                 // Close modal
-                //                 $('#edit_mitra').modal('hide');
-
-                //                 // Show success message
-
-                //             },
-                //             error: function(error) {
-                //                 if (error.responseJSON.title[0]) {
-
-                //                     //show alert
-                //                     $('#alert-name-edit').removeClass('d-none');
-                //                     $('#alert-name-edit').addClass('d-block');
-
-                //                     //add message to alert
-                //                     $('#alert-name-edit').html(error.responseJSON.name[
-                //                         0]);
-                //                 }
-                //                 // if (error.responseJSON.content[0]) {
-
-                //                 //     //show alert
-                //                 //     $('#alert-content-edit').removeClass('d-none');
-                //                 //     $('#alert-content-edit').addClass('d-block');
-
-                //                 //     //add message to alert
-                //                 //     $('#alert-content-edit').html(error.responseJSON
-                //                 //         .content[0]);
-                //                 // }
-                //                 // Handle validation errors or other errors here
-                //             }
-                //         });
-                //     });
-                });
-
-            
+            });
         </script>
     @endpush
 @endsection

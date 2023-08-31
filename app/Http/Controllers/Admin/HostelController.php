@@ -19,15 +19,19 @@ class HostelController extends Controller
         // $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
         // $users = User::where('role',2)->get();
 
-        $users = User::with('hostel')
-                ->where('role', 2)->get();
+        // $users = User::with('hostel')
+        //     ->where('role', 1)->get();
+        $users = DB::table('users')
+            ->select('users.*')
+            ->where('role', 1)
+            ->get();
 
         $hostels = DB::table('hostels')
-        ->join('users', 'users.id', '=', 'hostels.user_id')
-        ->select('hostels.*', 'users.name as user_name')
-        ->get();
+            ->join('users', 'users.id', '=', 'hostels.user_id')
+            ->select('hostels.*', 'users.name as user_name')
+            ->get();
 
-        return view('admin.management-mitra.hostel.index', compact('hostels','users'));
+        return view('admin.management-mitra.hostel.index', compact('hostels', 'users'));
     }
 
     public function show(Hostel $hostel)
@@ -39,17 +43,31 @@ class HostelController extends Controller
             'success' => true,
             'message' => 'Detail Data Post',
             'data'    => $hostel
-        ]); 
+        ]);
     }
 
     public function storeMitra(Request $request)
     {
-        Hostel::create([
-            'name' => ucwords($request->name), 
-            'user_id' => $request->user_id, 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
+            'website' => 'required',
+            'user_id' => 'required',
+            'city' => 'required',
+            'is_active' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        DB::table('hostels')->insert([
+            'name' => ucwords($request->name),
+            'user_id' => $request->user_id,
             'is_active' => 1,
-            'service_id' => 7, 
-            'city' => $request->city, 
+            'service_id' => 7,
+            'city' => $request->city,
             'kecamatan' => '-',
             'address' => $request->alamat,
             'description' => '-',
@@ -61,7 +79,26 @@ class HostelController extends Controller
             'checkout' => '12:00',
             'star' => $request->star,
             'website' => $request->website,
-            'property' => '-']);
+            'property' => '-'
+        ]);
+        // Hostel::create([
+        //     'name' => ucwords($request->name), 
+        //     'user_id' => $request->user_id, 
+        //     'is_active' => 1,
+        //     'service_id' => 7, 
+        //     'city' => $request->city, 
+        //     'kecamatan' => '-',
+        //     'address' => $request->alamat,
+        //     'description' => '-',
+        //     'facilities' => '-',
+        //     'lat' => '-',
+        //     'lon' => '-',
+        //     'category' => 'Harian',
+        //     'checkin' => '11:00',
+        //     'checkout' => '12:00',
+        //     'star' => $request->star,
+        //     'website' => $request->website,
+        //     'property' => '-']);
 
         toast('Mitra has been created', 'success');
         return redirect()->back();
@@ -106,14 +143,14 @@ class HostelController extends Controller
     public function update(Request $request, Hostel $hostel)
     {
         $validator = Validator::make($request->all(), [
-            'name' =>'required',
-            'address' =>'required',
-            'star' =>'required',
-            'website' =>'required',
-            'user_id' =>'required',
-            'city' =>'required',
-            'is_active' =>'required',
-            
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
+            'website' => 'required',
+            'user_id' => 'required',
+            'city' => 'required',
+            'is_active' => 'required',
+
         ]);
 
         if ($validator->fails()) {
@@ -121,34 +158,11 @@ class HostelController extends Controller
         }
 
         // //check if validation fails
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
-        // $hostel = Hostel::update([
-        //     'name' => $request->name, 
-        //     'user_id' => $request->user_id, 
-        //     'is_active' => $request->is_active, 
-        //     'city' => $request->city, 
-        //     'service_id' => 7, 
-        //     'kecamatan' => '-',
-        //     'address' => $request->address,
-        //     'description' => '-',
-        //     'facilities' => '-',
-        //     'lat' => '-',
-        //     'lon' => '-',
-        //     'category' => 'Harian',
-        //     'checkin' => '11:00',
-        //     'checkout' => '12:00',
-        //     'star' => $request->star,
-        //     'website' => $request->website,
-        //     'property' => '-'
-        // ]);
-
-        $hostel->update([
+        DB::table('hostels')->where('id', $hostel->id)->update([
             'user_id' => $request->user_id,
-            'is_active' => 1,
-            'checkin' => "11:00:00",
-            'checkout' => "12:00:00",
+            'is_active' => $request->is_active,
+            'checkin' => "11:00",
+            'checkout' => "12:00",
             'service_id' => 7,
             'name' => $request->name,
             'address' => $request->address,
@@ -156,13 +170,25 @@ class HostelController extends Controller
             'star' => $request->star,
             'website' => $request->website,
         ]);
-        
+        // $hostel->update([
+        //     'user_id' => $request->user_id,
+        //     'is_active' => 1,
+        //     'checkin' => "11:00:00",
+        //     'checkout' => "12:00:00",
+        //     'service_id' => 7,
+        //     'name' => $request->name,
+        //     'address' => $request->address,
+        //     'city' => $request->city,
+        //     'star' => $request->star,
+        //     'website' => $request->website,
+        // ]);
+
 
         toast('Hostel has been updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Disimpan!',
-            'data'    => $hostel  
+            'data'    => $hostel
         ]);
     }
 
@@ -185,14 +211,14 @@ class HostelController extends Controller
 
 
         for ($i = 0; $i < count($request->image); $i++) {
-            $myimage = url($destinationPath).'/'. $request->image[$i]->hashName();
+            $myimage = url($destinationPath) . '/' . $request->image[$i]->hashName();
             $request->image[$i]->move(public_path($destinationPath), $myimage);
             // dd($request->all(), $request->file('image')[$i]);
-//            $request->file('image')[$i]->storeAs(
-//                'hostel/' . Str::slug($hostel->name, '-'),
-//                Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
-//                'public',
-//            );
+            //            $request->file('image')[$i]->storeAs(
+            //                'hostel/' . Str::slug($hostel->name, '-'),
+            //                Str::slug($hostel->name) . '-' . time() + $i . '.' . $request->file('image')[$i]->getClientOriginalExtension(),
+            //                'public',
+            //            );
             HostelImage::create([
                 'hostel_id' => $request->id,
                 'image' => $myimage,
@@ -207,15 +233,16 @@ class HostelController extends Controller
         $hostels = Hostel::findOrFail($id);
         $hostels->delete();
 
-        return redirect()->route('admin.hostel.index')->with('success', 'Hostel berhasil dihapus.');
+        toast('Hostel has been deleted', 'success');
+        return redirect()->back();
     }
 
 
     public function updateAjax(Request $request, Hostel $hostel)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required', 
-            
+            'name' => 'required',
+
         ]);
 
         //check if validation fails
@@ -223,13 +250,13 @@ class HostelController extends Controller
             return response()->json($validator->errors(), 422);
         }
         $hostel = Hostel::update([
-            'name' => ucwords($request->name), 
-            'user_id' => $request->user_id, 
-            'is_active' => 1, 
-            'city' => $request->city, 
+            'name' => ucwords($request->name),
+            'user_id' => $request->user_id,
+            'is_active' => 1,
+            'city' => $request->city,
             'kecamatan' => '-',
             'address' => $request->alamat,
-            'category' => $request->category, 
+            'category' => $request->category,
             'description' => '-',
             'facilities' => '-',
             'lat' => '-',
@@ -241,13 +268,13 @@ class HostelController extends Controller
             'website' => $request->website,
             'property' => '-'
         ]);
-        
+
 
         toast('Hostel has been updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Disimpan!',
-            'data'    => $hostel  
+            'data'    => $hostel
         ]);
     }
 }

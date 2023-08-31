@@ -56,7 +56,7 @@
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Active</label>
-                        <select class="form-select form-select-solid is_active-edit" id="is_active-edit">
+                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit" id="is_active-edit">
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
@@ -99,20 +99,20 @@
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
                             <!--begin::Radio-->
                             <label class="btn btn-outline btn-color-muted btn-active-success input-star-1"
-                                data-kt-button="true">
-                                <!--begin::Input-->
-                                <input class="btn-check input-star-1" type="radio" name="star-edit" id="star-edit"
-                                    value="1" />
-                                <!--end::Input-->
-                                1
-                            </label>
+                            data-kt-button="true">
+                            <!--begin::Input-->
+                            <input class="btn-check input-star-1" type="radio" name="star-edit" id="star-edit-1"
+                                checked="checked" value="1" />
+                            <!--end::Input-->
+                            1
+                        </label>
                             <!--end::Radio-->
 
                             <!--begin::Radio-->
                             <label class="btn btn-outline btn-color-muted btn-active-success input-star-2"
                                 data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check input-star-2" type="radio" name="star-edit" id="star-edit"
+                                <input class="btn-check input-star-2" type="radio" name="star-edit" id="star-edit-2"
                                     checked="checked" value="2" />
                                 <!--end::Input-->
                                 2
@@ -123,7 +123,7 @@
                             <label class="btn btn-outline btn-color-muted btn-active-success input-star-3"
                                 data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check input-star-3" type="radio" name="star-edit" id="star-edit"
+                                <input class="btn-check input-star-3" type="radio" name="star-edit" id="star-edit-3"
                                     value="3" />
                                 <!--end::Input-->
                                 3
@@ -134,7 +134,7 @@
                             <label class="btn btn-outline btn-color-muted btn-active-success input-star-4"
                                 data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check input-star-4" type="radio" name="star-edit" id="star-edit"
+                                <input class="btn-check input-star-4" type="radio" name="star-edit" id="star-edit-4"
                                     value="4" />
                                 <!--end::Input-->
                                 4
@@ -144,7 +144,7 @@
                             <label class="btn btn-outline btn-color-muted btn-active-success input-star-5"
                                 data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check input-star-5" type="radio" name="star-edit" id="star-edit"
+                                <input class="btn-check input-star-5" type="radio" name="star-edit" id="star-edit-5"
                                     value="5" />
                                 <!--end::Input-->
                                 5
@@ -355,109 +355,3 @@
 
     });
 </script>
-{{-- <script>
-    // $(document).ready(function() {
-        $('body').on('click', '#btn-edit-post', function() {
-                        let hostel_id = $(this).data('id');
-
-                        $.ajax({
-                            url: `admin/management-mitra/hostel/${hostel_id}`,
-                            type: "GET",
-                            cache: false,
-                            success: function(response) {
-                                $('#hostel_id').val(response.data.id);
-                                $('#edit-name').val(response.data.name);
-                                $('#edit-user-id').val(response.data.user_id);
-                                $('#edit-city').val(response.data.city);
-                                $('#edit-alamat').val(response.data.address);
-                                $('#edit-bintang').val(response.data.star);
-
-                                $('#edit_mitra').modal('show');
-                            }
-                        });
-                    });
-
-                    $('#update').click(function(e) {
-                        e.preventDefault();
-
-                        // Define variables
-                        let hostel_id = $('#hostel_id').val();
-                        let name = $('#edit-name').val();
-                        let user_id = $('#edit-user-id').val();
-                        let city = $('#edit-city').val();
-                        let address = $('#edit-alamat').val();
-                        let star = $('#edit-bintang').val();
-                        let token = $("meta[name='csrf-token']").attr("content");
-
-                        // AJAX for update
-                        $.ajax({
-                            url: `admin/management-mitra/hostel/${hostel_id}`, // Change to correct URL
-                            type: "PUT",
-                            cache: false,
-                            data: {
-                                "name": name,
-                                "user_id": user_id,
-                                "city": city,
-                                "address": alamat,
-                                "website": website,
-                                "star": method,
-                                "_token": token,
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    type: 'success',
-                                    icon: 'success',
-                                    title: `${response.message}`,
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-                                // Update row in table
-                                let hostel = `
-                    <tr id="index_${response.data.id}">
-                        <td>${response.data.name}</td>
-                        <td>${response.data.user_id}</td>
-                        <td class="text-center">
-                            <a href="javascript:void(0)" id="btn-edit-post" data-id="${response.data.id}" class="btn btn-primary btn-sm">EDIT</a>
-                            <a href="javascript:void(0)" id="btn-delete-post" data-id="${response.data.id}" class="btn btn-danger btn-sm">DELETE</a>
-                        </td>
-                    </tr>
-                `;
-
-                                $(`#index_${response.data.id}`).replaceWith(hostel);
-
-                                // Close modal
-                                $('#edit_mitra').modal('hide');
-
-                                // Show success message
-
-                            },
-                            error: function(error) {
-                                if (error.responseJSON.title[0]) {
-
-                                    //show alert
-                                    $('#alert-name-edit').removeClass('d-none');
-                                    $('#alert-name-edit').addClass('d-block');
-
-                                    //add message to alert
-                                    $('#alert-name-edit').html(error.responseJSON.name[
-                                        0]);
-                                }
-                                // if (error.responseJSON.content[0]) {
-
-                                //     //show alert
-                                //     $('#alert-content-edit').removeClass('d-none');
-                                //     $('#alert-content-edit').addClass('d-block');
-
-                                //     //add message to alert
-                                //     $('#alert-content-edit').html(error.responseJSON
-                                //         .content[0]);
-                                // }
-                                // Handle validation errors or other errors here
-                            }
-                        });
-                    });
-                
-
-            
-        
-</script> --}}
