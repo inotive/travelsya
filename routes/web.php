@@ -68,10 +68,13 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
 
     Route::get('/data', 'data')->name('.data');
     Route::get('/bpjs', 'bpjs')->name('.bpjs');
-    Route::get('/pdam', 'pdam')->name('.pdam');
+    // Route::get('/pdam', 'pdam')->name('.pdam');
     // Route::get('/pln', 'pln')->name('.pln');
     Route::post('/pln', 'pln')->name('.pln');
     Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
+
+    Route::post('/pdam', 'pdam')->name('.pdam');
+    Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
 
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
 });
@@ -125,8 +128,6 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::resource('hostel', \App\Http\Controllers\Admin\HostelController::class);
                 Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
-
-
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');

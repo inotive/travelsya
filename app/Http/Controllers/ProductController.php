@@ -100,9 +100,22 @@ class ProductController extends Controller
         return view('product.bpjs');
     }
 
-    public function pdam()
+    public function pdam(Request $request)
     {
-        return view('product.pdam');
+        // return view('product.pdam');
+
+        $data = $request->all();
+
+        $requestMymili = $this->mymili->inquiry([
+            'no_hp' => $data['no_pelanggan'],
+            'nom' => $data['nom'],
+        ]);
+
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
     }
 
     public function pln(Request $request)
