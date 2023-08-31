@@ -115,11 +115,12 @@ class ProductController extends Controller
     public function paymentBpjs(Request $request)
     {
         $data = $request->all();
+        // dd($data);
 
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find($data['productPDAM']);
+        $product = Product::with('service')->find($data['product_id']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
@@ -130,7 +131,7 @@ class ProductController extends Controller
             'items' => [
                 [
                     "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPDAM']),
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganBPJS']),
                     "price" => $data['totalTagihan'],
                     "quantity" => 1,
                 ]
@@ -150,7 +151,7 @@ class ProductController extends Controller
 
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
-            'req_id' => 'PDAM-' . time(),
+            'req_id' => 'BPJS-' . time(),
             'service' => $product->service->name,
             'service_id' => $product->service->id,
             'payment' => 'xendit',
