@@ -34,7 +34,6 @@ class HomeController extends Controller
         })->toArray();
 
         $data['hotels'] = $dummyHotels;
-
         return view('home', $data);
     }
 }

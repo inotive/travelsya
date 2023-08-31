@@ -36,7 +36,7 @@ class RiwayatBookingController extends Controller
         $transactions = $tr->orderBy('created_at', 'desc')->paginate(10);
         $hostels = Hostel::where('user_id', $id)->select('name', 'id')->get();
         // dd($hostels);
-        return view('admin.partner.booking.index', compact('transactions', 'hostels'));
+        return view('ekstranet.booking.index', compact('transactions', 'hostels'));
     }
 
     /**
