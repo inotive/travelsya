@@ -3,14 +3,14 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.pln') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pdam') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-8">
+                    <div class="col-xl-4">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
@@ -26,7 +26,13 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPDAM">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
-                    <div class="col-4">
+                    <div class="col-xl-4">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-4">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
                     </div>
                     <div class="col-12">
@@ -77,6 +83,20 @@
 @push('add-script')
     <script>
         $(document).ready(function () {
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('product.product.pdam') }}",
+                success: function (response) {
+                    $.each(response, function (key, value) {
+                        $('#productPDAM').append($('<option>', {
+                            value: value.id,
+                            text: value.description
+                        }));
+                    });
+                }
+            });
+
             $('#noPelangganPDAM').on('keyup', function () {
                 $('.textAlert').hide();
             });

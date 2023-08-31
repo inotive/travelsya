@@ -74,6 +74,7 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
 
     Route::post('/pdam', 'pdam')->name('.pdam');
+    Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
     Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
 
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
