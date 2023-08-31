@@ -67,9 +67,13 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/payment-pulsa-data', 'paymentPulsaData')->name('.payment.pulsa.data');
 
     Route::get('/data', 'data')->name('.data');
-    Route::get('/bpjs', 'bpjs')->name('.bpjs');
+    // Route::get('/bpjs', 'bpjs')->name('.bpjs');
     // Route::get('/pdam', 'pdam')->name('.pdam');
     // Route::get('/pln', 'pln')->name('.pln');
+
+    Route::post('/bpjs', 'bpjs')->name('.bpjs');
+    Route::get('/payment-bpjs', 'paymentBpjs')->name('.payment.bpjs');
+
     Route::post('/pln', 'pln')->name('.pln');
     Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
 
