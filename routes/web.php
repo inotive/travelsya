@@ -81,7 +81,9 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
     Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
 
-    Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
+    Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
 });
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
