@@ -84,7 +84,13 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
     Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
     Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
+
+    Route::post('/tax', 'tax')->name('.tax');
+    Route::get('/product-tax', 'productTax')->name('.product.tax');
+    Route::get('/payment-tax', 'paymentTax')->name('.payment.tax');
 });
+
+
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
     Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
