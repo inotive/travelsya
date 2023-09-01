@@ -66,9 +66,16 @@
 
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
-                    </div>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @endauth
 
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
+                    </div>
                 </div>
             </div>
             <!--end::Body-->

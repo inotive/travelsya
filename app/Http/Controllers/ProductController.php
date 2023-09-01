@@ -425,11 +425,12 @@ class ProductController extends Controller
     public function paymentTax(Request $request)
     {
         $data = $request->all();
+        // dd($data);
 
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find($data['producttax']);
+        $product = Product::with('service')->find($data['productPajak']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
@@ -440,7 +441,7 @@ class ProductController extends Controller
             'items' => [
                 [
                     "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelanggantax']),
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPajak']),
                     "price" => $data['totalTagihan'],
                     "quantity" => 1,
                 ]
@@ -460,7 +461,7 @@ class ProductController extends Controller
 
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
-            'req_id' => 'tax-' . time(),
+            'req_id' => 'TAX-' . time(),
             'service' => $product->service->name,
             'service_id' => $product->service->id,
             'payment' => 'xendit',
