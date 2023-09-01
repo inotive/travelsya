@@ -95,21 +95,159 @@ class ProductController extends Controller
         return view('product.data');
     }
 
-    public function bpjs()
+    public function bpjs(Request $request)
     {
-        return view('product.bpjs');
+        // return view('product.bpjs');
+        $data = $request->all();
+
+        $requestMymili = $this->mymili->inquiry([
+            'no_hp' => $data['no_pelanggan'],
+            'nom' => $data['nom'],
+        ]);
+
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
     }
 
-    public function pdam()
+    public function paymentBpjs(Request $request)
     {
-        return view('product.pdam');
+        $data = $request->all();
+        // dd($data);
+
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find($data['product_id']);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $product->id,
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganBPJS']),
+                    "price" => $data['totalTagihan'],
+                    "quantity" => 1,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
+        ]);
+
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'BPJS-' . time(),
+            'service' => $product->service->name,
+            'service_id' => $product->service->id,
+            'payment' => 'xendit',
+            'user_id' => $request->user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => $amount
+        ]);
+
+        return redirect($payoutsXendit['invoice_url']);
+    }
+
+
+    public function pdam(Request $request)
+    {
+        // return view('product.pdam');
+
+        $data = $request->all();
+
+        $requestMymili = $this->mymili->inquiry([
+            'no_hp' => $data['no_pelanggan'],
+            'nom' => $data['nom'],
+        ]);
+
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
+    }
+
+    public function productPdam()
+    {
+        $data = Product::where([
+            ['category', 'negara'],
+            ['name', 'PDAM'],
+            ['is_active', '=', 1],
+        ])->get();
+
+        return response()->json($data);
+    }
+
+    public function paymentPdam(Request $request)
+    {
+        $data = $request->all();
+
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find($data['productPDAM']);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $product->id,
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPDAM']),
+                    "price" => $data['totalTagihan'],
+                    "quantity" => 1,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
+        ]);
+
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'PDAM-' . time(),
+            'service' => $product->service->name,
+            'service_id' => $product->service->id,
+            'payment' => 'xendit',
+            'user_id' => $request->user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => $amount
+        ]);
+
+        return redirect($payoutsXendit['invoice_url']);
     }
 
     public function pln(Request $request)
     {
         // return view('product.pln');
-
-
         $data = $request->all();
 
         $requestMymili = $this->mymili->inquiry([
@@ -127,12 +265,134 @@ class ProductController extends Controller
     public function paymentPln(Request $request)
     {
         $data = $request->all();
-        dd($data);
+        // dd($data);
+
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find(459);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $product->id,
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelanggan']),
+                    "price" => $data['totalTagihan'],
+                    "quantity" => 1,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
+        ]);
+
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'PLN-' . time(),
+            'service' => $product->service->name,
+            'service_id' => $product->service->id,
+            'payment' => 'xendit',
+            'user_id' => $request->user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => $amount
+        ]);
+
+        return redirect($payoutsXendit['invoice_url']);
     }
 
-    public function tvInternet()
+
+    public function tvInternet(Request $request)
     {
-        return view('product.tv');
+        // return view('product.tv');
+
+        $data = $request->all();
+
+        $requestMymili = $this->mymili->inquiry([
+            'no_hp' => $data['no_pelanggan'],
+            'nom' => $data['nom'],
+        ]);
+
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
+    }
+
+    public function productTvInternet()
+    {
+        $data = Product::where([
+            ['category', '=', 'tv-internet'],
+            ['is_active', '=', 1],
+        ])->get();
+
+        return response()->json($data);
+    }
+
+    public function paymentTvInternet(Request $request)
+    {
+        $data = $request->all();
+        // dd($data);
+
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find($data['productTV']);
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $product->id,
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganTV']),
+                    "price" => $data['totalTagihan'],
+                    "quantity" => 1,
+                ]
+            ],
+            'amount' => $amount,
+            'success_redirect_url'  => route('user.profile'),
+            'failure_redirect_url' => route('user.profile'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
+            ],
+            'fees' => $fees
+        ]);
+
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'TV-INTERNET-' . time(),
+            'service' => $product->service->name,
+            'service_id' => $product->service->id,
+            'payment' => 'xendit',
+            'user_id' => $request->user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => $amount
+        ]);
+
+        return redirect($payoutsXendit['invoice_url']);
     }
 
     public function show($product)

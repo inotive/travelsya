@@ -67,13 +67,23 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/payment-pulsa-data', 'paymentPulsaData')->name('.payment.pulsa.data');
 
     Route::get('/data', 'data')->name('.data');
-    Route::get('/bpjs', 'bpjs')->name('.bpjs');
-    Route::get('/pdam', 'pdam')->name('.pdam');
+    // Route::get('/bpjs', 'bpjs')->name('.bpjs');
+    // Route::get('/pdam', 'pdam')->name('.pdam');
     // Route::get('/pln', 'pln')->name('.pln');
+
+    Route::post('/bpjs', 'bpjs')->name('.bpjs');
+    Route::get('/payment-bpjs', 'paymentBpjs')->name('.payment.bpjs');
+
     Route::post('/pln', 'pln')->name('.pln');
     Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
 
-    Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::post('/pdam', 'pdam')->name('.pdam');
+    Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
+    Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
+
+    Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
+    Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
 });
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
@@ -125,8 +135,6 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::resource('hostel', \App\Http\Controllers\Admin\HostelController::class);
                 Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
-
-
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');

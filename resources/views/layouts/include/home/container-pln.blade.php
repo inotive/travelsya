@@ -16,7 +16,7 @@
                         </label>
 
                         <input type="text" id="noPelanggan" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
+                               name="noPelanggan" placeholder="Masukan nomor pelanggan" value=""/>
                                <small class="text-danger" style="display: none" id="textAlert">No. Pelanggan harus terisi</small>
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelanggan">
@@ -54,9 +54,16 @@
 
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-danger w-100">Pembayaran</button>
-                    </div>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @endauth
 
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
+                    </div>
                 </div>
             </div>
             <!--end::Body-->
