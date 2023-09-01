@@ -49,7 +49,7 @@
                                 <!--begin::Name-->
                                 <div class="d-flex align-items-center mb-2">
                                     <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">
-                                        {{session()->get('user')['data']['name']}}
+{{--                                        {{\Illuminate\Support\Facades\Auth::user()->name}}--}}
                                     </a>
                                     <a href="#"><i class="ki-duotone ki-verify fs-1 text-primary"><span class="path1"></span><span class="path2"></span></i></a>
                                 </div>
@@ -62,11 +62,11 @@
                                     </a>
                                     <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
                                         <i class="ki-duotone ki-phone fs-4 me-1"><span class="path1"></span><span class="path2"></span></i>
-                                        {{(session()->get('user')['data']['phone']) ?: "null"}}
+{{--                                        {{(session()->get('user')['data']['phone']) ?: "null"}}--}}
                                     </a>
                                     <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
                                         <i class="ki-duotone ki-sms fs-4 me-1"><span class="path1"></span><span class="path2"></span></i>
-                                        {{session()->get('user')['data']['email']}}
+{{--                                        {{session()->get('user')['data']['email']}}--}}
                                     </a>
                                 </div>
                                 <!--end::Info-->
@@ -151,12 +151,6 @@
                                 </select>
                                 <!--end::Select2-->
                             </div>
-
-                            <!--begin::Add product-->
-                            <a href="../catalog/add-product.html" class="btn btn-primary">
-                                Add Order
-                            </a>
-                            <!--end::Add product-->
                         </div>
                         <!--end::Card toolbar-->
                     </div>
@@ -169,61 +163,53 @@
                         <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_ecommerce_sales_table">
                             <thead>
                                 <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                                    <th class="min-w-100px">Order ID</th>
-                                    <th class="text-end min-w-70px">Status</th>
-                                    <th class="text-end min-w-100px">Total</th>
-                                    <th class="text-end min-w-100px">Date Added</th>
-                                    <th class="text-end min-w-100px">Actions</th>
+                                    <th class="min-w-100px">Invoice</th>
+                                    <th class="text-end min-w-70px">Metode Pembayaran</th>
+                                    <th class="text-end min-w-70px">Status Transaksi</th>
+                                    <th class="text-end min-w-100px">Total Transaksi</th>
+                                    <th class="text-end min-w-100px">Tanggal Transaksi</th>
+                                    <th class="text-end min-w-100px">Kategori Produk</th>
+                                    <th class="text-end min-w-100px">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="fw-semibold text-gray-600">
-                                @forelse($transactions as $transaction)
+                                @foreach($transactions as $transaction)
                                 <tr>
                                     <td data-kt-ecommerce-order-filter="order_id">
-                                        <a href="{{route('user.transaction.detail',$transaction['no_inv'])}}" class="text-gray-800 text-hover-primary fw-bold">
-                                            {{$transaction['no_inv']}} </a>
+                                        <a href="{{route('user.transaction.detail',$transaction->no_inv)}}" class="text-gray-800 text-hover-primary fw-bold">
+                                            {{$transaction->no_inv}} </a>
+                                    </td>
+                                    <td class="text-end pe-0">
+                                        <span class="fw-bold">{{$transaction->payment_channel}}</span>
                                     </td>
                                     <td class="text-end pe-0" data-order="Refunded">
                                         <!--begin::Badges-->
                                         @php
                                         $badge= '';
-                                        if($transaction['status'] == 'PENDING'){
+                                        if($transaction->status == 'PENDING'){
                                         $badge = 'info';
-                                        }elseif($transaction['status'] == 'PAID'){
+                                        }elseif($transaction->status == 'PAID'){
                                         $badge = 'success';
                                         }else{
                                         $badge = 'danger';
                                         }
                                         @endphp
-                                        <div class="badge badge-light-{{$badge}}">{{$transaction['status']}}</div>
+                                        <div class="badge badge-light-{{$badge}}">{{$transaction->status}}</div>
                                         <!--end::Badges-->
                                     </td>
                                     <td class="text-end pe-0">
-                                        <span class="fw-bold">{{$transaction['detail_transaction'][0]['price']}}</span>
+                                        <span class="fw-bold">Rp. {{number_format($transaction->total)}}</span>
                                     </td>
                                     <td class="text-end" data-order="2023-03-25">
-                                        <span class="fw-bold">{{date("d/m/y",strtotime($transaction['created_at']))}}</span>
+                                        <span class="fw-bold">{{date("d M y h:m",strtotime($transaction->created_at))}}</span>
                                     </td>
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                            Actions
+                                        <a href="{{route('user.transaction.detail',$transaction->no_inv)}}" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                            Lihat Detail Transaksi
                                             <i class="ki-duotone ki-down fs-5 ms-1"></i> </a>
-                                        <!--begin::Menu-->
-                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true">
-                                            <!--begin::Menu item-->
-                                            <div class="menu-item px-3">
-                                                <a href="{{route('user.transaction.detail',$transaction['no_inv'])}}" class="menu-link px-3">
-                                                    View
-                                                </a>
-                                            </div>
-                                            <!--end::Menu item-->
-                                        </div>
-                                        <!--end::Menu-->
                                     </td>
                                 </tr>
-                                @empty
-                                <tr>Trsaction not found</tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                         <!--end::Table-->

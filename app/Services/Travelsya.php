@@ -12,7 +12,7 @@ class Travelsya
 
     public function __construct()
     {
-        $this->url = 'https://demoz4ghel.my.id/api/';
+        $this->url = 'https://servicevps.travelsya.com/api/';
     }
     public function auth()
     {

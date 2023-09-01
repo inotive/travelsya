@@ -17,26 +17,26 @@ class ManagementHotelController extends Controller
     {
         $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
 
-        return view('admin.partner.management-hotel.index', compact('hostels'));
+        return view('ekstranet.management-hotel.index', compact('hostels'));
     }
 
     public function detailHotel($id)
     {
         $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
 
-        return view('admin.partner.management-hotel.detail-hotel', compact('hostel'));
+        return view('ekstranet.management-hotel.detail-hotel', compact('hostel'));
     }
     public function settingHotel($id)
     {
         $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
 
-        return view('admin.partner.management-hotel.setting-hotel', compact('hostel'));
+        return view('ekstranet.management-hotel.setting-hotel', compact('hostel'));
     }
     public function settingRoom($id)
     {
         $hostel = Hostel::with('hostelRoom')->find($id);
 
-        return view('admin.partner.management-hotel.setting-rooms', compact('hostel'));
+        return view('ekstranet.management-hotel.setting-rooms', compact('hostel'));
     }
 
     public function settingRoomPost(Request $request)
@@ -81,7 +81,6 @@ class ManagementHotelController extends Controller
     public function settingPhoto($id)
     {
         $hostel = Hostel::with('hostelImage')->find($id);
-
-        return view('admin.partner.management-hotel.setting-photo', compact('hostel'));
+        return view('ekstranet.management-hotel.setting-photo', compact('hostel'));
     }
 }

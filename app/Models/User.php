@@ -54,6 +54,11 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function hotel()
+    {
+        return $this->hasMany(Hotel::class);
+    }
+
     public function hostel()
     {
         return $this->hasMany(Hostel::class);

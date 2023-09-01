@@ -49,6 +49,6 @@ class DashboardPartnerController extends Controller
         $card['notready'] = HostelRoom::with('hostel', function ($q) use ($id) {
             $q->where('user_id', $id);
         })->where('is_active', 0)->count();
-        return view('admin.partner.dashboard', compact('transactions', 'card'));
+        return view('ekstranet.dashboard', compact('transactions', 'card'));
     }
 }

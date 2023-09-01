@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Services\Travelsya;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -17,7 +19,7 @@ class UserController extends Controller
     public function transaction()
     {
         if (!session()->get('user'))
-            return redirect()->route('login.view');
+            return redirect()->route('login');
 
         $transaction = $this->travelsya->listTransaction();
         $transactionData = $transaction['data'];
@@ -29,14 +31,15 @@ class UserController extends Controller
     }
     public function profile()
     {
-        if (!session()->get('user'))
-            return redirect()->route('login.view');
-
-        $transaction = $this->travelsya->listTransaction();
-        $transactionData = $transaction['data'];
-        if ($transaction['meta']['code'] != 200) {
-            $transactionData = 'not found';
-        }
+//        if (empty(Auth::check()))
+//            return redirect()->route('login');
+//
+//        $transaction = $this->travelsya->listTransaction();
+//        $transactionData = $transaction['data'];
+//        if ($transaction['meta']['code'] != 200) {
+//            $transactionData = 'not found';
+//        }
+        $transactionData = DB::table('transactions')->get();
         return view('user.profile', ['transactions' => $transactionData]);
     }
 

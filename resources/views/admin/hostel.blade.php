@@ -61,7 +61,7 @@
             <!--begin::Modal body-->
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.fee.update')}}">
+                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.management-fee.update')}}">
                     @method('put')
                     @csrf
                     <input type="hidden" name="id" id="id">

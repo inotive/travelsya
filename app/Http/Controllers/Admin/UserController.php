@@ -11,8 +11,8 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::whereIn('role', [0, 1])->paginate(10);
-        return view('admin.user', compact('users'));
+        $users = User::where('role', '0')->get();
+        return view('admin.management-user.index', compact('users'));
     }
 
     public function create(CreateUserRequest $request)
@@ -40,13 +40,13 @@ class UserController extends Controller
         unset($request['password']);
         $user->update($request->all());
         toast('User has been updated', 'success');
-        return redirect()->route('admin.user');
+        return redirect()->route('admin.management-user.index');
     }
 
     public function delete($id)
     {
         User::find($id)->delete();
         toast('User has been deleted', 'danger');
-        return redirect()->route('admin.user');
+        return redirect()->route('admin.management-user.index');
     }
 }

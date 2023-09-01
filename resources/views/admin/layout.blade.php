@@ -16,7 +16,7 @@
 		<link rel="canonical" href="" />
 		<link rel="shortcut icon" href="{{asset('admin/assets/media/logos/favicon.ico')}}" />
 		<meta name="csrf-token" content="{{ csrf_token() }}">
-
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
 		<!--begin::Fonts(mandatory for all pages)-->
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 		<!--end::Fonts-->
@@ -29,6 +29,7 @@
 		<link href="{{asset('admin/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<!--end::Global Stylesheets Bundle-->
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+        <script type = “text/JavaScript” src = “https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js”></script>
 		@stack("add-style")
 
 	</head>

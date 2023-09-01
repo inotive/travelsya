@@ -39,7 +39,7 @@ route::get('/xendit/fail', [TransactionController::class, 'redirectXenditfail'])
 route::post('/send-token-password', [AuthController::class, 'sendTokenPassword']);
 route::post('/token-password-confirmation', [AuthController::class, 'tokenCheck']);
 route::post('/reset-password', [AuthController::class, 'resetPassword']);
-
+Route::post('payment', [\App\Http\Controllers\PaymentController::class, 'store']);
 //hostel
 route::get('/hostel', [HostelController::class, 'index']);
 route::get('/hostel/city', [HostelController::class, 'hostelCity']);

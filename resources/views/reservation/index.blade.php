@@ -54,7 +54,7 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
-                                    <span>Tipe Kamar : </span>
+                                    <span>Kamar Yang Dipilih : </span>
                                     <span class="mt-2 fw-bold">Kamar Standart 1</span>
                                 </div>
                                 <div class="col-12">
@@ -78,6 +78,11 @@ Anda Memesan 2 Kamar , 6 Tamu
                                     <p>Extra Bed (2 Kasur)</p>
                                     <h4>Rp. {{number_format(50000*2,0,',','.')}}</h4>
                                 </div>
+                                <hr>
+                                <div class="col-12 d-flex justify-content-between">
+                                    <p>Total</p>
+                                    <h4>Rp. {{number_format(346246,0,',','.')}}</h4>
+                                </div>
                                 <div class="col-12">
                                     <button class="btn btn-lg text-white w-100" style="background-color: #c02425">Lanjut Pembayaran</button>
                                 </div>
@@ -87,9 +92,13 @@ Anda Memesan 2 Kamar , 6 Tamu
                 </div>
             </div>
         </div>
-        <!--end::Post-->
+
+
+
     </div>
     <!--end::Container-->
+
+
 @endsection
 
 @push('add-style')

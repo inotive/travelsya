@@ -98,10 +98,12 @@
                                         <th>Invoice</th>
                                         <th>Code Booking</th>
                                         <th>Customer</th>
+                                        <th>Layanan</th>
                                         <th>Check IN</th>
                                         <th>Check Out</th>
                                         <th>Metode Pembayaran</th>
                                         <th>Grand Total</th>
+                                        <th>Fee Admin</th>
                                         <th>Status</th>
                                     </tr>
                                     </thead>
@@ -112,6 +114,7 @@
                                             <td>{{$transaction->no_inv}}</td>
                                             <td>{{$transaction->req_id}}</td>
                                             <td>{{$transaction->user->name}}</td>
+                                            <td>{{strtoupper($transaction->service)}}</td>
                                             @if(isset($transaction->bookDate) && count($transaction->bookDate) != 0)
                                             <td>{{$transaction->bookDate[0]->start}}</td>
                                             <td>{{$transaction->bookDate[0]->end}}</td>
@@ -119,9 +122,10 @@
                                             <td></td>
                                             <td></td>
                                             @endif
-                                            <td>{{$transaction->payment_channel}}</td>
-                                            <td>{{$transaction->total}}</td>
-                                            <td><span class="badge {{($transaction->status == 'PAID') ? 'badge-success' : 'badge-danger'}} ">{{($transaction->status == "PAID" ? "Lunas" : $transaction->status)}}</span></td>
+                                            <td>{{$transaction->payment_method - $transaction->payment_channel}}</td>
+                                            <td>{{number_format($transaction->total,0,',','.')}}</td>
+                                            <td>{{number_format($transaction->total * 15 / 100,0,',','.')}}</td>
+                                            <td><span class="badge {{($transaction->status == 'PAID') ? 'badge-success' : 'badge-danger'}} ">Rp. {{($transaction->status == "PAID" ? "Lunas" : $transaction->status)}}</span></td>
                                         </tr>
                                             @php
                                         if($key == 4) break;
