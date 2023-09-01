@@ -351,7 +351,7 @@ class ProductController extends Controller
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find(459);
+        $product = Product::with('service')->find($data['productTV']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
@@ -362,7 +362,7 @@ class ProductController extends Controller
             'items' => [
                 [
                     "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelanggan']),
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganTV']),
                     "price" => $data['totalTagihan'],
                     "quantity" => 1,
                 ]
@@ -382,7 +382,7 @@ class ProductController extends Controller
 
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
-            'req_id' => 'PLN-' . time(),
+            'req_id' => 'TV-INTERNET-' . time(),
             'service' => $product->service->name,
             'service_id' => $product->service->id,
             'payment' => 'xendit',

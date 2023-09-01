@@ -3,7 +3,7 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.tvInternet') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
@@ -65,12 +65,20 @@
 
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-danger w-100">Pembayaran</button>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @endauth
+
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
                     </div>
                 </div>
             </div>
             <!--end::Body-->
-        </div>
+        </form>
         <!--end::Tiles Widget 2-->
     </div>
     <!--end::Col-->
