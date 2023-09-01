@@ -8,17 +8,14 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('ads', function (Blueprint $table) {
+        Schema::create('hotel_images', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('url');
-            $table->string('image')->nullable();
-            $table->boolean('is_active');
+            $table->foreignId('hotel_id')->constrained();
+            $table->string('image');
+            $table->integer('main');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -26,11 +23,9 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('ads');
+        Schema::dropIfExists('hotel_images');
     }
 };
