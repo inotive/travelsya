@@ -111,29 +111,36 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('product.pdam') }}",
+                    // url: "{{ route('product.pdam') }}",
+                    url: "https://servicevps.travelsya.com/product/pdam",
                     data: {
-                        'no_pelanggan': noPelangganPDAM,
+                        'no_pelanggan': $('#productPDAM').val(),
                         'nom': 'CEKPLN',
                     },
-                    success: function (response) {
-                        // console.log(response)
+                    success: function (responseTagihan) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct':  459,
+                            },
+                            success: function (response) {
+                                var simulateFeePDAM = parseInt(response[0].value);
 
-                        // SIMULASI!!!
-                        var simulateAmountPDAM = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        var simulateFeePDAM = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                        var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
+                                var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
+                                var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
 
-                        $('#namaPelangganPDAM').text('Joko Susilo');
-                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
-                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
-                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
+                                $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
+                                $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
+                                $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
+                                $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
 
-                        $('#inputNamaPelangganPDAM').val('Joko Susilo');
-                        $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
-                        $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
-                        $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
-
+                                $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
+                                $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
+                                $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
+                                $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
+                            }
+                        });
                     }
                 });
             });
