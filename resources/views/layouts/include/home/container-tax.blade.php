@@ -128,23 +128,31 @@
                         'nom': 'CEKPLN',
                     },
                     success: function (response) {
-                        // console.log(response)
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct':  $('#productPajak').val(),
+                            },
+                            success: function (response) {
 
-                        // SIMULASI!!!
-                        var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        var simulateFeePajak = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                        var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
+                                var simulateFeePajak = response[0].value;
 
-                        $('#namaPelangganPajak').text('Joko Susilo');
-                        $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
-                        $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
-                        $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
+                                 // SIMULASI!!!
+                                var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
+                                var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
 
-                        $('#inputNamaPelangganPajak').val('Joko Susilo');
-                        $('#inputTotalTagihanPajak').val(simulateAmountPajak);
-                        $('#inputBiayaAdminPajak').val(simulateFeePajak);
-                        $('#inputTotalBayarPajak').val(simulateTotalPajak);
+                                $('#namaPelangganPajak').text('Joko Susilo');
+                                $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
+                                $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
+                                $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
 
+                                $('#inputNamaPelangganPajak').val('Joko Susilo');
+                                $('#inputTotalTagihanPajak').val(simulateAmountPajak);
+                                $('#inputBiayaAdminPajak').val(simulateFeePajak);
+                                $('#inputTotalBayarPajak').val(simulateTotalPajak);
+                            }
+                        });
                     }
                 });
             });

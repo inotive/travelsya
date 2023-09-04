@@ -88,6 +88,8 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::post('/tax', 'tax')->name('.tax');
     Route::get('/product-tax', 'productTax')->name('.product.tax');
     Route::get('/payment-tax', 'paymentTax')->name('.payment.tax');
+
+    Route::post('/admin-fee', 'getAdminFee')->name('.adminFee');
 });
 
 

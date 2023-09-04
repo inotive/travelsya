@@ -474,6 +474,20 @@ class ProductController extends Controller
         return redirect($payoutsXendit['invoice_url']);
     }
 
+    public function getAdminFee(Request $request)
+    {
+        $data = $request->all();
+
+        $point = new Point;
+        $userPoint = $point->cekPoint(auth()->user()->id);
+
+        $product = Product::with('service')->find($data['idProduct']);
+        $setting = new Setting();
+        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+
+        return $fees;
+    }
+
     public function show($product)
     {
 
