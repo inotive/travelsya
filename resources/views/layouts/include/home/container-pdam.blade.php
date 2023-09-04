@@ -114,7 +114,7 @@
                     // url: "{{ route('product.pdam') }}",
                     url: "https://servicevps.travelsya.com/product/pdam",
                     data: {
-                        'no_pelanggan': $('#productPDAM').val(),
+                        'no_pelanggan': noPelangganPDAM,
                         'nom': 'CEKPLN',
                     },
                     success: function (responseTagihan) {
@@ -122,7 +122,7 @@
                             type: "POST",
                             url: "{{ route('product.adminFee') }}",
                             data: {
-                                'idProduct':  459,
+                                'idProduct': s$('#productPDAM').val(),
                             },
                             success: function (response) {
                                 var simulateFeePDAM = parseInt(response[0].value);

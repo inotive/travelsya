@@ -105,17 +105,16 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES")) {
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        }
     }
 
     public function paymentBpjs(Request $request)
     {
         $data = $request->all();
-        // dd($data);
 
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
