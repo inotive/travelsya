@@ -15,14 +15,14 @@
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
-                        <input type="text" id="noPelanggan" class="form-control form-control-lg"
-                               name="noPelanggan" placeholder="Masukan nomor pelanggan" value=""/>
+                        <input type="text" id="noPelangganPLN" class="form-control form-control-lg"
+                               name="noPelangganPLN" placeholder="Masukan nomor pelanggan" value=""/>
                                <small class="text-danger" style="display: none" id="textAlert">No. Pelanggan harus terisi</small>
 
-                        <input type="hidden" name="namaPelanggan" id="inputNamaPelanggan">
-                        <input type="hidden" name="totalTagihan" id="inputTotalTagihan">
-                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdmin">
-                        <input type="hidden" name="totalBayar" id="inputTotalBayar">
+                        <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPLN">
+                        <input type="hidden" name="totalTagihan" id="inputTotalTagihanPLN">
+                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPLN">
+                        <input type="hidden" name="totalBayar" id="inputTotalBayarPLN">
                     </div>
                     <div class="col-4">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btn-periksa">Periksa</button>
@@ -36,17 +36,17 @@
                                 <tbody>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3"><span id="namaPelanggan"></span></td>
+                                    <td class="text-right" colspan="3"><span id="namaPelangganPLN"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. <span id="totalTagihan"></span></td>
+                                    <td>Rp. <span id="totalTagihanPLN"></span></td>
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. <span id="biayaAdmin"></span></td>
+                                    <td>Rp. <span id="biayaAdminPLN"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td colspan="2">Rp. <span id="totalBayar"></span></td>
+                                    <td colspan="2">Rp. <span id="totalBayarPLN"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -81,14 +81,14 @@
 @push('add-script')
     <script>
        $(document).ready(function () {
-            $('#noPelanggan').on('keyup', function () {
+            $('#noPelangganPLN').on('keyup', function () {
                 $('#textAlert').hide();
             });
 
             $('#btn-periksa').on('click', function () {
-                var noPelanggan = $('#noPelanggan').val();
+                var noPelangganPLN = $('#noPelangganPLN').val();
 
-                if(noPelanggan == '') {
+                if(noPelangganPLN == '') {
                     $('#textAlert').show();
                     return false;
                 }
@@ -96,28 +96,38 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pln') }}",
+                    // url: "https://servicevps.travelsya.com/product/pln",
                     data: {
-                        'no_pelanggan': noPelanggan,
+                        'no_pelanggan': noPelangganPLN,
                         'nom': 'CEKPLN',
                     },
-                    success: function (response) {
-                        // console.log(response)
+                    success: function (responseTagihan) {
+                        console.log(responseTagihan);
 
-                        // SIMULASI!!!
-                        var simulateAmount = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        var simulateFee = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                        var simulateTotal = simulateAmount + simulateFee;
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct':  459,
+                            },
+                            success: function (response) {
 
-                        $('#namaPelanggan').text('Joko Susilo');
-                        $('#totalTagihan').text(new Intl.NumberFormat('id-ID').format(simulateAmount));
-                        $('#biayaAdmin').text(new Intl.NumberFormat('id-ID').format(simulateFee));
-                        $('#totalBayar').text(new Intl.NumberFormat('id-ID').format(simulateTotal));
+                                var simulateFeePLN = parseInt(response[0].value);
 
-                        $('#inputNamaPelanggan').val('Joko Susilo');
-                        $('#inputTotalTagihan').val(simulateAmount);
-                        $('#inputBiayaAdmin').val(simulateFee);
-                        $('#inputTotalBayar').val(simulateTotal);
+                                var simulateAmountPLN = parseInt(responseTagihan.data.tagihan);
+                                var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
 
+                                $('#namaPelangganPLN').text(responseTagihan.data.nama_pelanggan);
+                                $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
+                                $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
+                                $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
+
+                                $('#inputNamaPelangganPLN').val(responseTagihan.data.no_pelanggan);
+                                $('#inputTotalTagihanPLN').val(simulateAmountPLN);
+                                $('#inputBiayaAdminPLN').val(simulateFeePLN);
+                                $('#inputTotalBayarPLN').val(simulateTotalPLN);
+                            }
+                        });
                     }
                 });
             });

@@ -259,6 +259,25 @@ class ProductController extends Controller
         // } else {
         //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
         // }
+
+        $data = [
+            "meta" => [
+                "code" => 200,
+                "status" => "success",
+                "message" => "Inquiry loaded"
+            ],
+            "data" => [
+                "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
+                "tagihan" => "82636",
+                "no_pelanggan" => "232010890459",
+                "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
+                "nama_pelanggan" => "ERNA SARI",
+                "bulan_tahun_tagihan" => "Jun23",
+                "pemakaian" => "39212-3924"
+            ],
+        ];
+
+        return response()->json($data);
     }
 
     public function paymentPln(Request $request)
@@ -280,7 +299,7 @@ class ProductController extends Controller
             'items' => [
                 [
                     "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelanggan']),
+                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
                     "price" => $data['totalTagihan'],
                     "quantity" => 1,
                 ]
@@ -295,8 +314,10 @@ class ProductController extends Controller
                 'email' => $request->user()->email,
                 'mobile_number' => $request->user()->phone ?: "somenumber",
             ],
-            'fees' => $fees
+            // 'fees' => $fees
         ]);
+
+        // dd($payoutsXendit);
 
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
