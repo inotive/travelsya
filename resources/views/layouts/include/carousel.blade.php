@@ -26,10 +26,13 @@
 @endpush
 
 <div class="desktop carousel">
-  <div class="slide">
-    <img src="{{asset('assets/media/banner-1.jpg')}}" class="mw-100 rounded-4" />
-  </div>
-  <div class="slide">
+    @foreach ($listAds as $ads)
+        <div class="slide">
+            <img src="{{ asset('assets/'. $ads->image) }}" class="mw-100 rounded-4" />
+        </div>
+    @endforeach
+
+  {{-- <div class="slide">
     <img src="{{asset('assets/media/banner-2.jpg')}}" class="mw-100 rounded-4" />
   </div>
   <div class="slide">
@@ -37,11 +40,16 @@
   </div>
   <div class="slide">
     <img src="{{asset('assets/media/banner-2.jpg')}}" class="mw-100 rounded-4" />
-  </div>
+  </div> --}}
 </div>
 
 <div class="mobile carousel">
-  <div class="slide">
+    @foreach ($listAds as $ads)
+        <div class="slide">
+            <img src="{{ asset('assets/'. $ads->image) }}" class="mw-100 rounded-4" />
+        </div>
+    @endforeach
+  {{-- <div class="slide">
     <img src="{{asset('assets/media/banner-1.jpg')}}" class="mw-100 rounded-4" />
   </div>
   <div class="slide">
@@ -52,7 +60,7 @@
   </div>
   <div class="slide">
     <img src="{{asset('assets/media/banner-2.jpg')}}" class="mw-100 rounded-4" />
-  </div>
+  </div> --}}
 </div>
 
 @push('add-script')
