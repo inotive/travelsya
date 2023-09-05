@@ -325,11 +325,11 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES")) {
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        }
     }
 
     public function productTvInternet()

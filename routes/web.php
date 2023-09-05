@@ -41,6 +41,7 @@ Route::get('/welcome', function () {
 })->name('welcome');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 
 // Route::get('/', [AuthController::class, 'login'])->name('home');

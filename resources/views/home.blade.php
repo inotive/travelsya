@@ -297,47 +297,58 @@
             },
         ];
 
-        var dummyFavoriteHotel = [{
-                id: 0,
-                label: "Hotel Mulia Jakarta",
-                city: "Jakarta",
-                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-                price: 1300000,
-                realPrice: 825000,
-                rate: 3,
-                totalRate: 12,
+        // var dummyFavoriteHotel = [
+        //     {
+        //         id: 0,
+        //         label: "Hotel Mulia Jakarta",
+        //         city: "Jakarta",
+        //         image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+        //         price: 1300000,
+        //         realPrice: 825000,
+        //         rate: 3,
+        //         totalRate: 12,
+        //     },
+        //     {
+        //         id: 1,
+        //         label: "Hotel Mulia Jakarta",
+        //         city: "Jakarta",
+        //         image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+        //         price: 1300000,
+        //         realPrice: 825000,
+        //         rate: 3,
+        //         totalRate: 12,
+        //     },
+        //     {
+        //         id: 2,
+        //         label: "Hotel Mulia Jakarta",
+        //         city: "Jakarta",
+        //         image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+        //         price: 1300000,
+        //         realPrice: 825000,
+        //         rate: 3,
+        //         totalRate: 12,
+        //     },
+        //     {
+        //         id: 3,
+        //         label: "Hotel Mulia Jakarta",
+        //         city: "Jakarta",
+        //         image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
+        //         price: 1300000,
+        //         realPrice: 825000,
+        //         rate: 3,
+        //         totalRate: 12,
+        //     },
+        // ];
+
+        var dummyFavoriteHotel;
+        $.ajax({
+            url: "{{ route('favorite.hotel') }}",
+            type: "GET",
+            success: function(responseHotel) {
+               dummyFavoriteHotel = responseHotel
             },
-            {
-                id: 1,
-                label: "Hotel Mulia Jakarta",
-                city: "Jakarta",
-                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-                price: 1300000,
-                realPrice: 825000,
-                rate: 3,
-                totalRate: 12,
-            },
-            {
-                id: 2,
-                label: "Hotel Mulia Jakarta",
-                city: "Jakarta",
-                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-                price: 1300000,
-                realPrice: 825000,
-                rate: 3,
-                totalRate: 12,
-            },
-            {
-                id: 3,
-                label: "Hotel Mulia Jakarta",
-                city: "Jakarta",
-                image: "https://www.kayak.co.id/rimg/himg/ec/0f/60/ice-122686-64795234_3XL-516024.jpg",
-                price: 1300000,
-                realPrice: 825000,
-                rate: 3,
-                totalRate: 12,
-            },
-        ];
+        });
+
 
         var dummyPartnerHotel = [{
             id: 0,
@@ -395,7 +406,7 @@
             email: "-",
             telp: "-",
             website: "-"
-        }, ]
+        },]
 
         var today = new Date();
         $(".js-daterangepicker").daterangepicker({
