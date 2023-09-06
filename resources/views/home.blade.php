@@ -6,7 +6,7 @@
     <!-- end::Menubar -->
 
     @include('layouts.include.home.favorite-hotel')
-    @include('layouts.include.home.partner-hotel')
+    {{-- @include('layouts.include.home.partner-hotel') --}}
     @include('layouts.include.home.explore-city')
 @endsection
 
