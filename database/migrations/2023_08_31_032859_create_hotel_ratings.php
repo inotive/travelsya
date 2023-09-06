@@ -8,18 +8,16 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('history_points', function (Blueprint $table) {
+        Schema::create('hotel_ratings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
             $table->foreignId('transaction_id')->constrained();
-            $table->string('flow');
-            $table->integer("point");
-            $table->date("date");
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('hotel_id')->constrained();
+            $table->integer('rate');
+            $table->string('comment')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -27,11 +25,9 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('history_points');
+        Schema::dropIfExists('hotel_ratings');
     }
 };
