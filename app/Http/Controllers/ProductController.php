@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseFormatter;
+use App\Models\DetailTransaction;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Services\Mymili;
@@ -86,6 +87,19 @@ class ProductController extends Controller
             'link' => $payoutsXendit['invoice_url'],
             'total' => $amount
         ]);
+
+        DetailTransaction::create([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $data['product'],
+            'price' => $amount,
+            'qty' => 1,
+            'no_hp' => $data['notelp'],
+            'status' => "PROCESS"
+        ]);
+
+        //deductpoint
+        $point = new Point;
+        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }

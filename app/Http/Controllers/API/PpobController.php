@@ -84,6 +84,7 @@ class PpobController extends Controller
                 'detail.*.name' => 'required',
                 'detail.*.qty' => 'required',
             ]);
+
             if ($validator->fails()) {
                 return ResponseFormatter::error([
                     'response' => $validator->errors(),
@@ -174,6 +175,7 @@ class PpobController extends Controller
                         $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
                     }
                 });
+
                 return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
             }
 
