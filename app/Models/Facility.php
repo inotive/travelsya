@@ -11,4 +11,9 @@ class Facility extends Model
     use HasFactory, SoftDeletes;
 
     protected $guarded = [];
+
+    public function facility()
+    {
+        return $this->belongsToMany(HotelRoom::class, 'hotel_room_facility');
+    }
 }
