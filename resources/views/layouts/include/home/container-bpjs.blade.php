@@ -100,8 +100,8 @@
 
             $.ajax({
                 type: "POST",
-                // url: "{{ route('product.bpjs') }}",
-                url: "https://servicevps.travelsya.com/product/bpjs",
+                url: "{{ route('product.bpjs') }}",
+                // url: "https://servicevps.travelsya.com/product/bpjs",
                 data: {
                     'no_pelanggan': noPelangganBPJS,
                     'nom': 'CEKBPJSKS',

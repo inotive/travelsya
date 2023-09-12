@@ -119,11 +119,24 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], "SUKSES")) {
-            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        } else {
-            return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        }
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
+
+        return [
+            "meta" => [
+                "code" => 200,
+                "status" => "success",
+                "message" => "Inquiry loaded"
+            ],
+            "data" => [
+                "status" => "SUKSES!",
+                "nama_pelanggan" => "GUSTI BAGUS WAHYU SAPUTRA",
+                "tagihan" => "152500"
+            ]
+        ];
     }
 
     public function paymentBpjs(Request $request)
@@ -173,6 +186,19 @@ class ProductController extends Controller
             'link' => $payoutsXendit['invoice_url'],
             'total' => $amount
         ]);
+
+        DetailTransaction::create([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $data['product_id'],
+            'price' => $amount,
+            'qty' => 1,
+            'no_hp' => $request->user()->phone,
+            'status' => "PROCESS"
+        ]);
+
+        //deductpoint
+        $point = new Point;
+        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -396,11 +422,24 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], "SUKSES")) {
-            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        } else {
-            return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        }
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
+
+        return [
+            "meta" => [
+                "code" => 200,
+                "status" => "success",
+                "message" => "Inquiry loaded"
+            ],
+            "data" => [
+                "status" => "TRX CEKTELKOM 02189493022 SUKSES! SN=02189493022",
+                "nama_pelanggan" => "AGIL TRIYAS MOKO",
+                "tagihan" => "305250"
+            ],
+        ];
     }
 
     public function productTvInternet()
@@ -461,6 +500,19 @@ class ProductController extends Controller
             'link' => $payoutsXendit['invoice_url'],
             'total' => $amount
         ]);
+
+        DetailTransaction::create([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $data['productTV'],
+            'price' => $amount,
+            'qty' => 1,
+            'no_hp' => $request->user()->phone,
+            'status' => "PROCESS"
+        ]);
+
+        //deductpoint
+        $point = new Point;
+        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }
