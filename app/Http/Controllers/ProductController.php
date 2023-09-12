@@ -595,6 +595,19 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
+        DetailTransaction::create([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $data['productPajak'],
+            'price' => $amount,
+            'qty' => 1,
+            'no_hp' => $request->user()->phone,
+            'status' => "PROCESS"
+        ]);
+
+        //deductpoint
+        $point = new Point;
+        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+
         return redirect($payoutsXendit['invoice_url']);
     }
 
