@@ -267,11 +267,28 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES")) {
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        }
+
+        // return [
+        //     "meta" => [
+        //         "code" => 200,
+        //         "status" => "success",
+        //         "message" => "Inquiry loaded"
+        //     ],
+        //     "data" => [
+        //         "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
+        //         "tagihan" => "82636",
+        //         "no_pelanggan" => "232010890459",
+        //         "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
+        //         "nama_pelanggan" => "ERNA SARI",
+        //         "bulan_tahun_tagihan" => "Jun23",
+        //         "pemakaian" => "39212-3924"
+        //     ],
+        // ];
     }
 
     public function paymentPln(Request $request)
@@ -324,6 +341,19 @@ class ProductController extends Controller
             'link' => $payoutsXendit['invoice_url'],
             'total' => $amount
         ]);
+
+        DetailTransaction::create([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $product->id,
+            'price' => $amount,
+            'qty' => 1,
+            'no_hp' => $request->user()->phone,
+            'status' => "PROCESS"
+        ]);
+
+        //deductpoint
+        $point = new Point;
+        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }

@@ -101,8 +101,8 @@
                         'no_pelanggan': noPelangganPLN,
                         'nom': 'CEKPLN',
                     },
-                    success: function (responseTagihan) {
-                        console.log(responseTagihan);
+                    success: function (response) {
+                        console.log(response);
 
                         $.ajax({
                             type: "POST",
@@ -110,19 +110,19 @@
                             data: {
                                 'idProduct':  459,
                             },
-                            success: function (response) {
+                            success: function (responseTagihan) {
 
-                                var simulateFeePLN = parseInt(response[0].value);
+                                var simulateFeePLN = parseInt(responseTagihan[0].value);
 
-                                var simulateAmountPLN = parseInt(responseTagihan.data.tagihan);
+                                var simulateAmountPLN = parseInt(response.data.tagihan);
                                 var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
 
-                                $('#namaPelangganPLN').text(responseTagihan.data.nama_pelanggan);
+                                $('#namaPelangganPLN').text(response.data.nama_pelanggan);
                                 $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
                                 $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
                                 $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
 
-                                $('#inputNamaPelangganPLN').val(responseTagihan.data.no_pelanggan);
+                                $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
                                 $('#inputTotalTagihanPLN').val(simulateAmountPLN);
                                 $('#inputBiayaAdminPLN').val(simulateFeePLN);
                                 $('#inputTotalBayarPLN').val(simulateTotalPLN);
