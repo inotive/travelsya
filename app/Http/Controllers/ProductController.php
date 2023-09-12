@@ -188,11 +188,24 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], "SUKSES")) {
-            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        } else {
-            return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        }
+        // if (str_contains($requestMymili['status'], "SUKSES")) {
+        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        // } else {
+        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+        // }
+
+        return [
+            "meta" => [
+                "code" => 200,
+                "status" => "success",
+                "message" => "Inquiry loaded"
+            ],
+            "data" => [
+                "status" => "SUKSES!",
+                "nama_pelanggan" => "ERIKH",
+                "tagihan" => "346034"
+            ]
+        ];
     }
 
     public function productPdam()
@@ -253,6 +266,20 @@ class ProductController extends Controller
             'link' => $payoutsXendit['invoice_url'],
             'total' => $amount
         ]);
+
+        DetailTransaction::create([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $data['productPDAM'],
+            'price' => $amount,
+            'qty' => 1,
+            'no_hp' => $request->user()->phone,
+            'status' => "PROCESS"
+        ]);
+
+        //deductpoint
+        $point = new Point;
+        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+
 
         return redirect($payoutsXendit['invoice_url']);
     }
