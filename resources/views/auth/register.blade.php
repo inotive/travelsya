@@ -9,21 +9,9 @@
         <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-475px">
             <!--begin::Wrapper-->
             <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
-{{--                @if($errors->all())--}}
-{{--                <div class="font-medium text-red-600">--}}
-{{--                    Whoops! Something went wrong.--}}
-{{--                </div>--}}
-{{--                @endif--}}
-{{--                <ul class="mt-3 list-disc list-inside text-sm text-red-600">--}}
-{{--                    @foreach ($errors->all() as $error)--}}
-{{--                    <li>{{ $error }}</li>--}}
-{{--                    @endforeach--}}
-{{--                    @if($message)--}}
-{{--                    <li>{{ $message }}</li>--}}
-{{--                    @endif--}}
-{{--                </ul>--}}
+
                 <!--begin::Form-->
-                <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form" data-kt-redirect-url="{{route('login')}}" action="{{route('register')}}">
+                <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('register')}}">
                     <!--begin::Heading-->
                     @csrf
                     <div class="text-center mb-11">
@@ -50,9 +38,10 @@
 
                     <!--begin::Input group--->
                     <div class="fv-row mb-8">
-                        <label for="" class="form-label">Email</label>
+
+                        <label for="email" class="form-label">Email</label>
                         <!--begin::Email-->
-                        <input type="text" placeholder="Masukan email" name="email" autocomplete="off" class="form-control form-control-lg p-5 bg-transparent @error('email') is-invalid @enderror" />
+                        <input type="text" placeholder="Masukan email anda" name="email" autocomplete="off" class="form-control form-control-lg p-5 bg-transparent  @error('email') is-invalid @enderror" />
                         <!--end::Email-->
                         @error('email')
                         <span class="invalid-feedback" role="alert">
@@ -63,9 +52,10 @@
 
                     <!--end::Input group--->
                     <div class="fv-row mb-3">
-                        <label for="" class="form-label">Password</label>
+
+                        <label for="email" class="form-label">Password</label>
                         <!--begin::Password-->
-                        <input type="password" placeholder="Password" name="password" autocomplete="off" class="form-control form-control-lg p-5 bg-transparent @error('password') is-invalid @enderror" />
+                        <input type="password" placeholder="Masukan password anda" name="password" autocomplete="off" class="form-control form-control-lg p-5 bg-transparent @error('password') is-invalid @enderror" />
                         <!--end::Password-->
                         @error('password')
                         <span class="invalid-feedback" role="alert">

@@ -119,7 +119,7 @@ class HotelController extends Controller
         $data['listHotel'] = Hotel::all();
 
         // dd($hotels);
-
+        // dd($hotelPrices);
         return view('hotel.list-hotel', $data);
     }
 
