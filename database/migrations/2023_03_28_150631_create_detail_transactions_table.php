@@ -18,10 +18,12 @@ return new class extends Migration
             $table->foreignId('transaction_id')->constrained();
             $table->foreignId('product_id')->nullable()->constrained();
             $table->foreignId('hostel_room_id')->nullable()->constrained(table: 'hostel_rooms');
+            $table->foreignId('hotel_room_id')->nullable()->constrained(table: 'hotel_rooms');
             $table->integer('qty');
             $table->integer('price');
             $table->string('no_hp')->nullable();
             $table->string('status')->nullable();
+            $table->string('message')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

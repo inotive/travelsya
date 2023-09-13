@@ -18,22 +18,23 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('service_id')->constrained();
-            $table->string('name')->nullable();
-            $table->string('description')->nullable();
-            $table->integer('price')->nullable();
-            $table->string('city')->nullable();
-            $table->text('address')->nullable();
-            $table->text('facilities')->nullable();
-            $table->text('lat')->nullable();
-            $table->text('lon')->nullable();
-            $table->string('category')->nullable(); //harian|bulanan
-            $table->string('checkin')->nullable();
-            $table->string('checkout')->nullable();
+            $table->string('name');
+            $table->string('description');
+            $table->string('city');
+            $table->string('kecamatan')->nullable();
+            $table->text('address');
+            $table->text('facilities');
+            $table->string('lat');
+            $table->string('lon');
+            $table->string('category'); //harian|bulanan
+            $table->string('checkin');
+            $table->string('checkout');
+            $table->string('phone')->nullable();
             $table->string('email')->nullable();
-            $table->string('contact')->nullable();
             $table->string('website')->nullable();
-            $table->string('star')->nullable();
-            $table->boolean('is_active');
+            $table->integer('star');
+            $table->string('property')->nullable();
+            $table->tinyInteger('is_active');
             $table->softDeletes();
             $table->timestamps();
         });
