@@ -3,7 +3,7 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pln') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
@@ -15,13 +15,17 @@
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
-                        <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
-                        <!--end::Input-->
+                        <input type="text" id="noPelangganPLN" class="form-control form-control-lg"
+                               name="noPelangganPLN" placeholder="Masukan nomor pelanggan" value=""/>
+                               <small class="text-danger" style="display: none" id="textAlert">No. Pelanggan harus terisi</small>
+
+                        <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPLN">
+                        <input type="hidden" name="totalTagihan" id="inputTotalTagihanPLN">
+                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPLN">
+                        <input type="hidden" name="totalBayar" id="inputTotalBayarPLN">
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-danger mt-8 w-100">Periksa</button>
+                        <button type="button" class="btn btn-danger mt-8 w-100" id="btn-periksa">Periksa</button>
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -32,17 +36,17 @@
                                 <tbody>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3">Gusti Bagus Wahyu Saputra</td>
+                                    <td class="text-right" colspan="3"><span id="namaPelangganPLN"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td>Rp. <span id="totalTagihanPLN"></span></td>
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td>Rp. <span id="biayaAdminPLN"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td colspan="2">Rp. {{number_format(1312312,0,',','.')}}</td>
+                                    <td colspan="2">Rp. <span id="totalBayarPLN"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -50,13 +54,20 @@
 
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-danger w-100">Pembayaran</button>
-                    </div>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @endauth
 
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
+                    </div>
                 </div>
             </div>
             <!--end::Body-->
-        </div>
+        </form>
         <!--end::Tiles Widget 2-->
 
     </div>
@@ -64,11 +75,65 @@
 </div>
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script> --}}
 @endpush
 
 @push('add-script')
     <script>
+       $(document).ready(function () {
+            $('#noPelangganPLN').on('keyup', function () {
+                $('#textAlert').hide();
+            });
+
+            $('#btn-periksa').on('click', function () {
+                var noPelangganPLN = $('#noPelangganPLN').val();
+
+                if(noPelangganPLN == '') {
+                    $('#textAlert').show();
+                    return false;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('product.pln') }}",
+                    // url: "https://servicevps.travelsya.com/product/pln",
+                    data: {
+                        'no_pelanggan': noPelangganPLN,
+                        'nom': 'CEKPLN',
+                    },
+                    success: function (response) {
+                        console.log(response);
+
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct':  459,
+                            },
+                            success: function (responseTagihan) {
+
+                                var simulateFeePLN = parseInt(responseTagihan[0].value);
+
+                                var simulateAmountPLN = parseInt(response.data.tagihan);
+                                var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
+
+                                $('#namaPelangganPLN').text(response.data.nama_pelanggan);
+                                $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
+                                $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
+                                $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
+
+                                $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
+                                $('#inputTotalTagihanPLN').val(simulateAmountPLN);
+                                $('#inputBiayaAdminPLN').val(simulateFeePLN);
+                                $('#inputTotalBayarPLN').val(simulateTotalPLN);
+                            }
+                        });
+                    }
+                });
+            });
+       });
+    </script>
+    {{-- <script>
         $(document).ready(function() {
             $('#notelp').on('keyup', function(e) {
 
@@ -116,5 +181,5 @@
             })
 
         })
-    </script>
+    </script> --}}
 @endpush

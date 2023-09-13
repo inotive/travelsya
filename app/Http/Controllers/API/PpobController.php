@@ -84,6 +84,7 @@ class PpobController extends Controller
                 'detail.*.name' => 'required',
                 'detail.*.qty' => 'required',
             ]);
+
             if ($validator->fails()) {
                 return ResponseFormatter::error([
                     'response' => $validator->errors(),
@@ -94,6 +95,7 @@ class PpobController extends Controller
             $data['user_id'] = $request->user()->id;
             $product = Product::with('service')->find($data['detail'][0]['product_id']);
             $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+
             if ($data['inquiry'] == 1) {
                 $inquiry = $this->mymili->inquiry([
                     'no_hp' => $data['detail'][0]['no_hp'],
@@ -174,6 +176,7 @@ class PpobController extends Controller
                         $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
                     }
                 });
+
                 return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
             }
 
