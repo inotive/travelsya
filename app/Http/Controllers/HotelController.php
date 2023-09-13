@@ -401,4 +401,51 @@ class HotelController extends Controller
 
     //     return view('hotel.index', ['hotels' => $hotels['data'], 'cities' => $cities['data'], 'params' => $params]);
     // }
+
+    public function favoriteHotel()
+    {
+        $hotels = Hotel::with('hotelRoom', 'hotelRating')->get();
+
+        // Hitung total rating untuk setiap hotel dan simpan dalam array asosiatif
+        $hotelRatings = [];
+
+        foreach ($hotels as $ratingHotel) {
+            $totalRating = $ratingHotel->hotelRating->sum('rate');
+            $hotelRatings[$ratingHotel->id] = $totalRating;
+        }
+
+        // Urutkan hotel berdasarkan jumlah total rating terbesar
+        arsort($hotelRatings);
+
+        // Ambil ID hotel yang diurutkan
+        $sortedHotelIds = array_keys($hotelRatings);
+
+        // Ambil data hotel dengan urutan rating terbesar
+        $favoriteHotels = Hotel::with('hotelRoom', 'hotelRating')
+            ->whereIn('id', $sortedHotelIds)
+            ->limit(4)
+            ->get();
+
+        // Inisialisasi array kosong untuk data hotel yang diformat
+        $formattedHotels = [];
+
+        // // Loop melalui setiap hotel
+        foreach ($favoriteHotels as $hotel) {
+            $formattedHotel = [
+                'id' => $hotel->id,
+                'label' => $hotel->name,
+                'city' => $hotel->city,
+                'image' => $hotel->hotelRoom[0]->image_1, // Misalnya, mengambil gambar dari kamar pertama
+                'price' => number_format($hotel->hotelRoom[0]->price, 0, ',', '.'), // Misalnya, mengambil harga dari kamar pertama
+                'realPrice' => number_format($hotel->hotelRoom[0]->sellingprice, 0, ',', '.'), // Misalnya, mengambil harga jual dari kamar pertama
+                'rate' => $hotel->star,
+                'totalRate' => $hotel->hotelRating->count(),
+            ];
+
+            // Tambahkan data hotel yang diformat ke dalam array formattedHotels
+            $formattedHotels[] = $formattedHotel;
+        }
+
+        return response()->json($formattedHotels);
+    }
 }

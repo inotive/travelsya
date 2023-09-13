@@ -41,6 +41,7 @@ Route::get('/welcome', function () {
 })->name('welcome');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 
 // Route::get('/', [AuthController::class, 'login'])->name('home');
@@ -84,7 +85,15 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
     Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
     Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
+
+    Route::post('/tax', 'tax')->name('.tax');
+    Route::get('/product-tax', 'productTax')->name('.product.tax');
+    Route::get('/payment-tax', 'paymentTax')->name('.payment.tax');
+
+    Route::post('/admin-fee', 'getAdminFee')->name('.adminFee');
 });
+
+
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
     Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
