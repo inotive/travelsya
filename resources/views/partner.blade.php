@@ -1,4 +1,4 @@
-@extends('layouts.web') 
+@extends('layouts.web')
 
 @section('content-web')
 
@@ -10,7 +10,7 @@
           <p>Partner Hotel Travelsya</p>
           <span class="fs-1 fs-semibold">
             Untuk memastikan kenyamanan saat menginap,
-            <br>Kami melakukan kerja sama dengan berbagai hotel 
+            <br>Kami melakukan kerja sama dengan berbagai hotel
             <br>di seluruh indonesia
           </span>
         </div>
@@ -22,13 +22,42 @@
     </div>
   </div>
 
-  <div class="row py-15" x-data>
+  	<div class="row py-15" x-data>
+		@foreach ($partners as $partner)
+		<div class="col-6 col-md-2">
+			<div class="card-xl-stretch me-md-6">
+				<a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
+					<div
+					class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+					style="`background-image: url(${data.image})`"
+					></div>
+					<div class="overlay-layer card-rounded bg-dark bg-opacity-25">
+					<i class="bi bi-eye-fill fs-2x text-white"></i>
+					</div>
+				</a>
+				<div class="mt-5">
+					<div class="h-40px">
+                        <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-baseå">
+                            {{ $partner->name }}
+                        </a>
+					</div>
+					<p class="fs-6 text-gray-600 text-dark mt-3">-</p>
+					<p class="fs-7 text-gray-800 text-dark mt-3 mb-0">Telp: {{ $partner->phone }}</p>
+					<p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $partner->email }}</p>
+					<p class="fs-7 text-gray-800 text-dark mb-0">Website: -</p>
+				</div>
+			</div>
+		</div>
+		@endforeach
+  	</div>
+
+  {{-- <div class="row py-15" x-data>
     <template x-for="data in $store.partnerhotel.data">
       <div class=" col-6 col-md-2">
         <div class="card-xl-stretch me-md-6">
           <a x-bind:href="data.image" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
-            <div 
-              class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px" 
+            <div
+              class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
               x-bind:style="`background-image: url(${data.image})`"
             ></div>
             <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
@@ -45,10 +74,9 @@
             <p class="fs-7 text-gray-800 text-dark mb-0">Website: <span x-html="data.website"></span></p>
           </div>
         </div>
-  
       </div>
     </template>
-  </div>  
+  </div> --}}
 </div>
 
 
@@ -115,7 +143,7 @@
 			website: "-"
 		},
 	]
-	
+
   document.addEventListener("alpine:init", () => {
 		Alpine.store("partnerhotel", {
 			data: dummyPartnerHotel,

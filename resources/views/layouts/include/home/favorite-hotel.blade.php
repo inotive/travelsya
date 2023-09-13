@@ -21,8 +21,8 @@
           <div class="card-body p-5">
             <span class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1" x-html="data.label"></span>
             <span class="text-gray-400 fw-semibold d-block fs-6 mt-1" x-html="data.city"></span>
-            <span class="text-gray-400 fw-semibold d-block mt-5">Mulai dari <s x-html="data.price"></s></span>
-            <span class="text-danger text-end fw-bold fs-1 mt-2">Rp. {{number_format(412312,0,',','.')}}</span>
+            <span class="text-gray-400 fw-semibold d-block mt-5">Mulai dari <s x-html="data.realPrice"></s></span>
+            <span class="text-danger text-end fw-bold fs-1 mt-2">Rp. <span x-html="data.price"></span></span>
             <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
               <span class="fa fa-star fs-4" style="color: red;"></span>
               <span x-html="data.rate"></span>
