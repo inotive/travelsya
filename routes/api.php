@@ -93,6 +93,7 @@ Route::middleware('auth:sanctum')->group(function () {
         route::post('/hostel/{id}/destroy', [HostelController::class, 'destroy']);
     });
 });
+
 //setting
 route::get('/saldo', [SettingController::class, 'getSaldo']);
 route::get('/service', [SettingController::class, 'getService']);

@@ -3,7 +3,7 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.bpjs') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
@@ -16,22 +16,27 @@
                             <span class="required">Produk</span>
                         </label>
 
-                        <select name="" id="" class="form-control form-control-lg">
-                            <option value="">BPJS Kesehatan</option>
+                        <select name="product_id" id="productBPJS" class="form-control form-control-lg">
+                            <option value="362" selected>BPJS Kesehatan</option>
                         </select>
                     </div>
                     <div class="col-xl-8">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Nomor Pelanggan</span>
+                            <span class="required">Nomor BPJS</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
+                        <input type="text" id="noPelangganBPJS" class="form-control form-control-lg" name="noPelangganBPJS" placeholder="Masukan nomor BPJS" value=""/>
+                        <small class="text-danger textAlert" style="display: none">No. BPJS harus terisi</small>
                         <!--end::Input-->
+
+                        <input type="hidden" name="namaPelanggan" id="inputNamaPelangganBPJS">
+                        <input type="hidden" name="totalTagihan" id="inputTotalTagihanBPJS">
+                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdminBPJS">
+                        <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
                     <div class="col-4">
-                        <button class="btn btn-danger mt-8 w-100">Periksa</button>
+                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -39,36 +44,34 @@
                         </label>
                         <div class="table-responsive">
                             <table class="table table-bordered">
-                                <thead>
-                                </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3">Rp. {{number_format(1312312,0,',','.')}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
-                                </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                        <td class="text-right" colspan="3"><span id="namaPelangganBPJS"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                        <td>Rp. <span id="totalTagihanBPJS"></span></td>
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                        <td>Rp. <span id="biayaAdminBPJS"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                        <td colspan="2">Rp. <span id="totalBayarBPJS"></span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-danger w-100">Pembayaran</button>
+                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
                     </div>
 
                 </div>
             </div>
             <!--end::Body-->
-        </div>
+        </form>
         <!--end::Tiles Widget 2-->
 
     </div>
@@ -80,7 +83,60 @@
 @endpush
 
 @push('add-script')
-    <script>
+<script>
+    $(document).ready(function () {
+
+        $('#noPelangganBPJS').on('keyup', function () {
+            $('.textAlert').hide();
+        });
+
+        $('#btnPeriksaBPJS').on('click', function () {
+            var noPelangganBPJS = $('#noPelangganBPJS').val();
+
+            if(noPelangganBPJS == '') {
+                $('.textAlert').show();
+                return false;
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('product.bpjs') }}",
+                // url: "https://servicevps.travelsya.com/product/bpjs",
+                data: {
+                    'no_pelanggan': noPelangganBPJS,
+                    'nom': 'CEKBPJSKS',
+                },
+                success: function (responseTagihan) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('product.adminFee') }}",
+                        data: {
+                            'idProduct':  362,
+                        },
+                        success: function (response) {
+                            var simulateFeeBPJS = parseInt(response[0].value);
+
+                            var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
+                            var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
+
+                            $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
+                            $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
+                            $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
+                            $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
+
+                            $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
+                            $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
+                            $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
+                            $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+    {{-- <script>
         $(document).ready(function() {
             $('#notelp').on('keyup', function(e) {
 
@@ -128,5 +184,5 @@
             })
 
         })
-    </script>
+    </script> --}}
 @endpush

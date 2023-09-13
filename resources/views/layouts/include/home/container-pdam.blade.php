@@ -3,26 +3,37 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
-
+        <form action="{{ route('product.payment.pdam') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-8">
+                    <div class="col-xl-4">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor pelanggan" value=""/>
+                        <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
+                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value=""/>
+                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
+
+                        <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPDAM">
+                        <input type="hidden" name="totalTagihan" id="inputTotalTagihanPDAM">
+                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPDAM">
+                        <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
-                    <div class="col-4">
-                        <button class="btn btn-danger mt-8 w-100">Periksa</button>
+                    <div class="col-xl-4">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-4">
+                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -30,36 +41,34 @@
                         </label>
                         <div class="table-responsive">
                             <table class="table table-bordered">
-                                <thead>
-                                </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3">Rp. {{number_format(1312312,0,',','.')}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
-                                </tr>
-                                <tr>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td>Rp. {{number_format(1312312,0,',','.')}}</td>
-                                </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                        <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                        <td>Rp. <span id="totalTagihanPDAM"></span></td>
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                        <td>Rp. <span id="biayaAdminPDAM"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                        <td colspan="2">Rp. <span id="totalBayarPDAM"></span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
                     </div>
                     <div class="col-12">
-                        <button class="btn btn-danger w-100">Pembayaran</button>
+                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
                     </div>
 
                 </div>
             </div>
             <!--end::Body-->
-        </div>
+        </form>
         <!--end::Tiles Widget 2-->
 
     </div>
@@ -73,6 +82,72 @@
 
 @push('add-script')
     <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('product.product.pdam') }}",
+                success: function (response) {
+                    $.each(response, function (key, value) {
+                        $('#productPDAM').append($('<option>', {
+                            value: value.id,
+                            text: value.description
+                        }));
+                    });
+                }
+            });
+
+            $('#noPelangganPDAM').on('keyup', function () {
+                $('.textAlert').hide();
+            });
+
+            $('#btnPeriksaPDAM').on('click', function () {
+                var noPelangganPDAM = $('#noPelangganPDAM').val();
+
+                if(noPelangganPDAM == '') {
+                    $('.textAlert').show();
+                    return false;
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('product.pdam') }}",
+                    // url: "https://servicevps.travelsya.com/product/pdam",
+                    data: {
+                        'no_pelanggan': noPelangganPDAM,
+                        'nom': 'CEKPLN',
+                    },
+                    success: function (responseTagihan) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct': $('#productPDAM').val(),
+                            },
+                            success: function (response) {
+                                var simulateFeePDAM = parseInt(response[0].value);
+
+                                var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
+                                var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
+
+                                $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
+                                $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
+                                $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
+                                $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
+
+                                $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
+                                $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
+                                $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
+                                $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{-- <script>
         $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
@@ -120,5 +195,5 @@
             })
 
         })
-    </script>
+    </script> --}}
 @endpush

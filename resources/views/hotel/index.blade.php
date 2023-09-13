@@ -49,7 +49,7 @@
                             this.totalGuest = value * 3 + 1;
                         },
                         handleSelectGuest(e) {
-                    
+
                         }
                     }">
                         <div class="col-md-3 mb-5">

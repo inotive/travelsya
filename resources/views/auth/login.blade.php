@@ -9,24 +9,24 @@
         <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-475px">
             <!--begin::Wrapper-->
             <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
-                @if($errors->all())
-                <div class="font-medium text-red-600">
-                    Whoops! Something went wrong.
-                </div>
-                @endif
-                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
+{{--                @if($errors->all())--}}
+{{--                <div class="font-medium text-red-600">--}}
+{{--                    Whoops! Something went wrong.--}}
+{{--                </div>--}}
+{{--                @endif--}}
+{{--                <ul class="mt-3 list-disc list-inside text-sm text-red-600">--}}
+{{--                    @foreach ($errors->all() as $error)--}}
+{{--                    <li>{{ $error }}</li>--}}
+{{--                    @endforeach--}}
 {{--                    @if($message)--}}
 {{--                    <li>{{ $message }}</li>--}}
 {{--                    @endif--}}
-                    @if(isset($_GET['message']))
-                    <li>{{ $_GET['message'] }}</li>
-                    @endif
-                </ul>
-                <!--begin::Form-->
-                <form class="form w-100" method="POST" action="{{'login'}}" novalidate="novalidate" id="kt_sign_in_form"  >
+{{--                    @if(isset($_GET['message']))--}}
+{{--                    <li>{{ $_GET['message'] }}</li>--}}
+{{--                    @endif--}}
+{{--                </ul>--}}
+{{--                <!--begin::Form-->--}}
+                <form class="form w-100" method="POST" action="{{route('login')}}" novalidate="novalidate" id="kt_sign_in_form"  >
                     <!--begin::Heading-->
                     @csrf
                     <div class="text-center mb-11">

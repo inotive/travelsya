@@ -76,7 +76,7 @@
                                 @php
                                     $checkin = \Carbon\Carbon::parse($params['start']);
                                     $duration = $params['duration'];
-                                    
+
                                     // Hitung tanggal checkout
                                     $checkout = $checkin->copy()->addDays($duration);
                                 @endphp
@@ -100,20 +100,17 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
                         </div>
                         <div class="card-footer">
                             <div class="row gy-3">
                                 <div class="col-12 d-flex justify-content-between">
                                     <p>Biaya Kamar ({{ $params['room'] }} Kamar)</p>
-                                    <h4>{{ General::rp($hotelRoom->sellingprice * $params['duration']) }}</h4>
+                                    <h4>{{ General::rp($hotelRoom->sellingprice * $params['duration'] * $params['room']) }}
+                                    </h4>
                                 </div>
                                 <div class="col-12 d-flex justify-content-between">
                                     <p>Extra Bed (0 Kasur)</p>
-                                    <h4>Rp. {{ $hotelRoom->extrabedprice }}</h4>
+                                    <h4>Rp. {{ $hotelRoom->extrabedprice ?? 0 }}</h4>
                                 </div>
                                 <div class="col-12">
                                     <form action="{{ route('hotels.request', $hotelRoom->id) }}" class="d-flex flex-column"
@@ -130,11 +127,13 @@
                                         <input type="hidden" name="name"
                                         value="{{ session()->get('user') != null ? session()->get('user')['data']['name'] : '' }}"> --}}
                                         <input type="hidden" name="start" value="{{ $params['start'] }}">
-                                        <input type="hidden" name="end" value="{{ $params['start'] }}">
-                                        <input type="hidden" name="name"
-                                            value="{{ session()->get('user') != null ? session()->get('user')['data']['name'] : '' }}">
-                                        <button class="btn btn-lg w-100 text-white" style="background-color: #c02425">Lanjut
-                                            Pembayaran</button>
+                                        <input type="hidden" name="end" value="{{ $checkout->format('d-m-Y') }}">
+                                        <input type="hidden" name="name" value="{{ Auth()->user()->name }}">
+                                        <input type="hidden" name="point" value="{{ $point }}">
+                                        <input type="hidden" name="room" value="{{ $params['room'] }}">
+                                        <button class="btn btn-lg w-100 text-white" style="background-color: #c02425">
+                                            Lanjut Pembayaran
+                                        </button>
                                     </form>
                                 </div>
                             </div>

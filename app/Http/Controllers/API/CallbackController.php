@@ -42,6 +42,7 @@ class CallbackController extends Controller
         $transaction = Transaction::with('detailTransaction.product')
             ->where('no_inv', $data['external_id'])
             ->first();
+
         // dd($transaction->detailTransaction, $data);
         if ($transaction) {
             //CEK STATUS PENDING
