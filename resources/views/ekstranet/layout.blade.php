@@ -3,7 +3,7 @@
 <html lang="en">
 	<!--begin::Head-->
 	<head><base href=""/>
-		<title>Travelsya Admin Dashboard</title>
+		<title>Travelsya - Partner</title>
 		<meta charset="utf-8" />
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
@@ -44,12 +44,12 @@
 			<!--begin::Page-->
 			<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
 
-				@include('admin.include.header')
+				@include('ekstranet.layout.header')
 
 				<!--begin::Wrapper-->
                 <div class="app-wrapper flex-column flex-row-fluid" id="kt_app_wrapper">
 
-                    @include('admin.include.sidebar')
+                    @include('ekstranet.layout.sidebar')
 
                     <!--begin::Main-->
                     <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -68,7 +68,7 @@
                                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-                                                <a href="{{route('admin.dashboard')}}" class="text-muted text-hover-primary">Home</a>
+                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Home</a>
                                             </li>
                                             <!--end::Item-->
                                             <!--begin::Item-->
@@ -118,7 +118,7 @@
                         <!--end::Content wrapper-->
                         <!--begin::Footer-->
 
-                        @include('admin.include.footer')
+                        @include('ekstranet.layout.footer')
 
                     </div>
                     <!--end:::Main-->

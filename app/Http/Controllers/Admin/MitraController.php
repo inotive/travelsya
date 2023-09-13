@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 use App\Models\User;
@@ -16,11 +17,12 @@ class MitraController extends Controller
     {
 
         $vendors = Hostel::with('user', 'hostelRoom', 'hostelImage');
+        $cities = DB::table('cities')->orderBy('city_name','asc')->get();
         // dd($vendors);
          $users = User::with('hostel')
                  ->where('role', 1)->get();
         // dd($users);
-        return view('admin.management-mitra.index', compact('vendors','users'));
+        return view('admin.management-mitra.index', compact('vendors','users', 'cities'));
     }
 
     public function hostelRoomAjax(Request $request)

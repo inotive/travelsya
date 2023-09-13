@@ -103,7 +103,7 @@
                                 <span class="path3"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Data Customer</span>
+                        <span class="menu-title">Customer</span>
                     </span>
                     <!--end:Menu link-->
                 </a>

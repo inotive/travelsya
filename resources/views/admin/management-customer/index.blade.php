@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Customer','url' => route('admin.customer.index')])
+@extends('admin.layout',['title' => 'Customer','url' => route('admin.customer')])
 
 @section('content-admin')
     <!--begin::Tables Widget 11-->
@@ -21,9 +21,12 @@
                     <tr class="fw-bold text-muted bg-light">
                         <th class="ps-4 rounded-start">No</th>
                         <th class="min-w-125px">Email</th>
-                        <th class="min-w-125px">Name</th>
-                        <th class="min-w-125px">Phone</th>
+                        <th class="min-w-125px">Nama</th>
+                        <th class="min-w-125px">Nomor Telfon</th>
                         <th class="min-w-125px">Point</th>
+                        <th class="min-w-125px">Jumlah Transaksi</th>
+                        <th class="min-w-125px">Total Transaksi</th>
+                        <th class="min-w-125px">Aksi</th>
                     </tr>
                     </thead>
                     <!--end::Table head-->
@@ -45,6 +48,15 @@
                             </td>
                             <td>
                                 <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->point}}</div>
+                            </td>
+                            <td>
+                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{number_format(rand(5,10),0,',','.')}}</div>
+                            </td>
+                            <td>
+                                <div class="text-dark fw-bold  d-block mb-1 fs-6">Rp. {{number_format(rand(123123231,12412414),0,',','.')}}</div>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm">History Transaksi</button>
                             </td>
                         </tr>
                     @endforeach
