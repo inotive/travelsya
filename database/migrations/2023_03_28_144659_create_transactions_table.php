@@ -18,12 +18,14 @@ return new class extends Migration
             $table->string('no_inv')->unique();
             $table->string('req_id')->nullable(); //id xendit
             $table->string('link', 125)->nullable(); //link payout
-            $table->string('service', 20); //type of service
+            $table->string('service', 20); 
+            $table->foreignId('service_id')->constrained();//type of service
             $table->enum('payment', ['xendit', 'finpay', 'onthespot']); //type of payment
-            $table->integer('payment_method')->nullable();
-            $table->integer('payment_channel')->nullable();
+            $table->string('payment_method')->nullable();
+            $table->binary('payment_channel')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->string('status', 20);
+            $table->integer('total');
             $table->softDeletes();
             $table->timestamps();
         });
