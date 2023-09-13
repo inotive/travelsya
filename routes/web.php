@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\FacilitiesController;
 use App\Http\Controllers\Admin\FeeController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
@@ -142,6 +144,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::prefix('management-mitra')->group(function () {
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
                 Route::resource('hostel', \App\Http\Controllers\Admin\HostelController::class);
+                Route::get('hostel/{hostel}/review', [\App\Http\Controllers\Admin\HostelController::class, 'review'])->name('hostel.review');
                 Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
             });
@@ -175,10 +178,32 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('product/edit-data', [ProductAdminController::class, 'edit'])->name('product.edit');
             Route::post('product/update-product', [ProductAdminController::class, 'update'])->name('product.update-product');
 
-            //                //management-fee
-            //                Route::get('management-fee', [FeeController::class, 'index'])->name('management-fee');
-            //                Route::put('management-fee', [FeeController::class, 'updateFee'])->name('management-fee.update');
-            //                Route::post('management-fee', [FeeController::class, 'storeFee'])->name('management-fee.store');
+                //Facilities
+                // Route::resource('facility', FacilitiesController::class);
+                Route::get('facility', [FacilitiesController::class, 'index'])->name('facility.index');
+                Route::get('facility/create', [FacilitiesController::class, 'create'])->name('facility.create');
+                Route::post('facility', [FacilitiesController::class, 'store'])->name('facility.store');
+                Route::get('facility/{facility}', [FacilitiesController::class, 'show'])->name('facility.show');
+                Route::get('facility/{facility}/edit', [FacilitiesController::class, 'edit'])->name('facility.edit');
+                Route::post('facility/{facility}', [FacilitiesController::class, 'update'])->name('facility.update');
+                Route::delete('facility/{facility}', [FacilitiesController::class, 'destroy'])->name('facility.destroy');
+
+
+                //Ads
+                // Route::resource('ads', AdController::class);
+                Route::get('ads', [AdController::class, 'index'])->name('ads.index');
+                Route::post('ads', [AdController::class, 'store'])->name('ads.store');
+                Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
+                Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
+                Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
+                Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+
+
+
+                //                //management-fee
+                //                Route::get('management-fee', [FeeController::class, 'index'])->name('management-fee');
+                //                Route::put('management-fee', [FeeController::class, 'updateFee'])->name('management-fee.update');
+                //                Route::post('management-fee', [FeeController::class, 'storeFee'])->name('management-fee.store');
 
             //customer
             Route::get('customer', [CustomerController::class, 'index'])->name('customer');
@@ -227,6 +252,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::post('setting-hotel-room', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
         });
     });
+
 });
 
 
