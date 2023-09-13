@@ -78,16 +78,23 @@
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi</a>
                         </li>
-                        @foreach($services as $key => $service)
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_{{$key}}">{{ucfirst($service->name)}}</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan</a>
                         </li>
-                        @endforeach
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_all">PPOB</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_all">Pulsa & Data</a>
+                        </li>
+{{--                        @foreach($services as $key => $service)--}}
+{{--                        <li class="nav-item">--}}
+{{--                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_{{$key}}">{{ucfirst($service->name)}}</a>--}}
+{{--                        </li>--}}
+{{--                        @endforeach--}}
                     </ul>
                 </div>
                 <div class="card-body">
-
-
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_all" role="tabpanel">
                             <div class="table-responsive">
@@ -135,61 +142,61 @@
                                 </table>
                             </div>
                         </div>
-                        @foreach($services as $key => $service)
-                        @php
-                        $catId = $service->id;
-                        $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){
-                        return ($val['service_id'] == $catId);
-                    });
-                        @endphp
-                        <div class="tab-pane fade" id="kt_tab_pane_{{$key}}" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal</th>
-                                        <th>Invoice</th>
-                                        <th>Code Booking</th>
-                                        <th>Customer</th>
-                                        <th>Check IN</th>
-                                        <th>Check Out</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
-                                        <th>Status</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+{{--                        @foreach($services as $key => $service)--}}
+{{--                        @php--}}
+{{--                        $catId = $service->id;--}}
+{{--                        $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){--}}
+{{--                        return ($val['service_id'] == $catId);--}}
+{{--                    });--}}
+{{--                        @endphp--}}
+{{--                        <div class="tab-pane fade" id="kt_tab_pane_{{$key}}" role="tabpanel">--}}
+{{--                            <div class="table-responsive">--}}
+{{--                                <table class="table table-bordered">--}}
+{{--                                    <thead>--}}
+{{--                                    <tr class="fw-bold fs-6 text-gray-800">--}}
+{{--                                        <th>Tanggal</th>--}}
+{{--                                        <th>Invoice</th>--}}
+{{--                                        <th>Code Booking</th>--}}
+{{--                                        <th>Customer</th>--}}
+{{--                                        <th>Check IN</th>--}}
+{{--                                        <th>Check Out</th>--}}
+{{--                                        <th>Metode Pembayaran</th>--}}
+{{--                                        <th>Grand Total</th>--}}
+{{--                                        <th>Status</th>--}}
+{{--                                    </tr>--}}
+{{--                                    </thead>--}}
+{{--                                    <tbody>--}}
 
-                                    @forelse($filterTransactions as $key2 => $transaction)
-                                        <tr>
-                                            <td>{{date('d/m/y',strtotime($transaction["created_at"]))}}</td>
-                                            <td>{{$transaction['no_inv']}}</td>
-                                            <td>{{$transaction['req_id']}}</td>
-                                            <td>{{$transaction['user']['name']}}</td>
-                                            @if(isset($transaction['book_date'])  && count($transaction['book_date']) != 0)
-                                            <td>{{$transaction['book_date'][0]['start']}}</td>
-                                            <td>{{$transaction['book_date'][0]['end']}}</td>
-                                            @else
-                                            <td></td>
-                                            <td></td>
-                                            @endif
-                                            <td>{{$transaction['payment_channel']}}</td>
-                                            <td>{{$transaction['total']}}</td>
-                                            <td><span class="badge {{($transaction['status'] == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction['status'] == "SUCCESS" ? "Lunas" : $transaction['status'])}}</span></td>
-                                        </tr>
-                                    @php
-                                    if($key2 == 4) break;
-                                    @endphp
-                                    @empty
-                                        <tr>
-                                            <td colspan="8" class="text-center">Not found</td>
-                                        </tr>
-                                    @endforelse
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        @endforeach
+{{--                                    @forelse($filterTransactions as $key2 => $transaction)--}}
+{{--                                        <tr>--}}
+{{--                                            <td>{{date('d/m/y',strtotime($transaction["created_at"]))}}</td>--}}
+{{--                                            <td>{{$transaction['no_inv']}}</td>--}}
+{{--                                            <td>{{$transaction['req_id']}}</td>--}}
+{{--                                            <td>{{$transaction['user']['name']}}</td>--}}
+{{--                                            @if(isset($transaction['book_date'])  && count($transaction['book_date']) != 0)--}}
+{{--                                            <td>{{$transaction['book_date'][0]['start']}}</td>--}}
+{{--                                            <td>{{$transaction['book_date'][0]['end']}}</td>--}}
+{{--                                            @else--}}
+{{--                                            <td></td>--}}
+{{--                                            <td></td>--}}
+{{--                                            @endif--}}
+{{--                                            <td>{{$transaction['payment_channel']}}</td>--}}
+{{--                                            <td>{{$transaction['total']}}</td>--}}
+{{--                                            <td><span class="badge {{($transaction['status'] == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction['status'] == "SUCCESS" ? "Lunas" : $transaction['status'])}}</span></td>--}}
+{{--                                        </tr>--}}
+{{--                                    @php--}}
+{{--                                    if($key2 == 4) break;--}}
+{{--                                    @endphp--}}
+{{--                                    @empty--}}
+{{--                                        <tr>--}}
+{{--                                            <td colspan="8" class="text-center">Not found</td>--}}
+{{--                                        </tr>--}}
+{{--                                    @endforelse--}}
+{{--                                    </tbody>--}}
+{{--                                </table>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        @endforeach--}}
                         <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
                             <div class="table-responsive">
                                 <table class="table table-bordered">

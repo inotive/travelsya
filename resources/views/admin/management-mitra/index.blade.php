@@ -46,21 +46,21 @@
                                     <span class="badge badge-info">{{$hotel->name}}</span>
                                 @endforeach
                             </td>
-                            <td class="text-center">{{$vendor->user->phone ?? 'Belum Ada'}}</td>
+                            <td class="text-center">{{$user->phone ?? 'Belum Ada'}}</td>
                             <td class="text-center">
-                                @if($vendor->is_active == 1)
+                                @if($user->is_active == 1)
                                     <span class="badge badge-success">Aktif</span>
                                 @else
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-warning btn-sm p-2" data-id="{{$vendor->id}}"
-                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"
+                                <button class="btn btn-warning btn-sm p-2" data-id="{{$user->id}}"
+                                        data-active="{{$user->is_active}}" data-bs-toggle="modal"
                                         data-bs-target="#edit">Edit
                                 </button>
-                                <button class="btn btn-danger btn-sm p-2" data-id="{{$vendor->id}}"
-                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"
+                                <button class="btn btn-danger btn-sm p-2" data-id="{{$user->id}}"
+                                        data-active="{{$user->is_active}}" data-bs-toggle="modal"
                                         data-bs-target="#edit">Delete
                                 </button>
                             </td>

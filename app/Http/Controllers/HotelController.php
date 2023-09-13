@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailTransaction;
+use App\Models\Facility;
 use App\Models\Guest;
 use App\Models\Hotel;
 use App\Models\HotelBookDate;
@@ -115,6 +116,7 @@ class HotelController extends Controller
         $data['hotels'] = $hotels;
         $data['hotelDetails'] = $hotelDetails;
         $data['request'] = $request->all();
+        $data['facilities'] = Facility::all();
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::all();
 
