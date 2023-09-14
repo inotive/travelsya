@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
 use App\Models\Hotel;
+use App\Models\HotelRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB; 
 use File;
 
 class ManagementHotelController extends Controller
@@ -23,9 +25,11 @@ class ManagementHotelController extends Controller
 
     public function detailHotel($id)
     {
-        $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
+        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')->find($id);
+        $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
+        $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
 
-        return view('ekstranet.management-hotel.detail-hotel', compact('hostel'));
+        return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
     }
     public function settingHotel($id)
     {
@@ -83,5 +87,14 @@ class ManagementHotelController extends Controller
     {
         $hostel = Hostel::with('hostelImage')->find($id);
         return view('ekstranet.management-hotel.setting-photo', compact('hostel'));
+    }
+
+    public function destroyRoom($id)
+    {
+        $hotel_room = HotelRoom::findOrFail($id);
+        $hotel_room->delete();
+
+        toast('Hotel Room has been deleted', 'success');
+        return redirect()->back();
     }
 }
