@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Setting Hotel - Hotel A' ,"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Setting Hotel - Hotel A' ,"url" => "#"])
 
 @section('content-admin')
    <!--begin::Tables Widget 11-->
@@ -148,7 +148,7 @@
                         <!--end::Input group-->
                         <!--begin::Actions-->
                         <div class="text-center d-flex flex-row-auto gap-5">
-                            
+
                             <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary flex-fill">
                                 <span class="indicator-label">Simpan Data</span>
                                 <span class="indicator-progress">Please wait...

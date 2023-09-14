@@ -46,21 +46,21 @@
                                     <span class="badge badge-info">{{$hotel->name}}</span>
                                 @endforeach
                             </td>
-                            <td class="text-center">{{$vendor->user->phone ?? 'Belum Ada'}}</td>
+                            <td class="text-center">{{$user->phone ?? 'Belum Ada'}}</td>
                             <td class="text-center">
-                                @if($vendor->is_active == 1)
+                                @if($user->is_active == 1)
                                     <span class="badge badge-success">Aktif</span>
                                 @else
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-warning btn-sm p-2" data-id="{{$vendor->id}}"
-                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"
+                                <button class="btn btn-warning btn-sm p-2" data-id="{{$user->id}}"
+                                        data-active="{{$user->is_active}}" data-bs-toggle="modal"
                                         data-bs-target="#edit">Edit
                                 </button>
-                                <button class="btn btn-danger btn-sm p-2" data-id="{{$vendor->id}}"
-                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"
+                                <button class="btn btn-danger btn-sm p-2" data-id="{{$user->id}}"
+                                        data-active="{{$user->is_active}}" data-bs-toggle="modal"
                                         data-bs-target="#edit">Delete
                                 </button>
                             </td>
@@ -264,75 +264,34 @@
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
                             <!--begin::Title-->
-                            <h1 class="mb-3">Create Mitra</h1>
+                            <h1 class="mb-3">Tambah Mitra Baru</h1>
                             <!--end::Title-->
                         </div>
                         <!--end::Heading-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <div class="col-md-12 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Name Hostel</label>
-                                <input class="form-control form-control-solid" id="name" name="name" required/>
-
-                                @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
+                            <div class="col-md-12">
+                                <label class=" required fs-6 fw-semibold mb-2">Nama Perusahaan</label>
+                                <input class="form-control form-control-lg" id="name" name="name"
+                                       placeholder="Masukan nama perusahaan" required/>
                             </div>
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
-                                <select class="form-select form-select-solid" id="user_id" name="user_id">
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Kota</label>
+                                <select class="form-control" id="user_id" name="user_id">
+                                    @foreach($cities as $city)
+                                        <option value="{{$city->city_name}}">{{$city->city_name}}</option>
                                     @endforeach
                                 </select>
-                                @error('user_id')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
                             </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Active</label>
-                                <select class="form-select form-select-solid" id="active" name="active">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                                @error('active')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
+                            <div class="col-md-6">
+                                <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
+                                <input class="form-control form-control-lg" id="name" name="name"
+                                       placeholder="Masukan nomor telfon" required/>
                             </div>
                         </div>
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">City</label>
-                                <input class="form-control form-control-solid" id="city" name="city" required/>
-
-                                @error('city')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">category</label>
-                                <input class="form-control form-control-solid" id="category" name="category" required/>
-
-                                @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->

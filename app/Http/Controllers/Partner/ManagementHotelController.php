@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Partner;
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
+use App\Models\Hotel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use File;
@@ -15,9 +16,9 @@ class ManagementHotelController extends Controller
     // Daftar Hotel
     public function index()
     {
-        $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
 
-        return view('ekstranet.management-hotel.index', compact('hostels'));
+        return view('ekstranet.management-hotel.index', compact('hotels'));
     }
 
     public function detailHotel($id)

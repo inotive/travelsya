@@ -9,22 +9,6 @@
         <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-475px">
             <!--begin::Wrapper-->
             <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
-                @if($errors->all())
-                <div class="font-medium text-red-600">
-                    Whoops! Something went wrong.
-                </div>
-                @endif
-                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                    @if($message)
-                    <li>{{ $message }}</li>
-                    @endif
-                    @if(isset($_GET['message']))
-                    <li>{{ $_GET['message'] }}</li>
-                    @endif
-                </ul>
                 <!--begin::Form-->
                 <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('admin.login.post')}}">
                     <!--begin::Heading-->
@@ -46,10 +30,15 @@
 
                     <!--begin::Input group--->
                     <div class="fv-row mb-8">
-                        <label for="email" class="form-label">Eamil</label>
+                        <label for="email" class="form-label">Email</label>
                         <!--begin::Email-->
-                        <input type="text" placeholder="Masukan email anda" name="email" autocomplete="off" class="form-control form-control-lg p-5 " />
+                        <input type="text" placeholder="Masukan email anda" name="email" autocomplete="off" class="form-control form-control-lg p-5 bg-transparent @error('email') is-invalid @enderror" />
                         <!--end::Email-->
+                        @error('email')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
                     </div>
 
                     <!--end::Input group--->
@@ -57,8 +46,14 @@
                         <label for="email" class="form-label">Password</label>
                         <!--begin::Password-->
 
-                        <input type="password" placeholder="Masukan password" name="password" autocomplete="off" class="form-control form-control-lg p-5 " />
+                        <input type="password" placeholder="Masukan password" name="password" autocomplete="off" class="form-control  form-control-lg p-5 @error('password') is-invalid @enderror" />
                         <!--end::Password-->
+
+                        @error('password')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
                     </div>
                     <!--end::Input group--->
 
@@ -92,17 +87,7 @@
                     <!--end::Submit button-->
 
                 </form>
-                    <a href="" type="role" id="kt_sign_in_submit" class="btn btn-success w-100 py-5">
-
-                        <!--begin::Indicator label-->
-                        <span class="indicator-label">Pendaftaran Mitra</span>
-                        <!--end::Indicator label-->
-
-                        <!--begin::Indicator progress-->
-                        <span class="indicator-progress">
-                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                            </span>
-                        <!--end::Indicator progress--> </a>
+                <a href="#" class="btn btn-icon btn-lg btn-danger w-100"><i class="fa-brands fa-whatsapp fs-3 me-2"></i>Pendaftaran Mitra</a>
                 <!--end::Form-->
 
             </div>
