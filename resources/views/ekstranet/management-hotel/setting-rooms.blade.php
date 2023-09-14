@@ -1,174 +1,122 @@
-@extends('admin.layout',['title' => 'Setting Hostel - '.$hostel->name ,"url" => "#"])
-
+@extends('ekstranet.layout',['title' => 'Detail Hotel - '.$hotel->name ,"url" => "#"])
 @section('content-admin')
-<!--begin::Row-->
-<div class="row gy-5 g-xl-10">
-    <!--begin::Col-->
-    <div class="col-12">
-        <div class="card  mb-xl-8">
-            <!--begin::Body-->
-            <div class="card-body my-3">
-                <div class="row">
-                    <div class="col-12">
-                        <!--begin::Alert-->
-                        <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex flex-column pe-0 pe-sm-10">
-                                <!--begin::Title-->
-                                <h4 class="fw-bold">Room Information</h4>
-                                <!--end::Title-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Alert-->
-                    </div>
-                </div>
-                <form action="{{route('partner.management.hotel.setting.room.post')}}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="hostel_id" value="{{$hostel->id}}">
-                    <div class="row gy-5">
+    <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
+    <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
+    <script src="{{ url('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
+
+    <div class="card mb-5 mb-xl-8">
+        <!--begin::Header-->
+        <div class="card-header pt-5">
+            <div class="card-toolbar">
+                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.management.hotel.setting.room.create', ['id'=>$hotel->id]) }}" >
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Room</a>
+            </div>
+        </div>
+        <!--end::Header-->
+        <div class="card-body py-3">
+            <!--begin::Table container-->
+            <div class="table-responsive">
+                <!--begin::Table-->
+
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                       id="kt_datatable_zero_configuration">
+                    <thead>
+                    <tr class="fw-bold fs-6 text-gray-800 ">
+                        <th class="text-center">No.</th>
+                        <th class="text-center">Nama Room</th>
+                        <th class="text-center">Room Rate</th>
+                        <th class="text-center">Fix Rate</th>
+                        <th class="text-center">Jumlah Ruangan</th>
+                        <th class="text-center">Batas Penghuni</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($hotel->hotelRoom as $room)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ $room->name }}</td>
+                            <td class="text-center">@currency($room->price)</td>
+                            <td class="text-center">@currency($room->sellingprice)</td>
+                            <td class="text-center">{{ $room->totalroom }}</td>
+                            <td class="text-center">{{ $room->guest }}</td>
+                            <td class="text-center">
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="/metronic8/demo1/../demo1/apps/customers/view.html" class="menu-link px-3">
+                                            Daftar Room
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
+                                            Detail Hotel
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $room->id }}" data-hotel-id="{{ $room->hotel_id }}">
+                                            Edit
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $room->id }}" data-bs-toggle="modal" class="menu-link px-3 text-danger">
+                                            Delete
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                </div>
+                                <!--begin::Menu-->
+                                <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                    Actions
+                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                </a>
+                                <!--end::Menu-->
+                            </td>
+                        </tr>
+                        @endforeach
 
 
-                        <div class="col-12">
-                            <label class="form-label">Room Name</label>
-                            <input type="text" name="name" class="form-control" placeholder="Masukan Kamar" >
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Room Price</label>
-                            <input type="text" name="price" class="form-control" placeholder="Masukan Harga">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Room Selling Price</label>
-                            <input type="text" name="sellingprice" id="roomSellingPrice" class="form-control"
-                                   placeholder="" disabled>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Furnish</label>
-                            <select  class="form-control" name="roomtype" id="roomtype">
-                                <option value="studio">Studio</option>
-                                <option value="1br">1BR</option>
-                                <option value="2br">2BR</option>
-                                <option value="3br+">3BR+</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Room Type</label>
-                            <select  class="form-control" name="furnish" id="furnish">
-                                <option value="fullfurnished">Full Furnished</option>
-                                <option value="unfurnished+">Unfurnished</option>
-                            </select>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Number of Rooms</label>
-                            <input type="text" name="totalroom" class="form-control" placeholder="Masukan Total Ruangan">
-                        </div>
-
-                        <div class="col-12">
-                            <!--begin::Alert-->
-                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <!--begin::Title-->
-                                    <h4 class="fw-bold">Room Size</h4>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Wrapper-->
-                            </div>
-                            <!--end::Alert-->
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Size (m2)</label>
-                            <input type="text" name="roomsize" class="form-control"
-                                   placeholder="Masukan total ukuran kamar dalam bentuk m2 (pxl)">
-                        </div>
-                        <div class="col-12">
-                            <!--begin::Alert-->
-                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <!--begin::Title-->
-                                    <h4 class="fw-bold">Room Occupancy Policyze</h4>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Wrapper-->
-                            </div>
-                            <!--end::Alert-->
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Max Occopuncy</label>
-                            <input type="text" name="guest" class="form-control"
-                                   placeholder="Masukan Maximal Jumlah Tamu Yang Bisa Menginap">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Max Extra Bed</label>
-                            <input type="number" name="maxextrabed" class="form-control" placeholder="Masukan Maksimal Extra Bed">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Extra Bed Charge</label>
-                            <input type="number" name="extrabedprice" class="form-control" placeholder="Masukan Biaya Extra Bed">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Extra Selling Charge</label>
-                            <input type="number" name="" class="form-control" disabled>
-                        </div>
-                        <div class="col-12">
-                            <!--begin::Alert-->
-                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <!--begin::Title-->
-                                    <h4 class="fw-bold">Image</h4>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Wrapper-->
-                            </div>
-                            <!--end::Alert-->
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Image</label>
-                            <input type="file" name="image" class="form-control">
-                        </div>
-                        <div class="col-12">
-                            <!--begin::Alert-->
-                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <!--begin::Title-->
-                                    <h4 class="fw-bold">Room Additional Information</h4>
-                                    <!--end::Title-->
-                                </div>
-                                <!--end::Wrapper-->
-                            </div>
-                            <!--end::Alert-->
-                        </div>
-                        <div class="col-6 d-flex justify-content-around">
-                            <div class="form-check me-3">
-                                <input class="form-check-input" type="checkbox" name="breakfastIncluded"
-                                       id="flexCheckDefault" />
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Breakfast Included
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="wifiIncluded"
-                                       id="flexCheckDefault" />
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Wifi Included
-                                </label>
-                            </div>
-                        </div>
-
-                        {{--                    </div>--}}
-                    </div>
-                    <!--end:: Body-->
-                </form>
-                <div class="card-footer d-flex justify-content-between">
-                    <button type="submit" class="btn btn-primary w-50">Simpan Data</button>
-                    <a href="{{route('partner.management.hotel')}}"
-                    class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
-                </div>
-            </form>
+                    </tbody>
+                </table>
+                <!--end::Table-->
+            </div>
+            <!--end::Table container-->
         </div>
     </div>
-</div>
+
+    {{-- MODAL Disini --}}
+    @include('ekstranet.management-hotel.setting-room-delete')
+    @include('ekstranet.management-hotel.setting-room-edit')
 @endsection
+@push('add-script')
+    <script>
+        $(document).ready( function () {
+            $('#kt_datatable_zero_configuration').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+        } );
+    </script>
+
+@endpush

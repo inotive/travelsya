@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Detail Hotel - A',"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Detail Hotel - A',"url" => "#"])
 
 @section('content-admin')
     <!--begin::Row-->
@@ -10,21 +10,21 @@
                 <div class="card-body my-3">
                     <div class="row gy-3">
                         <div class="col-12">
-                            <h1 class="fw-bold text-primary">{{$hostel->name}}</h1>
+                            <h1 class="fw-bold text-primary">{{$hotel->name}}</h1>
                         </div>
                         <div class="col-6">
                             <div class="rating">
-                                @for($i=0;$i<$hostel->star;$i++)
+                                @for($i=0;$i<$hotel->star;$i++)
                                 <div class="rating-label checked">
                                     <i class="ki-duotone ki-star fs-6"></i>                                                    </div>
                                     @endfor
                             </div>
                         </div>
 
-                        <div class="col-6 d-flex justify-content-end fw-medium">{{$hostel->hostelRoom->count()}} Rooms</div>
-                        <div class="col-12  fw-medium">{{$hostel->address}}</div>
-                        <div class="col-6  fw-medium"><span class="badge badge-info">0{{$hostel->phone}}</span></div>
-                        <div class="col-6 d-flex justify-content-end  fw-medium">{{$hostel->email}}</div>
+                        <div class="col-6 d-flex justify-content-end fw-medium">{{$hotel->hotelRoom->count()}} Rooms</div>
+                        <div class="col-12  fw-medium">{{$hotel->address}}</div>
+                        <div class="col-6  fw-medium"><span class="badge badge-info">0{{$hotel->phone}}</span></div>
+                        <div class="col-6 d-flex justify-content-end  fw-medium">{{$hotel->email}}</div>
 
                     </div>
                 </div>
@@ -41,15 +41,15 @@
                         <tbody>
                             <tr>
                                 <td class="fw-bold text-dark">Check IN</td>
-                                <td class="text-center text-success fw-bold">{{date('H:i',strtotime($hostel->checkin))}}</td>
+                                <td class="text-center text-success fw-bold">{{date('H:i',strtotime($hotel->checkin))}}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold text-dark">Check Out</td>
-                                <td class="text-center text-danger fw-bold">{{date('H:i',strtotime($hostel->checkout))}}</td>
+                                <td class="text-center text-danger fw-bold">{{date('H:i',strtotime($hotel->checkout))}}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold text-dark">Status</td>
-                                <td class="text-center text-danger fw-bold"><span class="badge {{$hostel->is_active == 1 ? 'badge-success' : 'badge-danger'}} ">{{$hostel->is_active == 1 ? 'live' : 'off'}}</span></td>
+                                <td class="text-center text-danger fw-bold"><span class="badge {{$hotel->is_active == 1 ? 'badge-success' : 'badge-danger'}} ">{{$hotel->is_active == 1 ? 'live' : 'off'}}</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -73,7 +73,7 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
-                                @foreach($hostel->hostelRoom as $room)
+                                @foreach($hotel->hotelRoom as $room)
                                     <div class="col-4">
                                         <div class="card border border-light-subtle">
                                             <div class="card-body">
@@ -101,7 +101,7 @@
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                             <div class="row">
-                        @foreach($hostel->hostelImage as $image)
+                        @foreach($hotel->hotelImage as $image)
 
                                 <div class="col-4">
                                     <div class="card border border-light-subtle">
@@ -112,8 +112,8 @@
                                             <form action="{{route('admin.hostel.main-image')}}" method="post" class="d-flex flex-column">
                                                 @csrf
                                                 <input type="hidden" name="id" value="{{$image->id}}">
-                                                <input type="hidden" name="hostelid" value="{{$hostel->id}}">
-                                                
+                                                <input type="hidden" name="hotelid" value="{{$hotel->id}}">
+
                                             <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama</button>
 
                                             </form>
@@ -123,7 +123,7 @@
                                                 <input type="hidden" name="id" value="{{$image->id}}">
                                                 <button class="btn btn-outline btn-outline btn-sm btn-outline-danger text-dark  w-100">Delete Photo</button>
                                             </form>
-                                            
+
                                         </div>
                                     </div>
                                 </div>
