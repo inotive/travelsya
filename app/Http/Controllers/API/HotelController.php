@@ -84,9 +84,43 @@ class HotelController extends Controller
             }
 
             $hotelget = $hotels->get();
+            $hotelDetails = [];
+            $hotelFormatJSON = [];
 
-            if (count($hotelget)) {
-                return ResponseFormatter::success($hotelget, 'Data successfully loaded');
+            foreach ($hotelget as $hotel) {
+                $minPrice = $hotel->hotelRoom->min('price');
+                $maxPrice = $hotel->hotelRoom->min('sellingprice');
+                $jumlahTransaksi = $hotel->hotelRating->count();
+                $totalRating = $hotel->hotelRating->sum('rate');
+
+                // Rating 5
+                if ($jumlahTransaksi > 0) {
+                    $avgRating = $totalRating / $jumlahTransaksi;
+                    $resultRating = ($avgRating / 10) * 5;
+                } else {
+                    $avgRating = 0;
+                    $resultRating = 0;
+                }
+
+                $hotelDetails[$hotel->id] = [
+                    'avg_rating' => $avgRating,
+                    'rating_count' => $resultRating,
+                    'price' => $minPrice,
+                    'sellingprice' => $maxPrice,
+                ];
+
+                $hotelFormatJSON[] = [
+                    'name' => $hotel->name,
+                    'location' => $hotel->city,
+                    'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
+                    'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
+                    'price' => $hotelDetails[$hotel->id]['price'],
+                    'sellingprice' => $hotelDetails[$hotel->id]['sellingprice'],
+                ];
+            }
+
+            if (count($hotelFormatJSON)) {
+                return ResponseFormatter::success($hotelFormatJSON, 'Data successfully loaded');
             } else {
                 return ResponseFormatter::error(null, 'Data not found');
             }
