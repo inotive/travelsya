@@ -40,31 +40,31 @@ class HostelController extends Controller
     {
         try {
             $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
-            if ($request->name)
-                $hostels->where('name', 'like', '%' . $request->name . '%');
+            // if ($request->name)
+            //     $hostels->where('name', 'like', '%' . $request->name . '%');
 
             if ($request->location)
                 $hostels->where('city', 'like', '%' . $request->location . '%');
 
-            if ($request->category)
-                $hostels->where('category', 'like', '%' . $request->category . '%');
+            // if ($request->category)
+            //     $hostels->where('category', 'like', '%' . $request->category . '%');
 
-            if ($request->property)
-                $hostels->where('property', $request->property);
+            // if ($request->property)
+            //     $hostels->where('property', $request->property);
 
-            if ($request->furnish) {
-                $furnish = $request->furnish;
-                $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
-                    $q->where('furnish', $furnish);
-                });
-            }
+            // if ($request->furnish) {
+            //     $furnish = $request->furnish;
+            //     $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
+            //         $q->where('furnish', $furnish);
+            //     });
+            // }
 
-            if ($request->roomtype) {
-                $roomtype = $request->roomtype;
-                $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
-                    $q->where('roomtype', $roomtype);
-                });
-            }
+            // if ($request->roomtype) {
+            //     $roomtype = $request->roomtype;
+            //     $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
+            //         $q->where('roomtype', $roomtype);
+            //     });
+            // }
 
             $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(price),0)'));
@@ -72,8 +72,18 @@ class HostelController extends Controller
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
             }])->withCount("rating as rating_count")->get();
 
-            if (count($hostelsget)) {
-                return ResponseFormatter::success($hostelsget, 'Data successfully loaded');
+            $hostelShow = $hostelsget->map(function ($hostelsget) {
+                return [
+                    'name' => $hostelsget->name,
+                    'location' => $hostelsget->city,
+                    'rating_avg' => intval($hostelsget->rating_avg),
+                    'rating_count' => $hostelsget->rating_count,
+                    'sellingprice' => intval($hostelsget->price_avg),
+                ];
+            });
+
+            if (count($hostelShow)) {
+                return ResponseFormatter::success($hostelShow, 'Data successfully loaded');
             } else {
                 return ResponseFormatter::error(null, 'Data not found');
             }
