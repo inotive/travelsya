@@ -38,38 +38,52 @@ class HotelController extends Controller
     public function index(Request $request)
     {
         try {
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
-            if ($request->name)
-                $hotel->where('name', 'like', '%' . $request->name . '%');
+            // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
 
-            if ($request->location)
-                $hotel->where('city', 'like', '%' . $request->location . '%');
+            // if ($request->name)
+            //     $hotel->where('name', 'like', '%' . $request->name . '%');
 
-            if ($request->category)
-                $hotel->where('category', 'like', '%' . $request->category . '%');
+            // if ($request->location)
+            //     $hotel->where('city', 'like', '%' . $request->location . '%');
 
-            if ($request->property)
-                $hotel->where('property', $request->property);
+            // if ($request->category)
+            //     $hotel->where('category', 'like', '%' . $request->category . '%');
 
-            if ($request->furnish) {
-                $furnish = $request->furnish;
-                $hotel->withWhereHas('hotelRoom', function ($q) use ($furnish) {
-                    $q->where('furnish', $furnish);
-                });
+            // if ($request->property)
+            //     $hotel->where('property', $request->property);
+
+            // if ($request->furnish) {
+            //     $furnish = $request->furnish;
+            //     $hotel->withWhereHas('hotelRoom', function ($q) use ($furnish) {
+            //         $q->where('furnish', $furnish);
+            //     });
+            // }
+
+            // if ($request->roomtype) {
+            //     $roomtype = $request->roomtype;
+            //     $hotel->withWhereHas('hotelRoom', function ($q) use ($roomtype) {
+            //         $q->where('roomtype', $roomtype);
+            //     });
+            // }
+
+            // if (count($hotelget)) {
+            //     return ResponseFormatter::success($hotelget, 'Data successfully loaded');
+            // } else {
+            //     return ResponseFormatter::error(null, 'Data not found');
+            // }
+
+            $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
+
+            if ($request->has('location') && $request->has('room') && $request->has('guest')) {
+                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+                    $query->where([
+                        ['totalroom', '>', $request->room],
+                        ['guest', '>=', $request->guest],
+                    ]);
+                })->where('city', 'like', '%' . $request->location . '%');
             }
 
-            if ($request->roomtype) {
-                $roomtype = $request->roomtype;
-                $hotel->withWhereHas('hotelRoom', function ($q) use ($roomtype) {
-                    $q->where('roomtype', $roomtype);
-                });
-            }
-
-            $hotelget = $hotel->withCount(["hotelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(price),0)'));
-            }])->withCount(["hotelRating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("hotelRating as rating_count")->get();
+            $hotelget = $hotels->get();
 
             if (count($hotelget)) {
                 return ResponseFormatter::success($hotelget, 'Data successfully loaded');
@@ -119,6 +133,7 @@ class HotelController extends Controller
 
                 // return $filter;
             }
+
             $hotelGet = $hotel->get();
 
             if (count($hotelGet)) {

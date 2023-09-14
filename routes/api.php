@@ -46,7 +46,7 @@ route::get('/hostel/city', [HostelController::class, 'hostelCity']);
 route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
 
-//hostel
+//hotel
 route::get('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
 route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
