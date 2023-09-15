@@ -25,7 +25,10 @@
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPLN">
                     </div>
                     <div class="col-4">
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btn-periksa">Periksa</button>
+                        {{-- <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button> --}}
+                        @auth
+                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
+                        @endauth
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -55,7 +58,7 @@
                     </div>
                     <div class="col-12">
                         @auth
-                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPLN" disabled>Pembayaran</button>
                         @endauth
 
                         @guest
@@ -85,7 +88,7 @@
                 $('#textAlert').hide();
             });
 
-            $('#btn-periksa').on('click', function () {
+            $('#btnPeriksaPLN').on('click', function () {
                 var noPelangganPLN = $('#noPelangganPLN').val();
 
                 if(noPelangganPLN == '') {
@@ -102,13 +105,15 @@
                         'nom': 'CEKPLN',
                     },
                     success: function (response) {
-                        console.log(response);
-
                         $.ajax({
                             type: "POST",
                             url: "{{ route('product.adminFee') }}",
                             data: {
                                 'idProduct':  459,
+                            },
+                            beforeSend: function() {
+                                $('#btnPeriksaPLN').attr('disabled', true);
+                                $('#btnPeriksaPLN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
                             },
                             success: function (responseTagihan) {
 
@@ -126,6 +131,11 @@
                                 $('#inputTotalTagihanPLN').val(simulateAmountPLN);
                                 $('#inputBiayaAdminPLN').val(simulateFeePLN);
                                 $('#inputTotalBayarPLN').val(simulateTotalPLN);
+
+                                $('#btnPeriksaPLN').removeAttr('disabled');
+                                $('#btnPeriksaPLN').text('Periksa');
+
+                                $('#btnSubmitPLN').removeAttr('disabled');
                             }
                         });
                     }
