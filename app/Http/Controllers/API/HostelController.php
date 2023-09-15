@@ -164,6 +164,24 @@ class HostelController extends Controller
         }
     }
 
+    public function room($id)
+    {
+        try {
+            $hostels = HostelRoom::with('hostel')->findOrFail($id);
+
+            if ($hostels) {
+                return ResponseFormatter::success($hostels, 'Data successfully loaded');
+            } else {
+                return ResponseFormatter::error(null, 'Data not found');
+            }
+        } catch (Exception $th) {
+            return ResponseFormatter::error([
+                $th->getMessage(),
+                'message' => 'Something wrong',
+            ], 'Hostel process failed', 500);
+        }
+    }
+
     public function requestTransaction(Request $request)
     {
         // handle validation

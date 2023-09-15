@@ -26,7 +26,10 @@ class PpobController extends Controller
 
     public function getService($id)
     {
-        $ppob = Product::where('id', $id)->get();
+        $ppob = Product::where('id', $id)
+            ->where('is_active', 1)
+            ->get();
+
         if (count($ppob)) {
             return ResponseFormatter::success($ppob, 'Data successfully loaded');
         } else {

@@ -45,12 +45,14 @@ route::get('/hostel', [HostelController::class, 'index']);
 route::get('/hostel/city', [HostelController::class, 'hostelCity']);
 route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
+route::get('/hostel/room/{id}', [HostelController::class, 'room']);
 
 //hotel
 route::get('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
 route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);
+
 
 //ads
 route::get('/ads', [AdController::class, 'index']);
