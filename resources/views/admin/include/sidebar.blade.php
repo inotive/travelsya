@@ -260,7 +260,7 @@
                     </a>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <a href="{{route('admin.product')}}" class="menu-item {{(Request::segment(2)=="product") ? 'here' : ''}} menu-accordion">
+                    <a href="{{route('admin.facility.index')}}" class="menu-item {{(Request::segment(2)=="facility") ? 'here' : ''}} menu-accordion">
 
                         <!--begin:Menu link-->
                         <span class="menu-link">
@@ -271,6 +271,20 @@
                             </i>
                         </span>
                         <span class="menu-title">Managament Fasilitas Hotel</span>
+                    </span>
+                        <!--end:Menu link-->
+                    </a>
+                    <a href="{{route('admin.ads.index')}}" class="menu-item {{(Request::segment(2)=="ads") ? 'here' : ''}} menu-accordion">
+
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-money-check-alt fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Managament Iklan</span>
                     </span>
                         <!--end:Menu link-->
                     </a>

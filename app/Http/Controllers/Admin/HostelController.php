@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
+use App\Models\Rating;
 use App\Models\HostelImage;
 use App\Models\HostelRoom;
 use Illuminate\Support\Facades\Validator;
@@ -11,6 +12,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+
 
 class HostelController extends Controller
 {
@@ -31,8 +34,15 @@ class HostelController extends Controller
             ->select('hostels.*', 'users.name as user_name')
             ->get();
 
-        return view('admin.management-mitra.hostel.index', compact('hostels', 'users'));
+        $ratings = DB::table('ratings')
+            ->join('users', 'users.id', '=', 'ratings.user_id')
+            ->join('hostels', 'hostels.id', '=', 'ratings.hostel_id')
+            ->select('ratings.*', 'users.*', 'hostels.*')
+            ->get();
+
+        return view('admin.management-mitra.hostel.index', compact('hostels', 'users', 'ratings'));
     }
+
 
     public function show(Hostel $hostel)
     {
@@ -276,5 +286,37 @@ class HostelController extends Controller
             'message' => 'Data Berhasil Disimpan!',
             'data'    => $hostel
         ]);
+    }
+
+    public function review(Request $request, $hostel_id)
+    {
+
+        $query = DB::table('ratings')
+            ->join('users', 'users.id', '=', 'ratings.user_id')
+            ->join('hostels', 'hostels.id', '=', 'ratings.hostel_id')
+            ->join('transactions', 'transactions.id', '=', 'ratings.transaction_id')
+            ->where('ratings.hostel_id', $hostel_id);
+
+        if ($request->has('rate')) {
+            $query->where('ratings.rate', $request->rate);
+        }
+
+        $ratings = $query->select('ratings.*', 'ratings.created_at as createdat', 'users.name as user_name', 'hostels.*', 'transactions.id as transaction_id')->get();
+
+        $avg_rate = DB::table('ratings')->where('hostel_id', $hostel_id)->avg('rate');
+
+        $total_review = DB::table('ratings')->where('hostel_id', $hostel_id)->count();
+
+        $ratingCounts = [
+            '5' => $query->where('rate', 5)->count(),
+            '4' => $query->where('rate', 4)->count(),
+            '3' => $query->where('rate', 3)->count(),
+            '2' => $query->where('rate', 2)->count(),
+            '1' => $query->where('rate', 1)->count(),
+        ];
+        
+
+
+        return view('admin.management-mitra.rating.index', compact('ratings', 'hostel_id', 'avg_rate', 'total_review', 'ratingCounts'));
     }
 }

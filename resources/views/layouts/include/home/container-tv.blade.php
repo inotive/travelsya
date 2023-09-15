@@ -95,6 +95,7 @@
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tvInternet') }}",
+                // url: "https://servicevps.travelsya.com/product/tv-internet",
                 success: function (response) {
                     $.each(response, function (key, value) {
                         $('#productTV').append($('<option>', {
@@ -124,24 +125,47 @@
                         'no_pelanggan': noPelangganTV,
                         'nom': 'CEKTELKOM',
                     },
-                    success: function (response) {
+                    success: function (responseTagihan) {
                         // console.log(response)
 
                         // SIMULASI!!!
-                        var simulateAmount = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        var simulateFee = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                        var simulateTotal = simulateAmount + simulateFee;
+                        // var simulateAmount = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
+                        // var simulateFee = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
+                        // var simulateTotal = simulateAmount + simulateFee;
 
-                        $('#namaPelangganTV').text('Joko Susilo');
-                        $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmount));
-                        $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFee));
-                        $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotal));
+                        // $('#namaPelangganTV').text('Joko Susilo');
+                        // $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmount));
+                        // $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFee));
+                        // $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotal));
 
-                        $('#inputNamaPelangganTV').val('Joko Susilo');
-                        $('#inputTotalTagihanTV').val(simulateAmount);
-                        $('#inputBiayaAdminTV').val(simulateFee);
-                        $('#inputTotalBayarTV').val(simulateTotal);
+                        // $('#inputNamaPelangganTV').val('Joko Susilo');
+                        // $('#inputTotalTagihanTV').val(simulateAmount);
+                        // $('#inputBiayaAdminTV').val(simulateFee);
+                        // $('#inputTotalBayarTV').val(simulateTotal);
 
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct':  $('#productTV').val(),
+                            },
+                            success: function (response) {
+                                var simulateFeeTV = parseInt(response[0].value);
+
+                                var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
+                                var simulateTotalTV = simulateAmountTV + simulateFeeTV;
+
+                                $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
+                                $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
+                                $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
+                                $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
+
+                                $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
+                                $('#inputTotalTagihanTV').val(simulateAmountTV);
+                                $('#inputBiayaAdminTV').val(simulateFeeTV);
+                                $('#inputTotalBayarTV').val(simulateTotalTV);
+                            }
+                        });
                     }
                 });
             });

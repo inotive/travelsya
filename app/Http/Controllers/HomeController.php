@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use App\Services\Travelsya;
-
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -34,6 +34,12 @@ class HomeController extends Controller
         })->toArray();
 
         $data['hotels'] = $dummyHotels;
+
+        $data['listAds'] = DB::table('ads')
+            ->where('is_active', 1)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('home', $data);
     }
 }

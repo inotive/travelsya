@@ -34,8 +34,10 @@
                     </thead>
                     <tbody>
                         @foreach ($hostels as $hostel)
+                        {{-- @foreach ($ratings as $rating ) --}}
+                            
                             <tr>
-                                <td>{{ $hostel->id }}</td>
+                                <td>{{ $loop->iteration }}</td>
                                 <td class="text-center">{{ $hostel->user_name }}</td>
                                 <td class="text-center">{{ $hostel->name }}</td>
                                 <td class="text-center">{{ $hostel->city }}</td>
@@ -68,7 +70,7 @@
                                         <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3"
+                                            <a href="{{ route('admin.hostel.review', $hostel->id) }}" class="menu-link px-3"
                                                 data-kt-customer-table-filter="delete_row">
                                                 Detail Hostel
                                             </a>
@@ -133,7 +135,10 @@
                                 </div>
                             </div>
                         @endforeach
+                        {{-- @endforeach --}}
                         @include('admin.management-mitra.hostel.edit')
+                        {{-- @include('admin.management-mitra.rating.index') --}}
+
                         {{--                    @foreach ($vendors as $vendor) --}}
                         {{--                        <tr> --}}
                         {{--                            <td class="text-center">{{$loop->iteration}}</td> --}}
