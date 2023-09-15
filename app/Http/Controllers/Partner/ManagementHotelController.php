@@ -39,52 +39,6 @@ class ManagementHotelController extends Controller
 
         return view('ekstranet.management-hotel.setting-hotel', compact('hostel'));
     }
-    // public function settingRoom($id)
-    // {
-    //     $hostel = Hostel::with('hostelRoom')->find($id);
-
-    //     return view('ekstranet.management-hotel.setting-rooms', compact('hostel'));
-    // }
-
-    // public function settingRoomPost(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required',
-    //         'price' => 'required',
-    //         'name' => 'required',
-    //         'sellingprice' => 'required',
-    //         'totalroom' => 'required',
-    //         'roomsize' => 'required',
-    //         'guest' => 'required',
-    //         'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     ]);
-
-    //     $facilities = [];
-    //     if ($request->breakfastIncluded == 'on')
-    //         array_push($facilities, 'breakfast');
-
-    //     if ($request->wifiIncluded == 'on')
-    //         array_push($facilities, 'wifi');
-
-    //     $facstring = '[';
-    //     foreach ($facilities as $key => $facility) {
-    //         $facstring .= $facility;
-    //         if (array_key_last($facilities) != $key)
-    //             $facstring .= ',';
-    //     }
-
-    //     $request['facilities'] = $facstring . ']';
-
-    //     $hostel = Hostel::find($request->hostel_id);
-    //     $request['image_1'] = $request->file('image')->store(
-    //         'hostel/' . Str::slug($hostel->name, '-') . '/' . Str::slug($request->name, '-'),
-    //         'public',
-    //     );
-
-    //     HostelRoom::create($request->except('image', 'wifiIncluded', 'breakfastIncluded'));
-    //     toast('Hostelroom berhasil dibuat', 'success');
-    //     return redirect()->back();
-    // }
 
         public function settingRoom($id)
     {
@@ -102,13 +56,6 @@ class ManagementHotelController extends Controller
         $data = $responsJson['data'];
         return view('ekstranet.management-hotel.setting-rooms', compact('hotel', 'facilities', 'data'));
     }
-
-    // public function settingRoom($id)
-    // {
-    //     $hostel = Hostel::with('hostelRoom')->find($id);
-
-    //     return view('ekstranet.management-hotel.setting-rooms', compact('hostel'));
-    // }
 
     //Aksi Untuk Membuat Data Room
     public function settingRoomCreate($id)
@@ -178,58 +125,6 @@ class ManagementHotelController extends Controller
         $hostel = Hostel::with('hostelImage')->find($id);
         return view('ekstranet.management-hotel.setting-photo', compact('hostel'));
     }
-
-//     public function settingRoomShow($hotel_id, $id)
-// {
-//     $data = HotelRoom::where('id', $id)
-//                     ->where('hotel_id', $hotel_id)
-//                     ->first();
-
-//     if (!$data) {
-//         return response()->json([
-//             'success' => false,
-//             'message' => 'Data Room Tidak Ditemukan',
-//             'data' => null,
-//         ]);
-//     }
-
-//     return response()->json([
-//         'success' => true,
-//         'message' => 'Detail Data Room',
-//         'data' => $data,
-//     ]);
-// }
-
-//ini untuk mengirim data room pake ajax
-// public function settingRoomShow($hotel_id, $id)
-// {
-//     $hotelRoom = HotelRoom::where('id', $id)
-//                     ->where('hotel_id', $hotel_id)
-//                     ->first();
-
-//     if (!$hotelRoom) {
-//         return response()->json([
-//             'success' => false,
-//             'message' => 'Data Room Tidak Ditemukan',
-//             'data' => null,
-//         ]);
-//     }
-
-//     // Ambil data fasilitas (facility) yg
-//     $facilities = HotelRoomFacility::where('hotel_room_id', $hotelRoom->id)->get();
-
-
-//     return response()->json([
-//         'success' => true,
-//         'message' => 'Detail Data Room',
-//         'data' => [
-//             'hotel_room' => $hotelRoom,
-//             'facilities' => $facilities,
-//         ],
-//     ]);
-//     $roomFacilitiesIds = $responseJson['data']['facilities']->pluck('id')->toArray();
-// }
-
 public function settingRoomShow($hotel_id, $id)
 {
     $hotelRoom = HotelRoom::where('id', $id)
@@ -288,8 +183,6 @@ public function settingRoomShow($hotel_id, $id)
         }
 
         $facilityIds = $request->input('facility_id');
-        //$facilityIds = explode(',', $request->input('facility_id'));
-
 
         if($request->hasFile('image_1')){
             $image_1 = $request->file('image_1');
