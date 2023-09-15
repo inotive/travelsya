@@ -19,4 +19,9 @@ class Facility extends Model
     //         get: fn ($icon) => asset('/storage/facilities/' . $icon),
     //     );
     // }
+
+    public function hotelroomFacility()
+    {
+        return $this->hasMany(HotelRoomFacility::class);
+    }
 }

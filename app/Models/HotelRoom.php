@@ -69,4 +69,9 @@ class HotelRoom extends Model
         return $this->belongsToMany(Facility::class, 'hotel_room_facility');
     }
 
+    public function hotelroomFacility()
+    {
+        return $this->hasMany(HotelRoomFacility::class);
+    }
+
 }

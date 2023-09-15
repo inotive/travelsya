@@ -28,7 +28,7 @@ class ManagementHotelController extends Controller
 
     public function detailHotel($id)
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')->find($id);
+        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelbookDate', 'hotelroomFacility')->find($id);
         $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
         $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
 
@@ -101,11 +101,12 @@ class ManagementHotelController extends Controller
         return redirect()->back();
     }
 
-    public function destroyimage(HotelImage $hotelimage)
+    public function destroyimage($id, HotelImage $hotelImage)
     {
-        Storage::delete('media/hotel/'.$hotelimage->image);
+        $hotelImage = HotelImage::findOrFail($id);
+        Storage::delete('media/hotel/'.$hotelImage->image);
     
-        $hotelimage->delete();
+        $hotelImage->delete();
 
 
         toast('Hotel Image has been deleted', 'success');
