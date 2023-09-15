@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('hostel_rules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->constrained();
+            $table->unsignedBigInteger('hostel_id');
+            $table->foreign('hostel_id')->references('id')->on('hostels')->onDelete('cascade');
             $table->text('description');
             $table->timestamps();
         });
