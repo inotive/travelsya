@@ -16,12 +16,11 @@ class Facility extends Model
     public function facility()
     {
         return $this->belongsToMany(HotelRoom::class, 'hotel_room_facility');
-
+    }
     protected function icon(): Attribute
     {
         return Attribute::make(
             get: fn ($icon) => asset('/storage/facilities/' . $icon),
         );
-
     }
 }

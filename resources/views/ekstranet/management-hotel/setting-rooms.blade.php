@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Detail Hotel - '.$hotel->name ,"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Detail Hotel - '.$hotel->name ,"url" => "#"])
 @section('content-admin')
     <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
     <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>

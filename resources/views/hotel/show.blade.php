@@ -206,12 +206,13 @@
                                                 {{ $result_rating }}
                                             </span>
                                             <span class="badge badge-danger">({{ $total_rating }} Rating)</span>
+                                            <span>{{$detailHotel->description ?? ''}}</span>
                                         </div>
                                     </div>
                                     <div class="row mt-auto">
                                         <div class="col-12">
-                                            <h2 class="mt-15 fw-bold d-flex align-self-end" style="color: #c02425">Rp
-                                                {{ General::rp($min_price) }} - Rp
+                                            <h2 class="mt-15 fw-bold d-flex align-self-end" style="color: #c02425">
+                                                {{ General::rp($min_price) }} -
                                                 {{ General::rp($max_price) }}</h2>
                                         </div>
                                     </div>
