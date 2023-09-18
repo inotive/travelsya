@@ -50,7 +50,7 @@ route::get('/hostel/{id}', [HostelController::class, 'show']);
 route::get('/hostel/room/{id}', [HostelController::class, 'room']);
 
 //hotel
-route::get('/hotel', [HotelController::class, 'index']);
+route::post('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
 route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);

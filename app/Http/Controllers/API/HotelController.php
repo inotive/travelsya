@@ -27,8 +27,8 @@ class HotelController extends Controller
     protected $xendit, $point;
     public function __construct(Xendit $xendit, Point $point)
     {
-        $this->xendit =  $xendit;
-        $this->point =  $point;
+        $this->xendit = $xendit;
+        $this->point = $point;
     }
     /**
      * Display a listing of the resource.
@@ -74,13 +74,22 @@ class HotelController extends Controller
 
             $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
 
-            if ($request->has('location') && $request->has('room') && $request->has('guest')) {
+            if ($request->has('location')) {
+                if ($request->location != 'semua') {
+                    $hotels->where('city', 'like', '%' . $request->location . '%');
+                }
+            }
+
+            if ($request->has('room')) {
                 $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->where([
-                        ['totalroom', '>', $request->room],
-                        ['guest', '>=', $request->guest],
-                    ]);
-                })->where('city', 'like', '%' . $request->location . '%');
+                    $query->where('totalroom', '>', $request->room);
+                });
+            }
+
+            if ($request->has('guest')) {
+                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+                    $query->where('guest', '>=', $request->guest);
+                });
             }
 
             $hotelget = $hotels->get();
@@ -235,9 +244,11 @@ class HotelController extends Controller
         $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
 
         //cekpoint
-        if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
+        if (!$fees)
+            return ResponseFormatter::error(null, 'Point invalid');
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
-        if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
+        if ($qty < 0)
+            return ResponseFormatter::error(null, 'Date must be forward');
         $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
 
         // cek book date
@@ -259,7 +270,7 @@ class HotelController extends Controller
                 ]
             ],
             'amount' => $amount,
-            'success_redirect_url'  => route('redirect.succes'),
+            'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
             'should_send_email' => true,
@@ -339,11 +350,15 @@ class HotelController extends Controller
     public function hotelPopuler()
     {
         $hotelPopuler = Hotel::with('hotelImage', 'hotelRating')
-            ->withCount(["hotelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(price),0)'));
-            }])->withCount(["hotelRating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("hotelRating as rating_count")
+            ->withCount([
+                "hotelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(price),0)'));
+                }
+            ])->withCount([
+                    "hotelRating as rating_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(rate),0)'));
+                    }
+                ])->withCount("hotelRating as rating_count")
             ->orderBy('rating_count', 'DESC')
             ->orderBy('rating_avg', 'DESC')
             ->orderBy('price_avg', "desc")->get();
