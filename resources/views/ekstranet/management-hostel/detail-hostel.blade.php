@@ -136,10 +136,6 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Fasilitas Hotel
                                 ({{ $hotel->hotelroomFacility->count() }})</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5">Aturan Hotel
-                                ({{ $hotel->hotelRule->count() }})</a>
-                        </li>
                     </ul>
 
                     <div class="tab-content" id="myTabContent">
@@ -155,7 +151,7 @@
                                             <th class="text-center">Fix Rate</th>
                                             <th class="text-center">Jumlah Ruangan</th>
                                             <th class="text-center">Batas Penghuni</th>
-
+                                            
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -218,7 +214,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <div class="modal-header">
-                                                                <h2 class="fw-bold">Delete Room</h2>
+                                                                <h2 class="fw-bold">Delete image</h2>
                                                                 <button type="button"
                                                                     class="btn btn-icon btn-sm btn-active-icon-primary"
                                                                     data-bs-dismiss="modal">
@@ -389,7 +385,7 @@
                                 </table>
 
 
-
+                                
                             </div>
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
@@ -460,14 +456,15 @@
                                     </tbody>
                                 </table>
 
-
+                               
                             </div>
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
-
+                            
                             @foreach ($hotel->hotelRoom as $room)
+                            
                                 <div class="d-flex flex-wrap flex-sm-nowrap border border-secondary p-3 m-18 mt-2"
-                                    style="border-radius: 20px;" >
+                                    style="border-radius: 20px;"  id="kt_datatable_zero_configuration_3">
 
                                     <div class="container">
                                         <!-- Header -->
@@ -511,186 +508,6 @@
                             @endforeach
 
                         </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_5" role="tabpanel">
-                            <div class="row">
-                                <div class="card-toolbar">
-                                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal"
-                                        data-bs-target="#create-rule">
-                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Peraturan</a>
-                                </div>
-
-                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                                    id="kt_datatable_zero_configuration_3">
-                                    <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800 ">
-                                            <th class="text-center">No.</th>
-                                            <th class="text-center">Peraturan</th>
-                                            <th class="text-center">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($hotel->hotelRule as $rule)
-                                            <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td class="text-center">{{ $rule->name }}</td>
-                                                <td class="text-center">
-                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                        data-kt-menu="true" style="">
-                                                        <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)"
-                                                                class="menu-link px-3 text-warning" id="btn-edit-rule"
-                                                                data-id="{{ $rule->id }}" data-bs-toggle="modal"
-                                                                data-bs-target="#modal-edit-rule">
-                                                                Edit
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-item px-3">
-                                                            <a href="#" class="menu-link px-3 text-danger"
-                                                                data-bs-toggle="modal" {{-- data-kt-customer-table-filter="delete_row" --}}
-                                                                data-bs-target="#kt_modal_delete_rule{{ $rule->id }}">
-                                                                Delete
-                                                            </a>
-                                                        </div>
-                                                        <!--end::Menu item-->
-                                                    </div>
-                                                    <!--begin::Menu-->
-                                                    <a href="#"
-                                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                        Actions
-                                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                    </a>
-                                                    <!--end::Menu-->
-                                                </td>
-                                            </tr>
-                                            <div class="modal fade" id="kt_modal_delete_rule{{ $rule->id }}"
-                                                tabindex="-1" aria-hidden="true">
-                                                <!-- Konten modal penghapusan -->
-                                                <div class="modal-dialog modal-dialog-centered mw-650px">
-                                                    <div class="modal-content">
-                                                        <form
-                                                            action="{{ route('partner.management.hotel.destroyrule', $rule->id) }}"
-                                                            method="POST" id="kt_modal_delete_rule_form">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <div class="modal-header">
-                                                                <h2 class="fw-bold">Delete rule</h2>
-                                                                <button type="button"
-                                                                    class="btn btn-icon btn-sm btn-active-icon-primary"
-                                                                    data-bs-dismiss="modal">
-                                                                    <i class="ki-duotone ki-cross fs-1"></i>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body py-10 px-lg-17">
-                                                                <p>Anda yakin ingin menghapus data Peraturan
-                                                                    {{ $rule->name }}?
-                                                                </p>
-                                                            </div>
-                                                            <div class="modal-footer d-flex justify-content-center">
-                                                                <button type="button" class="btn btn-light me-3"
-                                                                    data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
-                                                            </div>
-                                                            <!--end::Menu-->
-                                                        </form>
-                                                        </td>
-                                                        </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                                @include('ekstranet.management-hotel.edit-rules')
-
-
-                                {{-- Modal Create RUles --}}
-                                <div class="modal fade" id="create-rule" tabindex="-1" aria-hidden="true">
-                                    <!--begin::Modal dialog-->
-                                    <div class="modal-dialog modal-dialog-centered mw-650px">
-                                        <!--begin::Modal content-->
-                                        <div class="modal-content rounded">
-                                            <!--begin::Modal header-->
-                                            <div class="modal-header pb-0 border-0 justify-content-end">
-                                                <!--begin::Close-->
-                                                <div class="btn btn-sm btn-icon btn-active-color-primary"
-                                                    data-bs-dismiss="modal">
-                                                    <i class="ki-duotone ki-cross fs-1">
-                                                        <span class="path1"></span>
-                                                        <span class="path2"></span>
-                                                    </i>
-                                                </div>
-                                                <!--end::Close-->
-                                            </div>
-                                            <!--begin::Modal header-->
-                                            <!--begin::Modal body-->
-                                            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                                                <!--begin:Form-->
-                                                <form id="kt_modal_new_target_form" class="form" method="post"
-                                                    action="{{ route('partner.management.hotel.storerule') }}">
-                                                    @csrf
-                                                    <!--begin::Heading-->
-                                                    <div class="mb-13 text-center">
-                                                        <!--begin::Title-->
-                                                        <h1 class="mb-3">Create Hotel Rules</h1>
-                                                        <!--end::Title-->
-                                                    </div>
-                                                    <!--end::Heading-->
-                                                    <!--begin::Input group-->
-                                                    <input type="hidden" id="hotel_id">
-                                                    <div class="row g-9 mb-8">
-                                                        <div class="col-md-12">
-                                                            <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                                                            <input class="form-control form-control-lg" id="name"
-                                                                placeholder="Masukan nama aturan" name="name"
-                                                                required />
-
-                                                            @error('name')
-                                                                <span class="text-danger mt-1" role="alert">
-                                                                    <strong>{{ $message }}</strong>
-                                                                </span>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                    <!--end::Input group-->
-                                                    <!--begin::Actions-->
-                                                    <div class="text-center">
-                                                        <div class="row">
-                                                            <div class="col-6">
-                                                                <button type="reset" id="kt_modal_new_target_cancel"
-                                                                    class="btn btn-light me-3">Cancel
-                                                                </button>
-                                                            </div>
-                                                            <div class="col-6">
-                                                                <button type="submit" id="kt_modal_new_target_submit"
-                                                                    class="btn btn-primary">
-                                                                    <span class="indicator-label">Submit</span>
-                                                                    <span class="indicator-progress">Please wait...
-                                                                        <span
-                                                                            class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <!--end::Actions-->
-                                                </form>
-                                                <!--end:Form-->
-                                            </div>
-                                            <!--end::Modal body-->
-                                        </div>
-                                        <!--end::Modal content-->
-                                    </div>
-                                    <!--end::Modal dialog-->
-                                </div>
-
-                                {{-- Modal Edit Rules --}}
-
-                                
-
-                                {{-- end modal edit rules --}}
-                            </div>
-                        </div>
 
 
                     </div>
@@ -705,14 +522,15 @@
 @endsection
 @push('add-script')
     <script>
-        $(document).ready(function() {
+        $(document).ready( function () {
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
-                "dom": "<'row'" +
+                "dom":
+                    "<'row'" +
                     "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
@@ -731,7 +549,8 @@
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
-                "dom": "<'row'" +
+                "dom":
+                    "<'row'" +
                     "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
@@ -750,7 +569,8 @@
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
-                "dom": "<'row'" +
+                "dom":
+                    "<'row'" +
                     "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
@@ -762,90 +582,10 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
-
-            $('#kt_datatable_zero_configuration_3').DataTable({
-                "scrollY": "500px",
-                "scrollCollapse": true,
-                "language": {
-                    "lengthMenu": "Show _MENU_",
-                },
-                "dom": "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                    ">" +
-
-                    "<'table-responsive'tr>" +
-
-                    "<'row'" +
-                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                    ">"
-            });
-
         });
 
-        // $('body').on('click', '#btn-edit-rule', function() {
-        //     let rule_id = $(this).data('id');
-        //     // alert(rule_id);
-        //     $.ajax({
-        //         url: `show/rules/${rule_id}`,
-        //         type: "GET",
-        //         cache: false,
-
-        //         success: function(response) {
-        //             $('#rule_id').val(response.data[0].id);
-        //             $('#hotel_id').val(response.data[0].hotel_id);
-        //             $('#name-edit').val(response.data[0].name);
-
-        //             $('#modal-edit-rule').modal('show');
-        //         }
-        //     });
-        // });
-        // $('#update').click(function(e) {
-        //     e.preventDefault();
-
-        //     //define variable
-        //     let rule_id = $('#rule_id').val();
-        //     let hotel_id = $('#hotel_id').val();
-        //     let name = $('#name-edit').val();
-        //     let token = $("meta[name='csrf-token']").attr("content");
-
-        //     //ajax
-        //     $.ajax({
-
-        //         url: `${rule_id}`,
-        //         type: "PUT",
-        //         cache: false,
-        //         data: {
-        //             "hotel_id": hotel_id,
-        //             "name": name,
-        //             "_token": token
-        //         },
-        //         success: function(response) {
-
-        //             $('#modal-edit-rule').modal('hide');
-        //             location.reload();
-
-
-        //         },
-        //         error: function(error) {
-
-        //             if (error.responseJSON.name[0]) {
-
-        //                 //show alert
-        //                 $('#alert-name-edit').removeClass('d-none');
-        //                 $('#alert-name-edit').addClass('d-block');
-
-
-        //                 //add message to alert
-        //                 $('#alert-name-edit').html(error.responseJSON.name[0]);
-
-        //             }
-
-        //         }
-
-        //     });
-
-        // });
     </script>
+
+
+
 @endpush

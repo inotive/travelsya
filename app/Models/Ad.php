@@ -19,10 +19,10 @@ class Ad extends Model
     //     return url('storage/' . $value);
     // }
 
-    protected function image(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($image) => asset('/storage/ads/' . $image),
-        );
-    }
+    // protected function image(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($image) => asset('/media/ads/' . $image),
+    //     );
+    // }
 }

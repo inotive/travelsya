@@ -45,14 +45,12 @@ class AdController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $image = $request->file('image');
-        $image->storeAs('/public/ads/', $image->hashName());
-
+        $image = $request->file('image')->store('media/ads');
         
         Ad::create([
             'name'  => $request->name,
             'url'   => $request->url,
-            'image' => $image->hashName(),
+            'image' => $image,
             'is_active' => $request->is_active
         ]);
 
@@ -85,29 +83,27 @@ class AdController extends Controller
      */
     public function update(Request $request, Ad $ad)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required',
-        //     'url' => 'required',
-        //     'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'url' => 'required',
+            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
-        // ]);
+        ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         if ($request->hasFile('image')) {
 
             //upload new image
-            $image = $request->file('image');
-            $image->storeAs('public/ads/', $image->hashName());
+            $image = $request->file('image')->store('media/ads');
+            // $image->storeAs('media/ads', $image->hashName(), 'public');
 
-            //delete old image
-            Storage::delete('public/ads/'.$ad->image);
+            Storage::delete('media/ads/'.$ad->image);
 
-            //update post with new image
             $ad->update([
-                'image'     => $image->hashName(),
+                'image'     => $image,
                 'name'     => $request->name,
                 'url'   => $request->url,
                 'is_active' => $request->is_active,
@@ -138,7 +134,7 @@ class AdController extends Controller
      */
     public function destroy(Ad $ad)
     {
-        Storage::delete('public/ads/'.$ad->image);
+        Storage::delete('media/ads/'.$ad->image);
 
         $ad->delete();
 

@@ -26,4 +26,9 @@ class HotelBookDate extends Model
     {
         return $this->belongsTo(HotelRoom::class);
     }
+
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
+    }
 }

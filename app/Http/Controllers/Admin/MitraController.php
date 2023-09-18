@@ -7,7 +7,6 @@ use App\Models\Hostel;
 use App\Models\HostelRoom;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -45,7 +44,6 @@ class MitraController extends Controller
 
     public function storeMitra(Request $request)
     {
-
         Hostel::create([
             'name' => ucwords($request->name),
             'user_id' => $request->user_id,
