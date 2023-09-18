@@ -8,10 +8,13 @@ use App\Models\HostelRoom;
 use App\Models\Hotel;
 use App\Models\HotelImage;
 use App\Models\HotelRoom;
+use App\Models\HotelRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB; 
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+
 
 use File;
 
@@ -28,7 +31,7 @@ class ManagementHotelController extends Controller
 
     public function detailHotel($id)
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')->find($id);
+        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelbookDate', 'hotelroomFacility', 'hotelRule')->find($id);
         $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
         $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
 
@@ -101,14 +104,76 @@ class ManagementHotelController extends Controller
         return redirect()->back();
     }
 
-    public function destroyimage(HotelImage $hotelimage)
+    public function destroyimage($id, HotelImage $hotelImage)
     {
-        Storage::delete('media/hotel/'.$hotelimage->image);
+        $hotelImage = HotelImage::findOrFail($id);
+        Storage::delete('media/hotel/'.$hotelImage->image);
     
-        $hotelimage->delete();
+        $hotelImage->delete();
 
 
         toast('Hotel Image has been deleted', 'success');
+        return redirect()->back();
+    }
+
+    public function storeRule(Request $request)
+    {
+        $this->validate($request, [
+            // 'hotel_id'  => 'required',
+            'name'  => 'required'
+        ]);
+
+        HotelRule::create([
+            'name'  => $request->name,
+            'hotel_id' => $request->hotel_id,
+        ]);
+        toast('Hotel Rule has been created', 'success');
+        return redirect()->back();
+    }
+
+    public function showRule(Request $request)
+    {
+        $hotelRule = HotelRule::where('id', $request->id)->get();
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Hotel Rules',
+            'data'    => $hotelRule
+        ]);
+    }
+
+    public function updaterule(Request $request, HotelRule $HotelRule,$id)
+    {
+        $validator = Validator::make($request->all(), [
+            'hotel_id'  => 'required',
+            'name'  => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+            
+
+        
+        $HotelRule = HotelRule::find($id);
+        $HotelRule->update([
+            'hotel_id'  => $request->hotel_id,
+            'name'  => $request->name
+        ]);
+
+        toast('Hotel Rule has been Updated', 'success');
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diudapte!',
+            'data'    => $HotelRule 
+        ]);
+        // return redirect()->back();
+    }
+    public function destroyRule($id)
+    {
+        $hotel_rule = HotelRule::findorfail($id);
+        $hotel_rule->delete();
+        toast('Hotel Rule has been Deleted', 'success');
         return redirect()->back();
     }
 }
