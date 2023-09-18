@@ -36,7 +36,9 @@
                         <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
                     <div class="col-4">
+                        @auth
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
+                        @endauth
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -65,7 +67,15 @@
 
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitBPJS" disabled>Pembayaran</button>
+                        @endauth
+
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
                     </div>
 
                 </div>
@@ -113,6 +123,10 @@
                         data: {
                             'idProduct':  362,
                         },
+                        beforeSend: function() {
+                            $('#btnPeriksaBPJS').attr('disabled', true);
+                            $('#btnPeriksaBPJS').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                        },
                         success: function (response) {
                             var simulateFeeBPJS = parseInt(response[0].value);
 
@@ -128,6 +142,11 @@
                             $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
                             $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
                             $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+
+                            $('#btnPeriksaBPJS').removeAttr('disabled');
+                            $('#btnPeriksaBPJS').text('Periksa');
+
+                            $('#btnSubmitBPJS').removeAttr('disabled');
                         }
                     });
                 }

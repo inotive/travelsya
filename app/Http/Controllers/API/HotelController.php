@@ -38,41 +38,89 @@ class HotelController extends Controller
     public function index(Request $request)
     {
         try {
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
-            if ($request->name)
-                $hotel->where('name', 'like', '%' . $request->name . '%');
+            // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
 
-            if ($request->location)
-                $hotel->where('city', 'like', '%' . $request->location . '%');
+            // if ($request->name)
+            //     $hotel->where('name', 'like', '%' . $request->name . '%');
 
-            if ($request->category)
-                $hotel->where('category', 'like', '%' . $request->category . '%');
+            // if ($request->location)
+            //     $hotel->where('city', 'like', '%' . $request->location . '%');
 
-            if ($request->property)
-                $hotel->where('property', $request->property);
+            // if ($request->category)
+            //     $hotel->where('category', 'like', '%' . $request->category . '%');
 
-            if ($request->furnish) {
-                $furnish = $request->furnish;
-                $hotel->withWhereHas('hotelRoom', function ($q) use ($furnish) {
-                    $q->where('furnish', $furnish);
-                });
+            // if ($request->property)
+            //     $hotel->where('property', $request->property);
+
+            // if ($request->furnish) {
+            //     $furnish = $request->furnish;
+            //     $hotel->withWhereHas('hotelRoom', function ($q) use ($furnish) {
+            //         $q->where('furnish', $furnish);
+            //     });
+            // }
+
+            // if ($request->roomtype) {
+            //     $roomtype = $request->roomtype;
+            //     $hotel->withWhereHas('hotelRoom', function ($q) use ($roomtype) {
+            //         $q->where('roomtype', $roomtype);
+            //     });
+            // }
+
+            // if (count($hotelget)) {
+            //     return ResponseFormatter::success($hotelget, 'Data successfully loaded');
+            // } else {
+            //     return ResponseFormatter::error(null, 'Data not found');
+            // }
+
+            $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
+
+            if ($request->has('location') && $request->has('room') && $request->has('guest')) {
+                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+                    $query->where([
+                        ['totalroom', '>', $request->room],
+                        ['guest', '>=', $request->guest],
+                    ]);
+                })->where('city', 'like', '%' . $request->location . '%');
             }
 
-            if ($request->roomtype) {
-                $roomtype = $request->roomtype;
-                $hotel->withWhereHas('hotelRoom', function ($q) use ($roomtype) {
-                    $q->where('roomtype', $roomtype);
-                });
+            $hotelget = $hotels->get();
+            $hotelDetails = [];
+            $hotelFormatJSON = [];
+
+            foreach ($hotelget as $hotel) {
+                $minPrice = $hotel->hotelRoom->min('price');
+                $maxPrice = $hotel->hotelRoom->min('sellingprice');
+                $jumlahTransaksi = $hotel->hotelRating->count();
+                $totalRating = $hotel->hotelRating->sum('rate');
+
+                // Rating 5
+                if ($jumlahTransaksi > 0) {
+                    $avgRating = $totalRating / $jumlahTransaksi;
+                    $resultRating = ($avgRating / 10) * 5;
+                } else {
+                    $avgRating = 0;
+                    $resultRating = 0;
+                }
+
+                $hotelDetails[$hotel->id] = [
+                    'avg_rating' => $avgRating,
+                    'rating_count' => $resultRating,
+                    'price' => $minPrice,
+                    'sellingprice' => $maxPrice,
+                ];
+
+                $hotelFormatJSON[] = [
+                    'name' => $hotel->name,
+                    'location' => $hotel->city,
+                    'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
+                    'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
+                    'price' => $hotelDetails[$hotel->id]['price'],
+                    'sellingprice' => $hotelDetails[$hotel->id]['sellingprice'],
+                ];
             }
 
-            $hotelget = $hotel->withCount(["hotelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(price),0)'));
-            }])->withCount(["hotelRating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("hotelRating as rating_count")->get();
-
-            if (count($hotelget)) {
-                return ResponseFormatter::success($hotelget, 'Data successfully loaded');
+            if (count($hotelFormatJSON)) {
+                return ResponseFormatter::success($hotelFormatJSON, 'Data successfully loaded');
             } else {
                 return ResponseFormatter::error(null, 'Data not found');
             }
@@ -94,32 +142,59 @@ class HotelController extends Controller
     {
         try {
             // $hotel = Hotel::find($hotel->id);
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')->where('is_active', 1)->where('id', $id);
+            // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+            //     ->find($id);
 
+            // if ($request->start_date) {
+            //     $date = [
+            //         'start' => $request->start_date,
+            //         'end' => $request->end_date
+            //     ];
+            //     $hotel->with(['hotelRoom' => function ($query) use ($date) {
+            //         $query->withCount(['hotelBookDate as existsDate' => function ($q) use ($date) {
+            //             $q->where('start', '>=', $date['start']);
+            //             $q->where('end', '<=', $date['end']);
+            //             $q->select(DB::raw('count(id)'));
+            //         }])->with('hotelBookDate');
+            //     }]);
+            //     // $hotelCollect =  collect($bookdate);
 
-            if ($request->start_date) {
-                $date = [
-                    'start' => $request->start_date,
-                    'end' => $request->end_date
-                ];
-                $hotel->with(['hotelRoom' => function ($query) use ($date) {
-                    $query->withCount(['hotelBookDate as existsDate' => function ($q) use ($date) {
-                        $q->where('start', '>=', $date['start']);
-                        $q->where('end', '<=', $date['end']);
-                        $q->select(DB::raw('count(id)'));
-                    }])->with('hotelBookDate');
-                }]);
-                // $hotelCollect =  collect($bookdate);
+            //     // $filter =  array_filter($hotelCollect->toArray(), function ($var) {
+            //     //     foreach ($var['hotel_room'] as $value) {
+            //     //         return ($value['existsDate'] == 0);
+            //     //     }
+            //     // });
 
-                // $filter =  array_filter($hotelCollect->toArray(), function ($var) {
-                //     foreach ($var['hotel_room'] as $value) {
-                //         return ($value['existsDate'] == 0);
-                //     }
-                // });
+            //     // return $filter;
+            // }
 
-                // return $filter;
+            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelFacilities', 'hotelRules')
+                ->find($id);
+
+            $jumlahTransaksi = $hotel->hotelRating->count();
+            $totalRating = $hotel->hotelRating->sum('rate');
+
+            // Rating 5
+            if ($jumlahTransaksi > 0) {
+                $avgRating = $totalRating / $jumlahTransaksi;
+            } else {
+                $avgRating = 0;
             }
-            $hotelGet = $hotel->get();
+
+            $hotelGet = collect([$hotel])->map(function ($hotel) use ($avgRating, $totalRating) {
+                return [
+                    'name' => $hotel->name,
+                    'checkin' => $hotel->checkin,
+                    'checkout' => $hotel->checkout,
+                    'location' => $hotel->city,
+                    'avg_rating' => $avgRating,
+                    'rating_count' => $totalRating,
+                    'hotel_rooms' => $hotel->hotelRoom,
+                    'hotel_facilities' => $hotel->hotelFacilities,
+                    'hotel_rules' => $hotel->hotelRules,
+                    'hotel_reviews' => $hotel->hotelRating,
+                ];
+            });
 
             if (count($hotelGet)) {
                 return ResponseFormatter::success($hotelGet, 'Data successfully loaded');
