@@ -115,21 +115,24 @@ class PpobController extends Controller
             }
             $setting = new Setting();
             $fees = $setting->getFees($data['point'], $product->service_id, $request->user()->id, $price);
-            if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
+            if (!$fees)
+                return ResponseFormatter::error(null, 'Point invalid');
             $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees);
 
 
             //request xendit
             $payoutsXendit = $this->xendit->create([
                 'external_id' => $data['no_inv'],
-                'items' => [[
-                    'name' => $product['name'],
-                    'quantity' => $data['detail'][0]['qty'],
-                    'price' => $price,
-                    'url' => $data['detail'][0]['url'] ?: "someurl"
-                ]],
+                'items' => [
+                    [
+                        'name' => $product['name'],
+                        'quantity' => $data['detail'][0]['qty'],
+                        'price' => $price,
+                        'url' => $data['detail'][0]['url'] ?: "someurl"
+                    ]
+                ],
                 'amount' => $amount,
-                'success_redirect_url'  => route('redirect.succes'),
+                'success_redirect_url' => route('redirect.succes'),
                 'failure_redirect_url' => route('redirect.fail'),
                 'invoice_duration ' => 72000,
                 'should_send_email' => true,
@@ -199,11 +202,11 @@ class PpobController extends Controller
         try {
             $data = $request->all();
 
-            // handle validation
             $validator = Validator::make($request->all(), [
                 'no_pelanggan' => 'required',
                 'nom' => 'required',
             ]);
+
             if ($validator->fails()) {
                 return ResponseFormatter::error([
                     'response' => $validator->errors(),

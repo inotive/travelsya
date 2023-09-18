@@ -63,6 +63,8 @@ route::get('/data', [PulsaDataController::class, 'getData']);
 route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
 
+route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // ppob product
@@ -71,7 +73,7 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/ppob/transaction', [PpobController::class, 'transaction']);
     route::post('/ppob/status', [PpobController::class, 'status']);
     route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
-    route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
+    // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
