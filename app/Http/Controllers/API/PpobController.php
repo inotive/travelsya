@@ -221,7 +221,15 @@ class PpobController extends Controller
             if (str_contains($requestMymili['status'], "SUKSES")) {
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
-                return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+                if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                    $status = "Tagihan Sudah Terbayar";
+                }
+
+                if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                    $status = "Nomor Tagihan Tidak Dikenali";
+                }
+
+                return ResponseFormatter::error($status, 'Inquiry failed');
             }
         } catch (\Throwable $th) {
             return ResponseFormatter::error([
