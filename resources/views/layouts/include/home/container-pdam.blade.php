@@ -33,7 +33,9 @@
                         <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
                     </div>
                     <div class="col-xl-4">
+                        @auth
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
+                        @endauth
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -62,7 +64,15 @@
 
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM" disabled>Pembayaran</button>
+                        @endauth
+
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
                     </div>
 
                 </div>
@@ -115,7 +125,7 @@
                     // url: "https://servicevps.travelsya.com/product/pdam",
                     data: {
                         'no_pelanggan': noPelangganPDAM,
-                        'nom': 'CEKPLN',
+                        'nom': 'CEKPDAMBLP',
                     },
                     success: function (responseTagihan) {
                         $.ajax({
@@ -123,6 +133,10 @@
                             url: "{{ route('product.adminFee') }}",
                             data: {
                                 'idProduct': $('#productPDAM').val(),
+                            },
+                            beforeSend: function() {
+                                $('#btnPeriksaPDAM').attr('disabled', true);
+                                $('#btnPeriksaPDAM').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
                             },
                             success: function (response) {
                                 var simulateFeePDAM = parseInt(response[0].value);
@@ -139,6 +153,11 @@
                                 $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
                                 $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
                                 $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
+
+                                $('#btnPeriksaPDAM').removeAttr('disabled');
+                                $('#btnPeriksaPDAM').text('Periksa');
+
+                                $('#btnSubmitPDAM').removeAttr('disabled');
                             }
                         });
                     }

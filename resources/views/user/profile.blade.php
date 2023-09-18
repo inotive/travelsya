@@ -1,229 +1,290 @@
 @extends('layouts.user')
 
 @section('content-user')
-<!--begin::Toolbar-->
-<div class="toolbar py-5 pb-lg-15" id="kt_toolbar">
-    <!--begin::Container-->
-    <div id="kt_toolbar_container" class=" container-xxl  d-flex flex-stack flex-wrap">
 
+{{-- Containre --}}
+<div class="container">
+    {{-- Row --}}
+    <div class="row">
+        {{-- Kolom Kiri (Menu)--}}
+        <div class="col-12 col-lg-3 offset-lg-1 mb-10">
+            <div class="card">
+                {{-- Card Bagian Body --}}
+                <div class="card-body">
+                    {{-- Nama User --}}
+                    <div class="card-title mb-5">
+                        <h3>
+                        <b>
+                        John Doe
+                        </b>
+                        </h3>
+                    </div>
+                    {{-- end Nama User --}}
 
-        <!--begin::Page title-->
-        <div class="page-title d-flex flex-column me-3">
-            <!--begin::Title-->
-            <h1 class="d-flex text-white fw-bold my-1 fs-3">
-                Account Overview
-            </h1>
-            <!--end::Title-->
+                    {{-- Menu Item Start --}}
 
+                    {{-- Bagian Poin --}}
+                    <div class="group-point-ini-guys d-flex">
+                        <div class="menu-item">
+                    <div class="menu-link">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/coin.svg') }}" class="h-24px me-10"/>
+                    </span>
+
+                    <div class="ini-pemersatu">
+                    <div class="text-gray-500 fs-8">Points Anda</div>
+                    <span class=" fw-medium fs-4 menu-title">
+                            <b>
+                                1.384
+                            </b>
+                    </span>
+                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- End Bagian Poin --}}
+
+                    {{-- Start Bagian e-Wallet --}}
+                    <div class="group-wallet-ini-guys d-flex">
+                        <div class="menu-item">
+                    <div class="menu-link">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/wallet.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <div class="ini-pemersatu">
+                    <div class="text-gray-500 fs-8">e-Wallet</div>
+                    <span class=" fw-medium fs-4 menu-title">
+                            <b>
+                                56.500
+                            </b>
+                    </span>
+                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Separator --}}
+                <div class="separator mb-3 border"></div>
+
+                {{-- Menu Item Profil Saya --}}
+                <div class="menu-item">
+                    <a class="menu-link text-gray" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/user.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title text-gray-900">
+                        <b>Profil Saya</b>
+                    </span>
+                    </a>
+                </div>
+
+                {{-- Menu Item Riwayat Pesanan --}}
+                <div class="menu-item">
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title">
+                        Riwayat Pesanan</b>
+                    </span>
+                    </div>
+                </a>
+                {{-- Menu Item Data Penumpang --}}
+                <div class="menu-item" >
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/users.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title">
+                        Data Penumpang
+                    </span>
+                    </a>
+                </div>
+                {{-- Menu Item Keamanan --}}
+                <div class="menu-item" >
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/lock.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title">
+                        Keamanan
+                    </span>
+                    </a>
+                </div>
+                {{-- Menu Item Kode Referral --}}
+                <div class="menu-item" >
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title">
+                        Kode Referral
+                    </span>
+                    </a>
+                </div>
+                {{-- Menu Item --}}
+                <div class="menu-item">
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/credit-card.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title">
+                        Refund & Pembatalan
+                    </span>
+                    </a>
+                </div>
+                {{-- Menu Item Pusat Bantuan --}}
+                <div class="menu-item" >
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/headphones.svg') }}" class="h-24px me-10"/>
+                    </span>
+                    <span class="menu-title">
+                        Pusat Bantuan
+                    </span>
+                    </a>
+                </div>
+                {{-- SEPARATOR --}}
+                <div class="separator my-3 border"></div>
+                {{-- Menu ITEm Logout --}}
+                <div class="menu-item" >
+                    <a class="menu-link text-gray-900" href="#">
+                    <span class="menu-icon">
+                        <img src="{{ asset('assets/media/svg/profile-account/log-out.svg') }}" class="h-24px me-10"/>
+                    </span>
+                        Log out
+                    </a>
+                </div>
+                </div>
+            </div>
         </div>
-        <!--end::Page title-->
+        {{-- End Kolom Kiri --}}
+
+        {{-- Kolom Kanan (Form Edit Profile) --}}
+        <div class="col-12 col-lg-7">
+            <div class="card">
+                {{-- Card Head --}}
+                <div class="card-header">
+                    <div class="card-title">
+                    <h1>
+                        <b>
+                        Profil Saya
+                        </b>
+                    </h1>
+                    </div>
+                </div>
+                {{-- Card Body --}}
+                <div class="card-body">
+                    {{-- Row --}}
+                    <div class="row">
+                        {{-- kolom batas form --}}
+                        <div class="col-9">
+                        <h3>
+                        <b>
+                        Data Pemilik Akun
+                        </b>
+                        </h3>
+                        <div class="mb-10 mt-5 d-flex">
+                        <div class="form-check form-check form-check-danger form-check-solid me-5">
+                            <input type="radio" class="form-check-input h-20px w-20px" name="radio" value="" id="flexCheckboxSm"  />
+                            <label class="form-check-label" for="flexCheckboxSm">
+                                Tuan
+                            </label>
+                        </div>
+                            <div class="form-check form-check form-check-danger form-check-solid me-5">
+                            <input type="radio" class="form-check-input h-20px w-20px" name="radio2" value="" id="flexCheckboxSm2"  />
+                            <label class="form-check-label" for="flexCheckboxSm2">
+                                Nyonya
+                            </label>
+                        </div>
+                            <div class="form-check form-check form-check-danger form-check-solid me-5">
+                            <input type="radio" class="form-check-input h-20px w-20px" name="radio3" value="" id="flexCheckboxSm3"  />
+                            <label class="form-check-label" for="flexCheckboxSm3">
+                                Nona
+                            </label>
+                        </div>
+                        </div>
+                        <!--begin::Input group-->
+                        <div class="mb-5">
+                                {{-- <label class="form-label">
+                                    Username
+                                </label> --}}
+                            <input type="text" class="form-control" />
+                            <div class="form-text fs-8">Seperti di KTP/SIM/Paspor</div>
+                        </div>
+                        <div class="form-text fs-6">Tanggal Lahir</div>
+                        <div class="input-group mb-10">
+                            <input type="date" class="form-control"  aria-describedby="basic-addon2"/>
+                        </div>
+                        <!--end::Input group-->
+                        <h3>
+                        <b>
+                        Info Kontak
+                        </b>
+                        </h3>
+                        <div class="form-text fs-6 mt-5">Nomor Handphone</div>
+                        <div class="input-group mb-5">
+                            <input type="text" class="form-control" />
+                        </div>
+
+                        <div class="form-text fs-6">Email</div>
+                        <div class="input-group mb-10">
+                            <input type="text" class="form-control" />
+                        </div>
+                        <h3>
+                        <b>
+                        Info Identitas
+                        </b>
+                        </h3>
+                        <div class="form-text mt-5 fs-6">Detail Kewarganegaraan</div>
+                        <div class="input-group mb-5">
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-text fs-6">NIK</div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="form-text mb-10 fs-8">Werga Negara Asing (WNA) boleh memasukkan nomor izin tinggal atau nomor paspor</div>
+                        <h3>
+                        <b>
+                        Info Paspor
+                        </b>
+                        </h3>
+                        <div class="form-text mt-5 fs-6">Email</div>
+                        <div class="input-group mb-5">
+                            <input type="email" class="form-control" />
+                        </div>
+                        <div class="form-text fs-6">Tanggal Penerbitan</div>
+                        <div class="input-group mb-5">
+                            <input type="date" class="form-control" />
+                        </div>
+                        <div class="form-text fs-6">Tanggal Kadaluwarsa</div>
+                        <div class="input-group">
+                            <input type="date" class="form-control" />
+                        </div>
+                        <div class="form-text fs-8 mb-10">Berlaku setidaknya 6 bulan dari tanggal kepergian</div>
+                        <h3>
+                        <b>
+                        Kontak Darurat
+                        </b>
+                        </h3>
+                        <div class="input-group mb-5 mt-5">
+                            <input type="text" class="form-control" placeholder="Nama"/>
+                        </div>
+                        <div class="form-text fs-6">Nomor Handphone</div>
+                        <div class="input-group mb-10">
+                            <input type="text" class="form-control" />
+                        </div>
+                        <a href="" class="btn btn-danger px-16">Simpan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- End Kolom Kanan --}}
     </div>
-    <!--end::Container-->
+    {{-- End Row --}}
 </div>
-<!--end::Toolbar-->
-<div id="kt_content_container" class="container-xxl ">
-    <!--begin::Post-->
-    <div class="content flex-row-fluid" id="kt_content">
+{{-- End Container --}}
 
-        <!--begin::Navbar-->
-        <div class="card mb-5 mb-xl-10">
-            <div class="card-body pt-9 pb-0">
-                <!--begin::Details-->
-                <div class="d-flex flex-wrap flex-sm-nowrap">
-                    <!--begin: Pic-->
-                    <div class="me-7 mb-4">
-                        <div class="symbol symbol-100px symbol-lg-160px symbol-fixed position-relative">
-                            <img src="../assets/media/avatars/300-1.jpg" alt="image" />
-                            <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-body h-20px w-20px">
-                            </div>
-                        </div>
-                    </div>
-                    <!--end::Pic-->
-
-                    <!--begin::Info-->
-                    <div class="flex-grow-1">
-                        <!--begin::Title-->
-                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                            <!--begin::User-->
-                            <div class="d-flex flex-column">
-                                <!--begin::Name-->
-                                <div class="d-flex align-items-center mb-2">
-                                    <a href="#" class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">
-{{--                                        {{\Illuminate\Support\Facades\Auth::user()->name}}--}}
-                                    </a>
-                                    <a href="#"><i class="ki-duotone ki-verify fs-1 text-primary"><span class="path1"></span><span class="path2"></span></i></a>
-                                </div>
-                                <!--end::Name-->
-
-                                <!--begin::Info-->
-                                <div class="d-flex flex-wrap fw-semibold fs-6 mb-4 pe-2">
-                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                        <i class="ki-duotone ki-profile-circle fs-4 me-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i> Verified
-                                    </a>
-                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary me-5 mb-2">
-                                        <i class="ki-duotone ki-phone fs-4 me-1"><span class="path1"></span><span class="path2"></span></i>
-{{--                                        {{(session()->get('user')['data']['phone']) ?: "null"}}--}}
-                                    </a>
-                                    <a href="#" class="d-flex align-items-center text-gray-400 text-hover-primary mb-2">
-                                        <i class="ki-duotone ki-sms fs-4 me-1"><span class="path1"></span><span class="path2"></span></i>
-{{--                                        {{session()->get('user')['data']['email']}}--}}
-                                    </a>
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::User-->
-
-                        </div>
-                        <!--end::Title-->
-
-                    </div>
-                    <!--end::Info-->
-                </div>
-                <!--end::Details-->
-
-                <!--begin::Navs-->
-                <ul class="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
-                    <!--begin::Nav item-->
-                    <li class="nav-item mt-2">
-                        <a class="nav-link text-active-primary ms-0 me-10 py-5 active" href="overview.html">
-                            Transaksi </a>
-                    </li>
-                    <!--end::Nav item-->
-                </ul>
-                <!--begin::Navs-->
-            </div>
-        </div>
-        <!--end::Navbar-->
-        <!--begin::details View-->
-        <div class="card mb-5 mb-xl-10" id="kt_profile_details_view">
-            <!--begin::Card header-->
-            <div class="card-header cursor-pointer">
-                <!--begin::Card title-->
-                <div class="card-title m-0">
-                    <h3 class="fw-bold m-0">List</h3>
-                </div>
-                <!--end::Card title-->
-
-            </div>
-            <!--begin::Card header-->
-
-            <!--begin::Card body-->
-            <div class="card-body p-9">
-                <!--begin::Products-->
-                <div class="card card-flush">
-                    <!--begin::Card header-->
-                    <div class="card-header align-items-center py-5 gap-2 gap-md-5">
-                        <!--begin::Card title-->
-                        <div class="card-title">
-                            <!--begin::Search-->
-                            <div class="d-flex align-items-center position-relative my-1">
-                                <i class="ki-duotone ki-magnifier fs-3 position-absolute ms-4"><span class="path1"></span><span class="path2"></span></i> <input type="text" data-kt-ecommerce-order-filter="search" class="form-control form-control-solid w-250px ps-12" placeholder="Search Order" />
-                            </div>
-                            <!--end::Search-->
-                        </div>
-                        <!--end::Card title-->
-
-                        <!--begin::Card toolbar-->
-                        <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
-                            <!--begin::Flatpickr-->
-                            <div class="input-group w-250px">
-                                <input class="form-control form-control-solid rounded rounded-end-0" placeholder="Pick date range" id="kt_ecommerce_sales_flatpickr" />
-                                <button class="btn btn-icon btn-light" id="kt_ecommerce_sales_flatpickr_clear">
-                                    <i class="ki-duotone ki-cross fs-2"><span class="path1"></span><span class="path2"></span></i> </button>
-                            </div>
-                            <!--end::Flatpickr-->
-
-                            <div class="w-100 mw-150px">
-                                <!--begin::Select2-->
-                                <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Status" data-kt-ecommerce-order-filter="status">
-                                    <option></option>
-                                    <option value="all">All</option>
-                                    <option value="Cancelled">Cancelled</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Denied">Denied</option>
-                                    <option value="Expired">Expired</option>
-                                    <option value="Failed">Failed</option>
-                                    <option value="Pending">Pending</option>
-                                    <option value="Processing">Processing</option>
-                                    <option value="Refunded">Refunded</option>
-                                    <option value="Delivered">Delivered</option>
-                                    <option value="Delivering">Delivering</option>
-                                </select>
-                                <!--end::Select2-->
-                            </div>
-                        </div>
-                        <!--end::Card toolbar-->
-                    </div>
-                    <!--end::Card header-->
-
-                    <!--begin::Card body-->
-                    <div class="card-body pt-0">
-
-                        <!--begin::Table-->
-                        <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_ecommerce_sales_table">
-                            <thead>
-                                <tr class="text-start text-gray-400 fw-bold fs-7 text-uppercase gs-0">
-                                    <th class="min-w-100px">Invoice</th>
-                                    <th class="text-end min-w-70px">Metode Pembayaran</th>
-                                    <th class="text-end min-w-70px">Status Transaksi</th>
-                                    <th class="text-end min-w-100px">Total Transaksi</th>
-                                    <th class="text-end min-w-100px">Tanggal Transaksi</th>
-                                    <th class="text-end min-w-100px">Kategori Produk</th>
-                                    <th class="text-end min-w-100px">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="fw-semibold text-gray-600">
-                                @foreach($transactions as $transaction)
-                                <tr>
-                                    <td data-kt-ecommerce-order-filter="order_id">
-                                        <a href="{{route('user.transaction.detail',$transaction->no_inv)}}" class="text-gray-800 text-hover-primary fw-bold">
-                                            {{$transaction->no_inv}} </a>
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="fw-bold">{{$transaction->payment_channel}}</span>
-                                    </td>
-                                    <td class="text-end pe-0" data-order="Refunded">
-                                        <!--begin::Badges-->
-                                        @php
-                                        $badge= '';
-                                        if($transaction->status == 'PENDING'){
-                                        $badge = 'info';
-                                        }elseif($transaction->status == 'PAID'){
-                                        $badge = 'success';
-                                        }else{
-                                        $badge = 'danger';
-                                        }
-                                        @endphp
-                                        <div class="badge badge-light-{{$badge}}">{{$transaction->status}}</div>
-                                        <!--end::Badges-->
-                                    </td>
-                                    <td class="text-end pe-0">
-                                        <span class="fw-bold">Rp. {{number_format($transaction->total)}}</span>
-                                    </td>
-                                    <td class="text-end" data-order="2023-03-25">
-                                        <span class="fw-bold">{{date("d M y h:m",strtotime($transaction->created_at))}}</span>
-                                    </td>
-                                    <td class="text-end">
-                                        <a href="{{route('user.transaction.detail',$transaction->no_inv)}}" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                            Lihat Detail Transaksi
-                                            <i class="ki-duotone ki-down fs-5 ms-1"></i> </a>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <!--end::Table-->
-                    </div>
-                    <!--end::Card body-->
-                </div>
-                <!--end::Products-->
-            </div>
-            <!--end::Card body-->
-        </div>
-        <!--end::details View-->
-
-    </div>
-    <!--end::Post-->
-</div>
-<!--end::Row-->
 @endsection
