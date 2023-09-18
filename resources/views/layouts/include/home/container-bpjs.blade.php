@@ -3,7 +3,7 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.bpjs') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">

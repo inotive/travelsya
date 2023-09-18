@@ -11,7 +11,7 @@ use App\Models\HotelRoom;
 use App\Models\HotelRule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,58 +37,46 @@ class ManagementHotelController extends Controller
 
         return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
     }
+
     public function settingHotel($id)
     {
         $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
 
         return view('ekstranet.management-hotel.setting-hotel', compact('hostel'));
     }
+
     public function settingRoom($id)
     {
-        $hostel = Hostel::with('hostelRoom')->find($id);
+        $hostels = Hostel::with('hostelRoom')->find($id);
 
-        return view('ekstranet.management-hotel.setting-rooms', compact('hostel'));
+        return view('ekstranet.management-hotel.setting-rooms', compact('hostels'));
     }
 
     public function settingRoomPost(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'name' => 'required',
-            'sellingprice' => 'required',
-            'totalroom' => 'required',
-            'roomsize' => 'required',
-            'guest' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        $request->validate(['name' => 'required', 'price' => 'required', 'name' => 'required', 'sellingprice' => 'required', 'totalroom' => 'required', 'roomsize' => 'required', 'guest' => 'required', 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',]);
 
         $facilities = [];
-        if ($request->breakfastIncluded == 'on')
-            array_push($facilities, 'breakfast');
+        if ($request->breakfastIncluded == 'on') array_push($facilities, 'breakfast');
 
-        if ($request->wifiIncluded == 'on')
-            array_push($facilities, 'wifi');
+        if ($request->wifiIncluded == 'on') array_push($facilities, 'wifi');
 
         $facstring = '[';
         foreach ($facilities as $key => $facility) {
             $facstring .= $facility;
-            if (array_key_last($facilities) != $key)
-                $facstring .= ',';
+            if (array_key_last($facilities) != $key) $facstring .= ',';
         }
 
         $request['facilities'] = $facstring . ']';
 
         $hostel = Hostel::find($request->hostel_id);
-        $request['image_1'] = $request->file('image')->store(
-            'hostel/' . Str::slug($hostel->name, '-') . '/' . Str::slug($request->name, '-'),
-            'public',
-        );
+        $request['image_1'] = $request->file('image')->store('hostel/' . Str::slug($hostel->name, '-') . '/' . Str::slug($request->name, '-'), 'public',);
 
         HostelRoom::create($request->except('image', 'wifiIncluded', 'breakfastIncluded'));
         toast('Hostelroom berhasil dibuat', 'success');
         return redirect()->back();
     }
+
     public function settingPhoto($id)
     {
         $hostel = Hostel::with('hostelImage')->find($id);
@@ -107,8 +95,8 @@ class ManagementHotelController extends Controller
     public function destroyimage($id, HotelImage $hotelImage)
     {
         $hotelImage = HotelImage::findOrFail($id);
-        Storage::delete('media/hotel/'.$hotelImage->image);
-    
+        Storage::delete('media/hotel/' . $hotelImage->image);
+
         $hotelImage->delete();
 
 
@@ -118,15 +106,10 @@ class ManagementHotelController extends Controller
 
     public function storeRule(Request $request)
     {
-        $this->validate($request, [
-            // 'hotel_id'  => 'required',
-            'name'  => 'required'
-        ]);
+        $this->validate($request, [// 'hotel_id'  => 'required',
+            'name' => 'required']);
 
-        HotelRule::create([
-            'name'  => $request->name,
-            'hotel_id' => $request->hotel_id,
-        ]);
+        HotelRule::create(['name' => $request->name, 'hotel_id' => $request->hotel_id,]);
         toast('Hotel Rule has been created', 'success');
         return redirect()->back();
     }
@@ -134,41 +117,27 @@ class ManagementHotelController extends Controller
     public function showRule(Request $request)
     {
         $hotelRule = HotelRule::where('id', $request->id)->get();
-        return response()->json([
-            'success' => true,
-            'message' => 'Detail Data Hotel Rules',
-            'data'    => $hotelRule
-        ]);
+        return response()->json(['success' => true, 'message' => 'Detail Data Hotel Rules', 'data' => $hotelRule]);
     }
 
-    public function updaterule(Request $request, HotelRule $HotelRule,$id)
+    public function updaterule(Request $request, HotelRule $HotelRule, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'hotel_id'  => 'required',
-            'name'  => 'required',
-        ]);
+        $validator = Validator::make($request->all(), ['hotel_id' => 'required', 'name' => 'required',]);
 
         //check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-            
 
-        
+
         $HotelRule = HotelRule::find($id);
-        $HotelRule->update([
-            'hotel_id'  => $request->hotel_id,
-            'name'  => $request->name
-        ]);
+        $HotelRule->update(['hotel_id' => $request->hotel_id, 'name' => $request->name]);
 
         toast('Hotel Rule has been Updated', 'success');
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Diudapte!',
-            'data'    => $HotelRule 
-        ]);
+        return response()->json(['success' => true, 'message' => 'Data Berhasil Diudapte!', 'data' => $HotelRule]);
         // return redirect()->back();
     }
+
     public function destroyRule($id)
     {
         $hotel_rule = HotelRule::findorfail($id);
