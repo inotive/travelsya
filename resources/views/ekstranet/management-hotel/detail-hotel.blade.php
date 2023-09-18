@@ -762,68 +762,6 @@
 
         });
 
-        // $('body').on('click', '#btn-edit-rule', function() {
-        //     let rule_id = $(this).data('id');
-        //     // alert(rule_id);
-        //     $.ajax({
-        //         url: `show/rules/${rule_id}`,
-        //         type: "GET",
-        //         cache: false,
-
-        //         success: function(response) {
-        //             $('#rule_id').val(response.data[0].id);
-        //             $('#hotel_id').val(response.data[0].hotel_id);
-        //             $('#name-edit').val(response.data[0].name);
-
-        //             $('#modal-edit-rule').modal('show');
-        //         }
-        //     });
-        // });
-        // $('#update').click(function(e) {
-        //     e.preventDefault();
-
-        //     //define variable
-        //     let rule_id = $('#rule_id').val();
-        //     let hotel_id = $('#hotel_id').val();
-        //     let name = $('#name-edit').val();
-        //     let token = $("meta[name='csrf-token']").attr("content");
-
-        //     //ajax
-        //     $.ajax({
-
-        //         url: `${rule_id}`,
-        //         type: "PUT",
-        //         cache: false,
-        //         data: {
-        //             "hotel_id": hotel_id,
-        //             "name": name,
-        //             "_token": token
-        //         },
-        //         success: function(response) {
-
-        //             $('#modal-edit-rule').modal('hide');
-        //             location.reload();
-
-
-        //         },
-        //         error: function(error) {
-
-        //             if (error.responseJSON.name[0]) {
-
-        //                 //show alert
-        //                 $('#alert-name-edit').removeClass('d-none');
-        //                 $('#alert-name-edit').addClass('d-block');
-
-
-        //                 //add message to alert
-        //                 $('#alert-name-edit').html(error.responseJSON.name[0]);
-
-        //             }
-
-        //         }
-
-        //     });
-
-        // });
+    
     </script>
 @endpush

@@ -39,15 +39,15 @@ class ManagementHotelController extends Controller
     }
     public function settingHotel($id)
     {
-        $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
+        $hotel = Hotel::with('hotelRoom', 'hotelImage')->find($id);
 
-        return view('ekstranet.management-hotel.setting-hotel', compact('hostel'));
+        return view('ekstranet.management-hotel.setting-hotel', compact('hotel'));
     }
     public function settingRoom($id)
     {
-        $hostel = Hostel::with('hostelRoom')->find($id);
+        $hotel = Hotel::with('hotelRoom')->find($id);
 
-        return view('ekstranet.management-hotel.setting-rooms', compact('hostel'));
+        return view('ekstranet.management-hotel.setting-rooms', compact('hotel'));
     }
 
     public function settingRoomPost(Request $request)

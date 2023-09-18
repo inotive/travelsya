@@ -25,6 +25,7 @@ use App\Http\Controllers\Partner\DashboardPartnerController;
 use App\Http\Controllers\Partner\ManagementHotelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
+use App\Http\Controllers\Partner\ManagementRoomController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -218,6 +219,7 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::prefix('partner')->namespace('partner')->group(function () {
         Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
         Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
+        Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
 
 
         Route::prefix('management-hotel')->group(function () {
@@ -241,6 +243,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('setting-hotel-photo/{id}', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
             Route::get('setting-hotel-room/{id}', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
             Route::post('setting-hotel-room', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
+            
         });
     });
     
