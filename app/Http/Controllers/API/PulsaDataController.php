@@ -62,7 +62,6 @@ class PulsaDataController extends Controller
             'product_id' => 'required',
             'no_hp' => 'required',
             'kode_pembayaran' => 'required',
-            'nominal' => 'required',
         ]);
 
 //            if ($validator->fails()) {
@@ -133,20 +132,30 @@ class PulsaDataController extends Controller
 
             // create detail transaction
             $data['detail'] = $request->input('detail');
-            DetailTransaction::create([
+            DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $transaction->id,
-                'product_id' => $product['id'],
-                'price' => $price,
-                'qty' => $data['detail'][0]['qty'],
-                'no_hp' => $data['detail'][0]['no_hp'],
+                'product_id' => $product->id,
+                'nomor_telfon' => $data['no_hp'],
+                'total_tagihan' => $price,
+                'fee_travelsya' => 2500,
+                'fee_mili' => 2500,
+                'message' => 'Pulsa sedang diproses',
                 'status' => "PROCESS"
             ]);
+//            DetailTransaction::create([
+//                'transaction_id' => $transaction->id,
+//                'product_id' => $product['id'],
+//                'price' => $price,
+//                'qty' => $data['detail'][0]['qty'],
+//                'no_hp' => $data['detail'][0]['no_hp'],
+//                'status' => "PROCESS"
+//            ]);
 
-            if ($data['point']) {
-                //deductpoint
-                $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
-            }
+//            if ($data['point']) {
+//                //deductpoint
+//                $point = new Point;
+//                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
+//            }
 
 //            DB::transaction(function () use ($data, $product, $request, $amount, $fees, $payoutsXendit) {
 //                //create transaction
@@ -158,14 +167,14 @@ class PulsaDataController extends Controller
 
 
         // response with link
-
-        try {
-
-        } catch (\Throwable $th) {
-            return ResponseFormatter::error([
-                $th,
-                'message' => $th,
-            ], 'Transaction failed', 500);
-        }
+//
+//        try {
+//
+//        } catch (\Throwable $th) {
+//            return ResponseFormatter::error([
+//                $th,
+//                'message' => $th,
+//            ], 'Transaction failed', 500);
+//        }
     }
 }
