@@ -30,9 +30,9 @@ class CallbackController extends Controller
 
     public function Xendit(Request $request)
     {
+        $responseMili =  $this->mymili->paymentTopUp('inv-test', 'sp15', '081253290605');
         $callbackSignature = $request->server('HTTP_X_CALLBACK_TOKEN');
         $json = $request->getContent();
-
 
         // dd($callbackSignature, $json);
         if (config('xendit.TOKEN_CALLBACK') !== $callbackSignature) {
@@ -44,13 +44,14 @@ class CallbackController extends Controller
             ->where('no_inv', $data['external_id'])
             ->first();
 
+        return $transaction;
         if ($transaction) {
             //CEK STATUS PENDING
             if ($transaction->status == "PENDING") {
                 //PAID
                 if ($data['status'] == 'PAID') {
                     $updateTransaction = $transaction->update([
-                        'status' => 'PAID',
+                        'status' => 'Toless',
                         'payment_channel' => $data['payment_channel'],
                         'payment_method' => $data['payment_method']
                     ]);
@@ -62,7 +63,7 @@ class CallbackController extends Controller
                             ->select('p.kode as kode_pembayaran', 'p.kode as nomor_telfon')
                             ->get();
 
-                        $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, $detailTransactionPulsa->first()->kode_pembayaran, $detailTransactionPulsa->first()->nomor_telfon);
+
                         DB::table('detail_transaction_top_up')->update([
                             'status' => 'Berhasil',
                             'message'=> $responseMili
