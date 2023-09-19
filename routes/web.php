@@ -200,15 +200,15 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
                 Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
 
-
+            //customer
+            Route::get('customer', [CustomerController::class, 'index'])->name('customer');
 
                 //                //management-fee
                 //                Route::get('management-fee', [FeeController::class, 'index'])->name('management-fee');
                 //                Route::put('management-fee', [FeeController::class, 'updateFee'])->name('management-fee.update');
                 //                Route::post('management-fee', [FeeController::class, 'storeFee'])->name('management-fee.store');
 
-            //customer
-            Route::get('customer', [CustomerController::class, 'index'])->name('customer');
+
 
             // Admin
             //dashboard

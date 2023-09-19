@@ -6,6 +6,7 @@ use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
+use App\Http\Controllers\API\PulsaDataController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
 use Illuminate\Http\Request;
@@ -45,12 +46,17 @@ route::get('/hostel', [HostelController::class, 'index']);
 route::get('/hostel/city', [HostelController::class, 'hostelCity']);
 route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
+route::get('/hostel/room/{id}', [HostelController::class, 'room']);
 
-//hostel
+//hotel
 route::get('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
 route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);
+
+// PULSA & DATA
+route::get('/pulsa', [PulsaDataController::class, 'getPulsa']);
+route::get('/data', [PulsaDataController::class, 'getData']);
 
 //ads
 route::get('/ads', [AdController::class, 'index']);

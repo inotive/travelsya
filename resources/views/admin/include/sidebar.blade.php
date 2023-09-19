@@ -103,7 +103,7 @@
                                 <span class="path3"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Data Customer</span>
+                        <span class="menu-title">Customer</span>
                     </span>
                     <!--end:Menu link-->
                 </a>
@@ -166,7 +166,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament User</span>
+                        <span class="menu-title">User Travelsya</span>
                     </span>
                     <!--end:Menu link-->
                 </a>
@@ -181,7 +181,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Management Mitra</span>
+                        <span class="menu-title">Mitra</span>
                         <span class="menu-arrow"></span>
                     </span>
                         <!--end:Menu link-->
@@ -238,7 +238,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament Point</span>
+                        <span class="menu-title">Point</span>
                     </span>
                     <!--end:Menu link-->
                 </a>
@@ -254,7 +254,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament Produk</span>
+                        <span class="menu-title">Produk</span>
                     </span>
                         <!--end:Menu link-->
                     </a>
@@ -270,7 +270,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament Fasilitas Hotel</span>
+                        <span class="menu-title">Fasilitas Hotel</span>
                     </span>
                         <!--end:Menu link-->
                     </a>
@@ -284,7 +284,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Managament Iklan</span>
+                        <span class="menu-title">Iklan</span>
                     </span>
                         <!--end:Menu link-->
                     </a>
@@ -299,7 +299,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Management Biaya Admin</span>
+                        <span class="menu-title">Biaya Admin</span>
                     </span>
                     <!--end:Menu link-->
                 </a>
@@ -315,7 +315,7 @@
                                 <span class="path2"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Manajemen Hotel</span>
+                        <span class="menu-title">Hotel</span>
                     </span>
                         <!--end:Menu link-->
                     </a>

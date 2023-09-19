@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Setting Photo - Hotel A',"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Setting Photo - Hotel A',"url" => "#"])
 
 @section('content-admin')
     <!--begin::Row-->

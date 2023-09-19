@@ -7,6 +7,7 @@ use App\Models\Facility;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
 use App\Models\Hotel;
+
 use App\Models\HotelRoom;
 use App\Models\HotelRoomFacility;
 use Illuminate\Http\Request;
@@ -22,7 +23,8 @@ class ManagementHotelController extends Controller
     // Daftar Hotel
     public function index()
     {
-        $hotels = Hotel::with('hotelRoom')->paginate(6);
+
+        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
 
         return view('ekstranet.management-hotel.index', compact('hotels'));
     }
