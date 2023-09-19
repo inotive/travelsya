@@ -33,7 +33,7 @@ class CallbackController extends Controller
     // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
     // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
     // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
-        $xenditXCallbackToken = env('TOKEN_CALLBACK_XENDIT_DEV');
+        $xenditXCallbackToken = 'c1dda41e2b9371bf8260fe93855a342964a31a0796b16d483702668a49068ce8';
 
         // Bagian ini untuk mendapatkan Token callback dari permintaan header,
         // yang kemudian akan dibandingkan dengan token verifikasi callback Xendit
@@ -45,7 +45,11 @@ class CallbackController extends Controller
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.
         if ($xIncomingCallbackTokenHeader === $xenditXCallbackToken) {
             // Permintaan masuk diverifikasi berasal dari Xendit
-
+            $transaction = Transaction::with('detailTransaction.product')
+                ->where('no_inv', '=', 'INV-20230919-PULSA-1695141403')
+                ->update([
+                    'status' => 'Halooo'
+                ]);
             // Baris ini untuk mendapatkan semua input pesan dalam format JSON teks mentah
             $rawRequestInput = file_get_contents("php://input");
             // Baris ini melakukan format input mentah menjadi array asosiatif
