@@ -95,34 +95,44 @@ class PpobController extends Controller
                 ], 'Transaction failed', 500);
             }
 
-
-
             //get data
             $data['user_id'] = $request->user()->id;
             $product = Product::with('service')->find($data['detail'][0]['product_id']);
             $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
 
-            if ($data['inquiry'] == 1) {
-                $inquiry = $this->mymili->inquiry([
-                    'no_hp' => $data['detail'][0]['no_hp'],
-                    'nom' => $data['detail'][0]['name_cek']
-                ]);
-                if (isset($inquiry['tagihan'])) {
-                    $price = $inquiry['tagihan'];
-                } else {
-                    return ResponseFormatter::error($inquiry, 'Inquiry invalid');
-                }
-            } else {
-                $price = $product->price;
-            }
+            // if ($data['inquiry'] == 1) {
+            //     $inquiry = $this->mymili->inquiry([
+            //         'no_hp' => $data['detail'][0]['no_hp'],
+            //         'nom' => $data['detail'][0]['name_cek']
+            //     ]);
+            //     if (isset($inquiry['tagihan'])) {
+            //         $price = $inquiry['tagihan'];
+            //     } else {
+            //         return ResponseFormatter::error($inquiry, 'Inquiry invalid');
+            //     }
+            // } else {
+            //     $price = $product->price;
+            // }
+
+            $price = $product->price;
+            // $price = $data['total_tagihan'];
+
             $setting = new Setting();
             $fees = $setting->getFees($data['point'], $product->service_id, $request->user()->id, $price);
-            if (!$fees)
+            // $fees = $product->price;
+
+            // return response()->json($fees);
+
+            if (!$fees) {
                 return ResponseFormatter::error(null, 'Point invalid');
-            $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees);
+            }
 
+            $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees, 1);
+            // $amount = $price + $fees;
 
-            //request xendit
+            // return response()->json($amount);
+
+            // request xendit
             $payoutsXendit = $this->xendit->create([
                 'external_id' => $data['no_inv'],
                 'items' => [
@@ -145,6 +155,8 @@ class PpobController extends Controller
                 ],
                 'fees' => $fees
             ]);
+
+            // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
 
             if (isset($payoutsXendit['status'])) {
 
@@ -179,6 +191,7 @@ class PpobController extends Controller
                         'no_hp' => $data['detail'][0]['no_hp'],
                         'status' => "PROCESS"
                     ]);
+
                     if ($data['point']) {
                         //deductpoint
                         $point = new Point;
