@@ -100,9 +100,9 @@ class PulsaDataController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                'given_names' => $request->user()->name,
-                'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: "somenumber",
+                'given_names' => 'bagus',
+                'email' => 'gustibagus34@gmail.com',
+                'mobile_number' => '081253290605',
             ],
             'fees' => $fees
         ]);
@@ -123,7 +123,7 @@ class PulsaDataController extends Controller
                 'no_inv' => $data['no_inv'],
                 'service' => $product->service->name,
                 'service_id' => $product->service_id,
-                'payment' => $data['payment'],
+                'payment' => 'xendit',
                 'user_id' => 2,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
