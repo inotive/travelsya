@@ -17,7 +17,9 @@ return new class extends Migration {
             $table->foreignId('hotel_room_id');
             $table->string('booking_id');
             $table->date('reservation_start');
-            $table->date('reservation_date');
+            $table->date('reservation_end');
+            $table->integer('guest');
+            $table->integer('room');
             $table->integer('rent_price');
             $table->integer('fee_admin');
             $table->timestamps();
