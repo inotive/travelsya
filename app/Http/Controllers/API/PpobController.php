@@ -218,14 +218,26 @@ class PpobController extends Controller
                 'nom' => $data['nom'],
             ]);
 
-            if (str_contains($requestMymili['status'], "SUKSES")) {
+            if (str_contains($requestMymili['status'], "SUKSES!")) {
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
                 if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
                     $status = "Tagihan Sudah Terbayar";
                 }
 
+                if (str_contains($requestMymili['status'], "Bills already paid")) {
+                    $status = "Tagihan Sudah Terbayar";
+                }
+
                 if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                    $status = "Nomor Tagihan Tidak Dikenali";
+                }
+
+                if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                    $status = "Nomor Tagihan Tidak Dikenali";
+                }
+
+                if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
                     $status = "Nomor Tagihan Tidak Dikenali";
                 }
 
