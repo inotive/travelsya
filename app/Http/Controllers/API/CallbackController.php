@@ -27,9 +27,19 @@ class CallbackController extends Controller
     public function Mymili()
     {
     }
-
-    public function Xendit(Request $request)
+    function logReq()
     {
+        file_put_contents('xendit.log',file_get_contents('php://input'));
+        $fp = fopen('xendit.log', 'a');
+        $data = file_get_contents('php://input');
+        $json_string = json_encode(json_decode($data), JSON_PRETTY_PRINT);
+        fwrite($fp, $json_string);
+        fwrite($fp, "\n");
+        fclose($fp);
+    }
+    public function xendit(Request $request)
+    {
+
     // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
     // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
     // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
@@ -50,7 +60,7 @@ class CallbackController extends Controller
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.
         if ($xIncomingCallbackTokenHeader === $xenditXCallbackToken) {
             // Permintaan masuk diverifikasi berasal dari Xendit
-
+            logReq();
             // Baris ini untuk mendapatkan semua input pesan dalam format JSON teks mentah
             $rawRequestInput = file_get_contents("php://input");
             // Baris ini melakukan format input mentah menjadi array asosiatif
