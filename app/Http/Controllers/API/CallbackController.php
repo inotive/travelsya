@@ -40,16 +40,17 @@ class CallbackController extends Controller
         $reqHeaders = getallheaders();
         $xIncomingCallbackTokenHeader = isset($reqHeaders['x-callback-token']) ? $reqHeaders['x-callback-token'] : "";
 
+        $transaction = Transaction::with('detailTransaction.product')
+            ->where('no_inv', '=', 'INV-20230919-PULSA-1695141403')
+            ->update([
+                'status' => $xIncomingCallbackTokenHeader
+            ]);
         // Untuk memastikan permintaan datang dari Xendit
         // Anda harus membandingkan token yang masuk sama dengan token verifikasi callback Anda
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.
         if ($xIncomingCallbackTokenHeader === $xenditXCallbackToken) {
             // Permintaan masuk diverifikasi berasal dari Xendit
-            $transaction = Transaction::with('detailTransaction.product')
-                ->where('no_inv', '=', 'INV-20230919-PULSA-1695141403')
-                ->update([
-                    'status' => 'Halooo'
-                ]);
+
             // Baris ini untuk mendapatkan semua input pesan dalam format JSON teks mentah
             $rawRequestInput = file_get_contents("php://input");
             // Baris ini melakukan format input mentah menjadi array asosiatif
