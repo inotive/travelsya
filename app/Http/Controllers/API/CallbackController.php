@@ -63,6 +63,11 @@ class CallbackController extends Controller
                             ->get();
 
                         $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, $detailTransactionPulsa->first()->kode_pembayaran, $detailTransactionPulsa->first()->nomor_telfon);
+                        DB::table('detail_transaction_top_up')->update([
+                            'status' => 'Berhasil',
+                            'message'=> $responseMili
+                        ]);
+                        return $responseMili;
                         if($responseMili['RESPONSECODE'] == 00)
                         {
                             DB::table('detail_transaction_top_up')->update([
