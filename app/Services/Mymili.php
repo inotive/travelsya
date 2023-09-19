@@ -23,7 +23,65 @@ class Mymili
 
     }
 
-    public function transaction($data)
+    public function paymentTopUp($invoice, $kodePembayaran, $nomorTopUp)
+    {
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>
+                    <methodCall>
+                        <methodName>topUpRequest</methodName>
+                        <params>
+                            <param>
+                                <value>
+                                    <struct>
+                                        <member>
+                                            <name>MSISDN</name>
+                                            <value>
+                                                <string>' . $this->msisdn . '</string>
+                                            </value>
+                                        </member>
+                                        <member>
+                                            <name>REQUESTID</name>
+                                            <value>
+                                                <string>' . $invoice . '</string>
+                                            </value>
+                                        </member>
+                                        <member>
+                                            <name>PIN</name>
+                                            <value>
+                                                <string>' . $this->pin . '</string>
+                                            </value>
+                                        </member>
+                                        <member>
+                                            <name>NOHP</name>
+                                            <value>
+                                                <string>' . $nomorTopUp . '</string>
+                                            </value>
+                                            Dawang API document 7
+                                        </member>
+                                        <member>
+                                            <name>NOM</name>
+                                            <value>
+                                                <string>' . $kodePembayaran . '</string>
+                                            </value>
+                                        </member>
+                                    </struct>
+                                </value>
+                            </param>
+                        </params>
+                    </methodCall>';
+
+        $client = new Client();
+        try {
+            $response = $client->request('POST', $this->url, [
+                'headers' => $this->headers,
+                'body' => $xml
+            ])->getBody()->getContents();
+        } catch (ClientException $e) {
+            $response = $e->getResponse()->getBody()->getContents();
+        }
+
+        return ResponseFormatter::namespacedXMLToArray($response);
+    }
+    public function paymentPPOB($data)
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                     <methodCall>
@@ -53,14 +111,14 @@ class Mymili
                                         <member>
                                             <name>NOHP</name>
                                             <value>
-                                                <string>' . $data['no_hp'] . '</string>
+                                                <string>' . $data['no_tagihan'] . '</string>
                                             </value>
                                             Dawang API document 7
                                         </member>
                                         <member>
                                             <name>NOM</name>
                                             <value>
-                                                <string>' . $data['nom'] . '</string>
+                                                <string>' . $data['kode_pembayaran'] . '</string>
                                             </value>
                                         </member>
                                     </struct>
