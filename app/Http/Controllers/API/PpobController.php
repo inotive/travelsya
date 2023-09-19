@@ -95,6 +95,8 @@ class PpobController extends Controller
                 ], 'Transaction failed', 500);
             }
 
+
+
             //get data
             $data['user_id'] = $request->user()->id;
             $product = Product::with('service')->find($data['detail'][0]['product_id']);
@@ -218,7 +220,19 @@ class PpobController extends Controller
                 'nom' => $data['nom'],
             ]);
 
+            $fee_admin = Product::with('service')
+                ->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
+                ->price;
+
             if (str_contains($requestMymili['status'], "SUKSES!")) {
+
+                $requestSaldoMyMili = $this->mymili->saldo();
+                $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
+
+                if ($saldoMyMili < ($requestMymili['tagihan'] + $fee_admin)) {
+                    return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
+                }
+
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
                 if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
