@@ -58,6 +58,8 @@ Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('pa
 //Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
 //Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
+Route::get('/profile/order-detail', [UserController::class, 'orderDetail'])->name('user.transactionDetail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
 Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
