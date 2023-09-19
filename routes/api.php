@@ -57,6 +57,7 @@ route::get('/hotel/{id}', [HotelController::class, 'show']);
 
 // PULSA & DATA
 route::get('/pulsa', [PulsaDataController::class, 'getPulsa']);
+route::get('/pulsa/topup', [PulsaDataController::class, 'pembayaranPulsa']);
 route::get('/data', [PulsaDataController::class, 'getData']);
 
 //ads

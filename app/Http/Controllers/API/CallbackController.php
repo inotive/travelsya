@@ -12,6 +12,7 @@ use App\Services\Mymili;
 use App\Services\Point;
 use App\Services\Xendit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Monolog\Formatter\JsonFormatter;
 
 class CallbackController extends Controller
@@ -28,6 +29,59 @@ class CallbackController extends Controller
     }
 
     public function Xendit(Request $request)
+    {
+        $callbackSignature = $request->server('HTTP_X_CALLBACK_TOKEN');
+        $json = $request->getContent();
+
+
+        // dd($callbackSignature, $json);
+        if (config('xendit.TOKEN_CALLBACK') !== $callbackSignature) {
+            return 'Invalid signature';
+        }
+
+        $data = json_decode($json, TRUE);
+        $transaction = Transaction::with('detailTransaction.product')
+            ->where('no_inv', $data['external_id'])
+            ->first();
+
+        if ($transaction) {
+            //CEK STATUS PENDING
+            if ($transaction->status == "PENDING") {
+                //PAID
+                if ($data['status'] == 'PAID') {
+                    $updateTransaction = $transaction->update([
+                        'status' => 'PAID',
+                        'payment_channel' => $data['payment_channel'],
+                        'payment_method' => $data['payment_method']
+                    ]);
+                    if($transaction->service == "pulsa")
+                    {
+                        $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
+                            ->join('product as p', 'top.product_id', '=', 'p.id')
+                            ->where('transaction_id', $transaction->id)
+                            ->select('p.kode as kode_pembayaran', 'p.kode as nomor_telfon')
+                            ->get();
+
+                        $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, $detailTransactionPulsa->first()->kode_pembayaran, $detailTransactionPulsa->first()->nomor_telfon);
+                        if($responseMili['RESPONSECODE'] == 00)
+                        {
+                            DB::table('detail_transaction_top_up')->update([
+                                'status' => 'Berhasil',
+                                'message'=> 'Pulsa sudah masuk'
+                            ]);
+                        }
+                        elseif($responseMili['RESPONSECODE'] == 68){
+                            DB::table('detail_transaction_top_up')->update([
+                                'status' => 'Pending',
+                                'message'=> 'Pulsa sedang diproses'
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public function XenditOLD(Request $request)
     {
         $callbackSignature = $request->server('HTTP_X_CALLBACK_TOKEN');
         $json = $request->getContent();
