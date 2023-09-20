@@ -39,6 +39,8 @@ class CallbackController extends Controller
     }
     public function xendit(Request $request)
     {
+
+
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
         // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
@@ -107,10 +109,11 @@ class CallbackController extends Controller
                         }
                         else if($transaction->service == "pln"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
-                                ->join('products as p', 'top.product_id', '=', 'p.id')
-                                ->where('top.transaction_id', $transaction->id)
-                                ->select('top.id','p.kode as kode_pembayaran', 'ppob.nomor_tagihan')
+                                ->join('products as p', 'ppob.product_id', '=', 'p.id')
+                                ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
+                                ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
+                            print_r('sudah masuk pembayaran mili');
                             $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, str($detailTransactionPPOB->kode_pembayaran), str($detailTransactionPPOB->nomor_tagihan));
 
                             // return $responseMili;
