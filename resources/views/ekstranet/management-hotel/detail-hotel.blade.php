@@ -169,10 +169,9 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">{{ $room->name }}</td>
-                                                <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
+                                                <td class="text-center">@currency($room->price)
                                                 </td>
-                                                <td class="text-center">Rp.
-                                                    {{ number_format($room->sellingprice, 0, ',', '.') }}</td>
+                                                <td class="text-center">@currency($room->sellingprice)</td>
                                                 <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                                                 <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
 
@@ -382,6 +381,7 @@
                                             <th class="text-center">Customer</th>
                                             <th class="text-center">Code Booking</th>
                                             <th class="text-center">Check In</th>
+                                            <th class="text-center">Check Out</th>
                                             <th class="text-center">Tipe Kamar</th>
                                             <th class="text-center">Jumlah Ruangan & Menginap</th>
                                             <th class="text-center">Aksi</th>
@@ -403,6 +403,7 @@
                                                 <td class="text-center">{{ $startdates }}
                                                 </td>
                                                 <td class="text-center">{{ $enddates }}</td>
+                                                <td class="text-center">{{ $booking->hotelroom->name     }}</td>
                                                 <td class="text-center">1 Kamar | 8 Malam</td>
 
 
@@ -762,68 +763,6 @@
 
         });
 
-        // $('body').on('click', '#btn-edit-rule', function() {
-        //     let rule_id = $(this).data('id');
-        //     // alert(rule_id);
-        //     $.ajax({
-        //         url: `show/rules/${rule_id}`,
-        //         type: "GET",
-        //         cache: false,
-
-        //         success: function(response) {
-        //             $('#rule_id').val(response.data[0].id);
-        //             $('#hotel_id').val(response.data[0].hotel_id);
-        //             $('#name-edit').val(response.data[0].name);
-
-        //             $('#modal-edit-rule').modal('show');
-        //         }
-        //     });
-        // });
-        // $('#update').click(function(e) {
-        //     e.preventDefault();
-
-        //     //define variable
-        //     let rule_id = $('#rule_id').val();
-        //     let hotel_id = $('#hotel_id').val();
-        //     let name = $('#name-edit').val();
-        //     let token = $("meta[name='csrf-token']").attr("content");
-
-        //     //ajax
-        //     $.ajax({
-
-        //         url: `${rule_id}`,
-        //         type: "PUT",
-        //         cache: false,
-        //         data: {
-        //             "hotel_id": hotel_id,
-        //             "name": name,
-        //             "_token": token
-        //         },
-        //         success: function(response) {
-
-        //             $('#modal-edit-rule').modal('hide');
-        //             location.reload();
-
-
-        //         },
-        //         error: function(error) {
-
-        //             if (error.responseJSON.name[0]) {
-
-        //                 //show alert
-        //                 $('#alert-name-edit').removeClass('d-none');
-        //                 $('#alert-name-edit').addClass('d-block');
-
-
-        //                 //add message to alert
-        //                 $('#alert-name-edit').html(error.responseJSON.name[0]);
-
-        //             }
-
-        //         }
-
-        //     });
-
-        // });
+    
     </script>
 @endpush
