@@ -53,10 +53,9 @@ class PulsaDataController extends Controller
         }
     }
 
-    public function testTopUP()
+    public function testTopUP(Request $request)
     {
-        $responseMili =  $this->mymili->paymentTopUp('test-inv-pulsa', 'sp15', '081253290605');
-
+        $responseMili =  $this->mymili->paymentTopUp($request->invoice, $request->kode_pembayaran, $request->nomor_telfon);
         if($responseMili['RESPONSECODE'] == 00)
         {
             return response()->json([
