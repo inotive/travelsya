@@ -18,10 +18,11 @@ class MitraController extends Controller
         $vendors = Hostel::with('user', 'hostelRoom', 'hostelImage');
         $cities = DB::table('cities')->orderBy('city_name','asc')->get();
         // dd($vendors);
-         $users = User::with('hostel')
+
+         $users = User::with('hostel','hotel')
                  ->where('role', 1)->get();
-        // dd($users);
-        return view('admin.management-mitra.index', compact('vendors','users', 'cities'));
+//         dd($users);
+        return view('admin.management-mitra.index', compact('vendors', 'users'));
     }
 
     public function hostelRoomAjax(Request $request)
