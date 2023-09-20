@@ -1,18 +1,13 @@
-@extends('ekstranet.layout',['title' => 'Detail Hotel - '.$hotel->name ,"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Daftar Room',"url" => "#"])
+
 @section('content-admin')
-    <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
-    <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
-    <script src="{{ url('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
+
 
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
-        <div class="card-header pt-5">
-            <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.management.hotel.setting.room.create', ['id'=>$hotel->id]) }}" >
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Room</a>
-            </div>
-        </div>
+        
         <!--end::Header-->
+        <!--begin::Body-->
         <div class="card-body py-3">
             <!--begin::Table container-->
             <div class="table-responsive">
@@ -23,6 +18,7 @@
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
+                        <th class="text-center">Hunian</th>
                         <th class="text-center">Nama Room</th>
                         <th class="text-center">Room Rate</th>
                         <th class="text-center">Fix Rate</th>
@@ -32,11 +28,58 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($hotel->hotelRoom as $room)
-                        <tr>
+                        @foreach ($hotelRooms as $room)
+                        <tr id="index_{{ $room->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td class="text-center">{{ $room->name }}</td>
-                            <td class="text-center">@currency($room->price)</td>
+                            <td class="text-center">{{ $room->hotel->name }}</td>
+                            <td class="text-center">SPOT ON {{ $room->name }}</td>
+                            <td class="text-center">@currency($room->price)
+                            </td>
+                            <td class="text-center">@currency($room->sellingprice)</td>
+                            <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
+                            <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
+                    <td class="text-center">
+                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">
+                            <!--begin::Menu item-->
+                            <div class="menu-item px-3">
+                                <a href="{{ route('partner.management.room.detailroomhotel', $room->id) }}" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
+                                    Detail Ruangan
+                                </a>
+                            </div>
+                            <!--end::Menu item-->
+                            <!--begin::Menu item-->
+                            <div class="menu-item px-3">
+                                <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $room->id }}" data-bs-toggle="modal">
+                                    Edit
+                                </a>
+                            </div>
+                            <!--end::Menu item-->
+                            <!--begin::Menu item-->
+                            <div class="menu-item px-3">
+                                <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $room->id }}" data-bs-toggle="modal" class="menu-link px-3 text-danger">
+                                    Delete
+                                </a>
+                            </div>
+                            <!--end::Menu item-->
+                        </div>
+                        <!--begin::Menu-->
+                        <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                            Actions
+                            <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                        </a>
+                        <!--end::Menu-->
+                    </td>
+                </tr>
+                @endforeach
+
+                    <!-- Menampilkan data dari HostelRoom -->
+                    @foreach ($hostelRooms as $room)
+                        <tr id="index_{{ $room->id }}">
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ $room->hostel->name }}</td>
+                            <td class="text-center">SPOT ON {{ $room->name }}</td>
+                            <td class="text-center">@currency($room->price)
+                            </td>
                             <td class="text-center">@currency($room->sellingprice)</td>
                             <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                             <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
@@ -44,21 +87,14 @@
                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="/metronic8/demo1/../demo1/apps/customers/view.html" class="menu-link px-3">
-                                            Daftar Room
+                                        <a href="{{ route('partner.management.room.detailroomhostel', $room->id) }}" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
+                                            Detail Ruangan
                                         </a>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                                            Detail Hotel
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $room->id }}" data-hotel-id="{{ $room->hotel_id }}">
+                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $room->id }}" data-bs-toggle="modal">
                                             Edit
                                         </a>
                                     </div>
@@ -78,8 +114,12 @@
                                 </a>
                                 <!--end::Menu-->
                             </td>
-                        </tr>
-                        @endforeach
+                        
+                    </tr>
+                    @endforeach
+    
+                            
+                        
 
 
                     </tbody>
@@ -88,12 +128,18 @@
             </div>
             <!--end::Table container-->
         </div>
+        <!--begin::Body-->
     </div>
+    <!--end::Tables Widget 11-->
 
-    {{-- MODAL Disini --}}
-    @include('ekstranet.management-hotel.setting-room-delete')
-    @include('ekstranet.management-hotel.setting-room-edit')
-@endsection
+
+    {{-- modal --}}
+   
+    <!--begin::Modal - New Target-->
+    
+    <!--end::Modal - New Target-->
+
+
 @push('add-script')
     <script>
         $(document).ready( function () {
@@ -120,3 +166,6 @@
     </script>
 
 @endpush
+
+
+@endsection

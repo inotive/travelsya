@@ -145,6 +145,11 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
+                                <div class="card-toolbar">
+                                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal"
+                                        data-bs-target="#create-room">
+                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Room</a>
+                                </div>
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
                                     id="kt_datatable_zero_configuration">
                                     <thead>
@@ -164,10 +169,9 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">{{ $room->name }}</td>
-                                                <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
+                                                <td class="text-center">@currency($room->price)
                                                 </td>
-                                                <td class="text-center">Rp.
-                                                    {{ number_format($room->sellingprice, 0, ',', '.') }}</td>
+                                                <td class="text-center">@currency($room->sellingprice)</td>
                                                 <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                                                 <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
 
@@ -241,37 +245,13 @@
                                                         <!--end::Menu-->
                                                         </td>
                                                         </tr>
-                                                        {{-- <div class="modal fade" id="kt_modal_delete_room{{ $room->id }}" tabindex="-1"
-                                            aria-hidden="true">
-                                            <!-- Konten modal penghapusan -->
-                                            <div class="modal-dialog modal-dialog-centered mw-650px">
-                                                <div class="modal-content">
-                                                    <form action="{{ route('partner.management.hotel.destroyroom', $room->id) }}" method="POST"
-                                                        id="kt_modal_delete_room_form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <div class="modal-header">
-                                                            <h2 class="fw-bold">Delete Room</h2>
-                                                            <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
-                                                                data-bs-dismiss="modal">
-                                                                <i class="ki-duotone ki-cross fs-1"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body py-10 px-lg-17">
-                                                            <p>Anda yakin ingin menghapus data Ruangan dengan nama {{ $room->name }}?
-                                                            </p>
-                                                        </div>
-                                                        <div class="modal-footer d-flex justify-content-center">
-                                                            <button type="button" class="btn btn-light me-3"
-                                                                data-bs-dismiss="modal">Cancel</button>
-                                                            <button type="submit" class="btn btn-danger">Delete</button>
-                                                        </div> --}}
-                                                        <!--end::Menu-->
+                                                        
                                                         </td>
                                                         </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
+                                @include('ekstranet.management-hotel.create-room')
                                 {{-- MODAL DELETE --}}
 
                                 {{-- <div class="col-4">
@@ -401,6 +381,7 @@
                                             <th class="text-center">Customer</th>
                                             <th class="text-center">Code Booking</th>
                                             <th class="text-center">Check In</th>
+                                            <th class="text-center">Check Out</th>
                                             <th class="text-center">Tipe Kamar</th>
                                             <th class="text-center">Jumlah Ruangan & Menginap</th>
                                             <th class="text-center">Aksi</th>
@@ -422,6 +403,7 @@
                                                 <td class="text-center">{{ $startdates }}
                                                 </td>
                                                 <td class="text-center">{{ $enddates }}</td>
+                                                <td class="text-center">{{ $booking->hotelroom->name     }}</td>
                                                 <td class="text-center">1 Kamar | 8 Malam</td>
 
 
@@ -631,12 +613,13 @@
                                                     <!--begin::Heading-->
                                                     <div class="mb-13 text-center">
                                                         <!--begin::Title-->
-                                                        <h1 class="mb-3">Create Hotel Rules</h1>
+                                                        <h1 class="mb-3">Create Hotel Rules </h1>
                                                         <!--end::Title-->
                                                     </div>
                                                     <!--end::Heading-->
                                                     <!--begin::Input group-->
-                                                    <input type="hidden" id="hotel_id">
+                                                    <input type="hidden" name="hotel_id" id="hotel_id" value="{{ $hotel->id }}">
+
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-12">
                                                             <label class="required fs-6 fw-semibold mb-2">Nama</label>
@@ -651,6 +634,7 @@
                                                             @enderror
                                                         </div>
                                                     </div>
+
                                                     <!--end::Input group-->
                                                     <!--begin::Actions-->
                                                     <div class="text-center">
@@ -684,11 +668,6 @@
                                     <!--end::Modal dialog-->
                                 </div>
 
-                                {{-- Modal Edit Rules --}}
-
-                                
-
-                                {{-- end modal edit rules --}}
                             </div>
                         </div>
 
@@ -784,68 +763,6 @@
 
         });
 
-        // $('body').on('click', '#btn-edit-rule', function() {
-        //     let rule_id = $(this).data('id');
-        //     // alert(rule_id);
-        //     $.ajax({
-        //         url: `show/rules/${rule_id}`,
-        //         type: "GET",
-        //         cache: false,
-
-        //         success: function(response) {
-        //             $('#rule_id').val(response.data[0].id);
-        //             $('#hotel_id').val(response.data[0].hotel_id);
-        //             $('#name-edit').val(response.data[0].name);
-
-        //             $('#modal-edit-rule').modal('show');
-        //         }
-        //     });
-        // });
-        // $('#update').click(function(e) {
-        //     e.preventDefault();
-
-        //     //define variable
-        //     let rule_id = $('#rule_id').val();
-        //     let hotel_id = $('#hotel_id').val();
-        //     let name = $('#name-edit').val();
-        //     let token = $("meta[name='csrf-token']").attr("content");
-
-        //     //ajax
-        //     $.ajax({
-
-        //         url: `${rule_id}`,
-        //         type: "PUT",
-        //         cache: false,
-        //         data: {
-        //             "hotel_id": hotel_id,
-        //             "name": name,
-        //             "_token": token
-        //         },
-        //         success: function(response) {
-
-        //             $('#modal-edit-rule').modal('hide');
-        //             location.reload();
-
-
-        //         },
-        //         error: function(error) {
-
-        //             if (error.responseJSON.name[0]) {
-
-        //                 //show alert
-        //                 $('#alert-name-edit').removeClass('d-none');
-        //                 $('#alert-name-edit').addClass('d-block');
-
-
-        //                 //add message to alert
-        //                 $('#alert-name-edit').html(error.responseJSON.name[0]);
-
-        //             }
-
-        //         }
-
-        //     });
-
-        // });
+    
     </script>
 @endpush
