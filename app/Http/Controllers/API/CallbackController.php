@@ -39,7 +39,7 @@ class CallbackController extends Controller
     }
     public function xendit(Request $request)
     {
-
+        $responseMili =  $this->mymili->paymentPPOB('test-ppob-1', str('PAYPLN'), str('232010845435'));
 
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
@@ -114,7 +114,7 @@ class CallbackController extends Controller
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
                             print_r('sudah masuk pembayaran mili');
-                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, str($detailTransactionPPOB->kode_pembayaran), str($detailTransactionPPOB->nomor_tagihan));
+
 
                             // return $responseMili;
                             if ($responseMili['RESPONSECODE'] == 00) {
