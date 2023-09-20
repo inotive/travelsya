@@ -75,7 +75,7 @@ class CallbackController extends Controller
                         if($transaction->service == "pulsa")
                         {
                             $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
-                                ->join('product as p', 'top.product_id', '=', 'p.id')
+                                ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
                                 ->select('p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
