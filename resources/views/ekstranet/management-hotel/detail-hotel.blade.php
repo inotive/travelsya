@@ -169,10 +169,9 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">{{ $room->name }}</td>
-                                                <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
+                                                <td class="text-center">@currency($room->price)
                                                 </td>
-                                                <td class="text-center">Rp.
-                                                    {{ number_format($room->sellingprice, 0, ',', '.') }}</td>
+                                                <td class="text-center">@currency($room->sellingprice)</td>
                                                 <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                                                 <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
 
@@ -382,6 +381,7 @@
                                             <th class="text-center">Customer</th>
                                             <th class="text-center">Code Booking</th>
                                             <th class="text-center">Check In</th>
+                                            <th class="text-center">Check Out</th>
                                             <th class="text-center">Tipe Kamar</th>
                                             <th class="text-center">Jumlah Ruangan & Menginap</th>
                                             <th class="text-center">Aksi</th>
@@ -403,6 +403,7 @@
                                                 <td class="text-center">{{ $startdates }}
                                                 </td>
                                                 <td class="text-center">{{ $enddates }}</td>
+                                                <td class="text-center">{{ $booking->hotelroom->name     }}</td>
                                                 <td class="text-center">1 Kamar | 8 Malam</td>
 
 
