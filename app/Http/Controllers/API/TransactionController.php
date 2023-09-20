@@ -92,6 +92,7 @@ class TransactionController extends Controller
         }
 
         $data = json_decode($json, TRUE);
+        return $data;
     }
 
     public function redirectXenditSucces()
