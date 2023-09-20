@@ -117,7 +117,7 @@ class PpobController extends Controller
                     [
                         'name' => $product->name,
                         'quantity' => 1,
-                        'price' => $product->price,
+                        'price' => $grandTotal,
                         'url' => "someurl"
                     ]
                 ],
