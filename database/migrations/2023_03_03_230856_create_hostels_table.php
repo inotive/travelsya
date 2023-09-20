@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->integer('star');
             $table->string('property')->nullable();
-            $table->tinyInteger('is_active');
+            $table->boolean('is_active');
             $table->softDeletes();
             $table->timestamps();
         });

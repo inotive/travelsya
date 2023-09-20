@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Facility;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use App\Services\Travelsya;
@@ -24,6 +25,8 @@ class HomeController extends Controller
         // return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
         //        dd('haloo');
         $hotels = Hotel::all();
+
+
 
         $dummyHotels = $hotels->map(function ($hotel) {
             return [
