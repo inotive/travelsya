@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\Xendit;
-class PulsaDataController extends Controller
+class TopUpController extends Controller
 {
     protected $mymili, $xendit;
     public function __construct(ServicesMymili $mymili, Xendit $xendit)

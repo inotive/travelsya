@@ -62,7 +62,8 @@ class CallbackController extends Controller
             $transaction = Transaction::with('detailTransaction.product')
                 ->where('no_inv', $responseXendit['external_id'])
                 ->first();
-
+            $status = "";
+            $message = "";
             if ($transaction) {
                 //CEK STATUS PENDING
                 if ($transaction->status == "PENDING") {
@@ -80,23 +81,64 @@ class CallbackController extends Controller
                                 ->where('top.transaction_id', $transaction->id)
                                 ->select('top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
-                            $transaction->update([
-                                'status' => 'Progress Transaksi',
-                            ]);
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionPulsa->kode_pembayaran), str($detailTransactionPulsa->nomor_telfon));
-                            if($responseMili['RESPONSECODE'] == 00)
-                            {
-                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPulsa->id)->update([
-                                    'status' => 'Berhasil',
-                                    'message'=> 'Pulsa sudah masuk'
-                                ]);
+
+                            if ($responseMili['RESPONSECODE'] == 00) {
+                                $status = "Berhasil";
+                                $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
+                            } elseif ($responseMili['RESPONSECODE'] == 68) {
+                                $status = "Pending";
+                                $message = "Pembayaran Sedang Di Proses";
+                            } else {
+                                $status = "Gagal";
+                                $message = "Pembayaran gagal";
                             }
-                            elseif($responseMili['RESPONSECODE'] == 68){
-                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPulsa->id)
-                                    ->update([
-                                    'status' => 'Pending',
-                                    'message'=> 'Pulsa diproses mili'
+
+                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPPOB->id)
+                                ->update([
+                                    'status' => $status,
+                                    'message'=> $message
                                 ]);
+
+                            if($status == "Berhasil" || $status == "Pending")
+                            {
+                                return ResponseFormatter::success($status, $message);
+                            }
+                            else{
+                                return ResponseFormatter::error($status, $message);
+                            }
+                        }
+                        else if($transaction->service == "ppob"){
+                            $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
+                                ->join('products as p', 'top.product_id', '=', 'p.id')
+                                ->where('top.transaction_id', $transaction->id)
+                                ->select('top.id','p.kode as kode_pembayaran', 'ppob.nomor_tagihan')
+                                ->first();
+                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, str($detailTransactionPPOB->kode_pembayaran), str($detailTransactionPPOB->nomor_telfon));
+
+                            // return $responseMili;
+                            if ($responseMili['RESPONSECODE'] == 00) {
+                                $status = "Berhasil";
+                                $message = "Pembayaran " . $transaction->service . ' Berhasil';
+                            } elseif ($responseMili['RESPONSECODE'] == 68) {
+                                $status = "Pending";
+                                $message = "Pembayaran Sedang Di Proses";
+                            } else {
+                                $status = "Gagal";
+                                $message = "Pembayaran PLN Berhasil";
+                            }
+                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPPOB->id)
+                                ->update([
+                                    'status' => $status,
+                                    'message'=> $message
+                                ]);
+
+                            if($status == "Berhasil" || $status == "Pending")
+                            {
+                                return ResponseFormatter::success($status, $message);
+                            }
+                            else{
+                                return ResponseFormatter::error($status, $message);
                             }
                         }
                     }
@@ -134,16 +176,16 @@ class CallbackController extends Controller
                     foreach ($transaction->detailTransaction as $detail) {
                         if ($transaction->service_id <> 7) {
                             if ($detail->no_hp) {
-                                $requestMymili = $this->mymili->transaction([
+                                $responseMili = $this->mymili->transaction([
                                     'no_hp' => $detail->no_hp,
                                     'nom' => $detail->product->kode,
                                     'reqid' => $transaction->no_inv . '-' . $detail->id
                                 ]);
-                                $message = $requestMymili['MESSAGE'];
-                                // return $requestMymili;
-                                if ($requestMymili['RESPONSECODE'] == 00) {
+                                $message = $responseMili['MESSAGE'];
+                                // return $responseMili;
+                                if ($responseMili['RESPONSECODE'] == 00) {
                                     $status = "SUCCESS";
-                                } elseif ($requestMymili['RESPONSECODE'] == 68) {
+                                } elseif ($responseMili['RESPONSECODE'] == 68) {
                                     $status = "PENDING-PRODUCT";
                                 } else {
                                     $status = "FAILED";

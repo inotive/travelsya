@@ -81,7 +81,7 @@ class Mymili
 
         return ResponseFormatter::namespacedXMLToArray($response);
     }
-    public function paymentPPOB($data)
+    public function paymentPPOB($invoice, $kodePembayaran, $nomorTagihan)
     {
         $xml = '<?xml version="1.0" encoding="UTF-8"?>
                     <methodCall>
@@ -99,7 +99,7 @@ class Mymili
                                         <member>
                                             <name>REQUESTID</name>
                                             <value>
-                                                <string>' . $data['reqid'] . '</string>
+                                                <string>' . $invoice . '</string>
                                             </value>
                                         </member>
                                         <member>
@@ -111,14 +111,14 @@ class Mymili
                                         <member>
                                             <name>NOHP</name>
                                             <value>
-                                                <string>' . $data['no_tagihan'] . '</string>
+                                                <string>' . $nomorTagihan . '</string>
                                             </value>
                                             Dawang API document 7
                                         </member>
                                         <member>
                                             <name>NOM</name>
                                             <value>
-                                                <string>' . $data['kode_pembayaran'] . '</string>
+                                                <string>' . $kodePembayaran . '</string>
                                             </value>
                                         </member>
                                     </struct>
