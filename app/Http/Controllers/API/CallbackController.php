@@ -75,12 +75,12 @@ class CallbackController extends Controller
                         ]);
                         if($transaction->service == "pulsa")
                         {
-                            $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
+                            $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
                                 ->select('top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
-                            $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionPulsa->kode_pembayaran), str($detailTransactionPulsa->nomor_telfon));
+                            $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
@@ -93,7 +93,7 @@ class CallbackController extends Controller
                                 $message = "Pembayaran gagal";
                             }
 
-                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPPOB->id)
+                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
                                     'status' => $status,
                                     'message'=> $message
@@ -113,7 +113,7 @@ class CallbackController extends Controller
                                 ->where('top.transaction_id', $transaction->id)
                                 ->select('top.id','p.kode as kode_pembayaran', 'ppob.nomor_tagihan')
                                 ->first();
-                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, str($detailTransactionPPOB->kode_pembayaran), str($detailTransactionPPOB->nomor_telfon));
+                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, str($detailTransactionPPOB->kode_pembayaran), str($detailTransactionPPOB->nomor_tagihan));
 
                             // return $responseMili;
                             if ($responseMili['RESPONSECODE'] == 00) {
