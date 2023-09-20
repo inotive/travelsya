@@ -14,11 +14,11 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('transaction_id');
             $table->foreignId('product_id');
-            $table->foreignId('hotel_room_id');
             $table->string('nomor_pelanggan');
             $table->integer('total_tagihan');
             $table->integer('fee_travelsya');
             $table->integer('fee_mili');
+            $table->longText('message');
             $table->string('status');
             $table->timestamps();
         });
