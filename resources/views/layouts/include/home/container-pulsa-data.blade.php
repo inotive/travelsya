@@ -50,9 +50,9 @@
                         @endauth
 
                         @guest
-                            <button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-danger w-100">
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
                                 Login Terlebih Dahulu
-                            </button>
+                            </a>
                         @endguest
                     </div>
                 </div>

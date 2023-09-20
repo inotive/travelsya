@@ -3,7 +3,7 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.bpjs') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
@@ -36,7 +36,9 @@
                         <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
                     <div class="col-4">
+                        @auth
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
+                        @endauth
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -65,7 +67,15 @@
 
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                        @auth
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitBPJS" disabled>Pembayaran</button>
+                        @endauth
+
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
+                        @endguest
                     </div>
 
                 </div>
@@ -101,28 +111,44 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.bpjs') }}",
+                // url: "https://servicevps.travelsya.com/product/bpjs",
                 data: {
                     'no_pelanggan': noPelangganBPJS,
                     'nom': 'CEKBPJSKS',
                 },
-                success: function (response) {
-                    // console.log(response)
+                success: function (responseTagihan) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('product.adminFee') }}",
+                        data: {
+                            'idProduct':  362,
+                        },
+                        beforeSend: function() {
+                            $('#btnPeriksaBPJS').attr('disabled', true);
+                            $('#btnPeriksaBPJS').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                        },
+                        success: function (response) {
+                            var simulateFeeBPJS = parseInt(response[0].value);
 
-                    // SIMULASI!!!
-                    var simulateAmountBPJS = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                    var simulateFeeBPJS = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                    var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
+                            var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
+                            var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
 
-                    $('#namaPelangganBPJS').text('Joko Susilo');
-                    $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
-                    $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
-                    $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
+                            $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
+                            $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
+                            $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
+                            $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
 
-                    $('#inputNamaPelangganBPJS').val('Joko Susilo');
-                    $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
-                    $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
-                    $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+                            $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
+                            $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
+                            $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
+                            $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
 
+                            $('#btnPeriksaBPJS').removeAttr('disabled');
+                            $('#btnPeriksaBPJS').text('Periksa');
+
+                            $('#btnSubmitBPJS').removeAttr('disabled');
+                        }
+                    });
                 }
             });
         });

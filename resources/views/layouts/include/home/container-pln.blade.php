@@ -15,17 +15,20 @@
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
-                        <input type="text" id="noPelanggan" class="form-control form-control-lg"
-                               name="noPelanggan" placeholder="Masukan nomor pelanggan" value=""/>
+                        <input type="text" id="noPelangganPLN" class="form-control form-control-lg"
+                               name="noPelangganPLN" placeholder="Masukan nomor pelanggan" value=""/>
                                <small class="text-danger" style="display: none" id="textAlert">No. Pelanggan harus terisi</small>
 
-                        <input type="hidden" name="namaPelanggan" id="inputNamaPelanggan">
-                        <input type="hidden" name="totalTagihan" id="inputTotalTagihan">
-                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdmin">
-                        <input type="hidden" name="totalBayar" id="inputTotalBayar">
+                        <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPLN">
+                        <input type="hidden" name="totalTagihan" id="inputTotalTagihanPLN">
+                        <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPLN">
+                        <input type="hidden" name="totalBayar" id="inputTotalBayarPLN">
                     </div>
                     <div class="col-4">
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btn-periksa">Periksa</button>
+                        {{-- <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button> --}}
+                        @auth
+                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
+                        @endauth
                     </div>
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
@@ -36,17 +39,17 @@
                                 <tbody>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3"><span id="namaPelanggan"></span></td>
+                                    <td class="text-right" colspan="3"><span id="namaPelangganPLN"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. <span id="totalTagihan"></span></td>
+                                    <td>Rp. <span id="totalTagihanPLN"></span></td>
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. <span id="biayaAdmin"></span></td>
+                                    <td>Rp. <span id="biayaAdminPLN"></span></td>
                                 </tr>
                                 <tr class="py-5">
                                     <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td colspan="2">Rp. <span id="totalBayar"></span></td>
+                                    <td colspan="2">Rp. <span id="totalBayarPLN"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -55,7 +58,7 @@
                     </div>
                     <div class="col-12">
                         @auth
-                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPLN" disabled>Pembayaran</button>
                         @endauth
 
                         @guest
@@ -81,14 +84,14 @@
 @push('add-script')
     <script>
        $(document).ready(function () {
-            $('#noPelanggan').on('keyup', function () {
+            $('#noPelangganPLN').on('keyup', function () {
                 $('#textAlert').hide();
             });
 
-            $('#btn-periksa').on('click', function () {
-                var noPelanggan = $('#noPelanggan').val();
+            $('#btnPeriksaPLN').on('click', function () {
+                var noPelangganPLN = $('#noPelangganPLN').val();
 
-                if(noPelanggan == '') {
+                if(noPelangganPLN == '') {
                     $('#textAlert').show();
                     return false;
                 }
@@ -96,28 +99,45 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pln') }}",
+                    // url: "https://servicevps.travelsya.com/product/pln",
                     data: {
-                        'no_pelanggan': noPelanggan,
+                        'no_pelanggan': noPelangganPLN,
                         'nom': 'CEKPLN',
                     },
                     success: function (response) {
-                        // console.log(response)
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('product.adminFee') }}",
+                            data: {
+                                'idProduct':  459,
+                            },
+                            beforeSend: function() {
+                                $('#btnPeriksaPLN').attr('disabled', true);
+                                $('#btnPeriksaPLN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                            },
+                            success: function (responseTagihan) {
 
-                        // SIMULASI!!!
-                        var simulateAmount = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        var simulateFee = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                        var simulateTotal = simulateAmount + simulateFee;
+                                var simulateFeePLN = parseInt(responseTagihan[0].value);
 
-                        $('#namaPelanggan').text('Joko Susilo');
-                        $('#totalTagihan').text(new Intl.NumberFormat('id-ID').format(simulateAmount));
-                        $('#biayaAdmin').text(new Intl.NumberFormat('id-ID').format(simulateFee));
-                        $('#totalBayar').text(new Intl.NumberFormat('id-ID').format(simulateTotal));
+                                var simulateAmountPLN = parseInt(response.data.tagihan);
+                                var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
 
-                        $('#inputNamaPelanggan').val('Joko Susilo');
-                        $('#inputTotalTagihan').val(simulateAmount);
-                        $('#inputBiayaAdmin').val(simulateFee);
-                        $('#inputTotalBayar').val(simulateTotal);
+                                $('#namaPelangganPLN').text(response.data.nama_pelanggan);
+                                $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
+                                $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
+                                $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
 
+                                $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
+                                $('#inputTotalTagihanPLN').val(simulateAmountPLN);
+                                $('#inputBiayaAdminPLN').val(simulateFeePLN);
+                                $('#inputTotalBayarPLN').val(simulateTotalPLN);
+
+                                $('#btnPeriksaPLN').removeAttr('disabled');
+                                $('#btnPeriksaPLN').text('Periksa');
+
+                                $('#btnSubmitPLN').removeAttr('disabled');
+                            }
+                        });
                     }
                 });
             });

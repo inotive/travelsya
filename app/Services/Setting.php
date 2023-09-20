@@ -26,6 +26,7 @@ class Setting
     public function getFees($point, $service, $userid, $price)
     {
         $fee = Fee::where('service_id', $service)->first();
+
         if ($fee->percent) {
             $feeValue = $price * ($fee->value / 100);
         } else {
@@ -41,14 +42,15 @@ class Setting
         if ($point == 1) {
             // cek point
             $user = User::find($userid);
-            if ($user && $user->point <= 0) {
-                return false;
-            }
+            // if ($user && $user->point <= 0) {
+            //     return false;
+            // }
             array_push($fees, [
                 'type' => 'point',
                 'value' => 0 - $user->point,
             ]);
         }
+
         return $fees;
     }
 }

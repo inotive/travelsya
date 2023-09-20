@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class HotelRoom extends Model
 {
@@ -11,10 +12,10 @@ class HotelRoom extends Model
 
     protected $guarded = [];
 
-    public function getImage1Attribute($value)
-    {
-        return url('storage/' . $value);
-    }
+    // public function getImage1Attribute($value)
+    // {
+    //     return url('storage/' . $value);
+    // }
 
     public function getImage2Attribute($value)
     {
@@ -61,4 +62,16 @@ class HotelRoom extends Model
     {
         return $this->hasMany(HotelBookDate::class)->select('id', 'transaction_id', 'hotel_room_id', 'start', 'end');
     }
+
+
+    public function facility()
+    {
+        return $this->belongsToMany(Facility::class, 'hotel_room_facility');
+    }
+
+    public function hotelroomFacility()
+    {
+        return $this->hasMany(HotelRoomFacility::class);
+    }
+
 }

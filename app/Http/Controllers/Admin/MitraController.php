@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,13 +14,15 @@ class MitraController extends Controller
 {
     public function index()
     {
-       
+
         $vendors = Hostel::with('user', 'hostelRoom', 'hostelImage');
+        $cities = DB::table('cities')->orderBy('city_name','asc')->get();
         // dd($vendors);
-        // $users = User::with('hostel')
-        //         ->where('role', 1)->get();
-        // dd($users);
-        return view('admin.management-mitra.index', compact('vendors', 'users', 'hostels'));
+
+         $users = User::with('hostel','hotel')
+                 ->where('role', 1)->get();
+//         dd($users);
+        return view('admin.management-mitra.index', compact('vendors', 'users'));
     }
 
     public function hostelRoomAjax(Request $request)
@@ -43,15 +45,14 @@ class MitraController extends Controller
 
     public function storeMitra(Request $request)
     {
-
         Hostel::create([
-            'name' => ucwords($request->name), 
-            'user_id' => $request->user_id, 
-            'is_active' => 1, 
-            'city' => $request->city, 
+            'name' => ucwords($request->name),
+            'user_id' => $request->user_id,
+            'is_active' => 1,
+            'city' => $request->city,
             'kecamatan' => '-',
             'address' => $request->alamat,
-            'category' => $request->category, 
+            'category' => $request->category,
             'description' => '-',
             'facilities' => '-',
             'lat' => '-',
@@ -62,7 +63,7 @@ class MitraController extends Controller
             'star' => $request->star,
             'website' => $request->website,
             'property' => '-']);
-      
+
         toast('Mitra has been created', 'success');
         return redirect()->back();
     }
@@ -70,8 +71,8 @@ class MitraController extends Controller
     public function update(Request $request, Hostel $hostel)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required', 
-            'user_id' => 'required', 
+            'name' => 'required',
+            'user_id' => 'required',
         ]);
 
         //check if validation fails
@@ -79,13 +80,13 @@ class MitraController extends Controller
             return response()->json($validator->errors(), 422);
         }
         $hostel = Hostel::update([
-            'name' => ucwords($request->name), 
-            'user_id' => $request->user_id, 
-            'is_active' => 1, 
-            'city' => $request->city, 
+            'name' => ucwords($request->name),
+            'user_id' => $request->user_id,
+            'is_active' => 1,
+            'city' => $request->city,
             'kecamatan' => '-',
             'address' => $request->alamat,
-            'category' => $request->category, 
+            'category' => $request->category,
             'description' => '-',
             'facilities' => '-',
             'lat' => '-',
@@ -97,13 +98,13 @@ class MitraController extends Controller
             'website' => $request->website,
             'property' => '-'
         ]);
-        
+
 
         toast('Hostel has been updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Disimpan!',
-            'data'    => $hostel  
+            'data'    => $hostel
         ]);
     }
 
@@ -116,7 +117,7 @@ class MitraController extends Controller
             'success' => true,
             'message' => 'Detail Data Post',
             'data'    => $hostel
-        ]); 
+        ]);
     }
 
     public function destroyMitra(Request $request)

@@ -12,10 +12,10 @@ class HotelImage extends Model
 
     protected $guarded = [];
 
-    public function getImageAttribute($value)
-    {
-        return url('storage/hostel/' . $value);
-    }
+    // public function getImageAttribute($value)
+    // {
+    //     return url('storage/hostel/' . $value);
+    // }
 
     public function hotel()
     {

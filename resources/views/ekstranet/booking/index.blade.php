@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Riwayat Booking',"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Riwayat Booking',"url" => "#"])
 
 @section('content-admin')
     <div class="card">
@@ -64,7 +64,7 @@
                                     <th>{{$transaction->detailTransaction[0]->hostelRoom->name}}</th>
                                     <th>{{$transaction->bookDate[0]->start}}</th>
                                     <th>{{$transaction->bookDate[0]->end}}</th>
-                                    <th>{{$transaction->total}}</th>
+                                    <th>{{number_format($transaction->total,0,',','.')}}</th>
                                     <th><a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-warning btn-sm p-4">Edit</a></th>
                                 </tr>
                             @endforeach

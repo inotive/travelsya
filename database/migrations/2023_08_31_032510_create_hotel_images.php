@@ -11,8 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('hotels', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained();
+        Schema::create('hotel_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('hotel_id')->constrained();
+            $table->string('image');
+            $table->integer('main');
+            $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hotels', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('hotel_images');
     }
 };

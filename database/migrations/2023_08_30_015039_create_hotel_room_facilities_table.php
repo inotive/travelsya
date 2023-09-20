@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('hotel_id');
             $table->foreignId('hotel_room_id');
             $table->foreignId('service_id');
+            $table->foreignId('facility_id');
             $table->timestamps();
         });
     }

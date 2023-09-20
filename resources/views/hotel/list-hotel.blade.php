@@ -52,43 +52,17 @@
                                 <div class="col-12">
                                     <label for="" class="form-label">Fasilitas</label>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Wifi
-                                        </label>
+                                @foreach($facilities as $facility)
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                   id="flexCheckDefault" />
+                                            <label class="form-check-label" for="flexCheckDefault">
+                                                {{$facility->name}}
+                                            </label>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Breakfast
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Breakfast
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Breakfast
-                                        </label>
-                                    </div>
-                                </div>
-
+                                @endforeach
                                 <div class="col-12">
                                     <label for="" class="form-label">Bintang</label>
                                 </div>

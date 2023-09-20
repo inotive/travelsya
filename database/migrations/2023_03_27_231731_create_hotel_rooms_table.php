@@ -13,23 +13,24 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('hostel_rooms', function (Blueprint $table) {
+        Schema::create('hotel_rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hostel_id')->constrained();
+            $table->foreignId('hotel_id')->constrained();
             $table->string('name');
-            $table->string('description');
-            $table->text('facilities');
-            $table->string('bed_type');
+            $table->string('description')->nullable();
             $table->integer('price');
-            $table->string('guest');
+            $table->integer('sellingprice');
+            $table->text('facilities')->nullable();
+            $table->string('bed_type')->nullable();
             $table->integer('roomsize')->nullable();
             $table->integer('maxextrabed')->nullable();
-            $table->integer('extrabedprice')->nullable();
+            $table->integer('totalroom')->nullable();
+            $table->integer('guest')->nullable();
             $table->string('image_1');
             $table->string('image_2')->nullable();
             $table->string('image_3')->nullable();
             $table->string('image_4')->nullable();
-            $table->boolean('is_active');
+            $table->integer('is_active');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -42,6 +43,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hostel_rooms');
+        Schema::dropIfExists('hotel_rooms');
     }
 };
