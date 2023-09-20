@@ -82,7 +82,7 @@ class HotelController extends Controller
 
             if ($request->has('room')) {
                 $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->where('totalroom', '>', $request->room);
+                    $query->where('totalroom', '>=', $request->room);
                 });
             }
 
@@ -90,6 +90,16 @@ class HotelController extends Controller
                 $hotels->whereHas('hotelRoom', function ($query) use ($request) {
                     $query->where('guest', '>=', $request->guest);
                 });
+            }
+
+            if ($request->has('check_in') && $request->has('check_out')) {
+                $hotels->whereRaw('(
+                    SELECT SUM(totalroom) FROM hotel_rooms hr WHERE hr.hotel_id = hotels.id
+                ) - (
+                    SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel WHERE hotel_id = hotels.id
+                    AND ? <= reservation_end
+                    AND ? >= reservation_start
+                ) > 0', [$request->check_out, $request->check_in]);
             }
 
             $hotelget = $hotels->get();
@@ -118,8 +128,11 @@ class HotelController extends Controller
                     'sellingprice' => $maxPrice,
                 ];
 
+                $hotelImage = $hotel->hotelImage->where('main', 1)->first();
+
                 $hotelFormatJSON[] = [
                     'name' => $hotel->name,
+                    'image' => $hotelImage ? asset($hotelImage->image) : null,
                     'location' => $hotel->city,
                     'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
                     'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
@@ -193,6 +206,7 @@ class HotelController extends Controller
             $hotelGet = collect([$hotel])->map(function ($hotel) use ($avgRating, $totalRating) {
                 return [
                     'name' => $hotel->name,
+                    'image' => $hotel->hotelImage,
                     'checkin' => $hotel->checkin,
                     'checkout' => $hotel->checkout,
                     'location' => $hotel->city,
