@@ -89,7 +89,7 @@ class TransactionController extends Controller
         // Bagian ini untuk mendapatkan Token callback dari permintaan header,
         // yang kemudian akan dibandingkan dengan token verifikasi callback Xendit
         $reqHeaders = getallheaders();
-        $xIncomingCallbackTokenHeader = isset($reqHeaders['X-CALLBACK-TOKEN']) ? $reqHeaders['X-CALLBACK-TOKEN'] : "haloo";
+        $xIncomingCallbackTokenHeader = isset($reqHeaders['X-Callback-Token']) ? $reqHeaders['X-Callback-Token'] : "haloo";
         return response()->json([
             'headers' => $reqHeaders,
             'comingTokenHeader' => $xIncomingCallbackTokenHeader
