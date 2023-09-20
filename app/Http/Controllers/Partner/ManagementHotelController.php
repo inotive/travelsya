@@ -25,7 +25,6 @@ class ManagementHotelController extends Controller
     public function index()
     {
         $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
-
         return view('ekstranet.management-hotel.index', compact('hotels'));
     }
 
@@ -150,8 +149,8 @@ class ManagementHotelController extends Controller
     }
     public function settingPhoto($id)
     {
-        $hostel = Hostel::with('hostelImage')->find($id);
-        return view('ekstranet.management-hotel.setting-photo', compact('hostel'));
+        $hotel = Hotel::with('hotelImage')->find($id);
+        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
 
     public function settingRoomShow($hotel_id, $id)

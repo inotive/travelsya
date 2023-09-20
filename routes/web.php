@@ -185,7 +185,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::delete('facility/{facility}', [FacilitiesController::class, 'destroy'])->name('facility.destroy');
 
             //customer
-            Route::get('customer', [CustomerController::class, 'index'])->name('customer.index');
+            Route::get('customer', [CustomerController::class, 'index'])->name('customer');
 
             //Ads
             // Route::resource('ads', AdController::class);
