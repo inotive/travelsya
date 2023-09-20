@@ -48,7 +48,6 @@ class CallbackController extends Controller
         // yang kemudian akan dibandingkan dengan token verifikasi callback Xendit
         $reqHeaders = getallheaders();
         $xIncomingCallbackTokenHeader = isset($reqHeaders['X-Callback-Token']) ? $reqHeaders['X-Callback-Token'] : "Incoming Header belum ada";
-
         // Untuk memastikan permintaan datang dari Xendit
         // Anda harus membandingkan token yang masuk sama dengan token verifikasi callback Anda
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.
@@ -77,7 +76,7 @@ class CallbackController extends Controller
                         {
                             $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
                                 ->join('product as p', 'top.product_id', '=', 'p.id')
-                                ->where('transaction_id', $transaction->id)
+                                ->where('top.transaction_id', $transaction->id)
                                 ->select('p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
 
