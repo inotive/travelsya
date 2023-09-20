@@ -154,7 +154,7 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
-                <a href="{{route('partner.management.hotel')}}"
+                <a href="{{route('partner.management.room')}}"
                    class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
