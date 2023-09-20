@@ -88,6 +88,7 @@ class TopUpController extends Controller
 
         $fees = Fee::where('service_id', $product->service_id)->first();
 
+        $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1)
         {
