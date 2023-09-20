@@ -52,6 +52,25 @@ class PulsaDataController extends Controller
             return ResponseFormatter::error(null, 'Data not found');
         }
     }
+
+    public function testTopUP()
+    {
+        $responseMili =  $this->mymili->paymentTopUp('test-inv-pulsa', 'sp15', '081253290605');
+
+        if($responseMili['RESPONSECODE'] == 00)
+        {
+            return response()->json([
+                'status' => '200',
+                'message' => 'Pulsa sudah masuk'
+            ]);
+        }
+        elseif($responseMili['RESPONSECODE'] == 68){
+            return response()->json([
+                'status' => '200',
+                'message' => 'Pulsa sedang diproses'
+            ]);
+        }
+    }
     public function pembayaranPulsa(Request $request)
     {
         $data = $request->all();
