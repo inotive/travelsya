@@ -28,8 +28,8 @@ class HostelController extends Controller
     protected $xendit, $point;
     public function __construct(Xendit $xendit, Point $point)
     {
-        $this->xendit =  $xendit;
-        $this->point =  $point;
+        $this->xendit = $xendit;
+        $this->point = $point;
     }
     /**
      * Display a listing of the resource.
@@ -40,37 +40,48 @@ class HostelController extends Controller
     {
         try {
             $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
-            // if ($request->name)
-            //     $hostels->where('name', 'like', '%' . $request->name . '%');
 
-            if ($request->location)
+            if ($request->location) {
                 $hostels->where('city', 'like', '%' . $request->location . '%');
+            }
 
-            // if ($request->category)
-            //     $hostels->where('category', 'like', '%' . $request->category . '%');
+            if ($request->type_duration) {
+                $hostels->where('category', $request->type_duration);
+            }
 
-            // if ($request->property)
-            //     $hostels->where('property', $request->property);
+            if ($request->has('property_type')) {
+                if ($request->property_type != 'semua') {
+                    $hostels->where('property', $request->property_type);
+                }
+            }
 
-            // if ($request->furnish) {
-            //     $furnish = $request->furnish;
-            //     $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
-            //         $q->where('furnish', $furnish);
-            //     });
-            // }
+            if ($request->has('property_room')) {
+                if ($request->property_room != 'semua') {
+                    $roomtype = $request->property_room;
+                    $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
+                        $q->where('roomtype', $roomtype);
+                    });
+                }
+            }
 
-            // if ($request->roomtype) {
-            //     $roomtype = $request->roomtype;
-            //     $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
-            //         $q->where('roomtype', $roomtype);
-            //     });
-            // }
+            if ($request->has('property_furnish')) {
+                if ($request->property_furnish != 'semua') {
+                    $furnish = $request->property_furnish;
+                    $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
+                        $q->where('furnish', $furnish);
+                    });
+                }
+            }
 
-            $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(price),0)'));
-            }])->withCount(["rating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("rating as rating_count")->get();
+            $hostelsget = $hostels->withCount([
+                "hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(price),0)'));
+                }
+            ])->withCount([
+                        "rating as rating_avg" => function ($q) {
+                            $q->select(DB::raw('coalesce(avg(rate),0)'));
+                        }
+                    ])->withCount("rating as rating_count")->get();
 
             $hostelShow = $hostelsget->map(function ($hostelsget) {
                 return [
@@ -106,11 +117,15 @@ class HostelController extends Controller
         try {
             // $hostel = Hostel::find($hostel->id);
             $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
-                ->withCount(["hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(price),0)'));
-                }])->withCount(["rating as rating_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(rate),0)'));
-                }])->withCount("rating as rating_count")
+                ->withCount([
+                    "hostelRoom as price_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(price),0)'));
+                    }
+                ])->withCount([
+                        "rating as rating_avg" => function ($q) {
+                            $q->select(DB::raw('coalesce(avg(rate),0)'));
+                        }
+                    ])->withCount("rating as rating_count")
                 ->find($id);
 
             // if ($request->start_date) {
@@ -208,7 +223,8 @@ class HostelController extends Controller
         $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->sellingprice);
 
         //cekpoint 
-        if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
+        if (!$fees)
+            return ResponseFormatter::error(null, 'Point invalid');
         $start = new DateTime($data['start']);
         $end = new DateTime($data['end']);
         $interval = $end->diff($start);
@@ -233,7 +249,7 @@ class HostelController extends Controller
                 ]
             ],
             'amount' => $amount,
-            'success_redirect_url'  => route('redirect.succes'),
+            'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
             'should_send_email' => true,
@@ -313,11 +329,15 @@ class HostelController extends Controller
     public function hostelPopuler()
     {
         $hostelPopuler = Hostel::with('hostelImage', 'rating')
-            ->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(price),0)'));
-            }])->withCount(["rating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("rating as rating_count")
+            ->withCount([
+                "hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(price),0)'));
+                }
+            ])->withCount([
+                    "rating as rating_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(rate),0)'));
+                    }
+                ])->withCount("rating as rating_count")
             ->orderBy('rating_count', 'DESC')
             ->orderBy('rating_avg', 'DESC')
             ->orderBy('price_avg', "desc")->get();
