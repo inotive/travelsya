@@ -67,7 +67,7 @@ class CallbackController extends Controller
                 if ($transaction->status == "PENDING") {
                     //PAID
                     if ($responseXendit['status'] == 'PAID') {
-                        $updateTransaction = $transaction->update([
+                        $transaction->update([
                             'status' => 'Berhasil',
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
@@ -77,19 +77,25 @@ class CallbackController extends Controller
                             $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
-                                ->select('p.kode as kode_pembayaran', 'top.nomor_telfon')
+                                ->select('top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
 
                             $responseMili =  $this->mymili->paymentTopUp($responseXendit['external_id'], $detailTransactionPulsa->kode_pembayaran, $detailTransactionPulsa->nomor_telfon);
+                            DB::table('detail_transaction_top_up')
+                                ->where('top.id', $detailTransactionPulsa->id)->update([
+                                'status' => 'Berhasil',
+                                'message'=> $responseMili
+                            ]);
                             if($responseMili['RESPONSECODE'] == 00)
                             {
-                                DB::table('detail_transaction_top_up')->update([
+                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPulsa->id)->update([
                                     'status' => 'Berhasil',
                                     'message'=> 'Pulsa sudah masuk'
                                 ]);
                             }
                             elseif($responseMili['RESPONSECODE'] == 68){
-                                DB::table('detail_transaction_top_up')->update([
+                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPulsa->id)
+                                    ->update([
                                     'status' => 'Pending',
                                     'message'=> 'Pulsa diproses mili'
                                 ]);
