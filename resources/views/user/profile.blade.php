@@ -148,7 +148,7 @@
                 <div class="separator my-3 border"></div>
                 {{-- Menu ITEm Logout --}}
                 <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" href="#" id="kt_docs_sweetalert_basic">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/log-out.svg') }}" class="h-24px me-10"/>
                     </span>
@@ -282,6 +282,7 @@
             </div>
         </div>
         {{-- End Kolom Kanan --}}
+        @include('user.logout')
     </div>
     {{-- End Row --}}
 </div>
