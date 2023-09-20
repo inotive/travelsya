@@ -80,7 +80,7 @@ class CallbackController extends Controller
                                 ->select('top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
 
-                            $responseMili =  $this->mymili->paymentTopUp($responseXendit['external_id'], $detailTransactionPulsa->kode_pembayaran, $detailTransactionPulsa->nomor_telfon);
+                            $responseMili =  $this->mymili->paymentTopUp('test-inv', 'sp15', '081253290605');
                             DB::table('detail_transaction_top_up')
                                 ->where('top.id', $detailTransactionPulsa->id)->update([
                                 'status' => 'Berhasil',
