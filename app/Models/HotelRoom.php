@@ -74,9 +74,4 @@ class HotelRoom extends Model
         return $this->hasMany(HotelRoomFacility::class);
     }
 
-    public function hotelroomImage()
-    {
-        return $this->hasMany(HotelRoomImage::class);
-    }
-
 }
