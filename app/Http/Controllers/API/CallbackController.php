@@ -61,18 +61,23 @@ class CallbackController extends Controller
             $transaction = Transaction::with('detailTransaction.product')
                 ->where('no_inv', $responseXendit['external_id'])
                 ->first();
-            $status = "";
-            $message = "";
+
+
             if ($transaction) {
                 //CEK STATUS PENDING
                 if ($transaction->status == "PENDING") {
                     //PAID
                     if ($responseXendit['status'] == 'PAID') {
+                        $status = "";
+                        $message = "";
+                        $responseCode = "";
+
                         $transaction->update([
                             'status' => 'Berhasil',
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
                         ]);
+
                         if($transaction->service == "pulsa")
                         {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
@@ -99,15 +104,8 @@ class CallbackController extends Controller
                                     'message'=> $message
                                 ]);
 
-                            if($status == "Berhasil" || $status == "Pending")
-                            {
-                                return ResponseFormatter::success($status, $message);
-                            }
-                            else{
-                                return ResponseFormatter::error($status, $message);
-                            }
                         }
-                        else if($transaction->service == "ppob"){
+                        else if($transaction->service == "pln"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
@@ -131,14 +129,14 @@ class CallbackController extends Controller
                                     'status' => $status,
                                     'message'=> $message
                                 ]);
+                        }
 
-                            if($status == "Berhasil" || $status == "Pending")
-                            {
-                                return ResponseFormatter::success($status, $message);
-                            }
-                            else{
-                                return ResponseFormatter::error($status, $message);
-                            }
+                        if($status == "Berhasil" || $status == "Pending")
+                        {
+                            return ResponseFormatter::success($status, $message);
+                        }
+                        else{
+                            return ResponseFormatter::error($status, $message);
                         }
                     }
                 }
