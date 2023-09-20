@@ -148,11 +148,12 @@
                 <div class="separator my-3 border"></div>
                 {{-- Menu ITEm Logout --}}
                 <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" id="kt_docs_sweetalert_basic" href="#">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/log-out.svg') }}" class="h-24px me-10"/>
                     </span>
                         Log out
+                        @include('user.logout')
                     </a>
                 </div>
                 </div>
