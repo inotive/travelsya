@@ -67,6 +67,7 @@ class CallbackController extends Controller
                 if ($transaction->status == "PENDING") {
                     //PAID
                     if ($responseXendit['status'] == 'PAID') {
+                        $responseMili =  $this->mymili->paymentTopUp('test-inv', 'sp15', '081253290605');
                         $transaction->update([
                             'status' => 'Berhasil',
                             'payment_channel' => $responseXendit['payment_channel'],
