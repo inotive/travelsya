@@ -66,71 +66,72 @@ class CallbackController extends Controller
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
 
-//            $_id = $arrRequestInput['id'];
-//            $_externalId = $arrRequestInput['external_id'];
-//            $_userId = $arrRequestInput['user_id'];
-//            $_status = $arrRequestInput['status'];
-//            $_paidAmount = $arrRequestInput['paid_amount'];
-//            $_paidAt = $arrRequestInput['paid_at'];
-//            $_paymentChannel = $arrRequestInput['payment_channel'];
-//            $_paymentDestination = $arrRequestInput['payment_destination'];
-
-            $transaction = Transaction::with('detailTransaction.product')
-                ->where('no_inv', $responseXendit['external_id'])
-                ->first();
-
-            if ($transaction) {
-                //CEK STATUS PENDING
-                if ($transaction->status == "PENDING") {
-                    //PAID
-                    if ($responseXendit['status'] == 'PAID') {
-                        $updateTransaction = $transaction->update([
-                            'status' => 'Berhasil',
-                            'payment_channel' => $responseXendit['payment_channel'],
-                            'payment_method' => $responseXendit['payment_method']
-                        ]);
-                        if($transaction->service == "pulsa")
-                        {
-                            $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
-                                ->join('product as p', 'top.product_id', '=', 'p.id')
-                                ->where('transaction_id', $transaction->id)
-                                ->select('p.kode as kode_pembayaran', 'top.nomor_telfon')
-                                ->first();
-
-                            $responseMili =  $this->mymili->paymentTopUp($responseXendit['external_id'], $detailTransactionPulsa->kode_pembayaran, $detailTransactionPulsa->nomor_telfon);
-                            if($responseMili['RESPONSECODE'] == 00)
-                            {
-                                DB::table('detail_transaction_top_up')->update([
-                                    'status' => 'Berhasil',
-                                    'message'=> 'Pulsa sudah masuk'
-                                ]);
-                            }
-                            elseif($responseMili['RESPONSECODE'] == 68){
-                                DB::table('detail_transaction_top_up')->update([
-                                    'status' => 'Pending',
-                                    'message'=> 'Pulsa diproses mili'
-                                ]);
-                            }
-                        }
-                    }
-                }
-            }
-            // Kamu bisa menggunakan array objek diatas sebagai informasi callback yang dapat digunaka untuk melakukan pengecekan atau aktivas tertentu di aplikasi atau sistem kamu.
+            $_id = $responseXendit['id'];
+            $_externalId = $responseXendit['external_id'];
+            $_userId = $responseXendit['user_id'];
+            $_status = $responseXendit['status'];
+            $_paidAmount = $responseXendit['paid_amount'];
+            $_paidAt = $responseXendit['paid_at'];
+            $_paymentChannel = $responseXendit['payment_channel'];
+            $_paymentDestination = $responseXendit['payment_destination'];
+//
+//            $transaction = Transaction::with('detailTransaction.product')
+//                ->where('no_inv', $responseXendit['external_id'])
+//                ->first();
+//
+//
+//            if ($transaction) {
+//                //CEK STATUS PENDING
+//                if ($transaction->status == "PENDING") {
+//                    //PAID
+//                    if ($responseXendit['status'] == 'PAID') {
+//                        $updateTransaction = $transaction->update([
+//                            'status' => 'Berhasil',
+//                            'payment_channel' => $responseXendit['payment_channel'],
+//                            'payment_method' => $responseXendit['payment_method']
+//                        ]);
+//                        if($transaction->service == "pulsa")
+//                        {
+//                            $detailTransactionPulsa = \DB::table('detail_transaction_top_up as top')
+//                                ->join('product as p', 'top.product_id', '=', 'p.id')
+//                                ->where('transaction_id', $transaction->id)
+//                                ->select('p.kode as kode_pembayaran', 'top.nomor_telfon')
+//                                ->first();
+//
+//                            $responseMili =  $this->mymili->paymentTopUp($responseXendit['external_id'], $detailTransactionPulsa->kode_pembayaran, $detailTransactionPulsa->nomor_telfon);
+//                            if($responseMili['RESPONSECODE'] == 00)
+//                            {
+//                                DB::table('detail_transaction_top_up')->update([
+//                                    'status' => 'Berhasil',
+//                                    'message'=> 'Pulsa sudah masuk'
+//                                ]);
+//                            }
+//                            elseif($responseMili['RESPONSECODE'] == 68){
+//                                DB::table('detail_transaction_top_up')->update([
+//                                    'status' => 'Pending',
+//                                    'message'=> 'Pulsa diproses mili'
+//                                ]);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            // Kamu bisa menggunakan array objek diatas sebagai informasi callback yang dapat digunaka untuk melakukan pengecekan atau aktivas tertentu di aplikasi atau sistem kamu.
 
         } else {
             // Permintaan bukan dari Xendit, tolak dan buang pesan dengan HTTP status 403
             http_response_code(403);
         }
 
-        $callbackSignature = $request->server('HTTP_X_CALLBACK_TOKEN');
-        $json = $request->getContent();
-
-        // dd($callbackSignature, $json);
-        if (config('xendit.TOKEN_CALLBACK') !== $callbackSignature) {
-            return 'Invalid signature';
-        }
-
-        $data = json_decode($json, TRUE);
+//        $callbackSignature = $request->server('HTTP_X_CALLBACK_TOKEN');
+//        $json = $request->getContent();
+//
+//        // dd($callbackSignature, $json);
+//        if (config('xendit.TOKEN_CALLBACK') !== $callbackSignature) {
+//            return 'Invalid signature';
+//        }
+//
+//        $data = json_decode($json, TRUE);
 
     }
     public function XenditOLD(Request $request)
