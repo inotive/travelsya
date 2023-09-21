@@ -346,7 +346,8 @@ class PpobController extends Controller
                 }
 
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-            } else {
+            }
+            else {
                 if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
                     $status = "Tagihan Sudah Terbayar";
                 }
@@ -367,13 +368,15 @@ class PpobController extends Controller
                     $status = "Nomor Tagihan Tidak Dikenali";
                 }
 
+                if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
+                    $status = "IP pada sistem ini belum terdaftar pada mili";
+                }
+
                 return ResponseFormatter::error($status, 'Inquiry failed');
             }
         } catch (\Throwable $th) {
             return ResponseFormatter::error([
-                $th,
-                'message' => 'Something wrong',
-            ], 'Transaction failed', 500);
+            ], 'Terjadi kesalahan pada sistem', 500);
         }
     }
 }
