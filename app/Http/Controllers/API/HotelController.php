@@ -144,7 +144,7 @@ class HotelController extends Controller
             if (count($hotelFormatJSON)) {
                 return ResponseFormatter::success($hotelFormatJSON, 'Data successfully loaded');
             } else {
-                return ResponseFormatter::error(null, 'Data not found');
+                return ResponseFormatter::success([], 'Data successfully loaded');
             }
         } catch (Exception $th) {
             return ResponseFormatter::error([
@@ -245,6 +245,7 @@ class HotelController extends Controller
             "end" => "required",
 
         ]);
+
         if ($validator->fails()) {
             return ResponseFormatter::error([
                 'response' => $validator->errors(),
@@ -252,6 +253,7 @@ class HotelController extends Controller
         }
 
         $data = $request->all();
+
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hotel->hotel->service->name) . "-" . time();
         $setting = new Setting();
@@ -263,7 +265,7 @@ class HotelController extends Controller
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
         if ($qty < 0)
             return ResponseFormatter::error(null, 'Date must be forward');
-        $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
+        $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, 1);
 
         // cek book date
         $checkBook = HotelBookDate::where("hotel_room_id", $data['hotel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
@@ -348,7 +350,7 @@ class HotelController extends Controller
         });
 
 
-        return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+        return ResponseFormatter::success($data, 'Payment successfully created');
     }
 
     public function hotelCity()

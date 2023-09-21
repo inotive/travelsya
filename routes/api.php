@@ -64,6 +64,8 @@ route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
 
 route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
+// route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
 
