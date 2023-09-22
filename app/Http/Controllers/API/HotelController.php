@@ -245,7 +245,6 @@ class HotelController extends Controller
             "end" => "required",
 
         ]);
-
         if ($validator->fails()) {
             return ResponseFormatter::error([
                 'response' => $validator->errors(),
@@ -346,18 +345,26 @@ class HotelController extends Controller
             ]);
 
 
-            $storeDetailTransaction = DB::table('detail_transaction_hotel')->insert([
-                'transaction_id' => $storeTransaction->id,
-                'hotel_id' => $hotel->hotel_id,
-                'hotel_room_id' => $data['hotel_room_id'],
-                'booking_id' => $storeBookDate->id,
-                'reservation_start' =>  $data['start'],
-                'reservation_end' =>  $data['end'],
-                'guest' =>  count($data['guest']),
-                'room' =>  1,
-                "rent_price" => $hotel->sellingprice,
-                "fee_admin" => $fees[0]['value'],
-            ]);
+            try {
+                $storeDetailTransaction = DB::table('detail_transaction_hotel')
+                    ->insert([
+                        'transaction_id' => $storeTransaction->id,
+                        'hotel_id' => $hotel->hotel_id,
+                        'hotel_room_id' => $data['hotel_room_id'],
+                        'booking_id' => Str::random(6),
+                        'reservation_start' =>  $data['start'],
+                        'reservation_end' =>  $data['end'],
+                        'guest' =>  count($data['guest']),
+                        'room' => 1,
+                        "rent_price" => $hotel->sellingprice,
+                        "fee_admin" => $fees[0]['value'],
+                    ]);
+            } catch (\Exception $exception) {
+                return response()->json([
+                    'message' => 'Error Store Data Transaction'
+                ]);
+            }
+
 
             // true buat guest
             // foreach ($data['guest'] as $guest) {
