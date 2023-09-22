@@ -3,73 +3,65 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
-use App\Models\Facility;
 use App\Models\Hostel;
+use App\Models\Facility;
+use App\Models\HostelImage;
 use App\Models\HostelRoom;
-use App\Models\Hotel;
-use App\Models\HotelImage;
-use App\Models\HotelRoom;
-use App\Models\HotelRoomFacility;
-use App\Models\HotelRule;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use App\Models\HostelRoomFacility;
+use App\Models\HostelRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
-
-use File;
-
-class ManagementHotelController extends Controller
+class ManagementHostelController extends Controller
 {
-
-    // Daftar Hotel
     public function index()
     {
-        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+        $hostels = Hostel::with('hostelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
 
-        return view('ekstranet.management-hotel.index', compact('hotels'));
+        return view('ekstranet.management-hostel.index', compact('hostels'));
     }
 
-    public function detailHotel($id)
+    public function detailhostel($id)
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelbookDate', 'hotelroomFacility', 'hotelRule')->find($id);
-        $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
-        $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
+        $hostel = hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelbookDate', 'hostelroomFacility', 'hostelRule')->find($id);
+        $avg_rate = DB::table('hostel_ratings')->where('hostel_id', $id)->avg('rate');
+        $total_review = DB::table('hostel_ratings')->where('hostel_id', $id)->count();
 
-        return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
+        return view('ekstranet.management-hostel.detail-hostel', compact('hostel', 'avg_rate', 'total_review'));
     }
-    public function settingHotel($id)
+    public function settinghostel($id)
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage')->find($id);
+        $hostel = hostel::with('hostelRoom', 'hostelImage')->find($id);
 
-        return view('ekstranet.management-hotel.setting-hotel', compact('hotel'));
+        return view('ekstranet.management-hostel.setting-hostel', compact('hostel'));
     }
     public function settingRoom($id)
     {
-        $hotel = Hotel::with('hotelRoom')->find($id);
-        $hotelRoom = $hotel->hotelRoom;
-        $hotelroomimage = $hotel->hotelroomImage;
+        $hostel = hostel::with('hostelRoom')->find($id);
+        $hostelRoom = $hostel->hostelRoom;
+        $hostelroomimage = $hostel->hostelroomImage;
         $facilities = Facility::all();
         $roomFacilitiesIds = $facilities->pluck('facility_id')->toArray();
         $responsJson = [
             'data' => [
-                'hotel_room' => $hotelRoom,
+                'hostel_room' => $hostelRoom,
                 'facilities' => $facilities,
                 'roomFacilitiesIds' => $roomFacilitiesIds,
             ],
         ];
         $data = $responsJson['data'];
-        return view('ekstranet.management-hotel.setting-rooms', compact('hotel', 'facilities', 'data'));
+        return view('ekstranet.management-hostel.setting-rooms', compact('hostel', 'facilities', 'data'));
     }
 
 
     public function settingRoomCreate($id)
     {
-        $hotel = Hotel::with('hotelRoom')->find($id);
+        $hostel = hostel::with('hostelRoom')->find($id);
         $facility = Facility::all();
 
-        return view('ekstranet.management-hotel.setting-room-create', compact('hotel', 'facility'));
+        return view('ekstranet.management-hostel.setting-room-create', compact('hostel', 'facility'));
     }
 
     public function settingRoomPost(Request $request)
@@ -93,8 +85,8 @@ class ManagementHotelController extends Controller
 
 
         //Insetrt Data Baru
-        $hotelRoom = HotelRoom::create([
-            'hotel_id' => $request->hotel_id,
+        $hostelRoom = hostelRoom::create([
+            'hostel_id' => $request->hostel_id,
             'name' => $request->name,
             'price' => $request->price,
             'roomsize' => $request->roomsize,
@@ -106,50 +98,50 @@ class ManagementHotelController extends Controller
             'sellingprice' => $request->sellingprice,
         ]);
 
-        $hotelRoomImageFiles = $request->file('hotel_room_image', []);
-        $hotel_id = $hotelRoom->hotel->id;
+        $hostelRoomImageFiles = $request->file('hostel_room_image', []);
+        $hostel_id = $hostelRoom->hostel->id;
 
-        foreach ($hotelRoomImageFiles as $imageFile) {
-            $path = $imageFile->store('media/hotel/');
+        foreach ($hostelRoomImageFiles as $imageFile) {
+            $path = $imageFile->store('media/hostel/');
             $filename = basename($path);
 
-            DB::table('hotel_room_images')->insert([
-                'hotel_id' => $hotel_id,
-                'hotel_room_id' => $hotelRoom->id, // Menggunakan ID dari kamar hotel yang baru saja dibuat
-                'image' => 'media/hotel/' . $filename,
+            DB::table('hostel_room_images')->insert([
+                'hostel_id' => $hostel_id,
+                'hostel_room_id' => $hostelRoom->id, // Menggunakan ID dari kamar hostel yang baru saja dibuat
+                'image' => 'media/hostel/' . $filename,
             ]);
         }
         
 
         $facilityIds = $request->input('facility_id', []);
-        $roomId = $hotelRoom->id;
+        $roomId = $hostelRoom->id;
 
         foreach ($facilityIds as $facilityId) {
-            DB::table('hotel_room_facilities')->insert([
-                'hotel_id' => $request->hotel_id,
+            DB::table('hostel_room_facilities')->insert([
+                'hostel_id' => $request->hostel_id,
                 'service_id' => 8,
-                'hotel_room_id' => $roomId,
+                'hostel_room_id' => $roomId,
                 'facility_id' => $facilityId,
             ]);
         }
 
         //Ini untuk pemberitahuan
-        toast('HotelRoom berhasil dibuat', 'success');
+        toast('hostelRoom berhasil dibuat', 'success');
         return redirect()->back();
     }
     public function settingPhoto($id)
     {
         $hostel = Hostel::with('hostelImage')->find($id);
-        return view('ekstranet.management-hotel.setting-photo', compact('hostel'));
+        return view('ekstranet.management-hostel.setting-photo', compact('hostel'));
     }
 
-    public function settingRoomShow($hotel_id, $id)
+    public function settingRoomShow($hostel_id, $id)
     {
-        $hotelRoom = HotelRoom::where('id', $id)
-            ->where('hotel_id', $hotel_id)
+        $hostelRoom = hostelRoom::where('id', $id)
+            ->where('hostel_id', $hostel_id)
             ->first();
 
-        if (!$hotelRoom) {
+        if (!$hostelRoom) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data Room Tidak Ditemukan',
@@ -158,13 +150,13 @@ class ManagementHotelController extends Controller
         }
 
         // Ambil data fasilitas (facility)
-        $facilities = HotelRoomFacility::where('hotel_room_id', $hotelRoom->id)->get();
+        $facilities = hostelRoomFacility::where('hostel_room_id', $hostelRoom->id)->get();
 
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Room',
             'data' => [
-                'hotel_room' => $hotelRoom,
+                'hostel_room' => $hostelRoom,
                 'facilities' => $facilities,
             ],
         ]);
@@ -173,11 +165,11 @@ class ManagementHotelController extends Controller
 
 
     //ini aksi untuk update
-    public function settingRoomUpdate(Request $request, $hotel_id, $id)
+    public function settingRoomUpdate(Request $request, $hostel_id, $id)
     {
         //dd($request->all());
-        $hotelRoom = HotelRoom::where('id', $id)
-            ->where('hotel_id', $hotel_id)
+        $hostelRoom = hostelRoom::where('id', $id)
+            ->where('hostel_id', $hostel_id)
             ->first();
 
         $facilities = Facility::all();
@@ -205,12 +197,12 @@ class ManagementHotelController extends Controller
 
         if ($request->hasFile('image_1')) {
             $image_1 = $request->file('image_1');
-            $image_1->storeAs('public/media/hotel', $image_1->hashName());
+            $image_1->storeAs('public/media/hostel', $image_1->hashName());
 
-            Storage::delete('public/media/hotel', $hotelRoom->image_1);
+            Storage::delete('public/media/hostel', $hostelRoom->image_1);
 
-            $hotelRoom->update([
-                'hotel_id' => $request->hotel_id,
+            $hostelRoom->update([
+                'hostel_id' => $request->hostel_id,
                 'name' => $request->name,
                 'price' => $request->price,
                 'roomsize' => $request->roomsize,
@@ -223,22 +215,22 @@ class ManagementHotelController extends Controller
             ]);
 
             // Hapus fasilitas lama
-            DB::table('hotel_room_facilities')
-                ->where('hotel_room_id', $hotelRoom->id)
+            DB::table('hostel_room_facilities')
+                ->where('hostel_room_id', $hostelRoom->id)
                 ->delete();
 
             // Tambahkan fasilitas yang baru
             foreach ($facilityIds as $facilityId) {
-                DB::table('hotel_room_facilities')->insert([
-                    'hotel_id' => $request->hotel_id,
+                DB::table('hostel_room_facilities')->insert([
+                    'hostel_id' => $request->hostel_id,
                     'service_id' => 8,
-                    'hotel_room_id' => $hotelRoom->id,
+                    'hostel_room_id' => $hostelRoom->id,
                     'facility_id' => $facilityId,
                 ]);
             }
         } else {
-            $hotelRoom->update([
-                'hotel_id' => $request->hotel_id,
+            $hostelRoom->update([
+                'hostel_id' => $request->hostel_id,
                 'name' => $request->name,
                 'price' => $request->price,
                 'roomsize' => $request->roomsize,
@@ -250,32 +242,32 @@ class ManagementHotelController extends Controller
             ]);
 
             // Hapus fasilitas lama
-            DB::table('hotel_room_facilities')
-                ->where('hotel_room_id', $hotelRoom->id)
+            DB::table('hostel_room_facilities')
+                ->where('hostel_room_id', $hostelRoom->id)
                 ->delete();
 
             // Tambahkan fasilitas yang baru
             foreach ($facilityIds as $facilityId) {
-                DB::table('hotel_room_facilities')->insert([
-                    'hotel_id' => $request->hotel_id,
+                DB::table('hostel_room_facilities')->insert([
+                    'hostel_id' => $request->hostel_id,
                     'service_id' => 8,
-                    'hotel_room_id' => $hotelRoom->id,
+                    'hostel_room_id' => $hostelRoom->id,
                     'facility_id' => $facilityId,
                 ]);
             }
         }
 
-        $updatedData = $hotelRoom->fresh();
+        $updatedData = $hostelRoom->fresh();
         // Ambil fasilitas yang diperbarui
-        $updatedFacilities = DB::table('hotel_room_facilities')
-            ->where('hotel_room_id', $updatedData->id)
+        $updatedFacilities = DB::table('hostel_room_facilities')
+            ->where('hostel_room_id', $updatedData->id)
             ->get();
 
-        toast('Hotel Room Has Been Updated', 'success');
+        toast('hostel Room Has Been Updated', 'success');
 
         return response()->json([
             'success' => true,
-            'message' => 'Data HotelRoom Berhasil Diudapte!',
+            'message' => 'Data hostelRoom Berhasil Diudapte!',
             'data' => [
                 'updatedData' => $updatedData,
                 'facilities' => $facilities,
@@ -286,9 +278,9 @@ class ManagementHotelController extends Controller
 
     public function settingRoomDelete(string $id)
     {
-        HotelRoom::where('id', $id)->delete();
-        HotelRoomFacility::where('hotel_room_id', $id)->delete();
-        toast('Hotel Has Been Removed', 'success');
+        hostelRoom::where('id', $id)->delete();
+        hostelRoomFacility::where('hostel_room_id', $id)->delete();
+        toast('hostel Has Been Removed', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Dihapus!'
@@ -298,54 +290,54 @@ class ManagementHotelController extends Controller
 
     public function destroyRoom($id)
     {
-        $hotel_room = HotelRoom::findOrFail($id);
-        $hotel_room->delete();
+        $hostel_room = hostelRoom::findOrFail($id);
+        $hostel_room->delete();
 
-        toast('Hotel Room has been deleted', 'success');
+        toast('hostel Room has been deleted', 'success');
         return redirect()->back();
     }
 
-    public function destroyimage($id, HotelImage $hotelImage)
+    public function destroyimage($id, hostelImage $hostelImage)
     {
-        $hotelImage = HotelImage::findOrFail($id);
-        Storage::delete('media/hotel/' . $hotelImage->image);
+        $hostelImage = hostelImage::findOrFail($id);
+        Storage::delete('media/hostel/' . $hostelImage->image);
 
-        $hotelImage->delete();
+        $hostelImage->delete();
 
 
-        toast('Hotel Image has been deleted', 'success');
+        toast('hostel Image has been deleted', 'success');
         return redirect()->back();
     }
 
     public function storeRule(Request $request)
     {
         $this->validate($request, [
-            // 'hotel_id'  => 'required',
+            // 'hostel_id'  => 'required',
             'name'  => 'required'
         ]);
 
-        HotelRule::create([
+        hostelRule::create([
             'name'  => $request->name,
-            'hotel_id' => $request->hotel_id,
+            'hostel_id' => $request->hostel_id,
         ]);
-        toast('Hotel Rule has been created', 'success');
+        toast('hostel Rule has been created', 'success');
         return redirect()->back();
     }
 
     public function showRule(Request $request)
     {
-        $hotelRule = HotelRule::where('id', $request->id)->get();
+        $hostelRule = hostelRule::where('id', $request->id)->get();
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Hotel Rules',
-            'data'    => $hotelRule
+            'message' => 'Detail Data hostel Rules',
+            'data'    => $hostelRule
         ]);
     }
 
-    public function updaterule(Request $request, HotelRule $HotelRule, $id)
+    public function updaterule(Request $request, hostelRule $hostelRule, $id)
     {
         $validator = Validator::make($request->all(), [
-            'hotel_id'  => 'required',
+            'hostel_id'  => 'required',
             'name'  => 'required',
         ]);
 
@@ -356,25 +348,25 @@ class ManagementHotelController extends Controller
 
 
 
-        $HotelRule = HotelRule::find($id);
-        $HotelRule->update([
-            'hotel_id'  => $request->hotel_id,
+        $hostelRule = hostelRule::find($id);
+        $hostelRule->update([
+            'hostel_id'  => $request->hostel_id,
             'name'  => $request->name
         ]);
 
-        toast('Hotel Rule has been Updated', 'success');
+        toast('hostel Rule has been Updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
-            'data'    => $HotelRule
+            'data'    => $hostelRule
         ]);
         // return redirect()->back();
     }
     public function destroyRule($id)
     {
-        $hotel_rule = HotelRule::findorfail($id);
-        $hotel_rule->delete();
-        toast('Hotel Rule has been Deleted', 'success');
+        $hostel_rule = hostelRule::findorfail($id);
+        $hostel_rule->delete();
+        toast('hostel Rule has been Deleted', 'success');
         return redirect()->back();
     }
 }

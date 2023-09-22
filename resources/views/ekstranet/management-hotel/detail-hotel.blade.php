@@ -2,7 +2,7 @@
 
 @section('content-admin')
     <!--begin::Row-->
-    <div class="row gy-5 g-xl-10">
+    <div class="row gy-5 g-xl-10">  
         <!--begin::Col-->
         <div class="col-xl-8 col-md-8">
             <div class="card ">
