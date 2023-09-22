@@ -73,19 +73,36 @@ class HostelController extends Controller
                 }
             }
 
+            if ($request->has('rent_start') && $request->has('rent_end')) {
+                $hostels->whereRaw('(
+                    SELECT SUM(totalroom) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
+                ) - (
+                    SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hostel WHERE hostel_id = hostels.id
+                    AND ? <= reservation_end
+                    AND ? >= reservation_start
+                ) > 0', [$request->rent_end, $request->rent_start]);
+            }
+
+
             $hostelsget = $hostels->withCount([
                 "hostelRoom as price_avg" => function ($q) {
                     $q->select(DB::raw('coalesce(avg(price),0)'));
                 }
             ])->withCount([
-                        "rating as rating_avg" => function ($q) {
-                            $q->select(DB::raw('coalesce(avg(rate),0)'));
-                        }
-                    ])->withCount("rating as rating_count")->get();
+                "rating as rating_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(rate),0)'));
+                }
+            ])->withCount("rating as rating_count")->get();
+
+
 
             $hostelShow = $hostelsget->map(function ($hostelsget) {
+
+                $hostelImage = $hostelsget->hostelImage->where('main', 1)->first();
+
                 return [
                     'name' => $hostelsget->name,
+                    'image' => $hostelImage ? asset($hostelImage->image) : null,
                     'location' => $hostelsget->city,
                     'rating_avg' => intval($hostelsget->rating_avg),
                     'rating_count' => $hostelsget->rating_count,
@@ -122,10 +139,10 @@ class HostelController extends Controller
                         $q->select(DB::raw('coalesce(avg(price),0)'));
                     }
                 ])->withCount([
-                        "rating as rating_avg" => function ($q) {
-                            $q->select(DB::raw('coalesce(avg(rate),0)'));
-                        }
-                    ])->withCount("rating as rating_count")
+                    "rating as rating_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(rate),0)'));
+                    }
+                ])->withCount("rating as rating_count")
                 ->find($id);
 
             // if ($request->start_date) {
@@ -154,6 +171,7 @@ class HostelController extends Controller
             $hostelGet = collect([$hostel])->map(function ($hostel) {
                 return [
                     'name' => $hostel->name,
+                    'image' => $hostel->image,
                     'checkin' => $hostel->checkin,
                     'checkout' => $hostel->checkout,
                     'location' => $hostel->city,
@@ -334,10 +352,10 @@ class HostelController extends Controller
                     $q->select(DB::raw('coalesce(avg(price),0)'));
                 }
             ])->withCount([
-                    "rating as rating_avg" => function ($q) {
-                        $q->select(DB::raw('coalesce(avg(rate),0)'));
-                    }
-                ])->withCount("rating as rating_count")
+                "rating as rating_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(rate),0)'));
+                }
+            ])->withCount("rating as rating_count")
             ->orderBy('rating_count', 'DESC')
             ->orderBy('rating_avg', 'DESC')
             ->orderBy('price_avg', "desc")->get();
