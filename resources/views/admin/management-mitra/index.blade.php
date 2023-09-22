@@ -28,7 +28,7 @@
                         <th class="text-center">Vendor</th>
                         <th class="text-center">Nama Hotel atau Hostel</th>
                         <th class="text-center">No.Telp</th>
-                        <th class="text-center">Status</th>
+{{--                        <th class="text-center">Status</th>--}}
                         <th class="text-center">Aksi</th>
                     </tr>
                     </thead>
@@ -41,10 +41,16 @@
                                 <p>{{$user->name}}</p>
                                 <p style="font-size : 9px;">{{$user->email}}</p>
                             </td>
+                            <td>
+                                <p style="font-size : 9px;">{{$user->email}}</p>
+                            </td>
                             <td class="text-center">
-                                @foreach($user->hotel as $hotel)
-                                    <span class="badge badge-info">{{$hotel->name}}</span>
+                                @foreach($user->hostel as $hostel)
+                                    <span class="badge badge-info">{{$hostel->name}}</span>
                                 @endforeach
+                                    @foreach($user->hotel as $hotel)
+                                        <span class="badge badge-info">{{$hotel->name}}</span>
+                                    @endforeach
                             </td>
                             <td class="text-center">{{$user->phone ?? 'Belum Ada'}}</td>
                             <td class="text-center">

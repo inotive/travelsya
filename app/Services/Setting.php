@@ -42,9 +42,9 @@ class Setting
         if ($point == 1) {
             // cek point
             $user = User::find($userid);
-            if ($user && $user->point <= 0) {
-                return false;
-            }
+            // if ($user && $user->point <= 0) {
+            //     return false;
+            // }
             array_push($fees, [
                 'type' => 'point',
                 'value' => 0 - $user->point,

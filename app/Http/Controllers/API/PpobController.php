@@ -100,36 +100,51 @@ class PpobController extends Controller
             $product = Product::with('service')->find($data['detail'][0]['product_id']);
             $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
 
-            if ($data['inquiry'] == 1) {
-                $inquiry = $this->mymili->inquiry([
-                    'no_hp' => $data['detail'][0]['no_hp'],
-                    'nom' => $data['detail'][0]['name_cek']
-                ]);
-                if (isset($inquiry['tagihan'])) {
-                    $price = $inquiry['tagihan'];
-                } else {
-                    return ResponseFormatter::error($inquiry, 'Inquiry invalid');
-                }
-            } else {
-                $price = $product->price;
-            }
+            // if ($data['inquiry'] == 1) {
+            //     $inquiry = $this->mymili->inquiry([
+            //         'no_hp' => $data['detail'][0]['no_hp'],
+            //         'nom' => $data['detail'][0]['name_cek']
+            //     ]);
+            //     if (isset($inquiry['tagihan'])) {
+            //         $price = $inquiry['tagihan'];
+            //     } else {
+            //         return ResponseFormatter::error($inquiry, 'Inquiry invalid');
+            //     }
+            // } else {
+            //     $price = $product->price;
+            // }
+
+            $price = $product->price;
+            // $price = $data['total_tagihan'];
+
             $setting = new Setting();
             $fees = $setting->getFees($data['point'], $product->service_id, $request->user()->id, $price);
-            if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
-            $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees);
+            // $fees = $product->price;
 
+            // return response()->json($fees);
 
-            //request xendit
+            if (!$fees) {
+                return ResponseFormatter::error(null, 'Point invalid');
+            }
+
+            $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees, 1);
+            // $amount = $price + $fees;
+
+            // return response()->json($amount);
+
+            // request xendit
             $payoutsXendit = $this->xendit->create([
                 'external_id' => $data['no_inv'],
-                'items' => [[
-                    'name' => $product['name'],
-                    'quantity' => $data['detail'][0]['qty'],
-                    'price' => $price,
-                    'url' => $data['detail'][0]['url'] ?: "someurl"
-                ]],
+                'items' => [
+                    [
+                        'name' => $product['name'],
+                        'quantity' => $data['detail'][0]['qty'],
+                        'price' => $price,
+                        'url' => $data['detail'][0]['url'] ?: "someurl"
+                    ]
+                ],
                 'amount' => $amount,
-                'success_redirect_url'  => route('redirect.succes'),
+                'success_redirect_url' => route('redirect.succes'),
                 'failure_redirect_url' => route('redirect.fail'),
                 'invoice_duration ' => 72000,
                 'should_send_email' => true,
@@ -140,6 +155,8 @@ class PpobController extends Controller
                 ],
                 'fees' => $fees
             ]);
+
+            // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
 
             if (isset($payoutsXendit['status'])) {
 
@@ -174,6 +191,7 @@ class PpobController extends Controller
                         'no_hp' => $data['detail'][0]['no_hp'],
                         'status' => "PROCESS"
                     ]);
+
                     if ($data['point']) {
                         //deductpoint
                         $point = new Point;
@@ -199,11 +217,11 @@ class PpobController extends Controller
         try {
             $data = $request->all();
 
-            // handle validation
             $validator = Validator::make($request->all(), [
                 'no_pelanggan' => 'required',
                 'nom' => 'required',
             ]);
+
             if ($validator->fails()) {
                 return ResponseFormatter::error([
                     'response' => $validator->errors(),
@@ -215,10 +233,42 @@ class PpobController extends Controller
                 'nom' => $data['nom'],
             ]);
 
-            if (str_contains($requestMymili['status'], "SUKSES")) {
+            $fee_admin = Product::with('service')
+                ->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
+                ->price;
+
+            if (str_contains($requestMymili['status'], "SUKSES!")) {
+
+                $requestSaldoMyMili = $this->mymili->saldo();
+                $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
+
+                if ($saldoMyMili < ($requestMymili['tagihan'] + $fee_admin)) {
+                    return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
+                }
+
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
-                return ResponseFormatter::error($requestMymili, 'Inquiry failed');
+                if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                    $status = "Tagihan Sudah Terbayar";
+                }
+
+                if (str_contains($requestMymili['status'], "Bills already paid")) {
+                    $status = "Tagihan Sudah Terbayar";
+                }
+
+                if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                    $status = "Nomor Tagihan Tidak Dikenali";
+                }
+
+                if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                    $status = "Nomor Tagihan Tidak Dikenali";
+                }
+
+                if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                    $status = "Nomor Tagihan Tidak Dikenali";
+                }
+
+                return ResponseFormatter::error($status, 'Inquiry failed');
             }
         } catch (\Throwable $th) {
             return ResponseFormatter::error([

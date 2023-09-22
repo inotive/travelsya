@@ -27,8 +27,8 @@ class HotelController extends Controller
     protected $xendit, $point;
     public function __construct(Xendit $xendit, Point $point)
     {
-        $this->xendit =  $xendit;
-        $this->point =  $point;
+        $this->xendit = $xendit;
+        $this->point = $point;
     }
     /**
      * Display a listing of the resource.
@@ -74,13 +74,22 @@ class HotelController extends Controller
 
             $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
 
-            if ($request->has('location') && $request->has('room') && $request->has('guest')) {
+            if ($request->has('location')) {
+                if ($request->location != 'semua') {
+                    $hotels->where('city', 'like', '%' . $request->location . '%');
+                }
+            }
+
+            if ($request->has('room')) {
                 $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->where([
-                        ['totalroom', '>', $request->room],
-                        ['guest', '>=', $request->guest],
-                    ]);
-                })->where('city', 'like', '%' . $request->location . '%');
+                    $query->where('totalroom', '>', $request->room);
+                });
+            }
+
+            if ($request->has('guest')) {
+                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
+                    $query->where('guest', '>=', $request->guest);
+                });
             }
 
             $hotelget = $hotels->get();
@@ -234,9 +243,11 @@ class HotelController extends Controller
         $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
 
         //cekpoint
-        if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
+        if (!$fees)
+            return ResponseFormatter::error(null, 'Point invalid');
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
-        if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
+        if ($qty < 0)
+            return ResponseFormatter::error(null, 'Date must be forward');
         $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
 
         // cek book date
@@ -258,7 +269,7 @@ class HotelController extends Controller
                 ]
             ],
             'amount' => $amount,
-            'success_redirect_url'  => route('redirect.succes'),
+            'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
             'should_send_email' => true,
@@ -335,21 +346,82 @@ class HotelController extends Controller
         return ResponseFormatter::success($hotelCity, 'Data successfully loaded');
     }
 
-    public function hotelPopuler()
+    public function hotelPopuler(Request $request)
     {
-        $hotelPopuler = Hotel::with('hotelImage', 'hotelRating')
-            ->withCount(["hotelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(price),0)'));
-            }])->withCount(["hotelRating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("hotelRating as rating_count")
-            ->orderBy('rating_count', 'DESC')
-            ->orderBy('rating_avg', 'DESC')
-            ->orderBy('price_avg', "desc")->get();
+        // $hotelPopuler = Hotel::with('hotelImage', 'hotelRating')
+        //     ->withCount([
+        //         "hotelRoom as price_avg" => function ($q) {
+        //             $q->select(DB::raw('coalesce(avg(price),0)'));
+        //         }
+        //     ])
+        //     ->withCount([
+        //         "hotelRating as rating_avg" => function ($q) {
+        //             $q->select(DB::raw('coalesce(avg(rate),0)'));
+        //         }
+        //     ])
+        //     ->withCount("hotelRating as rating_count")
+        //     ->orderBy('rating_count', 'DESC')
+        //     ->orderBy('rating_avg', 'DESC')
+        //     ->orderBy('price_avg', "desc")
+        //     ->get();
 
-        if (!$hotelPopuler)
+
+        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
+
+        if ($request->has('location')) {
+            $hotels->where('city', 'like', '%' . $request->location . '%');
+        }
+
+        $hotelget = $hotels->get();
+        $hotelDetails = [];
+        $hotelFormatJSON = [];
+
+        foreach ($hotelget as $hotel) {
+            $minPrice = $hotel->hotelRoom->min('price');
+            $maxPrice = $hotel->hotelRoom->min('sellingprice');
+            $jumlahTransaksi = $hotel->hotelRating->count();
+            $totalRating = $hotel->hotelRating->sum('rate');
+
+            // Rating 5
+            if ($jumlahTransaksi > 0) {
+                $avgRating = $totalRating / $jumlahTransaksi;
+            } else {
+                $avgRating = 0;
+            }
+
+            $hotelDetails[$hotel->id] = [
+                'avg_rating' => $avgRating,
+                'rating_count' => $jumlahTransaksi,
+                'price' => $minPrice,
+                'sellingprice' => $maxPrice,
+            ];
+
+            $hotelFormatJSON[] = [
+                'name' => $hotel->name,
+                'location' => $hotel->city,
+                'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
+                'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
+                'price' => $hotelDetails[$hotel->id]['price'],
+                'sellingprice' => $hotelDetails[$hotel->id]['sellingprice'],
+            ];
+
+            usort($hotelFormatJSON, function ($a, $b) {
+                // Mengurutkan berdasarkan avg_rating secara menurun (dari tertinggi ke terendah)
+                $avgRatingComparison = $b['avg_rating'] - $a['avg_rating'];
+
+                // Jika avg_rating sama, maka urutkan berdasarkan rating_count secara menurun
+                if ($avgRatingComparison === 0) {
+                    return $b['rating_count'] - $a['rating_count'];
+                }
+
+                return $avgRatingComparison;
+            });
+        }
+
+        if (!$hotelFormatJSON) {
             return ResponseFormatter::error(null, 'Data not found');
+        }
 
-        return ResponseFormatter::success($hotelPopuler, 'Data successfully loaded');
+        return ResponseFormatter::success($hotelFormatJSON, 'Data successfully loaded');
     }
 }

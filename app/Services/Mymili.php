@@ -6,6 +6,7 @@ use App\Helpers\ResponseFormatter;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\DB;
+
 class Mymili
 {
     protected $url, $requestid, $nom, $nohp, $msisdn, $pin, $headers, $method;
@@ -70,7 +71,7 @@ class Mymili
 
         $client = new Client();
         try {
-            $response = $client->request('POST', $this->url,  [
+            $response = $client->request('POST', $this->url, [
                 'headers' => $this->headers,
                 'body' => $xml
             ])->getBody()->getContents();
@@ -129,7 +130,7 @@ class Mymili
 
         $client = new Client();
         try {
-            $response = $client->request('POST', $this->url,  [
+            $response = $client->request('POST', $this->url, [
                 'headers' => $this->headers,
                 'body' => $xml
             ])->getBody()->getContents();
@@ -188,7 +189,7 @@ class Mymili
 
         $client = new Client();
         try {
-            $responseRaw = $client->request('POST', $this->url,  [
+            $responseRaw = $client->request('POST', $this->url, [
                 'headers' => $this->headers,
                 'body' => $xml
             ])->getBody()->getContents();
@@ -270,7 +271,7 @@ class Mymili
         $client = new Client();
 
         try {
-            $response = $client->request('POST', $this->url,  [
+            $response = $client->request('POST', $this->url, [
                 'headers' => $this->headers,
                 'body' => $xml
             ])->getBody()->getContents();
