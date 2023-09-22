@@ -140,8 +140,8 @@
                     <!--end:Menu link-->
                 </a>
 
-                <a href="{{route('partner.management.hotel')}}"
-                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
+                <a href="{{route('partner.management.hostel')}}"
+                   class="menu-item {{(Request::segment(2)=="management-hostel") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -154,7 +154,7 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
-                <a href="{{route('partner.management.hotel')}}"
+                <a href="{{route('partner.management.room')}}"
                    class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
