@@ -59,6 +59,11 @@ Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('pa
 //Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
 //Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
+Route::get('/profile/order-detail', [UserController::class, 'orderDetail'])->name('user.transactionDetail');
+Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
+
+
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
 Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
@@ -251,6 +256,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
             Route::delete('detail-hotel/{id}/deleteroom', [ManagementHotelController::class, 'destroyRoom'])->name('partner.management.hotel.destroyroom');
             //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+
             Route::get('setting-hotel-information/{id}', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
             Route::get('setting-hotel-photo/{id}', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
             Route::get('setting-hotel-room/{id}', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
