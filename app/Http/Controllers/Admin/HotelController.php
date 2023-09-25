@@ -18,7 +18,7 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')->where('role',2)->get();
+        $users = DB::table('users')->where('role',1)->get();
         $hotels = DB::table('hotels')
             ->join('services', 'services.id', '=', 'hotels.service_id')
             ->join('users', 'users.id', '=', 'hotels.user_id')
