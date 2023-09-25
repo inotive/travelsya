@@ -27,6 +27,7 @@ use App\Http\Controllers\Partner\ManagementHostelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\Partner\ReviewController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -225,6 +226,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
 
+        Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
 
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');

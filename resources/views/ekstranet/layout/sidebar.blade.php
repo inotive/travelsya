@@ -86,7 +86,7 @@
                     <!--end:Menu link-->
                 </a>
                 <!--begin:Menu item-->
-                <a href="{{route('partner.riwayat-booking')}}"
+                <a href="{{route('partner.review')}}"
                    class="menu-item menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">

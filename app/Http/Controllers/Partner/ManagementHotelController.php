@@ -321,11 +321,11 @@ class ManagementHotelController extends Controller
     {
         $this->validate($request, [
             // 'hotel_id'  => 'required',
-            'name'  => 'required'
+            'description'  => 'required'
         ]);
 
         HotelRule::create([
-            'name'  => $request->name,
+            'description'  => $request->description,
             'hotel_id' => $request->hotel_id,
         ]);
         toast('Hotel Rule has been created', 'success');
@@ -346,7 +346,7 @@ class ManagementHotelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'hotel_id'  => 'required',
-            'name'  => 'required',
+            'description'  => 'required',
         ]);
 
         //check if validation fails
@@ -359,7 +359,7 @@ class ManagementHotelController extends Controller
         $HotelRule = HotelRule::find($id);
         $HotelRule->update([
             'hotel_id'  => $request->hotel_id,
-            'name'  => $request->name
+            'description'  => $request->description
         ]);
 
         toast('Hotel Rule has been Updated', 'success');
