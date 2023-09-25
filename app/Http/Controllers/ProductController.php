@@ -220,18 +220,44 @@ class ProductController extends Controller
         //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
         // }
 
-        return [
-            "meta" => [
-                "code" => 200,
-                "status" => "success",
-                "message" => "Inquiry loaded"
-            ],
-            "data" => [
-                "status" => "SUKSES!",
-                "nama_pelanggan" => "ERIKH",
-                "tagihan" => "346034"
-            ]
-        ];
+        // return [
+        //     "meta" => [
+        //         "code" => 200,
+        //         "status" => "success",
+        //         "message" => "Inquiry loaded"
+        //     ],
+        //     "data" => [
+        //         "status" => "SUKSES!",
+        //         "nama_pelanggan" => "ERIKH",
+        //         "tagihan" => "346034"
+        //     ]
+        // ];
+
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
     }
 
     public function productPdam()
