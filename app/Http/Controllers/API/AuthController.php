@@ -129,6 +129,7 @@ class AuthController extends Controller
                 unset($data['old_password']);
                 $data['password'] = Hash::make($data['password']);
             }
+            $data['phone'] = $request->phone;
             $update = $user->update($data);
             if ($update) {
                 return ResponseFormatter::success($user, "User update success");
