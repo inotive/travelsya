@@ -29,6 +29,7 @@
                         @csrf
                         <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
                         <div class="row gy-5">
+
                             <div class="col-6">
                                 <label class="form-label required">Tipe Kamar</label>
                                 <input type="text" name="name" id="name" class="form-control"
@@ -74,7 +75,6 @@
                                 <option value="unfurnished+">Unfurnished</option>
                             </select>
                         </div> --}}
-
 
                             <div class="col-12">
                                 <!--begin::Alert-->
@@ -151,7 +151,6 @@
 {{--                                </div>--}}
                             </div>
 
-
                             <div class="col-4 extrabedWidget">
                                 <label class="form-label">Biaya Extra Bed</label>
                                 <div class="input-group">
@@ -161,11 +160,13 @@
                                 </div>
 
                             </div>
+
                             <div class="col-4 extrabedWidget"  style="display:none;">
                                 <label class="form-label">Max Extra Bed</label>
                                 <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
                                     placeholder="Masukkan Maksimal Extra Bed">
                             </div>
+
                             <div class="col-4 extrabedWidget">
                                 <label class="form-label">Extra Selling Charge</label>
                                 <input type="number" name="sellingcharge" id="sellingcharge" class="form-control"
@@ -253,6 +254,7 @@
                                         </div>
                                     @endforeach
                                 </div> --}}
+
                                 <table class="table table-rounded table-bordered border gy-7 gs-7"
                                     id="kt_datatable_zero_configuration" style="border: 1px solid rgb(112, 112, 112);">
                                     <thead>
@@ -297,7 +299,7 @@
             const extrabedYaCheckbox = document.getElementById('extrabedYaCheckbox');
             const extrabedTidakCheckbox = document.getElementById('extrabedTidakCheckbox');
             const extrabedWidget = document.getElementsByClassName('extrabedWidget');
-
+            
             extrabedYaCheckbox.addEventListener('change', toggleWidget);
             extrabedTidakCheckbox.addEventListener('change', toggleWidget);
 
