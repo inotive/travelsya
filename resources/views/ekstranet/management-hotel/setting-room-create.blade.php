@@ -29,10 +29,18 @@
                         @csrf
                         <input type="hidden" name="hotel_id" value="{{ $hotel->id }}">
                         <div class="row gy-5">
-                            <div class="col-12">
-                                <label class="form-label">Tipe Kamar</label>
+                            <div class="col-6">
+                                <label class="form-label required">Tipe Kamar</label>
                                 <input type="text" name="name" id="name" class="form-control"
                                     placeholder="Masukan Nama Kamar/No Kamar" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label required">Berapa kamar yang kamu miliki ?</label>
+                                <div class="input-group">
+                                    <input type="text" name="totalroom" id="totalroom" class="form-control"
+                                           placeh   older="Masukan Total Ruangan" placeholder="Masukan total kamar" required>
+                                    <span class="input-group-text">Kamar</span>
+                                </div>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Tarif Per Malam</label>
@@ -47,18 +55,18 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
                                     <input type="text" name="sellingprice" id="sellingprice" class="form-control"
-                                        placeholder="Masukkan Harga Termasuk Pajak" required>
+                                        placeholder="Masukkan Harga Termasuk Pajak" disabled>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="form-label">Room Type</label>
-                                <select class="form-control" name="bed_type" id="bed_type" required>
-                                    <option value="studio">Studio</option>
-                                    <option value="1br">1BR</option>
-                                    <option value="2br">2BR</option>
-                                    <option value="3br+">3BR+</option>
-                                </select>
-                            </div>
+{{--                            <div class="col-12">--}}
+{{--                                <label class="form-label">Room Type</label>--}}
+{{--                                <select class="form-control" name="bed_type" id="bed_type" required>--}}
+{{--                                    <option value="studio">Studio</option>--}}
+{{--                                    <option value="1br">1BR</option>--}}
+{{--                                    <option value="2br">2BR</option>--}}
+{{--                                    <option value="3br+">3BR+</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
                             {{-- <div class="col-6">
                             <label class="form-label">Furnish</label>
                             <select  class="form-control" name="furnish" id="furnish">
@@ -66,14 +74,7 @@
                                 <option value="unfurnished+">Unfurnished</option>
                             </select>
                         </div> --}}
-                            <div class="col-12">
-                                <label class="form-label">Berapa kamar yang kamu miliki ?</label>
-                                <div class="input-group">
-                                    <input type="text" name="totalroom" id="totalroom" class="form-control"
-                                        placeholder="Masukan Total Ruangan" required>
-                                    <span class="input-group-text">Kamar</span>
-                                </div>
-                            </div>
+
 
                             <div class="col-12">
                                 <!--begin::Alert-->
@@ -113,26 +114,45 @@
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Apakah Tersedia Extra Bed pada Kamar Ini?</label>
-                                <div class="col-6">
+                                <!--begin::Radio group-->
+                                <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+                                    <!--begin::Radio-->
+                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                                        <!--begin::Input-->
+                                        <input class="btn-check" type="radio" name="method" value="ya" id="extrabedYaCheckbox"/>
+                                        <!--end::Input-->
+                                        Ya, ada
+                                    </label>
+                                    <!--end::Radio-->
 
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="extrabed" value="ya"
-                                            id="extrabedYaCheckbox">
-                                        <label class="form-check-label" for="extrabedYaCheckbox">
-                                            Ya
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="extrabed" value="tidak"
-                                            id="extrabedTidakCheckbox">
-                                        <label class="form-check-label" for="extrabedTidakCheckbox">
-                                            Tidak
-                                        </label>
-                                    </div>
+                                    <!--begin::Radio-->
+                                    <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                                        <!--begin::Input-->
+                                        <input class="btn-check" type="radio" name="method" checked="checked" value="tidak" id="extrabedTidakCheckbox"/>
+                                        <!--end::Input-->
+                                        Tidak Ada
+                                    </label>
+                                    <!--end::Radio-->
                                 </div>
+{{--                                <!--end::Radio group-->--}}
+{{--                                <div class="form-check form-check-inline">--}}
+{{--                                    <input class="form-check-input" type="radio" name="extrabed" value="ya"--}}
+{{--                                           id="extrabedYaCheckbox">--}}
+{{--                                    <label class="form-check-label" for="extrabedYaCheckbox">--}}
+{{--                                        Ya--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
+{{--                                <div class="form-check form-check-inline">--}}
+{{--                                    <input class="form-check-input" type="radio" name="extrabed" value="tidak"--}}
+{{--                                           id="extrabedTidakCheckbox" checked>--}}
+{{--                                    <label class="form-check-label" for="extrabedTidakCheckbox">--}}
+{{--                                        Tidak--}}
+{{--                                    </label>--}}
+{{--                                </div>--}}
                             </div>
 
-                            <div class="col-6">
+
+                            <div class="col-4 extrabedWidget">
                                 <label class="form-label">Biaya Extra Bed</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
@@ -141,12 +161,12 @@
                                 </div>
 
                             </div>
-                            <div class="col-6" id="extrabedWidget" style="display:none;">
+                            <div class="col-4 extrabedWidget"  style="display:none;">
                                 <label class="form-label">Max Extra Bed</label>
                                 <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
                                     placeholder="Masukkan Maksimal Extra Bed">
                             </div>
-                            <div class="col-6">
+                            <div class="col-4 extrabedWidget">
                                 <label class="form-label">Extra Selling Charge</label>
                                 <input type="number" name="sellingcharge" id="sellingcharge" class="form-control"
                                     disabled>
@@ -233,7 +253,7 @@
                                         </div>
                                     @endforeach
                                 </div> --}}
-                                <table class="table table-rounded table-striped border gy-7 gs-7"
+                                <table class="table table-rounded table-bordered border gy-7 gs-7"
                                     id="kt_datatable_zero_configuration" style="border: 1px solid rgb(112, 112, 112);">
                                     <thead>
                                         <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200 ">
@@ -273,18 +293,21 @@
     @endsection
     @push('add-script')
         <script>
+
             const extrabedYaCheckbox = document.getElementById('extrabedYaCheckbox');
             const extrabedTidakCheckbox = document.getElementById('extrabedTidakCheckbox');
-            const extrabedWidget = document.getElementById('extrabedWidget');
+            const extrabedWidget = document.getElementsByClassName('extrabedWidget');
 
             extrabedYaCheckbox.addEventListener('change', toggleWidget);
             extrabedTidakCheckbox.addEventListener('change', toggleWidget);
 
             function toggleWidget() {
                 if (extrabedYaCheckbox.checked) {
-                    extrabedWidget.style.display = 'block'; // Jika checkbox 'Ya' diceklis, tampilkan widget
+                    $('.extrabedWidget').removeClass('none');
+                    // extrabedWidget.style.display = 'block'; // Jika checkbox 'Ya' diceklis, tampilkan widget
                 } else if (extrabedTidakCheckbox.checked) {
-                    extrabedWidget.style.display = 'none'; // Jika checkbox 'Tidak' diceklis, sembunyikan widget
+                    $('.extrabedWidget').addClass('d-none');
+                    // extrabedWidget.style.display = 'none'; // Jika checkbox 'Tidak' diceklis, sembunyikan widget
                 }
             }
 
