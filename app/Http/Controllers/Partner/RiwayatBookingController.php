@@ -74,6 +74,27 @@ class RiwayatBookingController extends Controller
         return view('ekstranet.booking.index', compact('hotelbookdates', 'hostelbookdates'));
     }
 
+    public function detailhotelbookdate($id)
+    {
+        $hotelbookdates = HotelBookDate::find($id);
+        
+        return view('ekstranet.booking.detail-book-hotel', compact('hotelbookdates'));
+    }
+
+    public function detailhostelbookdate($id)
+    {
+        $hostelbookdates = BookDate::find($id);
+        
+        return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
+    }
+
+    // public function detailroomhostel($id)
+    // {
+
+
+    //     return view('ekstranet.management-room.detail-room-hostel', compact('hostelrooms'));
+    // }
+
     /**
      * Show the form for creating a new resource.
      */
