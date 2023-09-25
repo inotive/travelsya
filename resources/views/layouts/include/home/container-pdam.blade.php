@@ -169,8 +169,6 @@
 
                                 $('#btnPeriksaPDAM').removeAttr('disabled');
 
-                                $('#btnSubmitPDAM').removeAttr('disabled');
-
                                 $('#detailPDAM').show();
                             }
                         });

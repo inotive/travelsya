@@ -170,6 +170,9 @@
                                 $('#inputTotalBayarPajak').val(simulateTotalPajak);
                             }
                         });
+
+                        $('#btnPeriksaPajak').removeAttr('disabled');
+                        $('#btnPeriksaPajak').html('Periksa');
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status === 400) {
@@ -179,8 +182,8 @@
                         }
 
                         // Hapus spinner dan aktifkan tombol
-                        $('#btnPeriksaPDAM').removeAttr('disabled');
-                        $('#btnPeriksaPDAM').html('Periksa');
+                        $('#btnPeriksaPajak').removeAttr('disabled');
+                        $('#btnPeriksaPajak').html('Periksa');
                     }
                 });
             });
