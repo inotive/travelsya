@@ -26,7 +26,7 @@
                     <!--end::Title-->
                 </div>
                 <input type="hidden" id="rule_id">
-                <input type="hidden" id="hotel_id">
+                <input type="hidden" id="hostel_id">
 
 
                 <!--end::Heading-->
@@ -84,7 +84,7 @@ $('body').on('click', '#btn-edit-rule', function() {
 
         success: function(response) {
             $('#rule_id').val(response.data[0].id);
-            $('#hotel_id').val(response.data[0].hotel_id);
+            $('#hostel_id').val(response.data[0].hostel_id);
             $('#description-edit').val(response.data[0].description);
 
             $('#modal-edit-rule').modal('show');
@@ -96,7 +96,7 @@ $('#update').click(function(e) {
 
     //define variable
     let rule_id = $('#rule_id').val();
-    let hotel_id = $('#hotel_id').val();
+    let hostel_id = $('#hostel_id').val();
     let description = $('#description-edit').val();
     let token = $("meta[name='csrf-token']").attr("content");
 
@@ -107,7 +107,7 @@ $('#update').click(function(e) {
         type: "PUT",
         cache: false,
         data: {
-            "hotel_id": hotel_id,
+            "hostel_id": hostel_id,
             "description": description,
             "_token": token
         },

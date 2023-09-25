@@ -25,9 +25,13 @@ class ManagementHostelController extends Controller
 
     public function detailhostel($id)
     {
-        $hostel = hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelbookDate', 'hostelroomFacility', 'hostelRule')->find($id);
-        $avg_rate = DB::table('hostel_ratings')->where('hostel_id', $id)->avg('rate');
-        $total_review = DB::table('hostel_ratings')->where('hostel_id', $id)->count();
+        // $hostel = hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelbookDate', 'hostelroomFacility', 'hostelRule')->find($id);
+        $hostel = hostel::with('hostelRoom', 'hostelImage', 'Rating', 'hostelRule', 'hostelFacilities')->find($id);
+
+        // $avg_rate = DB::table('hostel_ratings')->where('hostel_id', $id)->avg('rate');
+        $avg_rate = DB::table('ratings')->where('hostel_id', $id)->avg('rate');
+
+        $total_review = DB::table('ratings')->where('hostel_id', $id)->count();
 
         return view('ekstranet.management-hostel.detail-hostel', compact('hostel', 'avg_rate', 'total_review'));
     }
@@ -111,7 +115,7 @@ class ManagementHostelController extends Controller
                 'image' => 'media/hostel/' . $filename,
             ]);
         }
-        
+
 
         $facilityIds = $request->input('facility_id', []);
         $roomId = $hostelRoom->id;
@@ -313,11 +317,11 @@ class ManagementHostelController extends Controller
     {
         $this->validate($request, [
             // 'hostel_id'  => 'required',
-            'name'  => 'required'
+            'description'  => 'required'
         ]);
 
         hostelRule::create([
-            'name'  => $request->name,
+            'description'  => $request->description,
             'hostel_id' => $request->hostel_id,
         ]);
         toast('hostel Rule has been created', 'success');
@@ -338,7 +342,7 @@ class ManagementHostelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'hostel_id'  => 'required',
-            'name'  => 'required',
+            'description'  => 'required',
         ]);
 
         //check if validation fails
@@ -351,7 +355,7 @@ class ManagementHostelController extends Controller
         $hostelRule = hostelRule::find($id);
         $hostelRule->update([
             'hostel_id'  => $request->hostel_id,
-            'name'  => $request->name
+            'description'  => $request->description
         ]);
 
         toast('hostel Rule has been Updated', 'success');
