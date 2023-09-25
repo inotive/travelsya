@@ -181,10 +181,10 @@
                         if (xhr.status === 400) {
                             // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
                             var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-                            
+
                             // Isi elemen div dengan pesan kesalahan dari respons JSON
                             // alertDiv.text(xhr.responseJSON.data);
-                            
+
                             // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertContainer').empty().append(alertDiv);
                         }
