@@ -46,7 +46,7 @@ Route::get('/welcome', function () {
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
-
+Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
 // Route::get('/', [AuthController::class, 'login'])->name('home');
 //auth
 //Route::get('/login', [AuthController::class, 'login'])->name('login.view');
@@ -72,10 +72,32 @@ Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransa
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
     Route::get('/pulsa', 'pulsa')->name('.pulsa');
     Route::get('/data', 'data')->name('.data');
+
+    Route::get('/{category}/{provider}', 'pulsaData');
+    Route::get('/payment-pulsa-data', 'paymentPulsaData')->name('.payment.pulsa.data');
+    // Route::get('/bpjs', 'bpjs')->name('.bpjs');
     Route::get('/bpjs', 'bpjs')->name('.bpjs');
+    // Route::get('/pdam', 'pdam')->name('.pdam');
     Route::get('/pdam', 'pdam')->name('.pdam');
+    // Route::get('/pln', 'pln')->name('.pln');
     Route::get('/pln', 'pln')->name('.pln');
+    Route::post('/bpjs', 'bpjs')->name('.bpjs');
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::get('/payment-bpjs', 'paymentBpjs')->name('.payment.bpjs');
+    Route::post('/pln', 'pln')->name('.pln');
+    Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
+    Route::post('/pdam', 'pdam')->name('.pdam');
+    Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
+    Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
+    Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
+    Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
+
+    Route::post('/tax', 'tax')->name('.tax');
+    Route::get('/product-tax', 'productTax')->name('.product.tax');
+    Route::get('/payment-tax', 'paymentTax')->name('.payment.tax');
+
+    Route::post('/admin-fee', 'getAdminFee')->name('.adminFee');
 });
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
