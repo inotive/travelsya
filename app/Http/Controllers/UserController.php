@@ -43,6 +43,14 @@ class UserController extends Controller
         return view('user.profile', ['transactions' => $transactionData]);
     }
 
+    public function orderHistory() {
+        return view('user.orderhistory');
+    }
+
+    public function orderDetail(){
+        return view('user.orderdetail');
+    }
+
     public function detailTransaction($no_inv)
     {
         if (!session()->get('user'))

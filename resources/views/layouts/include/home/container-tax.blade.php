@@ -39,42 +39,51 @@
                     <div class="col-xl-4">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPajak">Periksa</button>
                     </div>
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold my-3">
-                            <span>Detail Pelanggan</span>
-                        </label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                        <td class="text-right" colspan="3"><span id="namaPelangganPajak"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                        <td>Rp. <span id="totalTagihanPajak"></span></td>
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                        <td>Rp. <span id="biayaAdminPajak"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                        <td colspan="2">Rp. <span id="totalBayarPajak"></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                    <div class="row mt-4" id="detailPajak">
+                        <div class="col-12">
+                            <label class="fs-5 fw-semibold my-3">
+                                <span>Detail Pelanggan</span>
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPajak"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                            <td>Rp. <span id="totalTagihanPajak"></span></td>
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                            <td>Rp. <span id="biayaAdminPajak"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                            <td colspan="2">Rp. <span id="totalBayarPajak"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+    
                         </div>
-
+                        <div class="col-12">
+                            @auth
+                                <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                            @endauth
+    
+                            @guest
+                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                    Login Terlebih Dahulu
+                                </a>
+                            @endguest
+                        </div>
                     </div>
-                    <div class="col-12">
-                        @auth
-                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
-                        @endauth
 
-                        @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
-                        @endguest
+                    <div class="row mt-5">
+                        <div class="col-xl-12">
+                            <div id="alertPajak"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -112,6 +121,9 @@
                 $('.textAlert').hide();
             });
 
+
+            $('#detailPDAM').hide();
+
             $('#btnPeriksaPajak').on('click', function () {
                 var noPelangganPajak = $('#noPelangganPajak').val();
 
@@ -119,6 +131,11 @@
                     $('.textAlert').show();
                     return false;
                 }
+
+                $('#alertContainer').empty()
+                $('#detailPDAM').hide();
+                $('#btnPeriksaPajak').attr('disabled', true);
+                $('#btnPeriksaPajak').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
 
                 $.ajax({
                     type: "POST",
@@ -153,6 +170,20 @@
                                 $('#inputTotalBayarPajak').val(simulateTotalPajak);
                             }
                         });
+
+                        $('#btnPeriksaPajak').removeAttr('disabled');
+                        $('#btnPeriksaPajak').html('Periksa');
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400) {
+                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+
+                            $('#alertPajak').empty().append(alertDiv);
+                        }
+
+                        // Hapus spinner dan aktifkan tombol
+                        $('#btnPeriksaPajak').removeAttr('disabled');
+                        $('#btnPeriksaPajak').html('Periksa');
                     }
                 });
             });

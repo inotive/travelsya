@@ -2,7 +2,7 @@
 
 @section('content-admin')
     <!--begin::Row-->
-    <div class="row gy-5 g-xl-10">
+    <div class="row gy-5 g-xl-10">  
         <!--begin::Col-->
         <div class="col-xl-8 col-md-8">
             <div class="card ">
@@ -514,7 +514,7 @@
                                         @foreach ($hotel->hotelRule as $rule)
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
-                                                <td class="text-center">{{ $rule->name }}</td>
+                                                <td class="text-center">{{ $rule->description }}</td>
                                                 <td class="text-center">
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                         data-kt-menu="true" style="">
@@ -549,15 +549,15 @@
                                             <div class="modal fade" id="kt_modal_delete_rule{{ $rule->id }}"
                                                 tabindex="-1" aria-hidden="true">
                                                 <!-- Konten modal penghapusan -->
-                                                <div class="modal-dialog modal-dialog-centered mw-650px">
+                                                <div class="modal-dialog modal-dialog-centered mw-550px modal-lg">
                                                     <div class="modal-content">
                                                         <form
                                                             action="{{ route('partner.management.hotel.destroyrule', $rule->id) }}"
                                                             method="POST" id="kt_modal_delete_rule_form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <div class="modal-header">
-                                                                <h2 class="fw-bold">Delete rule</h2>
+                                                            <div class="modal-header d-flex justify-content-center">
+                                                                <h2 class="fw-bold text-center mt-2">Delete rule</h2>
                                                                 <button type="button"
                                                                     class="btn btn-icon btn-sm btn-active-icon-primary"
                                                                     data-bs-dismiss="modal">
@@ -565,7 +565,7 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body py-10 px-lg-17">
-                                                                <p>Anda yakin ingin menghapus data Peraturan
+                                                                <p class="text-center">Anda yakin ingin menghapus data Peraturan
                                                                     {{ $rule->name }}?
                                                                 </p>
                                                             </div>
@@ -624,7 +624,7 @@
                                                         <div class="col-md-12">
                                                             <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                                             <input class="form-control form-control-lg" id="name"
-                                                                placeholder="Masukan nama aturan" name="name"
+                                                                placeholder="Masukan nama aturan" name="description"
                                                                 required />
 
                                                             @error('name')

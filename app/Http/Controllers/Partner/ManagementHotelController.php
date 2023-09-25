@@ -27,7 +27,6 @@ class ManagementHotelController extends Controller
     public function index()
     {
         $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
-
         return view('ekstranet.management-hotel.index', compact('hotels'));
     }
 
@@ -139,8 +138,8 @@ class ManagementHotelController extends Controller
     }
     public function settingPhoto($id)
     {
-        $hostel = Hostel::with('hostelImage')->find($id);
-        return view('ekstranet.management-hotel.setting-photo', compact('hostel'));
+        $hotel = Hotel::with('hotelImage')->find($id);
+        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
 
     public function settingRoomShow($hotel_id, $id)
@@ -321,11 +320,11 @@ class ManagementHotelController extends Controller
     {
         $this->validate($request, [
             // 'hotel_id'  => 'required',
-            'name'  => 'required'
+            'description'  => 'required'
         ]);
 
         HotelRule::create([
-            'name'  => $request->name,
+            'description'  => $request->description,
             'hotel_id' => $request->hotel_id,
         ]);
         toast('Hotel Rule has been created', 'success');
@@ -346,7 +345,7 @@ class ManagementHotelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'hotel_id'  => 'required',
-            'name'  => 'required',
+            'description'  => 'required',
         ]);
 
         //check if validation fails
@@ -359,7 +358,7 @@ class ManagementHotelController extends Controller
         $HotelRule = HotelRule::find($id);
         $HotelRule->update([
             'hotel_id'  => $request->hotel_id,
-            'name'  => $request->name
+            'description'  => $request->description
         ]);
 
         toast('Hotel Rule has been Updated', 'success');

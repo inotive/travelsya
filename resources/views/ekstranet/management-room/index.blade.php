@@ -5,7 +5,6 @@
 
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
-        
         <!--end::Header-->
         <!--begin::Body-->
         <div class="card-body py-3">
@@ -33,9 +32,11 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $room->hotel->name }}</td>
                             <td class="text-center">SPOT ON {{ $room->name }}</td>
-                            <td class="text-center">@currency($room->price)
+
+                            <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
                             </td>
-                            <td class="text-center">@currency($room->sellingprice)</td>
+                            <td class="text-center">Rp.
+                                {{ number_format($room->sellingprice, 0, ',', '.') }}</td>
                             <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                             <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
                     <td class="text-center">
@@ -78,9 +79,11 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $room->hostel->name }}</td>
                             <td class="text-center">SPOT ON {{ $room->name }}</td>
-                            <td class="text-center">@currency($room->price)
+
+                            <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
                             </td>
-                            <td class="text-center">@currency($room->sellingprice)</td>
+                            <td class="text-center">Rp.
+                                {{ number_format($room->sellingprice, 0, ',', '.') }}</td>
                             <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                             <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
                             <td class="text-center">
@@ -114,14 +117,9 @@
                                 </a>
                                 <!--end::Menu-->
                             </td>
-                        
+
                     </tr>
                     @endforeach
-    
-                            
-                        
-
-
                     </tbody>
                 </table>
                 <!--end::Table-->
@@ -134,9 +132,10 @@
 
 
     {{-- modal --}}
-   
+
+
     <!--begin::Modal - New Target-->
-    
+
     <!--end::Modal - New Target-->
 
 

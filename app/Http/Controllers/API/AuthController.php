@@ -129,6 +129,7 @@ class AuthController extends Controller
                 unset($data['old_password']);
                 $data['password'] = Hash::make($data['password']);
             }
+            $data['phone'] = $request->phone;
             $update = $user->update($data);
             if ($update) {
                 return ResponseFormatter::success($user, "User update success");
@@ -158,26 +159,28 @@ class AuthController extends Controller
         }
 
         $check = PasswordReset::where('email', $data['email'])->first();
-        if ($check)
+
+        if ($check) {
             $check->delete();
+        }
 
         // Generate random code
         $data['token'] = (string)mt_rand(100000, 999999);
 
-        // return $data;
         // create token
         $createToken = PasswordReset::create($data);
 
-        if (!$createToken)
+        if (!$createToken) {
             exit('Token create failed');
+        }
 
-        //send email
+        // //send email
         $mail = Mail::to($data['email'])->send(new SendTokenResetPassword($createToken->token));
 
         if ($mail) {
-            return ResponseFormatter::success(null, "Token sent to email");
+            return ResponseFormatter::success([], "Token sent to email");
         } else {
-            return ResponseFormatter::error(null, "Token sent failed");
+            return ResponseFormatter::error([], "Token sent failed");
         }
     }
 

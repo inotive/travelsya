@@ -76,10 +76,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                           <i class="fa-solid fa-receipt fs-3"></i>
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
+                            <i class="far fa-calendar fs-3"></i>
                         </span>
                         <span class="menu-title">Pemesanan (17)</span>
                     </span>
@@ -107,10 +104,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                           <i class="fa-regular fa-thumbs-up fs-3"></i>
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
+                          <i class="fas fa-receipt fs-3"></i>
                         </span>
                         <span class="menu-title">Laporan</span>
                     </span>
@@ -124,6 +118,54 @@
                     </div>
                     <!--end:Menu content-->
                 </div>
+                <!--begin:Menu item-->
+                <div data-kt-menu-trigger="click"
+                     class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                             <i class="fas fa-users fs-3">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Hotel</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    <!--end:Menu link-->
+                    <!--begin:Menu sub-->
+                    <div class="menu-sub menu-sub-accordion">
+                        <!--begin:Menu item-->
+                        <div class="menu-item">
+                            <!--begin:Menu link-->
+                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}"
+                               href="{{route('partner.management.hotel')}}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Semua Hotel</span>
+                            </a>
+                            <!--end:Menu link-->
+                        </div>
+                        <!--end:Menu item-->
+                        <!--begin:Menu item-->
+                        <div class="menu-item">
+                            <!--begin:Menu link-->
+                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}"
+                               href="{{route('partner.management.room')}}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Daftar Kamar</span>
+                            </a>
+                            <!--end:Menu link-->
+                        </div>
+                        <!--end:Menu item-->
+                    </div>
+                    <!--end:Menu sub-->
+                </div>
+                <!--end:Menu item-->
+
                 <!--end:Menu item-->
                 <a href="{{route('partner.management.hotel')}}"
                    class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
@@ -140,8 +182,9 @@
                     <!--end:Menu link-->
                 </a>
 
-                <a href="{{route('partner.management.hotel')}}"
-                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
+                <<<<<<< Updated upstream
+                <a href="{{route('partner.management.hostel')}}"
+                   class="menu-item {{(Request::segment(2)=="management-hostel") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -168,6 +211,34 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
+                {{--                <a href="{{route('partner.management.hotel')}}"--}}
+                {{--                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">--}}
+                {{--                    <!--begin:Menu link-->--}}
+                {{--                    <span class="menu-link">--}}
+                {{--                        <span class="menu-icon">--}}
+                {{--                            <i class="fa-solid fa-hotel fs-3"></i>--}}
+                {{--                                <span class="path1"></span>--}}
+                {{--                                <span class="path2"></span>--}}
+                {{--                            </i>--}}
+                {{--                        </span>--}}
+                {{--                        <span class="menu-title">Hostel</span>--}}
+                {{--                    </span>--}}
+                {{--                    <!--end:Menu link-->--}}
+                {{--                </a>--}}
+                {{--                <a href="{{route('partner.management.room')}}"--}}
+                {{--                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">--}}
+                {{--                    <!--begin:Menu link-->--}}
+                {{--                    <span class="menu-link">--}}
+                {{--                        <span class="menu-icon">--}}
+                {{--                            <i class="ki-duotone ki-color-swatch fs-2">--}}
+                {{--                                <span class="path1"></span>--}}
+                {{--                                <span class="path2"></span>--}}
+                {{--                            </i>--}}
+                {{--                        </span>--}}
+                {{--                        <span class="menu-title">Rooms</span>--}}
+                {{--                    </span>--}}
+                {{--                    <!--end:Menu link-->--}}
+                {{--                </a>--}}
                 <!--end:Menu item-->
             </div>
             <!--end::Menu-->

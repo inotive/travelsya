@@ -37,42 +37,50 @@
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
                         @endauth
                     </div>
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold my-3">
-                            <span>Detail Pelanggan</span>
-                        </label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                        <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                        <td>Rp. <span id="totalTagihanPDAM"></span></td>
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                        <td>Rp. <span id="biayaAdminPDAM"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                        <td colspan="2">Rp. <span id="totalBayarPDAM"></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="row mt-4" id="detailPDAM">
+                        <div class="col-12">
+                            <label class="fs-5 fw-semibold my-3">
+                                <span>Detail Pelanggan</span>
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                            <td>Rp. <span id="totalTagihanPDAM"></span></td>
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                            <td>Rp. <span id="biayaAdminPDAM"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                            <td colspan="2">Rp. <span id="totalBayarPDAM"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
+                        <div class="col-12">
+                            @auth
+                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM" disabled>Pembayaran</button>
+                            @endauth
 
+                            @guest
+                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                    Login Terlebih Dahulu
+                                </a>
+                            @endguest
+                        </div>
                     </div>
-                    <div class="col-12">
-                        @auth
-                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM" disabled>Pembayaran</button>
-                        @endauth
 
-                        @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
-                        @endguest
+                    <div class="row mt-5">
+                        <div class="col-xl-12">
+                            <div id="alertContainer"></div>
+                        </div>
                     </div>
 
                 </div>
@@ -111,6 +119,8 @@
                 $('.textAlert').hide();
             });
 
+            $('#detailPDAM').hide();
+
             $('#btnPeriksaPDAM').on('click', function () {
                 var noPelangganPDAM = $('#noPelangganPDAM').val();
 
@@ -118,6 +128,11 @@
                     $('.textAlert').show();
                     return false;
                 }
+
+                $('#alertContainer').empty()
+                $('#detailPDAM').hide();
+                $('#btnPeriksaPDAM').attr('disabled', true);
+                $('#btnPeriksaPDAM').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
 
                 $.ajax({
                     type: "POST",
@@ -128,15 +143,13 @@
                         'nom': 'CEKPDAMBLP',
                     },
                     success: function (responseTagihan) {
+                        console.log(responseTagihan);
+
                         $.ajax({
                             type: "POST",
                             url: "{{ route('product.adminFee') }}",
                             data: {
                                 'idProduct': $('#productPDAM').val(),
-                            },
-                            beforeSend: function() {
-                                $('#btnPeriksaPDAM').attr('disabled', true);
-                                $('#btnPeriksaPDAM').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
                             },
                             success: function (response) {
                                 var simulateFeePDAM = parseInt(response[0].value);
@@ -155,11 +168,28 @@
                                 $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
 
                                 $('#btnPeriksaPDAM').removeAttr('disabled');
-                                $('#btnPeriksaPDAM').text('Periksa');
 
-                                $('#btnSubmitPDAM').removeAttr('disabled');
+                                $('#detailPDAM').show();
                             }
                         });
+
+                        $('#btnPeriksaPDAM').text('Periksa');
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400) {
+                            // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
+                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+
+                            // Isi elemen div dengan pesan kesalahan dari respons JSON
+                            // alertDiv.text(xhr.responseJSON.data);
+
+                            // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
+                            $('#alertContainer').empty().append(alertDiv);
+                        }
+
+                        // Hapus spinner dan aktifkan tombol
+                        $('#btnPeriksaPDAM').removeAttr('disabled');
+                        $('#btnPeriksaPDAM').html('Periksa');
                     }
                 });
             });

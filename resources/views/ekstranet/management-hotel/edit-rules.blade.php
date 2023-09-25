@@ -35,12 +35,12 @@
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text"
-                            class="form-control form-control-lg name-edit" id="name-edit"
+                            class="form-control form-control-lg name-edit" id="description-edit"
                             required />
                         <div class="alert alert-danger mt-2 d-none" role="alert"
-                            id="alert-name-edit"></div>
+                            id="alert-description-edit"></div>
 
-                        @error('name')
+                        @error('description')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -85,7 +85,7 @@ $('body').on('click', '#btn-edit-rule', function() {
         success: function(response) {
             $('#rule_id').val(response.data[0].id);
             $('#hotel_id').val(response.data[0].hotel_id);
-            $('#name-edit').val(response.data[0].name);
+            $('#description-edit').val(response.data[0].description);
 
             $('#modal-edit-rule').modal('show');
         }
@@ -97,7 +97,7 @@ $('#update').click(function(e) {
     //define variable
     let rule_id = $('#rule_id').val();
     let hotel_id = $('#hotel_id').val();
-    let name = $('#name-edit').val();
+    let description = $('#description-edit').val();
     let token = $("meta[name='csrf-token']").attr("content");
 
     //ajax
@@ -108,7 +108,7 @@ $('#update').click(function(e) {
         cache: false,
         data: {
             "hotel_id": hotel_id,
-            "name": name,
+            "description": description,
             "_token": token
         },
         success: function(response) {
