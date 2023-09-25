@@ -6,7 +6,7 @@ use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
-use App\Http\Controllers\API\PulsaDataController;
+use App\Http\Controllers\API\TopUpController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
 use Illuminate\Http\Request;
@@ -41,26 +41,34 @@ route::post('/send-token-password', [AuthController::class, 'sendTokenPassword']
 route::post('/token-password-confirmation', [AuthController::class, 'tokenCheck']);
 route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::post('payment', [\App\Http\Controllers\PaymentController::class, 'store']);
+Route::post('/xendit/callback', [TransactionController::class, 'xenditCallback'])->name('xendit-callback');
+
 //hostel
-route::get('/hostel', [HostelController::class, 'index']);
+route::post('/hostel', [HostelController::class, 'index']);
 route::get('/hostel/city', [HostelController::class, 'hostelCity']);
 route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
 route::get('/hostel/room/{id}', [HostelController::class, 'room']);
 
 //hotel
-route::get('/hotel', [HotelController::class, 'index']);
+route::post('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
 route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);
 
 // PULSA & DATA
-route::get('/pulsa', [PulsaDataController::class, 'getPulsa']);
-route::get('/data', [PulsaDataController::class, 'getData']);
+route::get('/pulsa', [TopUpController::class, 'getPulsa']);
+route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
+route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
+route::get('/data', [TopUpController::class, 'getData']);
 
 //ads
 route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
+
+route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
+route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -70,7 +78,7 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/ppob/transaction', [PpobController::class, 'transaction']);
     route::post('/ppob/status', [PpobController::class, 'status']);
     route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
-    route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
+    // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
@@ -84,7 +92,7 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
-    route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+    // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
 
 
     route::middleware('admin')->group(function () {

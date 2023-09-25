@@ -283,6 +283,7 @@
             </div>
         </div>
         {{-- End Kolom Kanan --}}
+        @include('user.logout')
     </div>
     {{-- End Row --}}
 </div>

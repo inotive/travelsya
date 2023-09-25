@@ -26,7 +26,7 @@
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
                         <th class="text-center">Vendor</th>
-                        <th class="text-center">Nama Hotel atau Hostel</th>
+                        <th class="text-center">Hotel atau Hostel</th>
                         <th class="text-center">No.Telp</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Aksi</th>
@@ -42,6 +42,9 @@
                                 <p style="font-size : 9px;">{{$user->email}}</p>
                             </td>
                             <td class="text-center">
+                                @foreach($user->hostel as $hostel)
+                                    <span class="badge badge-info">{{$hostel->name}}</span>
+                                @endforeach
                                 @foreach($user->hotel as $hotel)
                                     <span class="badge badge-info">{{$hotel->name}}</span>
                                 @endforeach
@@ -240,52 +243,51 @@
     <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
-            <!--begin::Modal content-->
-            <div class="modal-content rounded">
-                <!--begin::Modal header-->
-                <div class="modal-header pb-0 border-0 justify-content-end">
-                    <!--begin::Close-->
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
-                </div>
-                <!--begin::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                    <!--begin:Form-->
-                    <form id="kt_modal_new_target_form" class="form" method="post"
-                          action="{{route('admin.mitra.store')}}">
-                        @csrf
-                        <input type="hidden" name="id" id="id">
-                        <!--begin::Heading-->
-                        <div class="mb-13 text-center">
-                            <!--begin::Title-->
-                            <h1 class="mb-3">Tambah Mitra Baru</h1>
-                            <!--end::Title-->
+            <!--begin:Form-->
+            <form id="kt_modal_new_target_form" class="form" method="post"
+                  action="{{route('admin.mitra.store')}}">
+                @csrf
+                <!--begin::Modal content-->
+                <div class="modal-content rounded">
+                    <!--begin::Modal header-->
+                    <div class="modal-header justify-content-between">
+                        <!--begin::Title-->
+                        <h1 class="mb-3">Tambah Mitra Baru</h1>
+                        <!--end::Title-->
+                        <!--begin::Close-->
+                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <i class="ki-duotone ki-cross fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
                         </div>
-                        <!--end::Heading-->
+                        <!--end::Close-->
+                    </div>
+                    <!--begin::Modal header-->
+                    <!--begin::Modal body-->
+                    <div class="modal-body scroll-y">
+                        <input type="hidden" name="id" id="id">
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class=" required fs-6 fw-semibold mb-2">Nama Perusahaan</label>
+                                <label class=" required fs-6 fw-semibold mb-2">Nama User</label>
                                 <input class="form-control form-control-lg" id="name" name="name"
                                        placeholder="Masukan nama perusahaan" required/>
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Kota</label>
-                                <select class="form-control" id="user_id" name="user_id">
-                                    @foreach($cities as $city)
-                                        <option value="{{$city->city_name}}">{{$city->city_name}}</option>
-                                    @endforeach
-                                </select>
+                                <label class=" required fs-6 fw-semibold mb-2">Email</label>
+                                <input class="form-control form-control-lg" id="email" name="email"
+                                       placeholder="Masukan nama email" required/>
                             </div>
                             <div class="col-md-6">
+                                <label class=" required fs-6 fw-semibold mb-2">Password</label>
+                                <input class="form-control form-control-lg" id="password" name="password"
+                                       type="password"
+                                       placeholder="Masukan nama email" required/>
+                            </div>
+                            <div class="col-md-12">
                                 <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
-                                <input class="form-control form-control-lg" id="name" name="name"
+                                <input class="form-control form-control-lg" name="nomor_telfon"
                                        placeholder="Masukan nomor telfon" required/>
                             </div>
                         </div>
@@ -294,6 +296,13 @@
                         <div class="row g-9 mb-8">
                         </div>
                         <!--end::Input group-->
+
+
+                        <!--end:Form-->
+                    </div>
+                    <!--end::Modal body-->
+
+                    <div class="modal-footer">
                         <!--begin::Actions-->
                         <div class="text-center">
                             <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
@@ -305,12 +314,11 @@
                             </button>
                         </div>
                         <!--end::Actions-->
-                    </form>
-                    <!--end:Form-->
+                    </div>
+
                 </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
+                <!--end::Modal content-->
+            </form>
         </div>
         <!--end::Modal dialog-->
     </div>

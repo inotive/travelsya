@@ -23,8 +23,10 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Partner\DashboardPartnerController;
 use App\Http\Controllers\Partner\ManagementHotelController;
+use App\Http\Controllers\Partner\ManagementHostelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
+use App\Http\Controllers\Partner\ManagementRoomController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -43,7 +45,6 @@ Route::get('/welcome', function () {
 })->name('welcome');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
-Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 
 // Route::get('/', [AuthController::class, 'login'])->name('home');
@@ -61,6 +62,8 @@ Route::get('/profile', [UserController::class, 'profile'])->name('user.profile')
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
 Route::get('/profile/order-detail', [UserController::class, 'orderDetail'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
+
+
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
 Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
@@ -68,41 +71,18 @@ Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransa
 //ppob
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
     Route::get('/pulsa', 'pulsa')->name('.pulsa');
-
-    Route::get('/{category}/{provider}', 'pulsaData');
-    Route::get('/payment-pulsa-data', 'paymentPulsaData')->name('.payment.pulsa.data');
-
     Route::get('/data', 'data')->name('.data');
-    // Route::get('/bpjs', 'bpjs')->name('.bpjs');
-    // Route::get('/pdam', 'pdam')->name('.pdam');
-    // Route::get('/pln', 'pln')->name('.pln');
-
-    Route::post('/bpjs', 'bpjs')->name('.bpjs');
-    Route::get('/payment-bpjs', 'paymentBpjs')->name('.payment.bpjs');
-
-    Route::post('/pln', 'pln')->name('.pln');
-    Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
-
-    Route::post('/pdam', 'pdam')->name('.pdam');
-    Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
-    Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
-
-    Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
-    Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
-    Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
-
-    Route::post('/tax', 'tax')->name('.tax');
-    Route::get('/product-tax', 'productTax')->name('.product.tax');
-    Route::get('/payment-tax', 'paymentTax')->name('.payment.tax');
-
-    Route::post('/admin-fee', 'getAdminFee')->name('.adminFee');
+    Route::get('/bpjs', 'bpjs')->name('.bpjs');
+    Route::get('/pdam', 'pdam')->name('.pdam');
+    Route::get('/pln', 'pln')->name('.pln');
+    Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
 });
-
-
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
     Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
     Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
+
+
 });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
 
@@ -119,12 +99,11 @@ Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->gro
     Route::post('/ajax', 'ajaxHotel');
 });
 
-
 //hostel
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/room/', 'room')->name('.room');
-    Route::get('/{idroom}/checkout', 'checkout')->name('.checkout');
+    Route::get('/{idroom}/start/{start}/duration/{duration}/jumlah-kamar/{room}/jumlah-tamu/{guest}', 'checkout')->name('.checkout');
     Route::post('/{idroom}/request', 'request')->name('.request');
     Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
     Route::post('/ajax', 'ajaxHostel');
@@ -132,7 +111,7 @@ Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->gr
 
 
 //tranas
-Route::get('/cart', [TransactionController::class, 'cart'])->name('cart');
+Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
 Route::get('reservation', [TransactionController::class, 'reservation'])->name('reservation.hotel');
 
@@ -144,12 +123,16 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::middleware('admin')->group(function () {
 
         Route::prefix('admin')->name('admin.')->group(function () {
-            Route::prefix('management-mitra')->group(function () {
+            Route::prefix('management-mitra')->group(function (){
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
                 Route::resource('hostel', \App\Http\Controllers\Admin\HostelController::class);
                 Route::get('hostel/{hostel}/review', [\App\Http\Controllers\Admin\HostelController::class, 'review'])->name('hostel.review');
                 Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
+
+
+
+
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
@@ -157,6 +140,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::post('user/edit', [AdminUserController::class, 'editJson'])->name('user.edit');
             Route::put('user/update', [AdminUserController::class, 'update'])->name('user.update');
             Route::get('user/{id}/delete', [AdminUserController::class, 'delete'])->name('user.delete');
+
 
             //management-mitra
             Route::get('mitra', [MitraController::class, 'index'])->name('mitra');
@@ -181,37 +165,32 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('product/edit-data', [ProductAdminController::class, 'edit'])->name('product.edit');
             Route::post('product/update-product', [ProductAdminController::class, 'update'])->name('product.update-product');
 
-                //Facilities
-                // Route::resource('facility', FacilitiesController::class);
-                Route::get('facility', [FacilitiesController::class, 'index'])->name('facility.index');
-                Route::get('facility/create', [FacilitiesController::class, 'create'])->name('facility.create');
-                Route::post('facility', [FacilitiesController::class, 'store'])->name('facility.store');
-                Route::get('facility/{facility}', [FacilitiesController::class, 'show'])->name('facility.show');
-                Route::get('facility/{facility}/edit', [FacilitiesController::class, 'edit'])->name('facility.edit');
-                Route::post('facility/{facility}', [FacilitiesController::class, 'update'])->name('facility.update');
-                Route::delete('facility/{facility}', [FacilitiesController::class, 'destroy'])->name('facility.destroy');
-
-
-                //Ads
-                // Route::resource('ads', AdController::class);
-                Route::get('ads', [AdController::class, 'index'])->name('ads.index');
-                Route::post('ads', [AdController::class, 'store'])->name('ads.store');
-                Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
-                Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
-                Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
-                Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+            //Facilities
+            // Route::resource('facility', FacilitiesController::class);
+            Route::get('facility', [FacilitiesController::class, 'index'])->name('facility.index');
+            Route::get('facility/create', [FacilitiesController::class, 'create'])->name('facility.create');
+            Route::post('facility', [FacilitiesController::class, 'store'])->name('facility.store');
+            Route::get('facility/{facility}', [FacilitiesController::class, 'show'])->name('facility.show');
+            Route::get('facility/{facility}/edit', [FacilitiesController::class, 'edit'])->name('facility.edit');
+            Route::post('facility/{facility}', [FacilitiesController::class, 'update'])->name('facility.update');
+            Route::delete('facility/{facility}', [FacilitiesController::class, 'destroy'])->name('facility.destroy');
 
             //customer
             Route::get('customer', [CustomerController::class, 'index'])->name('customer');
 
-                //                //management-fee
-                //                Route::get('management-fee', [FeeController::class, 'index'])->name('management-fee');
-                //                Route::put('management-fee', [FeeController::class, 'updateFee'])->name('management-fee.update');
-                //                Route::post('management-fee', [FeeController::class, 'storeFee'])->name('management-fee.store');
+            //Ads
+            // Route::resource('ads', AdController::class);
+            Route::get('ads', [AdController::class, 'index'])->name('ads.index');
+            Route::post('ads', [AdController::class, 'store'])->name('ads.store');
+            Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
+            Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
+            Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
+            Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
 
+                //customer
+                Route::get('customer', [CustomerController::class, 'index'])->name('customer');
 
-
-            // Admin
+                // Admin
             //dashboard
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -221,20 +200,20 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('transaction.detail');
             Route::put('transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('transaction.detail.update');
 
-            //            Route::resource('hostel',[\App\Http\Controllers\Admin\HostelController::class]);
-            //            //hostel
-            //            Route::get('hostel', [AdminHostelController::class, 'index'])->name('hostel');
-            //            Route::get('hostel/{id}', [AdminHostelController::class, 'show'])->name('hostel.show');
-            //            Route::post('hostel/main-image', [AdminHostelController::class, 'mainImage'])->name('hostel.main-image');
-            //            Route::delete('hostel/delete-image', [AdminHostelController::class, 'deleteImage'])->name('hostel.delete-image');
-            //            Route::get('hostel/{id}/edit', [AdminHostelController::class, 'edit'])->name('hostel.edit');
-            //            Route::put('hostel/{id}/update', [AdminHostelController::class, 'update'])->name('hostel.update');
-            //            Route::get('hostel/{id}/image', [AdminHostelController::class, 'showImage'])->name('hostel.image');
-            //            Route::post('hostel/store-image', [AdminHostelController::class, 'storeImage'])->name('hostel.store-image');
+//            Route::resource('hostel',[\App\Http\Controllers\Admin\HostelController::class]);
+//            //hostel
+//            Route::get('hostel', [AdminHostelController::class, 'index'])->name('hostel');
+//            Route::get('hostel/{id}', [AdminHostelController::class, 'show'])->name('hostel.show');
+//            Route::post('hostel/main-image', [AdminHostelController::class, 'mainImage'])->name('hostel.main-image');
+//            Route::delete('hostel/delete-image', [AdminHostelController::class, 'deleteImage'])->name('hostel.delete-image');
+//            Route::get('hostel/{id}/edit', [AdminHostelController::class, 'edit'])->name('hostel.edit');
+//            Route::put('hostel/{id}/update', [AdminHostelController::class, 'update'])->name('hostel.update');
+//            Route::get('hostel/{id}/image', [AdminHostelController::class, 'showImage'])->name('hostel.image');
+//            Route::post('hostel/store-image', [AdminHostelController::class, 'storeImage'])->name('hostel.store-image');
 
 
             //hostel ajax
-            //            Route::post('hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('hostelroom.ajax');
+//            Route::post('hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('hostelroom.ajax');
         });
         //user
 
@@ -243,12 +222,41 @@ Route::middleware(['auth', 'role'])->group(function () {
     Route::prefix('partner')->namespace('partner')->group(function () {
         Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
         Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
+        Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
+        Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
+        Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
+
+        Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
+        Route::get('daftar-room/detailroom/hotel/{id}',[ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
+        Route::get('daftar-room/detailroom/hostel/{id}',[ManagementRoomController::class, 'detailroomhostel'])->name('partner.management.room.detailroomhostel');
+
+        Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
+        Route::post('daftar-room/detailroom/hotel/updateimage/{id}', [ManagementRoomController::class, 'updatehotelroomImage'])->name('partner.management.room.updatehotelroomImage');
+        Route::delete('daftar-room/detailroom/hotel/destroyimage/{id}', [ManagementRoomController::class, 'destroyhotelroomimage'])->name('partner.management.hotel.destroyhotelroomimage');
+
+        Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
+        Route::get('daftar-room/detailroom/hotel/{id}',[ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
+        Route::get('daftar-room/detailroom/hostel/{id}',[ManagementRoomController::class, 'detailroomhostel'])->name('partner.management.room.detailroomhostel');
+
+        Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
+        Route::post('daftar-room/detailroom/hotel/updateimage/{id}', [ManagementRoomController::class, 'updatehotelroomImage'])->name('partner.management.room.updatehotelroomImage');
+        Route::delete('daftar-room/detailroom/hotel/destroyimage/{id}', [ManagementRoomController::class, 'destroyhotelroomimage'])->name('partner.management.hotel.destroyhotelroomimage');
 
         Route::prefix('management-hotel')->group(function () {
             Route::get('', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
             Route::get('detail-hotel/{id}', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
-            //Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+            Route::delete('detail-hotel/{id}/deleteimage', [ManagementHotelController::class, 'destroyimage'])->name('partner.management.hotel.destroyimage');
+
+            // Route CRUD HotelRule
+            Route::post('detail-hotel/', [ManagementHotelController::class, 'storeRule'])->name('partner.management.hotel.storerule');
+            Route::get('detail-hotel/show/rules/{id}', [ManagementHotelController::class, 'showRule'])->name('partner.management.hotel.showrule');
+            Route::put('detail-hotel/{hotelrule}', [ManagementHotelController::class, 'updaterule'])->name('partner.management.hotel.updaterule');
+            Route::delete('detail-hotel/{id}/destroyrule', [ManagementHotelController::class, 'destroyRule'])->name('partner.management.hotel.destroyrule');
+
+            Route::delete('detail-hotel/{id}/deleteroom', [ManagementHotelController::class, 'destroyRoom'])->name('partner.management.hotel.destroyroom');
+            //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+
             Route::get('setting-hotel-information/{id}', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
             Route::get('setting-hotel-photo/{id}', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
             Route::get('setting-hotel-room/{id}', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
@@ -257,8 +265,44 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::delete('setting-hotel-room/delete/{id}', [ManagementHotelController::class,'settingRoomDelete'])->name('partner.management.setting.room.delete');
             Route::get('setting-hotel-room/hotel-room/{hotel_id}/{id}', [ManagementHotelController::class,'settingRoomShow'])->name('partner.management.setting.room.show');
             Route::post('setting-hotel-room/hotel-room/update/{hotel_id}/{id}', [ManagementHotelController::class,'settingRoomUpdate'])->name('partner.management.setting.room.update');
+
+            //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+
+
+        });
+
+        Route::prefix('management-hostel')->group(function () {
+            Route::get('', [ManagementHostelController::class, 'index'])->name('partner.management.hostel');
+            Route::get('detail-hostel/{id}', [ManagementHostelController::class, 'detailhostel'])->name('partner.management.hostel.detail');
+            Route::delete('detail-hostel/{id}/deleteimage', [ManagementHostelController::class, 'destroyimage'])->name('partner.management.hostel.destroyimage');
+
+            // Route CRUD hostelRule
+            Route::post('detail-hostel/', [ManagementHostelController::class, 'storeRule'])->name('partner.management.hostel.storerule');
+            Route::get('detail-hostel/show/rules/{id}', [ManagementHostelController::class, 'showRule'])->name('partner.management.hostel.showrule');
+            Route::put('detail-hostel/{hostelrule}', [ManagementHostelController::class, 'updaterule'])->name('partner.management.hostel.updaterule');
+            Route::delete('detail-hostel/{id}/destroyrule', [ManagementHostelController::class, 'destroyRule'])->name('partner.management.hostel.destroyrule');
+
+
+            Route::delete('detail-hostel/{id}/deleteroom', [ManagementHostelController::class, 'destroyRoom'])->name('partner.management.hostel.destroyroom');
+            //            Route::get('detail-hostel/{hostel}', [ManagementhostelController::class, 'index'])->name('partner.management.hostel');
+            // Route::get('setting-hostel-information/{id}', [ManagementHostelController::class, 'settinghostel'])->name('partner.management.hostel.setting.hostel');
+            // Route::get('setting-hostel-photo/{id}', [ManagementHostelController::class, 'settingPhoto'])->name('partner.management.hostel.setting.photo');
+            // Route::get('setting-hostel-room/{id}', [ManagementHostelController::class, 'settingRoom'])->name('partner.management.hostel.setting.room');
+            // Route::get('setting-hostel-room/create/{id}', [ManagementHostelController::class, 'settingRoomCreate'])->name('partner.management.hostel.setting.room.create');
+            // Route::post('setting-hostel-room/post', [ManagementHostelController::class, 'settingRoomPost'])->name('partner.management.hostel.setting.room.post');
+            // Route::delete('setting-hostel-room/delete/{id}', [ManagementHostelController::class,'settingRoomDelete'])->name('partner.management.setting.room.delete');
+            // Route::get('setting-hostel-room/hostel-room/{hostel_id}/{id}', [ManagementHostelController::class,'settingRoomShow'])->name('partner.management.setting.room.show');
+            // Route::post('setting-hostel-room/hostel-room/update/{hostel_id}/{id}', [ManagementHostelController::class,'settingRoomUpdate'])->name('partner.management.setting.room.update');
+
+
+            //   Route::get('detail-hostel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
+
         });
     });
+
+
+
+
 
 });
 

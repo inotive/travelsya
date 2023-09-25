@@ -34,7 +34,6 @@
                     </thead>
                     <tbody>
                         @foreach ($hostels as $hostel)
-                        {{-- @foreach ($ratings as $rating ) --}}
                             
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -135,9 +134,7 @@
                                 </div>
                             </div>
                         @endforeach
-                        {{-- @endforeach --}}
                         @include('admin.management-mitra.hostel.edit')
-                        {{-- @include('admin.management-mitra.rating.index') --}}
 
                         {{--                    @foreach ($vendors as $vendor) --}}
                         {{--                        <tr> --}}
