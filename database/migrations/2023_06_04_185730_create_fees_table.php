@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('fees', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('service_id')->constrained();
+            $table->unsignedBigInteger('service_id');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+
             $table->float('value');
             $table->boolean('percent');
             $table->softDeletes();

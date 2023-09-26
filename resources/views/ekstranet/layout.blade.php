@@ -31,7 +31,13 @@
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type = “text/JavaScript” src = “https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js”></script>
 		@stack("add-style")
+        <style>
+            .menu-item .menu-link .menu-title{
+                font-size : 14px;
+                font-weight : 400;
+            }
 
+        </style>
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
