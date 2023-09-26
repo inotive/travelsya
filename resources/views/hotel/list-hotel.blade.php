@@ -52,25 +52,19 @@
                                 <div class="col-12">
                                     <label for="" class="form-label">Fasilitas</label>
                                 </div>
+                                @foreach ($facilities as $facility)
                                 <div class="col-12">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
+                                        <input class="form-check-input" name="facility" type="checkbox" value="{{ $facility->id }}"
+                                            id="flexCheckDefault" {{ ($request['facility'] ?? null) == $facility->id ? 'checked' : ''}} />
                                         <label class="form-check-label" for="flexCheckDefault">
-                                            Wifi
+                                            {{ $facility->name }}
                                         </label>
                                     </div>
                                 </div>
-                                <div class="col-12">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value=""
-                                            id="flexCheckDefault" />
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                            Breakfast
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
+                                @endforeach
+
+                                {{-- <div class="col-12">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" value=""
                                             id="flexCheckDefault" />
@@ -88,6 +82,15 @@
                                         </label>
                                     </div>
                                 </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value=""
+                                            id="flexCheckDefault" />
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                            Breakfast
+                                        </label>
+                                    </div>
+                                </div> --}}
 
                                 <div class="col-12">
                                     <label for="" class="form-label">Bintang</label>
@@ -244,11 +247,47 @@
                                 <div class="card">
                                     <div class="card-body h-100">
                                         <div class="row my-4">
-                                            <div class="col-3">
-                                                <img src="https://service.travelsya.com/storage/hotel/image3.webp"
-                                                    alt="" height="200" width="200">
+                                            <div class="col-4">
+                                                {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp"
+                                                    alt="" height="200" width="200"> --}}
+                                                    <!--begin::Overlay-->
+                                                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset($hotel->image) }}">
+                                                    <!--begin::Image-->
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                                        style="background-image:url('{{ asset($hotel->image) }}')">
+                                                    </div>
+                                                    <!--end::Image-->
+
+                                                    <!--begin::Action-->
+                                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                    </div>
+                                                    <!--end::Action-->
+                                                </a>
+                                                <!--end::Overlay-->
+
+                                                <div class="row mt-4">
+                                                   @foreach ($hotel->hotelImage->take(3) as $hotelImage)
+                                                   <div class="col-4">
+                                                        <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset($hotelImage->image) }}">
+                                                            <!--begin::Image-->
+                                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                                style="background-image:url('{{ asset($hotelImage->image) }}')">
+                                                            </div>
+                                                            <!--end::Image-->
+
+                                                            <!--begin::Action-->
+                                                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                            </div>
+                                                            <!--end::Action-->
+                                                        </a>
+                                                    </div>
+                                                    @endforeach
+                                                </div>
+
                                             </div>
-                                            <div class="col-6">
+                                            <div class="col-5">
                                                 <div class="row gy-4">
                                                     <div class="col-12">
                                                         <h3>{{ $hotel->name }}</h3>
@@ -287,8 +326,14 @@
                                             </div>
                                             <div class="col-3">
                                                 <h3 class="mb-4">Fasilitas</h3>
-                                                <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                                <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                                {{-- <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                                <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
+                                                <ul>
+                                                @foreach ($hotel->hotelFacilities as $facility)
+                                                    <li>{{ $facility->facility->name }}</li>
+                                                @endforeach
+                                                </ul>
+
                                                 <a href="{{ route('hotels.room', ['id_hotel' => $hotel->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] }}&guest={{ $request['guest'] }}"
                                                     class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
                                             </div>
@@ -298,6 +343,10 @@
                             </div>
                         </div>
                     @endforeach
+
+                    <div class="mt-4">
+                        {{ $hotels->links() }}
+                    </div>
 
                     {{-- <div class="row mt-4">
                         <div class="col-12">
@@ -601,6 +650,7 @@
     </style>
 @endpush
 @push('add-script')
+    <script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
     <script>
         $(document).ready(function() {
             $("#card-filter").hide();

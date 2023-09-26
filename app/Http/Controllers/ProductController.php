@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ResponseFormatter;
 use App\Models\DetailTransaction;
+use App\Models\Fee;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Services\Mymili;
@@ -120,6 +121,7 @@ class ProductController extends Controller
         ]);
 
         if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
             if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
@@ -254,6 +256,7 @@ class ProductController extends Controller
         // ];
 
         if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
             if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
@@ -366,28 +369,49 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        return [
-            "meta" => [
-                "code" => 200,
-                "status" => "success",
-                "message" => "Inquiry loaded"
-            ],
-            "data" => [
-                "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
-                "tagihan" => "82636",
-                "no_pelanggan" => "232010890459",
-                "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
-                "nama_pelanggan" => "ERNA SARI",
-                "bulan_tahun_tagihan" => "Jun23",
-                "pemakaian" => "39212-3924"
-            ],
-        ];
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
+
+        // return [
+        //     "meta" => [
+        //         "code" => 200,
+        //         "status" => "success",
+        //         "message" => "Inquiry loaded"
+        //     ],
+        //     "data" => [
+        //         "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
+        //         "tagihan" => "82636",
+        //         "no_pelanggan" => "232010890459",
+        //         "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
+        //         "nama_pelanggan" => "ERNA SARI",
+        //         "bulan_tahun_tagihan" => "Jun23",
+        //         "pemakaian" => "39212-3924"
+        //     ],
+        // ];
     }
 
     public function paymentPln(Request $request)
@@ -469,9 +493,14 @@ class ProductController extends Controller
         ]);
 
         if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(10, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
             if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
                 $status = "Tagihan Sudah Terbayar";
             }
 
@@ -585,31 +614,40 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES!")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-        //         $status = "Tagihan Sudah Terbayar";
-        //     }
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        //     if (str_contains($requestMymili['status'], "Bills already paid")) {
-        //         $status = "Tagihan Sudah Terbayar";
-        //     }
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        //     if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-        //         $status = "Nomor Tagihan Tidak Dikenali";
-        //     }
+            if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
+                $status = "Tagihan Sudah Terbayar atau Nomor Tagihan Tidak Dikenali";
+            }
 
-        //     if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-        //         $status = "Nomor Tagihan Tidak Dikenali";
-        //     }
+            if (str_contains($requestMymili['status'], "INVALID! Produk tidak tersedia")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
 
-        //     if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-        //         $status = "Nomor Tagihan Tidak Dikenali";
-        //     }
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
 
-        //     return ResponseFormatter::error($status, 'Inquiry failed');
-        // }
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
     }
 
     public function productTax()
@@ -688,18 +726,28 @@ class ProductController extends Controller
         return redirect($payoutsXendit['invoice_url']);
     }
 
-    public function getAdminFee(Request $request)
+    public function getAdminFee($service_id, $price)
     {
-        $data = $request->all();
+        // $data = $request->all();
 
-        $point = new Point;
-        $userPoint = $point->cekPoint(auth()->user()->id);
+        // $point = new Point;
+        // $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find($data['idProduct']);
-        $setting = new Setting();
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        // $product = Product::with('service')->find($data['idProduct']);
+        // $setting = new Setting();
+        // $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
 
-        return $fees;
+        // return $fees;
+
+        $fee = Fee::where('service_id', $service_id)->first();
+
+        if ($fee->percent) {
+            $feeValue = $price * ($fee->value / 100);
+        } else {
+            $feeValue = $fee->value;
+        }
+
+        return $feeValue;
     }
 
     public function show($product)

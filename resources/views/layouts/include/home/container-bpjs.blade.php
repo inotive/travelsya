@@ -36,9 +36,7 @@
                         <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
                     <div class="col-4">
-                        @auth
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
-                        @endauth
                     </div>
                     <div class="row mt-4" id="detailBPJS">
                         <div class="col-12">
@@ -125,52 +123,41 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.bpjs') }}",
-                // url: "https://servicevps.travelsya.com/product/bpjs",
                 data: {
                     'no_pelanggan': noPelangganBPJS,
                     'nom': 'CEKBPJSKS',
                 },
                 success: function (responseTagihan) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('product.adminFee') }}",
-                        data: {
-                            'idProduct':  362,
-                        },
-                        success: function (response) {
-                            var simulateFeeBPJS = parseInt(response[0].value);
+                    
+                    var simulateFeeBPJS = parseInt(responseTagihan.data.fee);
 
-                            var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
-                            var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
+                    var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
+                    var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
 
-                            $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
-                            $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
-                            $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
-                            $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
+                    $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
+                    $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
+                    $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
+                    $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
 
-                            $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
-                            $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
-                            $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
-                            $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+                    $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
+                    $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
+                    $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
+                    $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
 
-                            $('#btnPeriksaBPJS').removeAttr('disabled');
-                            $('#btnPeriksaBPJS').text('Periksa');
+                    $('#btnPeriksaBPJS').removeAttr('disabled');
+                    $('#btnPeriksaBPJS').text('Periksa');
 
-                            $('#btnSubmitBPJS').removeAttr('disabled');
+                    $('#btnSubmitBPJS').removeAttr('disabled');
 
-                            $('#detailBPJS').show();
-                        },
-                    });
+                    $('#detailBPJS').show();
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 400) {
                         var alertBPJS = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
 
                         $('#alertBPJS').empty().append(alertBPJS);
-                        // alert(xhr.responseJSON.data);
                     }
 
-                    // Hapus spinner dan aktifkan tombol
                     $('#btnPeriksaBPJS').removeAttr('disabled');
                     $('#btnPeriksaBPJS').html('Periksa');
                 }
