@@ -5,7 +5,6 @@
 
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
-
         <!--end::Header-->
         <!--begin::Body-->
         <div class="card-body py-3">
@@ -33,6 +32,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $room->hotel->name }}</td>
                             <td class="text-center">SPOT ON {{ $room->name }}</td>
+
                             <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
                             </td>
                             <td class="text-center">Rp.
@@ -79,6 +79,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td class="text-center">{{ $room->hostel->name }}</td>
                             <td class="text-center">SPOT ON {{ $room->name }}</td>
+
                             <td class="text-center">Rp. {{ number_format($room->price, 0, ',', '.') }}
                             </td>
                             <td class="text-center">Rp.
@@ -119,11 +120,6 @@
 
                     </tr>
                     @endforeach
-
-
-
-
-
                     </tbody>
                 </table>
                 <!--end::Table-->
@@ -136,6 +132,7 @@
 
 
     {{-- modal --}}
+
 
     <!--begin::Modal - New Target-->
 

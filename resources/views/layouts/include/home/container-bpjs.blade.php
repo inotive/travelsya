@@ -36,46 +36,51 @@
                         <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
                     <div class="col-4">
-                        @auth
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
-                        @endauth
                     </div>
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold my-3">
-                            <span>Detail Pelanggan</span>
-                        </label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                        <td class="text-right" colspan="3"><span id="namaPelangganBPJS"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                        <td>Rp. <span id="totalTagihanBPJS"></span></td>
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                        <td>Rp. <span id="biayaAdminBPJS"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                        <td colspan="2">Rp. <span id="totalBayarBPJS"></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="row mt-4" id="detailBPJS">
+                        <div class="col-12">
+                            <label class="fs-5 fw-semibold my-3">
+                                <span>Detail Pelanggan</span>
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganBPJS"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                            <td>Rp. <span id="totalTagihanBPJS"></span></td>
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                            <td>Rp. <span id="biayaAdminBPJS"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                            <td colspan="2">Rp. <span id="totalBayarBPJS"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
+                        <div class="col-12">
+                            @auth
+                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitBPJS" disabled>Pembayaran</button>
+                            @endauth
 
+                            @guest
+                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                    Login Terlebih Dahulu
+                                </a>
+                            @endguest
+                        </div>
                     </div>
-                    <div class="col-12">
-                        @auth
-                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitBPJS" disabled>Pembayaran</button>
-                        @endauth
-
-                        @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
-                        @endguest
+                    <div class="row mt-5">
+                        <div class="col-xl-12">
+                            <div id="alertBPJS"></div>
+                        </div>
                     </div>
 
                 </div>
@@ -100,6 +105,8 @@
             $('.textAlert').hide();
         });
 
+        $('#detailBPJS').hide();
+
         $('#btnPeriksaBPJS').on('click', function () {
             var noPelangganBPJS = $('#noPelangganBPJS').val();
 
@@ -108,47 +115,51 @@
                 return false;
             }
 
+            $('#alertBPJS').empty()
+            $('#detailBPJS').hide();
+            $('#btnPeriksaBPJS').attr('disabled', true);
+            $('#btnPeriksaBPJS').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.bpjs') }}",
-                // url: "https://servicevps.travelsya.com/product/bpjs",
                 data: {
                     'no_pelanggan': noPelangganBPJS,
                     'nom': 'CEKBPJSKS',
                 },
                 success: function (responseTagihan) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('product.adminFee') }}",
-                        data: {
-                            'idProduct':  362,
-                        },
-                        beforeSend: function() {
-                            $('#btnPeriksaBPJS').attr('disabled', true);
-                            $('#btnPeriksaBPJS').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-                        },
-                        success: function (response) {
-                            var simulateFeeBPJS = parseInt(response[0].value);
+                    
+                    var simulateFeeBPJS = parseInt(responseTagihan.data.fee);
 
-                            var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
-                            var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
+                    var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
+                    var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
 
-                            $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
-                            $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
-                            $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
-                            $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
+                    $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
+                    $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
+                    $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
+                    $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
 
-                            $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
-                            $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
-                            $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
-                            $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+                    $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
+                    $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
+                    $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
+                    $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
 
-                            $('#btnPeriksaBPJS').removeAttr('disabled');
-                            $('#btnPeriksaBPJS').text('Periksa');
+                    $('#btnPeriksaBPJS').removeAttr('disabled');
+                    $('#btnPeriksaBPJS').text('Periksa');
 
-                            $('#btnSubmitBPJS').removeAttr('disabled');
-                        }
-                    });
+                    $('#btnSubmitBPJS').removeAttr('disabled');
+
+                    $('#detailBPJS').show();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 400) {
+                        var alertBPJS = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+
+                        $('#alertBPJS').empty().append(alertBPJS);
+                    }
+
+                    $('#btnPeriksaBPJS').removeAttr('disabled');
+                    $('#btnPeriksaBPJS').html('Periksa');
                 }
             });
         });

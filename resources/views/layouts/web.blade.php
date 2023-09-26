@@ -93,7 +93,7 @@
         } */
     </style>
     @stack('add-style')
-    @vite(['resources/js/app.js'])
+{{--    @vite(['resources/js/app.js'])--}}
 </head>
 <!--end::Head-->
 

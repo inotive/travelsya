@@ -13,7 +13,7 @@ class Mymili
 
     public function __construct()
     {
-        $this->url = 'http://180.250.247.166:6856/xmlh2h/';
+        $this->url = 'http://180.250.247.166:6856/xmlh2h/v2/';
         $this->requestid = 'H2H2712';
         $this->msisdn = '08115417708';
         $this->pin = '5614';

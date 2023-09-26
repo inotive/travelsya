@@ -1,4 +1,4 @@
-<div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
+ <div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
     <!--begin::Col-->
     <div class="col-xl-12">
 
@@ -37,7 +37,8 @@
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaTV">Periksa</button>
                     </div>
                 </div>
-                <div class="row" id="row-pricelist">
+
+                <div class="row" id="detailTV">
                     <div class="col-12">
                         <label class="fs-5 fw-semibold my-3">
                             <span>Detail Pelanggan</span>
@@ -66,7 +67,7 @@
                     </div>
                     <div class="col-12">
                         @auth
-                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmiTV" disabled>Pembayaran</button>
                         @endauth
 
                         @guest
@@ -74,6 +75,12 @@
                                 Login Terlebih Dahulu
                             </a>
                         @endguest
+                    </div>                    
+                </div>
+
+                <div class="row mt-5">
+                    <div class="col-xl-12">
+                        <div id="alertTV"></div>
                     </div>
                 </div>
             </div>
@@ -95,11 +102,10 @@
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tvInternet') }}",
-                // url: "https://servicevps.travelsya.com/product/tv-internet",
                 success: function (response) {
                     $.each(response, function (key, value) {
                         $('#productTV').append($('<option>', {
-                            value: value.id,
+                            value: value.kode,
                             text: value.name
                         }));
                     });
@@ -110,6 +116,8 @@
                 $('.textAlert').hide();
             });
 
+            $('#detailTV').hide();
+
             $('#btnPeriksaTV').on('click', function () {
                 var noPelangganTV = $('#noPelangganTV').val();
 
@@ -118,54 +126,48 @@
                     return false;
                 }
 
+                $('#alertContainer').empty()
+                $('#detailTV').hide();
+                $('#btnPeriksaTV').attr('disabled', true);
+                $('#btnPeriksaTV').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.tvInternet') }}",
                     data: {
                         'no_pelanggan': noPelangganTV,
-                        'nom': 'CEKTELKOM',
-                    },
+                        'nom': $('#productTV').val(),
+                    },  
                     success: function (responseTagihan) {
-                        // console.log(response)
+                        var simulateFeeTV = parseInt(responseTagihan.data.fee);
 
-                        // SIMULASI!!!
-                        // var simulateAmount = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        // var simulateFee = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
-                        // var simulateTotal = simulateAmount + simulateFee;
+                        var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
+                        var simulateTotalTV = simulateAmountTV + simulateFeeTV;
 
-                        // $('#namaPelangganTV').text('Joko Susilo');
-                        // $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmount));
-                        // $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFee));
-                        // $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotal));
+                        $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
+                        $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
+                        $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
 
-                        // $('#inputNamaPelangganTV').val('Joko Susilo');
-                        // $('#inputTotalTagihanTV').val(simulateAmount);
-                        // $('#inputBiayaAdminTV').val(simulateFee);
-                        // $('#inputTotalBayarTV').val(simulateTotal);
+                        $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
+                        $('#inputTotalTagihanTV').val(simulateAmountTV);
+                        $('#inputBiayaAdminTV').val(simulateFeeTV);
+                        $('#inputTotalBayarTV').val(simulateTotalTV);
 
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct':  $('#productTV').val(),
-                            },
-                            success: function (response) {
-                                var simulateFeeTV = parseInt(response[0].value);
+                        $('#btnPeriksaTV').removeAttr('disabled');
+                        $('#btnPeriksaTV').html('Pembayaran');
 
-                                var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
-                                var simulateTotalTV = simulateAmountTV + simulateFeeTV;
+                        $('#detailTV').show();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400 || xhr.status === 500) {
+                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
 
-                                $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
-                                $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
-                                $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
-                                $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
+                            $('#alertTV').empty().append(alertDiv);
+                        }
 
-                                $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
-                                $('#inputTotalTagihanTV').val(simulateAmountTV);
-                                $('#inputBiayaAdminTV').val(simulateFeeTV);
-                                $('#inputTotalBayarTV').val(simulateTotalTV);
-                            }
-                        });
+                        $('#btnPeriksaTV').removeAttr('disabled');
+                        $('#btnPeriksaTV').html('Pembayaran');
                     }
                 });
             });
