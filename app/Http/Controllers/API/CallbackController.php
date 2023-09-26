@@ -39,7 +39,7 @@ class CallbackController extends Controller
     }
     public function xendit(Request $request)
     {
-        $responseMili =  $this->mymili->paymentPPOB($request->inv, str($request->kode), str($request->nomor_pelanggan));
+        $responseMili =  $this->mymili->paymentPPOB($request->inv, $request->kode, $request->nomor_pelanggan);
 
         return $responseMili;
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
