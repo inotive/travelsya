@@ -74,23 +74,13 @@ class Hotel extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    public function hotelbookDate()
-    {
-        return $this->hasMany(HotelBookDate::class);
-    }
-
-    public function hotelroomFacility()
+    public function hotelFacilities()
     {
         return $this->hasMany(HotelRoomFacility::class);
     }
 
-    public function hotelRule()
+    public function hotelRules()
     {
         return $this->hasMany(HotelRule::class);
-    }
-
-    public function hotelroomImage()
-    {
-        return $this->hasMany(HotelRoomImage::class);
     }
 }
