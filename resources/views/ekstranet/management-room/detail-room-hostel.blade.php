@@ -66,7 +66,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_2">Foto Ruangan
-                            ()</a>
+                            (0)</a>
                     </li>
                 </ul>
 
