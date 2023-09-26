@@ -27,6 +27,7 @@ class Transaction extends Model
         return $this->hasMany(DetailTransaction::class);
     }
 
+
     /**
      * Get all of the product for the Transaction
      *

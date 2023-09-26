@@ -28,7 +28,7 @@
 <div class="desktop carousel">
     @foreach ($listAds as $ads)
         <div class="slide">
-            <img src="{{ asset('assets/'. $ads->image) }}" class="mw-100 rounded-4" />
+            <img src="{{ asset('media/ads/'. $ads->image) }}" class="mw-100 rounded-4" />
         </div>
     @endforeach
 
@@ -46,7 +46,7 @@
 <div class="mobile carousel">
     @foreach ($listAds as $ads)
         <div class="slide">
-            <img src="{{ asset('assets/'. $ads->image) }}" class="mw-100 rounded-4" />
+            <img src="{{ asset('media/ads/'. $ads->image) }}" class="mw-100 rounded-4" />
         </div>
     @endforeach
   {{-- <div class="slide">

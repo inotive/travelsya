@@ -133,7 +133,6 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 
 Route::middleware(['auth', 'role'])->group(function () {
     Route::middleware('admin')->group(function () {
-
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::prefix('management-mitra')->group(function () {
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
@@ -141,8 +140,6 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::get('hostel/{hostel}/review', [AdminHostelController::class, 'review'])->name('hostel.review');
                 Route::get('hostel/{hostel}', [AdminHostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
-
-
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
@@ -248,7 +245,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::put('detail-hotel/{hotelrule}', [ManagementHotelController::class, 'updaterule'])->name('partner.management.hotel.updaterule');
             Route::delete('detail-hotel/{id}/destroyrule', [ManagementHotelController::class, 'destroyRule'])->name('partner.management.hotel.destroyrule');
 
-        
+
             Route::delete('detail-hotel/{id}/deleteroom', [ManagementHotelController::class, 'destroyRoom'])->name('partner.management.hotel.destroyroom');
             //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
             Route::get('setting-hotel-information/{id}', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
@@ -259,8 +256,8 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::delete('setting-hotel-room/delete/{id}', [ManagementHotelController::class,'settingRoomDelete'])->name('partner.management.setting.room.delete');
             Route::get('setting-hotel-room/hotel-room/{hotel_id}/{id}', [ManagementHotelController::class,'settingRoomShow'])->name('partner.management.setting.room.show');
             Route::post('setting-hotel-room/hotel-room/update/{hotel_id}/{id}', [ManagementHotelController::class,'settingRoomUpdate'])->name('partner.management.setting.room.update');
-           
-        
+
+
             //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
         });
     });
