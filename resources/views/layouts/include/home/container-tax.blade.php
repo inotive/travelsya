@@ -110,7 +110,7 @@
                 success: function (response) {
                     $.each(response, function (key, value) {
                         $('#productPajak').append($('<option>', {
-                            value: value.id,
+                            value: value.kode,
                             text: value.description
                         }));
                     });
@@ -122,7 +122,7 @@
             });
 
 
-            $('#detailPDAM').hide();
+            $('#detailPajak').hide();
 
             $('#btnPeriksaPajak').on('click', function () {
                 var noPelangganPajak = $('#noPelangganPajak').val();
@@ -132,8 +132,8 @@
                     return false;
                 }
 
-                $('#alertContainer').empty()
-                $('#detailPDAM').hide();
+                $('#alertPajak').empty()
+                $('#detailPajak').hide();
                 $('#btnPeriksaPajak').attr('disabled', true);
                 $('#btnPeriksaPajak').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
 
@@ -142,40 +142,32 @@
                     url: "{{ route('product.tax') }}",
                     data: {
                         'no_pelanggan': noPelangganPajak,
-                        'nom': 'CEKPLN',
+                        'nom': $('#productPajak').val()
                     },
                     success: function (response) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct':  $('#productPajak').val(),
-                            },
-                            success: function (response) {
+                        // var simulateFeePajak = parseInt(responseTagihan.data.fee)
+                        
+                        // SIMULASI!!!
+                        var simulateFeePajak = 1000;
+                        var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
+                        var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
 
-                                var simulateFeePajak = response[0].value;
+                        $('#namaPelangganPajak').text('Joko Susilo');
+                        $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
+                        $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
+                        $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
 
-                                 // SIMULASI!!!
-                                var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                                var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
-
-                                $('#namaPelangganPajak').text('Joko Susilo');
-                                $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
-                                $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
-                                $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
-
-                                $('#inputNamaPelangganPajak').val('Joko Susilo');
-                                $('#inputTotalTagihanPajak').val(simulateAmountPajak);
-                                $('#inputBiayaAdminPajak').val(simulateFeePajak);
-                                $('#inputTotalBayarPajak').val(simulateTotalPajak);
-                            }
-                        });
+                        $('#inputNamaPelangganPajak').val('Joko Susilo');
+                        $('#inputTotalTagihanPajak').val(simulateAmountPajak);
+                        $('#inputBiayaAdminPajak').val(simulateFeePajak);
+                        $('#inputTotalBayarPajak').val(simulateTotalPajak);
 
                         $('#btnPeriksaPajak').removeAttr('disabled');
                         $('#btnPeriksaPajak').html('Periksa');
+                        $('#detailPajak').show();
                     },
                     error: function(xhr, status, error) {
-                        if (xhr.status === 400) {
+                        if (xhr.status === 400 || xhr.status === 500) {
                             var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
 
                             $('#alertPajak').empty().append(alertDiv);
