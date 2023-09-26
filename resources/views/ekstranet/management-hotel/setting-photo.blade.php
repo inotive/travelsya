@@ -1,18 +1,18 @@
-@extends('admin.layout',['title' => 'Setting Photo - Hotel A',"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Setting Photo - Hotel A',"url" => "#"])
 
 @section('content-admin')
     <!--begin::Row-->
     <div class="row gy-5 g-xl-10">
         <!--begin::Col-->
         <div class="col-4">
-            <form id="kt_modal_new_target_form " class="form " method="post" enctype="multipart/form-data" action="{{route('admin.hostel.store-image',$hostel->id)}}">
+            <form id="kt_modal_new_target_form " class="form " method="post" enctype="multipart/form-data" action="{{route('partner.management.hotel.setting.photo',$hotel->first()->id)}}">
             <div class="card mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
                     <div class="row">
                         <!--begin::Form-->
                                 @csrf
-                                <input type="hidden" name="id" value="{{$hostel->id}}">
+                                <input type="hidden" name="id" value="{{$hotel->id}}">
                             <!--begin::Input group-->
                             <div class="fv-row">
                                 <!--begin::Dropzone-->
@@ -56,7 +56,7 @@
                 <!--begin::Body-->
                 <div class="card-body my-3">
                     <div class="row">
-                        @foreach($hostel->hostelImage as $image)
+                        @foreach($hotel->hotelImage as $image)
 
                         <div class="col-6">
                             <div class="card border border-light-subtle">
@@ -67,7 +67,7 @@
                                     <form action="{{route('admin.hostel.main-image')}}" method="post" class="d-flex flex-column">
                                         @csrf
                                         <input type="hidden" name="id" value="{{$image->id}}">
-                                        <input type="hidden" name="hostelid" value="{{$hostel->id}}">
+                                        <input type="hidden" name="hostelid" value="{{$hotel->id}}">
                                     <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama</button>
 
                                     </form>

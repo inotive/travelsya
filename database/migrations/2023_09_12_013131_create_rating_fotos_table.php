@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hotel_ratings', function (Blueprint $table) {
+        Schema::create('rating_fotos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('hotel_id')->constrained();
-            $table->integer('rate');
-            $table->string('comment')->nullable();
+            $table->foreignId('rating_id')->constrained();
+            $table->string('image');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hotel_ratings');
+        Schema::dropIfExists('rating_fotos');
     }
 };

@@ -26,7 +26,7 @@
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
                         <th class="text-center">Vendor</th>
-                        <th class="text-center">Nama Hotel atau Hostel</th>
+                        <th class="text-center">Hotel atau Hostel</th>
                         <th class="text-center">No.Telp</th>
                         <th class="text-center">Status</th>
                         <th class="text-center">Aksi</th>
@@ -42,25 +42,28 @@
                                 <p style="font-size : 9px;">{{$user->email}}</p>
                             </td>
                             <td class="text-center">
+                                @foreach($user->hostel as $hostel)
+                                    <span class="badge badge-info">{{$hostel->name}}</span>
+                                @endforeach
                                 @foreach($user->hotel as $hotel)
                                     <span class="badge badge-info">{{$hotel->name}}</span>
                                 @endforeach
                             </td>
-                            <td class="text-center">{{$vendor->user->phone ?? 'Belum Ada'}}</td>
+                            <td class="text-center">{{$user->phone ?? 'Belum Ada'}}</td>
                             <td class="text-center">
-                                @if($vendor->is_active == 1)
+                                @if($user->is_active == 1)
                                     <span class="badge badge-success">Aktif</span>
                                 @else
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <button class="btn btn-warning btn-sm p-2" data-id="{{$vendor->id}}"
-                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"
+                                <button class="btn btn-warning btn-sm p-2" data-id="{{$user->id}}"
+                                        data-active="{{$user->is_active}}" data-bs-toggle="modal"
                                         data-bs-target="#edit">Edit
                                 </button>
-                                <button class="btn btn-danger btn-sm p-2" data-id="{{$vendor->id}}"
-                                        data-active="{{$vendor->is_active}}" data-bs-toggle="modal"
+                                <button class="btn btn-danger btn-sm p-2" data-id="{{$user->id}}"
+                                        data-active="{{$user->is_active}}" data-bs-toggle="modal"
                                         data-bs-target="#edit">Delete
                                 </button>
                             </td>
@@ -240,101 +243,66 @@
     <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
-            <!--begin::Modal content-->
-            <div class="modal-content rounded">
-                <!--begin::Modal header-->
-                <div class="modal-header pb-0 border-0 justify-content-end">
-                    <!--begin::Close-->
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
+            <!--begin:Form-->
+            <form id="kt_modal_new_target_form" class="form" method="post"
+                  action="{{route('admin.mitra.store')}}">
+                @csrf
+                <!--begin::Modal content-->
+                <div class="modal-content rounded">
+                    <!--begin::Modal header-->
+                    <div class="modal-header justify-content-between">
+                        <!--begin::Title-->
+                        <h1 class="mb-3">Tambah Mitra Baru</h1>
+                        <!--end::Title-->
+                        <!--begin::Close-->
+                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <i class="ki-duotone ki-cross fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </div>
+                        <!--end::Close-->
                     </div>
-                    <!--end::Close-->
-                </div>
-                <!--begin::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                    <!--begin:Form-->
-                    <form id="kt_modal_new_target_form" class="form" method="post"
-                          action="{{route('admin.mitra.store')}}">
-                        @csrf
+                    <!--begin::Modal header-->
+                    <!--begin::Modal body-->
+                    <div class="modal-body scroll-y">
                         <input type="hidden" name="id" id="id">
-                        <!--begin::Heading-->
-                        <div class="mb-13 text-center">
-                            <!--begin::Title-->
-                            <h1 class="mb-3">Create Mitra</h1>
-                            <!--end::Title-->
-                        </div>
-                        <!--end::Heading-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <div class="col-md-12 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Name Hostel</label>
-                                <input class="form-control form-control-solid" id="name" name="name" required/>
-
-                                @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
+                            <div class="col-md-12">
+                                <label class=" required fs-6 fw-semibold mb-2">Nama User</label>
+                                <input class="form-control form-control-lg" id="name" name="name"
+                                       placeholder="Masukan nama perusahaan" required/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class=" required fs-6 fw-semibold mb-2">Email</label>
+                                <input class="form-control form-control-lg" id="email" name="email"
+                                       placeholder="Masukan nama email" required/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class=" required fs-6 fw-semibold mb-2">Password</label>
+                                <input class="form-control form-control-lg" id="password" name="password"
+                                       type="password"
+                                       placeholder="Masukan nama email" required/>
+                            </div>
+                            <div class="col-md-12">
+                                <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
+                                <input class="form-control form-control-lg" name="nomor_telfon"
+                                       placeholder="Masukan nomor telfon" required/>
                             </div>
                         </div>
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
-                                <select class="form-select form-select-solid" id="user_id" name="user_id">
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
-                                    @endforeach
-                                </select>
-                                @error('user_id')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Active</label>
-                                <select class="form-select form-select-solid" id="active" name="active">
-                                    <option value="0">No</option>
-                                    <option value="1">Yes</option>
-                                </select>
-                                @error('active')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
                         </div>
                         <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">City</label>
-                                <input class="form-control form-control-solid" id="city" name="city" required/>
 
-                                @error('city')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">category</label>
-                                <input class="form-control form-control-solid" id="category" name="category" required/>
 
-                                @error('category')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <!--end::Input group-->
+                        <!--end:Form-->
+                    </div>
+                    <!--end::Modal body-->
+
+                    <div class="modal-footer">
                         <!--begin::Actions-->
                         <div class="text-center">
                             <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
@@ -346,12 +314,11 @@
                             </button>
                         </div>
                         <!--end::Actions-->
-                    </form>
-                    <!--end:Form-->
+                    </div>
+
                 </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
+                <!--end::Modal content-->
+            </form>
         </div>
         <!--end::Modal dialog-->
     </div>

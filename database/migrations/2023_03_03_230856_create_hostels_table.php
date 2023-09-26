@@ -16,8 +16,9 @@ return new class extends Migration
     {
         Schema::create('hostels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('service_id')->constrained();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->string('name');
             $table->string('description');
             $table->string('city');
@@ -34,7 +35,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->integer('star');
             $table->string('property')->nullable();
-            $table->tinyInteger('is_active');
+            $table->boolean('is_active');
             $table->softDeletes();
             $table->timestamps();
         });

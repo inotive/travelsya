@@ -47,7 +47,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <!-- end:: Style swiper -->
 
-    {{--    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script> --}}
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
     <style>
         .main {
 
@@ -93,7 +93,7 @@
         } */
     </style>
     @stack('add-style')
-    @vite(['resources/js/app.js'])
+{{--    @vite(['resources/js/app.js'])--}}
 </head>
 <!--end::Head-->
 
@@ -138,14 +138,7 @@
                     @include('layouts.include.header')
                 </div>
                 <!--end::Header-->
-
-
-
-
                 @yield('content-web')
-
-
-
                 <!--begin::Footer-->
                 <div class="footer py-4 d-flex flex-lg-column text-white " style="background-color:#C02425;"
                     id="kt_footer">
@@ -163,7 +156,7 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col md-4">
-                                        <p class="fw-bold fs-5">Layanan</p>
+                                        <p class="fw-bold fs-5">Layanansss</p>
                                         <p>Booking Hotel</p>
                                         <p>Tiket Pesawat</p>
                                         <p>Tiket Kereta Api</p>

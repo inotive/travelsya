@@ -16,6 +16,20 @@ class HotelRoomFacility extends Model
      */
     protected $guarded = [];
 
+    public function hotel()
+    {
+        return $this->belongsTo(Hotel::class);
+    }
+
+    public function hotelRoom()
+    {
+        return $this->belongsTo(HotelRoom::class);
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
     public function facility()
     {
         return $this->belongsTo(Facility::class);

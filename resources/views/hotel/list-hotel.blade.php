@@ -52,6 +52,7 @@
                                 <div class="col-12">
                                     <label for="" class="form-label">Fasilitas</label>
                                 </div>
+
                                 @foreach ($facilities as $facility)
                                 <div class="col-12">
                                     <div class="form-check">
@@ -91,6 +92,7 @@
                                         </label>
                                     </div>
                                 </div> --}}
+
 
                                 <div class="col-12">
                                     <label for="" class="form-label">Bintang</label>

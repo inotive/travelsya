@@ -144,8 +144,9 @@ class ProductController extends Controller
                 $status = "Nomor Tagihan Tidak Dikenali";
             }
 
-            return ResponseFormatter::error($status, 'Inquiry failed');
+            return ResponseFormatter::error('Tidak ada', 'Inquiry failed');
         }
+
 
         // return [
         //     "meta" => [

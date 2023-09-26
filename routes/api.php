@@ -6,7 +6,7 @@ use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
-use App\Http\Controllers\API\PulsaDataController;
+use App\Http\Controllers\API\TopUpController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
 use Illuminate\Http\Request;
@@ -41,6 +41,7 @@ route::post('/send-token-password', [AuthController::class, 'sendTokenPassword']
 route::post('/token-password-confirmation', [AuthController::class, 'tokenCheck']);
 route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::post('payment', [\App\Http\Controllers\PaymentController::class, 'store']);
+Route::post('/xendit/callback', [TransactionController::class, 'xenditCallback'])->name('xendit-callback');
 
 //hostel
 route::post('/hostel', [HostelController::class, 'index']);
@@ -56,8 +57,10 @@ route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);
 
 // PULSA & DATA
-route::get('/pulsa', [PulsaDataController::class, 'getPulsa']);
-route::get('/data', [PulsaDataController::class, 'getData']);
+route::get('/pulsa', [TopUpController::class, 'getPulsa']);
+route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
+route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
+route::get('/data', [TopUpController::class, 'getData']);
 
 //ads
 route::get('/ads', [AdController::class, 'index']);

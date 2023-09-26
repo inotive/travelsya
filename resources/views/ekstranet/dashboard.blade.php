@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Dashboard',"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Dashboard',"url" => "#"])
 
 @section('content-admin')
     <!--begin::Row-->
