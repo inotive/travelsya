@@ -50,6 +50,9 @@ class UserController extends Controller
     public function orderDetail(){
         return view('user.orderdetail');
     }
+    public function help(){
+        return view('user.help');
+    }
 
     public function detailTransaction($no_inv)
     {

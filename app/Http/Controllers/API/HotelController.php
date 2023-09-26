@@ -131,6 +131,7 @@ class HotelController extends Controller
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
 
                 $hotelFormatJSON[] = [
+                    'id' => $hotel->id,
                     'name' => $hotel->name,
                     'image' => $hotelImage ? asset($hotelImage->image) : null,
                     'location' => $hotel->city,

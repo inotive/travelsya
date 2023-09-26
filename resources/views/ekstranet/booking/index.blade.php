@@ -82,6 +82,19 @@
                                                     Cetak
                                                 </a>
                                             </div>
+
+                                            <div class="menu-item px-3">
+                                                <a href="{{ route('partner.riwayat-booking.detailhotel', $booking->id) }}" class="menu-link px-3 text-warning"
+                                                    id="" data-id="">
+                                                    Detail Booking
+                                                </a>
+                                            </div>
+
+                                            {{-- <div class="menu-item px-3">
+                                                <a href="{{ route('partner.management.room.detailroomhostel', $room->id) }}" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
+                                                    Detail Ruangan
+                                                </a>
+                                            </div> --}}
                                             <!--end::Menu item-->
                                             <!--begin::Menu item-->
 
@@ -127,6 +140,12 @@
                                             data-kt-menu="true" style="">
 
                                             <!--begin::Menu item-->
+                                            <div class="menu-item px-3">
+                                                <a href="{{ route('partner.riwayat-booking.detailhostel', $booking->id) }}" class="menu-link px-3 text-warning"
+                                                    id="" data-id="">
+                                                    Detail Booking
+                                                </a>
+                                            </div>
                                             <div class="menu-item px-3">
                                                 <a href="javascript:void(0)" class="menu-link px-3 text-warning"
                                                     id="" data-id="" data-bs-toggle="modal">
