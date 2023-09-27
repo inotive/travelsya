@@ -290,7 +290,7 @@ class CallbackController extends Controller
 
     public function callBackPPOB()
     {
-        $responseMili =  $this->mymili->paymentPPOB('test-bayar', 'PAYPLN', '232001112496');
+        $responseMili =  $this->mymili->paymentPPOB('test-bayar-dana', 'DNA30', '081253290605');
         if($responseMili['RESPONSECODE'] == 00)
         {
             return response()->json([
