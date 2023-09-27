@@ -39,9 +39,7 @@ class CallbackController extends Controller
     }
     public function xendit(Request $request)
     {
-//        $responseMili =  $this->mymili->paymentPPOB($request->inv, $request->kode, $request->nomor_pelanggan);
-//
-//        return $responseMili;
+
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
         // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
@@ -116,6 +114,7 @@ class CallbackController extends Controller
                                 ->first();
                             print_r('sudah masuk pembayaran mili');
 
+                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, $detailTransactionPPOB->kode_pembayaran, $detailTransactionPPOB->nomor_pelanggan);
 
                             // return $responseMili;
                             if ($responseMili['RESPONSECODE'] == 00) {
@@ -134,6 +133,22 @@ class CallbackController extends Controller
                                     'message'=> $message
                                 ]);
                         }
+//                        else if($transaction->service == "hotel" || $transaction->service == "hostel"){
+//                            $type = $transaction->service;
+//                            $detailTransactionPPOB = \DB::table('detail_transaction_hotel as dh')
+//                                ->where('dh.transaction_id', $transaction->id)
+//                                ->first();
+//
+//                            if($type == "hotel")
+//                            {
+//                                DB::table('detail_transaction_hotel')->where('top.id', $detailTransactionPPOB->id)
+//                                    ->update([
+//                                        'status' => $status,
+//                                        'message'=> $message
+//                                    ]);
+//                            }
+//
+//                        }
 
                         if($status == "Berhasil" || $status == "Pending")
                         {
@@ -271,5 +286,23 @@ class CallbackController extends Controller
         // 30 Failed
         // 68 Pending
         // 99 invalid
+    }
+
+    public function callBackPPOB()
+    {
+        $responseMili =  $this->mymili->paymentPPOB('test-bayar', 'PAYPLN', '232001112496');
+        if($responseMili['RESPONSECODE'] == 00)
+        {
+            return response()->json([
+                'status' => '200',
+                'message' => 'Pulsa sudah masuk'
+            ]);
+        }
+        elseif($responseMili['RESPONSECODE'] == 68){
+            return response()->json([
+                'status' => '200',
+                'message' => 'Pulsa sedang diproses'
+            ]);
+        }
     }
 }

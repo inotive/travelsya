@@ -83,6 +83,7 @@ route::get('/service', [SettingController::class, 'getService']);
 
 //webhook
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
+route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
 Route::middleware('auth:sanctum')->group(function () {
     //auth
