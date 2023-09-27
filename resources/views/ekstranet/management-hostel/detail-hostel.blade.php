@@ -312,7 +312,7 @@
 
                             </div>
                         </div>
-                        {{-- <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
+                        <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
                             <div class="row">
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
                                     id="kt_datatable_zero_configuration_2">
@@ -327,21 +327,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($hotel->hotelbookDate as $booking)
-                                            @php
-                                                $startdate = \Carbon\Carbon::parse($booking->start);
-                                                $enddate = \Carbon\Carbon::parse($booking->end);
-                                                $startdates = $startdate->Format('d F Y');
-                                                $enddates = $enddate->Format('d F Y');
-                                                
-                                            @endphp
+                                        {{-- @foreach ($hotel->hotelbookDate as $booking) --}}
+                        
                                             <tr>
-                                                <td class="text-center">{{ $booking->transaction->user->name }} -
-                                                    {{ $booking->transaction->user->phone }}</td>
+                                                <td class="text-center">Gusti Bagus - 081123123 </td>
                                                 <td class="text-center">CTH123</td>
-                                                <td class="text-center">{{ $startdates }}
+                                                <td class="text-center">20 Juni 2023
                                                 </td>
-                                                <td class="text-center">{{ $enddates }}</td>
+                                                <td class="text-center">22 Juni 2023</td>
                                                 <td class="text-center">1 Kamar | 8 Malam</td>
 
 
@@ -376,13 +369,13 @@
 
                                             </td>
                                             </tr>
-                                        @endforeach
+                                        {{-- @endforeach --}}
                                     </tbody>
                                 </table>
 
 
                             </div>
-                        </div> --}}
+                        </div>
 
                         <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
 

@@ -83,7 +83,7 @@
                     <!--end:Menu link-->
                 </a>
                 <!--begin:Menu item-->
-                <a href="{{route('partner.riwayat-booking')}}"
+                <a href="{{route('partner.review')}}"
                    class="menu-item menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
@@ -167,22 +167,7 @@
                 <!--end:Menu item-->
 
                 <!--end:Menu item-->
-                <a href="{{route('partner.management.hotel')}}"
-                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="fa-solid fa-hotel fs-3"></i>
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                        </span>
-                        <span class="menu-title">Hotel</span>
-                    </span>
-                    <!--end:Menu link-->
-                </a>
 
-                <<<<<<< Updated upstream
                 <a href="{{route('partner.management.hostel')}}"
                    class="menu-item {{(Request::segment(2)=="management-hostel") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
@@ -197,20 +182,20 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
-                <a href="{{route('partner.management.room')}}"
-                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="ki-duotone ki-color-swatch fs-2">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                        </span>
-                        <span class="menu-title">Rooms</span>
-                    </span>
-                    <!--end:Menu link-->
-                </a>
+{{--                <a href="{{route('partner.management.room')}}"--}}
+{{--                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">--}}
+{{--                    <!--begin:Menu link-->--}}
+{{--                    <span class="menu-link">--}}
+{{--                        <span class="menu-icon">--}}
+{{--                            <i class="ki-duotone ki-color-swatch fs-2">--}}
+{{--                                <span class="path1"></span>--}}
+{{--                                <span class="path2"></span>--}}
+{{--                            </i>--}}
+{{--                        </span>--}}
+{{--                        <span class="menu-title">Rooms</span>--}}
+{{--                    </span>--}}
+{{--                    <!--end:Menu link-->--}}
+{{--                </a>--}}
                 {{--                <a href="{{route('partner.management.hotel')}}"--}}
                 {{--                   class="menu-item {{(Request::segment(2)=="management-hotel") ? 'here' : ''}} menu-accordion">--}}
                 {{--                    <!--begin:Menu link-->--}}
