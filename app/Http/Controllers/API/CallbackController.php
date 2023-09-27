@@ -304,5 +304,9 @@ class CallbackController extends Controller
                 'message' => 'Pulsa sedang diproses'
             ]);
         }
+        return response()->json([
+            'status' => '400',
+            'message' => $responseMili
+        ]);
     }
 }
