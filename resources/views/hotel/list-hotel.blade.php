@@ -313,7 +313,7 @@
                                                         @endfor --}}
                                                     </div>
                                                     <div class="col-12">
-                                                        <p>{{ $hotel->address ?? 'Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan' }}
+                                                        <p>{{ $hotel->address }}
                                                         </p>
                                                     </div>
                                                     <div class="col-12">

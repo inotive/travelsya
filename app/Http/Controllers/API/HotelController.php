@@ -135,6 +135,9 @@ class HotelController extends Controller
                     'name' => $hotel->name,
                     'image' => $hotelImage ? asset($hotelImage->image) : null,
                     'location' => $hotel->city,
+                    'address' => $hotel->address,
+                    'lat' => $hotel->lat,
+                    'lon' => $hotel->lon,
                     'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
                     'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
                     'price' => $hotelDetails[$hotel->id]['price'],
@@ -231,13 +234,18 @@ class HotelController extends Controller
                     ];
                 });
 
+                $hotelImage = $hotel->hotelImage->where('main', 1)->first();
 
                 return [
+                    'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotel->hotelImage,
+                    'image' => $hotelImage ? asset($hotelImage->image) : null,
                     'checkin' => $hotel->checkin,
                     'checkout' => $hotel->checkout,
                     'location' => $hotel->city,
+                    'address' => $hotel->address,
+                    'lat' => $hotel->lat,
+                    'lon' => $hotel->lon,
                     'avg_rating' => $avgRating,
                     'rating_count' => $totalRating,
                     'hotel_rooms' => $hotel_room,
