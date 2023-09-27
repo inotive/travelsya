@@ -132,11 +132,13 @@ class AdController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ad $ad)
+    public function destroy($id)
     {
+        $ad = Ad::find($id);
+        $ad->delete();
         Storage::delete('media/ads/'.$ad->image);
 
-        $ad->delete();
+        
 
         toast('Ads has been deleted', 'success');
         return redirect()->back();
