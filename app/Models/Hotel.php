@@ -89,7 +89,7 @@ class Hotel extends Model
     {
         return $this->hasMany(HotelBookDate::class);
     }
-}
+
 
     public function hotelroomImage()
     {
