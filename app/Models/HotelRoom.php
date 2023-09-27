@@ -78,5 +78,4 @@ class HotelRoom extends Model
     {
         return $this->hasMany(HotelRoomImage::class);
     }
-
 }
