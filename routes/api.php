@@ -85,6 +85,9 @@ route::get('/service', [SettingController::class, 'getService']);
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
 route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
+route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
@@ -93,8 +96,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //transaction
     // route::get('/transaction',[TransactionController::class,'GetServices']);
-    route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
-    route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+    // route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+    // route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
     // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
@@ -111,5 +114,3 @@ Route::middleware('auth:sanctum')->group(function () {
         route::post('/hostel/{id}/destroy', [HostelController::class, 'destroy']);
     });
 });
-
-
