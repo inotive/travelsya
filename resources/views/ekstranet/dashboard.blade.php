@@ -12,7 +12,7 @@
                     <span  class=" fw-bold text-dark fs-8  d-block">Seminggu Terakhir</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-1 fw-bold me-2">{{$card['guest']}}</span>
+                        <span class="text-dark fs-1 fw-bold me-2">10 Orang</span>
 
                         <span class="fw-semibold text-muted fs-7">Orang</span>
                     </div>
@@ -30,7 +30,8 @@
                     <span  class=" fw-bold text-dark fs-8  d-block">Seminggu Terakhir</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueWeek'])}}</span>
+{{--                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueWeek'])}}</span>--}}
+                        <span class="text-dark fs-1 fw-bold me-2">0</span>
 
                     </div>
                 </div>
@@ -47,7 +48,8 @@
                     <span  class=" fw-bold text-dark fs-8  d-block">Sebulan Terakhir</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueMonth'])}}</span>
+{{--                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueMonth'])}}</span>--}}
+                        <span class="text-dark fs-1 fw-bold me-2">123</span>
 
                     </div>
                 </div>
@@ -78,7 +80,8 @@
                                 <!--begin::Title-->
                                 <div>
                                     <div class="fs-7 text-success fw-bold">Ready </div>
-                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['ready']}} Rooms</div>
+{{--                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['ready']}} Rooms</div>--}}
+                                    <div class="fs-5 text-dark fw-bold lh-1">123 Rooms</div>
 
                                 </div>
                                 <!--end::Title-->
@@ -93,7 +96,8 @@
                                 <!--begin::Title-->
                                 <div>
                                     <div class="fs-7 text-danger fw-bold">Not Ready</div>
-                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['notready']}} Rooms</div>
+{{--                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['notready']}} Rooms</div>--}}
+                                    <div class="fs-5 text-dark fw-bold lh-1">123 Rooms</div>
 
                                 </div>
                                 <!--end::Title-->
@@ -133,19 +137,19 @@
                             </thead>
                             <tbody>
 
-                            @foreach($transactions as $transaction)
-                                <tr>
-                                    <td>{{date('d M y',strtotime($transaction->created_at))}}</td>
-                                    <td>{{$transaction->no_inv}}</td>
-                                    <td>{{$transaction->req_id}}</td>
-                                    <td>{{$transaction->user->name}}</td>
-                                    <td>{{date('d M y',strtotime($transaction->bookDate[0]->start))}}</td>
-                                    <td>{{date('d M y',strtotime($transaction->bookDate[0]->end))}}</td>
-                                    <td>{{$transaction->payment }}</td>
-                                    <td>{{ General::rp($transaction->detailTransaction[0]->price) }}</td>
-                                    <td><span class="badge {{$transaction->status == "SUCCESS" ? "badge-success" : "badge-danger"}}">{{$transaction->status }}</span></td>
-                                </tr>
-                                @endforeach
+{{--                            @foreach($transactions as $transaction)--}}
+{{--                                <tr>--}}
+{{--                                    <td>{{date('d M y',strtotime($transaction->created_at))}}</td>--}}
+{{--                                    <td>{{$transaction->no_inv}}</td>--}}
+{{--                                    <td>{{$transaction->req_id}}</td>--}}
+{{--                                    <td>{{$transaction->user->name}}</td>--}}
+{{--                                    <td>{{date('d M y',strtotime($transaction->bookDate[0]->start))}}</td>--}}
+{{--                                    <td>{{date('d M y',strtotime($transaction->bookDate[0]->end))}}</td>--}}
+{{--                                    <td>{{$transaction->payment }}</td>--}}
+{{--                                    <td>{{ General::rp($transaction->detailTransaction[0]->price) }}</td>--}}
+{{--                                    <td><span class="badge {{$transaction->status == "SUCCESS" ? "badge-success" : "badge-danger"}}">{{$transaction->status }}</span></td>--}}
+{{--                                </tr>--}}
+{{--                                @endforeach--}}
                             </tbody>
                         </table>
                     </div>

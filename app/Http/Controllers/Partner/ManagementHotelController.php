@@ -32,10 +32,9 @@ class ManagementHotelController extends Controller
 
     public function detailHotel($id)
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelbookDate', 'hotelroomFacility', 'hotelRule')->find($id);
+        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotel', 'hotelroomFacility', 'hotelRule', 'hotelBookDate')->find($id);
         $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
         $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
-
         return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
     }
     public function settingHotel($id)
@@ -118,7 +117,7 @@ class ManagementHotelController extends Controller
                 'image' => 'media/hotel/' . $filename,
             ]);
         }
-        
+
 
         $facilityIds = $request->input('facility_id', []);
         $roomId = $hotelRoom->id;
