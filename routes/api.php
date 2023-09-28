@@ -31,7 +31,6 @@ Route::get('/unauthorized', function () {
     return json_encode(['message' => 'Unauthorized']);
 })->name('unauthorized');
 
-
 //auth
 route::post('/register', [AuthController::class, 'register']);
 route::post('/login', [AuthController::class, 'login']);
@@ -70,30 +69,37 @@ route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
 
 
+// ppob product
+route::get('/ppob', [PpobController::class, 'getServices']);
+route::get('/ppob/{id}', [PpobController::class, 'getService']);
+route::post('/ppob/transaction', [PpobController::class, 'transaction']);
+route::post('/ppob/status', [PpobController::class, 'status']);
+route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
+// route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
+
+//setting
+route::get('/saldo', [SettingController::class, 'getSaldo']);
+route::get('/service', [SettingController::class, 'getService']);
+
+//webhook
+route::post('/callback/xendit', [CallbackController::class, 'xendit']);
+
+route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
 Route::middleware('auth:sanctum')->group(function () {
-
-    // ppob product
-    route::get('/ppob', [PpobController::class, 'getServices']);
-    route::get('/ppob/{id}', [PpobController::class, 'getService']);
-    route::post('/ppob/transaction', [PpobController::class, 'transaction']);
-    route::post('/ppob/status', [PpobController::class, 'status']);
-    route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
-    // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
-
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
     route::post('/user/update', [AuthController::class, 'update']);
     route::post('/user', [AuthController::class, 'profile']);
 
-
     //transaction
     // route::get('/transaction',[TransactionController::class,'GetServices']);
-    route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
-    route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+    // route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+    // route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
     // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
-
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);
@@ -107,11 +113,3 @@ Route::middleware('auth:sanctum')->group(function () {
         route::post('/hostel/{id}/destroy', [HostelController::class, 'destroy']);
     });
 });
-
-//setting
-route::get('/saldo', [SettingController::class, 'getSaldo']);
-route::get('/service', [SettingController::class, 'getService']);
-
-
-//webhook
-route::post('/callback/xendit', [CallbackController::class, 'xendit']);

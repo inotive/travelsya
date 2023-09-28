@@ -313,7 +313,7 @@
                                                         @endfor --}}
                                                     </div>
                                                     <div class="col-12">
-                                                        <p>{{ $hotel->address ?? 'Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan' }}
+                                                        <p>{{ $hotel->address }}
                                                         </p>
                                                     </div>
                                                     <div class="col-12">
@@ -331,7 +331,7 @@
                                                 {{-- <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
                                                 <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
                                                 <ul>
-                                                @foreach ($hotel->hotelFacilities as $facility)
+                                                @foreach ($hotel->hotelroomFacility as $facility)
                                                     <li>{{ $facility->facility->name }}</li>
                                                 @endforeach
                                                 </ul>
