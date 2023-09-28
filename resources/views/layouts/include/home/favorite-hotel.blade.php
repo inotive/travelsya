@@ -8,9 +8,11 @@
       <a href="/hotels" class="text-danger fs-4 fw-bold">Lihat Semua</a>
     </div>
   </div>
+
     @php
         $ads = \App\Models\Ad::all();
     @endphp
+
   <div class="row justify-content-between" x-data>
     <template x-for="data in $store.favoritehotel.data">
       <div class="col-md-3">
@@ -47,7 +49,8 @@
             <span class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1" x-html="data.label"></span>
             <span class="text-gray-400 fw-semibold d-block fs-6 mt-1" x-html="data.city"></span>
             <span class="text-gray-400 fw-semibold d-block mt-5">Mulai dari <s x-html="data.price"></s></span>
-            <span class="text-danger text-end fw-bold fs-1 mt-2">Rp. {{number_format(150000,0,',','.')}}</span>
+
+            <span class="text-danger text-end fw-bold fs-1 mt-2">Rp. {{number_format(100000,0,',','.')}}</span>
             <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
               <span class="fa fa-star fs-4" style="color: red;"></span>
               <span x-html="data.rate"></span>

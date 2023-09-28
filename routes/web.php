@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilitiesController;
 use App\Http\Controllers\Admin\FeeController;
+use App\Http\Controllers\Admin\HelpController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Partner\ManagementHostelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\Partner\ReviewController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -202,7 +204,16 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
             Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
             Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
-            Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+            Route::delete('ads/{id}', [AdController::class, 'destroy'])->name('ads.destroy');
+
+            // Helps
+            Route::get('helps', [HelpController::class, 'index'])->name('help.index');
+            Route::get('helps/create', [HelpController::class, 'create'])->name('help.create');
+            Route::post('helps/create', [HelpController::class, 'store'])->name('help.store');
+            Route::get('helps/{id}/edit', [HelpController::class, 'edit'])->name('help.edit');
+            Route::put('helps/{help}', [HelpController::class, 'update'])->name('help.update');
+            Route::delete('helps/{id}', [HelpController::class, 'destroy'])->name('help.destroy');
+
 
                 //customer
                 Route::get('customer', [CustomerController::class, 'index'])->name('customer');
@@ -243,6 +254,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
+        Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}',[ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');

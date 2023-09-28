@@ -101,11 +101,11 @@ class FacilitiesController extends Controller
         if ($request->hasFile('image')) {
 
             //upload new image
-            $image = $request->file('image')->store('media/ads');
+            $image = $request->file('image')->store('media/facilities');
 
 
             //delete old image
-            Storage::delete('media/ads' . $facility->image);
+            Storage::delete('media/facilities' . $facility->image);
 
             DB::table('facilities')->where('id', $facility->id)->update([
                 'icon' => $image,
@@ -132,7 +132,7 @@ class FacilitiesController extends Controller
      */
     public function destroy(Facility $facility)
     {
-        Storage::delete('media/ads' . $facility->image);
+        Storage::delete('media/facilities' . $facility->image);
         $facility->delete();
 
         toast('Facilities has been deleted', 'success');

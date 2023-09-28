@@ -23,6 +23,7 @@ class HotelController extends Controller
             ->join('users', 'users.id', '=', 'hotels.user_id')
             ->select('hotels.*', 'users.name as user_name')
             ->get();
+
         return view('admin.management-mitra.hotel.index',compact('users', 'hotels'));
     }
 

@@ -40,6 +40,7 @@ class HomeController extends Controller
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)
+            ->where('deleted_at', null)
             ->orderBy('created_at', 'desc')
             ->get();
 

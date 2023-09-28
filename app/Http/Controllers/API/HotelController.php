@@ -135,6 +135,9 @@ class HotelController extends Controller
                     'name' => $hotel->name,
                     'image' => $hotelImage ? asset($hotelImage->image) : null,
                     'location' => $hotel->city,
+                    'address' => $hotel->address,
+                    'lat' => $hotel->lat,
+                    'lon' => $hotel->lon,
                     'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
                     'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
                     'price' => $hotelDetails[$hotel->id]['price'],
@@ -191,7 +194,7 @@ class HotelController extends Controller
             //     // return $filter;
             // }
 
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelFacilities', 'hotelRules')
+            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility', 'hotelRule')
                 ->find($id);
 
             $jumlahTransaksi = $hotel->hotelRating->count();
@@ -205,17 +208,49 @@ class HotelController extends Controller
             }
 
             $hotelGet = collect([$hotel])->map(function ($hotel) use ($avgRating, $totalRating) {
+
+                $hotel_room = $hotel->hotelRoom->map(function ($room) {
+                    return [
+                        'id' => $room->id,
+                        'name' => $room->name,
+                        'description' => $room->description,
+                        'price' => $room->price,
+                        'sellingprice' => $room->sellingprice,
+                        'bed_type' => $room->bed_type,
+                        'roomsize' => $room->roomsize,
+                        'maxextrabed' => $room->maxextrabed,
+                        'totalroom' => $room->totalroom,
+                        'guest' => $room->guest,
+                        'hotel_room_image' => $room->hotelRoomImage
+                    ];
+                });
+
+                $hotel_facilities = $hotel->hotelroomFacility->map(function ($facility) {
+                    return [
+                        // 'hotel_id' => $facility->hotel_id,
+                        // 'hotel_room_id' => $facility->hotel_room_id,
+                        // 'facility_id' => $facility->facility_id,
+                        'name' => $facility->facility->name,
+                    ];
+                });
+
+                $hotelImage = $hotel->hotelImage->where('main', 1)->first();
+
                 return [
+                    'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotel->hotelImage,
+                    'image' => $hotelImage ? asset($hotelImage->image) : null,
                     'checkin' => $hotel->checkin,
                     'checkout' => $hotel->checkout,
                     'location' => $hotel->city,
+                    'address' => $hotel->address,
+                    'lat' => $hotel->lat,
+                    'lon' => $hotel->lon,
                     'avg_rating' => $avgRating,
                     'rating_count' => $totalRating,
-                    'hotel_rooms' => $hotel->hotelRoom,
-                    'hotel_facilities' => $hotel->hotelFacilities,
-                    'hotel_rules' => $hotel->hotelRules,
+                    'hotel_rooms' => $hotel_room,
+                    'hotel_facilities' => $hotel_facilities,
+                    'hotel_rules' => $hotel->hotelRule,
                     'hotel_reviews' => $hotel->hotelRating,
                 ];
             });

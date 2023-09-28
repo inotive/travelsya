@@ -13,6 +13,7 @@
 
                     <div class="py-1">
                         <span class="text-dark fs-1 fw-bold me-2">10 Orang</span>
+{{--                        <span class="text-dark fs-1 fw-bold me-2">{{$card['guest']}}</span>--}}
 
                         <span class="fw-semibold text-muted fs-7">Orang</span>
                     </div>
@@ -31,8 +32,7 @@
 
                     <div class="py-1">
 {{--                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueWeek'])}}</span>--}}
-                        <span class="text-dark fs-1 fw-bold me-2">0</span>
-
+                        <span class="text-dark fs-1 fw-bold me-2">150000</span>
                     </div>
                 </div>
                 <!--end:: Body-->
@@ -50,6 +50,7 @@
                     <div class="py-1">
 {{--                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueMonth'])}}</span>--}}
                         <span class="text-dark fs-1 fw-bold me-2">123</span>
+{{--                        <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueMonth'])}}</span>--}}
 
                     </div>
                 </div>
@@ -82,7 +83,6 @@
                                     <div class="fs-7 text-success fw-bold">Ready </div>
 {{--                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['ready']}} Rooms</div>--}}
                                     <div class="fs-5 text-dark fw-bold lh-1">123 Rooms</div>
-
                                 </div>
                                 <!--end::Title-->
                             </div>
@@ -98,6 +98,7 @@
                                     <div class="fs-7 text-danger fw-bold">Not Ready</div>
 {{--                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['notready']}} Rooms</div>--}}
                                     <div class="fs-5 text-dark fw-bold lh-1">123 Rooms</div>
+{{--                                    <div class="fs-5 text-dark fw-bold lh-1">{{$card['notready']}} Rooms</div>--}}
 
                                 </div>
                                 <!--end::Title-->

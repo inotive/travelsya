@@ -78,4 +78,9 @@ class HostelRoom extends Model
     {
         return $this->hasMany(BookDate::class)->select('id', 'transaction_id', 'hostel_room_id', 'start', 'end');
     }
+
+    public function hostelroomImage()
+    {
+        return $this->hasMany(HostelRoomImages::class);
+    }
 }
