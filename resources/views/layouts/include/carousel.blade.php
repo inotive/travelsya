@@ -30,7 +30,6 @@
         <div class="slide">
 
             <img src="{{ asset($ads->image) }}" class="mw-100 rounded-4" />
-
         </div>
     @endforeach
 
