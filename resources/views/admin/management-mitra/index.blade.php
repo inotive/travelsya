@@ -51,11 +51,7 @@
                             </td>
                             <td class="text-center">{{$user->phone ?? 'Belum Ada'}}</td>
                             <td class="text-center">
-                                @if($user->is_active == 1)
-                                    <span class="badge badge-success">Aktif</span>
-                                @else
-                                    <span class="badge badge-danger">Tidak Aktif</span>
-                                @endif
+                                <span class="badge badge-success">Aktif</span>
                             </td>
                             <td class="text-center">
                                 <button class="btn btn-warning btn-sm p-2" data-id="{{$user->id}}"
