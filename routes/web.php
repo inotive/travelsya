@@ -145,7 +145,6 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 
 Route::middleware(['auth', 'role'])->group(function () {
     Route::middleware('admin')->group(function () {
-
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::prefix('management-mitra')->group(function (){
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
@@ -153,10 +152,6 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::get('hostel/{hostel}/review', [\App\Http\Controllers\Admin\HostelController::class, 'review'])->name('hostel.review');
                 Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
-
-
-
-
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');

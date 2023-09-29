@@ -56,7 +56,7 @@ class HotelController extends Controller
         // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
         //     ->withAvg('hotelRating', 'rate')
         //     ->orderByDesc('hotel_rating_avg_rate');
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelFacilities')
+        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where([
                     ['totalroom', '>', $request->room],
@@ -90,7 +90,7 @@ class HotelController extends Controller
         }
 
         if ($request->has('facility')) {
-            $hotels->whereHas('hotelFacilities', function ($query) use ($request) {
+            $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
                 $query->where('facility_id', $request->facility);
             });
         }
