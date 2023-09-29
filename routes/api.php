@@ -83,6 +83,7 @@ route::get('/service', [SettingController::class, 'getService']);
 
 //webhook
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
+route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
 route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
 route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);

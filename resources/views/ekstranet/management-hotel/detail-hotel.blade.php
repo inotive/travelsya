@@ -2,7 +2,7 @@
 
 @section('content-admin')
     <!--begin::Row-->
-    <div class="row gy-5 g-xl-10">  
+    <div class="row gy-5 g-xl-10">
         <!--begin::Col-->
         <div class="col-xl-8 col-md-8">
             <div class="card ">
@@ -130,7 +130,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Riwayat Booking
-                                ({{ $hotel->hotelbookDate->count() }})</a>
+                                ({{ 0 }})</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Fasilitas Hotel
@@ -245,7 +245,7 @@
                                                         <!--end::Menu-->
                                                         </td>
                                                         </tr>
-                                                        
+
                                                         </td>
                                                         </tr>
                                         @endforeach
@@ -394,7 +394,7 @@
                                                 $enddate = \Carbon\Carbon::parse($booking->end);
                                                 $startdates = $startdate->Format('d F Y');
                                                 $enddates = $enddate->Format('d F Y');
-                                                
+
                                             @endphp
                                             <tr>
                                                 <td class="text-center">{{ $booking->transaction->user->name }} -
@@ -763,6 +763,6 @@
 
         });
 
-    
+
     </script>
 @endpush
