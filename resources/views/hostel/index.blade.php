@@ -191,7 +191,7 @@
                         <input type="hidden" name="start" value="{{ $params['start']}}">
                         <input type="hidden" name="duration" value="{{ $params['duration']}}">
                         {{-- <input type="hidden" name="room" value="{{ $params['room']}}"> --}}
-                        {{-- <input type="hidden" name="guest" value="{{ $params['guest']}}"> --}}
+                        <input type="hidden" name="category" value="{{ $params['category']}}">
                         <input type="hidden" name="property" value="{{ $params['property'] }}">
                         <input type="hidden" name="roomtype" value="{{ $params['roomtype'] }}">
                         <input type="hidden" name="furnish" value="{{ $params['furnish'] }}">
@@ -234,7 +234,19 @@
                             <div class="col-12">
                                 <label for="" class="form-label">Fasilitas</label>
                             </div>
+                            @foreach ($facilities as $facility)
                             <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="facility" type="checkbox"
+                                        value="{{ $facility->id }}" id="flexCheckDefault" {{ ($request['facility'] ??
+                                        null)==$facility->id ? 'checked' : ''}} />
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        {{ $facility->name }}
+                                    </label>
+                                </div>
+                            </div>
+                            @endforeach
+                            {{-- <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
                                     <label class="form-check-label" for="flexCheckDefault">
@@ -265,7 +277,7 @@
                                         Breakfast
                                     </label>
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-12">
                                 <label for="" class="form-label">Bintang</label>
@@ -338,8 +350,7 @@
                         <div class="card">
                             <div class="card-body h-100">
                                 <form method="GET" action="{{ route('hostel.index') }}" class="row g-4">
-                                    <input type="hidden" name="property" value="{{ $params['property'] }}">
-                                    <input type="hidden" name="roomtype" value="{{ $params['roomtype'] }}">
+                                    <input type="hidden" name="category" value="{{ $params['category'] }}">
                                     <input type="hidden" name="furnish" value="{{ $params['furnish'] }}">
                                     <div class="col-12">
                                         <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
@@ -354,12 +365,13 @@
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
-                                        <div class="input-group" id="js_datepicker" data-td-target-input="nearest"
-                                            data-td-target-toggle="nearest">
+                                        <div class="input-group" id="js_datepicker_list_hostel"
+                                            data-td-target-input="nearest" data-td-target-toggle="nearest">
                                             <input id="checkin" type="text" name="start" class="form-control"
-                                                data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"
+                                                data-td-target="#js_datepicker_list_hostel"
+                                                x-on:change="handleSelectCheckin"
                                                 value="{{ $params['start'] ?? '' }}" />
-                                            <span class="input-group-text" data-td-target="#js_datepicker"
+                                            <span class="input-group-text" data-td-target="#js_datepicker_list_hostel"
                                                 data-td-toggle="datetimepicker">
                                                 <i class="ki-duotone ki-calendar fs-2">
                                                     <span class="path1"></span>
@@ -368,8 +380,8 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="duration" value="{{ $params['duration'] }}">
-                                    @php
+                                    {{-- <input type="hidden" name="duration" value="{{ $params['duration'] }}"> --}}
+                                    {{-- @php
                                     $checkin = \Carbon\Carbon::parse($params['start']);
                                     $duration = $params['duration'];
 
@@ -380,6 +392,43 @@
                                         <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
                                         <input type="text" class="form-control" name="end_date"
                                             value="{{ $checkout->format('d-m-Y') }}" />
+                                    </div> --}}
+                                    <div class="col-3">
+                                        <label for="" class="form-label fw-bold fs-6">Durasi</label>
+                                        <select name="duration" class="form-select">
+                                            @for ($i = 1; $i <= 31; $i++) <option value="{{ $i }}" {{
+                                                $params['duration']==$i ? 'selected' :'' }}>{{ $i }} Bulan
+                                                </option>
+                                                @endfor
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label fw-bold fs-6">Tipe Properti</label>
+                                        <select name="property" id="property" class="form-select">
+                                            <option value="" {{ $params['property']=='' ? 'selected' : '' }}>
+                                                Semua</option>
+                                            <option value="apartemen" {{ $params['property']=='apartemen' ? 'selected'
+                                                : '' }}>Apartemen</option>
+                                            <option value="villa" {{ $params['property']=='villa' ? 'selected' : '' }}>
+                                                Villa</option>
+                                            <option value="residence" {{ $params['property']=='residence' ? 'selected'
+                                                : '' }}>Residence</option>
+                                            <option value="rumah" {{ $params['property']=='rumah' ? 'selected' : '' }}>
+                                                Rumah</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label fw-bold fs-6">Tipe Kamar</label>
+                                        <select name="roomtype" id="roomtype" class="form-select">
+                                            <option value="" {{ $params['roomtype']=='' ? 'selected' : '' }}>Semua
+                                            </option>
+                                            <option value="1BR" {{ $params['roomtype']=='1BR' ? 'selected' : '' }}>1BR
+                                            </option>
+                                            <option value="2BR" {{ $params['roomtype']=='2BR' ? 'selected' : '' }}>2BR
+                                            </option>
+                                            <option value="3BR+" {{ $params['roomtype']=='3BR' ? 'selected' : '' }}>3BR+
+                                            </option>
+                                        </select>
                                     </div>
                                     {{-- <div class="col-3">
                                         <label class="form-label fw-bold fs-6">Total Kamar</label>
@@ -413,11 +462,49 @@
                         <div class="card">
                             <div class="card-body h-100">
                                 <div class="row my-4">
-                                    <div class="col-3">
-                                        <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
-                                            height="200" width="200">
+                                    <div class="col-4">
+                                        {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
+                                            height="200" width="200"> --}}
+                                        <!--begin::Overlay-->
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic"
+                                            href="{{ asset($hostel->image) }}">
+                                            <!--begin::Image-->
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                                style="background-image:url('{{ asset($hostel->image) }}')">
+                                            </div>
+                                            <!--end::Image-->
+
+                                            <!--begin::Action-->
+                                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                            </div>
+                                            <!--end::Action-->
+                                        </a>
+                                        <!--end::Overlay-->
+
+                                        <div class="row mt-4">
+                                            @foreach ($hostel->hostelImage->take(3) as $hostelImage)
+                                            <div class="col-4">
+                                                <a class="d-block overlay" data-fslightbox="lightbox-basic"
+                                                    href="{{ asset($hostelImage->image) }}">
+                                                    <!--begin::Image-->
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                        style="background-image:url('{{ asset($hostelImage->image) }}')">
+                                                    </div>
+                                                    <!--end::Image-->
+
+                                                    <!--begin::Action-->
+                                                    <div
+                                                        class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                    </div>
+                                                    <!--end::Action-->
+                                                </a>
+                                            </div>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-5">
                                         <div class="row gy-4">
                                             <div class="col-12">
                                                 <h3>{{ $hostel->name }}</h3>
@@ -436,8 +523,7 @@
                                                     @endfor
                                             </div>
                                             <div class="col-12">
-                                                <p>{{ $hostel->address ?? 'Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir,
-                                                    Balikpapan' }}
+                                                <p>{{ $hostel->address }}
                                                 </p>
                                             </div>
                                             <div class="col-12">
@@ -449,8 +535,15 @@
                                     </div>
                                     <div class="col-3">
                                         <h3 class="mb-4">Fasilitas</h3>
-                                        <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
+                                        {{-- <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
+                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
+
+                                        <ul>
+                                            @foreach ($hostel->hostelFacilities as $facility)
+                                            <li>{{ $facility->facility->name }}</li>
+                                            @endforeach
+                                        </ul>
+
                                         <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $_GET['location'] . '&start=' . $_GET['start'] . '&duration=' . $_GET['duration'] . '&property=' . $_GET['property'] . '&roomtype=' . $_GET['roomtype'] . '&furnish=' . $_GET['furnish'] }}"
                                             class="btn btn-danger d-block mt-10 text-white">
                                             Lihat
@@ -479,11 +572,31 @@
         cursor: pointer;
     }
 </style>
-@endpush
+@endpush --}}
 
 @push('add-script')
+<script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
 <script>
     $(document).ready(function() {
+        new tempusDominus.TempusDominus(
+                document.getElementById("js_datepicker_list_hostel"), {
+                    display: {
+                        viewMode: "calendar",
+                        components: {
+                            date: true,
+                            hours: false,
+                            minutes: false,
+                            seconds: false
+                        }
+                    },
+                    localization: {
+                        locale: "id",
+                        format: "dd-MM-yyyy",
+                    },
+                    restrictions: {
+                        minDate: today,
+                    },
+                });
 
             $("#card-filter").hide();
             $("#button-refilter").click(function() {
@@ -530,6 +643,7 @@
                     }
                 })
             })
+
             $(".rate").on('click', function() {
                 optionrate = $('input[name="rate"]:checked').val();
                 $.ajaxSetup({
@@ -561,4 +675,4 @@
             })
         })
 </script>
-@endpush --}}
+@endpush
