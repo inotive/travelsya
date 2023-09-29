@@ -293,7 +293,7 @@
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="fas fa-money-check-alt fs-2">
+                            <i class="fas fa-solid fa-circle-info fs-2">
                                 <span class="path1"></span>
                                 <span class="path2"></span>
                             </i>
