@@ -91,7 +91,7 @@ class TransactionController extends Controller
             $transaction = Transaction::where('no_inv', $no_inv)->where('user_id', $user_id);
 
             // UNTUK PPOB
-            if (in_array($transaction->firstOrFail()->service_id, [1])) {
+            if (in_array($transaction->firstOrFail()->service_id, [1, 6, 3, 5, 9, 10])) {
                 $detailTransaction = Transaction::join('detail_transaction_ppob', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id');
 
                 $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
@@ -113,7 +113,7 @@ class TransactionController extends Controller
             }
 
             // UNTUK TOP UP
-            if (in_array($transaction->firstOrFail()->service_id, [2])) {
+            if (in_array($transaction->firstOrFail()->service_id, [1, 2])) {
                 $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id');
 
                 $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
@@ -135,7 +135,7 @@ class TransactionController extends Controller
             }
 
             // UNTUK HOTEL
-            if (in_array($transaction->firstOrFail()->service_id, [3])) {
+            if (in_array($transaction->firstOrFail()->service_id, [8])) {
                 $detailTransaction = Transaction::join('detail_transaction_hotel', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
                     ->join('hotels', 'hotels.id', '=', 'detail_transaction_hotel.hotel_id')
                     ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id');
@@ -163,7 +163,7 @@ class TransactionController extends Controller
             }
 
             // UNTUK HOSTEL
-            if (in_array($transaction->firstOrFail()->service_id, [4])) {
+            if (in_array($transaction->firstOrFail()->service_id, [7])) {
                 $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
                     ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
                     ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id');
