@@ -11,6 +11,7 @@ class Hotel extends Model
 
     protected $guarded = [];
 
+
     public function getFacilitiesAttribute($value)
     {
         $arrays = explode(',', $value);
@@ -82,16 +83,16 @@ class Hotel extends Model
     {
         return $this->hasMany(HotelRule::class);
     }
-//    public function hotelbookdate()
-//    {
-//        return $this->hasMany(HotelBookDate::class);
-//    }
+
+
+    public function hotelbookdate()
+    {
+        return $this->hasMany(HotelBookDate::class);
+    }
+
+
     public function hotelroomImage()
     {
         return $this->hasMany(HotelRoomImage::class);
-    }
-    public function hotelBookDate()
-    {
-        return $this->hasMany(DetailTransactionHotel::class);
     }
 }
