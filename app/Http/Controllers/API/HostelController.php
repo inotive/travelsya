@@ -415,6 +415,7 @@ class HostelController extends Controller
     public function hostelPopuler()
     {
         $hostelPopuler = Hostel::with('hostelImage', 'rating')
+            ->has("hostelRoom") //retrieve only hostel that have hostel room, to avoid data with 0 price_avg
             ->withCount([
                 "hostelRoom as price_avg" => function ($q) {
                     $q->select(DB::raw('coalesce(avg(price),0)'));
@@ -424,9 +425,10 @@ class HostelController extends Controller
                     $q->select(DB::raw('coalesce(avg(rate),0)'));
                 }
             ])->withCount("rating as rating_count")
-            ->orderBy('rating_count', 'DESC')
-            ->orderBy('rating_avg', 'DESC')
-            ->orderBy('price_avg', "desc")->get();
+            ->orderBy('price_avg', "asc")
+            ->orderBy('rating_count', 'asc')
+            ->orderBy('rating_avg', 'asc')->get(); 
+         
 
         if (!$hostelPopuler)
             return ResponseFormatter::error(null, 'Data not found');
