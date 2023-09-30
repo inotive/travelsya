@@ -426,8 +426,8 @@ class HostelController extends Controller
                 }
             ])->withCount("rating as rating_count")
             ->orderBy('price_avg', "asc")
-            ->orderBy('rating_count', 'asc')
-            ->orderBy('rating_avg', 'asc')->get(); 
+            ->orderBy('rating_count', 'DESC')
+            ->orderBy('rating_avg', 'DESC')->get(); 
          
 
         if (!$hostelPopuler)
