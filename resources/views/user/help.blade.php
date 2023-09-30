@@ -170,105 +170,33 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div class="text fw-bold h2 mb-5">
-                        Pilih Topik Bantuan
-                    </div>
                     <div class="row">
                         {{-- Pusat --}}
                         <div class="col-12">
-                            <div class="d-flex justify-content-around">
 
-                                <div class="card border border-1 d-flex" style="width: 30%;">
-                                <div class="d-flex align-items-center m-1">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame1.svg') }}" alt="">
-                                    </div>
-                                    <div class="text" style="margin-left: 10px">
-                                        Bantuan A
-                                    </div>
-                                </div>
-                                </div>
-
-                                <div class="card border border-1 d-flex" style="width: 30%;">
-                                <div class="d-flex align-items-center m-1">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame2.svg') }}" alt="">
-                                    </div>
-                                    <div class="text" style="margin-left: 10px">
-                                        Bantuan B
-                                    </div>
-                                </div>
-                                </div>
-
-                                <div class="card border border-1 d-flex" style="width: 30%;">
-                                <div class="d-flex align-items-center m-1">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame4.svg') }}" alt="">
-                                    </div>
-                                    <div class="text" style="margin-left: 10px">
-                                        Bantuan C
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-5 d-flex justify-content-around">
-
-                                <div class="card border border-1 d-flex" style="width: 30%;">
-                                <div class="d-flex align-items-center m-1">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame1.svg') }}" alt="">
-                                    </div>
-                                    <div class="text" style="margin-left: 10px">
-                                        Bantuan A
-                                    </div>
-                                </div>
-                                </div>
-
-                                <div class="card border border-1 d-flex" style="width: 30%;">
-                                <div class="d-flex align-items-center m-1">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame2.svg') }}" alt="">
-                                    </div>
-                                    <div class="text" style="margin-left: 10px">
-                                        Bantuan B
-                                    </div>
-                                </div>
-                                </div>
-
-                                <div class="card border border-1 d-flex" style="width: 30%;">
-                                <div class="d-flex align-items-center m-1">
-                                    <div class="image">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame4.svg') }}" alt="">
-                                    </div>
-                                    <div class="text" style="margin-left: 10px">
-                                        Bantuan C
-                                    </div>
-                                </div>
-                                </div>
-
-                            </div>
-
-                            <div class="text fw-bold fs-2 mt-10 mb-5">
+                            <div class="text fw-bold fs-2 mb-5">
                             Artikel Terkait
                             </div>
 
                             {{-- Accordion --}}
-                            <div class="accordion accordion-flush" id="kt_accordion_1">
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="kt_accordion_1_header_1">
-                                        <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_1" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
-                                            Cara Reschedule Tiket Pesawat
-                                        </button>
-                                    </h2>
-                                    <div id="kt_accordion_1_body_1" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
-                                        <div class="accordion-body">
-                                            Ini Isi
+                            <div class="accordion" id="kt_accordion_1">
+                                @foreach ($helps as $key => $help)
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="kt_accordion_1_header_{{ $key }}">
+                                            <button class="accordion-button fs-4 fw-semibold {{ $key == 0 ? '' : 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_{{ $key }}" aria-expanded="{{ $key == 0 ? 'true' : 'false' }}" aria-controls="kt_accordion_1_body_{{ $key }}">
+                                                {{ $help->title }}
+                                            </button>
+                                        </h2>
+                                        <div id="kt_accordion_1_body_{{ $key }}" class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}" aria-labelledby="kt_accordion_1_header_{{ $key }}" data-bs-parent="#kt_accordion_1">
+                                            <div class="accordion-body">
+                                                {!! $help->content !!}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
+                            </div>
 
-                                <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                     <h2 class="accordion-header" id="kt_accordion_1_header_2">
                                         <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_2" aria-expanded="false" aria-controls="kt_accordion_1_body_2">
                                         Dokumen Penerbangan Selama Periode PPKM
@@ -293,7 +221,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                             {{-- ENd Accordion --}}
 
                             <br><br><br>
