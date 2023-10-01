@@ -98,7 +98,7 @@ class PpobController extends Controller
 
             $fees = Fee::where('service_id', $product->service_id)->first();
             $priceWithAdmin = $request->nominal_tagihan + $fees->value;
-
+            $saldoPointCustomer = 0;
             // Jika user menggunakan point untuk transaksi
             if ($request->point == 1)
             {
