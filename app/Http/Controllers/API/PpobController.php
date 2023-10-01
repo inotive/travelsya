@@ -82,6 +82,7 @@ class PpobController extends Controller
             $validator = Validator::make($request->all(), [
                 'product_id' => 'required',
                 'nomor_tagihan' => 'required',
+                'nominal_tagihan' => 'required',
                 'point' => 'required',
             ]);
 
