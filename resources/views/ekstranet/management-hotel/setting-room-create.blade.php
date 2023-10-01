@@ -47,7 +47,7 @@
                                 <label class="form-label">Tarif Per Malam</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
-                                    <input type="number" name="price" id="price" class="form-control"
+                                    <input type="text" name="price" id="price" class="form-control"
                                         placeholder="Masukan Harga" required>
                                 </div>
                             </div>
@@ -59,23 +59,6 @@
                                         placeholder="Masukkan Harga Termasuk Pajak" disabled>
                                 </div>
                             </div>
-{{--                            <div class="col-12">--}}
-{{--                                <label class="form-label">Room Type</label>--}}
-{{--                                <select class="form-control" name="bed_type" id="bed_type" required>--}}
-{{--                                    <option value="studio">Studio</option>--}}
-{{--                                    <option value="1br">1BR</option>--}}
-{{--                                    <option value="2br">2BR</option>--}}
-{{--                                    <option value="3br+">3BR+</option>--}}
-{{--                                </select>--}}
-{{--                            </div>--}}
-                            {{-- <div class="col-6">
-                            <label class="form-label">Furnish</label>
-                            <select  class="form-control" name="furnish" id="furnish">
-                                <option value="fullfurnished">Full Furnished</option>
-                                <option value="unfurnished+">Unfurnished</option>
-                            </select>
-                        </div> --}}
-
                             <div class="col-12">
                                 <!--begin::Alert-->
                                 <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
@@ -117,7 +100,7 @@
                                 <!--begin::Radio group-->
                                 <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
                                         <!--begin::Input-->
                                         <input class="btn-check" type="radio" name="method" value="ya" id="extrabedYaCheckbox"/>
                                         <!--end::Input-->
@@ -126,29 +109,13 @@
                                     <!--end::Radio-->
 
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="false">
                                         <!--begin::Input-->
                                         <input class="btn-check" type="radio" name="method" checked="checked" value="tidak" id="extrabedTidakCheckbox"/>
-                                        <!--end::Input-->
-                                        Tidak Ada
+                                        <!--end::Input-->                                        Tidak Ada
                                     </label>
                                     <!--end::Radio-->
                                 </div>
-{{--                                <!--end::Radio group-->--}}
-{{--                                <div class="form-check form-check-inline">--}}
-{{--                                    <input class="form-check-input" type="radio" name="extrabed" value="ya"--}}
-{{--                                           id="extrabedYaCheckbox">--}}
-{{--                                    <label class="form-check-label" for="extrabedYaCheckbox">--}}
-{{--                                        Ya--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
-{{--                                <div class="form-check form-check-inline">--}}
-{{--                                    <input class="form-check-input" type="radio" name="extrabed" value="tidak"--}}
-{{--                                           id="extrabedTidakCheckbox" checked>--}}
-{{--                                    <label class="form-check-label" for="extrabedTidakCheckbox">--}}
-{{--                                        Tidak--}}
-{{--                                    </label>--}}
-{{--                                </div>--}}
                             </div>
 
                             <div class="col-4 extrabedWidget">
@@ -295,19 +262,58 @@
     @endsection
     @push('add-script')
         <script>
+            /* Fungsi formatRupiah */
+            function formatRupiah(angka, prefix) {
+                var number_string = angka.replace(/[^,\d]/g, "").toString(),
+                    split = number_string.split(","),
+                    sisa = split[0].length % 3,
+                    rupiah = split[0].substr(0, sisa),
+                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+                // tambahkan titik jika yang di input sudah menjadi angka ribuan
+                if (ribuan) {
+                    separator = sisa ? "." : "";
+                    rupiah += separator + ribuan.join(".");
+                }
+
+                rupiah = split[1] != undefined ? rupiah + "." + split[1] : rupiah;
+                return prefix == undefined ? rupiah : rupiah ? "Rp. " + rupiah : "";
+            }
+            function addCommas(nStr) {
+                nStr += '';
+                x = nStr.split('.');
+                x1 = x[0];
+                x2 = x.length > 1 ? '.' + x[1] : '';
+                var rgx = /(\d+)(\d{3})/;
+                while (rgx.test(x1)) {
+                    x1 = x1.replace(rgx, '$1' + '.' + '$2');
+                }
+                return x1 + x2;
+            }
+
+            $("#price").keyup(function () {
+                var el = $(this);
+                el.val(formatRupiah(el.val()))
+
+                var basePrice = parseInt(el.val().split('.').join(""));
+                var sellingPrice = basePrice + (basePrice * 15 / 100);
+                $('#sellingprice').val(addCommas(sellingPrice));
+            })
 
             const extrabedYaCheckbox = document.getElementById('extrabedYaCheckbox');
             const extrabedTidakCheckbox = document.getElementById('extrabedTidakCheckbox');
             const extrabedWidget = document.getElementsByClassName('extrabedWidget');
-            
+
             extrabedYaCheckbox.addEventListener('change', toggleWidget);
             extrabedTidakCheckbox.addEventListener('change', toggleWidget);
 
             function toggleWidget() {
                 if (extrabedYaCheckbox.checked) {
+                    alert('ya');
                     $('.extrabedWidget').removeClass('none');
                     // extrabedWidget.style.display = 'block'; // Jika checkbox 'Ya' diceklis, tampilkan widget
                 } else if (extrabedTidakCheckbox.checked) {
+                    alert('tidak');
                     $('.extrabedWidget').addClass('d-none');
                     // extrabedWidget.style.display = 'none'; // Jika checkbox 'Tidak' diceklis, sembunyikan widget
                 }

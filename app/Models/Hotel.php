@@ -95,4 +95,10 @@ class Hotel extends Model
     {
         return $this->hasMany(HotelRoomImage::class);
     }
+
+
+    public function hotel_reservation()
+    {
+        return $this->hasMany(DetailTransactionHotel::class,'hotel_id','id');
+    }
 }

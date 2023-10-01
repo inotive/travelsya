@@ -388,7 +388,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($hotel->hotelbookDate as $booking)
+                                        @foreach ($hotel->hotel_reservation as $booking)
                                             @php
                                                 $startdate = \Carbon\Carbon::parse($booking->start);
                                                 $enddate = \Carbon\Carbon::parse($booking->end);
