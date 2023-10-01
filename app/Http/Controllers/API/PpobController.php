@@ -116,7 +116,7 @@ class PpobController extends Controller
             $data['status'] = $payoutsXendit['status'];
             $data['link'] = $payoutsXendit['invoice_url'];
 
-                $transaction = Transaction::create(['no_inv' => $data['no_inv'], 'service' => $product->service->name, 'service_id' => $product->service_id, 'payment' => 'xendit', 'user_id' => 3, 'status' => $payoutsXendit['status'], 'link' => $payoutsXendit['invoice_url'], 'total' => $grandTotal]);
+            $transaction = Transaction::create(['no_inv' => $data['no_inv'], 'service' => $product->service->name, 'service_id' => $product->service_id, 'payment' => 'xendit', 'user_id' => 3, 'status' => $payoutsXendit['status'], 'link' => $payoutsXendit['invoice_url'], 'total' => $grandTotal]);
 
             // create detail transaction
             $data['detail'] = $request->input('detail');
@@ -132,144 +132,6 @@ class PpobController extends Controller
         }
     }
 
-//    public function requestTransaction(Request $request)
-//    {
-//        try {
-//            $data = $request->all();
-//
-//            // handle validation
-//            $validator = Validator::make($request->all(), [
-//                'service' => 'required',
-//                'payment' => 'required',
-//                'inquiry' => 'required',
-//                'detail.*.product_id' => 'required',
-//                'detail.*.no_hp' => 'required',
-//                'detail.*.name' => 'required',
-//                'detail.*.qty' => 'required',
-//            ]);
-//
-//            if ($validator->fails()) {
-//                return ResponseFormatter::error([
-//                    'response' => $validator->errors(),
-//                ], 'Transaction failed', 500);
-//            }
-//
-//            //get data
-//            $data['user_id'] = $request->user()->id;
-//            $product = Product::with('service')->find($data['detail'][0]['product_id']);
-//            $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
-//
-//            // if ($data['inquiry'] == 1) {
-//            //     $inquiry = $this->mymili->inquiry([
-//            //         'no_hp' => $data['detail'][0]['no_hp'],
-//            //         'nom' => $data['detail'][0]['name_cek']
-//            //     ]);
-//            //     if (isset($inquiry['tagihan'])) {
-//            //         $price = $inquiry['tagihan'];
-//            //     } else {
-//            //         return ResponseFormatter::error($inquiry, 'Inquiry invalid');
-//            //     }
-//            // } else {
-//            //     $price = $product->price;
-//            // }
-//
-//            $price = $product->price;
-//            // $price = $data['total_tagihan'];
-//
-//            $setting = new Setting();
-//            $fees = $setting->getFees($data['point'], $product->service_id, $request->user()->id, $price);
-//            // $fees = $product->price;
-//
-//            // return response()->json($fees);
-//
-//            if (!$fees) {
-//                return ResponseFormatter::error(null, 'Point invalid');
-//            }
-//
-//            $amount = $setting->getAmount($price, $data['detail'][0]['qty'], $fees, 1);
-//            // $amount = $price + $fees;
-//
-//            // return response()->json($amount);
-//
-//            // request xendit
-//            $payoutsXendit = $this->xendit->create([
-//                'external_id' => $data['no_inv'],
-//                'items' => [
-//                    [
-//                        'name' => $product['name'],
-//                        'quantity' => $data['detail'][0]['qty'],
-//                        'price' => $price,
-//                        'url' => $data['detail'][0]['url'] ?: "someurl"
-//                    ]
-//                ],
-//                'amount' => $amount,
-//                'success_redirect_url' => route('redirect.succes'),
-//                'failure_redirect_url' => route('redirect.fail'),
-//                'invoice_duration ' => 72000,
-//                'should_send_email' => true,
-//                'customer' => [
-//                    'given_names' => $request->user()->name,
-//                    'email' => $request->user()->email,
-//                    'mobile_number' => $request->user()->phone ?: "somenumber",
-//                ],
-//                'fees' => $fees
-//            ]);
-//
-//            // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
-//
-//            if (isset($payoutsXendit['status'])) {
-//
-//                $data['status'] = $payoutsXendit['status'];
-//                $data['link'] = $payoutsXendit['invoice_url'];
-//
-//                // create transaction
-//                // unset($data['detail']);
-//                // unset($data['fees']);
-//                // unset($data['inquiry']);
-//                // unset($data['point']);
-//                DB::transaction(function () use ($data, $product, $request, $amount, $fees, $payoutsXendit) {
-//                    //create transaction
-//                    $transaction = Transaction::create([
-//                        'no_inv' => $data['no_inv'],
-//                        'service' => $product->service->name,
-//                        'service_id' => $product->service_id,
-//                        'payment' => $data['payment'],
-//                        'user_id' => $request->user()->id,
-//                        'status' => $payoutsXendit['status'],
-//                        'link' => $payoutsXendit['invoice_url'],
-//                        'total' => $amount
-//                    ]);
-//
-//                    // create detail transaction
-//                    $data['detail'] = $request->input('detail');
-//                    DetailTransaction::create([
-//                        'transaction_id' => $transaction->id,
-//                        'product_id' => $product['id'],
-//                        'price' => $amount,
-//                        'qty' => $data['detail'][0]['qty'],
-//                        'no_hp' => $data['detail'][0]['no_hp'],
-//                        'status' => "PROCESS"
-//                    ]);
-//
-//                    if ($data['point']) {
-//                        //deductpoint
-//                        $point = new Point;
-//                        $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
-//                    }
-//                });
-//
-//                return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
-//            }
-//
-//
-//            // response with link
-//        } catch (\Throwable $th) {
-//            return ResponseFormatter::error([
-//                $th,
-//                'message' => 'Something wrong',
-//            ], 'Transaction failed', 500);
-//        }
-//    }
 
     public function requestInquiry(Request $request)
     {
@@ -285,7 +147,7 @@ class PpobController extends Controller
             $requestMymili = $this->mymili->inquiry(['no_hp' => $data['no_pelanggan'], 'nom' => $data['nom'],]);
 
             $fee_admin = Product::with('service')->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
-                ->price;
+            ->price;
 
             if (str_contains($requestMymili['status'], "SUKSES!")) {
 
