@@ -36,7 +36,7 @@
                                 <td class="text-center">{{ $ad->name }}</td>
                                 <td class="text-center">{{ $ad->url }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset($ad->image) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset('media/ads/' . $ad->image) }}" class="rounded" style="width: 150px">
                                 </td>
                                 <td class="text-center">
                                     @if ($ad->is_active)
@@ -45,7 +45,7 @@
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
-                                
+
 
 
                                 <td class="text-center">
@@ -268,7 +268,7 @@
                             <div class="form-group">
                                 <label class="font-weight-bold">Gambar Iklan</label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
-                            
+
                                 <!-- error message untuk title -->
                                 @error('image')
                                     <div class="alert alert-danger mt-2">
@@ -277,7 +277,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-12">
-                                
+
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                 <input class="form-control form-control-lg" id="name"
                                     placeholder="Masukan nama Iklan" name="name" required />
@@ -309,7 +309,7 @@
 
                             {{-- <input type="hidden" name="category" value="Harian"> --}}
 
-                        
+
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
@@ -345,10 +345,10 @@
 
     {{-- MODAL EDIT --}}
 
-    
+
 
     @push('add-script')
-        
+
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({

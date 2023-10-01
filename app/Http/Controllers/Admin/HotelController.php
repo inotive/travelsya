@@ -121,6 +121,9 @@ class HotelController extends Controller
             'city' => $request->city,
             'star' => $request->star,
             'website' => $request->website,
+            'lon' => $request->long_ltd,
+            'lat' => $request->ltd,
+            'description' => $request->description,
         ]);
 
         toast('Hotel Has Been Updated', 'success');

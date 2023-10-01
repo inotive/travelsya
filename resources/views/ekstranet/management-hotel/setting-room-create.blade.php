@@ -56,7 +56,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
                                     <input type="text" name="sellingprice" id="sellingprice" class="form-control"
-                                        placeholder="Masukkan Harga Termasuk Pajak" disabled>
+                                        placeholder="Masukkan Harga Termasuk Pajak" readonly>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -117,6 +117,11 @@
                                     <!--end::Radio-->
                                 </div>
                             </div>
+                            <div class="col-4 extrabedWidget">
+                                <label class="form-label">Maksimal Extra Bed</label>
+                                <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
+                                       placeholder="Masukkan Maksimal Extra Bed">
+                            </div>
 
                             <div class="col-4 extrabedWidget">
                                 <label class="form-label">Biaya Extra Bed</label>
@@ -125,19 +130,14 @@
                                     <input type="number" name="extrabedprice" id="extrabedprice" class="form-control"
                                         placeholder="Masukan Biaya Extra Bed">
                                 </div>
-
                             </div>
-
-                            <div class="col-4 extrabedWidget"  style="display:none;">
-                                <label class="form-label">Max Extra Bed</label>
-                                <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
-                                    placeholder="Masukkan Maksimal Extra Bed">
-                            </div>
-
                             <div class="col-4 extrabedWidget">
                                 <label class="form-label">Extra Selling Charge</label>
-                                <input type="number" name="sellingcharge" id="sellingcharge" class="form-control"
-                                    disabled>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="number" name="extrabedsellingprice" id="extrabedsellingprice" class="form-control"
+                                           placeholder="Masukan Biaya Extra Bed" disabled readonly>
+                                </div>
                             </div>
                             <div class="col-12">
                                 <!--begin::Alert-->
@@ -300,6 +300,15 @@
                 $('#sellingprice').val(addCommas(sellingPrice));
             })
 
+            $("#extrabedprice").keyup(function () {
+                var el = $(this);
+                el.val(formatRupiah(el.val()))
+
+                var basePrice = parseInt(el.val().split('.').join(""));
+                var sellingPrice = basePrice + (basePrice * 15 / 100);
+                $('#extrabedsellingprice').val(addCommas(sellingPrice));
+            })
+
             const extrabedYaCheckbox = document.getElementById('extrabedYaCheckbox');
             const extrabedTidakCheckbox = document.getElementById('extrabedTidakCheckbox');
             const extrabedWidget = document.getElementsByClassName('extrabedWidget');
@@ -309,11 +318,9 @@
 
             function toggleWidget() {
                 if (extrabedYaCheckbox.checked) {
-                    alert('ya');
-                    $('.extrabedWidget').removeClass('none');
+                    $('.extrabedWidget').removeClass('d-none');
                     // extrabedWidget.style.display = 'block'; // Jika checkbox 'Ya' diceklis, tampilkan widget
                 } else if (extrabedTidakCheckbox.checked) {
-                    alert('tidak');
                     $('.extrabedWidget').addClass('d-none');
                     // extrabedWidget.style.display = 'none'; // Jika checkbox 'Tidak' diceklis, sembunyikan widget
                 }

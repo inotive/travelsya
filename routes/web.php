@@ -276,6 +276,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
             Route::get('detail-hotel/{id}', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
             Route::delete('detail-hotel/{id}/deleteimage', [ManagementHotelController::class, 'destroyimage'])->name('partner.management.hotel.destroyimage');
+            Route::post('detail-hotel/store-photo/{id}', [ManagementHotelController::class, 'storePhotoHotel'])->name('partner.management.hotel.storePhotoHotel');
 
             // Route CRUD HotelRule
             Route::post('detail-hotel/', [ManagementHotelController::class, 'storeRule'])->name('partner.management.hotel.storerule');

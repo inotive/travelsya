@@ -24,7 +24,7 @@ class ManagementRoomController extends Controller
 
     public function detailroomhotel($id)
     {
-        $hotelrooms = HotelRoom::with('hotelbookDate')->find($id);
+        $hotelrooms = HotelRoom::with('hotelBookDate')->find($id);
         // $hostelrooms = HostelRoom::with('hostelbookdate')->find($id);
 
         return view('ekstranet.management-room.detail-room-hotel', compact('hotelrooms'));

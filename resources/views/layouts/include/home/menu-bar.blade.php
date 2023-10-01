@@ -4,6 +4,24 @@
       <div class="card shadow-sm">
         <div class="card-body">
           <div class="row gy-3">
+              <div
+                  class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
+                  data-bs-toggle="modal" data-bs-target="#modal_action_feature"
+              >
+                  <div class="row">
+                      <div class="col-md-4 col-sm-12 justify-content-center">
+                          <div class="child-item-menubar">
+                              <img
+                                  src="{{asset('assets/media/products-categories/icon-hotel.png')}}"
+                                  style="filter: grayscale(0)"
+                                  class="w-40px"
+                              />
+                          </div>
+                      </div>
+                      <span
+                          class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600">Hotel</span>
+                  </div>
+              </div>
             <template x-for="data in $store.menubar.data">
               <div
                 data-bs-toggle="modal"
