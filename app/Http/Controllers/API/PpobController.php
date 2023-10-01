@@ -9,6 +9,7 @@ use App\Models\HistoryPoint;
 use App\Models\Product;
 use App\Services\Mymili as ServicesMymili;
 use App\Services\Xendit;
+use Auth;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Validator;
@@ -16,10 +17,12 @@ use App\Models\DetailTransaction;
 use App\Services\Point;
 use App\Services\Setting;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PpobController extends Controller
 {
     protected $mymili, $xendit;
+
     public function __construct(ServicesMymili $mymili, Xendit $xendit)
     {
         $this->mymili = $mymili;
@@ -28,9 +31,7 @@ class PpobController extends Controller
 
     public function getService($id)
     {
-        $ppob = Product::where('id', $id)
-            ->where('is_active', 1)
-            ->get();
+        $ppob = Product::where('id', $id)->where('is_active', 1)->get();
 
         if (count($ppob)) {
             return ResponseFormatter::success($ppob, 'Data successfully loaded');
@@ -76,92 +77,50 @@ class PpobController extends Controller
 
     public function requestTransaction(Request $request)
     {
-            $data = $request->all();
+        $data = $request->all();
 
-            // handle validation
-            $validator = Validator::make($request->all(), [
-                'product_id' => 'required',
-                'nomor_tagihan' => 'required',
-                'nominal_tagihan' => 'required',
-                'point' => 'required',
-            ]);
+        // handle validation
+        $validator = Validator::make($request->all(), ['product_id' => 'required', 'nomor_tagihan' => 'required', 'nominal_tagihan' => 'required', 'point' => 'required',]);
 
-            if ($validator->fails()) {
-                return ResponseFormatter::error([
-                    'response' => $validator->errors(),
-                ], 'Transaction failed', 500);
-            }
+        if ($validator->fails()) {
+            return ResponseFormatter::error(['response' => $validator->errors(),], 'Transaction failed', 500);
+        }
 
-            //get data
-            $product = Product::with('service')->find($request->product_id);
-            $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        //get data
+        $product = Product::with('service')->find($request->product_id);
+        $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
 
-            $fees = Fee::where('service_id', $product->service_id)->first();
-            $priceWithAdmin = $request->nominal_tagihan + $fees->value;
-            $saldoPointCustomer = 0;
-            // Jika user menggunakan point untuk transaksi
-            if ($request->point == 1)
-            {
-                // history point masuk dan keluar customer
-                $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->first();
-                // point masuk - point keluar
-                $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow','=','credit')->sum('point') ?? 0;
-            }
+        $fees = Fee::where('service_id', $product->service_id)->first();
+        $priceWithAdmin = $request->nominal_tagihan + $fees->value;
 
-            // total pembayaran termasuk dikurangi point
-            $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
+        $saldoPointCustomer = 0;
+        // Jika user menggunakan point untuk transaksi
+        if ($request->point == 1) {
+            // history point masuk dan keluar customer
+            $pointCustomer = HistoryPoint::where('user_id', '=', 3)->first();
+            // point masuk - point keluar
+            $saldoPointCustomer = 100 ?? 0;
+        }
 
-            // request xendit
-            $payoutsXendit = $this->xendit->create([
-                'external_id' => $data['no_inv'],
-                'items' => [
-                    [
-                        'name' => $product->name,
-                        'quantity' => 1,
-                        'price' => $grandTotal,
-                        'url' => "someurl"
-                    ]
-                ],
-                'amount' => $grandTotal,
-                'success_redirect_url' => route('redirect.succes'),
-                'failure_redirect_url' => route('redirect.fail'),
-                'invoice_duration ' => 72000,
-                'should_send_email' => true,
-                'customer' => [
-                    'given_names' => 'Gusti Bagus',
-                    'email' => 'gustibagus34@gmail.com',
-                    'mobile_number' => "081253290605",
-                ],
-            ]);
+        // total pembayaran termasuk dikurangi point
+        $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
 
-            if (isset($payoutsXendit['status'])) {
+        // total pembayaran termasuk dikurangi point
+        $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
 
-                $data['status'] = $payoutsXendit['status'];
-                $data['link'] = $payoutsXendit['invoice_url'];
+        // request xendit
+        $payoutsXendit = $this->xendit->create(['external_id' => $data['no_inv'], 'items' => [['name' => $product->name, 'quantity' => 1, 'price' => $grandTotal, 'url' => "someurl"]], 'amount' => $grandTotal, 'success_redirect_url' => route('redirect.succes'), 'failure_redirect_url' => route('redirect.fail'), 'invoice_duration ' => 72000, 'should_send_email' => true, 'customer' => ['given_names' => 'Gusti Bagus', 'email' => 'gustibagus34@gmail.com', 'mobile_number' => "081253290605",],]);
 
-                $transaction = Transaction::create([
-                    'no_inv' => $data['no_inv'],
-                    'service' => $product->service->name,
-                    'service_id' => $product->service_id,
-                    'payment' => 'xendit',
-                    'user_id' => \Auth::user()->id,
-                    'status' => $payoutsXendit['status'],
-                    'link' => $payoutsXendit['invoice_url'],
-                    'total' => $grandTotal
-                ]);
+        if (isset($payoutsXendit['status'])) {
 
-                // create detail transaction
-                $data['detail'] = $request->input('detail');
-                DB::table('detail_transaction_ppob')->insert([
-                    'transaction_id' => $transaction->id,
-                    'product_id' => $product->id,
-                    'nomor_pelanggan' => $request->nomor_tagihan,
-                    'total_tagihan' => $grandTotal,
-                    'fee_travelsya' => 2500,
-                    'fee_mili' => 100,
-                    'message' => 'Sedang menunggu pembayaran',
-                    'status' => "PROCESS"
-                ]);
+            $data['status'] = $payoutsXendit['status'];
+            $data['link'] = $payoutsXendit['invoice_url'];
+
+                $transaction = Transaction::create(['no_inv' => $data['no_inv'], 'service' => $product->service->name, 'service_id' => $product->service_id, 'payment' => 'xendit', 'user_id' => 3, 'status' => $payoutsXendit['status'], 'link' => $payoutsXendit['invoice_url'], 'total' => $grandTotal]);
+
+            // create detail transaction
+            $data['detail'] = $request->input('detail');
+            DB::table('detail_transaction_ppob')->insert(['transaction_id' => $transaction->id, 'product_id' => $product->id, 'nomor_pelanggan' => $request->nomor_tagihan, 'total_tagihan' => $grandTotal, 'fee_travelsya' => 2500, 'fee_mili' => 100, 'message' => 'Sedang menunggu pembayaran', 'status' => "PROCESS"]);
 
 //                if ($data['point']) {
 //                    //deductpoint
@@ -169,8 +128,8 @@ class PpobController extends Controller
 //                    $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
 //                }
 
-                return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
-            }
+            return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+        }
     }
 
 //    public function requestTransaction(Request $request)
@@ -317,24 +276,15 @@ class PpobController extends Controller
         try {
             $data = $request->all();
 
-            $validator = Validator::make($request->all(), [
-                'no_pelanggan' => 'required',
-                'nom' => 'required',
-            ]);
+            $validator = Validator::make($request->all(), ['no_pelanggan' => 'required', 'nom' => 'required',]);
 
             if ($validator->fails()) {
-                return ResponseFormatter::error([
-                    'response' => $validator->errors(),
-                ], 'Transaction failed', 500);
+                return ResponseFormatter::error(['response' => $validator->errors(),], 'Transaction failed', 500);
             }
 
-            $requestMymili = $this->mymili->inquiry([
-                'no_hp' => $data['no_pelanggan'],
-                'nom' => $data['nom'],
-            ]);
+            $requestMymili = $this->mymili->inquiry(['no_hp' => $data['no_pelanggan'], 'nom' => $data['nom'],]);
 
-            $fee_admin = Product::with('service')
-                ->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
+            $fee_admin = Product::with('service')->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
                 ->price;
 
             if (str_contains($requestMymili['status'], "SUKSES!")) {
@@ -347,8 +297,7 @@ class PpobController extends Controller
                 }
 
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-            }
-            else {
+            } else {
                 if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
                     $status = "Tagihan Sudah Terbayar";
                 }
@@ -375,9 +324,8 @@ class PpobController extends Controller
 
                 return ResponseFormatter::error($status, 'Inquiry failed');
             }
-        } catch (\Throwable $th) {
-            return ResponseFormatter::error([
-            ], 'Terjadi kesalahan pada sistem', 500);
+        } catch (Throwable $th) {
+            return ResponseFormatter::error([], 'Terjadi kesalahan pada sistem', 500);
         }
     }
 }
