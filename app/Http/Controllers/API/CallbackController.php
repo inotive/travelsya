@@ -290,12 +290,17 @@ class CallbackController extends Controller
 
     public function callBackPPOB(Request $request)
     {
-        $responseMili =  $this->mymili->paymentPPOB($request->invoice, $request->kode_pembayaran, $request->nomor_tagihan);
+//        $responseMili =  $this->mymili->tr($request->invoice, $request->kode_pembayaran, $request->nomor_tagihan);
+        $responseMili = $this->mymili->transaction([
+            'no_hp' => $request->nomor_tagihan,
+            'nom' => $request->kode_pembayaran,
+            'reqid' => $request->invoice
+        ]);
         if($responseMili['RESPONSECODE'] == 00)
         {
             return response()->json([
                 'status' => '200',
-                'message' => 'Pulsa sudah masuk'
+                'message' => 'Pembayaran telah berhasil'
             ]);
         }
         elseif($responseMili['RESPONSECODE'] == 68){
