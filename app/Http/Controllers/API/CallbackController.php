@@ -290,11 +290,10 @@ class CallbackController extends Controller
 
     public function callBackPPOB(Request $request)
     {
-        $data = [
+        $responseMili =  $this->mymili->inquiry([
             'no_hp' => $request->no_hp,
             'nom' => $request->nom,
-        ];
-        $responseMili =  $this->mymili->inquiry($data);
+        ]);
 
         if($responseMili['RESPONSECODE'] == 00)
         {
