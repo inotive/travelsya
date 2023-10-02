@@ -111,14 +111,14 @@ class Mymili
                                         <member>
                                             <name>NOHP</name>
                                             <value>
-                                                <string>' . $nomorTagihan . '</string>
+                                                <string>'.$nomorTagihan.'</string>
                                             </value>
                                             Dawang API document 7
                                         </member>
                                         <member>
                                             <name>NOM</name>
                                             <value>
-                                                <string>' . $kodePembayaran . '</string>
+                                                <string>'.$kodePembayaran.'</string>
                                             </value>
                                         </member>
                                     </struct>

@@ -33,8 +33,8 @@
 		@stack("add-style")
         <style>
             .menu-item .menu-link .menu-title{
-                font-size : 14px;
-                font-weight : 400;
+                font-size : 15px;
+                font-weight : 450;
             }
 
         </style>

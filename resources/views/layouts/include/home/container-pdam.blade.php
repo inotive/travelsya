@@ -3,22 +3,29 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.pdam') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pdam') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
-                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value=""/>
-                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
+                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
+                        <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPDAM">
@@ -26,16 +33,8 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPDAM">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Wilayah Pelanggan</span>
-                        </label>
-                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
-                    </div>
-                    <div class="col-xl-4">
-                        @auth
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
-                        @endauth
+                    <div class="col-xl-12">
+                        <button type="button" class="btn btn-lg btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
                     </div>
                     <div class="row mt-4" id="detailPDAM">
                         <div class="col-12">
@@ -66,13 +65,14 @@
                         </div>
                         <div class="col-12">
                             @auth
-                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM" disabled>Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM"
+                                disabled>Pembayaran</button>
                             @endauth
 
                             @guest
-                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                    Login Terlebih Dahulu
-                                </a>
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
                             @endguest
                         </div>
                     </div>
@@ -95,12 +95,12 @@
 
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
@@ -137,7 +137,6 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pdam') }}",
-                    // url: "https://servicevps.travelsya.com/product/pdam",
                     data: {
                         'no_pelanggan': noPelangganPDAM,
                         'nom': 'CEKPDAMBLP',
@@ -194,10 +193,10 @@
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
@@ -244,5 +243,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush

@@ -92,7 +92,7 @@
             <div class="input-group" id="js_datepickerhostel" data-td-target-input="nearest"
                 data-td-target-toggle="nearest">
                 <input name="start" id="checkin" type="text" class="form-control" data-td-target="#js_datepickerhostel"
-                    data-td-toggle="datetimepicker" x-on:change="handleSelectCheckin" />
+                    data-td-toggle="datetimepicker" x-on:change="handleSelectCheckin" value="{{date('Y-m-D')}}" />
                 <span class="input-group-text" data-td-target="#js_datepickerhostel" data-td-toggle="datetimepicker">
                     <i class="ki-duotone ki-calendar fs-2">
                         <span class="path1"></span>
