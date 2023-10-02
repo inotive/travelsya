@@ -52,7 +52,7 @@
         <div class="col-md-4 mb-5">
             <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
             <div class="input-group" id="js_datepicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                <input id="checkin" type="text" name="start" class="form-control" data-td-target="#js_datepicker"
+                <input id="checkin" type="text" name="start" class="form-control" data-td-target="#js_datepicker" value="{{date('Y-m-D')}}"
                     x-on:change="handleSelectCheckin" />
                 <span class="input-group-text" data-td-target="#js_datepicker" data-td-toggle="datetimepicker">
                     <i class="ki-duotone ki-calendar fs-2">
