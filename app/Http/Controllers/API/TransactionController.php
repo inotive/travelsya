@@ -28,7 +28,7 @@ class TransactionController extends Controller
     {
         try {
             // $user_id = $request->user()->id;
-            $user_id = 8;
+            $user_id = 5;
 
             // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
             //     ->where('user_id', $user_id)
