@@ -78,8 +78,10 @@ class CallbackController extends Controller
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
                         ]);
+                        $point = new Point();
+                        $point->addPoint($transaction->user_id, $transaction->total, $transaction->id, $transaction->service_id);
 
-                        if($transaction->service == "pulsa")
+                        if($transaction->service == "pulsa"  || $transaction->service == "listrik token" || $transaction->service == "e-wallet")
                         {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
@@ -99,10 +101,12 @@ class CallbackController extends Controller
                                 $message = "Pembayaran gagal";
                             }
 
-                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
+                            DB::table('detail_transaction_top_up')
+                                ->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
                                     'status' => $status,
-                                    'message'=> $message
+                                    'message'=> $message,
+                                    'kode_voucher'
                                 ]);
 
                         }
@@ -112,7 +116,6 @@ class CallbackController extends Controller
                                 ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
-                            print_r('sudah masuk pembayaran mili');
 
                             $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, $detailTransactionPPOB->kode_pembayaran, $detailTransactionPPOB->nomor_pelanggan);
 
@@ -127,25 +130,24 @@ class CallbackController extends Controller
                                 $status = "Gagal";
                                 $message = "Pembayaran PLN Berhasil";
                             }
-                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPPOB->id)
-                                ->update([
-                                    'status' => $status,
-                                    'message'=> $message
-                                ]);
+
                         }
+                        // hunian
 //                        else if($transaction->service == "hotel" || $transaction->service == "hostel"){
 //                            $type = $transaction->service;
-//                            $detailTransactionPPOB = \DB::table('detail_transaction_hotel as dh')
-//                                ->where('dh.transaction_id', $transaction->id)
-//                                ->first();
-//
 //                            if($type == "hotel")
 //                            {
-//                                DB::table('detail_transaction_hotel')->where('top.id', $detailTransactionPPOB->id)
+//                                $detailTransactionHotel = \DB::table('detail_transaction_hotel as dh')
+//                                    ->where('dh.transaction_id', $transaction->id)
+//                                    ->first();
+//                                DB::table('detail_transaction_hotel')->where('top.id', $detailTransactionHotel->id)
 //                                    ->update([
 //                                        'status' => $status,
 //                                        'message'=> $message
 //                                    ]);
+//                            }
+//                            else{
+//
 //                            }
 //
 //                        }
@@ -290,12 +292,13 @@ class CallbackController extends Controller
 
     public function callBackPPOB(Request $request)
     {
-        $responseMili =  $this->mymili->paymentPPOB($request->invoice, $request->kode_pembayaran, $request->nomor_tagihan);
+        $responseMili =  $this->mymili->paymentPPOB($request->no_inv,$request->kode_pembayaran,$request->nomor_tagihan);
+
         if($responseMili['RESPONSECODE'] == 00)
         {
             return response()->json([
                 'status' => '200',
-                'message' => 'Pulsa sudah masuk'
+                'message' => 'Pembayaran telah berhasil'
             ]);
         }
         elseif($responseMili['RESPONSECODE'] == 68){

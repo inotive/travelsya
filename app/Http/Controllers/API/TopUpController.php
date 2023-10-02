@@ -181,6 +181,8 @@ class TopUpController extends Controller
                 'message' => 'Pulsa sedang diproses',
                 'status' => "PROCESS"
             ]);
+
+            // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         }
     }
