@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilitiesController;
 use App\Http\Controllers\Admin\FeeController;
+use App\Http\Controllers\Admin\HelpController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
@@ -203,7 +204,16 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
             Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
             Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
-            Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+            Route::delete('ads/{id}', [AdController::class, 'destroy'])->name('ads.destroy');
+
+            // Helps
+            Route::get('helps', [HelpController::class, 'index'])->name('help.index');
+            Route::get('helps/create', [HelpController::class, 'create'])->name('help.create');
+            Route::post('helps/create', [HelpController::class, 'store'])->name('help.store');
+            Route::get('helps/{id}/edit', [HelpController::class, 'edit'])->name('help.edit');
+            Route::put('helps/{help}', [HelpController::class, 'update'])->name('help.update');
+            Route::delete('helps/{id}', [HelpController::class, 'destroy'])->name('help.destroy');
+
 
                 //customer
                 Route::get('customer', [CustomerController::class, 'index'])->name('customer');
@@ -266,6 +276,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
             Route::get('detail-hotel/{id}', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
             Route::delete('detail-hotel/{id}/deleteimage', [ManagementHotelController::class, 'destroyimage'])->name('partner.management.hotel.destroyimage');
+            Route::post('detail-hotel/store-photo/{id}', [ManagementHotelController::class, 'storePhotoHotel'])->name('partner.management.hotel.storePhotoHotel');
 
             // Route CRUD HotelRule
             Route::post('detail-hotel/', [ManagementHotelController::class, 'storeRule'])->name('partner.management.hotel.storerule');

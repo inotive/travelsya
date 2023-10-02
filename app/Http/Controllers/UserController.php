@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Help;
 use App\Services\Travelsya;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -50,8 +51,11 @@ class UserController extends Controller
     public function orderDetail(){
         return view('user.orderdetail');
     }
-    public function help(){
-        return view('user.help');
+    public function help()
+    {
+        $helps = Help::all();
+
+        return view('user.help', compact('helps'));
     }
 
     public function detailTransaction($no_inv)

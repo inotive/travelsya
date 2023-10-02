@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
+use App\Models\Ad;
 use App\Models\Facility;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
@@ -32,10 +33,10 @@ class ManagementHotelController extends Controller
 
     public function detailHotel($id)
     {
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelbookDate', 'hotelroomFacility', 'hotelRule')->find($id);
+        //$hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotel', 'hotelroomFacility', 'hotelRule', 'hotelBookDate')->find($id);
+        $hotel = Hotel::with('hotelRoom','hotelImage','hotelRating','hotelroomFacility','hotelRule','hotel_reservation')->find($id);
         $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
         $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
-
         return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
     }
     public function settingHotel($id)
@@ -73,21 +74,19 @@ class ManagementHotelController extends Controller
 
     public function settingRoomPost(Request $request)
     {
-        //$data = $request->all();
-        //dd($data);
-
+        $data = $request->all();
         //Ini validasi
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required',
-            'sellingprice' => 'required',
-            'totalroom' => 'required',
-            'roomsize' => 'required',
-            // 'maxextrabed' => 'required',
-            'bed_type' => 'required',
-            'guest' => 'required',
-            // 'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+//        $request->validate([
+//            'name' => 'required',
+//            'price' => 'required',
+//            'sellingprice' => 'required',
+//            'totalroom' => 'required',
+//            'roomsize' => 'required',
+//            // 'maxextrabed' => 'required',
+//            'bed_type' => 'required',
+//            'guest' => 'required',
+//            // 'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+//        ]);
 
 
 
@@ -95,14 +94,16 @@ class ManagementHotelController extends Controller
         $hotelRoom = HotelRoom::create([
             'hotel_id' => $request->hotel_id,
             'name' => $request->name,
-            'price' => $request->price,
+            'price' => str_replace('.','',$request->price),
             'roomsize' => $request->roomsize,
             'guest' => $request->guest,
             'maxextrabed' => $request->maxextrabed,
             'bed_type' => $request->bed_type,
             'totalroom' => $request->totalroom,
             'is_active' => 1,
-            'sellingprice' => $request->sellingprice,
+            'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.','',$request->sellingprice),
+            'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.','',$request->extrabedprice),
+            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.','',$request->extrabedsellingprice),
         ]);
 
         $hotelRoomImageFiles = $request->file('hotel_room_image', []);
@@ -118,7 +119,6 @@ class ManagementHotelController extends Controller
                 'image' => 'media/hotel/' . $filename,
             ]);
         }
-        
 
         $facilityIds = $request->input('facility_id', []);
         $roomId = $hotelRoom->id;
@@ -126,7 +126,6 @@ class ManagementHotelController extends Controller
         foreach ($facilityIds as $facilityId) {
             DB::table('hotel_room_facilities')->insert([
                 'hotel_id' => $request->hotel_id,
-                'service_id' => 8,
                 'hotel_room_id' => $roomId,
                 'facility_id' => $facilityId,
             ]);
@@ -134,12 +133,31 @@ class ManagementHotelController extends Controller
 
         //Ini untuk pemberitahuan
         toast('HotelRoom berhasil dibuat', 'success');
-        return redirect()->back();
+        return redirect()->route('partner.management.hotel.setting.room', ['id' => $request->hotel_id]);
     }
     public function settingPhoto($id)
     {
         $hotel = Hotel::with('hotelImage')->find($id);
         return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
+    }
+
+    public function storePhotoHotel($id, Request $request)
+    {
+        $file = $request->file('image');
+        $nama_foto = $file->hashName();
+
+        $path = public_path('media/hotel');
+        $file->move($path, $nama_foto);
+
+        HotelImage::create([
+            'hotel_id' => $id,
+            'image' => $nama_foto,
+            'main' => 0
+        ]);
+
+        toast('Upload foto berhasil', 'success');
+        return redirect()->back();
+//        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
 
     public function settingRoomShow($hotel_id, $id)

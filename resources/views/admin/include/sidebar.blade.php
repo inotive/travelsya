@@ -288,6 +288,20 @@
                     </span>
                         <!--end:Menu link-->
                     </a>
+                    <a href="{{route('admin.help.index')}}" class="menu-item {{(Request::segment(2)=="help") ? 'here' : ''}} menu-accordion">
+
+                        <!--begin:Menu link-->
+                        <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-solid fa-circle-info fs-2">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title">Bantuan</span>
+                    </span>
+                        <!--end:Menu link-->
+                    </a>
                     <!--end:Menu item-->
                 <!--begin:Menu item-->
                 <a href="{{route('admin.management-fee')}}" class="menu-item {{(Request::segment(2)=="management-fee") ? 'here' : ''}} menu-accordion">

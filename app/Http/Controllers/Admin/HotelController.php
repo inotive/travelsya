@@ -20,7 +20,6 @@ class HotelController extends Controller
     {
         $users = DB::table('users')->where('role',1)->get();
         $hotels = DB::table('hotels')
-//            ->join('services', 'services.id', '=', 'hotels.service_id')
             ->join('users', 'users.id', '=', 'hotels.user_id')
             ->select('hotels.*', 'users.name as user_name')
             ->get();
@@ -122,6 +121,9 @@ class HotelController extends Controller
             'city' => $request->city,
             'star' => $request->star,
             'website' => $request->website,
+            'lon' => $request->long_ltd,
+            'lat' => $request->ltd,
+            'description' => $request->description,
         ]);
 
         toast('Hotel Has Been Updated', 'success');

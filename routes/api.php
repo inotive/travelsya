@@ -61,6 +61,11 @@ route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
 route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
 route::get('/data', [TopUpController::class, 'getData']);
 
+// E-wallet
+route::get('/e-wallet', [TopUpController::class, 'getEWallet']);
+route::get('/e-wallet/detail', [TopUpController::class, 'detailEwallet']);
+
+
 //ads
 route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
@@ -83,6 +88,7 @@ route::get('/service', [SettingController::class, 'getService']);
 
 //webhook
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
+route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
 route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
 route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
