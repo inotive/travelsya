@@ -103,8 +103,8 @@
     </div>
 </form>
 @push('add-script')
-    <script>
-        function calculateCheckoutDate(checkinDate, duration) {
+<script>
+    function calculateCheckoutDate(checkinDate, duration) {
             var parts = checkinDate.split('-');
             var day = parseInt(parts[0], 10);
             var month = parseInt(parts[1], 10) - 1;
@@ -115,5 +115,5 @@
 
             return checkoutDate;
         }
-    </script>
+</script>
 @endpush
