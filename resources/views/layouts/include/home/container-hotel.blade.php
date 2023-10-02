@@ -3,6 +3,7 @@
     <div class="row" x-data="{
         totalDuration: 32,
         durationValue: 0,
+        filterGuest: 0,
         totalRoom: 11,
         totalGuest: 31,
         checkinValue: '',
@@ -11,7 +12,7 @@
             var date = e.target.value
             this.checkinValue = date;
             if (this.durationValue > 0) {
-                this.checkoutValue = formatDateAndAddOneDay(date, this.durationValue);
+                this.checkoutValue = calculateCheckoutDate(this.checkinValue, duration);
             }
         },
         handleSelectDuration(e) {
@@ -20,7 +21,7 @@
             if (duration == 0) {
                 this.checkoutValue = '';
             } else if (this.checkinValue !== '') {
-                this.checkoutValue = formatDateAndAddOneDay(this.checkinValue, duration);
+                this.checkoutValue = calculateCheckoutDate(this.checkinValue, duration);
             } else {
                 return
             }
@@ -28,9 +29,10 @@
         handleSelectRoom(e) {
             var value = parseInt(e.target.value)
             this.totalGuest = value * 3 + 1;
+            this.filterGuest = value;
         },
         handleSelectGuest(e) {
-    
+
         }
     }">
         <div class="col-md-12 mb-5">
@@ -86,7 +88,7 @@
         <div class="col-md-6 col-6 mb-5">
             <label class="form-label fw-bold fs-6">Total Tamu</label>
             <select name="guest" id="guest" class="form-select">
-                <template x-for="data in [ ...Array(totalGuest).keys() ]" key="data">
+                <template x-for="data in [ ...Array(totalGuest).keys() ].slice(filterGuest)" key="data">
                     <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Tamu` : `${data} Tamu`">-
                     </option>
                 </template>
@@ -102,18 +104,16 @@
 </form>
 @push('add-script')
     <script>
-        function formatDateAndAddOneDay(dateString, duration = 0) {
-            var parts = dateString.split('-');
+        function calculateCheckoutDate(checkinDate, duration) {
+            var parts = checkinDate.split('-');
             var day = parseInt(parts[0], 10);
-            var month = parseInt(parts[1], 10);
-
-            // Subtracting 1 to match JavaScript months (0-11)
+            var month = parseInt(parts[1], 10) - 1;
             var year = parseInt(parts[2], 10);
-            var date = new Date(year, month, day);
-            date.setDate(date.getDate() + parseInt(duration));
-            var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
-                date.getFullYear();
-            return formattedDate;
+            var checkin = new Date(year, month, day);
+            checkin.setDate(checkin.getDate() + duration);
+            var checkoutDate = ("0" + checkin.getDate()).slice(-2) + "-" + ("0" + (checkin.getMonth() + 1)).slice(-2) + "-" + checkin.getFullYear();
+
+            return checkoutDate;
         }
     </script>
 @endpush

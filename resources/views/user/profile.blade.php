@@ -135,7 +135,7 @@
                 </div>
                 {{-- Menu Item Pusat Bantuan --}}
                 <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" href="{{ route('user.help')}}">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/headphones.svg') }}" class="h-24px me-10"/>
                     </span>

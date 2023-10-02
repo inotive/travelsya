@@ -74,14 +74,20 @@ class Hotel extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    public function hotelFacilities()
+    public function hotelroomFacility()
     {
         return $this->hasMany(HotelRoomFacility::class);
     }
 
-    public function hotelRules()
+    public function hotelRule()
     {
         return $this->hasMany(HotelRule::class);
+    }
+
+
+    public function hotelbookdate()
+    {
+        return $this->hasMany(HotelBookDate::class);
     }
 
 
@@ -89,5 +95,10 @@ class Hotel extends Model
     {
         return $this->hasMany(HotelRoomImage::class);
     }
-}
 
+
+    public function hotel_reservation()
+    {
+        return $this->hasMany(DetailTransactionHotel::class,'hotel_id','id');
+    }
+}

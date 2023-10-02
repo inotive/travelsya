@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilitiesController;
 use App\Http\Controllers\Admin\FeeController;
+use App\Http\Controllers\Admin\HelpController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
@@ -27,6 +28,7 @@ use App\Http\Controllers\Partner\ManagementHostelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\Partner\ReviewController;
 use Illuminate\Support\Facades\Auth;
 
 /*
@@ -74,7 +76,7 @@ Route::get('/search-pdam', function () {
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
-
+Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
 // Route::get('/', [AuthController::class, 'login'])->name('home');
 //auth
 //Route::get('/login', [AuthController::class, 'login'])->name('login.view');
@@ -99,10 +101,32 @@ Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransa
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {
     Route::get('/pulsa', 'pulsa')->name('.pulsa');
     Route::get('/data', 'data')->name('.data');
+
+    Route::get('/{category}/{provider}', 'pulsaData');
+    Route::get('/payment-pulsa-data', 'paymentPulsaData')->name('.payment.pulsa.data');
+    // Route::get('/bpjs', 'bpjs')->name('.bpjs');
     Route::get('/bpjs', 'bpjs')->name('.bpjs');
+    // Route::get('/pdam', 'pdam')->name('.pdam');
     Route::get('/pdam', 'pdam')->name('.pdam');
+    // Route::get('/pln', 'pln')->name('.pln');
     Route::get('/pln', 'pln')->name('.pln');
+    Route::post('/bpjs', 'bpjs')->name('.bpjs');
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::get('/payment-bpjs', 'paymentBpjs')->name('.payment.bpjs');
+    Route::post('/pln', 'pln')->name('.pln');
+    Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
+    Route::post('/pdam', 'pdam')->name('.pdam');
+    Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
+    Route::get('/payment-pdam', 'paymentPdam')->name('.payment.pdam');
+    Route::post('/tv-internet', 'tvInternet')->name('.tvInternet');
+    Route::get('/product-tv-internet', 'productTvInternet')->name('.product.tvInternet');
+    Route::get('/payment-tv-internet', 'paymentTvInternet')->name('.payment.tvInternet');
+
+    Route::post('/tax', 'tax')->name('.tax');
+    Route::get('/product-tax', 'productTax')->name('.product.tax');
+    Route::get('/payment-tax', 'paymentTax')->name('.payment.tax');
+
+    Route::post('/admin-fee', 'getAdminFee')->name('.adminFee');
 });
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
@@ -148,7 +172,6 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 
 Route::middleware(['auth', 'role'])->group(function () {
     Route::middleware('admin')->group(function () {
-
         Route::prefix('admin')->name('admin.')->group(function () {
             Route::prefix('management-mitra')->group(function (){
                 Route::resource('hotel', \App\Http\Controllers\Admin\HotelController::class);
@@ -156,10 +179,6 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::get('hostel/{hostel}/review', [\App\Http\Controllers\Admin\HostelController::class, 'review'])->name('hostel.review');
                 Route::get('hostel/{hostel}', [\App\Http\Controllers\Admin\HostelController::class, 'show'])->name('hostel.show');
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
-
-
-
-
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
@@ -212,7 +231,16 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('ads/{ad}', [AdController::class, 'show'])->name('ads.show');
             Route::get('ads/{ad}/edit', [AdController::class, 'edit'])->name('ads.edit');
             Route::post('ads/{ad}', [AdController::class, 'update'])->name('ads.update');
-            Route::delete('ads/{ad}', [AdController::class, 'destroy'])->name('ads.destroy');
+            Route::delete('ads/{id}', [AdController::class, 'destroy'])->name('ads.destroy');
+
+            // Helps
+            Route::get('helps', [HelpController::class, 'index'])->name('help.index');
+            Route::get('helps/create', [HelpController::class, 'create'])->name('help.create');
+            Route::post('helps/create', [HelpController::class, 'store'])->name('help.store');
+            Route::get('helps/{id}/edit', [HelpController::class, 'edit'])->name('help.edit');
+            Route::put('helps/{help}', [HelpController::class, 'update'])->name('help.update');
+            Route::delete('helps/{id}', [HelpController::class, 'destroy'])->name('help.destroy');
+
 
                 //customer
                 Route::get('customer', [CustomerController::class, 'index'])->name('customer');
@@ -253,6 +281,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
+        Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}',[ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
@@ -274,6 +303,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
             Route::get('detail-hotel/{id}', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
             Route::delete('detail-hotel/{id}/deleteimage', [ManagementHotelController::class, 'destroyimage'])->name('partner.management.hotel.destroyimage');
+            Route::post('detail-hotel/store-photo/{id}', [ManagementHotelController::class, 'storePhotoHotel'])->name('partner.management.hotel.storePhotoHotel');
 
             // Route CRUD HotelRule
             Route::post('detail-hotel/', [ManagementHotelController::class, 'storeRule'])->name('partner.management.hotel.storerule');

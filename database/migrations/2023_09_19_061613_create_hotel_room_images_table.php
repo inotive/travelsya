@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('hotel_room_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hotel_id')->constrained();
-            $table->foreignId('hotel_room_id')->constrained();
+            $table->unsignedBigInteger('hotel_id');
+            $table->unsignedBigInteger('hotel_room_id');
+            $table->foreign('hotel_id')->references('id')->on('hotels')->onDelete('cascade');
+            $table->foreign('hotel_room_id')->references('id')->on('hotel_rooms')->onDelete('cascade');
+
             $table->string('image');
             $table->timestamps();
         });
