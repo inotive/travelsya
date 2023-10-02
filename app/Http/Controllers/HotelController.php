@@ -91,12 +91,12 @@ class HotelController extends Controller
 
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
-                $query->where('facility_id', $request->facility);
+                $query->whereIn('facility_id', $request->facility);
             });
         }
 
         if ($request->has('star')) {
-            $hotels->where('star', $request->star);
+            $hotels->whereIn('star', $request->star);
         }
 
         $hotels = $hotels->paginate(10);

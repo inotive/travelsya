@@ -3,7 +3,8 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.pdam') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pdam') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
@@ -17,7 +18,7 @@
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
-                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value=""/>
+                            name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
                         <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
@@ -66,13 +67,14 @@
                         </div>
                         <div class="col-12">
                             @auth
-                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM" disabled>Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM"
+                                disabled>Pembayaran</button>
                             @endauth
 
                             @guest
-                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                    Login Terlebih Dahulu
-                                </a>
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
                             @endguest
                         </div>
                     </div>
@@ -95,12 +97,12 @@
 
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
@@ -137,7 +139,6 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pdam') }}",
-                    // url: "https://servicevps.travelsya.com/product/pdam",
                     data: {
                         'no_pelanggan': noPelangganPDAM,
                         'nom': 'CEKPDAMBLP',
@@ -194,10 +195,10 @@
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
@@ -244,5 +245,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush
