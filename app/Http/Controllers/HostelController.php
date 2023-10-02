@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Facility;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
 use App\Models\Transaction;
@@ -67,7 +68,7 @@ class HostelController extends Controller
 
         // return view('hostel.index', ['hostels' => $hostelsget, 'cities' => $cities, 'params' => $params]);
 
-        $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating')
+        $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->where('city', 'like', '%' . $request->location . '%')
             ->withCount(["hostelRoom as price_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
@@ -77,6 +78,45 @@ class HostelController extends Controller
             }])
             ->withCount("rating as rating_count");
 
+        if ($request->has('property')) {
+            if ($request->property != '') {
+                $hostels->where('property', $request->property);
+            }
+        }
+
+        if ($request->has('roomtype')) {
+            if ($request->roomtype != '') {
+                $roomtype = $request->roomtype;
+                $hostels->withWhereHas('hostelRoom', function ($q) use ($roomtype) {
+                    $q->where('roomtype', $roomtype);
+                });
+            }
+        }
+
+        if ($request->has('furnish')) {
+            if ($request->furnish != '') {
+                $furnish = $request->furnish;
+                $hostels->withWhereHas('hostelRoom', function ($q) use ($furnish) {
+                    $q->where('furnish', $furnish);
+                });
+            }
+        }
+
+        if ($request->has('start')) {
+            $checkin = \Carbon\Carbon::parse($request->start);
+            $duration = $request->duration;
+
+            // Hitung tanggal checkout
+            $checkout = $checkin->copy()->addMonths($duration);
+
+            $hostels->whereRaw('(
+                SELECT SUM(totalroom) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
+            ) - (
+                SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hostel WHERE hostel_id = hostels.id
+                AND ? <= reservation_end
+                AND ? >= reservation_start
+            ) > 0', [$checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+        }
 
         if ($request->has('harga')) {
             if ($request->harga == 'tertinggi') {
@@ -92,10 +132,17 @@ class HostelController extends Controller
             $hostels->where('star', $request->star);
         }
 
+        if ($request->has('facility')) {
+            $hostels->whereHas('hostelFacilities', function ($query) use ($request) {
+                $query->where('facility_id', $request->facility);
+            });
+        }
+
 
         $data['hostels'] = $hostels->get();
         $data['params']  = $request->all();
         $data['cities']  = Hostel::distinct()->select('city')->get();
+        $data['facilities'] = Facility::all();
 
         return view('hostel.index', $data);
     }
