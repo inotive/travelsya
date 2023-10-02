@@ -487,12 +487,12 @@ class ProductController extends Controller
         // return view('product.tv');
 
         $data = $request->all();
-        return $data;
+
         $requestMymili = $this->mymili->inquiry([
             'no_hp' => $data['no_pelanggan'],
             'nom' => $data['nom'],
         ]);
-
+        return $requestMymili;
         if (str_contains($requestMymili['status'], "SUKSES!")) {
             $requestMymili['fee'] = $this->getAdminFee(10, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
