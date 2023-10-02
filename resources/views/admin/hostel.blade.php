@@ -37,9 +37,6 @@
 </div>
 <!--end::Tables Widget 11-->
 
-
-
-
 <!--begin::Modal - New Target-->
 <div class="modal fade" id="edit" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->

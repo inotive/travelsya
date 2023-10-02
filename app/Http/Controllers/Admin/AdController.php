@@ -44,13 +44,16 @@ class AdController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+        $file = $request->file('image');
+        $nama_foto = $file->hashName();
 
-        $image = $request->file('image')->store('media/ads');
-        
+        $path = public_path('media/ads');
+        $file->move($path, $nama_foto);
+
         Ad::create([
             'name'  => $request->name,
             'url'   => $request->url,
-            'image' => $image,
+            'image' => $nama_foto,
             'is_active' => $request->is_active
         ]);
 
@@ -118,7 +121,7 @@ class AdController extends Controller
                 'is_active' => $request->is_active,
             ]);
         }
-        
+
 
 
         toast('Ads has been updated', 'success');
@@ -132,11 +135,13 @@ class AdController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ad $ad)
+    public function destroy($id)
     {
+        $ad = Ad::find($id);
+        $ad->delete();
         Storage::delete('media/ads/'.$ad->image);
 
-        $ad->delete();
+
 
         toast('Ads has been deleted', 'success');
         return redirect()->back();

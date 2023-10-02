@@ -79,4 +79,9 @@ class Hostel extends Model
     {
         return $this->hasMany(HostelRule::class);
     }
+
+    public function hostelroomImage()
+    {
+        return $this->hasMany(HostelRoomImages::class);
+    }
 }

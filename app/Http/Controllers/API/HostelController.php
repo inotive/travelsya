@@ -142,7 +142,7 @@ class HostelController extends Controller
                         $q->select(DB::raw('coalesce(avg(rate),0)'));
                     }
                 ])->withCount("rating as rating_count")
-                ->find($id);
+                ->findOrFail($id);
 
             // if ($request->start_date) {
             //     $date = [
@@ -169,7 +169,23 @@ class HostelController extends Controller
             // $hostelGet = $hostel->get();
             $hostelGet = collect([$hostel])->map(function ($hostel) {
 
-                $hostel_rules = $hostel->hostelRules->map(function ($rule) {
+                $hostel_room = $hostel->hostelRoom->map(function ($room) {
+                    return [
+                        'id' => $room->id,
+                        'name' => $room->name,
+                        'description' => $room->description,
+                        'price' => $room->price,
+                        'sellingprice' => $room->sellingprice,
+                        'bed_type' => $room->bed_type,
+                        'roomsize' => $room->roomsize,
+                        'maxextrabed' => $room->maxextrabed,
+                        'totalroom' => $room->totalroom,
+                        'guest' => $room->guest,
+                        'hostel_room_image' => $room->hostelRoomImage
+                    ];
+                });
+
+                $hostel_rules = $hostel->hostelRule->map(function ($rule) {
                     return [
                         'id'          => $rule->id,
                         'description' => $rule->description,
@@ -199,7 +215,7 @@ class HostelController extends Controller
                     'lon'               => $hostel->lon,
                     'avg_rating'        => intval($hostel->rating_avg),
                     'rating_count'      => $hostel->rating_count,
-                    'hostel_rooms'      => $hostel->hostelRoom,
+                    'hostel_rooms'      => $hostel_room,
                     'hostel_facilities' => $hostel->hostelFacilities,
                     'hostel_rules'      => $hostel_rules,
                     'hostel_reviews'    => $hostel_reviews,
@@ -269,7 +285,7 @@ class HostelController extends Controller
             ],
         ];
 
-        //cekpoint 
+        //cekpoint
         // if (!$fees)
         //     return ResponseFormatter::error(null, 'Point invalid');
         $start = new DateTime($data['start']);
@@ -399,6 +415,7 @@ class HostelController extends Controller
     public function hostelPopuler()
     {
         $hostelPopuler = Hostel::with('hostelImage', 'rating')
+            ->has("hostelRoom") //retrieve only hostel that have hostel room, to avoid data with 0 price_avg
             ->withCount([
                 "hostelRoom as price_avg" => function ($q) {
                     $q->select(DB::raw('coalesce(avg(price),0)'));
@@ -408,9 +425,10 @@ class HostelController extends Controller
                     $q->select(DB::raw('coalesce(avg(rate),0)'));
                 }
             ])->withCount("rating as rating_count")
+            ->orderBy('price_avg', "asc")
             ->orderBy('rating_count', 'DESC')
-            ->orderBy('rating_avg', 'DESC')
-            ->orderBy('price_avg', "desc")->get();
+            ->orderBy('rating_avg', 'DESC')->get(); 
+         
 
         if (!$hostelPopuler)
             return ResponseFormatter::error(null, 'Data not found');

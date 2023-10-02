@@ -56,16 +56,24 @@ class HotelController extends Controller
         // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
         //     ->withAvg('hotelRating', 'rate')
         //     ->orderByDesc('hotel_rating_avg_rate');
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where([
                     ['totalroom', '>', $request->room],
                     ['guest', '>=', 3],
                 ]);
-            })->where(function ($query) use ($request) {
+            })
+            ->where(function ($query) use ($request) {
                 $query->where('hotels.city', 'like', '%' . $request->location . '%')
                     ->orWhere('hotels.name', 'like', '%' . $request->location . '%');
-            });
+            })
+            ->whereRaw('(
+                SELECT SUM(totalroom) FROM hotel_rooms hr WHERE hr.hotel_id = hotels.id
+            ) - (
+                SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel WHERE hotel_id = hotels.id
+                AND ? <= guest
+                AND ? >= reservation_start
+            ) > 0', [$request->end_date, $request->start]);
 
         if ($request->has('harga')) {
             if ($request->harga == 'tertinggi') {
@@ -81,11 +89,17 @@ class HotelController extends Controller
             }
         }
 
+        if ($request->has('facility')) {
+            $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
+                $query->where('facility_id', $request->facility);
+            });
+        }
+
         if ($request->has('star')) {
             $hotels->where('star', $request->star);
         }
 
-        $hotels = $hotels->get();
+        $hotels = $hotels->paginate(10);
 
         $hotelDetails = [];
 

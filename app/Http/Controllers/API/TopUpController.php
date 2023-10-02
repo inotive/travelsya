@@ -55,6 +55,33 @@ class TopUpController extends Controller
         }
     }
 
+    public function getEWallet(Request $request)
+    {
+        $products = DB::table('products')->where('service_id', 11)
+        ->distinct('name')->select('id','name')->get();
+
+
+        if ($products) {
+            return ResponseFormatter::success($products, 'Data successfully loaded');
+        } else {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+    }
+    public function detailEwallet(Request $request)
+    {
+        $products = Product::where([
+            ['service_id', 11],
+            ['name', 'like', '%' . strtoupper($request->name) . '%'],
+            ['is_active', 1],
+        ])->get();
+
+        if ($products) {
+            return ResponseFormatter::success($products, 'Data successfully loaded');
+        } else {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+    }
+
     public function testTopUP(Request $request)
     {
         $responseMili =  $this->mymili->paymentTopUp($request->invoice, $request->kode_pembayaran, $request->nomor_telfon);

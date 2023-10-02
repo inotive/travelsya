@@ -15,15 +15,35 @@ class TransactionController extends Controller
     public function getTransactionUser(Request $request)
     {
         try {
-            $user_id = $request->user()->id;
+            // $user_id = $request->user()->id;
+            $user_id = 5;
 
-            $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
-                ->where('user_id', $user_id)
-                ->orderBy('id', 'desc')
+            // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
+            //     ->where('user_id', $user_id)
+            //     ->orderBy('id', 'desc')
+            //     ->get();
+            $transaction = Transaction::where('user_id', $user_id)
+                ->latest()
                 ->get();
 
+            $responsTransaction = $transaction->map(function ($transaction) {
+                return [
+                    'id' => $transaction->id,
+                    'no_inv' => $transaction->no_inv,
+                    'req_id' => $transaction->req_id,
+                    'link' => $transaction->link,
+                    'service' => $transaction->service,
+                    'payment' => $transaction->payment,
+                    'payment_method' => $transaction->payment_method,
+                    'payment_channel' => $transaction->payment_channel,
+                    'status' => $transaction->status,
+                    'total' => $transaction->total,
+                    'created_at' => $transaction->created_at,
+                ];
+            });
+
             if (count($transaction)) {
-                return ResponseFormatter::success($transaction, 'Data successfully loaded');
+                return ResponseFormatter::success($responsTransaction, 'Data successfully loaded');
             } else {
                 return ResponseFormatter::error(null, 'Data not found');
             }
@@ -40,18 +60,15 @@ class TransactionController extends Controller
         Xendit::setApiKey("xnd_development_720yPHpZAyEfNzCycBS6I6nnREM6JrieSYS4zdytWdptFMn68JEyEsoBvPYs");
     }
 
-//    public function createInvoice(Request $request)
-//    {
-//        $param = [
-//            'external_id' =>
-//        ]
-//    }
+    //    public function createInvoice(Request $request)
+    //    {
+    //        $param = [
+    //            'external_id' =>
+    //        ]
+    //    }
     public function getTransactionInv(Request $request)
     {
         try {
-            $no_inv = $request->input('no_inv');
-            $user_id = $request->user()->id;
-
             $validator = Validator::make($request->all(), [
                 'no_inv' => 'required',
             ]);
@@ -62,16 +79,126 @@ class TransactionController extends Controller
                 ], 'Fetch data failed', 500);
             }
 
-            $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product', 'historyPoint', 'rating', 'guest', 'bookDate')
-                ->where('no_inv', $no_inv)
-                ->where('user_id', $user_id)
-                ->get();
+            // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product', 'historyPoint', 'rating', 'guest', 'bookDate')
+            //     ->where('no_inv', $no_inv)
+            //     ->where('user_id', $user_id)
+            //     ->get();
 
-            if (count($transaction)) {
-                return ResponseFormatter::success($transaction, 'Data successfully loaded');
-            } else {
-                return ResponseFormatter::error(null, 'Data not found');
+            $no_inv = $request->input('no_inv');
+            // $user_id = $request->user()->id;
+            $user_id = 5;
+
+            $transaction = Transaction::where('no_inv', $no_inv)->where('user_id', $user_id);
+
+            // UNTUK PPOB
+            if (in_array($transaction->firstOrFail()->service_id, [1, 6, 3, 5, 9, 10])) {
+                $detailTransaction = Transaction::join('detail_transaction_ppob', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id');
+
+                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                    return [
+                        'id' => $detailTransaction->id,
+                        'no_inv' => $detailTransaction->no_inv,
+                        'nomor_pelanggan' => $detailTransaction->nomor_pelanggan,
+                        'req_id' => $detailTransaction->req_id,
+                        'link' => $detailTransaction->link,
+                        'service' => $detailTransaction->service,
+                        'payment' => $detailTransaction->payment,
+                        'payment_method' => $detailTransaction->payment_method,
+                        'payment_channel' => $detailTransaction->payment_channel,
+                        'status' => $detailTransaction->status,
+                        'total' => $detailTransaction->total,
+                        'created_at' => $detailTransaction->created_at,
+                    ];
+                });
             }
+
+            // UNTUK TOP UP
+            if (in_array($transaction->firstOrFail()->service_id, [1, 2])) {
+                $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id');
+
+                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                    return [
+                        'id' => $detailTransaction->id,
+                        'no_inv' => $detailTransaction->no_inv,
+                        'nomor_telfon' => $detailTransaction->nomor_telfon,
+                        'req_id' => $detailTransaction->req_id,
+                        'link' => $detailTransaction->link,
+                        'service' => $detailTransaction->service,
+                        'payment' => $detailTransaction->payment,
+                        'payment_method' => $detailTransaction->payment_method,
+                        'payment_channel' => $detailTransaction->payment_channel,
+                        'status' => $detailTransaction->status,
+                        'total' => $detailTransaction->total,
+                        'created_at' => $detailTransaction->created_at,
+                    ];
+                });
+            }
+
+            // UNTUK HOTEL
+            if (in_array($transaction->firstOrFail()->service_id, [8])) {
+                $detailTransaction = Transaction::join('detail_transaction_hotel', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
+                    ->join('hotels', 'hotels.id', '=', 'detail_transaction_hotel.hotel_id')
+                    ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id');
+
+                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                    return [
+                        'id' => $detailTransaction->id,
+                        'no_inv' => $detailTransaction->no_inv,
+                        'booking_id' => $detailTransaction->booking_id,
+                        'reservation_start' => $detailTransaction->reservation_start,
+                        'reservation_end' => $detailTransaction->reservation_end,
+                        'guest' => $detailTransaction->guest,
+                        'room' => $detailTransaction->room,
+                        'req_id' => $detailTransaction->req_id,
+                        'link' => $detailTransaction->link,
+                        'service' => $detailTransaction->service,
+                        'payment' => $detailTransaction->payment,
+                        'payment_method' => $detailTransaction->payment_method,
+                        'payment_channel' => $detailTransaction->payment_channel,
+                        'status' => $detailTransaction->status,
+                        'total' => $detailTransaction->total,
+                        'created_at' => $detailTransaction->created_at,
+                    ];
+                });
+            }
+
+            // UNTUK HOSTEL
+            if (in_array($transaction->firstOrFail()->service_id, [7])) {
+                $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
+                    ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
+                    ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id');
+
+                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                    return [
+                        'id' => $detailTransaction->id,
+                        'no_inv' => $detailTransaction->no_inv,
+                        'booking_id' => $detailTransaction->booking_id,
+                        'reservation_start' => $detailTransaction->reservation_start,
+                        'reservation_end' => $detailTransaction->reservation_end,
+                        'guest' => $detailTransaction->guest,
+                        'room' => $detailTransaction->room,
+                        'type_rent' => $detailTransaction->type_rent,
+                        'req_id' => $detailTransaction->req_id,
+                        'link' => $detailTransaction->link,
+                        'service' => $detailTransaction->service,
+                        'payment' => $detailTransaction->payment,
+                        'payment_method' => $detailTransaction->payment_method,
+                        'payment_channel' => $detailTransaction->payment_channel,
+                        'status' => $detailTransaction->status,
+                        'total' => $detailTransaction->total,
+                        'created_at' => $detailTransaction->created_at,
+                    ];
+                });
+            }
+
+
+            return ResponseFormatter::success($responseTransaction, 'Data successfully loaded');
+
+            // if (count($transaction)) {
+            //     return ResponseFormatter::success($transaction, 'Data successfully loaded');
+            // } else {
+            //     return ResponseFormatter::error(null, 'Data not found');
+            // }
         } catch (\Throwable $th) {
             return ResponseFormatter::error([
                 $th,

@@ -102,11 +102,10 @@
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tvInternet') }}",
-                // url: "https://servicevps.travelsya.com/product/tv-internet",
                 success: function (response) {
                     $.each(response, function (key, value) {
                         $('#productTV').append($('<option>', {
-                            value: value.id,
+                            value: value.kode,
                             text: value.name
                         }));
                     });
@@ -137,48 +136,36 @@
                     url: "{{ route('product.tvInternet') }}",
                     data: {
                         'no_pelanggan': noPelangganTV,
-                        'nom': 'CEKTELKOM',
-                    },
+                        'nom': $('#productTV').val(),
+                    },  
                     success: function (responseTagihan) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct':  $('#productTV').val(),
-                            },
-                            success: function (response) {
-                                var simulateFeeTV = parseInt(response[0].value);
+                        var simulateFeeTV = parseInt(responseTagihan.data.fee);
 
-                                var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
-                                var simulateTotalTV = simulateAmountTV + simulateFeeTV;
+                        var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
+                        var simulateTotalTV = simulateAmountTV + simulateFeeTV;
 
-                                $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
-                                $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
-                                $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
-                                $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
+                        $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
+                        $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
+                        $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
 
-                                $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
-                                $('#inputTotalTagihanTV').val(simulateAmountTV);
-                                $('#inputBiayaAdminTV').val(simulateFeeTV);
-                                $('#inputTotalBayarTV').val(simulateTotalTV);
+                        $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
+                        $('#inputTotalTagihanTV').val(simulateAmountTV);
+                        $('#inputBiayaAdminTV').val(simulateFeeTV);
+                        $('#inputTotalBayarTV').val(simulateTotalTV);
 
-                                $('#btnPeriksaTV').removeAttr('disabled');
-                                $('#btnPeriksaTV').html('Pembayaran');
+                        $('#btnPeriksaTV').removeAttr('disabled');
+                        $('#btnPeriksaTV').html('Pembayaran');
 
-                                $('#detailTV').show();
-                            }
-                        });
+                        $('#detailTV').show();
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status === 400 || xhr.status === 500) {
-                            // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
                             var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
 
-                            // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertTV').empty().append(alertDiv);
                         }
 
-                        // Hapus spinner dan aktifkan tombol
                         $('#btnPeriksaTV').removeAttr('disabled');
                         $('#btnPeriksaTV').html('Pembayaran');
                     }

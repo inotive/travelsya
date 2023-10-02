@@ -6,7 +6,7 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 
 <head>
-    <title>Traveslya - @yield('title')</title>
+    <title>Traveslya Indonesia</title>
     <meta charset="utf-8" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
@@ -93,7 +93,7 @@
         } */
     </style>
     @stack('add-style')
-    @vite(['resources/js/app.js'])
+{{--    @vite(['resources/js/app.js'])--}}
 </head>
 <!--end::Head-->
 

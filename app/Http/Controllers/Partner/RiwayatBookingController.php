@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionHostel;
+use App\Models\DetailTransactionHotel;
 use App\Models\Hostel;
 use App\Models\HotelBookDate;
 use App\Models\Transaction;
@@ -45,8 +47,8 @@ class RiwayatBookingController extends Controller
 
     public function index(Request $request)
     {
-        $hotelbookdates = HotelBookDate::query();
-        $hostelbookdates = BookDate::query();
+        $hotelbookdates = DetailTransactionHotel::query();
+        $hostelbookdates = DetailTransactionHostel::query();
 
 
         $year = $request->input('year');
@@ -55,18 +57,18 @@ class RiwayatBookingController extends Controller
 
 
         if ($year != null) {
-            $hotelbookdates->whereYear('start', $year)->orWhereYear('end', $year);
-            $hostelbookdates->whereYear('start', $year)->orWhereYear('end', $year);
+            $hotelbookdates->whereYear('reservation_start', $year)->orWhereYear('end', $year);
+            $hostelbookdates->whereYear('reservation_start', $year)->orWhereYear('end', $year);
         }
 
         if ($start != null) {
-            $hotelbookdates = $hotelbookdates->where('start', '>=', $start);
-            $hostelbookdates = $hostelbookdates->where('start', '>=', $start);
+            $hotelbookdates = $hotelbookdates->where('reservation_start', '>=', $start);
+            $hostelbookdates = $hostelbookdates->where('reservation_start', '>=', $start);
         }
 
         if ($end != null) {
-            $hotelbookdates = $hotelbookdates->where('end', '<=', $end);
-            $hostelbookdates = $hostelbookdates->where('end', '<=', $end);
+            $hotelbookdates = $hotelbookdates->where('reservation_end', '<=', $end);
+            $hostelbookdates = $hostelbookdates->where('reservation_end', '<=', $end);
         }
 
         $hotelbookdates = $hotelbookdates->get();
@@ -77,14 +79,14 @@ class RiwayatBookingController extends Controller
     public function detailhotelbookdate($id)
     {
         $hotelbookdates = HotelBookDate::find($id);
-        
+
         return view('ekstranet.booking.detail-book-hotel', compact('hotelbookdates'));
     }
 
     public function detailhostelbookdate($id)
     {
         $hostelbookdates = BookDate::find($id);
-        
+
         return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
     }
 
