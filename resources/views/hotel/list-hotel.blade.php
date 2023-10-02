@@ -58,12 +58,25 @@
                                 <label for="" class="form-label">Fasilitas</label>
                             </div>
 
+                            {{-- @foreach ($facilities as $facility)
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="facility[]" type="checkbox"
+                                        value="{{ $facility->id }}" id="flexCheckDefault" {{ ($request['facility'] ??
+                                        null)==$facility->id ? 'checked' : ''}} />
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        {{ $facility->name }}
+                                    </label>
+                                </div>
+                            </div>
+                            @endforeach --}}
+
                             @foreach ($facilities as $facility)
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" name="facility" type="checkbox"
-                                        value="{{ $facility->id }}" id="flexCheckDefault" {{ ($request['facility'] ??
-                                        null)==$facility->id ? 'checked' : ''}} />
+                                    <input class="form-check-input" name="facility[]" type="checkbox"
+                                        value="{{ $facility->id }}" id="flexCheckDefault" {{ in_array($facility->id,
+                                    $request['facility'] ?? []) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="flexCheckDefault">
                                         {{ $facility->name }}
                                     </label>
@@ -102,8 +115,9 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="1"
-                                        id="flexCheckDefault" {{ ($request['star'] ?? null)==1 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="1"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(1, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                     </label>
@@ -111,8 +125,9 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="2"
-                                        id="flexCheckDefault" {{ ($request['star'] ?? null)==2 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="2"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(2, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -121,21 +136,10 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="3"
-                                        id="flexCheckDefault" {{ ($request['star'] ?? null)==3 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="3"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(3, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="4"
-                                        id="flexCheckDefault" {{ ($request['star'] ?? null)==4 ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -144,8 +148,22 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="5"
-                                        id="flexCheckDefault" {{ ($request['star'] ?? null)==5 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="4"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(4, $_GET['star']))
+                                        ? 'checked' : '' }} />
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="5"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(5, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -189,12 +207,13 @@
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
-                                        <div class="input-group" id="js_datepicker" data-td-target-input="nearest"
-                                            data-td-target-toggle="nearest">
+                                        <div class="input-group" id="js_datepicker_list_hotel"
+                                            data-td-target-input="nearest" data-td-target-toggle="nearest">
                                             <input id="checkin" type="text" name="start" class="form-control"
-                                                data-td-target="#js_datepicker" x-on:change="handleSelectCheckin"
+                                                data-td-target="#js_datepicker_list_hotel"
+                                                x-on:change="handleSelectCheckin"
                                                 value="{{ $request['start'] ?? '' }}" />
-                                            <span class="input-group-text" data-td-target="#js_datepicker"
+                                            <span class="input-group-text" data-td-target="#js_datepicker_list_hotel"
                                                 data-td-toggle="datetimepicker">
                                                 <i class="ki-duotone ki-calendar fs-2">
                                                     <span class="path1"></span>
@@ -203,7 +222,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <input type="hidden" name="duration" value="{{ $request['duration'] }}">
+                                    {{-- <input type="hidden" name="duration" value="{{ $request['duration'] }}">
                                     @php
                                     $checkin = \Carbon\Carbon::parse($request['start']);
                                     $duration = $request['duration'];
@@ -217,6 +236,16 @@
                                         <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
                                         <input type="text" class="form-control" name="end_date"
                                             value="{{ $checkout->format('d-m-Y') }}" />
+                                    </div> --}}
+
+                                    <div class="col-3">
+                                        <label for="" class="form-label fw-bold fs-6">Durasi</label>
+                                        <select name="duration" class="form-select">
+                                            @for ($i = 1; $i <= 31; $i++) <option value="{{ $i }}" {{
+                                                $request['duration']==$i ? 'selected' :'' }}>{{ $i }} Malam
+                                                </option>
+                                                @endfor
+                                        </select>
                                     </div>
                                     <div class="col-3">
                                         <label class="form-label fw-bold fs-6">Total Kamar</label>
@@ -337,7 +366,7 @@
                                         {{-- <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
                                         <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
                                         <ul>
-                                            @foreach ($hotel->hostelFacilities as $facility)
+                                            @foreach ($hotel->hotelroomFacility as $facility)
                                             <li>{{ $facility->facility->name }}</li>
                                             @endforeach
                                         </ul>
@@ -687,10 +716,31 @@
 <script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
 <script>
     $(document).ready(function() {
-            $("#card-filter").hide();
-            $("#button-refilter").click(function() {
-                $("#card-filter").toggle();
-            })
+        $("#card-filter").hide();
+        $("#button-refilter").click(function() {
+            $("#card-filter").toggle();
         })
+
+        var today = new Date();
+
+        new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hotel"), {
+            display: {
+                viewMode: "calendar",
+                components: {
+                    date: true,
+                    hours: false,
+                    minutes: false,
+                    seconds: false
+                }
+            },
+            localization: {
+                locale: "id",
+                format: "dd-MM-yyyy",
+            },
+            restrictions: {
+                minDate: today,
+            },
+        });
+    })
 </script>
 @endpush

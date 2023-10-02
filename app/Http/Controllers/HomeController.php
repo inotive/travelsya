@@ -24,16 +24,18 @@ class HomeController extends Controller
         // $ads = $this->travelsya->ads();
         // return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
         //        dd('haloo');
-        $data['hotels'] = Hotel::with('hotelRoom','hotelImage')->limit(4)->get();
-//        $dummyHotels = $hotels->map(function ($hotel) {
-//            return [
-//                'id' => $hotel->id,
-//                'name' => $hotel->name,
-//                'label' => $hotel->name,
-//            ];
-//        })->toArray();
+        $hotels = Hotel::with('hotelRoom', 'hotelImage')->latest()->get();
+        $hotel_favorite = Hotel::with('hotelRoom', 'hotelImage')->limit(4)->get();
+        $dummyHotels = $hotels->map(function ($hotel) {
+            return [
+                'id' => $hotel->id,
+                'name' => $hotel->name,
+                'label' => $hotel->name,
+            ];
+        })->toArray();
 
-//        $data['hotels'] = $dummyHotels;
+        $data['hotels'] = $dummyHotels;
+        $data['hotel_favorite'] = $hotel_favorite;
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)

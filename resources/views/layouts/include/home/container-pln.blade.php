@@ -106,6 +106,7 @@
                     $('#textAlert').show();
                     return false;
                 }
+
                 $('#alertPLN').empty()
                 $('#detailPLN').hide();
                 $('#btnPeriksaPLN').attr('disabled', true);
