@@ -11,15 +11,19 @@
                 <h2 class="fw-bold mb-5">E-Wallet</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-6">
+                    <div class="col-6">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span >Nomor Handphone</span>
+                            <span>Jenis Produk</span>
                         </label>
-
-                        <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor telfon" value=""/>
-                        <!--end::Input-->
+                        @php
+                            $products = DB::table('products')->where('service_id', 11)
+                                ->distinct('name')->get();
+                        @endphp
+                        <select name="" id="" class="form-control form-control-lg" onchange="getProduct(this)">
+                            @foreach($products as $product)
+                                <option value="">{{$product->name}}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="col-6">
                         <label class="fs-5 fw-semibold mb-2">
@@ -31,6 +35,15 @@
                                 <option value="">Rp. {{number_format($i *10000,0,',','.')}}</option>
                             @endfor
                         </select>
+                    </div>
+                    <div class="col-xl-12">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span>Nomor Handphone</span>
+                        </label>
+                        <!--begin::Input-->
+                        <input type="text" id="notelp" class="form-control form-control-lg"
+                               name="notelp" placeholder="Masukan nomor telfon" value=""/>
+                        <!--end::Input-->
                     </div>
 
                 </div>
