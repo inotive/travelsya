@@ -44,6 +44,34 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+
+
+// Searching Page
+Route::get('/search-hotel', function () {
+    return view('search.hotel');
+})->name('search.hotel');
+
+Route::get('/search-page-bpjs', function () {
+    return view('search.bpjs');
+})->name('search.bpjs');
+
+Route::get('/search-ppob', function () {
+    return view('search.hostel');
+})->name('search.hostel');
+
+Route::get('/search-pln', function () {
+    return view('search.pln');
+})->name('search.hostel');
+
+Route::get('/search-pulsa', function () {
+    return view('search.pulsa');
+})->name('search.hostel');
+
+Route::get('/search-pdam', function () {
+    return view('search.pdam');
+})->name('search.hostel');
+
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 
@@ -62,8 +90,7 @@ Route::get('/profile', [UserController::class, 'profile'])->name('user.profile')
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
 Route::get('/profile/order-detail', [UserController::class, 'orderDetail'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
-
-
+Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
 Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
