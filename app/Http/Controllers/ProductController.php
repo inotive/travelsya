@@ -114,7 +114,7 @@ class ProductController extends Controller
     {
         // return view('product.bpjs');
         $data = $request->all();
-
+        return $data;
         $requestMymili = $this->mymili->inquiry([
             'no_hp' => $data['no_pelanggan'],
             'nom' => $data['nom'],
