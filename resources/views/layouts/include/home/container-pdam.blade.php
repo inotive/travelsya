@@ -11,15 +11,21 @@
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
-                            name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
-                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
+                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
+                        <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPDAM">
@@ -27,16 +33,8 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPDAM">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Wilayah Pelanggan</span>
-                        </label>
-                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
-                    </div>
-                    <div class="col-xl-4">
-                        @auth
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
-                        @endauth
+                    <div class="col-xl-12">
+                        <button type="button" class="btn btn-lg btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
                     </div>
                     <div class="row mt-4" id="detailPDAM">
                         <div class="col-12">

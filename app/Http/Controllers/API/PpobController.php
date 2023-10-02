@@ -85,13 +85,19 @@ class PpobController extends Controller
         if ($validator->fails()) {
             return ResponseFormatter::error(['response' => $validator->errors(),], 'Transaction failed', 500);
         }
-
         //get data
         $product = Product::with('service')->find($request->product_id);
         $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
 
         $fees = Fee::where('service_id', $product->service_id)->first();
         $priceWithAdmin = $request->nominal_tagihan + $fees->value;
+
+        $requestSaldoMyMili = $this->mymili->saldo();
+        $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
+
+        if ($saldoMyMili < ($priceWithAdmin)) {
+            return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
+        }
 
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
@@ -132,7 +138,6 @@ class PpobController extends Controller
         }
     }
 
-
     public function requestInquiry(Request $request)
     {
         try {
@@ -150,14 +155,6 @@ class PpobController extends Controller
             ->price;
 
             if (str_contains($requestMymili['status'], "SUKSES!")) {
-
-                $requestSaldoMyMili = $this->mymili->saldo();
-                $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
-
-                if ($saldoMyMili < ($requestMymili['tagihan'] + $fee_admin)) {
-                    return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
-                }
-
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
                 if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {

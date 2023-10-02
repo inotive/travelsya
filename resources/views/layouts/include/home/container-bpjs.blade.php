@@ -11,8 +11,8 @@
                 <h2 class="fw-bold mb-5">BPJS</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-6">
+                        <label class="fs-5 fw-semibold mb-3">
                             <span class="required">Produk</span>
                         </label>
 
@@ -20,14 +20,14 @@
                             <option value="362" selected>BPJS Kesehatan</option>
                         </select>
                     </div>
-                    <div class="col-xl-8">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-3">
                             <span class="required">Nomor BPJS</span>
                         </label>
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganBPJS" class="form-control form-control-lg" name="noPelangganBPJS" placeholder="Masukan nomor BPJS" value=""/>
-                        <small class="text-danger textAlert" style="display: none">No. BPJS harus terisi</small>
+                        <small class="text-danger textAlert">No. BPJS harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganBPJS">
@@ -35,7 +35,7 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminBPJS">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
-                    <div class="col-4">
+                    <div class="col-12">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
                     </div>
                     <div class="row mt-4" id="detailBPJS">
@@ -128,7 +128,7 @@
                     'nom': 'CEKBPJSKS',
                 },
                 success: function (responseTagihan) {
-                    
+
                     var simulateFeeBPJS = parseInt(responseTagihan.data.fee);
 
                     var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);

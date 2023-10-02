@@ -18,7 +18,7 @@
 
                         <input type="text" id="noPelangganPLN" class="form-control form-control-lg"
                             name="noPelangganPLN" placeholder="Masukan nomor pelanggan" value="" />
-                        <small class="text-danger" style="display: none" id="textAlert">No. Pelanggan harus
+                        <small class="text-danger"  id="textAlert">No. Pelanggan harus
                             terisi</small>
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPLN">
@@ -39,7 +39,7 @@
                                 <table class="table table-bordered">
                                     <tbody>
                                         <tr class="py-5">
-                                            <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                            <td class="bg-light fw-bold fs-6 text-gray-800 mb-4">Nama Pelanggan</td>
                                             <td class="text-right" colspan="3"><span id="namaPelangganPLN"></span></td>
                                         </tr>
                                         <tr class="py-5">
