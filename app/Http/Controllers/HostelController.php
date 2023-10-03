@@ -129,12 +129,12 @@ class HostelController extends Controller
         }
 
         if ($request->has('star')) {
-            $hostels->where('star', $request->star);
+            $hostels->whereIn('star', $request->star);
         }
 
         if ($request->has('facility')) {
             $hostels->whereHas('hostelFacilities', function ($query) use ($request) {
-                $query->where('facility_id', $request->facility);
+                $query->whereIn('facility_id', $request->facility);
             });
         }
 

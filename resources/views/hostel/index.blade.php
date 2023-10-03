@@ -234,7 +234,7 @@
                             <div class="col-12">
                                 <label for="" class="form-label">Fasilitas</label>
                             </div>
-                            @foreach ($facilities as $facility)
+                            {{-- @foreach ($facilities as $facility)
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" name="facility" type="checkbox"
@@ -245,7 +245,21 @@
                                     </label>
                                 </div>
                             </div>
+                            @endforeach --}}
+
+                            @foreach ($facilities as $facility)
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="facility[]" type="checkbox"
+                                        value="{{ $facility->id }}" id="flexCheckDefault" {{ in_array($facility->id,
+                                    $_GET['facility'] ?? []) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        {{ $facility->name }}
+                                    </label>
+                                </div>
+                            </div>
                             @endforeach
+
                             {{-- <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
@@ -284,29 +298,20 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="1"
-                                        id="flexCheckDefault" {{ ($params['star'] ?? null)==1 ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="1"
+                                        id="flexCheckDefault1" {{ (isset($_GET['star']) && in_array(1, $_GET['star']))
+                                        ? 'checked' : '' }} />
+                                    <label class="form-check-label" for="flexCheckDefault1">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="2"
-                                        id="flexCheckDefault" {{ ($params['star'] ?? null)==2 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="2"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(2, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="3"
-                                        id="flexCheckDefault" {{ ($params['star'] ?? null)==3 ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                     </label>
@@ -314,10 +319,10 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="4"
-                                        id="flexCheckDefault" {{ ($params['star'] ?? null)==4 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="3"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(3, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -326,8 +331,22 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star" value="5"
-                                        id="flexCheckDefault" {{ ($params['star'] ?? null)==5 ? 'checked' : '' }} />
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="4"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(4, $_GET['star']))
+                                        ? 'checked' : '' }} />
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        <span class="card-text fa fa-star" style="color: orange;"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="star[]" value="5"
+                                        id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(5, $_GET['star']))
+                                        ? 'checked' : '' }} />
                                     <label class="form-check-label" for="flexCheckDefault">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
