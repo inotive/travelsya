@@ -563,7 +563,7 @@
                                             @endforeach
                                         </ul>
 
-                                        <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $_GET['location'] . '&start=' . $_GET['start'] . '&duration=' . $_GET['duration'] . '&property=' . $_GET['property'] . '&roomtype=' . $_GET['roomtype'] . '&furnish=' . $_GET['furnish'] }}"
+                                        <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $_GET['location'] . '&start=' . $_GET['start'] . '&duration=' . $_GET['duration'] . '&property=' . $_GET['property'] . '&category=' . $_GET['category'] . '&roomtype=' . $_GET['roomtype'] . '&furnish=' . $_GET['furnish'] }}"
                                             class="btn btn-danger d-block mt-10 text-white">
                                             Lihat
                                         </a>

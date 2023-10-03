@@ -24,7 +24,7 @@
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
-                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
+                            name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
                         <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
@@ -34,7 +34,8 @@
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
                     <div class="col-xl-12">
-                        <button type="button" class="btn btn-lg btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
+                        <button type="button" class="btn btn-lg btn-danger mt-8 w-100"
+                            id="btnPeriksaPDAM">Periksa</button>
                     </div>
                     <div class="row mt-4" id="detailPDAM">
                         <div class="col-12">
@@ -142,35 +143,24 @@
                         'nom': 'CEKPDAMBLP',
                     },
                     success: function (responseTagihan) {
-                        console.log(responseTagihan);
+                        var simulateFeePDAM = parseInt(responseTagihan.data.fee);
 
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct': $('#productPDAM').val(),
-                            },
-                            success: function (response) {
-                                var simulateFeePDAM = parseInt(response[0].value);
+                        var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
+                        var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
 
-                                var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
-                                var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
+                        $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
+                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
+                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
 
-                                $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
-                                $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
-                                $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
-                                $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
+                        $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
+                        $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
+                        $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
+                        $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
 
-                                $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
-                                $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
-                                $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
-                                $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
+                        $('#btnPeriksaPDAM').removeAttr('disabled');
 
-                                $('#btnPeriksaPDAM').removeAttr('disabled');
-
-                                $('#detailPDAM').show();
-                            }
-                        });
+                        $('#detailPDAM').show();
 
                         $('#btnPeriksaPDAM').text('Periksa');
                     },
@@ -178,9 +168,6 @@
                         if (xhr.status === 400) {
                             // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
                             var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-
-                            // Isi elemen div dengan pesan kesalahan dari respons JSON
-                            // alertDiv.text(xhr.responseJSON.data);
 
                             // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertContainer').empty().append(alertDiv);
