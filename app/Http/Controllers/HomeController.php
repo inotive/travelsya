@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Facility;
+use App\Models\Hostel;
 use App\Models\Hotel;
 use Illuminate\Http\Request;
 use App\Services\Travelsya;
@@ -64,9 +65,50 @@ class HomeController extends Controller
             ];
         }
 
+        $hostel_favorite = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
+            ->withCount(["hostelRoom as price_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+            }])
+            ->withCount(["rating as rating_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(rate),0)'));
+            }])
+            ->withCount("rating as rating_count")
+            ->leftJoin('hostel_rooms', 'hostels.id', '=', 'hostel_rooms.hostel_id')
+            ->leftJoin('hostel_ratings', 'hostels.id', '=', 'hostel_ratings.hostel_id')
+            ->orderByDesc('hostel_ratings.rate')
+            ->orderBy('hostel_rooms.sellingprice')
+            ->limit(4)
+            ->get();
+
+        // $hostelDetails = [];
+
+        // foreach ($hostel_favorite as $favorite) {
+        //     $jumlahTransaksi = $favorite->rating->count();
+        //     $totalRating = $favorite->rating->sum('rate');
+
+        //     // Rating 5
+        //     if ($jumlahTransaksi > 0) {
+        //         $avgRating = $totalRating / $jumlahTransaksi;
+        //         $resultRating = ($avgRating / 10) * 5;
+        //     } else {
+        //         $avgRating = 0;
+        //         $resultRating = 0;
+        //     }
+
+        //     $hostelDetails[$favorite->id] = [
+        //         'total_rating' => $totalRating,
+        //         'result_rating' => $resultRating,
+        //         'star_rating' => floor($resultRating),
+        //     ];
+        // }
+
+        // dd($hostelDetails);
+
         $data['hotels'] = $dummyHotels;
         $data['hotel_favorite'] = $hotel_favorite;
         $data['hotel_detail'] = $hotelDetails;
+        $data['hostel_favorite'] = $hostel_favorite;
+        // $data['hostel_detail'] = $hostelDetails;
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)
