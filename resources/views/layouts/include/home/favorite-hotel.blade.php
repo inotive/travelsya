@@ -26,8 +26,9 @@
                         {{number_format($sellingPrice,0,',','.')}}</span>
                     <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
                         <span class="fa fa-star fs-4" style="color: red;"></span>
-                        <span x-html="data.rate">4.5</span>
-                        <span class="text-gray-400" x-html="data.totalRate">(5 Rating)</span>
+                        <span x-html="data.rate">{{ $hotel_detail[$hotel->id]['star_rating'] }}</span>
+                        <span class="text-gray-400" x-html="data.totalRate">({{
+                            $hotel_detail[$hotel->id]['total_rating'] }} Rating)</span>
                     </span>
                 </div>
             </div>

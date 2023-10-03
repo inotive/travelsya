@@ -25,7 +25,6 @@ class HomeController extends Controller
         // return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
         //        dd('haloo');
         $hotels = Hotel::with('hotelRoom', 'hotelImage')->latest()->get();
-        $hotel_favorite = Hotel::with('hotelRoom', 'hotelImage')->limit(4)->get();
         $dummyHotels = $hotels->map(function ($hotel) {
             return [
                 'id' => $hotel->id,
@@ -34,8 +33,40 @@ class HomeController extends Controller
             ];
         })->toArray();
 
+        $hotel_favorite = Hotel::with('hotelRoom', 'hotelImage')
+            ->leftJoin('hotel_rooms', 'hotels.id', '=', 'hotel_rooms.hotel_id')
+            ->leftJoin('hotel_ratings', 'hotels.id', '=', 'hotel_ratings.hotel_id')
+            ->select('hotels.*', DB::raw('COALESCE(hotel_ratings.rate, 0) as rating'), DB::raw('COALESCE(hotel_rooms.sellingprice, 0) as selling_price'))
+            ->orderByDesc('hotel_ratings.rate')
+            ->orderBy('hotel_rooms.sellingprice')
+            ->limit(4)
+            ->get();
+
+        $hotelDetails = [];
+
+        foreach ($hotel_favorite as $favorite) {
+            $jumlahTransaksi = $favorite->hotelRating->count();
+            $totalRating = $favorite->hotelRating->sum('rate');
+
+            // Rating 5
+            if ($jumlahTransaksi > 0) {
+                $avgRating = $totalRating / $jumlahTransaksi;
+                $resultRating = ($avgRating / 10) * 5;
+            } else {
+                $avgRating = 0;
+                $resultRating = 0;
+            }
+
+            $hotelDetails[$favorite->id] = [
+                'total_rating' => $totalRating,
+                'result_rating' => $resultRating,
+                'star_rating' => floor($resultRating),
+            ];
+        }
+
         $data['hotels'] = $dummyHotels;
         $data['hotel_favorite'] = $hotel_favorite;
+        $data['hotel_detail'] = $hotelDetails;
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)
