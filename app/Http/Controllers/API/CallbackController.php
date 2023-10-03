@@ -37,9 +37,9 @@ class CallbackController extends Controller
         fwrite($fp, "\n");
         fclose($fp);
     }
+    
     public function xendit(Request $request)
     {
-
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
         // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
@@ -88,9 +88,19 @@ class CallbackController extends Controller
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
+                            //process retrieve voucher code
+                            $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
+                            $responseMessageSN = explode("SN=",$responseMessage[4]);
+                            $responseMessageSNCode = explode("/",$responseMessageSN[1]);
+                            $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
+                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
+                                ->update([
+                                    'kode_voucher' => $responseMessageSNCodeFinal,
+                                ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
