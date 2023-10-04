@@ -72,6 +72,7 @@ Route::get('/transaction', [UserController::class, 'transaction'])->name('user.t
 Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
 
 Route::get('/ewallet/products/{jenis}', [EwalletController::class, 'products']);
+Route::post('/ewallet/payment', [EwalletController::class, 'payment']);
 
 //ppob
 Route::controller(ProductController::class)->name('product')->prefix('product')->group(function () {

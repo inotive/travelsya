@@ -6,7 +6,9 @@
         <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
-            <div class="card-body d-flex flex-column justify-content-between">
+            <form method="post" action="{{ url('ewallet/payment') }}"
+                class="card-body d-flex flex-column justify-content-between">
+                @csrf
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">E-Wallet</h2>
                 <!--end::Title-->
@@ -15,16 +17,7 @@
                         <label class="fs-5 fw-semibold mb-2">
                             <span>Jenis Produk</span>
                         </label>
-                        @php
-                        $products = DB::table('products')->where('service_id', 11)
-                        ->where('is_active', 1)
-                        ->distinct('name')
-                        ->get();
-                        @endphp
-                        <select name="jenis_ewallet" id="jenis_ewallet" class="form-select form-select-lg">
-                            {{-- @foreach($products as $product)
-                            <option value="">{{$product->name}}</option>
-                            @endforeach --}}
+                        <select name="jenis_ewallet" id="jenis_ewallet" class="form-select form-select-lg" required>
                             <option value="">Pilih E-Wallet</option>
                             <option value="DANA">DANA</option>
                             <option value="GO-PAY">GO-PAY</option>
@@ -36,26 +29,33 @@
                             <span>Produk</span>
                         </label>
 
-                        <select name="produk_ewallet" id="produk_ewallet" class="form-select form-select-lg"></select>
+                        <select name="produk_ewallet" id="produk_ewallet" class="form-select form-select-lg"
+                            required></select>
                     </div>
                     <div class="col-xl-12">
                         <label class="fs-5 fw-semibold mb-2">
                             <span>Nomor Handphone</span>
                         </label>
-                        <!--begin::Input-->
                         <input type="text" id="notelp" class="form-control form-control-lg" name="notelp"
-                            placeholder="Masukan nomor telfon" value="" />
-                        <!--end::Input-->
+                            placeholder="Masukan nomor telfon" required />
                     </div>
 
                 </div>
 
                 <div class="row">
                     <div class="col">
-                        <button class="btn btn-danger w-100">Bayar</button>
+                        {{-- @auth --}}
+                        <button type="submit" class="btn btn-danger w-100">Bayar</button>
+                        {{-- @endauth --}}
+
+                        {{-- @guest
+                        <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                            Login Terlebih Dahulu
+                        </a>
+                        @endguest --}}
                     </div>
                 </div>
-            </div>
+            </form>
             <!--end::Body-->
         </div>
         <!--end::Tiles Widget 2-->
@@ -87,7 +87,7 @@
                         // Menambahkan pilihan berdasarkan respons
                         $.each(response, function (key, value) {
                             $('#produk_ewallet').append($('<option>', {
-                                value: value.kode,
+                                value: value.id,
                                 text: value.name +' - Rp. '+ value.price
                             }));
                         });
