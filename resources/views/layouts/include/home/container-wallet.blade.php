@@ -16,13 +16,19 @@
                             <span>Jenis Produk</span>
                         </label>
                         @php
-                            $products = DB::table('products')->where('service_id', 11)
-                                ->distinct('name')->get();
+                        $products = DB::table('products')->where('service_id', 11)
+                        ->where('is_active', 1)
+                        ->distinct('name')
+                        ->get();
                         @endphp
-                        <select name="" id="" class="form-control form-control-lg" onchange="getProduct(this)">
-                            @foreach($products as $product)
-                                <option value="">{{$product->name}}</option>
-                            @endforeach
+                        <select name="jenis_ewallet" id="jenis_ewallet" class="form-select form-select-lg">
+                            {{-- @foreach($products as $product)
+                            <option value="">{{$product->name}}</option>
+                            @endforeach --}}
+                            <option value="">Pilih E-Wallet</option>
+                            <option value="DANA">DANA</option>
+                            <option value="GO-PAY">GO-PAY</option>
+                            <option value="OVO">OVO</option>
                         </select>
                     </div>
                     <div class="col-6">
@@ -30,19 +36,15 @@
                             <span>Produk</span>
                         </label>
 
-                        <select name="" id="" class="form-control form-control-lg">
-                            @for($i = 1; $i <11; $i++)
-                                <option value="">Rp. {{number_format($i *10000,0,',','.')}}</option>
-                            @endfor
-                        </select>
+                        <select name="produk_ewallet" id="produk_ewallet" class="form-select form-select-lg"></select>
                     </div>
                     <div class="col-xl-12">
                         <label class="fs-5 fw-semibold mb-2">
                             <span>Nomor Handphone</span>
                         </label>
                         <!--begin::Input-->
-                        <input type="text" id="notelp" class="form-control form-control-lg"
-                               name="notelp" placeholder="Masukan nomor telfon" value=""/>
+                        <input type="text" id="notelp" class="form-control form-control-lg" name="notelp"
+                            placeholder="Masukan nomor telfon" value="" />
                         <!--end::Input-->
                     </div>
 
@@ -63,65 +65,89 @@
 </div>
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function() {
+<script>
+    $(document).ready(function() {
 
-            const {
-                getOperator
-            } = window.NoTelp;
-            $('#notelp').on('keyup', function(e) {
-                var notelp = e.target.value;
-                var operatorTelp1 = getOperator(notelp);
+        $('#jenis_ewallet').change(function (e) {
+            e.preventDefault();
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            const jenis_ewallet = $(this).val();
+
+            if(jenis_ewallet !== '') {
+                $.ajax({
+                    type: "GET",
+                    url: "ewallet/products/"+jenis_ewallet,
+                    success: function (response) {
+                        $('#produk_ewallet').empty();
+
+                        // Menambahkan pilihan berdasarkan respons
+                        $.each(response, function (key, value) {
+                            $('#produk_ewallet').append($('<option>', {
+                                value: value.kode,
+                                text: value.name +' - Rp. '+ value.price
+                            }));
+                        });
                     }
                 });
-                if (operatorTelp1.valid) {
-                    $.ajax({
-                        url: "{{ url('/ajax/ppob') }}",
-                        type: "POST",
-                        dataType: 'json',
-                        data: {
-                            operator: operatorTelp1.operator,
-                            category: 'pulsa'
-                        },
-                        success: function(response) {
-                            $('#row-pricelist').html('');
+            }
+        });
 
-                            if (response.message != 'Unauthorized') {
-                                $.each(response, function(key, val) {
-                                    $('#row-pricelist').append(
-                                        `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.description}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.price}</span></div></div></div></div>`
-                                    )
-                                });
-                            } else {
-                                $('#row-pricelist').append(
-                                    '<div class="col-md-12"><a href="{{ route('login') }}">Login first</a></div>'
-                                )
-                            }
-                        }
-                    }).done(function() {
-                        $('.pricelist').on('click', function(e) {
-                            const id = $(this).data('product');
-                            const notelp = $('#notelp').val();
+            // const {
+            //     getOperator
+            // } = window.NoTelp;
+            // $('#notelp').on('keyup', function(e) {
+            //     var notelp = e.target.value;
+            //     var operatorTelp1 = getOperator(notelp);
 
-                            $('#row-pricelist').append(
-                                `<form id="form_id" method="post" action="{{ route('cart') }}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `
-                            ).click(function() {
-                                $('#form_id').submit();
-                            });
+            //     $.ajaxSetup({
+            //         headers: {
+            //             'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
+            //         }
+            //     });
+            //     if (operatorTelp1.valid) {
+            //         $.ajax({
+            //             url: "{{ url('/ajax/ppob') }}",
+            //             type: "POST",
+            //             dataType: 'json',
+            //             data: {
+            //                 operator: operatorTelp1.operator,
+            //                 category: 'pulsa'
+            //             },
+            //             success: function(response) {
+            //                 $('#row-pricelist').html('');
 
-                        })
-                    });
-                }
-            })
+            //                 if (response.message != 'Unauthorized') {
+            //                     $.each(response, function(key, val) {
+            //                         $('#row-pricelist').append(
+            //                             `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.description}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.price}</span></div></div></div></div>`
+            //                         )
+            //                     });
+            //                 } else {
+            //                     $('#row-pricelist').append(
+            //                         '<div class="col-md-12"><a href="{{ route('login') }}">Login first</a></div>'
+            //                     )
+            //                 }
+            //             }
+            //         }).done(function() {
+            //             $('.pricelist').on('click', function(e) {
+            //                 const id = $(this).data('product');
+            //                 const notelp = $('#notelp').val();
+
+            //                 $('#row-pricelist').append(
+            //                     `<form id="form_id" method="post" action="{{ route('cart') }}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `
+            //                 ).click(function() {
+            //                     $('#form_id').submit();
+            //                 });
+
+            //             })
+            //         });
+            //     }
+            // })
 
         })
-    </script>
+</script>
 @endpush
