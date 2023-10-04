@@ -129,12 +129,12 @@ class HostelController extends Controller
         }
 
         if ($request->has('star')) {
-            $hostels->where('star', $request->star);
+            $hostels->whereIn('star', $request->star);
         }
 
         if ($request->has('facility')) {
             $hostels->whereHas('hostelFacilities', function ($query) use ($request) {
-                $query->where('facility_id', $request->facility);
+                $query->whereIn('facility_id', $request->facility);
             });
         }
 
@@ -184,7 +184,10 @@ class HostelController extends Controller
 
         // return view('hostel.room', compact('hostelget', 'params', 'cities'));
 
-        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities');
+
+        $startDate = date("Y-m-d", strtotime($request->start));
+        $endDate = date("Y-m-d", strtotime("+" . $request->duration . " month", strtotime($startDate)));
 
         $data['hostelget'] = $hostel->withCount(["hostelRoom as price_avg" => function ($query) {
             $query->select(DB::raw('coalesce(avg(sellingprice),0)'));
@@ -193,7 +196,35 @@ class HostelController extends Controller
                 $query->select(DB::raw('coalesce(avg(rate),0)'));
             }])
             ->withCount("rating as rating_count")
+            ->addSelect([
+                'availability_count' => DB::raw('COALESCE(
+                    (SELECT COUNT(*) FROM hostel_rooms AS hr
+                        WHERE hr.hostel_id = hostels.id
+                        AND NOT EXISTS (
+                            SELECT * FROM detail_transaction_hostel AS dt
+                            WHERE dt.hostel_room_id = hr.id
+                            AND (
+                                (dt.reservation_start <= ? AND dt.reservation_end >= ?)
+                                OR (dt.reservation_start <= ? AND dt.reservation_end >= ?)
+                            )
+                        )), 0)')
+            ])
+            ->setBindings([$startDate, $startDate, $endDate, $endDate])
             ->find($id);
+
+        // foreach ($data['hostelget']->hostelRoom as $room) {
+        //     $transactionCount = DB::table('detail_transaction_hostel')
+        //         ->where('hostel_room_id', $room->id)
+        //         ->where(function ($query) use ($startDate, $endDate) {
+        //             $query->whereBetween('reservation_start', [$startDate, $endDate])
+        //                 ->orWhereBetween('reservation_end', [$startDate, $endDate]);
+        //         })
+        //         ->count();
+
+        //     $room->totalroom -= $transactionCount;
+        // }
+
+        // dd($data['hostelget']);
 
         $data['params'] = $request->all();
 
