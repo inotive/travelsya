@@ -89,11 +89,13 @@
         </div>
         <div class="col-md-4 ">
             <label class="form-label fw-bold fs-6">Mulai Sewa</label>
-            <div class="input-group" id="js_datepickerhostel" data-td-target-input="nearest"
+            <div class="input-group" id="js_datepicker_list_hostel" data-td-target-input="nearest"
                 data-td-target-toggle="nearest">
-                <input name="start" id="checkin" type="text" class="form-control" data-td-target="#js_datepickerhostel"
-                    data-td-toggle="datetimepicker" x-on:change="handleSelectCheckin" value="{{date('Y-m-D')}}" />
-                <span class="input-group-text" data-td-target="#js_datepickerhostel" data-td-toggle="datetimepicker">
+                <input name="start" id="checkin" type="text" class="form-control"
+                    data-td-target="#js_datepicker_list_hostel" data-td-toggle="datetimepicker"
+                    x-on:change="handleSelectCheckin" value="" />
+                <span class="input-group-text" data-td-target="#js_datepicker_list_hostel"
+                    data-td-toggle="datetimepicker">
                     <i class="ki-duotone ki-calendar fs-2">
                         <span class="path1"></span>
                         <span class="path2"></span>
@@ -170,16 +172,36 @@
 @push('add-script')
 <script>
     function formatDateAndAddOneDay(dateString, duration = 0) {
-            var parts = dateString.split('-');
-            var day = parseInt(parts[0], 10);
-            var month = parseInt(parts[1], 10) - 1;
-            // Subtracting 1 to match JavaScript months (0-11)
-            var year = parseInt(parts[2], 10);
-            var date = new Date(year, month, day);
-            date.setMonth(date.getMonth() + parseInt(duration));
-            var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
-                date.getFullYear();
-            return formattedDate;
-        }
+        var parts = dateString.split('-');
+        var day = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10) - 1;
+        // Subtracting 1 to match JavaScript months (0-11)
+        var year = parseInt(parts[2], 10);
+        var date = new Date(year, month, day);
+        date.setMonth(date.getMonth() + parseInt(duration));
+        var formattedDate = ("0" + date.getDate()).slice(-2) + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" +
+            date.getFullYear();
+        return formattedDate;
+    }
+
+    var today_hostel = new Date();
+    new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hostel"), {
+        display: {
+            viewMode: "calendar",
+            components: {
+                date: true,
+                hours: false,
+                minutes: false,
+                seconds: false
+            }
+        },
+        localization: {
+            locale: "id",
+            format: "dd-MM-yyyy",
+        },
+        restrictions: {
+            minDate: today_hostel,
+        },
+    });
 </script>
 @endpush

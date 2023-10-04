@@ -298,6 +298,8 @@
                 var basePrice = parseInt(el.val().split('.').join(""));
                 var sellingPrice = basePrice + (basePrice * 15 / 100);
                 $('#sellingprice').val(addCommas(sellingPrice));
+
+                
             })
 
             $("#extrabedprice").keyup(function () {

@@ -51,10 +51,12 @@
         </div>
         <div class="col-md-4 mb-5">
             <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
-            <div class="input-group" id="js_datepicker" data-td-target-input="nearest" data-td-target-toggle="nearest">
-                <input id="checkin" type="text" name="start" class="form-control" data-td-target="#js_datepicker" value="{{date('Y-m-D')}}"
-                    x-on:change="handleSelectCheckin" />
-                <span class="input-group-text" data-td-target="#js_datepicker" data-td-toggle="datetimepicker">
+            <div class="input-group" id="js_datepicker_list_hotel" data-td-target-input="nearest"
+                data-td-target-toggle="nearest">
+                <input id="checkin" type="text" name="start" class="form-control"
+                    data-td-target="#js_datepicker_list_hotel" value="" x-on:change="handleSelectCheckin" />
+                <span class="input-group-text" data-td-target="#js_datepicker_list_hotel"
+                    data-td-toggle="datetimepicker">
                     <i class="ki-duotone ki-calendar fs-2">
                         <span class="path1"></span>
                         <span class="path2"></span>
@@ -105,15 +107,35 @@
 @push('add-script')
 <script>
     function calculateCheckoutDate(checkinDate, duration) {
-            var parts = checkinDate.split('-');
-            var day = parseInt(parts[0], 10);
-            var month = parseInt(parts[1], 10) - 1;
-            var year = parseInt(parts[2], 10);
-            var checkin = new Date(year, month, day);
-            checkin.setDate(checkin.getDate() + duration);
-            var checkoutDate = ("0" + checkin.getDate()).slice(-2) + "-" + ("0" + (checkin.getMonth() + 1)).slice(-2) + "-" + checkin.getFullYear();
+        var parts = checkinDate.split('-');
+        var day = parseInt(parts[0], 10);
+        var month = parseInt(parts[1], 10) - 1;
+        var year = parseInt(parts[2], 10);
+        var checkin = new Date(year, month, day);
+        checkin.setDate(checkin.getDate() + duration);
+        var checkoutDate = ("0" + checkin.getDate()).slice(-2) + "-" + ("0" + (checkin.getMonth() + 1)).slice(-2) + "-" + checkin.getFullYear();
 
-            return checkoutDate;
-        }
+        return checkoutDate;
+    }
+
+    var todayHotel = new Date();
+    new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hotel"), {
+        display: {
+            viewMode: "calendar",
+            components: {
+                date: true,
+                hours: false,
+                minutes: false,
+                seconds: false
+            }
+        },
+        localization: {
+            locale: "id",
+            format: "dd-MM-yyyy",
+        },
+        restrictions: {
+            minDate: todayHotel,
+        },
+    });
 </script>
 @endpush
