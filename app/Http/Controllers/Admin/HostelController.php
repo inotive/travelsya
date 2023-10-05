@@ -156,8 +156,7 @@ class HostelController extends Controller
             'name' => 'required',
             'address' => 'required',
             'star' => 'required',
-            'website' => 'required',
-            'user_id' => 'required',
+            // 'user_id' => 'required',
             'city' => 'required',
             'is_active' => 'required',
 
@@ -171,20 +170,23 @@ class HostelController extends Controller
         DB::table('hostels')->where('id', $hostel->id)->update([
             'user_id' => $request->user_id,
             'is_active' => $request->is_active,
-            'checkin' => "11:00",
-            'checkout' => "12:00",
-            'service_id' => 7,
+            'checkin' => $request->checkin,
+            'checkout' => $request->checkout,
+            // 'service_id' => 7,
             'name' => $request->name,
             'address' => $request->address,
             'city' => $request->city,
             'star' => $request->star,
             'website' => $request->website,
+            'lat' => $request->ltd,
+            'lon' => $request->long_ltd,
+            'property' => $request->property
         ]);
         // $hostel->update([
         //     'user_id' => $request->user_id,
         //     'is_active' => 1,
-        //     'checkin' => "11:00:00",
-        //     'checkout' => "12:00:00",
+        //     'checkin' => "11:00",
+        //     'checkout' => "12:00",
         //     'service_id' => 7,
         //     'name' => $request->name,
         //     'address' => $request->address,

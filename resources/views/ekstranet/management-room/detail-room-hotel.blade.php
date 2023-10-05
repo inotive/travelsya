@@ -149,6 +149,11 @@
                         <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                             <div class="row">
 
+                                <div class="card-toolbar">
+                                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
+                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Foto Ruangan</a>
+                                </div>
+
 
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
                                     id="kt_datatable_zero_configuration_1">
@@ -225,6 +230,86 @@
         <!--end::details View-->
         <!--begin::Row-->
 
+    </div>
+
+    <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header pb-0 border-0 justify-content-end">
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-duotone ki-cross fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                    <!--begin:Form-->
+                    <form id="kt_modal_new_target_form" class="form" method="post"
+                        action="{{ route('partner.management.room.storehotelroomImage') }}" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="hotel_id" value="{{$hotelrooms->hotel->id}}">
+                        <input type="hidden" name="hotel_room_id" value="{{$hotelrooms->id}}">
+
+                        <!--begin::Heading-->
+                        <div class="mb-13 text-center">
+                            <!--begin::Title-->
+                            <h1 class="mb-3">Create Foto Ruangan</h1>
+                            <!--end::Title-->
+                        </div>
+                        <!--end::Heading-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Gambar Iklan</label>
+                                <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                    name="image">
+
+                                <!-- error message untuk title -->
+                                @error('image')
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Actions-->
+                        <div class="text-center">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="reset" id="kt_modal_new_target_cancel"
+                                        class="btn btn-light me-3">Cancel
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                                        <span class="indicator-label">Submit</span>
+                                        <span class="indicator-progress">Please wait...
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end:Form-->
+                </div>
+                <!--end::Modal body-->
+            </div>
+            <!--end::Modal content-->
+        </div>
+        <!--end::Modal dialog-->
     </div>
 @endsection
 @push('add-script')
