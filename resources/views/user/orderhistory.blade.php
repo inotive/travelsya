@@ -77,7 +77,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
 
                 {{-- Menu Item Profil Saya --}}
                 <div class="menu-item">
-                    <a class="menu-link text-gray" href="#">
+                    <a class="menu-link text-gray" href="{{ route('user.profile') }}">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/user-nonactive.svg') }}" class="h-24px me-10"/>
                     </span>
@@ -89,7 +89,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
 
                 {{-- Menu Item Riwayat Pesanan --}}
                 <div class="menu-item">
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" href="{{ route('user.orderHistory') }}">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/clipboard-active.svg') }}" class="h-24px me-10"/>
                     </span>
@@ -98,40 +98,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                     </span>
                     </div>
                 </a>
-                {{-- Menu Item Data Penumpang --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/users.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Data Penumpang
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item Keamanan --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/lock.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Keamanan
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item Kode Referral --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Kode Referral
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item --}}
+                {{-- Menu Item Refund Dan Pembatalan --}}
                 <div class="menu-item">
                     <a class="menu-link text-gray-900" href="#">
                     <span class="menu-icon">
@@ -144,7 +111,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                 </div>
                 {{-- Menu Item Pusat Bantuan --}}
                 <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" href="{{ route('user.help') }}">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/headphones.svg') }}" class="h-24px me-10"/>
                     </span>
@@ -157,11 +124,12 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                 <div class="separator my-3 border"></div>
                 {{-- Menu ITEm Logout --}}
                 <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" id="kt_docs_sweetalert_basic" href="#">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/log-out.svg') }}" class="h-24px me-10"/>
                     </span>
                         Log out
+                        @include('user.logout')
                     </a>
                 </div>
                 </div>
@@ -188,179 +156,161 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                     <div class="row">
                         {{-- kolom batas form --}}
                         <div class="col-12">
-                            {{-- Opsi --}}
-                            <div class="ini-opsi d-flex">
-                                <div class="semua mr-3" style="margin-right: 8px">
-                                    <a class="btn btn-light-danger py-1 text-bold px-4 border border-1 rounded-pill fw-bold border-danger">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a id="pills-semua-tab" data-bs-toggle="pill" data-bs-target="#pills-semua" role="tab" aria-controls="pills-semua" aria-selected="true" class="nav-link btn btn-light-danger py-1 text-bold px-4 border border-1 rounded-pill fw-bold border-danger">
                                         Semua
                                     </a>
-                                </div>
-                                <div class="pesanan-aktif" style="margin-right: 8px">
-                                    <a class="btn btn-outline btn-outline-secondary py-1 text-bold px-4 border border-1 rounded-pill fw-bold text-gray-400 border-gray-400">
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a id="pills-aktif-tab" data-bs-toggle="pill" data-bs-target="#pills-aktif" role="tab" aria-controls="pills-aktif" aria-selected="false" class="nav-link btn btn-light-danger py-1 text-bold px-4 border border-1 rounded-pill fw-bold border-danger">
                                         Pesanan Aktif
                                     </a>
-                                </div>
-                                <div class="riwayat" style="margin-right: 8px">
-                                    <a class="btn btn-outline btn-outline-secondary py-1 text-bold px-4 border border-1 rounded-pill fw-bold text-gray-400 border-gray-400 ">
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a id="pills-riwayat-tab" data-bs-toggle="pill" data-bs-target="#pills-riwayat" role="tab" aria-controls="pills-riwayat" aria-selected="false" class="nav-link btn btn-light-danger py-1 text-bold px-4 border border-1 rounded-pill fw-bold border-danger">
                                         Riwayat
                                     </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade pills-semua" id="pills-semua" role="tabpanel" aria-labelledby="pills-semua-tab" tabindex="0">
+                                    {{-- Card Pertama Revisi --}}
+                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                            <div class="d-flex justify-content-between m-5">
+                                                <div class="text-gray-400 fw-bold">Hotel</div>
+                                                <div class="text-success fw-bold">Selesai</div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                            <div class="d-flex justify-content-between align-items-center m-5">
+                                                <div class="kiri d-flex">
+                                                    <div class="symbol symbol-40px">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame5.svg') }}" alt="frame5">
+                                                    </div>
+                                                    <div class="d-flex flex-column" style=" margin-left: 16px">
+                                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">MEISO KELAPA GADING</a>
+                                                        <span class="text-gray-400" style="margin-bottom: 6px">Reflexology 30 Menit</span>
+                                                    </div>
+                                                </div>
+                                                <div class="kanan">
+                                                    <div class="panah">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                            <div class="bagian-bawah-kiri d-block" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
+                                                <div class="text-gray-400 fs-8">Minggu, 01 Des 2022  14:00 WIB</div>
+                                                <div style="margin-top: 8px;" class="text fs-4 fw-bold">IDR 218,999</div>
+                                            </div>
+                                    </div>
+                                    {{-- Card Kedua Revisi --}}
+                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                            <div class="d-flex justify-content-between m-5">
+                                                <div class="text-gray-400 fw-bold">Hotel</div>
+                                                <div class="text-danger fw-bold">Menunggu Pembayaran</div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                            <div class="d-flex justify-content-between align-items-center m-5">
+                                                <div class="kiri d-flex">
+                                                    <div class="symbol symbol-40px">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame1.svg') }}" alt="frame5">
+                                                    </div>
+                                                    <div class="d-flex flex-column" style=" margin-left: 16px">
+                                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">MACA VILLAS and SPA Seminyak</a>
+                                                        <span class="text-gray-400" style="margin-bottom: 6px">2 Superior Room | 2 Night</span>
+                                                    </div>
+                                                </div>
+                                                <div class="kanan">
+                                                    <div class="panah">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="bagian-bawah-kiri d-block" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
+                                                <div class="text-gray-400 fs-8">Menunggu Pembayaran</div>
+                                                <div style="margin-top: 8px;" class="text fs-4 fw-bold">IDR 218,999</div>
+                                            </div>
+                                            <div class="bagian-bawah-kanan" style="margin-right: 16px">
+                                                <a href="#" class="btn btn-danger">
+                                                    Bayar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade pills-aktif" id="pills-aktif" role="tabpanel" aria-labelledby="pills-aktif-tab" tabindex="0">
+                                    {{-- Card Kedua Revisi --}}
+                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                            <div class="d-flex justify-content-between m-5">
+                                                <div class="text-gray-400 fw-bold">Hotel</div>
+                                                <div class="text-danger fw-bold">Menunggu Pembayaran</div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                            <div class="d-flex justify-content-between align-items-center m-5">
+                                                <div class="kiri d-flex">
+                                                    <div class="symbol symbol-40px">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame1.svg') }}" alt="frame5">
+                                                    </div>
+                                                    <div class="d-flex flex-column" style=" margin-left: 16px">
+                                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">MACA VILLAS and SPA Seminyak</a>
+                                                        <span class="text-gray-400" style="margin-bottom: 6px">2 Superior Room | 2 Night</span>
+                                                    </div>
+                                                </div>
+                                                <div class="kanan">
+                                                    <div class="panah">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="bagian-bawah-kiri d-block" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
+                                                <div class="text-gray-400 fs-8">Menunggu Pembayaran</div>
+                                                <div style="margin-top: 8px;" class="text fs-4 fw-bold">IDR 218,999</div>
+                                            </div>
+                                            <div class="bagian-bawah-kanan" style="margin-right: 16px">
+                                                <a href="#" class="btn btn-danger">
+                                                    Bayar
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade pills-riwayat" id="pills-riwayat" role="tabpanel" aria-labelledby="pills-riwayat-tab" tabindex="0">
+                                    {{-- Card Pertama Revisi --}}
+                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                            <div class="d-flex justify-content-between m-5">
+                                                <div class="text-gray-400 fw-bold">Hotel</div>
+                                                <div class="text-success fw-bold">Selesai</div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                            <div class="d-flex justify-content-between align-items-center m-5">
+                                                <div class="kiri d-flex">
+                                                    <div class="symbol symbol-40px">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame5.svg') }}" alt="frame5">
+                                                    </div>
+                                                    <div class="d-flex flex-column" style=" margin-left: 16px">
+                                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">MEISO KELAPA GADING</a>
+                                                        <span class="text-gray-400" style="margin-bottom: 6px">Reflexology 30 Menit</span>
+                                                    </div>
+                                                </div>
+                                                <div class="kanan">
+                                                    <div class="panah">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="separator border border-1" style="margin-bottom: 16px; margin-left: 16px; margin-right: 16px;"></div>
+                                            <div class="bagian-bawah-kiri d-block" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
+                                                <div class="text-gray-400 fs-8">Minggu, 01 Des 2022  14:00 WIB</div>
+                                                <div style="margin-top: 8px;" class="text fs-4 fw-bold">IDR 218,999</div>
+                                            </div>
+                                    </div>
                                 </div>
                             </div>
-                            {{-- End Opsi --}}
-
-                        {{-- Card Pertama --}}
-                        <div class="card border border-1 mt-5 d-flex bg-gradient-merah" style="margin-bottom: 8px;">
-                            <div class="d-flex align-items-center">
-                                <!--begin::User-->
-                                <div class="d-flex" style="margin-left: 16px; margin-top:16px; margin-bottom: 8px;">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-40px me-5">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame5.svg') }}" alt="frame5">
-                                    </div>
-                                    <!--end::Avatar-->
-
-                                    <!--begin::Info-->
-                                    <div class="d-flex flex-column">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">MEISO KELAPA GADING</a>
-                                        <span class="text-gray-400" style="margin-bottom: 6px">Reflexology 30 Menit</span>
-                                    </div>
-                                    <!--end::Info-->
-                                </div>
-                                <!--end::User-->
-                            </div>
-                                {{-- Separator --}}
-                                <div class="separator border border-1" style="margin-bottom: 8px; margin-left: 16px; margin-right: 16px;"></div>
-                                <div class="bagian-bawah d-flex justify-content-between" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
-                                <div class="text fw-bold text-danger fs-8">Menunggu Pembayaran</div>
-                                <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
-                                </div>
-                        </div>
-
-                        {{-- Card Kedua --}}
-                        <div class="card border border-1 d-flex bg-gradient-merah" style="margin-bottom: 8px;">
-                            <div class="d-flex align-items-center">
-                                <!--begin::User-->
-                                <div class="d-flex" style="margin-left: 16px; margin-top:16px; margin-bottom: 8px;">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-40px me-5">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame4.svg') }}" alt="frame4">
-                                    </div>
-                                    <!--end::Avatar-->
-
-                                    <!--begin::Info-->
-                                    <div class="info-full" style="margin-right: 16px">
-                                    <div class="d-flex flex-column">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">SOEKARNO HATTA - DJUANDA</a>
-                                        <span class="text-gray-400" style="margin-bottom: 6px">Citilink QG-513, Ekonomi</span>
-                                        <span class="text-gray-400">Senin, 02 Des 2022 | 06:00 | 1j 30m</span>
-                                    </div>
-                                    <!--end::Info-->
-                                    <!--begin::Info-->
-                                    <div class="d-flex flex-column" style="margin-top: 12px">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">SOEKARNO HATTA - DJUANDA</a>
-                                        <span class="text-gray-400" style="margin-bottom: 6px">Citilink QG-555, Ekonomi</span>
-                                        <span class="text-gray-400">Senin, 02 Des 2022 | 18:00 | 1j 30m</span>
-                                    </div>
-                                    </div>
-                                    <!--end::Info-->
-                                </div>
-                                <!--end::User-->
-                            </div>
-                                {{-- Separator --}}
-                                <div class="separator border border-1" style="margin-bottom: 8px; margin-left: 16px; margin-right: 16px;"></div>
-                                <div class="bagian-bawah d-flex justify-content-between" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
-                                <div class="text fw-bold text-gray-400 fs-8">Selesai</div>
-                                <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
-                                </div>
-                        </div>
-
-                        {{-- Card Ketiga --}}
-                        <div class="card border border-1 d-flex bg-gradient-merah " style="margin-bottom: 8px;">
-                            <div class="d-flex align-items-center">
-                                <!--begin::User-->
-                                <div class="d-flex" style="margin-left: 16px; margin-top:16px; margin-bottom: 8px;">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-40px me-5">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame3.svg') }}" alt="frame3">
-                                    </div>
-                                    <!--end::Avatar-->
-
-                                    <!--begin::Info-->
-                                    <div class="d-flex flex-column">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">YOGYAKARTA - JAKARTA</a>
-                                        <span class="text-gray-400" style="margin-bottom: 6px">Bangunkarta 122, Eksekutif</span>
-                                        <span class="text-gray-400">Senin, 02 Des 2022 | 14:00 | Cikarang</span>
-                                    </div>
-                                    <!--end::Info-->
-                                </div>
-                                <!--end::User-->
-                            </div>
-                                {{-- Separator --}}
-                                <div class="separator border border-1" style="margin-bottom: 8px; margin-left: 16px; margin-right: 16px;"></div>
-                                <div class="bagian-bawah d-flex justify-content-between" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
-                                <div class="text fw-bold text-gray-400 fs-8">Selesai</div>
-                                <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
-                                </div>
-                        </div>
-
-                        {{-- Card Empat --}}
-                        <div class="card border border-1 d-flex bg-gradient-merah" style="margin-bottom: 8px;">
-                            <div class="d-flex align-items-center">
-                                <!--begin::User-->
-                                <div class="d-flex" style="margin-left: 16px; margin-top:16px; margin-bottom: 8px;">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-40px me-5">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame1.svg') }}" alt="frame1">
-                                    </div>
-                                    <!--end::Avatar-->
-
-                                    <!--begin::Info-->
-                                    <div class="d-flex flex-column">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">Maca Villas and Spa Seminyak</a>
-                                        <span class="text-gray-400" style="margin-bottom: 6px">1x Kamar Deluxe Double atau Ranjang Lain - Pemandangan Kota</span>
-                                        <span class="text-gray-400">19 Feb 2022 - 22 Feb 2022</span>
-                                    </div>
-                                    <!--end::Info-->
-                                </div>
-                                <!--end::User-->
-                            </div>
-                                {{-- Separator --}}
-                                <div class="separator border border-1" style="margin-bottom: 8px; margin-left: 16px; margin-right: 16px;"></div>
-                                <div class="bagian-bawah d-flex justify-content-between" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
-                                <div class="text fw-bold text-gray-400 fs-8">Selesai</div>
-                                <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
-                                </div>
-                        </div>
-
-                        {{-- Card Kelima --}}
-                        <div class="card border border-1 d-flex bg-gradient-merah" style="margin-bottom: 8px;">
-                            <div class="d-flex align-items-center">
-                                <!--begin::User-->
-                                <div class="d-flex" style="margin-left: 16px; margin-top:16px; margin-bottom: 8px;">
-                                    <!--begin::Avatar-->
-                                    <div class="symbol symbol-40px me-5">
-                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame3.svg') }}" alt="frame3">
-                                    </div>
-                                    <!--end::Avatar-->
-
-                                    <!--begin::Info-->
-                                    <div class="d-flex flex-column">
-                                        <a href="#" class="text-gray-900 text-hover-primary fs-6 fw-bold" style="margin-bottom: 8px">JAKARTA - YOGYAKARTA</a>
-                                        <span class="text-gray-400" style="margin-bottom: 6px">Bangunkarta 122, Eksekutif</span>
-                                        <span class="text-gray-400">Senin, 02 Des 2022 | 14:00 | Cikarang</span>
-                                    </div>
-                                    <!--end::Info-->
-                                </div>
-                                <!--end::User-->
-                            </div>
-                                {{-- Separator --}}
-                                <div class="separator border border-1" style="margin-bottom: 8px; margin-left: 16px; margin-right: 16px;"></div>
-                                <div class="bagian-bawah d-flex justify-content-between" style="margin-left: 16px; margin-bottom: 16px; margin-right: 16px;">
-                                <div class="text fw-bold text-gray-400 fs-8">Selesai</div>
-                                <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}" alt="frame5" style="height: 18px; width: 18px;">
-                                </div>
-                        </div>
-
                         </div>
                     </div>
                 </div>
