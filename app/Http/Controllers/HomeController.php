@@ -40,8 +40,9 @@ class HomeController extends Controller
             ->select('hotels.*', DB::raw('COALESCE(hotel_ratings.rate, 0) as rating'), DB::raw('COALESCE(hotel_rooms.sellingprice, 0) as selling_price'))
             ->orderByDesc('hotel_ratings.rate')
             ->orderBy('hotel_rooms.sellingprice')
-            ->limit(4)
-            ->get();
+            // ->limit(4)
+            // ->get();
+            ->take(4);
 
         $hotelDetails = [];
 
@@ -115,6 +116,10 @@ class HomeController extends Controller
             ->where('deleted_at', null)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $data['hotelByCity'] = Hotel::distinct('city')
+            ->orderBy('city', 'asc')
+            ->pluck('city');
 
         return view('home', $data);
     }

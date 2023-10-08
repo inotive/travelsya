@@ -68,11 +68,11 @@
 
                 {{-- Menu Item Profil Saya --}}
                 <div class="menu-item">
-                    <a class="menu-link text-gray" href="#">
+                    <a class="menu-link text-gray" href="{{ route('user.profile') }}">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/user.svg') }}" class="h-24px me-10"/>
                     </span>
-                    <span class="menu-title text-gray-900">
+                    <span class="menu-title fw-bold text-danger">
                         <b>Profil Saya</b>
                     </span>
                     </a>
@@ -80,7 +80,7 @@
 
                 {{-- Menu Item Riwayat Pesanan --}}
                 <div class="menu-item">
-                    <a class="menu-link text-gray-900" href="#">
+                    <a class="menu-link text-gray-900" href="{{ route('user.orderHistory') }}">
                     <span class="menu-icon">
                         <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
                     </span>
@@ -89,39 +89,6 @@
                     </span>
                     </div>
                 </a>
-                {{-- Menu Item Data Penumpang --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/users.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Data Penumpang
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item Keamanan --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/lock.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Keamanan
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item Kode Referral --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Kode Referral
-                    </span>
-                    </a>
-                </div>
                 {{-- Menu Item --}}
                 <div class="menu-item">
                     <a class="menu-link text-gray-900" href="#">

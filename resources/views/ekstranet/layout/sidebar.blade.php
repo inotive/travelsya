@@ -82,6 +82,51 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
+                {{-- <div data-kt-menu-trigger="click"
+                     class="menu-item menu-accordion{{(Request::segment(2)=="riwayat-booking") ? 'here show' : ''}}">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                       <span class="menu-icon">
+                            <i class="far fa-calendar fs-3"></i>
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                           </i>
+                        </span>
+                        <span class="menu-title">Pemesanan</span>
+                        <span class="menu-arrow"></span>
+                    </span>
+                    <!--end:Menu link-->
+                    <!--begin:Menu sub-->
+                    <div class="menu-sub menu-sub-accordion">
+                        <!--begin:Menu item-->
+                        <div class="menu-item">
+                            <!--begin:Menu link-->
+                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}"
+                               href="{{route('partner.riwayat-booking')}}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Riwayat Pemesanan Hotel</span>
+                            </a>
+                            <!--end:Menu link-->
+                        </div>
+                        <!--end:Menu item-->
+                        <!--begin:Menu item-->
+                        <div class="menu-item">
+                            <!--begin:Menu link-->
+                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}"
+                               href="{{route('partner.riwayat-booking')}}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title">Riwayat Pemesanan Hostel</span>
+                            </a>
+                            <!--end:Menu link-->
+                        </div>
+                        <!--end:Menu item-->
+                    </div>
+                    <!--end:Menu sub-->
+                </div> --}}
                 <!--begin:Menu item-->
                 <a href="{{route('partner.review')}}"
                    class="menu-item menu-accordion">
