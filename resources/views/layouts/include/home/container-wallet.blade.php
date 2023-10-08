@@ -44,15 +44,15 @@
 
                 <div class="row">
                     <div class="col">
-                        {{-- @auth --}}
+                        @auth
                         <button type="submit" class="btn btn-danger w-100">Bayar</button>
-                        {{-- @endauth --}}
+                        @endauth
 
-                        {{-- @guest
+                        @guest
                         <a href="{{ route('login') }}" class="btn btn-danger w-100">
                             Login Terlebih Dahulu
                         </a>
-                        @endguest --}}
+                        @endguest
                     </div>
                 </div>
             </form>

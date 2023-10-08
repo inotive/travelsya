@@ -117,6 +117,10 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $data['hotelByCity'] = Hotel::distinct('city')
+            ->orderBy('city', 'asc')
+            ->pluck('city');
+
         return view('home', $data);
     }
 }

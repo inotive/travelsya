@@ -429,8 +429,9 @@
                                         </b>
                                     </p>
                                     <div class="d-flex align-items-center gap-2">
-                                        @foreach ($room->hotelroomFacility as $facility)
-                                        {{ asset($facility->image) }}
+                                        @foreach ($room->hotelroomFacility->groupBy('facility.name') as $facility)
+                                        <img src="{{ asset($facility->first()->facility->icon) }}" alt="facility"
+                                            width="30" class="me-1">
                                         @endforeach
                                     </div>
                                 </div>
