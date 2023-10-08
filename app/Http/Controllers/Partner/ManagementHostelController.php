@@ -72,7 +72,7 @@ class ManagementHostelController extends Controller
     {
         //$data = $request->all();
         //dd($data);
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'hostel_id' => 'required',
             'name' => 'required',
             // 'rentprice_monthly' => 'required',
@@ -102,27 +102,27 @@ class ManagementHostelController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-// $data = $request->only(['rentprice_monthly', 'sellingrentprice_monthly', 'rentprice_yearly', 'sellingrentprice_yearly']); // Ambil data dari request
+        // $data = $request->only(['rentprice_monthly', 'sellingrentprice_monthly', 'rentprice_yearly', 'sellingrentprice_yearly']); // Ambil data dari request
 
         //Insetrt Data Baru
         $hostelRoom = hostelRoom::create([
             'hostel_id' => $request->hostel_id,
             'name' => $request->name,
-            'rentprice_monthly' => str_replace('.','',$request->rentprice_monthly),
-            'sellingrentprice_monthly' => $request->sellingrentprice_monthly == null ? 0 : str_replace('.','',$request->sellingrentprice_monthly),
-            'rentprice_yearly' => str_replace('.','',$request->rentprice_yearly),
-            'sellingrentprice_yearly' => $request->sellingrentprice_yearly == null ? 0 : str_replace('.','',$request->sellingrentprice_yearly),
+            'rentprice_monthly' => str_replace('.', '', $request->rentprice_monthly),
+            'sellingrentprice_monthly' => $request->sellingrentprice_monthly == null ? 0 : str_replace('.', '', $request->sellingrentprice_monthly),
+            'rentprice_yearly' => str_replace('.', '', $request->rentprice_yearly),
+            'sellingrentprice_yearly' => $request->sellingrentprice_yearly == null ? 0 : str_replace('.', '', $request->sellingrentprice_yearly),
             'roomsize' => $request->roomsize,
             'max_guest' => $request->guest,
             'maxextrabed' => $request->maxextrabed,
             'totalbathroom' => $request->totalbathroom,
             'maxextrabed' => $request->maxextrabed,
-            'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.','',$request->extrabedprice),
-            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.','',$request->extrabedsellingprice),
+            'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
+            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
             // 'bed_type' => $request->bed_type,
             'totalroom' => $request->totalroom,
             'is_active' => 1,
-            
+
         ]);
 
         $hostelRoomImageFiles = $request->file('hostel_room_image', []);
@@ -156,11 +156,68 @@ class ManagementHostelController extends Controller
         return redirect()->back();
     }
 
-    
+
     public function settingPhoto($id)
     {
         $hostel = Hostel::with('hostelImage')->find($id);
         return view('ekstranet.management-hostel.setting-photo', compact('hostel'));
+    }
+
+    public function storePhotoHostel($id, Request $request)
+    {
+        $file = $request->file('image');
+        $nama_foto = $file->hashName();
+
+        $path = public_path('media/hostel');
+        $file->move($path, $nama_foto);
+
+        HostelImage::create([
+            'hostel_id' => $id,
+            'image' => $nama_foto,
+            'main' => 0
+        ]);
+
+        toast('Upload foto berhasil', 'success');
+        return redirect()->back();
+        //        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
+    }
+
+    public function mainphotoHostel($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'hostel_id'  => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+
+        $hostelImage = HostelImage::find($id);
+
+        if ($hostelImage) {
+            $hostelImage->update([
+                'main' => 1,
+            ]);
+
+            toast('Foto Utama Hostel berhasil diperbarui', 'success');
+
+            return redirect()->back();
+        } else {
+            return response()->json(['error' => 'Gambar Hostel tidak ditemukan'], 404);
+        }
+    }
+
+    public function destroyphotoHostel($id)
+    {
+        
+            $hostelImage = HostelImage::findOrFail($id);
+            $hostelImage->delete();
+    
+            toast('Hostel Image has been deleted', 'success');
+            return redirect()->back();
+        
     }
 
     public function settingRoomShow($hostel_id, $id)

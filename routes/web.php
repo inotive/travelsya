@@ -288,6 +288,8 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('detail-hotel/{id}', [ManagementHotelController::class, 'detailHotel'])->name('partner.management.hotel.detail');
             Route::delete('detail-hotel/{id}/deleteimage', [ManagementHotelController::class, 'destroyimage'])->name('partner.management.hotel.destroyimage');
             Route::post('detail-hotel/store-photo/{id}', [ManagementHotelController::class, 'storePhotoHotel'])->name('partner.management.hotel.storePhotoHotel');
+            Route::put('detail-hotel/store-photo/main/{id}', [ManagementHotelController::class, 'mainphotoHotel'])->name('partner.management.hostel.mainphotoHotel');
+            Route::delete('detail-hotel/store-photo/delete/{id}', [ManagementHotelController::class, 'destroyphotoHotel'])->name('partner.management.hostel.destroyphotoHotel');
 
             // Route CRUD HotelRule
             Route::post('detail-hotel/', [ManagementHotelController::class, 'storeRule'])->name('partner.management.hotel.storerule');
@@ -316,6 +318,9 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('', [ManagementHostelController::class, 'index'])->name('partner.management.hostel');
             Route::get('detail-hostel/{id}', [ManagementHostelController::class, 'detailhostel'])->name('partner.management.hostel.detail');
             Route::delete('detail-hostel/{id}/deleteimage', [ManagementHostelController::class, 'destroyimage'])->name('partner.management.hostel.destroyimage');
+            Route::post('detail-hostel/store-photo/{id}', [ManagementHostelController::class, 'storePhotoHostel'])->name('partner.management.hostel.storePhotoHostel');
+            Route::put('detail-hostel/store-photo/main/{id}', [ManagementHostelController::class, 'mainphotoHostel'])->name('partner.management.hostel.mainphotoHostel');
+            Route::delete('detail-hostel/store-photo/delete/{id}', [ManagementHostelController::class, 'destroyphotoHostel'])->name('partner.management.hostel.destroyphotoHostel');
 
             // Route CRUD hostelRule
             Route::post('detail-hostel/', [ManagementHostelController::class, 'storeRule'])->name('partner.management.hostel.storerule');

@@ -226,7 +226,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
                                     <input type="number" name="extrabedsellingprice" id="extrabedsellingprice" class="form-control"
-                                           placeholder="Masukan Biaya Extra Bed" disabled readonly>
+                                           placeholder="Masukan Biaya Extra Bed" readonly>
                                 </div>
                             </div>
                             <div class="col-12">

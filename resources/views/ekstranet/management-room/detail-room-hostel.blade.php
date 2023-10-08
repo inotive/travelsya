@@ -184,7 +184,8 @@
                                                         <div class="menu-item px-3">
                                                             <a href="#" class="menu-link px-3 text-danger"
                                                                 data-bs-toggle="modal" {{-- data-kt-customer-table-filter="delete_row" --}}
-                                                                data-bs-target="#kt_modal_delete_image">
+                                                                id="tombol-delete"
+                                                                data-id="{{ $roomimage->id }}">
                                                                 Delete
                                                             </a>
                                                         </div>
@@ -330,6 +331,44 @@
                     "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
+            });
+        });
+
+        $('body').on('click', '#tombol-delete', function() {
+
+            let hostel_room_images_id = $(this).data('id');
+            let token = $("meta[name='csrf-token']").attr("content");
+
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah anda yakin ingin menghapus data ini?",
+                icon: 'error',
+                showCancelButton: true,
+                cancelButtonText: 'Kembali',
+                confirmButtonText: 'Ya, Hapus!',
+                customClass: {
+                    confirmButton: "btn btn-danger",
+                    cancelButton: 'btn btn-secondary text-white'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Menggunakan metode ajax() untuk mengirim permintaan DELETE
+                    $.ajax({
+                        url: `destroyimage/${hostel_room_images_id}/`,
+                        type: "DELETE",
+                        data: {
+                            "_token": token
+                        },
+                        success: function(response) {
+                            location.reload();
+                        },
+                        error: function(error) {
+                            location.reload();
+
+                        }
+                    });
+                }
             });
         });
     </script>
