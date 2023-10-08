@@ -236,38 +236,7 @@
 
                 $('#modal-edit').modal('hide');
 
-// Swal.fire({
-//     type: 'success',
-//     icon: 'success',
-//     title: `${response.message}`,
-//     showConfirmButton: false,
-//     timer: 1000
-// }).then(() => {
-//     location.reload();
-// });
-
-
-                //data post
-                // let hotel = `
-                //     <tr id="index_${response.data.id}">
-                //         <td>${response.data.user_id}</td>
-                //         <td>${response.data.name}</td>
-                //         <td>${response.data.address}</td>
-                //         <td>${response.data.website}</td>
-                //         <td>${response.data.star}</td>
-                //         <td>${response.data.is_active}</td>
-                //         <td>${response.data.city}</td>
-                //         <td class="text-center">
-                //             <a href="javascript:void(0)" id="btn-edit-post" data-id="${response.data.id}" class="btn btn-primary btn-sm">EDIT</a>
-                //             <a href="javascript:void(0)" id="btn-delete-post" data-id="${response.data.id}" class="btn btn-danger btn-sm">DELETE</a>
-                //         </td>
-                //     </tr>
-                // `;
-                // $(`#index_${response.data.id}`).replaceWith(hotel);
-
                 location.reload();
-
-
             },
             error:function(error){
 

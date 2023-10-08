@@ -7,23 +7,13 @@
             <a href="#" target="_blank" class="text-gray-800 text-hover-primary">Travelsya Panel</a>
         </div>
         <!--end::Copyright-->
-        {{-- <select name="kecamatan" id="field-kecamatan" class="form-control">
-            @foreach($kecamatans => as $kecamatan)
-            <option value="{{$kecamatan->id}}">{{$kecamatan->name}}</option>
-            @endforeach
-        </select> --}}
-
-{{--        <select name="tipe_caleg" id="field-wilayah-caleg" class="form-control">--}}
-{{--            <option value="kecamatan">Kecamatan</option>--}}
-{{--            <option value="kota">Provinsi</option>--}}
-{{--        </select>--}}
         <!--end::Menu-->
     </div>
     <!--end::Footer container-->
 </div>
 <!--end::Footer-->
 
-<script>
+{{-- <script>
     function displayKecamatan()
     {
         var value = this.value;
@@ -36,4 +26,4 @@
             $('#field-kecamatan').removeClass('d-none');
         }
     }
-</script>
+</script> --}}
