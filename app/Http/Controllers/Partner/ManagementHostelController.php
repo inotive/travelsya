@@ -211,13 +211,13 @@ class ManagementHostelController extends Controller
 
     public function destroyphotoHostel($id)
     {
-        
+
             $hostelImage = HostelImage::findOrFail($id);
             $hostelImage->delete();
-    
+
             toast('Hostel Image has been deleted', 'success');
             return redirect()->back();
-        
+
     }
 
     public function settingRoomShow($hostel_id, $id)

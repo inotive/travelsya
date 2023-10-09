@@ -535,9 +535,9 @@
                                 <div class="row my-4">
                                     <div class="col-4">
                                         <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                            href="{{ asset($hostel->hostelImage->where('main', 1)->first()->image ?? null) }}">
+                                            href="{{ asset('media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}">
                                             <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                                style="background-image:url('{{ asset($hostel->hostelImage->where('main', 1)->first()->image ?? null) }}')">
+                                                style="background-image:url('{{ asset('media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}')">
                                             </div>
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -548,10 +548,10 @@
                                             @foreach ($hostel->hostelImage->take(3) as $hostelImage)
                                             <div class="col-4">
                                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                                    href="{{ asset($hostelImage->image) }}">
+                                                    href="{{ asset('media/hostel/'.$hostelImage->image) }}">
                                                     <!--begin::Image-->
                                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                                                        style="background-image:url('{{ asset($hostelImage->image) }}')">
+                                                        style="background-image:url('{{ asset('media/hostel/'. $hostelImage->image) }}')">
                                                     </div>
                                                     <!--end::Image-->
 
