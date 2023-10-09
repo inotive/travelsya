@@ -1,4 +1,4 @@
-@extends('ekstranet.layout',['title' => 'Setting Photo - Hotel A',"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Setting Photo - ' . $hotel->name,"url" => "#"])
 
 @section('content-admin')
     <!--begin::Row-->
@@ -8,7 +8,9 @@
         <!--begin::Col-->
         <div class="col-4">
             <form id="kt_modal_new_target_form " class="form " method="post" enctype="multipart/form-data"
-                  action="{{route('partner.management.hotel.storePhotoHotel',$hotel->first()->id)}}">
+                  action="{{route('partner.management.hotel.storePhotoHotel',$hotel->id)}}">
+                  {{-- {{route('partner.management.hotel.storePhotoHotel',$hotel->first()->id)}} --}}
+                 
                 @csrf
                 <div class="card mb-xl-8">
                     <!--begin::Body-->
@@ -85,15 +87,16 @@
                                              alt="image">
                                     </div>
                                     <div class="card-footer py-2">
-                                        <form action="" method="post" class="d-flex flex-column">
+                                        <form action="{{route('partner.management.hostel.mainphotoHotel', $image->id)}}" method="post" class="d-flex flex-column">
                                             @csrf
+                                            @method('PUT')
                                             <input type="hidden" name="id" value="{{$image->id}}">
-                                            <input type="hidden" name="hostelid" value="{{$hotel->id}}">
+                                            <input type="hidden" name="hotel_id" value="{{$hotel->id}}">
                                             <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama
                                             </button>
 
                                         </form>
-                                        <form action="" method="post" class="d-flex flex-column">
+                                        <form action="{{route('partner.management.hostel.destroyphotoHotel', ['id' => $image->id])}}" method="post" class="d-flex flex-column">
                                             @csrf
                                             @method('delete')
                                             <input type="hidden" name="id" value="{{$image->id}}">

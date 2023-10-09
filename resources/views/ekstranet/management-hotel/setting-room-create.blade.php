@@ -136,7 +136,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
                                     <input type="number" name="extrabedsellingprice" id="extrabedsellingprice" class="form-control"
-                                           placeholder="Masukan Biaya Extra Bed" disabled readonly>
+                                           placeholder="Masukan Biaya Extra Bed" readonly>
                                 </div>
                             </div>
                             <div class="col-12">
@@ -298,6 +298,8 @@
                 var basePrice = parseInt(el.val().split('.').join(""));
                 var sellingPrice = basePrice + (basePrice * 15 / 100);
                 $('#sellingprice').val(addCommas(sellingPrice));
+
+                
             })
 
             $("#extrabedprice").keyup(function () {

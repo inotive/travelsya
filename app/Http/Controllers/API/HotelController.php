@@ -463,7 +463,6 @@ class HotelController extends Controller
         $hotelget = $hotels->get();
         $hotelDetails = [];
         $hotelFormatJSON = [];
-
         foreach ($hotelget as $hotel) {
             $minPrice = $hotel->hotelRoom->min('price');
             $maxPrice = $hotel->hotelRoom->min('sellingprice');
@@ -476,17 +475,29 @@ class HotelController extends Controller
             } else {
                 $avgRating = 0;
             }
-
+ 
             $hotelDetails[$hotel->id] = [
                 'avg_rating' => $avgRating,
                 'rating_count' => $jumlahTransaksi,
                 'price' => $minPrice,
                 'sellingprice' => $maxPrice,
             ];
+            
+            $imageUrl = "-";
+            //retrieve image url
+            if(!$hotel->hotelImage->isEmpty()){
+              $imageUrl = $hotel->hotelImage[0]->image;
+            }
+          
 
             $hotelFormatJSON[] = [
+                'id' => $hotel->id,
                 'name' => $hotel->name,
+                'image' => $imageUrl,
                 'location' => $hotel->city,
+                'address' => $hotel->address,
+                'lat' => $hotel->lot,
+                'lon' => $hotel->lon,
                 'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
                 'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
                 'price' => $hotelDetails[$hotel->id]['price'],
