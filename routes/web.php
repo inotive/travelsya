@@ -158,7 +158,8 @@ Route::controller(HotelController::class)->name('hotels')->prefix('hotels')->gro
 Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->group(function () {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/room/', 'room')->name('.room');
-    Route::get('/{idroom}/start/{start}/duration/{duration}/jumlah-kamar/{room}/jumlah-tamu/{guest}', 'checkout')->name('.checkout');
+    // Route::get('/{idroom}/start/{start}/duration/{duration}/category/{category}', 'checkout')->name('.checkout');
+    Route::get('/room/{idroom}/checkout', 'checkout')->name('.checkout');
     Route::post('/{idroom}/request', 'request')->name('.request');
     Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
     Route::post('/ajax', 'ajaxHostel');

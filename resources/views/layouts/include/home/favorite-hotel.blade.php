@@ -38,7 +38,7 @@
         @foreach($hostel_favorite as $hostel)
         @php
         $imageHostel = $hostel->hostelImage->first()->image ?? 'images.png';
-        $sellingPriceHostel = $hostel->hostelRoom->first()->sellingprice ?? 0;
+        $sellingPriceHostel = $hostel->hostelRoom->first()->sellingrentprice_monthly ?? 0;
         @endphp
         <div class="col-md-3 mb-5">
             <div class="card">
