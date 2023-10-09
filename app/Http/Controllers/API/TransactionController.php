@@ -40,6 +40,7 @@ class TransactionController extends Controller
 
             $responsTransaction = $transaction->map(function ($transaction) {
                 $detailTransaction = $this->getDetailTransaction($transaction->id,$transaction->service_id);
+              
                 return [
                     'id' => $transaction->id,
                     'no_inv' => $transaction->no_inv,
@@ -52,7 +53,7 @@ class TransactionController extends Controller
                     'status' => $transaction->status,
                     'total' => $transaction->total,
                     'created_at' => $transaction->created_at,
-                    'detail_transactions' => $detailTransaction,
+                    'detail_transactions' => $detailTransaction ? $detailTransaction : null,
                 ];
             });
             
@@ -72,45 +73,57 @@ class TransactionController extends Controller
     protected function getDetailTransaction($transaction_id,$service_id){
         if($service_id == 7){
             $data = DetailTransactionHostel::where('transaction_id',$transaction_id)->first();
-            $hostelName = Hostel::where('id',$data->id)->first()->name;
-            $hostelRoom = HostelRoom::where('hostel_id',$data->id)->where('id',$data->room)->first()->name;
-            $reservationEnd = Carbon::parse($data->reservation_end);
-            $reservationStart = Carbon::parse($data->reservation_start);
-            $daysDiff = $reservationEnd->diffInDays($reservationStart);
-            return  [
-                'hostel_name' => $hostelName,
-                'room_type' => $hostelRoom,
-                'reservation_duration' => $daysDiff
-            ];
+            if($data != null){
+                $hostelName = Hostel::where('id',$data->id)->first()->name;
+                $hostelRoom = HostelRoom::where('hostel_id',$data->id)->where('id',$data->room)->first()->name;
+                $reservationEnd = Carbon::parse($data->reservation_end);
+                $reservationStart = Carbon::parse($data->reservation_start);
+                $daysDiff = $reservationEnd->diffInDays($reservationStart);
+                return  [
+                    'hostel_name' => $hostelName,
+                    'room_type' => $hostelRoom,
+                    'reservation_duration' => $daysDiff
+                ];
+            }
+         
         }else if($service_id == 8){
             $data = DetailTransactionHotel::where('transaction_id',$transaction_id)->first();
-            $hotelName = Hotel::where('id',$data->id)->first()->name;
-            $hotelRoom = HotelRoom::where('hotel_id',$data->id)->where('id',$data->room)->first()->name;
-            $reservationEnd = Carbon::parse($data->reservation_end);
-            $reservationStart = Carbon::parse($data->reservation_start);
-            $daysDiff = $reservationEnd->diffInDays($reservationStart);
-            return  [
-                'hotel_name' => $hotelName,
-                'room_type' => $hotelRoom,
-                'reservation_duration' => $daysDiff
-            ];
+            if($data){
+                $hotelName = Hotel::where('id',$data->id)->first()->name;
+                $hotelRoom = HotelRoom::where('hotel_id',$data->id)->where('id',$data->room)->first()->name;
+                $reservationEnd = Carbon::parse($data->reservation_end);
+                $reservationStart = Carbon::parse($data->reservation_start);
+                $daysDiff = $reservationEnd->diffInDays($reservationStart);
+                return  [
+                    'hotel_name' => $hotelName,
+                    'room_type' => $hotelRoom,
+                    'reservation_duration' => $daysDiff
+                ];
+            }
+           
         }else{
             if($service_id == 1){
                 $dataPulsa = DetailTransactionTopUp::where('transaction_id',$transaction_id)->first();
-                $nomorTelfon = $dataPulsa->nomor_telfon;
-                $productName = Product::where('id',$dataPulsa->product_id)->first()->name;
-                return  [
-                    'product_name' => $productName,
-                    'phone_number' => $nomorTelfon,
-                ];
+                if($dataPulsa){
+                    $nomorTelfon = $dataPulsa->nomor_telfon;
+                    $productName = Product::where('id',$dataPulsa->product_id)->first()->name;
+                    return  [
+                        'product_name' => $productName,
+                        'phone_number' => $nomorTelfon,
+                    ];
+                }
+               
             }else{
                 $dataPPOB = DetailTransactionPPOB::where('transaction_id',$transaction_id)->first();
-                $productName = Product::where('id',$dataPPOB->product_id)->first()->name;
-                $nomorPelanggan = $dataPPOB->nomor_pelanggan;
-                return  [
-                    'product_name' => $productName,
-                    'customer_number' => $nomorPelanggan,
-                ];
+                if($dataPPOB){
+                    $productName = Product::where('id',$dataPPOB->product_id)->first()->name;
+                    $nomorPelanggan = $dataPPOB->nomor_pelanggan;
+                    return  [
+                        'product_name' => $productName,
+                        'customer_number' => $nomorPelanggan,
+                    ];
+                }
+               
             }
         }
     }
