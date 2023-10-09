@@ -67,9 +67,9 @@
                 <!--end::Radio-->
 
                 <!--begin::Radio-->
-                <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                     <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" checked="checked" value="yearly" />
+                    <input class="btn-check" type="radio" name="category" value="yearly" />
                     <!--end::Input-->
                     Tahunan
                 </label>
@@ -117,8 +117,9 @@
             <label class="form-label fw-bold fs-6">Durasi Sewa</label>
             <select name="duration" x-bind:value="durationValue" id="durationHostel" class="form-select"
                 x-on:change="handleSelectDuration">
-                @for ($i = 1; $i < 12; $i++) <option value="{{ $i }}">{{ $i }} Tahun</option>
-                    @endfor
+                {{-- @for ($i = 1; $i < 12; $i++) <option value="{{ $i }}">{{ $i }} Tahun</option>
+                    @endfor --}}
+                    <option value="">Pilih Durasi</option>
             </select>
             {{-- <select name="duration" id="duration" class="form-select" x-bind:value="durationValue"
                 x-on:change="handleSelectDuration">
