@@ -68,7 +68,7 @@ class HomeController extends Controller
 
         $hostel_favorite = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+                $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
             }])
             ->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
@@ -77,7 +77,7 @@ class HomeController extends Controller
             ->leftJoin('hostel_rooms', 'hostels.id', '=', 'hostel_rooms.hostel_id')
             ->leftJoin('hostel_ratings', 'hostels.id', '=', 'hostel_ratings.hostel_id')
             ->orderByDesc('hostel_ratings.rate')
-            ->orderBy('hostel_rooms.sellingprice')
+            ->orderBy('hostel_rooms.sellingrentprice_monthly')
             ->limit(4)
             ->get();
 

@@ -298,17 +298,26 @@
                         </div>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
+                        @if ($params['category'] == 'monthly')
                         <p class="fw-semibold d-block fs-2 text-danger">Rp.
-                            {{ number_format($room->sellingprice, 0, ',', '.') }}</p>
-                        @guest
+                            {{ number_format($room->sellingrentprice_monthly, 0, ',', '.') }}</p>
+                        @endif
+
+                        @if ($params['category'] == 'yearly')
+                        <p class="fw-semibold d-block fs-2 text-danger">Rp.
+                            {{ number_format($room->sellingrentprice_yearly, 0, ',', '.') }}</p>
+                        @endif
+
+                        {{-- @guest
                         <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
                             data-target="#exampleModal">Pesan Kamar</a>
                         @endguest
-                        @auth
-                        <a href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?location={{ $params['location'] }}&start={{ $params['start'] }}&duration={{ $params['duration'] }}&room={{ $params['room'] }}&guest={{ $params['guest'] }}"
+
+                        @auth --}}
+                        <a href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}"
                             class="btn btn-danger px-4 py-2">Pesan
                             Kamar</a>
-                        @endauth
+                        {{-- @endauth --}}
                     </div>
                 </div>
             </div>
