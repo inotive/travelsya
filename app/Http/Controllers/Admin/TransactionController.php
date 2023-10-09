@@ -12,6 +12,7 @@ use App\Models\HostelRoom;
 use App\Models\Service;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
@@ -31,7 +32,7 @@ class TransactionController extends Controller
             $tr = $tr->where('service_id', $request->service);
 
         if ($request->start != null) {
-            $tr = $tr->whereDate('created_at', '>=', $request->start)->whereDate('created_at', '<=', $request->end);
+            $tr = $tr->whereDate('created_at', '>=', $request->start);
         }
 
         $transactions = $tr->orderBy('created_at', 'desc')->paginate(10);

@@ -27,7 +27,7 @@ class ManagementHotelController extends Controller
     // Daftar Hotel
     public function index()
     {
-        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate();
         return view('ekstranet.management-hotel.index', compact('hotels'));
     }
 
@@ -159,6 +159,47 @@ class ManagementHotelController extends Controller
         return redirect()->back();
 //        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
+
+    public function mainphotoHotel($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'hotel_id'  => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+
+        $hotelImage = HotelImage::find($id);
+
+        if ($hotelImage) {
+            $hotelImage->update([
+                'main' => 1,
+            ]);
+
+            toast('Foto Utama Hotel berhasil diperbarui', 'success');
+
+            return redirect()->back();
+        } else {
+            return response()->json(['error' => 'Gambar Hotel tidak ditemukan'], 404);
+        }
+    }
+
+    public function destroyphotoHotel($id)
+    {
+        
+            $hotelImage = HotelImage::findOrFail($id);
+            Storage::delete('media/hotel/'. $hotelImage->image);
+
+            $hotelImage->delete();
+    
+            toast('Hotel Image has been deleted', 'success');
+            return redirect()->back();
+        
+    }
+
 
     public function settingRoomShow($hotel_id, $id)
     {
