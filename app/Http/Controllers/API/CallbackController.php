@@ -37,7 +37,7 @@ class CallbackController extends Controller
         fwrite($fp, "\n");
         fclose($fp);
     }
-    
+
     public function xendit(Request $request)
     {
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
@@ -81,7 +81,7 @@ class CallbackController extends Controller
                         $point = new Point();
                         $point->addPoint($transaction->user_id, $transaction->total, $transaction->id, $transaction->service_id);
 
-                        if($transaction->service == "pulsa"  || $transaction->service == "listrik token" || $transaction->service == "e-wallet")
+                        if($transaction->service == "pulsa"  || $transaction->service == "listrik-token" || $transaction->service == "ewallet")
                         {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
@@ -116,7 +116,6 @@ class CallbackController extends Controller
                                 ->update([
                                     'status' => $status,
                                     'message'=> $message,
-                                    'kode_voucher'
                                 ]);
 
                         }
@@ -142,26 +141,6 @@ class CallbackController extends Controller
                             }
 
                         }
-                        // hunian
-//                        else if($transaction->service == "hotel" || $transaction->service == "hostel"){
-//                            $type = $transaction->service;
-//                            if($type == "hotel")
-//                            {
-//                                $detailTransactionHotel = \DB::table('detail_transaction_hotel as dh')
-//                                    ->where('dh.transaction_id', $transaction->id)
-//                                    ->first();
-//                                DB::table('detail_transaction_hotel')->where('top.id', $detailTransactionHotel->id)
-//                                    ->update([
-//                                        'status' => $status,
-//                                        'message'=> $message
-//                                    ]);
-//                            }
-//                            else{
-//
-//                            }
-//
-//                        }
-
                         if($status == "Berhasil" || $status == "Pending")
                         {
                             return ResponseFormatter::success($status, $message);

@@ -60,7 +60,6 @@ class HotelController extends Controller
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where([
                     ['totalroom', '>', $request->room],
-                    ['guest', '>=', 3],
                 ]);
             })
             ->where(function ($query) use ($request) {
