@@ -191,9 +191,9 @@
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
 
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                    href="{{ asset($detailHotel->image) }}">
+                                    href="{{ asset('media/hotel/'. $detailHotel->image) }}">
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                        style="background-image:url('{{ asset($detailHotel->image) }}')">
+                                        style="background-image:url('{{ asset('media/hotel/'.$detailHotel->image) }}')">
                                     </div>
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -297,9 +297,9 @@
         <div class="row card flex-row w-75 me-auto ms-auto mt-4 p-3">
             @foreach ($detailHotel->hotelImage->take(3) as $hotelImage)
             <div class="col-4">
-                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset($hotelImage->image) }}">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset('media/hotel/'.$hotelImage->image) }}">
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                        style="background-image:url('{{ asset($hotelImage->image) }}')">
+                        style="background-image:url('{{ asset('media/hotel/'.$hotelImage->image) }}')">
                     </div>
                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                         <i class="bi bi-eye-fill text-white fs-3x"></i>

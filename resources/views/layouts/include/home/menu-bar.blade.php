@@ -150,6 +150,24 @@
               </div>
               <div
                   class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
+                  data-bs-toggle="modal" data-bs-target="#modal-pajak"
+              >
+                  <div class="row">
+                      <div class="col-md-4 col-sm-12 justify-content-center">
+                          <div class="child-item-menubar">
+                              <img
+                                  src="{{asset('assets/media/products-categories/icon-pajak.png')}}"
+                                  style="filter: grayscale(0)"
+                                  class="w-40px"
+                              />
+                          </div>
+                      </div>
+                      <span
+                          class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600">Pajak</span>
+                  </div>
+              </div>
+              <div
+                  class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
               >
                   <div class="row">
                       <div class="col-md-4 col-sm-12 justify-content-center">
