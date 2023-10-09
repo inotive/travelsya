@@ -280,43 +280,31 @@
                             <div class="card-body h-100">
                                 <div class="row my-4">
                                     <div class="col-4">
-                                        {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
-                                            height="200" width="200"> --}}
-                                        <!--begin::Overlay-->
                                         <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                            href="{{ asset($hotel->image) }}">
-                                            <!--begin::Image-->
+                                            href="{{ asset('media/hotel/'. $hotel->hotelImage->where('main', 1)->first()->image ?? null) }}">
                                             <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                                style="background-image:url('{{ asset($hotel->image) }}')">
+                                                style="background-image:url('{{ asset('media/hotel/' . $hotel->hotelImage->where('main', 1)->first()->image ?? null) }}')">
                                             </div>
-                                            <!--end::Image-->
-
-                                            <!--begin::Action-->
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white fs-3x"></i>
                                             </div>
-                                            <!--end::Action-->
                                         </a>
-                                        <!--end::Overlay-->
 
                                         <div class="row mt-4">
                                             @foreach ($hotel->hotelImage->take(3) as $hotelImage)
                                             <div class="col-4">
-                                                <a class="d-block overlay" data-fslightbox="lightbox-basic"
+                                                {{-- <a class="d-block overlay" data-fslightbox="lightbox-basic"
                                                     href="{{ asset($hotelImage->image) }}">
-                                                    <!--begin::Image-->
-                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
                                                         style="background-image:url('{{ asset($hotelImage->image) }}')">
                                                     </div>
-                                                    <!--end::Image-->
-
-                                                    <!--begin::Action-->
                                                     <div
                                                         class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
                                                     </div>
-                                                    <!--end::Action-->
-                                                </a>
+                                                </a> --}}
+                                                <img src="{{ asset('media/hotel/'.$hotelImage->image) }}" alt="image" width="100%"
+                                                    class="rounded" data-fslightbox="lightbox-basic">
                                             </div>
                                             @endforeach
                                         </div>
@@ -366,8 +354,8 @@
                                         {{-- <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
                                         <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
                                         <ul>
-                                            @foreach ($hotel->hotelroomFacility as $facility)
-                                            <li>{{ $facility->facility->name }}</li>
+                                            @foreach ($hotel->hotelroomFacility->groupBy('facility.name') as $facility)
+                                            <li>{{ $facility->first()->facility->name }}</li>
                                             @endforeach
                                         </ul>
 
