@@ -68,80 +68,47 @@
 
                 {{-- Menu Item Profil Saya --}}
                 <div class="menu-item">
-                    <a class="menu-link text-gray" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/user.svg') }}" class="h-24px me-10"/>
+                    <a class="menu-link text-gray" href="{{ route('user.profile') }}">
+                    <span class="menu-icon" style="fill: #C02425;">
+                        <img src="{{ asset('assets/media/svg/profile-account/user-nonactive.svg') }}" class="h-24px me-10"/>
                     </span>
                     <span class="menu-title text-gray-900">
-                        <b>Profil Saya</b>
+                        Profil Saya
                     </span>
                     </a>
                 </div>
 
                 {{-- Menu Item Riwayat Pesanan --}}
                 <div class="menu-item">
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Riwayat Pesanan</b>
-                    </span>
-                    </div>
-                </a>
-                {{-- Menu Item Data Penumpang --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/users.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Data Penumpang
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item Keamanan --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/lock.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Keamanan
-                    </span>
-                    </a>
-                </div>
-                {{-- Menu Item Kode Referral --}}
-                <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Kode Referral
-                    </span>
+                    <a class="menu-link text-gray-900" href="{{ route('user.orderHistory') }}">
+                        <span class="menu-icon">
+                            <img src="{{ asset('assets/media/svg/profile-account/clipboard.svg') }}" class="h-24px me-10"/>
+                        </span>
+                        <span class="menu-title">
+                            Riwayat Pesanan</b>
+                        </span>
                     </a>
                 </div>
                 {{-- Menu Item --}}
                 <div class="menu-item">
                     <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/credit-card.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Refund & Pembatalan
-                    </span>
+                        <span class="menu-icon">
+                            <img src="{{ asset('assets/media/svg/profile-account/credit-card.svg') }}" class="h-24px me-10"/>
+                        </span>
+                        <span class="menu-title">
+                            Refund & Pembatalan
+                        </span>
                     </a>
                 </div>
                 {{-- Menu Item Pusat Bantuan --}}
                 <div class="menu-item" >
-                    <a class="menu-link text-gray-900" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/headphones.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <span class="menu-title">
-                        Pusat Bantuan
-                    </span>
+                    <a class="menu-link text-gray-900" href="{{ route('user.help') }}">
+                        <span class="menu-icon">
+                            <img src="{{ asset('assets/media/svg/profile-account/headphones-active.svg') }}" class="h-24px me-10"/>
+                        </span>
+                        <span class="menu-title fw-bold text-danger">
+                            Pusat Bantuan
+                        </span>
                     </a>
                 </div>
                 {{-- SEPARATOR --}}
@@ -149,11 +116,11 @@
                 {{-- Menu ITEm Logout --}}
                 <div class="menu-item" >
                     <a class="menu-link text-gray-900" id="kt_docs_sweetalert_basic" href="#">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/log-out.svg') }}" class="h-24px me-10"/>
-                    </span>
-                        Log out
-                        @include('user.logout')
+                        <span class="menu-icon">
+                            <img src="{{ asset('assets/media/svg/profile-account/log-out.svg') }}" class="h-24px me-10"/>
+                        </span>
+                            Log out
+                            @include('user.logout')
                     </a>
                 </div>
                 </div>
