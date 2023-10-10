@@ -175,15 +175,15 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Layanan</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->service }}</div>
+                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->service ?? 'Missing'}}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Produk</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->product_name }}</div>
+                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->product_name ?? 'Missing'}}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">No. Meter/IdPel</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->nomor_pelanggan }}</div>
+                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->nomor_pelanggan ?? 'Missing'}}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Nama</div>
@@ -231,7 +231,11 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Point Digunakan</div>
-                                            <div class="fs-8 fw-bold text-danger">{{ $transactionPPOB->points }} Point</div>
+                                            @if ($pengeluaran->jumlah_point == 0)
+                                            <div class="fs-8 fw-bold">Tidak ada</div>
+                                            @else
+                                            <div class="fs-8 fw-bold text-danger">- {{ $pengeluaran->jumlah_point }} Point</div>
+                                            @endif
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Total Bayar</div>
@@ -254,6 +258,13 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     Rp. {{ number_format($transactionPPOB->total_after_fee, 2, ',', '.') }}
                                 </div>
                                 </div>
+                                </div>
+                            </div>
+                            <div class="col-12 d-grid">
+                                <div class="badge bg-light-success border-success border border-1 mt-5 ">
+                                    <div class="mx-auto my-5 fs-4">
+                                        Kamu Dapat <b>{{ $pemasukan->jumlah_point }} Poin</b>  dari transaksi ini
+                                    </div>
                                 </div>
                             </div>
                         </div>

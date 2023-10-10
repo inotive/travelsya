@@ -147,8 +147,13 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                     <div class="image-back">
                     <img src="{{ asset('assets/media/svg/profile-account/order-history/down-2.svg') }}" alt="down" style="margin-right: 16px; margin-bottom: 8px;">
                     </div>
-                    <div class="h1 fw-bold">
+                    <div class="bungkus">
+                    <div class="h1 fw-bold mb-0">
                         Rincian Pesanan
+                    </div>
+                    <div class="text mt-0">
+                        {{ $transactionHotel->inv_num ?? 'Tidak ada' }}
+                    </div>
                     </div>
                     </div>
                     <a href="#" class="btn btn-outline btn-outline-danger border border-danger fw-bold" style="padding: 12px 16px 12px 16px; border: 1px;">
@@ -169,8 +174,8 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                 <div class="card border border-1 text-center" style="background: #f4f4f4;">
                                     <div class="info-wrapper-grup" style="padding: 10px 16px 10px 16px;">
                                     <span class="text-gray-400 fs-8" style="margin-bottom: 6px">Checkin</span><br>
-                                    <span class="text fs-6 fw-bold" style="margin-bottom: 6px">19 Feb 2022</span><br>
-                                    <span class="text fs-8" style="margin-bottom: 6px">10:00 AM</span><br>
+                                    <span class="text fs-6 fw-bold" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('d M Y') }}</span><br>
+                                    <span class="text fs-8" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('H:i') }}</span><br>
                                     </div>
                                 </div>
                             </div>
@@ -178,8 +183,8 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                 <div class="card border border-1 text-center" style="background: #f4f4f4;">
                                     <div class="info-wrapper-grup" style="padding: 10px 16px 10px 16px;">
                                     <span class="text-gray-400 fs-8" style="margin-bottom: 6px">Checkout</span><br>
-                                    <span class="text fs-6 fw-bold" style="margin-bottom: 6px">19 Feb 2022</span><br>
-                                    <span class="text fs-8" style="margin-bottom: 6px">10:00 AM</span><br>
+                                    <span class="text fs-6 fw-bold" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_end)->format('d M Y') }}</span><br>
+                                    <span class="text fs-8" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_end)->format('H:i') }}</span><br>
                                     </div>
                                 </div>
                             </div>
@@ -190,7 +195,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                         <div class="card border border-1 mt-5 mb-5">
                             <div style="height: 250px; background: url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/53/0a/5f/maca-villas-spa.jpg?w=700&h=-1&s=1') center/cover no-repeat; border-radius: 8px"></div>
                             <div class="fw-bold fs-4 m-5">
-                                Maca Villas And Spa Seminyak
+                                {{ $transactionHotel->hotel_name }}
                             </div>
                         </div>
                         </div>
@@ -207,10 +212,10 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="text" style="margin-left: 16px">
                                             <div class="fs-6 fw-bold mb-2">
-                                                2x Superior Room
+                                                {{ $transactionHotel->hotelRoomName }}
                                             </div>
                                             <div class="fs-8 text-gray-400">
-                                                City View | 1x Double Room | 100m2
+                                                City View | 1x Double Room | {{ $hotelRoomDetail->roomsize }}m²
                                             </div>
                                         </div>
                                     </div>
@@ -219,7 +224,11 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     Benefits
                                 </div>
                                 <div class="fs-6 m-5 mt-0">
-                                    Parking, Wifi, Bathroom, Breakfast
+                                    @forelse ($hotelRoomDetail->facility_id as $facility)
+                                        <div class="text">$facility</div>
+                                    @empty
+                                        Tidak ada fasilitas
+                                    @endforelse
                                 </div>
                             </div>
                             {{-- Informasi Tamu --}}
@@ -272,19 +281,19 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Status Transaksi</div>
-                                            <div class="fs-8 fw-bold text-success">Selesai</div>
+                                            <div class="fs-8 fw-bold text-success">{{ $transactionHotel->status_pembayaran }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Tanggal Transaksi</div>
-                                            <div class="fs-8 fw-bold">04 Jan 2023 12:04 WIB</div>
+                                            <div class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('d M Y H:i') }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Metode Pembayaran</div>
-                                            <div class="fs-8 fw-bold">Virtual Account BCA</div>
+                                            <div class="fs-8 fw-bold">{{ $transactionHotel->payment_method }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Biaya Hotel</div>
-                                            <div class="fs-8 fw-bold">Rp 1.780.000</div>
+                                            <div class="fs-8 fw-bold">{{ $transactionHotel->room_price }}</div>
                                         </div>
                                     </div>
                             </div>

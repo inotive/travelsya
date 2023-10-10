@@ -51,20 +51,54 @@ class UserController extends Controller
     }
 
     public function orderDetailHotel(){
-        return view('user.order-detail.hotel');
+        $transactionHotel = DB::table('detail_transaction_hotel')
+        ->join('transactions', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
+        ->join('hotels', 'detail_transaction_hotel.hotel_id', '=', 'hotels.id')
+        ->join('hotel_rooms', 'detail_transaction_hotel.hotel_room_id', '=', 'hotel_rooms.id')
+        ->join('guests', '')
+        ->join('users', 'transactions.user_id', '=', 'users.id')
+        ->leftJoin('history_points', 'transactions.id', '=', 'history_points.transaction_id')
+        ->select('detail_transaction_hotel.*',
+                'transactions.no_inv as inv_num',
+                'transactions.service as service',
+                'transactions.created_at as created_transaction',
+                'transactions.payment_method as payment_method',
+                'transactions.status as status_pembayaran',
+                'history_points.point as points',
+                'users.name as user_name',
+                'hotels.name as hotel_name',
+                'hotel_rooms.name as hotelRoomName',
+                'hotel_rooms.price as room_price'
+                )
+        ->where('detail_transaction_hotel.id', 1)
+        ->first();
+
+
+
+        $hotelRoomDetail = DB::table('hotel_rooms')
+        ->join('hotel_room_facilities', 'hotel_rooms.id', '=', 'hotel_room_facilities.hotel_room_id')
+        ->select(
+            'hotel_rooms.*',
+            'hotel_room_facilities.facility_id'
+        )
+        ->where('hotel_rooms.id', $transactionHotel->hotel_room_id)
+        ->first();
+
+        return view('user.order-detail.hotel', compact('transactionHotel', 'hotelRoomDetail'));
     }
 
     public function orderDetailListrikVoucher(){
 
-    $transactionPPOB = DB::table('detail_transaction_ppob')
-    ->join('products', 'detail_transaction_ppob.product_id', '=', 'products.id')
-    ->join('transactions', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
+    $transactionPPOB = DB::table('detail_transaction_top_up')
+    ->join('products', 'detail_transaction_top_up.product_id', '=', 'products.id')
+    ->join('transactions', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id')
     ->join('users', 'transactions.user_id', '=', 'users.id')
-    ->join('history_points', 'detail_transaction_ppob.transaction_id', '=', 'history_points.transaction_id')
-    // ->join('history_points', 'detail_transaction_ppob.history_point_id', '=', 'history_points.id')
+    ->leftJoin('history_points', 'transactions.id', '=', 'history_points.transaction_id')
+    // ->join('history_points', 'detail_transaction_top_up.history_point_id', '=', 'history_points.id')
     ->select(
-        'detail_transaction_ppob.*',
+        'detail_transaction_top_up.*',
         'products.name as product_name',
+        'products.category as product_category',
         'transactions.no_inv as inv_num',
         'transactions.service as service',
         'transactions.created_at as created_transaction',
@@ -72,18 +106,29 @@ class UserController extends Controller
         'transactions.status as status',
         'history_points.point as points',
         'users.name as user_name',
-
-        DB::raw('detail_transaction_ppob.total_tagihan +
-        detail_transaction_ppob.fee_travelsya -
-        history_points.point
-        as total_after_fee
-        ')
+        DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
+        DB::raw('detail_transaction_top_up.total_tagihan +
+            detail_transaction_top_up.fee_travelsya -
+            (CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as total_after_fee')
     )
-    ->where('detail_transaction_ppob.id', 2)
+    ->where('detail_transaction_top_up.id', 1)
     ->first();
 
+    $pemasukan = DB::table('history_points')
+    ->select('transaction_id', 'point as jumlah_point')
+    ->where('flow', 'debit')
+    ->where('transaction_id', $transactionPPOB->transaction_id)
+    ->first();
+
+    $pengeluaran = DB::table('history_points')
+    ->select('transaction_id', 'point as jumlah_point')
+    ->where('flow', 'credit')
+    ->where('transaction_id', $transactionPPOB->transaction_id)
+    ->first();
+
+
     // $transaction = DetailTransactionPPOB::where('id', 2)->first();
-        return view('user.order-detail.listrik-voucher', compact('transactionPPOB'));
+        return view('user.order-detail.listrik-voucher', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
     }
 
     public function orderDetailListrik(){
@@ -92,7 +137,7 @@ class UserController extends Controller
     ->join('products', 'detail_transaction_ppob.product_id', '=', 'products.id')
     ->join('transactions', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
     ->join('users', 'transactions.user_id', '=', 'users.id')
-    ->join('history_points', 'detail_transaction_ppob.transaction_id', '=', 'history_points.transaction_id')
+    ->leftJoin('history_points', 'transactions.id', '=', 'history_points.transaction_id')
     // ->join('history_points', 'detail_transaction_ppob.history_point_id', '=', 'history_points.id')
     ->select(
         'detail_transaction_ppob.*',
@@ -104,17 +149,27 @@ class UserController extends Controller
         'transactions.status as status',
         'history_points.point as points',
         'users.name as user_name',
-
+        DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
         DB::raw('detail_transaction_ppob.total_tagihan +
-        detail_transaction_ppob.fee_travelsya -
-        history_points.point
-        as total_after_fee
-        ')
+            detail_transaction_ppob.fee_travelsya -
+            (CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as total_after_fee')
     )
-    ->where('detail_transaction_ppob.id', 2)
+    ->where('detail_transaction_ppob.id', 1)
     ->first();
 
-        return view('user.order-detail.listrik', compact('transactionPPOB'));
+    $pemasukan = DB::table('history_points')
+    ->select('transaction_id', 'point as jumlah_point')
+    ->where('flow', 'debit')
+    ->where('transaction_id', $transactionPPOB->transaction_id)
+    ->first();
+
+    $pengeluaran = DB::table('history_points')
+    ->select('transaction_id', 'point as jumlah_point')
+    ->where('flow', 'credit')
+    ->where('transaction_id', $transactionPPOB->transaction_id)
+    ->first();
+
+        return view('user.order-detail.listrik', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
     }
 
     public function help()
