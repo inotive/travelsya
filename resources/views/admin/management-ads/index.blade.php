@@ -36,7 +36,7 @@
                                 <td class="text-center">{{ $ad->name }}</td>
                                 <td class="text-center">{{ $ad->url }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset( $ad->image) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset('storage/'. $ad->image) }}" class="rounded" style="width: 150px">
                                 </td>
                                 <td class="text-center">
                                     @if ($ad->is_active)
@@ -45,9 +45,6 @@
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
-
-
-
                                 <td class="text-center">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
