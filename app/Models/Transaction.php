@@ -26,6 +26,17 @@ class Transaction extends Model
     {
         return $this->hasMany(DetailTransaction::class);
     }
+    
+
+    public function detailTransactionHotel()
+    {
+        return $this->hasMany(DetailTransactionHotel::class);
+    }
+
+    public function detailTransactionHostel()
+    {
+        return $this->hasMany(DetailTransactionHostel::class);
+    }
 
 
     /**

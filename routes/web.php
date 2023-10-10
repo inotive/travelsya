@@ -228,6 +228,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
             //customer
             Route::get('customer', [CustomerController::class, 'index'])->name('customer');
+            Route::get('customer/show', [CustomerController::class, 'showDetailtransaction'])->name('customer.showDetailtransaction');
 
             //Ads
             // Route::resource('ads', AdController::class);

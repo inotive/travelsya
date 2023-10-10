@@ -87,7 +87,9 @@
                                 </td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#history">History Transaksi</button>
+                                        data-bs-target="#history" 
+                                        onclick="showDetailTransactions({{ $customer->id }})"
+                                        >History Transaksi</button>
                                 </td>
                             </tr>
                         @endforeach
