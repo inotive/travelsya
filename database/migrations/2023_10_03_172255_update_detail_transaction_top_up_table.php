@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rating_fotos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('rating_id')->constrained();
-            $table->string('image');
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::table('detail_transaction_top_up', function (Blueprint $table) {
+            $table->string('kode_voucher')->default('')->after('nomor_telfon'); // use this for field after specific column.
         });
     }
 
@@ -25,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rating_fotos');
+        //
     }
 };
