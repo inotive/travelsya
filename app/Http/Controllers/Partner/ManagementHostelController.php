@@ -166,11 +166,13 @@ class ManagementHostelController extends Controller
     public function storePhotoHostel($id, Request $request)
     {
 
-        $image = $request->file('image')->store('media/hostel');
+        $file = $request->file('image');
+        $fileName = $file->hashName();
+        $file->storeAs('media/ads', $fileName);
 
         HostelImage::create([
             'hostel_id' => $id,
-            'image' => $image,
+            'image' => $fileName,
             'main' => 0
         ]);
 
