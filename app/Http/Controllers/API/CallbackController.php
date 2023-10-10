@@ -37,7 +37,7 @@ class CallbackController extends Controller
         fwrite($fp, "\n");
         fclose($fp);
     }
-    
+
     public function xendit(Request $request)
     {
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
@@ -101,7 +101,7 @@ class CallbackController extends Controller
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
                                 DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
-                                    'kode_voucher' => $responseMessageSNCodeFinal,
+                                    'kode_voucher' => $responseMessageSNCodeFinal ?? '',
                                 ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
