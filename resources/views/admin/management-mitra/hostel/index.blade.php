@@ -357,7 +357,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.mitra.store') }}">
+                        action="{{ route('admin.hostel.store') }}">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -409,7 +409,7 @@
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="alamat" id="" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Website</label>

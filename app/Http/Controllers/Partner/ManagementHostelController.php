@@ -19,7 +19,7 @@ class ManagementHostelController extends Controller
     public function index()
     {
         $hostels = Hostel::with('hostelRoom')
-            ->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+            ->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate();
         return view('ekstranet.management-hostel.index', compact('hostels'));
     }
 
@@ -209,13 +209,15 @@ class ManagementHostelController extends Controller
 
     public function destroyphotoHostel($id)
     {
-
+        
             $hostelImage = HostelImage::findOrFail($id);
-            $hostelImage->delete();
+            Storage::delete('media/hostel/'. $hostelImage->image);
 
+            $hostelImage->delete();
+    
             toast('Hostel Image has been deleted', 'success');
             return redirect()->back();
-
+        
     }
 
     public function settingRoomShow($hostel_id, $id)
