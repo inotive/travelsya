@@ -81,7 +81,7 @@
                         <div class="col-6">
                             <div class="card border border-light-subtle">
                                 <div class="card-body">
-                                    <img src="{{ asset('media/hostel/' . $image->image) }}"
+                                    <img src="{{ asset($image->image) }}"
                                         style="width: 100%; height: 150px; bac" alt="image">
                                 </div>
                                 <div class="card-footer py-2">
