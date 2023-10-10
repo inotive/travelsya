@@ -17,7 +17,12 @@ class DashboardController extends Controller
 
     public function index()
     {
-        return view('admin.dashboard');
+        $transactions = Transaction::with('user')->get();
+        $countPartner = User::wherein('role', ['1', '2'])->get();
+        $countTransactionToday = $transactions->where('created_at', date('y-m-d'))->count();
+        $sumTranscationToday = $transactions->where('created_at', date('y-m-d'))->sum('total');
+        $sumTranscationMonthly = $transactions->where('month(created_at)', date('m'))->sum('total');
+        return view('admin.dashboard', compact('transactions','countPartner','countTransactionToday','sumTranscationToday','sumTranscationToday'));
     }
 //    public function index(Request $request)
 //    {

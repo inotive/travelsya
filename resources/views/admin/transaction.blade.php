@@ -22,9 +22,9 @@
                             <select class="form-select form-select-solid" data-control="select2"
                                 data-placeholder="Layanan" data-hide-search="true" name="service">
                                 <option value=""></option>
-                                @foreach($services as $service)
-                                <option value="{{$service->id}}" {{$service->id == $_GET['service'] ? 'selected' : ''}}>{{ucfirst($service->name)}}</option>
-                                @endforeach
+{{--                                @foreach($services as $service)--}}
+{{--                                <option value="{{$service->id}}" {{ isset($_GET['service']) && $service->id == $_GET['service'] ? 'selected' : '' }}>{{ucfirst($service->name)}}</option>--}}
+{{--                                @endforeach--}}
                             </select>
                             <!--end::Select-->
 
@@ -162,12 +162,12 @@
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{ $transaction->payment_method  }}
+                                        {{ $transaction->payment_method ?? '-' }}
                                     </div>
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{ $transaction->payment_channel  }}
+                                        {{ $transaction->payment_channel ?? '-'  }}
                                     </div>
                                 </td>
                                 <td>
