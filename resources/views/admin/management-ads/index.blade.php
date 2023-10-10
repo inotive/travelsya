@@ -36,7 +36,7 @@
                                 <td class="text-center">{{ $ad->name }}</td>
                                 <td class="text-center">{{ $ad->url }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset('media/ads/' . $ad->image) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset( $ad->image) }}" class="rounded" style="width: 150px">
                                 </td>
                                 <td class="text-center">
                                     @if ($ad->is_active)

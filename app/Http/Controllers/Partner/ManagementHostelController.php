@@ -165,21 +165,17 @@ class ManagementHostelController extends Controller
 
     public function storePhotoHostel($id, Request $request)
     {
-        $file = $request->file('image');
-        $nama_foto = $file->hashName();
 
-        $path = public_path('media/hostel');
-        $file->move($path, $nama_foto);
+        $image = $request->file('image')->store('media/hostel');
 
         HostelImage::create([
             'hostel_id' => $id,
-            'image' => $nama_foto,
+            'image' => $image,
             'main' => 0
         ]);
 
         toast('Upload foto berhasil', 'success');
         return redirect()->back();
-        //        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
 
     public function mainphotoHostel($id, Request $request)
