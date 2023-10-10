@@ -6,11 +6,23 @@
                 sampai kelewatan</p>
         </div>
         <div class="row">
-            <template x-for="data in $store.explorecity.data">
+            {{-- <template x-for="data in $store.explorecity.data">
                 <div class="col-6 col-md-3 pb-6">
                     <img x-bind:src="data.image" x-bind:alt="data.label" class="img-thumbnail w-100" />
                 </div>
-            </template>
+            </template> --}}
+
+            @foreach ($hotelByCity as $cityHotel)
+            <a href="{{ url('hotels') }}?location={{ $cityHotel }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=3"
+                class="col-6 col-md-3 pb-6 text-center">
+                <div class="d-flex align-items-center justify-content-center rounded"
+                    style="height: 150px; background-color: #ccc;">
+                    <h1 class="text-white m-0">
+                        {{ $cityHotel }}
+                    </h1>
+                </div>
+            </a>
+            @endforeach
         </div>
     </div>
 </div>

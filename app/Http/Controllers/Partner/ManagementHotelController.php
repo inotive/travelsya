@@ -160,6 +160,45 @@ class ManagementHotelController extends Controller
 //        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
 
+    public function mainphotoHotel($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'hotel_id'  => 'required',
+        ]);
+
+        //check if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+
+        $hotelImage = HotelImage::find($id);
+
+        if ($hotelImage) {
+            $hotelImage->update([
+                'main' => 1,
+            ]);
+
+            toast('Foto Utama Hotel berhasil diperbarui', 'success');
+
+            return redirect()->back();
+        } else {
+            return response()->json(['error' => 'Gambar Hotel tidak ditemukan'], 404);
+        }
+    }
+
+    public function destroyphotoHotel($id)
+    {
+        
+            $hotelImage = HotelImage::findOrFail($id);
+            $hotelImage->delete();
+    
+            toast('Hotel Image has been deleted', 'success');
+            return redirect()->back();
+        
+    }
+
+
     public function settingRoomShow($hotel_id, $id)
     {
         $hotelRoom = HotelRoom::where('id', $id)

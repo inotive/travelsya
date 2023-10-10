@@ -40,8 +40,9 @@ class HomeController extends Controller
             ->select('hotels.*', DB::raw('COALESCE(hotel_ratings.rate, 0) as rating'), DB::raw('COALESCE(hotel_rooms.sellingprice, 0) as selling_price'))
             ->orderByDesc('hotel_ratings.rate')
             ->orderBy('hotel_rooms.sellingprice')
-            ->limit(4)
-            ->get();
+            // ->limit(4)
+            // ->get();
+            ->take(4);
 
         $hotelDetails = [];
 
@@ -67,7 +68,7 @@ class HomeController extends Controller
 
         $hostel_favorite = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+                $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
             }])
             ->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
@@ -76,7 +77,7 @@ class HomeController extends Controller
             ->leftJoin('hostel_rooms', 'hostels.id', '=', 'hostel_rooms.hostel_id')
             ->leftJoin('hostel_ratings', 'hostels.id', '=', 'hostel_ratings.hostel_id')
             ->orderByDesc('hostel_ratings.rate')
-            ->orderBy('hostel_rooms.sellingprice')
+            ->orderBy('hostel_rooms.sellingrentprice_monthly')
             ->limit(4)
             ->get();
 
@@ -115,6 +116,10 @@ class HomeController extends Controller
             ->where('deleted_at', null)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        $data['hotelByCity'] = Hotel::distinct('city')
+            ->orderBy('city', 'asc')
+            ->pluck('city');
 
         return view('home', $data);
     }

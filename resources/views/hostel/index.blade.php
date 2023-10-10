@@ -369,9 +369,49 @@
                         <div class="card">
                             <div class="card-body h-100">
                                 <form method="GET" action="{{ route('hostel.index') }}" class="row g-4">
-                                    <input type="hidden" name="category" value="{{ $params['category'] }}">
-                                    <input type="hidden" name="furnish" value="{{ $params['furnish'] }}">
-                                    <div class="col-12">
+                                    <div class="col-md-12 ">
+                                        <!--begin::Heading-->
+                                        <div class="mb-3">
+                                            <!--begin::Label-->
+                                            <label class="d-flex align-items-center fs-5 fw-semibold">
+                                                Durasi Menginap
+                                            </label>
+                                            <!--end::Label-->
+                                        </div>
+                                        <!--end::Heading-->
+
+                                        <!--begin::Radio group-->
+                                        <div class="btn-group w-100" data-kt-buttons="true"
+                                            data-kt-buttons-target="[data-kt-button]">
+
+                                            <!--begin::Radio-->
+                                            <label
+                                                class="btn btn-outline btn-color-muted btn-active-success {{ $params['category']=='monthly' ? 'active' :'' }}"
+                                                data-kt-button="true">
+                                                <!--begin::Input-->
+                                                <input class="btn-check" type="radio" name="category" value="monthly" {{
+                                                    $params['category']=='monthly' ? 'checked' :'' }} />
+                                                <!--end::Input-->
+                                                Bulanan
+                                            </label>
+                                            <!--end::Radio-->
+
+                                            <!--begin::Radio-->
+                                            <label
+                                                class="btn btn-outline btn-color-muted btn-active-success {{ $params['category']=='yearly' ? 'active' :'' }}"
+                                                data-kt-button="true">
+                                                <!--begin::Input-->
+                                                <input class="btn-check" type="radio" name="category" value="yearly" {{
+                                                    $params['category']=='yearly' ? 'checked' :'' }} />
+                                                <!--end::Input-->
+                                                Tahunan
+                                            </label>
+                                            <!--end::Radio-->
+
+                                        </div>
+                                        <!--end::Radio group-->
+                                    </div>
+                                    <div class="col-9">
                                         <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
                                         <select name="location" id="location" class="form-select select"
                                             data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
@@ -380,6 +420,15 @@
                                                 'selected' : '' }}>
                                                 {{ $city->city }}</option>
                                             @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="" class="form-label fw-bold fs-6">Durasi</label>
+                                        <select name="duration" class="form-select">
+                                            @for ($i = 1; $i <= 31; $i++) <option value="{{ $i }}" {{
+                                                $params['duration']==$i ? 'selected' :'' }}>{{ $i }} Bulan
+                                                </option>
+                                                @endfor
                                         </select>
                                     </div>
                                     <div class="col-3">
@@ -412,15 +461,7 @@
                                         <input type="text" class="form-control" name="end_date"
                                             value="{{ $checkout->format('d-m-Y') }}" />
                                     </div> --}}
-                                    <div class="col-3">
-                                        <label for="" class="form-label fw-bold fs-6">Durasi</label>
-                                        <select name="duration" class="form-select">
-                                            @for ($i = 1; $i <= 31; $i++) <option value="{{ $i }}" {{
-                                                $params['duration']==$i ? 'selected' :'' }}>{{ $i }} Bulan
-                                                </option>
-                                                @endfor
-                                        </select>
-                                    </div>
+
                                     <div class="col-3">
                                         <label class="form-label fw-bold fs-6">Tipe Properti</label>
                                         <select name="property" id="property" class="form-select">
@@ -447,6 +488,17 @@
                                             </option>
                                             <option value="3BR+" {{ $params['roomtype']=='3BR' ? 'selected' : '' }}>3BR+
                                             </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <label class="form-label fw-bold fs-6">Tipe Furnish</label>
+                                        <select name="furnish" id="furnish" class="form-select">
+                                            <option value="" {{ $params['furnish']=='' ? 'selected' : '' }}>Semua
+                                            </option>
+                                            <option value="fullfurnished" {{ $params['furnish']=='fullfurnished'
+                                                ? 'selected' : '' }}>Full Furnished</option>
+                                            <option value="unfurnished" {{ $params['furnish']=='unfurnished'
+                                                ? 'selected' : '' }}>Unfurnished</option>
                                         </select>
                                     </div>
                                     {{-- <div class="col-3">
@@ -482,33 +534,24 @@
                             <div class="card-body h-100">
                                 <div class="row my-4">
                                     <div class="col-4">
-                                        {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
-                                            height="200" width="200"> --}}
-                                        <!--begin::Overlay-->
                                         <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                            href="{{ asset($hostel->image) }}">
-                                            <!--begin::Image-->
+                                            href="{{ asset('media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}">
                                             <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                                style="background-image:url('{{ asset($hostel->image) }}')">
+                                                style="background-image:url('{{ asset('media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}')">
                                             </div>
-                                            <!--end::Image-->
-
-                                            <!--begin::Action-->
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white fs-3x"></i>
                                             </div>
-                                            <!--end::Action-->
                                         </a>
-                                        <!--end::Overlay-->
 
                                         <div class="row mt-4">
                                             @foreach ($hostel->hostelImage->take(3) as $hostelImage)
                                             <div class="col-4">
                                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                                    href="{{ asset($hostelImage->image) }}">
+                                                    href="{{ asset('media/hostel/'.$hostelImage->image) }}">
                                                     <!--begin::Image-->
                                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                                                        style="background-image:url('{{ asset($hostelImage->image) }}')">
+                                                        style="background-image:url('{{ asset('media/hostel/'. $hostelImage->image) }}')">
                                                     </div>
                                                     <!--end::Image-->
 
