@@ -48,7 +48,8 @@
                                     <th class="min-w-125px">Deskripsi</th>
                                     <th class="min-w-125px">Metode</th>
                                     <th class="min-w-125px">Grand</th>
-                                    <th class="min-w-70px">Point</th>
+                                    <th class="min-w-70px">Point Yang didapat</th>
+                                    <th class="min-w-70px">Point Yang dipakai</th>
                                 </tr>
                             </thead>
                             <!--end::Table head-->
@@ -123,11 +124,12 @@
                 var row = '<tr>' +
                     '<td>' + created_at + '</td>' +
                     '<td>' + data[i].no_inv + '</td>' +
-                    '<td>' + (data[i].service_name ? data[i].service_name.charAt(0).toUpperCase() + data[i].service_name.slice(1) : '-') + '</td>' +
+                    '<td><span class="badge badge-rounded badge-primary">' + (data[i].service_name ? data[i].service_name.charAt(0).toUpperCase() + data[i].service_name.slice(1) : '-') + '</span></td>' +
                     '<td>' + data[i].transaction_name + ' - ' + data[i].transaction_desc + '</td>' +
                     '<td>' + (data[i].payment_method ? data[i].payment_method.replace(/_/g, ' ') : '-') + '</td>' +
                     '<td>' + (data[i].transaction_price ? 'Rp ' + data[i].transaction_price.toLocaleString('id-ID') : '-') + '</td>' +
-                    '<td>' + data[i].point + '</td>' +
+                    '<td>' + data[i].debit_point + ' Point' + '</td>' +
+                    '<td>' + data[i].credit_point + ' Point' + '</td>' +
                     '</tr>';
 
                 tableBody.append(row);
