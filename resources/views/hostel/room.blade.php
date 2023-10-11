@@ -133,21 +133,16 @@
                             <div class="col-4">
                                 {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp"
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
-
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                    href="{{ asset($hostelget->image) }}">
-                                    <!--begin::Image-->
+                                   href="{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}">
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                        style="background-image:url('{{ asset($hostelget->image) }}')">
+                                         style="background-image:url('{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}')">
                                     </div>
-                                    <!--end::Image-->
-
-                                    <!--begin::Action-->
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
                                     </div>
-                                    <!--end::Action-->
                                 </a>
+
                             </div>
                             <div class="col-8 d-flex flex-column">
                                 <div class="row">
@@ -187,10 +182,10 @@
         <div class="row card flex-row w-75 me-auto ms-auto mt-4 p-3">
             @foreach ($hostelget->hostelImage->take(3) as $hostelImage)
             <div class="col-4">
-                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset($hostelImage->image) }}">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset('storage/media/hostel/'.$hostelImage->image) }}">
                     <!--begin::Image-->
-                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                        style="background-image:url('{{ asset($hostelImage->image) }}')">
+                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
+                        style="background-image:url('{{ asset('storage/media/hostel/'.$hostelImage->image) }}')">
                     </div>
                     <!--end::Image-->
 
@@ -273,9 +268,22 @@
                 <div class="card card-hostel mb-3">
                     <div class="row mb-2">
                         <div class="col-4">
-                            <div class="img-fluid rounded-1 w-150px h-150px m-3"
-                                style="background-image:url('https://service.travelsya.com/storage/kamar/Lnw9eol8C1F759cRDf16qgdLBnsMgKLqjngpfw3H.jpg');background-position: center; ">
-                            </div>
+                            @php
+                                $i = 0;
+                            @endphp
+                            @foreach ($room->hostelroomImage as $roomImage)
+                                @php
+                                    $i += 1;
+                                @endphp
+                                <a class="d-block overlay {{$i == 1 ? '' : 'd-none'}}" data-fslightbox="lightbox-basic-{{$room->id}}" href="{{ asset('storage/' . $roomImage->image) }}">
+                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
+                                         style="background-image:url('{{ asset('storage/' . $roomImage->image) }}')">
+                                    </div>
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
                         <div class="col">
                             <div class="row mt-5 px-2">
