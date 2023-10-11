@@ -191,9 +191,9 @@
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
 
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                    href="{{ asset('media/hotel/'. $detailHotel->image) }}">
+                                    href="{{ asset($detailHotel->hotelImage->where('main', 1)->first()->image) }}">
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                        style="background-image:url('{{ asset('media/hotel/'.$detailHotel->image) }}')">
+                                        style="background-image:url('{{ asset($detailHotel->hotelImage->where('main', 1)->first()->image) }}')">
                                     </div>
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -297,9 +297,9 @@
         <div class="row card flex-row w-75 me-auto ms-auto mt-4 p-3">
             @foreach ($detailHotel->hotelImage->take(3) as $hotelImage)
             <div class="col-4">
-                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset('media/hotel/'.$hotelImage->image) }}">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset($hotelImage->image) }}">
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                        style="background-image:url('{{ asset('media/hotel/'.$hotelImage->image) }}')">
+                        style="background-image:url('{{ asset($hotelImage->image) }}')">
                     </div>
                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                         <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -441,8 +441,7 @@
                             <p class="fw-semibold d-block fs-2 text-danger">Rp.
                                 {{ number_format($room->sellingprice, 0, ',', '.') }}</p>
                             @guest
-                            <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
-                                data-target="#exampleModal">Pesan Kamar</a>
+                            <a href="{{ route('login') }}" class="btn btn-danger px-4 py-2">Login Dulu</a>
                             @endguest
                             @auth
                             <a href="{{ route('hotels.reservation', ['idroom' => $room->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] }}&guest={{ $request['guest'] }}"

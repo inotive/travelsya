@@ -5,19 +5,21 @@
             <p class="fs-4 text-gray-700 mb-10">Hotel yang paling sering dikunjungi saat liburan</p>
         </div>
         <div class="col-md-6 text-end">
-            <a href="/hotels" class="text-danger fs-4 fw-bold">Lihat Semua</a>
+            <a href="{{ url('/') }}/hotels?location=&start={{ date('d-m-Y') }}&duration=1&room=1&guest=1"
+                class="text-danger fs-4 fw-bold">Lihat Semua</a>
         </div>
     </div>
 
     <div class="row justify-content-between">
         @foreach($hotel_favorite as $hotel)
         @php
-        $imageHotel = $hotel->hotelImage->first()->image ?? 'images.png';
+        $imageHotel = $hotel->hotelImage->where('main',1)->first()->image ?? null;
         $sellingPriceHotel = $hotel->hotelRoom->first()->sellingprice ?? 0;
         @endphp
         <div class="col-md-3 mb-5">
-            <div class="card">
-                <img class="card-img-top h-200px" src="{{asset('media/hotel/'.$imageHotel)}}">
+            <a href="{{ route('hotels.room', ['id_hotel' => $hotel->id]) }}?location={{ $hotel->city }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=1"
+                class="card">
+                <img class="card-img-top h-200px" src="{{asset($imageHotel)}}">
                 <div class="card-body p-5">
                     <span
                         class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hotel->name}}</span>
@@ -31,18 +33,19 @@
                             $hotel_detail[$hotel->id]['total_rating'] }} Rating)</span>
                     </span>
                 </div>
-            </div>
+            </a>
         </div>
         @endforeach
 
         @foreach($hostel_favorite as $hostel)
         @php
-        $imageHostel = $hostel->hostelImage->first()->image ?? 'images.png';
+        $imageHostel = $hostel->hostelImage->where('main',1)->first()->image ?? null;
         $sellingPriceHostel = $hostel->hostelRoom->first()->sellingrentprice_monthly ?? 0;
         @endphp
         <div class="col-md-3 mb-5">
-            <div class="card">
-                <img class="card-img-top h-200px" src="{{asset('media/hostel/'.$imageHostel)}}">
+            <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $hostel->city . '&start=' . date('d-m-Y') . '&duration=1&property=&category=monthly&roomtype=&furnish=' }}"
+                class="card">
+                <img class="card-img-top h-200px" src="{{asset($imageHostel)}}">
                 <div class="card-body p-5">
                     <span
                         class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hostel->name}}</span>
@@ -55,12 +58,12 @@
                         <span class="text-gray-400" x-html="data.totalRate">({{ $hostel->rating_count }} Rating)</span>
                     </span>
                 </div>
-            </div>
+            </a>
         </div>
         @endforeach
     </div>
 
-    <div class="row justify-content-between" x-data>
+    {{-- <div class="row justify-content-between" x-data>
         <template x-for="data in $store.favoritehotel.data">
             <div class="col-md-3">
                 <div class="card">
@@ -82,6 +85,6 @@
                 </div>
             </div>
         </template>
-    </div>
+    </div> --}}
 
 </div>
