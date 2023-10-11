@@ -55,36 +55,50 @@ class UserController extends Controller
         ->join('transactions', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
         ->join('hotels', 'detail_transaction_hotel.hotel_id', '=', 'hotels.id')
         ->join('hotel_rooms', 'detail_transaction_hotel.hotel_room_id', '=', 'hotel_rooms.id')
-        ->join('guests', '')
+        ->join('guests', 'guests.transaction_id', '=', 'transactions.id')
         ->join('users', 'transactions.user_id', '=', 'users.id')
+        ->join('hotel_images', 'hotel_images.hotel_id', '=', 'hotels.id')
         ->leftJoin('history_points', 'transactions.id', '=', 'history_points.transaction_id')
         ->select('detail_transaction_hotel.*',
+                'hotels.id as hotel_id',
+                'hotels.address as hotel_address',
+                'guests.name as guest_name',
+                //'guests.nomor_telepon as guest_telp',
                 'transactions.no_inv as inv_num',
-                'transactions.service as service',
                 'transactions.created_at as created_transaction',
                 'transactions.payment_method as payment_method',
                 'transactions.status as status_pembayaran',
-                'history_points.point as points',
-                'users.name as user_name',
+                'users.email as user_email',
                 'hotels.name as hotel_name',
                 'hotel_rooms.name as hotelRoomName',
-                'hotel_rooms.price as room_price'
+                'hotel_rooms.sellingprice as sellingPrice',
+                'hotel_rooms.id as hotel_room_id',
+                'hotel_rooms.roomsize as room_size',
+                DB::raw('(CASE WHEN hotel_images.main THEN hotel_images.image ELSE NULL END) as `gambar-hotel`')
                 )
         ->where('detail_transaction_hotel.id', 1)
         ->first();
 
-
-
-        $hotelRoomDetail = DB::table('hotel_rooms')
-        ->join('hotel_room_facilities', 'hotel_rooms.id', '=', 'hotel_room_facilities.hotel_room_id')
-        ->select(
-            'hotel_rooms.*',
-            'hotel_room_facilities.facility_id'
-        )
-        ->where('hotel_rooms.id', $transactionHotel->hotel_room_id)
+        $hotelPict = DB::table('hotel_images')
+        ->where('main', 1)
+        ->where('hotel_id', $transactionHotel->hotel_id)
         ->first();
 
-        return view('user.order-detail.hotel', compact('transactionHotel', 'hotelRoomDetail'));
+        $roomPict = DB::table('hotel_room_images')
+        ->where('hotel_id', $transactionHotel->hotel_id)
+        ->where('hotel_room_id', $transactionHotel->hotel_room_id)
+        ->first();
+
+        $roomFacilities = DB::table('hotel_room_facilities')
+        ->join('facilities', 'hotel_room_facilities.facility_id', '=', 'facilities.id')
+        ->select('hotel_room_facilities.*', 'facilities.name as facility_name')
+        ->where('hotel_id', $transactionHotel->hotel_id)
+        ->where('hotel_room_id', $transactionHotel->hotel_room_id)
+        ->get();
+
+        //dd($roomFacilities);
+
+        return view('user.order-detail.hotel', compact('transactionHotel', 'hotelPict', 'roomPict', 'roomFacilities'));
     }
 
     public function orderDetailListrikVoucher(){

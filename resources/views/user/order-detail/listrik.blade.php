@@ -191,7 +191,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Total Tagihan</div>
-                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->total_tagihan, 2, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->total_tagihan, 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                             </div>
@@ -219,27 +219,27 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Tanggal Transaksi</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->created_transaction }}</div>
+                                            <div class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionPPOB->created_transaction)->format('d M Y H:i') }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Metode Pembayaran</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->payment_method }}</div>
+                                            <div class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionPPOB->payment_method) }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Biaya Admin</div>
-                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->fee_travelsya, 2, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->fee_travelsya, 0, ',', '.') }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Point Digunakan</div>
                                             @if ($pengeluaran->jumlah_point == 0)
                                             <div class="fs-8 fw-bold">Tidak ada</div>
                                             @else
-                                            <div class="fs-8 fw-bold text-danger">- {{ $pengeluaran->jumlah_point }} Point</div>
+                                            <div class="fs-8 fw-bold text-danger">- {{ number_format($pengeluaran->jumlah_point, 0, ',', '.') }} Point</div>
                                             @endif
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Total Bayar</div>
-                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total_after_fee, 2, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total_after_fee, 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                             </div>
@@ -255,7 +255,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     Total Biaya
                                 </div>
                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                    Rp. {{ number_format($transactionPPOB->total_after_fee, 2, ',', '.') }}
+                                    Rp. {{ number_format($transactionPPOB->total_after_fee, 0, ',', '.') }}
                                 </div>
                                 </div>
                                 </div>
@@ -263,7 +263,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                             <div class="col-12 d-grid">
                                 <div class="badge bg-light-success border-success border border-1 mt-5 ">
                                     <div class="mx-auto my-5 fs-4">
-                                        Kamu Dapat <b>{{ $pemasukan->jumlah_point }} Poin</b>  dari transaksi ini
+                                        Kamu Dapat <b>{{ number_format($pemasukan->jumlah_point, 0, ',', '.') }} Poin</b>  dari transaksi ini
                                     </div>
                                 </div>
                             </div>
