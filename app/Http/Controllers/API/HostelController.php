@@ -93,11 +93,12 @@ class HostelController extends Controller
                     $q->select(DB::raw('coalesce(avg(rate),0)'));
                 }
             ])->withCount("rating as rating_count")->get();
-
+            
+            // dd($hostelsget);
             $hostelShow = $hostelsget->map(function ($hostelsget) {
 
                 $hostelImage = $hostelsget->hostelImage->where('main', 1)->first();
-
+                $hostelRoom = $hostelsget->hostelRoom->where('hostel_id', $hostelsget->id)->first();
                 return [
                     'id' => $hostelsget->id,
                     'name' => $hostelsget->name,
@@ -106,6 +107,10 @@ class HostelController extends Controller
                     'rating_avg' => intval($hostelsget->rating_avg),
                     'rating_count' => $hostelsget->rating_count,
                     'sellingprice' => intval($hostelsget->price_avg),
+                    'property_type' => $hostelsget->property,
+                    'rent_category' => $hostelsget->category,
+                    'room_type' => $hostelRoom->roomtype,
+                    'furnish_type' => $hostelRoom->furnish
                 ];
             });
 
@@ -461,6 +466,9 @@ class HostelController extends Controller
                 'price' => $minPrice,
                 'sellingprice' => $maxPrice,
             ];
+
+            $hostelRoom = $hostel->hostelRoom->where('hostel_id', $hostel->id)->first();
+        
             $hostelFormatJSON[] = [
                 'id' => $hostel->id,
                 'name' => $hostel->name,
@@ -469,6 +477,10 @@ class HostelController extends Controller
                 'rating_avg' => $hotelDetails[$hostel->id]['avg_rating'],
                 'rating_count' => $hotelDetails[$hostel->id]['rating_count'],
                 'sellingprice' => $hotelDetails[$hostel->id]['sellingprice'],
+                'property_type' => $hostel->property,
+                'rent_category' => $hostel->category,
+                'room_type' => $hostelRoom->roomtype,
+                'furnish_type' => $hostelRoom->furnish
             ];
 
             usort($hostelFormatJSON, function ($a, $b) {

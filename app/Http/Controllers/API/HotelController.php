@@ -169,7 +169,7 @@ class HotelController extends Controller
         try {
             // $hotel = Hotel::find($hotel->id);
             // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-            //     ->find($id);
+        //     ->find($id);
 
             // if ($request->start_date) {
             //     $date = [
