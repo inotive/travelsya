@@ -22,24 +22,27 @@ class DashboardController extends Controller
 //         $transactions = Transaction::with('user')->get();
 //         $countPartner = User::wherein('role', ['1', '2'])->get();
 //         $countTransactionToday = $transactions->where('created_at', date('y-m-d'))->count();
-//         $sumTranscationToday = $transactions->where('created_at', date('y-m-d'))->sum('total');
-//         $sumTranscationMonthly = $transactions->where('month(created_at)', date('m'))->sum('total');
+
+
 //         return view('admin.dashboard', compact('transactions','countPartner','countTransactionToday','sumTranscationToday','sumTranscationToday'));
 // =======
         $card['partner'] = User::where('role', 1)->count();
         $card['transactionToday'] = Transaction::whereDate('created_at', today())->count();
 
-
-        $sumDayTransaction = Transaction::whereDate('created_at', today())
-            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
-            ->get()
-            ->map(function ($transaction) {
-                $price = $transaction->detailTransaction->sum('price');
-                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
-                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
-                return $price + $hotelRentPrice + $hostelRentPrice;
-            })
-            ->sum();
+        $sumDayTransaction = Transaction::whereDate('created_at', date('y-m-d'))->sum('total');
+        $sumMonthTransaction = Transaction::whereMonth('created_at', date('m'))->sum('total');
+//        $sumDayTransaction = Transaction::whereDate('created_at', today())
+//            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
+//            ->get()
+//            ->map(function ($transaction) {
+//                $price = $transaction->detailTransaction->sum('price');
+//                $price = $transaction->detailTransaction->sum('price');
+//                $price = $transaction->detailTransaction->sum('price');
+//                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
+//                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
+//                return $price + $hotelRentPrice + $hostelRentPrice;
+//            })
+//            ->sum();
 
         $card['sumDayTransaction'] = General::rp($sumDayTransaction);
 
@@ -47,16 +50,16 @@ class DashboardController extends Controller
         $firstDayOfMonth = now()->startOfMonth();
         $lastDayOfMonth = now()->endOfMonth();
 
-        $sumMonthTransaction = Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
-            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
-            ->get()
-            ->map(function ($transaction) {
-                $price = $transaction->detailTransaction->sum('price');
-                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
-                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
-                return $price + $hotelRentPrice + $hostelRentPrice;
-            })
-            ->sum();
+//        $sumMonthTransaction = Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+//            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
+//            ->get()
+//            ->map(function ($transaction) {
+//                $price = $transaction->detailTransaction->sum('price');
+//                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
+//                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
+//                return $price + $hotelRentPrice + $hostelRentPrice;
+//            })
+//            ->sum();
 
 
         $card['sumMonthTransaction'] = General::rp($sumMonthTransaction);
@@ -84,7 +87,7 @@ class DashboardController extends Controller
             ->leftJoin('products', 'detail_transaction_top_up.product_id', '=', 'products.id')
             ->leftJoin('products as ppob_products', 'detail_transaction_ppob.product_id', '=', 'ppob_products.id') // Tambah leftJoin ke tabel products (sebagai ppob_products)
             ->leftJoin('users', 'transactions.user_id', '=', 'users.id') // Join dengan tabel products
-            ->selectRaw('transactions.id, transactions.user_id, users.name as user, 
+            ->selectRaw('transactions.id, transactions.user_id, users.name as user,
                     transactions.total as transaction_price,
                     hotels.name as hotel_name, hotel_rooms.name as hotel_room,
                     hostels.name as hostel_name, hostel_rooms.name as hostel_room,

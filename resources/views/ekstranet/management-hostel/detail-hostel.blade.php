@@ -109,7 +109,7 @@
                                         class="badge {{ $hostel->is_active == 1 ? 'badge-success' : 'badge-danger' }} ">{{ $hostel->is_active == 1 ? 'live' : 'off' }}</span>
                                 </td>
                             </tr>
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -147,7 +147,7 @@
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle">
-                    
+
                                     <tbody>
                                         <tr>
                                             <td>Tipe Properti</td>
@@ -187,7 +187,7 @@
 
 
 
-                
+
                                         </td>
                                         </tr>
                                     </tbody>
@@ -239,7 +239,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset('media/hostel/' .$image->image) }}" class="rounded"
+                                                    <img src="{{ asset('storage/' .$image->image) }}" class="rounded"
                                                         style="width: 150px">
                                                 </td>
                                                 <td class="text-center">
@@ -328,7 +328,7 @@
                                     </thead>
                                     <tbody>
                                         {{-- @foreach ($hotel->hotelbookDate as $booking) --}}
-                        
+
                                             <tr>
                                                 <td class="text-center">Gusti Bagus - 081123123 </td>
                                                 <td class="text-center">CTH123</td>
@@ -391,7 +391,7 @@
                                         @foreach ($hostel->hostelFacilities as $facility)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$facility->facility->name}}</td>                          
+                                                <td>{{$facility->facility->name}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>

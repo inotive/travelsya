@@ -168,7 +168,7 @@ class ManagementHostelController extends Controller
 
         $file = $request->file('image');
         $fileName = $file->hashName();
-        $file->storeAs('media/ads', $fileName);
+        $file->storeAs('media/hostel', $fileName);
 
         HostelImage::create([
             'hostel_id' => $id,
@@ -209,15 +209,15 @@ class ManagementHostelController extends Controller
 
     public function destroyphotoHostel($id)
     {
-        
+
             $hostelImage = HostelImage::findOrFail($id);
             Storage::delete('media/hostel/'. $hostelImage->image);
 
             $hostelImage->delete();
-    
+
             toast('Hostel Image has been deleted', 'success');
             return redirect()->back();
-        
+
     }
 
     public function settingRoomShow($hostel_id, $id)

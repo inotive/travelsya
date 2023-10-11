@@ -83,7 +83,7 @@
                             <div class="col-6">
                                 <div class="card border border-light-subtle">
                                     <div class="card-body">
-                                        <img src="{{asset( $image->image)}}" style="width: 100%; height: 250px;"
+                                        <img src="{{asset('storage/'. $image->image)}}" style="width: 100%; height: 250px;"
                                              alt="image">
                                     </div>
                                     <div class="card-footer py-2">
