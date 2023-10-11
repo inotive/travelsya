@@ -1,4 +1,4 @@
-@extends('ekstranet.layout', ['title' => 'Setting Photo - Hotel A', 'url' => '#'])
+@extends('ekstranet.layout', ['title' => 'Setting Photo - '. $hostel->name, 'url' => '#'])
 
 @section('content-admin')
     <!--begin::Row-->
@@ -81,8 +81,8 @@
                         <div class="col-6">
                             <div class="card border border-light-subtle">
                                 <div class="card-body">
-                                    <img src="{{ asset('media/hostel/' . $image->image) }}"
-                                        style="width: 100%; height: 150px; bac" alt="image">
+                                    <img src="{{ asset('storage/media/hostel/'.$image->image) }}"
+                                        style="width: 100%; height: 150px;" alt="image">
                                 </div>
                                 <div class="card-footer py-2">
                                     <form

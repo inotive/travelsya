@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('hostel_rooms', function (Blueprint $table) {
-            $table->integer('rentprice_monthly');
-            $table->integer('sellingrentprice_monthly');
-            $table->integer('rentprice_yearly');
-            $table->integer('sellingrentprice_yearly');
-            $table->integer('totalbathroom');
-            $table->integer('extrabed_sellingprice')->nullable();
+            $table->integer('rentprice_monthly')->after('description');
+            $table->integer('sellingrentprice_monthly')->after('rentprice_monthly');
+            $table->integer('rentprice_yearly')->after('sellingrentprice_monthly');
+            $table->integer('sellingrentprice_yearly')->after('rentprice_yearly');
+            $table->integer('totalbathroom')->after('totalroom');
+            $table->integer('extrabed_sellingprice')->after('extrabedprice')->nullable();
         });
     }
 

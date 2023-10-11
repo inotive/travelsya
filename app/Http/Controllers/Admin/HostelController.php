@@ -56,16 +56,16 @@ class HostelController extends Controller
         ]);
     }
 
-    public function storeMitra(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'address' => 'required',
+            // 'address' => 'required',
             'star' => 'required',
             'website' => 'required',
             'user_id' => 'required',
             'city' => 'required',
-            'is_active' => 'required',
+            // 'is_active' => 'required',
 
         ]);
 
@@ -76,10 +76,10 @@ class HostelController extends Controller
             'name' => ucwords($request->name),
             'user_id' => $request->user_id,
             'is_active' => 1,
-            'service_id' => 7,
+            // 'service_id' => 7,
             'city' => $request->city,
             'kecamatan' => '-',
-            'address' => $request->alamat,
+            'address' => $request->address,
             'description' => '-',
             'facilities' => '-',
             'lat' => '-',

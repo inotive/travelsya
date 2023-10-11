@@ -12,8 +12,11 @@ return new class extends Migration {
     {
         Schema::create('detail_transaction_ppob', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id');
-            $table->foreignId('product_id');
+            $table->unsignedBigInteger('transaction_id');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->string('nama_pelanggan')->nullable();
             $table->string('nomor_pelanggan');
             $table->integer('total_tagihan');
             $table->integer('fee_travelsya');

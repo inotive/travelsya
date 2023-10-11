@@ -44,16 +44,17 @@ class AdController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        $file = $request->file('image');
-        $nama_foto = $file->hashName();
-
-        $path = public_path('media/ads');
-        $file->move($path, $nama_foto);
+//        $file = $request->file('image');
+//        $nama_foto = $file->hashName();
+//
+//        $path = public_path('media/ads');
+//        $file->move($path, $nama_foto);
+        $image = $request->file('image')->store('media/ads');
 
         Ad::create([
             'name'  => $request->name,
             'url'   => $request->url,
-            'image' => $nama_foto,
+            'image' => $image,
             'is_active' => $request->is_active
         ]);
 

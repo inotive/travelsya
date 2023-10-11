@@ -1,4 +1,4 @@
-@extends('ekstranet.layout',['title' => 'Setting Hotel - Hotel A' ,"url" => "#"])
+@extends('ekstranet.layout',['title' => 'Setting Hotel - '. $hostel->name ,"url" => "#"])
 
 @section('content-admin')
    <!--begin::Tables Widget 11-->
