@@ -19,7 +19,7 @@
         <div class="col-md-3 mb-5">
             <a href="{{ route('hotels.room', ['id_hotel' => $hotel->id]) }}?location={{ $hotel->city }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=1"
                 class="card">
-                <img class="card-img-top h-200px" src="{{asset('storage/media/hotel/' .$imageHotel)}}">
+                <img class="card-img-top h-200px" src="{{asset('storage/' .$imageHotel)}}">
                 <div class="card-body p-5">
                     <span
                         class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hotel->name}}</span>
