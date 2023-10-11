@@ -289,7 +289,7 @@
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td class="text-center">
-                                                <img src="{{asset('media/hotel/' . $image->image) }}" class="rounded"
+                                                <img src="{{asset('storage/' . $image->image) }}" class="rounded"
                                                      style="width: 150px">
                                             </td>
                                             <td class="text-center">
@@ -390,13 +390,13 @@
 
                                         @endphp
                                         <tr>
-                                            <td class="text-center">{{ $booking->transaction->user->name }} -
-                                                {{ $booking->transaction->user->phone }}</td>
+                                            <td class="text-center">{{ $booking->transaction->user->name ?? '' }} -
+                                                {{ $booking->transaction->user->phone ?? '' }}</td>
                                             <td class="text-center">CTH123</td>
                                             <td class="text-center">{{ $startdates }}
                                             </td>
                                             <td class="text-center">{{ $enddates }}</td>
-                                            <td class="text-center">{{ $booking->hotelroom->name     }}</td>
+                                            <td class="text-center">{{ $booking->hotelroom->name  ?? ''   }}</td>
                                             <td class="text-center">1 Kamar | 8 Malam</td>
 
 
@@ -458,7 +458,7 @@
                                                     <div class="col-md-1 mb-1 text-center">
                                                         <div
                                                             class="symbol symbol-100px symbol-lg-70px symbol-fixed position-relative">
-                                                            <img src="{{ asset($facilityhotel->facility->icon) }}"
+                                                            <img src="{{ asset('storage/media/facilities/'. $facilityhotel->facility->icon) }}"
                                                                  alt="image"/>
                                                         </div>
                                                         <div class="mt-2">

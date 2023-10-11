@@ -281,9 +281,9 @@
                                 <div class="row my-4">
                                     <div class="col-4">
                                         <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                            href="{{ asset('media/hotel/'. $hotel->hotelImage->where('main', 1)->first()->image ?? null) }}">
+                                            href="{{ asset('storage/' . $hotel->hotelImage->where('main', 1)->first()->image ?? null) }}">
                                             <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                                style="background-image:url('{{ asset('media/hotel/' . $hotel->hotelImage->where('main', 1)->first()->image ?? null) }}')">
+                                                style="background-image:url('{{ asset('storage/' . $hotel->hotelImage->where('main', 1)->first()->image ?? null) }}')">
                                             </div>
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -303,7 +303,7 @@
                                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
                                                     </div>
                                                 </a> --}}
-                                                <img src="{{ asset('media/hotel/'.$hotelImage->image) }}" alt="image" width="100%"
+                                                <img src="{{ asset('storage/' . $hotelImage->image) }}" alt="image" width="100%"
                                                     class="rounded" data-fslightbox="lightbox-basic">
                                             </div>
                                             @endforeach

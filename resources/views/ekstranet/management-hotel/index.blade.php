@@ -9,7 +9,7 @@
                 $avg_rate = DB::table('hotel_ratings')
                     ->where('hotel_id', $hotel->id)
                     ->avg('rate');
-                
+
                 $total_review = DB::table('hotel_ratings')
                     ->where('hotel_id', $hotel->id)
                     ->count();
@@ -52,7 +52,7 @@
                                 <a href="{{route('partner.management.hotel.setting.hotel',$hotel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Profil Hotel</a>
                             </div>
                             <div class="col-6">
-                                <a href="{{route('partner.management.hotel.setting.photo',$hotel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo Hotel</a>
+                                <a href="{{route('partner.management.hotel.setting.photo',$hotel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo Hotel ({{$hotel->hotelImage->count()}})</a>
                             </div>
                             <div class="col-6">
                                 <a href="{{route('partner.management.hotel.setting.room',$hotel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Kamar Hotel ({{$hotel->hotelRoom->count()}})</a>

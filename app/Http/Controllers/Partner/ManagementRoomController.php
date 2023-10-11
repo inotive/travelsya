@@ -124,7 +124,7 @@ class ManagementRoomController extends Controller
 
         $hotelRoomImage = HotelRoomImage::find($id);
         if ($hotelRoomImage) {
-            Storage::delete('media/hotel/' . $hotelRoomImage->image);
+            Storage::delete($hotelRoomImage->image);
 
             $hotelRoomImage->update([
                 'hotel_id'  => $request->hotel_id,
@@ -152,7 +152,7 @@ class ManagementRoomController extends Controller
     {
         $hotelRoomImage = HotelRoomImage::find($id);
 
-        Storage::delete('media/hotel/'.$hotelRoomImage->image);
+        Storage::delete($hotelRoomImage->image);
 
         $hotelRoomImage->delete();
 
@@ -214,7 +214,7 @@ class ManagementRoomController extends Controller
 
         $hostelRoomImage = HostelRoomImages::find($id);
         if ($hostelRoomImage) {
-            Storage::delete('media/hostel/' . $hostelRoomImage->image);
+            Storage::delete($hostelRoomImage->image);
 
             $hostelRoomImage->update([
                 'hostel_id'  => $request->hostel_id,
@@ -242,7 +242,7 @@ class ManagementRoomController extends Controller
     {
         $hostelRoomImage = hostelRoomImages::find($id);
 
-        Storage::delete('media/hostel/'.$hostelRoomImage->image);
+        Storage::delete($hostelRoomImage->image);
 
         $hostelRoomImage->delete();
 
