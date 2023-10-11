@@ -235,7 +235,24 @@ class HotelController extends Controller
                 });
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
-
+                $hotel_ratings = null;
+                if($hotel->hotelRating != null){
+                    $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
+                        return [
+                            "id"=> $hr->id,
+                            "transaction_id" => $hr->transaction_id,
+                            "user_id" => $hr->user_id,
+                            "user_name" => User::where('id',$hr->user_id)->first()->name,
+                            "hotel_id" => $hr->hotel_id,
+                            "rate" => $hr->rate,
+                            "comment" => $hr->comment,
+                            "deleted_at" => $hr->deleted_at,
+                            "created_at" => $hr->created_at,
+                            "updated_at" => $hr->updated_at,
+                        ];
+                    });
+                };
+              
                 return [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
@@ -251,7 +268,7 @@ class HotelController extends Controller
                     'hotel_rooms' => $hotel_room,
                     'hotel_facilities' => $hotel_facilities,
                     'hotel_rules' => $hotel->hotelRule,
-                    'hotel_reviews' => $hotel->hotelRating,
+                    'hotel_reviews' => $hotel_ratings,
                 ];
             });
 

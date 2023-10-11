@@ -27,7 +27,7 @@ class ManagementHotelController extends Controller
     // Daftar Hotel
     public function index()
     {
-        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate(5);
+        $hotels = Hotel::with('hotelRoom')->where('user_id', auth()->user()->id)->orderBy('created_at', 'desc')->paginate();
         return view('ekstranet.management-hotel.index', compact('hotels'));
     }
 
@@ -187,6 +187,8 @@ class ManagementHotelController extends Controller
     {
 
             $hotelImage = HotelImage::findOrFail($id);
+            Storage::delete('media/hotel/'. $hotelImage->image);
+
             $hotelImage->delete();
 
             toast('Hotel Image has been deleted', 'success');
