@@ -118,35 +118,35 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
-                                            <th>Tanggal</th>
-                                            <th>Invoice</th>
-                                            <th>Produk</th>
-                                            <th>Customer</th>
-                                            <th>Deskripsi</th>
-                                            <th>Metode Pembayaran</th>
-                                            <th>Grand Total</th>
-                                            <th>Fee Admin</th>
-                                        </tr>
+                                    <tr class="fw-bold fs-6 text-gray-800">
+                                        <th>Tanggal</th>
+                                        <th>Invoice</th>
+                                        <th>Produk</th>
+                                        <th>Customer</th>
+                                        <th>Deskripsi</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Grand Total</th>
+                                        <th>Fee Admin</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $key => $transaction) --}}
-                                        @foreach ($detailTransactions as $transaction)
-                                            <tr>
-                                                <td>{{ $transaction['created_at'] }}</td>
-                                                <td>{{ $transaction['no_inv'] }}</td>
-                                                <td>
+                                    {{-- @foreach ($transactions as $key => $transaction) --}}
+                                    @foreach ($detailTransactions as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction['created_at'] }}</td>
+                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>
                                                     <span class="badge badge-rounded badge-primary">
                                                         {{ strtoupper($transaction['service_name']) }}
                                                     </span>
-                                                </td>
-                                                <td>{{ $transaction['user'] }}</td>
-                                                <td>{{ $transaction['transaction_name'] }} -
-                                                    {{ $transaction['transaction_desc'] }}</td>
-                                                <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                                <td>@currency($transaction['transaction_price'])</td>
-                                                <td>@currency($transaction['fee'])</td>
-                                        @endforeach
+                                            </td>
+                                            <td>{{ $transaction['user'] }}</td>
+                                            <td>{{ $transaction['transaction_name'] }} -
+                                                {{ $transaction['transaction_desc'] }}</td>
+                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
+                                            <td>@currency($transaction['transaction_price'])</td>
+                                            <td>@currency($transaction['fee'])</td>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -401,52 +401,52 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
-                                            <th>Tanggal</th>
-                                            <th>Invoice</th>
-                                            <th>Produk</th>
-                                            <th>Customer</th>
-                                            <th>Deskripsi</th>
-                                            <th>Metode Pembayaran</th>
-                                            <th>Grand Total</th>
-                                            <th>Fee Admin</th>
-                                        </tr>
+                                    <tr class="fw-bold fs-6 text-gray-800">
+                                        <th>Tanggal</th>
+                                        <th>Invoice</th>
+                                        <th>Produk</th>
+                                        <th>Customer</th>
+                                        <th>Deskripsi</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Grand Total</th>
+                                        <th>Fee Admin</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $key => $transaction) --}}
-                                        @foreach ($detailTransactionHotel as $transaction)
-                                            <tr>
-                                                <td>{{ $transaction['created_at'] }}</td>
-                                                <td>{{ $transaction['no_inv'] }}</td>
-                                                <td>
+                                    {{-- @foreach ($transactions as $key => $transaction) --}}
+                                    @foreach ($detailTransactionHotel as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction['created_at'] }}</td>
+                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>
                                                     <span class="badge badge-rounded badge-primary">
                                                         {{ strtoupper($transaction['service_name']) }}
                                                     </span>
-                                                </td>
-                                                <td>{{ $transaction['user'] }}</td>
-                                                <td>{{ $transaction['transaction_name'] }} -
-                                                    {{ $transaction['transaction_desc'] }}</td>
-                                                <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                                <td>@currency($transaction['transaction_price'])</td>
-                                                <td>@currency($transaction['fee'])</td>
-                                        @endforeach
+                                            </td>
+                                            <td>{{ $transaction['user'] }}</td>
+                                            <td>{{ $transaction['transaction_name'] }} -
+                                                {{ $transaction['transaction_desc'] }}</td>
+                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
+                                            <td>@currency($transaction['transaction_price'])</td>
+                                            <td>@currency($transaction['fee'])</td>
+                                    @endforeach
 
-                                        @foreach ($detailTransactionHostel as $transaction)
-                                            <tr>
-                                                <td>{{ $transaction['created_at'] }}</td>
-                                                <td>{{ $transaction['no_inv'] }}</td>
-                                                <td>
+                                    @foreach ($detailTransactionHostel as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction['created_at'] }}</td>
+                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>
                                                     <span class="badge badge-rounded badge-primary">
                                                         {{ strtoupper($transaction['service_name']) }}
                                                     </span>
-                                                </td>
-                                                <td>{{ $transaction['user'] }}</td>
-                                                <td>{{ $transaction['transaction_name'] }} -
-                                                    {{ $transaction['transaction_desc'] }}</td>
-                                                <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                                <td>@currency($transaction['transaction_price'])</td>
-                                                <td>@currency($transaction['fee'])</td>
-                                        @endforeach
+                                            </td>
+                                            <td>{{ $transaction['user'] }}</td>
+                                            <td>{{ $transaction['transaction_name'] }} -
+                                                {{ $transaction['transaction_desc'] }}</td>
+                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
+                                            <td>@currency($transaction['transaction_price'])</td>
+                                            <td>@currency($transaction['fee'])</td>
+                                    @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -460,35 +460,35 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
-                                            <th>Tanggal</th>
-                                            <th>Invoice</th>
-                                            <th>Produk</th>
-                                            <th>Customer</th>
-                                            <th>Deskripsi</th>
-                                            <th>Metode Pembayaran</th>
-                                            <th>Grand Total</th>
-                                            <th>Fee Admin</th>
-                                        </tr>
+                                    <tr class="fw-bold fs-6 text-gray-800">
+                                        <th>Tanggal</th>
+                                        <th>Invoice</th>
+                                        <th>Produk</th>
+                                        <th>Customer</th>
+                                        <th>Deskripsi</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Grand Total</th>
+                                        <th>Fee Admin</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $key => $transaction) --}}
-                                        @foreach ($detailTransactionPPOB as $transaction)
-                                            <tr>
-                                                <td>{{ $transaction['created_at'] }}</td>
-                                                <td>{{ $transaction['no_inv'] }}</td>
-                                                <td>
+                                    {{-- @foreach ($transactions as $key => $transaction) --}}
+                                    @foreach ($detailTransactionPPOB as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction['created_at'] }}</td>
+                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>
                                                     <span class="badge badge-rounded badge-primary">
                                                         {{ strtoupper($transaction['service_name']) }}
                                                     </span>
-                                                </td>
-                                                <td>{{ $transaction['user'] }}</td>
-                                                <td>{{ $transaction['transaction_name'] }} -
-                                                    {{ $transaction['transaction_desc'] }}</td>
-                                                <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                                <td>@currency($transaction['transaction_price'])</td>
-                                                <td>@currency($transaction['fee'])</td>
-                                        @endforeach
+                                            </td>
+                                            <td>{{ $transaction['user'] }}</td>
+                                            <td>{{ $transaction['transaction_name'] }} -
+                                                {{ $transaction['transaction_desc'] }}</td>
+                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
+                                            <td>@currency($transaction['transaction_price'])</td>
+                                            <td>@currency($transaction['fee'])</td>
+                                    @endforeach
 
 
                                     </tbody>
@@ -504,35 +504,35 @@
                             <div class="table-responsive">
                                 <table class="table table-bordered">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
-                                            <th>Tanggal</th>
-                                            <th>Invoice</th>
-                                            <th>Produk</th>
-                                            <th>Customer</th>
-                                            <th>Deskripsi</th>
-                                            <th>Metode Pembayaran</th>
-                                            <th>Grand Total</th>
-                                            <th>Fee Admin</th>
-                                        </tr>
+                                    <tr class="fw-bold fs-6 text-gray-800">
+                                        <th>Tanggal</th>
+                                        <th>Invoice</th>
+                                        <th>Produk</th>
+                                        <th>Customer</th>
+                                        <th>Deskripsi</th>
+                                        <th>Metode Pembayaran</th>
+                                        <th>Grand Total</th>
+                                        <th>Fee Admin</th>
+                                    </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $key => $transaction) --}}
-                                        @foreach ($detailTransactionPulsa as $transaction)
-                                            <tr>
-                                                <td>{{ $transaction['created_at'] }}</td>
-                                                <td>{{ $transaction['no_inv'] }}</td>
-                                                <td>
+                                    {{-- @foreach ($transactions as $key => $transaction) --}}
+                                    @foreach ($detailTransactionPulsa as $transaction)
+                                        <tr>
+                                            <td>{{ $transaction['created_at'] }}</td>
+                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>
                                                     <span class="badge badge-rounded badge-primary">
                                                         {{ strtoupper($transaction['service_name']) }}
                                                     </span>
-                                                </td>
-                                                <td>{{ $transaction['user'] }}</td>
-                                                <td>{{ $transaction['transaction_name'] }} -
-                                                    {{ $transaction['transaction_desc'] }}</td>
-                                                <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                                <td>@currency($transaction['transaction_price'])</td>
-                                                <td>@currency($transaction['fee'])</td>
-                                        @endforeach
+                                            </td>
+                                            <td>{{ $transaction['user'] }}</td>
+                                            <td>{{ $transaction['transaction_name'] }} -
+                                                {{ $transaction['transaction_desc'] }}</td>
+                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
+                                            <td>@currency($transaction['transaction_price'])</td>
+                                            <td>@currency($transaction['fee'])</td>
+                                    @endforeach
 
 
                                     </tbody>
@@ -546,4 +546,4 @@
 
             </div>
         </div>
-    @endsection
+@endsection

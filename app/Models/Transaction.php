@@ -26,7 +26,15 @@ class Transaction extends Model
     {
         return $this->hasMany(DetailTransaction::class);
     }
-    
+
+    public function detailTransactionPPOB()
+    {
+        return $this->hasMany(DetailTransactionPPOB::class);
+    }
+    public function detailTransactionTopUp()
+    {
+        return $this->hasMany(DetailTransactionTopUp::class);
+    }
 
     public function detailTransactionHotel()
     {

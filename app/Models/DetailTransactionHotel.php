@@ -14,4 +14,8 @@ class DetailTransactionHotel extends Model
     {
         return $this->belongsTo(Hotel::class, 'hotel_id');
     }
+    public function customer()
+    {
+        return $this->belongsTo(User::class, 'users_id');
+    }
 }

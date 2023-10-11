@@ -192,15 +192,23 @@ class HostelController extends Controller
                     ];
                 });
 
-                $hostel_reviews = $hostel->rating->map(function ($reviews) {
-                    return [
-                        'id' => $reviews->id,
-                        'user_id' => $reviews->user_id,
-                        'user_name' => $reviews->user->name,
-                        'rate' => $reviews->rate,
-                        'comment' => $reviews->comment,
-                    ];
-                });
+                $hostel_reviews = null;
+                if($hostel->rating != null){
+                    $hostel_reviews = $hostel->rating->map(function ($reviews) {
+                        return [
+                            'id' => $reviews->id,
+                            'user_id' => $reviews->user_id,
+                            'user_name' => $reviews->user->name,
+                            'rate' => $reviews->rate,
+                            'comment' => $reviews->comment,
+                            'deleted_at' => $reviews->deleted_at,
+                            'created_at' => $reviews->created_at,
+                            'updated_at' => $reviews->updated_at,
+                        ];
+                    });
+                };
+
+              
 
                 return [
                     'id'                => $hostel->id,

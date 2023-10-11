@@ -143,15 +143,11 @@ class ManagementHotelController extends Controller
 
     public function storePhotoHotel($id, Request $request)
     {
-        $file = $request->file('image');
-        $nama_foto = $file->hashName();
-
-        $path = public_path('media/hotel');
-        $file->move($path, $nama_foto);
+        $image = $request->file('image')->store('media/hotel');
 
         HotelImage::create([
             'hotel_id' => $id,
-            'image' => $nama_foto,
+            'image' => $image,
             'main' => 0
         ]);
 
@@ -189,15 +185,15 @@ class ManagementHotelController extends Controller
 
     public function destroyphotoHotel($id)
     {
-        
+
             $hotelImage = HotelImage::findOrFail($id);
             Storage::delete('media/hotel/'. $hotelImage->image);
 
             $hotelImage->delete();
-    
+
             toast('Hotel Image has been deleted', 'success');
             return redirect()->back();
-        
+
     }
 
 
