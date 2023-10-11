@@ -34,32 +34,33 @@
                     <tbody>
                         @foreach ($customers as $customer)
                             @php
-                                $totalTransactions = DB::table('transactions')
-                                    ->leftJoin('detail_transactions', 'transactions.id', '=', 'detail_transactions.transaction_id')
-                                    ->leftJoin('detail_transaction_hotel', 'transactions.id', '=', 'detail_transaction_hotel.transaction_id')
-                                    ->leftJoin('detail_transaction_hostel', 'transactions.id', '=', 'detail_transaction_hostel.transaction_id')
-                                    ->selectRaw('SUM(detail_transactions.price + IFNULL(detail_transaction_hotel.rent_price, 0) + IFNULL(detail_transaction_hostel.rent_price, 0)) as total_price')
-                                    ->where('detail_transactions.status', 'SUCCESS')
-                                    ->whereIn('transactions.id', $customer->transaction->pluck('id'))
-                                    ->value('total_price');
-                           
-                                $detailTransaction = DB::table('detail_transactions')
-                                    ->join('transactions', 'transactions.id', '=', 'detail_transactions.transaction_id')
-                                    ->whereIn('transactions.id', $customer->transaction->pluck('id'))
-                                    ->where('detail_transactions.status', 'SUCCESS')
-                                    ->sum('price');
-                            
-                                $detailTransactionhotel = DB::table('detail_transaction_hotel')
-                                    ->join('transactions', 'transactions.id', '=', 'detail_transaction_hotel.transaction_id')
-                                    ->whereIn('transactions.id', $customer->transaction->pluck('id'))
-                                    ->sum('rent_price');
-                            
-                                $detailTransactionhostel = DB::table('detail_transaction_hostel')
-                                    ->join('transactions', 'transactions.id', '=', 'detail_transaction_hostel.transaction_id')
-                                    ->whereIn('transactions.id', $customer->transaction->pluck('id'))
-                                    ->sum('rent_price');
+                        
+                                // $detailTransactionPPOB = DB::table('detail_transaction_ppob')
+                                //     ->join('transactions', 'transactions.id', '=', 'detail_transaction_ppob.transaction_id')
+                                //     ->whereIn('transactions.id', $customer->transaction->pluck('id'))
+                                //     ->where('detail_transaction_ppob.status', 'SUCCESS')
+                                //     ->sum('total_tagihan');
 
-                                    $totaltr  =  $detailTransaction + $detailTransactionhotel + $detailTransactionhostel;
+                                // $detailTransactionTopUp = DB::table('detail_transaction_top_up')
+                                //     ->join('transactions', 'transactions.id', '=', 'detail_transaction_top_up.transaction_id')
+                                //     ->whereIn('transactions.id', $customer->transaction->pluck('id'))
+                                //     ->where('detail_transaction_top_up.status', 'SUCCESS')
+                                //     ->sum('total_tagihan');
+
+                                // $detailTransactionhotel = DB::table('detail_transaction_hotel')
+                                //     ->join('transactions', 'transactions.id', '=', 'detail_transaction_hotel.transaction_id')
+                                //     ->whereIn('transactions.id', $customer->transaction->pluck('id'))
+                                //     ->sum('rent_price');
+
+                                // $detailTransactionhostel = DB::table('detail_transaction_hostel')
+                                //     ->join('transactions', 'transactions.id', '=', 'detail_transaction_hostel.transaction_id')
+                                //     ->whereIn('transactions.id', $customer->transaction->pluck('id'))
+                                //     ->sum('rent_price');
+                                //     $totaltr =  $detailTransactionPPOB + $detailTransactionTopUp + $detailTransactionhotel + $detailTransactionhostel;
+
+                                $totalTransaction = DB::table('transactions')
+                                ->where('transactions.user_id', $customer->id)
+                                ->sum('total');
                             @endphp
                             <tr>
                                 <td>
@@ -83,13 +84,11 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">@currency($totaltr)</div>
+                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">@currency($totalTransaction)</div>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                        data-bs-target="#history" 
-                                        onclick="showDetailTransactions({{ $customer->id }})"
-                                        >History Transaksi</button>
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#history"
+                                        onclick="showDetailTransactions({{ $customer->id }})">History Transaksi</button>
                                 </td>
                             </tr>
                         @endforeach

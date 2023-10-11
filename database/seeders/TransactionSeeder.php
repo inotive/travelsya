@@ -1,7 +1,10 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\Transaction;
+use Carbon\Carbon;
+
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -27,8 +30,9 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-03-28 11:44:13',
-            'updated_at'=>'2023-03-28 11:44:13'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            
             ] );
             
             
@@ -47,8 +51,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-03-29 15:49:23',
-            'updated_at'=>'2023-03-29 15:49:23'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -67,8 +71,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-03-31 20:36:10',
-            'updated_at'=>'2023-03-31 23:15:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -87,8 +91,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-01 06:46:36',
-            'updated_at'=>'2023-04-01 14:44:04'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -102,13 +106,13 @@ class TransactionSeeder extends Seeder
             'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
-            'payment_channel'=>0x5045524d415441,
+            'payment_channel'=>NULL,
             'user_id'=>2,
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-01 14:53:42',
-            'updated_at'=>'2023-04-01 14:54:15'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -127,8 +131,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-02 14:30:47',
-            'updated_at'=>'2023-04-02 14:31:42'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -147,8 +151,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-03 23:40:51',
-            'updated_at'=>'2023-04-04 00:08:46'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -167,8 +171,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 00:13:40',
-            'updated_at'=>'2023-04-04 00:14:04'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -187,8 +191,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 16:51:48',
-            'updated_at'=>'2023-04-05 16:52:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -207,8 +211,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 16:53:15',
-            'updated_at'=>'2023-04-05 16:54:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -227,8 +231,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 16:53:51',
-            'updated_at'=>'2023-04-04 17:01:53'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -247,8 +251,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 17:01:23',
-            'updated_at'=>'2023-04-05 17:01:30'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -267,8 +271,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 17:03:53',
-            'updated_at'=>'2023-04-04 17:04:13'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -287,8 +291,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 19:09:26',
-            'updated_at'=>'2023-04-04 19:09:52'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -307,8 +311,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-04 19:13:05',
-            'updated_at'=>'2023-04-04 19:13:23'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -327,8 +331,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-06 04:54:27',
-            'updated_at'=>'2023-04-06 05:29:30'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -347,8 +351,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-13 10:53:51',
-            'updated_at'=>'2023-04-14 10:54:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -367,8 +371,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-13 16:22:29',
-            'updated_at'=>'2023-04-13 16:23:40'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -387,8 +391,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-13 17:19:34',
-            'updated_at'=>'2023-04-14 17:20:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -407,8 +411,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-20 13:40:15',
-            'updated_at'=>'2023-04-21 13:40:17'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -427,8 +431,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-20 14:52:45',
-            'updated_at'=>'2023-04-21 14:53:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -447,8 +451,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-20 16:10:00',
-            'updated_at'=>'2023-04-20 18:06:56'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -467,8 +471,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-20 16:10:24',
-            'updated_at'=>'2023-04-21 16:11:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -487,8 +491,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-20 16:19:39',
-            'updated_at'=>'2023-04-21 16:20:17'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -507,8 +511,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-26 06:15:50',
-            'updated_at'=>'2023-04-27 06:16:14'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -527,8 +531,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-04-27 04:04:49',
-            'updated_at'=>'2023-04-27 04:05:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -547,8 +551,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-10 00:30:10',
-            'updated_at'=>'2023-05-11 00:30:27'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -562,13 +566,13 @@ class TransactionSeeder extends Seeder
             'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
-            'payment_channel'=>0x4d414e44495249,
+            'payment_channel'=>NULL,
             'user_id'=>7,
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-10 04:31:59',
-            'updated_at'=>'2023-05-10 04:32:19'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -587,8 +591,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-10 22:26:45',
-            'updated_at'=>'2023-05-11 22:27:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -607,8 +611,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-10 22:42:59',
-            'updated_at'=>'2023-05-11 22:43:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -627,8 +631,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 03:54:20',
-            'updated_at'=>'2023-05-11 03:54:20'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -642,13 +646,13 @@ class TransactionSeeder extends Seeder
             'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
-            'payment_channel'=>0x4d414e44495249,
+            'payment_channel'=>NULL,
             'user_id'=>7,
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 03:55:31',
-            'updated_at'=>'2023-05-11 03:55:40'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -667,8 +671,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 03:57:12',
-            'updated_at'=>'2023-05-11 03:58:05'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -687,8 +691,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 04:04:52',
-            'updated_at'=>'2023-05-11 04:05:07'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -707,8 +711,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 23:15:42',
-            'updated_at'=>'2023-05-12 23:16:21'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -727,8 +731,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 23:41:34',
-            'updated_at'=>'2023-05-12 23:42:17'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -747,8 +751,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-11 23:45:28',
-            'updated_at'=>'2023-05-12 23:46:12'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -767,8 +771,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-12 00:01:22',
-            'updated_at'=>'2023-05-12 00:01:40'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -787,8 +791,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-12 00:42:07',
-            'updated_at'=>'2023-05-13 00:42:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -807,8 +811,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-12 00:42:36',
-            'updated_at'=>'2023-05-12 00:44:10'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -827,8 +831,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-12 00:50:09',
-            'updated_at'=>'2023-05-13 00:50:19'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -847,8 +851,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-14 15:52:23',
-            'updated_at'=>'2023-05-15 15:53:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -867,8 +871,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-14 16:52:29',
-            'updated_at'=>'2023-05-15 16:53:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -882,13 +886,13 @@ class TransactionSeeder extends Seeder
             'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
-            'payment_channel'=>0x4d414e44495249,
+            'payment_channel'=>NULL,
             'user_id'=>3,
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-18 17:39:17',
-            'updated_at'=>'2023-05-18 17:39:42'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -902,13 +906,13 @@ class TransactionSeeder extends Seeder
             'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
-            'payment_channel'=>0x4d414e44495249,
+            'payment_channel'=>NULL,
             'user_id'=>3,
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-19 05:35:29',
-            'updated_at'=>'2023-05-19 05:35:54'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -927,8 +931,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 02:43:50',
-            'updated_at'=>'2023-05-22 02:44:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -947,8 +951,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 03:18:44',
-            'updated_at'=>'2023-05-22 03:19:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -967,8 +971,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 03:19:38',
-            'updated_at'=>'2023-05-22 03:20:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -987,8 +991,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 03:22:19',
-            'updated_at'=>'2023-05-21 03:27:30'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1007,8 +1011,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 03:24:27',
-            'updated_at'=>'2023-05-21 03:25:02'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1027,8 +1031,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 03:56:35',
-            'updated_at'=>'2023-05-21 03:59:09'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1047,8 +1051,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 05:55:24',
-            'updated_at'=>'2023-05-22 05:56:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1067,8 +1071,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 05:56:56',
-            'updated_at'=>'2023-05-21 05:57:53'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1087,8 +1091,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:04:52',
-            'updated_at'=>'2023-05-21 06:04:52'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1107,8 +1111,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:06:24',
-            'updated_at'=>'2023-05-21 06:06:24'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1127,8 +1131,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:11:13',
-            'updated_at'=>'2023-05-21 06:11:40'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1147,8 +1151,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:18:40',
-            'updated_at'=>'2023-05-21 06:23:19'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1167,8 +1171,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:26:36',
-            'updated_at'=>'2023-05-22 06:27:17'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1187,8 +1191,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:27:10',
-            'updated_at'=>'2023-05-21 06:27:32'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1207,8 +1211,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-05-21 06:40:45',
-            'updated_at'=>'2023-05-21 06:56:33'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1227,8 +1231,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-03 01:55:15',
-            'updated_at'=>'2023-06-04 01:55:18'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1247,8 +1251,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-04 19:07:54',
-            'updated_at'=>'2023-06-04 19:50:32'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1267,8 +1271,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-04 19:13:30',
-            'updated_at'=>'2023-06-05 19:14:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1287,8 +1291,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-04 19:14:53',
-            'updated_at'=>'2023-06-05 19:15:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1307,8 +1311,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-05 03:55:00',
-            'updated_at'=>'2023-06-06 03:55:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1327,8 +1331,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-05 03:57:00',
-            'updated_at'=>'2023-06-06 03:57:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1347,8 +1351,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-05 03:57:38',
-            'updated_at'=>'2023-06-06 03:58:42'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1367,8 +1371,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 00:50:47',
-            'updated_at'=>'2023-06-07 00:51:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1387,8 +1391,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 00:54:49',
-            'updated_at'=>'2023-06-07 00:55:17'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1407,8 +1411,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 06:58:14',
-            'updated_at'=>'2023-06-07 06:58:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1427,8 +1431,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 07:00:33',
-            'updated_at'=>'2023-06-07 07:01:44'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1447,8 +1451,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 07:02:03',
-            'updated_at'=>'2023-06-06 07:02:28'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1467,8 +1471,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 07:13:07',
-            'updated_at'=>'2023-06-06 07:14:31'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1487,8 +1491,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 07:15:26',
-            'updated_at'=>'2023-06-06 07:15:38'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1507,8 +1511,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 07:16:53',
-            'updated_at'=>'2023-06-06 07:17:11'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1527,8 +1531,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-06 23:11:43',
-            'updated_at'=>'2023-06-06 23:12:35'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1547,8 +1551,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 01:14:28',
-            'updated_at'=>'2023-06-07 01:19:25'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1567,8 +1571,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 02:00:55',
-            'updated_at'=>'2023-06-07 02:01:31'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1587,8 +1591,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 03:46:38',
-            'updated_at'=>'2023-06-07 03:47:02'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1602,13 +1606,13 @@ class TransactionSeeder extends Seeder
             'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'QR_CODE',
-            'payment_channel'=>0x51524953,
+            'payment_channel'=>NULL,
             'user_id'=>15,
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 04:59:43',
-            'updated_at'=>'2023-06-07 05:00:15'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1627,8 +1631,8 @@ class TransactionSeeder extends Seeder
             'status'=>'EXPIRED',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 05:17:53',
-            'updated_at'=>'2023-06-08 05:18:16'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1647,8 +1651,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 23:07:02',
-            'updated_at'=>'2023-06-07 23:07:23'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1667,8 +1671,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 23:08:18',
-            'updated_at'=>'2023-06-07 23:13:50'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1687,8 +1691,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-07 23:12:38',
-            'updated_at'=>'2023-06-07 23:13:05'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1707,8 +1711,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-10 05:41:18',
-            'updated_at'=>'2023-06-10 05:41:44'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1727,8 +1731,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-10 08:06:04',
-            'updated_at'=>'2023-06-10 08:08:19'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1747,8 +1751,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-10 08:06:58',
-            'updated_at'=>'2023-06-10 08:07:25'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1767,8 +1771,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-12 00:15:05',
-            'updated_at'=>'2023-06-12 00:15:05'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1787,8 +1791,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-12 04:57:02',
-            'updated_at'=>'2023-06-12 04:57:21'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1807,8 +1811,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-13 04:54:53',
-            'updated_at'=>'2023-06-13 04:55:34'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1827,8 +1831,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-13 05:43:32',
-            'updated_at'=>'2023-06-13 05:44:14'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1847,8 +1851,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>0,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-13 09:43:38',
-            'updated_at'=>'2023-06-13 09:44:02'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1867,8 +1871,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>6745,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-15 04:55:54',
-            'updated_at'=>'2023-06-15 04:56:27'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1887,8 +1891,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PAID',
             'total'=>6910,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-15 16:48:57',
-            'updated_at'=>'2023-06-15 20:31:01'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1901,14 +1905,14 @@ class TransactionSeeder extends Seeder
             'service'=>'hotel',
             'service_id'=>8,
             'payment'=>'xendit',
-            'payment_method'=>'BANK_TRANSFER',
+            'payment_method'=>NULL,
             'payment_channel'=>NULL,
-            'user_id'=>6,
+            'user_id'=>3,
             'status'=>'EXPIRED',
             'total'=>121200,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-21 08:05:39',
-            'updated_at'=>'2023-06-22 08:06:17'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1927,8 +1931,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>1212000,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-22 17:46:02',
-            'updated_at'=>'2023-06-22 17:46:02'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1947,8 +1951,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>110412000,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-22 17:46:29',
-            'updated_at'=>'2023-06-22 17:46:29'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1967,8 +1971,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>110412000,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-22 17:49:59',
-            'updated_at'=>'2023-06-22 17:49:59'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
             
             
@@ -1987,8 +1991,8 @@ class TransactionSeeder extends Seeder
             'status'=>'PENDING',
             'total'=>1212000,
             'deleted_at'=>NULL,
-            'created_at'=>'2023-06-22 18:50:41',
-            'updated_at'=>'2023-06-22 18:50:41'
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
             ] );
     }
 }
