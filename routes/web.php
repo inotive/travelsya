@@ -90,6 +90,7 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 //Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
 //Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
 Route::get('/profile/order-detail/hotel', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
 Route::get('/profile/order-detail/listrik-voucher', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
