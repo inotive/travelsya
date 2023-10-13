@@ -91,8 +91,8 @@
                             <span class="menu-title">
                                 Riwayat Pesanan</b>
                             </span>
+                        </a>
                     </div>
-                    </a>
                     {{-- Menu Item --}}
                     <div class="menu-item">
                         <a class="menu-link text-gray-900" href="#">

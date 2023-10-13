@@ -215,9 +215,9 @@ class UserController extends Controller
 
     public function help()
     {
-        $helps = Help::all();
+        $data['helps'] = Help::orderBy('title')->get();
 
-        return view('user.help', compact('helps'));
+        return view('user.help', $data);
     }
 
     public function detailTransaction($no_inv)
