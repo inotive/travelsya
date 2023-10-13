@@ -93,7 +93,7 @@ class HostelController extends Controller
                     $q->select(DB::raw('coalesce(avg(rate),0)'));
                 }
             ])->withCount("rating as rating_count")->get();
-            
+
             // dd($hostelsget);
             $hostelShow = $hostelsget->map(function ($hostelsget) {
 
@@ -102,7 +102,7 @@ class HostelController extends Controller
                 return [
                     'id' => $hostelsget->id,
                     'name' => $hostelsget->name,
-                    'image' => $hostelImage ? asset($hostelImage->image) : null,
+                    'image' => $hostelImage ? asset('storage/' . $hostelImage->image) : null,
                     'location' => $hostelsget->city,
                     'rating_avg' => intval($hostelsget->rating_avg),
                     'rating_count' => $hostelsget->rating_count,
@@ -186,7 +186,7 @@ class HostelController extends Controller
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
                         'guest' => $room->guest,
-                        'hostel_room_image' => $room->hostelRoomImage
+                        'hostel_room_image' => 'storage/' .$room->hostelRoomImage
                     ];
                 });
 
@@ -213,13 +213,13 @@ class HostelController extends Controller
                     });
                 };
 
-              
+
 
                 return [
                     'id'                => $hostel->id,
                     'name'              => $hostel->name,
                     'category'          => $hostel->category,
-                    'image'             => $hostel->image,
+                    'image'             => 'storage/' . $hostel->image,
                     'checkin'           => $hostel->checkin,
                     'checkout'          => $hostel->checkout,
                     'location'          => $hostel->city,
@@ -440,7 +440,7 @@ class HostelController extends Controller
             ])->withCount("rating as rating_count")
             ->orderBy('price_avg', "asc")
             ->orderBy('rating_count', 'DESC')
-            ->orderBy('rating_avg', 'DESC')->get(); 
+            ->orderBy('rating_avg', 'DESC')->get();
         $hostelFormatJSON = [];
         foreach ($hostelPopuler as $hostel) {
             $minPrice = $hostel->hostelRoom->min('price');
@@ -468,7 +468,7 @@ class HostelController extends Controller
             ];
 
             $hostelRoom = $hostel->hostelRoom->where('hostel_id', $hostel->id)->first();
-        
+
             $hostelFormatJSON[] = [
                 'id' => $hostel->id,
                 'name' => $hostel->name,

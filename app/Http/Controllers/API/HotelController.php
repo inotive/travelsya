@@ -133,7 +133,7 @@ class HotelController extends Controller
                 $hotelFormatJSON[] = [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotelImage ? asset($hotelImage->image) : null,
+                    'image' => $hotelImage ? asset('storage/' . $hotelImage->image) : null,
                     'location' => $hotel->city,
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
@@ -252,11 +252,11 @@ class HotelController extends Controller
                         ];
                     });
                 };
-              
+
                 return [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotelImage ? asset($hotelImage->image) : null,
+                    'image' => $hotelImage ? asset('storage/' . $hotelImage->image) : null,
                     'checkin' => $hotel->checkin,
                     'checkout' => $hotel->checkout,
                     'location' => $hotel->city,
@@ -492,20 +492,20 @@ class HotelController extends Controller
             } else {
                 $avgRating = 0;
             }
- 
+
             $hotelDetails[$hotel->id] = [
                 'avg_rating' => $avgRating,
                 'rating_count' => $jumlahTransaksi,
                 'price' => $minPrice,
                 'sellingprice' => $maxPrice,
             ];
-            
+
             $imageUrl = "-";
             //retrieve image url
             if(!$hotel->hotelImage->isEmpty()){
               $imageUrl = $hotel->hotelImage[0]->image;
             }
-          
+
 
             $hotelFormatJSON[] = [
                 'id' => $hotel->id,
