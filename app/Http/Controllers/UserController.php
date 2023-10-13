@@ -70,10 +70,51 @@ class UserController extends Controller
 
     public function orderHistory()
     {
-        return view('user.orderhistory');
+        $transactions = Transaction::where('transactions.user_id', auth()->id())
+            ->leftJoin('detail_transaction_top_up as dtt', 'dtt.transaction_id', '=', 'transactions.id')
+            ->leftJoin('detail_transaction_ppob as dtp', 'dtp.transaction_id', '=', 'transactions.id')
+            ->leftJoin('detail_transaction_hotel as dth', 'dth.transaction_id', '=', 'transactions.id')
+            ->leftJoin('detail_transaction_hostel as dths', 'dths.transaction_id', '=', 'transactions.id')
+            ->leftJoin('products as p_dtt', 'p_dtt.id', '=', 'dtt.product_id')
+            ->leftJoin('products as p_dtp', 'p_dtp.id', '=', 'dtp.product_id')
+            ->leftJoin('hotels', 'hotels.id', '=', 'dth.hotel_id')
+            ->leftJoin('hostels', 'hostels.id', '=', 'dths.hostel_id')
+            ->select(
+                'transactions.id',
+                'transactions.no_inv',
+                'transactions.service',
+                'transactions.service_id',
+                'transactions.user_id',
+                'transactions.status',
+                'transactions.total',
+                'transactions.created_at',
+                'dtt.product_id as product_id_topup',
+                'dtp.product_id as product_id_ppob',
+                'p_dtt.name as name_topup',
+                'p_dtp.name as name_ppob',
+                'hotels.name as name_hotel',
+                'hostels.name as name_hostel',
+            );
+
+        $data['all_transactions'] = $transactions->orderBy('transactions.created_at', 'desc')->get();
+
+        $pending_transactions = clone $transactions;
+        $data['pending_transactions'] = $pending_transactions->where('transactions.status', 'PENDING')
+            ->orderBy('transactions.created_at', 'desc')
+            ->get();
+
+        $history_transactions = clone $transactions;
+        $data['history_transactions'] = $history_transactions->where('transactions.status', 'SUCCESS')
+            ->orderBy('transactions.created_at', 'desc')
+            ->get();
+
+        // dd($data);
+
+        return view('user.orderhistory', $data);
     }
 
     public function orderDetailHotel()
+
     {
         $transactionHotel = DB::table('detail_transaction_hotel')
             ->join('transactions', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')

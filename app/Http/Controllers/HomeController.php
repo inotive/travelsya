@@ -40,6 +40,7 @@ class HomeController extends Controller
             ->select('hotels.*', DB::raw('COALESCE(hotel_ratings.rate, 0) as rating'), DB::raw('COALESCE(hotel_rooms.sellingprice, 0) as selling_price'))
             ->orderByDesc('hotel_ratings.rate')
             ->orderBy('hotel_rooms.sellingprice')
+            // ->groupBy('hotels.name')
             ->limit(4)
             ->get();
 
