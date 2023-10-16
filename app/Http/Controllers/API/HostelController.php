@@ -99,11 +99,11 @@ class HostelController extends Controller
                 $hostelImage = $hostelsget->hostelImage->where('main', 1)->first();
 
                 return [
-                    'id' => $hostelsget->id,
-                    'name' => $hostelsget->name,
-                    'image' => $hostelImage ? asset($hostelImage->image) : null,
-                    'location' => $hostelsget->city,
-                    'rating_avg' => intval($hostelsget->rating_avg),
+                    'id'           => $hostelsget->id,
+                    'name'         => $hostelsget->name,
+                    'image'        => $hostelImage ? asset('storage/' . $hostelImage->image) : null,
+                    'location'     => $hostelsget->city,
+                    'rating_avg'   => intval($hostelsget->rating_avg),
                     'rating_count' => $hostelsget->rating_count,
                     'sellingprice' => intval($hostelsget->price_avg),
                 ];
@@ -170,18 +170,28 @@ class HostelController extends Controller
             $hostelGet = collect([$hostel])->map(function ($hostel) {
 
                 $hostel_room = $hostel->hostelRoom->map(function ($room) {
+
+                    $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
+                        return [
+                            'id'               => $room_images->id,
+                            'hostel_room_id'   => $room_images->hostel_room_id,
+                            'hostel_room_name' => $room_images->hostelRoom->name,
+                            'image'            => 'storage/' . $room_images->image,
+                        ];
+                    });
+
                     return [
-                        'id' => $room->id,
-                        'name' => $room->name,
-                        'description' => $room->description,
-                        'price' => $room->price,
-                        'sellingprice' => $room->sellingprice,
-                        'bed_type' => $room->bed_type,
-                        'roomsize' => $room->roomsize,
-                        'maxextrabed' => $room->maxextrabed,
-                        'totalroom' => $room->totalroom,
-                        'guest' => $room->guest,
-                        'hostel_room_image' => $room->hostelRoomImage
+                        'id'                => $room->id,
+                        'name'              => $room->name,
+                        'description'       => $room->description,
+                        'price'             => $room->price,
+                        'sellingprice'      => $room->sellingprice,
+                        'bed_type'          => $room->bed_type,
+                        'roomsize'          => $room->roomsize,
+                        'maxextrabed'       => $room->maxextrabed,
+                        'totalroom'         => $room->totalroom,
+                        'guest'             => $room->guest,
+                        'hostel_room_image' => $hostel_room_image
                     ];
                 });
 
@@ -193,22 +203,20 @@ class HostelController extends Controller
                 });
 
                 $hostel_reviews = null;
-                if($hostel->rating != null){
+                if ($hostel->rating != null) {
                     $hostel_reviews = $hostel->rating->map(function ($reviews) {
                         return [
-                            'id' => $reviews->id,
-                            'user_id' => $reviews->user_id,
-                            'user_name' => $reviews->user->name,
-                            'rate' => $reviews->rate,
-                            'comment' => $reviews->comment,
+                            'id'         => $reviews->id,
+                            'user_id'    => $reviews->user_id,
+                            'user_name'  => $reviews->user->name,
+                            'rate'       => $reviews->rate,
+                            'comment'    => $reviews->comment,
                             'deleted_at' => $reviews->deleted_at,
                             'created_at' => $reviews->created_at,
                             'updated_at' => $reviews->updated_at,
                         ];
                     });
                 };
-
-              
 
                 return [
                     'id'                => $hostel->id,
@@ -435,7 +443,7 @@ class HostelController extends Controller
             ])->withCount("rating as rating_count")
             ->orderBy('price_avg', "asc")
             ->orderBy('rating_count', 'DESC')
-            ->orderBy('rating_avg', 'DESC')->get(); 
+            ->orderBy('rating_avg', 'DESC')->get();
         $hostelFormatJSON = [];
         foreach ($hostelPopuler as $hostel) {
             $minPrice = $hostel->hostelRoom->min('price');
@@ -451,8 +459,8 @@ class HostelController extends Controller
             }
             $imageUrl = "-";
             //retrieve image url
-            if(!$hostel->hostelImage->isEmpty()){
-              $imageUrl = $hostel->hostelImage[0]->image;
+            if (!$hostel->hostelImage->isEmpty()) {
+                $imageUrl = $hostel->hostelImage[0]->image;
             }
 
             $hotelDetails[$hostel->id] = [
