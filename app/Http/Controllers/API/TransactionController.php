@@ -28,7 +28,7 @@ class TransactionController extends Controller
     {
         try {
             // $user_id = $request->user()->id;
-            $user_id = 5;
+            $user_id = \Auth::user()->id;
 
             // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
             //     ->where('user_id', $user_id)
@@ -40,7 +40,7 @@ class TransactionController extends Controller
 
             $responsTransaction = $transaction->map(function ($transaction) {
                 $detailTransaction = $this->getDetailTransaction($transaction->id,$transaction->service_id);
-              
+
                 return [
                     'id' => $transaction->id,
                     'no_inv' => $transaction->no_inv,
@@ -56,7 +56,7 @@ class TransactionController extends Controller
                     'detail_transactions' => $detailTransaction ? $detailTransaction : null,
                 ];
             });
-            
+
             if (count($transaction)) {
                 return ResponseFormatter::success($responsTransaction, 'Data successfully loaded');
             } else {
@@ -85,7 +85,7 @@ class TransactionController extends Controller
                     'reservation_duration' => $daysDiff
                 ];
             }
-         
+
         }else if($service_id == 8){
             $data = DetailTransactionHotel::where('transaction_id',$transaction_id)->first();
             if($data){
@@ -100,7 +100,7 @@ class TransactionController extends Controller
                     'reservation_duration' => $daysDiff
                 ];
             }
-           
+
         }else{
             if($service_id == 1){
                 $dataPulsa = DetailTransactionTopUp::where('transaction_id',$transaction_id)->first();
@@ -112,7 +112,7 @@ class TransactionController extends Controller
                         'phone_number' => $nomorTelfon,
                     ];
                 }
-               
+
             }else{
                 $dataPPOB = DetailTransactionPPOB::where('transaction_id',$transaction_id)->first();
                 if($dataPPOB){
@@ -123,7 +123,7 @@ class TransactionController extends Controller
                         'customer_number' => $nomorPelanggan,
                     ];
                 }
-               
+
             }
         }
     }

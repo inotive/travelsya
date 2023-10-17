@@ -124,9 +124,8 @@ class TopUpController extends Controller
             // point masuk - point keluar
             $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow','=','credit')->sum('point') ?? 0;
         }
-
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
+        $grandTotal = $product->price + $fees->value - $saldoPointCustomer;
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],

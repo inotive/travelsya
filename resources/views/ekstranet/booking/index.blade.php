@@ -57,20 +57,17 @@
                                     $enddate = \Carbon\Carbon::parse($booking->end);
                                     $startdates = $startdate->Format('d F Y');
                                     $enddates = $enddate->Format('d F Y');
-                                    
+
                                 @endphp
                                 <tr>
-                                    <td class="text-center">{{ $booking->transaction->user->name }} -
-                                        {{ $booking->transaction->user->phone }}</td>
+                                    <td class="text-center">{{ $booking->transaction->user->name ?? ''}} -
+                                        {{ $booking->transaction->user->phone ?? '' }}</td>
                                     <td class="text-center">CTH123</td>
                                     <td class="text-center">{{ $startdates }}
                                     </td>
                                     <td class="text-center">{{ $enddates }}</td>
                                     <td class="text-center">{{ $booking->hotelroom->name }}</td>
                                     <td class="text-center">1 Kamar | 8 Malam</td>
-
-
-
                                     <td class="text-center">
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                             data-kt-menu="true" style="">
@@ -121,7 +118,7 @@
                                     $enddate = \Carbon\Carbon::parse($booking->end);
                                     $startdates = $startdate->Format('d F Y');
                                     $enddates = $enddate->Format('d F Y');
-                                    
+
                                 @endphp
                                 <tr>
                                     <td class="text-center">{{ $booking->transaction->user->name }} -

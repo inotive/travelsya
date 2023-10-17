@@ -90,15 +90,16 @@ route::get('/service', [SettingController::class, 'getService']);
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
 route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
-route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
-route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
+
 
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
     route::post('/user/update', [AuthController::class, 'update']);
     route::post('/user', [AuthController::class, 'profile']);
-
+    route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+    route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
     //transaction
     // route::get('/transaction',[TransactionController::class,'GetServices']);
     // route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
