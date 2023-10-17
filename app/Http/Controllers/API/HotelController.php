@@ -133,7 +133,7 @@ class HotelController extends Controller
                 $hotelFormatJSON[] = [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotelImage ? asset($hotelImage->image) : null,
+                    'image' => $hotelImage ? asset('storage/' . $hotelImage->image) : null,
                     'location' => $hotel->city,
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
@@ -169,7 +169,7 @@ class HotelController extends Controller
         try {
             // $hotel = Hotel::find($hotel->id);
             // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-            //     ->find($id);
+        //     ->find($id);
 
             // if ($request->start_date) {
             //     $date = [
@@ -256,7 +256,7 @@ class HotelController extends Controller
                 return [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotelImage ? asset($hotelImage->image) : null,
+                    'image' => $hotelImage ? asset('storage/' . $hotelImage->image) : null,
                     'checkin' => $hotel->checkin,
                     'checkout' => $hotel->checkout,
                     'location' => $hotel->city,
