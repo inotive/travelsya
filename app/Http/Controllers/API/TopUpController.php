@@ -162,7 +162,7 @@ class TopUpController extends Controller
                 'service' => $product->service->name,
                 'service_id' => $product->service_id,
                 'payment' => 'xendit',
-                'user_id' => 2,
+                'user_id' => \Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
@@ -170,17 +170,16 @@ class TopUpController extends Controller
 
             // create detail transaction
             $data['detail'] = $request->input('detail');
-            DB::table('detail_transaction_top_up')->insert([
+           DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $transaction->id,
                 'product_id' => $product->id,
                 'nomor_telfon' => $data['no_hp'],
                 'total_tagihan' => $grandTotal,
                 'fee_travelsya' => 2500,
                 'fee_mili' => 2500,
-                'message' => 'Pulsa sedang diproses',
+                'message' => 'Top UP sedang diproses',
                 'status' => "PROCESS"
             ]);
-
             // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         }

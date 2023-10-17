@@ -193,8 +193,11 @@ class ManagementHostelController extends Controller
 
 
         $hostelImage = HostelImage::find($id);
-
         if ($hostelImage) {
+            $hostelImage->where('hostel_id', $request->hostel_id)
+                ->update([
+                    'main' => 0
+                ]);
             $hostelImage->update([
                 'main' => 1,
             ]);

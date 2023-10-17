@@ -82,7 +82,10 @@
                             <div class="card border border-light-subtle">
                                 <div class="card-body">
                                     <img src="{{ asset('storage/media/hostel/'.$image->image) }}"
-                                        style="width: 100%; height: 150px;" alt="image">
+                                        style="width: 100%; height: 250px;" alt="image">
+                                    @if($image->main == 1 )
+                                        <span class="badge badge-primary my-5">Foto Utama</span>
+                                    @endif
                                 </div>
                                 <div class="card-footer py-2">
                                     <form
@@ -92,7 +95,9 @@
                                         @method('PUT')
                                         <input type="hidden" name="id" value="{{ $image->id }}">
                                         <input type="hidden" name="hostel_id" value="{{ $hostel->id }}">
+                                        @if($image->main != 1 )
                                         <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama</button>
+                                        @endif
 
                                     </form>
                                     <form

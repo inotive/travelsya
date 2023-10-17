@@ -23,7 +23,7 @@
                     <div class="card-title mb-5">
                         <h3>
                             <b>
-                                John Doe
+                                {{Auth::user()->name}}
                             </b>
                         </h3>
                     </div>

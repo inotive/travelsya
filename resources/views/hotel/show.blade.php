@@ -295,7 +295,7 @@
         </div>
 
         <div class="row card flex-row w-75 me-auto ms-auto mt-4 p-3">
-            @foreach ($detailHotel->hotelImage->take(3) as $hotelImage)
+            @foreach ($detailHotel->hotelImage->where('main', '!=', 1)->take(3) as $hotelImage)
             <div class="col-4">
                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
                     href="{{ asset('storage/'.$hotelImage->image) }}">
@@ -342,8 +342,8 @@
                         <!--end::Title-->
 
                         <!--begin::Content-->
-                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a role="button"
-                                class="d-inline-block fw-bold" data-toggle="modal" data-target="#exampleModal">Login
+                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a href="{{ route('login') }}"
+                                                                                              class="d-inline-block fw-bold">Login
                                 Disini</a></span>
                         <!--end::Content-->
                     </div>
