@@ -280,7 +280,6 @@ class HostelController extends Controller
             "guest" => "required",
             "start" => "required",
             "end" => "required",
-
         ]);
 
         if ($validator->fails()) {
@@ -291,7 +290,8 @@ class HostelController extends Controller
 
         $data = $request->all();
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
+        // $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hostel') . "-" . time();
         // $setting = new Setting();
         // $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->sellingprice);
         $fees = [
@@ -309,7 +309,7 @@ class HostelController extends Controller
         $interval = $end->diff($start);
         $qty = $interval->format('%m');
         // $amount = $setting->getAmount($hostel->sellingprice, $qty, $fees);
-        $amount = $hostel->sellingprice;
+        $amount = $hostel->sellingrentprice_yearly;
 
         // cek book date
         $checkBook = BookDate::where("hostel_room_id", $data['hostel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
@@ -324,7 +324,8 @@ class HostelController extends Controller
                 [
                     "product_id" => $data['hostel_room_id'],
                     "name" => $hostel['name'],
-                    "price" => $hostel->sellingprice,
+                    // "price" => $hostel->sellingprice,
+                    "price" => $hostel->sellingrentprice_yearly,
                     "quantity" => $qty,
                 ]
             ],
@@ -347,8 +348,9 @@ class HostelController extends Controller
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HST-' . time(),
-                'service' => $hostel->hostel->service->name,
-                'service_id' => $hostel->hostel->service_id,
+                'service' => 'hostel',
+                // 'service_id' => $hostel->hostel->service_id,
+                'service_id' => 7,
                 'payment' => $data['payment'],
                 'user_id' => $request->user()->id,
                 'status' => $payoutsXendit['status'],
@@ -357,13 +359,13 @@ class HostelController extends Controller
             ]);
 
 
-            // true buat detail
-            // $storeDetailTransaction = DetailTransaction::create([
-            //     'transaction_id' => $storeTransaction->id,
-            //     'hostel_room_id' => $data['hostel_room_id'],
-            //     "qty" => $qty,
-            //     "price" => $hostel->sellingprice
-            // ]);
+            //     // true buat detail
+            //     // $storeDetailTransaction = DetailTransaction::create([
+            //     //     'transaction_id' => $storeTransaction->id,
+            //     //     'hostel_room_id' => $data['hostel_room_id'],
+            //     //     "qty" => $qty,
+            //     //     "price" => $hostel->sellingprice
+            //     // ]);
 
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hostel')
@@ -377,7 +379,8 @@ class HostelController extends Controller
                         'reservation_end'   => $data['end'],
                         'guest'             => count($data['guest']),
                         'room'              => 1,
-                        "rent_price"        => $hostel->sellingprice,
+                        // "rent_price"        => $hostel->sellingprice,
+                        "rent_price"        => $hostel->sellingrentprice_yearly,
                         "fee_admin"         => $fees[0]['value'],
                     ]);
             } catch (\Exception $exception) {
@@ -387,31 +390,31 @@ class HostelController extends Controller
             }
 
 
-            // // true buat bookdate
-            // $storeBookDate = BookDate::create([
-            //     'start' => $data['start'],
-            //     'end' => $data['end'],
-            //     'hostel_room_id' => $data["hostel_room_id"],
-            //     'transaction_id' => $storeTransaction->id
-            // ]);
+            //     // // true buat bookdate
+            //     // $storeBookDate = BookDate::create([
+            //     //     'start' => $data['start'],
+            //     //     'end' => $data['end'],
+            //     //     'hostel_room_id' => $data["hostel_room_id"],
+            //     //     'transaction_id' => $storeTransaction->id
+            //     // ]);
 
-            // // true buat guest
-            // foreach ($data['guest'] as $guest) {
-            //     $storeGuest = Guest::create([
-            //         'transaction_id' => $storeTransaction->id,
-            //         // 'type_id' => $guest['type_id'],
-            //         // 'identity' => $guest['identity'],
-            //         'name' => $guest['name'],
-            //         'email' => $guest['email'],
-            //         'phone' => $guest['phone'],
-            //     ]);
-            // }
+            //     // // true buat guest
+            //     // foreach ($data['guest'] as $guest) {
+            //     //     $storeGuest = Guest::create([
+            //     //         'transaction_id' => $storeTransaction->id,
+            //     //         // 'type_id' => $guest['type_id'],
+            //     //         // 'identity' => $guest['identity'],
+            //     //         'name' => $guest['name'],
+            //     //         'email' => $guest['email'],
+            //     //         'phone' => $guest['phone'],
+            //     //     ]);
+            //     // }
 
-            // if ($data['point']) {
-            //     //deductpoint
-            //     $point = new Point;
-            //     $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
-            // }
+            //     // if ($data['point']) {
+            //     //     //deductpoint
+            //     //     $point = new Point;
+            //     //     $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+            //     // }
         });
 
 
