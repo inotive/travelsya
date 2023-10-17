@@ -133,7 +133,7 @@ class HotelController extends Controller
                 $hotelFormatJSON[] = [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotelImage ? asset($hotelImage->image) : null,
+                    'image' => $hotelImage ? asset('storage/' . $hotelImage->image) : null,
                     'location' => $hotel->city,
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
@@ -169,7 +169,7 @@ class HotelController extends Controller
         try {
             // $hotel = Hotel::find($hotel->id);
             // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-            //     ->find($id);
+        //     ->find($id);
 
             // if ($request->start_date) {
             //     $date = [
@@ -229,20 +229,21 @@ class HotelController extends Controller
                     return [
                         // 'hotel_id' => $facility->hotel_id,
                         // 'hotel_room_id' => $facility->hotel_room_id,
-                        // 'facility_id' => $facility->facility_id,
+                         'id' => $facility->facility_id,
                         'name' => $facility->facility->name,
+                        'image' => 'storage/' . $facility->facility->icon,
                     ];
                 });
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
                 $hotel_ratings = null;
-                if($hotel->hotelRating != null){
+                if ($hotel->hotelRating != null) {
                     $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
                         return [
-                            "id"=> $hr->id,
+                            "id" => $hr->id,
                             "transaction_id" => $hr->transaction_id,
                             "user_id" => $hr->user_id,
-                            "user_name" => User::where('id',$hr->user_id)->first()->name,
+                            "user_name" => User::where('id', $hr->user_id)->first()->name,
                             "hotel_id" => $hr->hotel_id,
                             "rate" => $hr->rate,
                             "comment" => $hr->comment,
@@ -252,11 +253,11 @@ class HotelController extends Controller
                         ];
                     });
                 };
-              
+
                 return [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
-                    'image' => $hotelImage ? asset($hotelImage->image) : null,
+                    'image' => $hotelImage ? asset('storage/' . $hotelImage->image) : null,
                     'checkin' => $hotel->checkin,
                     'checkout' => $hotel->checkout,
                     'location' => $hotel->city,
@@ -265,6 +266,7 @@ class HotelController extends Controller
                     'lon' => $hotel->lon,
                     'avg_rating' => $avgRating,
                     'rating_count' => $totalRating,
+                    'hotel_image' => $hotel->hotelImage,
                     'hotel_rooms' => $hotel_room,
                     'hotel_facilities' => $hotel_facilities,
                     'hotel_rules' => $hotel->hotelRule,
@@ -306,7 +308,7 @@ class HotelController extends Controller
         $data = $request->all();
 
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hotel->hotel->service->name) . "-" . time();
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hotel') . "-" . time();
         // $setting = new Setting();
         // $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
 
@@ -368,8 +370,10 @@ class HotelController extends Controller
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HTL-' . time(),
-                'service' => $hotel->hotel->service->name,
-                'service_id' => $hotel->hotel->service_id,
+                'service' => 'hotel',
+                'service_id' => 8,
+                // 'service' => $hotel->hotel->service->name,
+                // 'service_id' => $hotel->hotel->service_id,
                 'payment' => $data['payment'],
                 // 'user_id' => $request->user()->id,
                 'user_id' => 3,
@@ -389,12 +393,12 @@ class HotelController extends Controller
 
 
             // true buat bookdate
-            $storeBookDate = HotelBookDate::create([
-                'start' => $data['start'],
-                'end' => $data['end'],
-                'hotel_room_id' => $data["hotel_room_id"],
-                'transaction_id' => $storeTransaction->id
-            ]);
+            // $storeBookDate = HotelBookDate::create([
+            //     'start' => $data['start'],
+            //     'end' => $data['end'],
+            //     'hotel_room_id' => $data["hotel_room_id"],
+            //     'transaction_id' => $storeTransaction->id
+            // ]);
 
 
             try {
@@ -438,6 +442,7 @@ class HotelController extends Controller
         });
 
 
+        // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }
 
@@ -492,20 +497,20 @@ class HotelController extends Controller
             } else {
                 $avgRating = 0;
             }
- 
+
             $hotelDetails[$hotel->id] = [
                 'avg_rating' => $avgRating,
                 'rating_count' => $jumlahTransaksi,
                 'price' => $minPrice,
                 'sellingprice' => $maxPrice,
             ];
-            
+
             $imageUrl = "-";
             //retrieve image url
-            if(!$hotel->hotelImage->isEmpty()){
-              $imageUrl = $hotel->hotelImage[0]->image;
+            if (!$hotel->hotelImage->isEmpty()) {
+                $imageUrl = $hotel->hotelImage[0]->image;
             }
-          
+
 
             $hotelFormatJSON[] = [
                 'id' => $hotel->id,

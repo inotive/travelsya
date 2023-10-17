@@ -49,6 +49,7 @@ route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
 route::get('/hostel/room/{id}', [HostelController::class, 'room']);
 
+
 //hotel
 route::post('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
@@ -57,7 +58,6 @@ route::get('/hotel/{id}', [HotelController::class, 'show']);
 
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
-route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
 route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
 route::get('/data', [TopUpController::class, 'getData']);
 
@@ -90,8 +90,10 @@ route::get('/service', [SettingController::class, 'getService']);
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
 route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
-route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
-route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
+
+
+
 
 Route::middleware('auth:sanctum')->group(function () {
     //auth
@@ -104,8 +106,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
     // route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
-    route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
+    route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+    route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
     // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+    route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
+    route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);

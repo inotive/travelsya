@@ -119,7 +119,7 @@ class CallbackController extends Controller
                                 ]);
 
                         }
-                        else if($transaction->service == "pln"){
+                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
                                 ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
