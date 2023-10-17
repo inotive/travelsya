@@ -229,8 +229,9 @@ class HotelController extends Controller
                     return [
                         // 'hotel_id' => $facility->hotel_id,
                         // 'hotel_room_id' => $facility->hotel_room_id,
-                        // 'facility_id' => $facility->facility_id,
+                         'id' => $facility->facility_id,
                         'name' => $facility->facility->name,
+                        'image' => 'storage/' . $facility->facility->icon,
                     ];
                 });
 
@@ -265,6 +266,7 @@ class HotelController extends Controller
                     'lon' => $hotel->lon,
                     'avg_rating' => $avgRating,
                     'rating_count' => $totalRating,
+                    'hotel_image' => $hotel->hotelImage,
                     'hotel_rooms' => $hotel_room,
                     'hotel_facilities' => $hotel_facilities,
                     'hotel_rules' => $hotel->hotelRule,

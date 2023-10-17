@@ -158,7 +158,7 @@
 
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="account/statements.html" class="menu-link px-5">
+                        <a href="{{route('user.orderHistory')}}" class="menu-link px-5">
                             My Transaction
                         </a>
                     </div>
