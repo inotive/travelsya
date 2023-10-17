@@ -99,7 +99,7 @@ class HostelController extends Controller
 
                 $hostelImage = $hostelsget->hostelImage->where('main', 1)->first();
                 $hostelRoom = $hostelsget->hostelRoom->where('hostel_id', $hostelsget->id)->first();
-                return [
+
                     'id' => $hostelsget->id,
                     'name' => $hostelsget->name,
                     'image' => $hostelImage ? asset('storage/' . $hostelImage->image) : null,
@@ -175,18 +175,28 @@ class HostelController extends Controller
             $hostelGet = collect([$hostel])->map(function ($hostel) {
 
                 $hostel_room = $hostel->hostelRoom->map(function ($room) {
+
+                    $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
+                        return [
+                            'id'               => $room_images->id,
+                            'hostel_room_id'   => $room_images->hostel_room_id,
+                            'hostel_room_name' => $room_images->hostelRoom->name,
+                            'image'            => 'storage/' . $room_images->image,
+                        ];
+                    });
+
                     return [
-                        'id' => $room->id,
-                        'name' => $room->name,
-                        'description' => $room->description,
-                        'price' => $room->price,
-                        'sellingprice' => $room->sellingprice,
-                        'bed_type' => $room->bed_type,
-                        'roomsize' => $room->roomsize,
-                        'maxextrabed' => $room->maxextrabed,
-                        'totalroom' => $room->totalroom,
-                        'guest' => $room->guest,
-                        'hostel_room_image' => 'storage/' .$room->hostelRoomImage
+                        'id'                => $room->id,
+                        'name'              => $room->name,
+                        'description'       => $room->description,
+                        'price'             => $room->price,
+                        'sellingprice'      => $room->sellingprice,
+                        'bed_type'          => $room->bed_type,
+                        'roomsize'          => $room->roomsize,
+                        'maxextrabed'       => $room->maxextrabed,
+                        'totalroom'         => $room->totalroom,
+                        'guest'             => $room->guest,
+                        'hostel_room_image' => $hostel_room_image
                     ];
                 });
 
@@ -198,22 +208,20 @@ class HostelController extends Controller
                 });
 
                 $hostel_reviews = null;
-                if($hostel->rating != null){
+                if ($hostel->rating != null) {
                     $hostel_reviews = $hostel->rating->map(function ($reviews) {
                         return [
-                            'id' => $reviews->id,
-                            'user_id' => $reviews->user_id,
-                            'user_name' => $reviews->user->name,
-                            'rate' => $reviews->rate,
-                            'comment' => $reviews->comment,
+                            'id'         => $reviews->id,
+                            'user_id'    => $reviews->user_id,
+                            'user_name'  => $reviews->user->name,
+                            'rate'       => $reviews->rate,
+                            'comment'    => $reviews->comment,
                             'deleted_at' => $reviews->deleted_at,
                             'created_at' => $reviews->created_at,
                             'updated_at' => $reviews->updated_at,
                         ];
                     });
                 };
-
-
 
                 return [
                     'id'                => $hostel->id,
@@ -277,7 +285,6 @@ class HostelController extends Controller
             "guest" => "required",
             "start" => "required",
             "end" => "required",
-
         ]);
 
         if ($validator->fails()) {
@@ -288,7 +295,8 @@ class HostelController extends Controller
 
         $data = $request->all();
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
+        // $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hostel') . "-" . time();
         // $setting = new Setting();
         // $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->sellingprice);
         $fees = [
@@ -306,7 +314,7 @@ class HostelController extends Controller
         $interval = $end->diff($start);
         $qty = $interval->format('%m');
         // $amount = $setting->getAmount($hostel->sellingprice, $qty, $fees);
-        $amount = $hostel->sellingprice;
+        $amount = $hostel->sellingrentprice_yearly;
 
         // cek book date
         $checkBook = BookDate::where("hostel_room_id", $data['hostel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
@@ -321,7 +329,8 @@ class HostelController extends Controller
                 [
                     "product_id" => $data['hostel_room_id'],
                     "name" => $hostel['name'],
-                    "price" => $hostel->sellingprice,
+                    // "price" => $hostel->sellingprice,
+                    "price" => $hostel->sellingrentprice_yearly,
                     "quantity" => $qty,
                 ]
             ],
@@ -344,8 +353,9 @@ class HostelController extends Controller
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HST-' . time(),
-                'service' => $hostel->hostel->service->name,
-                'service_id' => $hostel->hostel->service_id,
+                'service' => 'hostel',
+                // 'service_id' => $hostel->hostel->service_id,
+                'service_id' => 7,
                 'payment' => $data['payment'],
                 'user_id' => $request->user()->id,
                 'status' => $payoutsXendit['status'],
@@ -354,13 +364,13 @@ class HostelController extends Controller
             ]);
 
 
-            // true buat detail
-            // $storeDetailTransaction = DetailTransaction::create([
-            //     'transaction_id' => $storeTransaction->id,
-            //     'hostel_room_id' => $data['hostel_room_id'],
-            //     "qty" => $qty,
-            //     "price" => $hostel->sellingprice
-            // ]);
+            //     // true buat detail
+            //     // $storeDetailTransaction = DetailTransaction::create([
+            //     //     'transaction_id' => $storeTransaction->id,
+            //     //     'hostel_room_id' => $data['hostel_room_id'],
+            //     //     "qty" => $qty,
+            //     //     "price" => $hostel->sellingprice
+            //     // ]);
 
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hostel')
@@ -374,7 +384,8 @@ class HostelController extends Controller
                         'reservation_end'   => $data['end'],
                         'guest'             => count($data['guest']),
                         'room'              => 1,
-                        "rent_price"        => $hostel->sellingprice,
+                        // "rent_price"        => $hostel->sellingprice,
+                        "rent_price"        => $hostel->sellingrentprice_yearly,
                         "fee_admin"         => $fees[0]['value'],
                     ]);
             } catch (\Exception $exception) {
@@ -384,31 +395,31 @@ class HostelController extends Controller
             }
 
 
-            // // true buat bookdate
-            // $storeBookDate = BookDate::create([
-            //     'start' => $data['start'],
-            //     'end' => $data['end'],
-            //     'hostel_room_id' => $data["hostel_room_id"],
-            //     'transaction_id' => $storeTransaction->id
-            // ]);
+            //     // // true buat bookdate
+            //     // $storeBookDate = BookDate::create([
+            //     //     'start' => $data['start'],
+            //     //     'end' => $data['end'],
+            //     //     'hostel_room_id' => $data["hostel_room_id"],
+            //     //     'transaction_id' => $storeTransaction->id
+            //     // ]);
 
-            // // true buat guest
-            // foreach ($data['guest'] as $guest) {
-            //     $storeGuest = Guest::create([
-            //         'transaction_id' => $storeTransaction->id,
-            //         // 'type_id' => $guest['type_id'],
-            //         // 'identity' => $guest['identity'],
-            //         'name' => $guest['name'],
-            //         'email' => $guest['email'],
-            //         'phone' => $guest['phone'],
-            //     ]);
-            // }
+            //     // // true buat guest
+            //     // foreach ($data['guest'] as $guest) {
+            //     //     $storeGuest = Guest::create([
+            //     //         'transaction_id' => $storeTransaction->id,
+            //     //         // 'type_id' => $guest['type_id'],
+            //     //         // 'identity' => $guest['identity'],
+            //     //         'name' => $guest['name'],
+            //     //         'email' => $guest['email'],
+            //     //         'phone' => $guest['phone'],
+            //     //     ]);
+            //     // }
 
-            // if ($data['point']) {
-            //     //deductpoint
-            //     $point = new Point;
-            //     $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
-            // }
+            //     // if ($data['point']) {
+            //     //     //deductpoint
+            //     //     $point = new Point;
+            //     //     $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+            //     // }
         });
 
 
@@ -456,8 +467,8 @@ class HostelController extends Controller
             }
             $imageUrl = "-";
             //retrieve image url
-            if(!$hostel->hostelImage->isEmpty()){
-              $imageUrl = $hostel->hostelImage[0]->image;
+            if (!$hostel->hostelImage->isEmpty()) {
+                $imageUrl = $hostel->hostelImage[0]->image;
             }
 
             $hotelDetails[$hostel->id] = [

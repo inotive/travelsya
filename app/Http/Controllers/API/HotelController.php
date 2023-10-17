@@ -236,13 +236,13 @@ class HotelController extends Controller
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
                 $hotel_ratings = null;
-                if($hotel->hotelRating != null){
+                if ($hotel->hotelRating != null) {
                     $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
                         return [
-                            "id"=> $hr->id,
+                            "id" => $hr->id,
                             "transaction_id" => $hr->transaction_id,
                             "user_id" => $hr->user_id,
-                            "user_name" => User::where('id',$hr->user_id)->first()->name,
+                            "user_name" => User::where('id', $hr->user_id)->first()->name,
                             "hotel_id" => $hr->hotel_id,
                             "rate" => $hr->rate,
                             "comment" => $hr->comment,
@@ -306,7 +306,7 @@ class HotelController extends Controller
         $data = $request->all();
 
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hotel->hotel->service->name) . "-" . time();
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hotel') . "-" . time();
         // $setting = new Setting();
         // $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
 
@@ -368,8 +368,10 @@ class HotelController extends Controller
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HTL-' . time(),
-                'service' => $hotel->hotel->service->name,
-                'service_id' => $hotel->hotel->service_id,
+                'service' => 'hotel',
+                'service_id' => 8,
+                // 'service' => $hotel->hotel->service->name,
+                // 'service_id' => $hotel->hotel->service_id,
                 'payment' => $data['payment'],
                 // 'user_id' => $request->user()->id,
                 'user_id' => 3,
@@ -389,12 +391,12 @@ class HotelController extends Controller
 
 
             // true buat bookdate
-            $storeBookDate = HotelBookDate::create([
-                'start' => $data['start'],
-                'end' => $data['end'],
-                'hotel_room_id' => $data["hotel_room_id"],
-                'transaction_id' => $storeTransaction->id
-            ]);
+            // $storeBookDate = HotelBookDate::create([
+            //     'start' => $data['start'],
+            //     'end' => $data['end'],
+            //     'hotel_room_id' => $data["hotel_room_id"],
+            //     'transaction_id' => $storeTransaction->id
+            // ]);
 
 
             try {
@@ -438,6 +440,7 @@ class HotelController extends Controller
         });
 
 
+        // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }
 
@@ -502,8 +505,8 @@ class HotelController extends Controller
 
             $imageUrl = "-";
             //retrieve image url
-            if(!$hotel->hotelImage->isEmpty()){
-              $imageUrl = $hotel->hotelImage[0]->image;
+            if (!$hotel->hotelImage->isEmpty()) {
+                $imageUrl = $hotel->hotelImage[0]->image;
             }
 
 
