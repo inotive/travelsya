@@ -115,7 +115,7 @@ class HotelController extends Controller
                 // Rating 5
                 if ($jumlahTransaksi > 0) {
                     $avgRating = $totalRating / $jumlahTransaksi;
-                    $resultRating = ($avgRating / 10) * 5;
+                    $resultRating = $hotel->hotelRating->count();
                 } else {
                     $avgRating = 0;
                     $resultRating = 0;
@@ -129,6 +129,7 @@ class HotelController extends Controller
                 ];
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
+                $avg_rating = $hotel->hotelRating->sum('rate') != 0 ? $hotel->hotelRating->sum('rate') / $hotel->hotelRating->count() : 0;
 
                 $hotelFormatJSON[] = [
                     'id' => $hotel->id,
@@ -138,8 +139,8 @@ class HotelController extends Controller
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
                     'lon' => $hotel->lon,
-                    'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
-                    'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
+                    'avg_rating' => $avg_rating,
+                    'rating_count' => $hotel->hotelRating->count(),
                     'price' => $hotelDetails[$hotel->id]['price'],
                     'sellingprice' => $hotelDetails[$hotel->id]['sellingprice'],
                 ];
@@ -236,24 +237,22 @@ class HotelController extends Controller
                 });
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
-                $hotel_ratings = null;
-                if ($hotel->hotelRating != null) {
-                    $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
-                        return [
-                            "id" => $hr->id,
-                            "transaction_id" => $hr->transaction_id,
-                            "user_id" => $hr->user_id,
-                            "user_name" => User::where('id', $hr->user_id)->first()->name,
-                            "hotel_id" => $hr->hotel_id,
-                            "rate" => $hr->rate,
-                            "comment" => $hr->comment,
-                            "deleted_at" => $hr->deleted_at,
-                            "created_at" => $hr->created_at,
-                            "updated_at" => $hr->updated_at,
-                        ];
-                    });
-                };
+                $avg_rating = $hotel->hotelRating->sum('rate') != 0 ? $hotel->hotelRating->sum('rate') / $hotel->hotelRating->count() : 0;
 
+                $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
+                    return [
+                        "id" => $hr->id,
+                        "transaction_id" => $hr->transaction_id,
+                        "user_id" => $hr->users_id,
+                        "user_name" => User::where('id', $hr->users_id)->pluck('name')->first(),
+                        "hotel_id" => $hr->hotel_id,
+                        "rate" => $hr->rate,
+                        "comment" => $hr->comment,
+                        "deleted_at" => $hr->deleted_at,
+                        "created_at" => $hr->created_at,
+                        "updated_at" => $hr->updated_at,
+                    ];
+                });
                 return [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
@@ -264,8 +263,8 @@ class HotelController extends Controller
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
                     'lon' => $hotel->lon,
-                    'avg_rating' => $avgRating,
-                    'rating_count' => $totalRating,
+                    'avg_rating' => $avg_rating,
+                    'rating_count' => $hotel->hotelRating->count(),
                     'hotel_image' => $hotel->hotelImage,
                     'hotel_rooms' => $hotel_room,
                     'hotel_facilities' => $hotel_facilities,
