@@ -18,7 +18,8 @@ class UserController extends Controller
     public function create(CreateUserRequest $request)
     {
         $request['name'] = $request->name;
-        $request['role'] = $request->role;
+        // $request['role'] = $request->role;
+        $request['role'] = 0;
         $request['email'] = $request->email;
         $request['password'] = password_hash($request->password, PASSWORD_DEFAULT);
         toast('User has been created', 'success');

@@ -10,7 +10,7 @@
         </h3>
         <div class="card-toolbar">
             <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-            <i class="ki-duotone ki-plus fs-2"></i>Tambah Data User</a>
+                <i class="ki-duotone ki-plus fs-2"></i>Tambah Data User</a>
         </div>
     </div>
     <!--end::Header-->
@@ -19,7 +19,8 @@
         <!--begin::Table container-->
         <div class="table-responsive">
             <!--begin::Table-->
-            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
+            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                id="kt_datatable_zero_configuration">
                 <!--begin::Table head-->
                 <thead>
                     <tr class="fw-bold text-muted bg-light">
@@ -34,7 +35,7 @@
                 <!--begin::Table body-->
                 <tbody>
                     @php
-                        $i = 1;
+                    $i = 1;
                     @endphp
                     @foreach($users as $user)
                     <tr>
@@ -51,19 +52,22 @@
                             {{\Carbon\Carbon::parse($user->created_at)->format('d M Y')}}
                         </td>
                         <td class="text-center">
-{{--                            <a onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">--}}
-{{--                                <i class="ki-duotone ki-switch fs-2">--}}
-{{--                                    <span class="path1"></span>--}}
-{{--                                    <span class="path2"></span>--}}
-{{--                                </i>--}}
-{{--                            </a>--}}
-                            <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit" data-id="{{$user->id}}" data-bs-toggle="modal" data-bs-target="#edit">
+                            {{-- <a onclick="return confirm('are you sure?')"
+                                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1">--}}
+                                {{-- <i class="ki-duotone ki-switch fs-2">--}}
+                                    {{-- <span class="path1"></span>--}}
+                                    {{-- <span class="path2"></span>--}}
+                                    {{-- </i>--}}
+                                {{-- </a>--}}
+                            <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"
+                                data-id="{{$user->id}}" data-bs-toggle="modal" data-bs-target="#edit">
                                 <i class="ki-duotone ki-pencil fs-2">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
                                 </i>
                             </a>
-                            <a href="{{route('admin.user.delete',$user->id)}}" onclick="return confirm('are you sure?')" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
+                            <a href="{{route('admin.user.delete',$user->id)}}" onclick="return confirm('are you sure?')"
+                                class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm">
                                 <i class="ki-duotone ki-trash fs-2">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
@@ -128,33 +132,36 @@
                             <span class="required">Email</span>
                         </label>
                         <!--end::Label-->
-                        <input type="text" class="form-control form-control-solid" placeholder="Email" name="email" required/>
+                        <input type="text" class="form-control form-control-solid" placeholder="Email" name="email"
+                            required />
                         @error('email')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <!--end::Input group-->
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
+                        {{-- <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Role</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true" data-placeholder="Select Role" name="role">
+                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
+                                data-placeholder="Select Role" name="role">
                                 <option value="">Select user...</option>
                                 <option value="0">Admin</option>
                                 <option value="1">Vendor</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <!--end::Col-->
                         <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Name</label>
                             <!--begin::Input-->
-                                <!--begin::Text-->
-                                <input type="text" class="form-control form-control-solid" placeholder="Name" name="name" required/>
-                                <!--end::Text-->
+                            <!--begin::Text-->
+                            <input type="text" class="form-control form-control-solid" placeholder="Name" name="name"
+                                required />
+                            <!--end::Text-->
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
@@ -167,12 +174,13 @@
                             <span class="required">Password</span>
                         </label>
                         <!--end::Label-->
-                        <input type="password" class="form-control form-control-solid" placeholder="Password" name="password" required/>
+                        <input type="password" class="form-control form-control-solid" placeholder="Password"
+                            name="password" required />
                         @error('password')
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <!--end::Input group-->
                     <!--begin::Input group-->
@@ -182,22 +190,24 @@
                             <span class="required">Password Confirmation</span>
                         </label>
                         <!--end::Label-->
-                        <input type="password" class="form-control form-control-solid" placeholder="Password" name="password_confirmation" required/>
+                        <input type="password" class="form-control form-control-solid" placeholder="Password"
+                            name="password_confirmation" required />
                         @error('password_confirmation')
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <!--end::Input group-->
 
                     <!--begin::Actions-->
                     <div class="text-center">
-                        <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
+                        <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3"
+                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
                             <span class="indicator-label">Submit</span>
                             <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                         </button>
                     </div>
                     <!--end::Actions-->
@@ -252,12 +262,13 @@
                             <span class="required">Email</span>
                         </label>
                         <!--end::Label-->
-                        <input type="text" class="form-control form-control-solid" id="email" placeholder="Email" name="email" required/>
+                        <input type="text" class="form-control form-control-solid" id="email" placeholder="Email"
+                            name="email" required />
                         @error('email')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <!--end::Input group-->
                     <!--begin::Input group-->
@@ -275,9 +286,10 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Name</label>
                             <!--begin::Input-->
-                                <!--begin::Text-->
-                                <input type="text" class="form-control form-control-solid" id="name" placeholder="Name" name="name" required/>
-                                <!--end::Text-->
+                            <!--begin::Text-->
+                            <input type="text" class="form-control form-control-solid" id="name" placeholder="Name"
+                                name="name" required />
+                            <!--end::Text-->
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
@@ -290,12 +302,13 @@
                             <span class="required">Password</span>
                         </label>
                         <!--end::Label-->
-                        <input type="password" class="form-control form-control-solid" placeholder="Password" name="password"/>
+                        <input type="password" class="form-control form-control-solid" placeholder="Password"
+                            name="password" />
                         @error('password')
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <!--end::Input group-->
                     <!--begin::Input group-->
@@ -305,12 +318,13 @@
                             <span class="required">Password Confirmation</span>
                         </label>
                         <!--end::Label-->
-                        <input type="password" class="form-control form-control-solid" placeholder="Password" name="password_confirmation"/>
+                        <input type="password" class="form-control form-control-solid" placeholder="Password"
+                            name="password_confirmation" />
                         @error('password_confirmation')
-                                <span class="text-danger" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                        <span class="text-danger" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
                     </div>
                     <!--end::Input group-->
 
@@ -320,7 +334,7 @@
                         <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
                             <span class="indicator-label">Submit</span>
                             <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                         </button>
                     </div>
                     <!--end::Actions-->

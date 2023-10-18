@@ -115,8 +115,8 @@ class ManagementHostelController extends Controller
             'roomsize' => $request->roomsize,
             'max_guest' => $request->guest,
             'maxextrabed' => $request->maxextrabed,
-            'totalbathroom' => $request->totalbathroom,
-            'maxextrabed' => $request->maxextrabed,
+            // 'totalbathroom' => $request->totalbathroom,
+            // 'maxextrabed' => $request->maxextrabed,
             'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
             'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
             // 'bed_type' => $request->bed_type,
@@ -213,14 +213,13 @@ class ManagementHostelController extends Controller
     public function destroyphotoHostel($id)
     {
 
-            $hostelImage = HostelImage::findOrFail($id);
-            Storage::delete('media/hostel/'. $hostelImage->image);
+        $hostelImage = HostelImage::findOrFail($id);
+        Storage::delete('media/hostel/' . $hostelImage->image);
 
-            $hostelImage->delete();
+        $hostelImage->delete();
 
-            toast('Hostel Image has been deleted', 'success');
-            return redirect()->back();
-
+        toast('Hostel Image has been deleted', 'success');
+        return redirect()->back();
     }
 
     public function settingRoomShow($hostel_id, $id)

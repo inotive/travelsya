@@ -167,8 +167,6 @@
                     </button>
                 </div>
                 <!--end::Actions-->
-
-
             </div>
             <!--end::Modal body-->
         </div>
