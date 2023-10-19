@@ -90,10 +90,11 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 //Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
 //Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
-Route::get('/profile/order-detail/hotel', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik-voucher', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
@@ -366,6 +367,12 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('setting-hostel-photo/{id}', [ManagementHostelController::class, 'settingPhoto'])->name('partner.management.hostel.setting.photo');
             Route::get('setting-hostel-room/{id}', [ManagementHostelController::class, 'settingRoom'])->name('partner.management.hostel.setting.room');
             Route::get('setting-hostel-room/create/{id}', [ManagementHostelController::class, 'settingRoomCreate'])->name('partner.management.hostel.setting.room.create');
+
+            Route::get('setting-hostel-room/{id}/edit/{room_id}', [ManagementHostelController::class, 'settingRoomEdit'])
+                ->name('partner.management.hostel.setting.room.edit');
+            Route::put('setting-hostel-room/{id}/edit/{room_id}', [ManagementHostelController::class, 'settingRoomUpdate'])
+                ->name('partner.management.hostel.setting.room.update');
+
             Route::post('setting-hostel-room/post', [ManagementHostelController::class, 'settingRoomPost'])->name('partner.management.hostel.setting.room.post');
             // Route::delete('setting-hostel-room/delete/{id}', [ManagementHostelController::class,'settingRoomDelete'])->name('partner.management.setting.room.delete');
             // Route::get('setting-hostel-room/hostel-room/{hostel_id}/{id}', [ManagementHostelController::class,'settingRoomShow'])->name('partner.management.setting.room.show');

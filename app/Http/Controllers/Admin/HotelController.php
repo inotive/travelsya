@@ -18,13 +18,13 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')->where('role',1)->get();
+        $users = DB::table('users')->where('role', 1)->get();
         $hotels = DB::table('hotels')
             ->join('users', 'users.id', '=', 'hotels.user_id')
             ->select('hotels.*', 'users.name as user_name')
             ->get();
 
-        return view('admin.management-mitra.hotel.index',compact('users', 'hotels'));
+        return view('admin.management-mitra.hotel.index', compact('users', 'hotels'));
     }
 
     /**
@@ -41,12 +41,12 @@ class HotelController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' =>'required',
-            'address' =>'required',
-            'star' =>'required',
-            'website' =>'required',
-            'user_id' =>'required',
-            'city' =>'required',
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
+            'website' => 'required',
+            'user_id' => 'required',
+            'city' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -55,17 +55,18 @@ class HotelController extends Controller
 
         DB::table('hotels')->insert(
             [
-            'user_id' => $request->user_id,
-            'is_active' => 1,
-            'checkin' => "11:00:00",
-            'checkout' => "12:00:00",
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'star' => $request->star,
-            'website' => $request->website
+                'user_id' => $request->user_id,
+                'is_active' => 1,
+                'checkin' => "11:00:00",
+                'checkout' => "12:00:00",
+                'name' => $request->name,
+                'address' => $request->address,
+                'city' => $request->city,
+                'star' => $request->star,
+                'website' => $request->website
             ]
         );
+
         toast('Hotel Has Been Added', 'success');
 
         return redirect()->route('admin.hotel.index')->with('success', 'Data Berhasil Disimpan');
@@ -97,13 +98,12 @@ class HotelController extends Controller
     public function update(Request $request, Hotel $hotel)
     {
         $validator = Validator::make($request->all(), [
-        'name' =>'required',
-        'address' =>'required',
-        'star' =>'required',
-        'website' =>'required',
-        'user_id' =>'required',
-        'city' =>'required',
-        'is_active' =>'required',
+            'name'      => 'required',
+            'address'   => 'required',
+            'star'      => 'required',
+            'user_id'   => 'required',
+            'city'      => 'required',
+            'is_active' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -111,18 +111,17 @@ class HotelController extends Controller
         }
 
         $hotel->update([
-            'user_id' => $request->user_id,
-            'is_active' => $request->is_active,
-            'checkin' => "11:00:00",
-            'checkout' => "12:00:00",
-            'service_id' => 8,
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'star' => $request->star,
-            'website' => $request->website,
-            'lon' => $request->long_ltd,
-            'lat' => $request->ltd,
+            'user_id'     => $request->user_id,
+            'is_active'   => $request->is_active,
+            'checkin'     => "11:00:00",
+            'checkout'    => "12:00:00",
+            'name'        => $request->name,
+            'address'     => $request->address,
+            'city'        => $request->city,
+            'star'        => $request->star,
+            'website'     => $request->website,
+            'lon'         => $request->long_ltd,
+            'lat'         => $request->ltd,
             'description' => $request->description,
         ]);
 

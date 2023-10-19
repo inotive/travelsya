@@ -2,111 +2,112 @@
 <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
 <script src="{{ url('https://cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
 <script src="{{ url('https://code.jquery.com/jquery-3.6.0.min.js') }}"></script>
-    <!--begin::Modal - New Target-->
-    <div class="modal fade" id="modal-edit" tabindex="-1" aria-hidden="true">
-        <!--begin::Modal dialog-->
-        <div class="modal-dialog modal-dialog-centered mw-650px">
-            <!--begin::Modal content-->
-            <div class="modal-content rounded">
-                <!--begin::Modal header-->
-                <div class="modal-header pb-0 border-0 justify-content-end">
-                    <!--begin::Close-->
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
+<!--begin::Modal - New Target-->
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-hidden="true">
+    <!--begin::Modal dialog-->
+    <div class="modal-dialog modal-dialog-centered mw-650px">
+        <!--begin::Modal content-->
+        <div class="modal-content rounded">
+            <!--begin::Modal header-->
+            <div class="modal-header pb-0 border-0 justify-content-end">
+                <!--begin::Close-->
+                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                    <i class="ki-duotone ki-cross fs-1">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
                 </div>
-                <!--begin::Modal header-->
-                <!--begin::Modal body-->
-                <form id="updateForm" method="POST" enctype="multipart/form-data">
-                    @csrf
+                <!--end::Close-->
+            </div>
+            <!--begin::Modal header-->
+            <!--begin::Modal body-->
+            <form id="updateForm" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                        <!--begin::Heading-->
-                        <div class="mb-13 text-center">
-                            <!--begin::Title-->
-                            <h1 class="mb-3">Update Room</h1>
-                            <!--end::Title-->
-                        </div>
-                        <!--end::Heading-->
-                        <!--begin::Input group-->
-                        <div class="row">
-                            <div class="col-12">
-                        <!--begin::Alert-->
-                                <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                            <!--begin::Wrapper-->
-                                    <div class="d-flex flex-column pe-0 pe-sm-10">
-                                <!--begin::Title-->
-                                        <h4 class="fw-bold">Room Information</h4>
-                                <!--end::Title-->
-                                    </div>
-                            <!--end::Wrapper-->
+                    <!--begin::Heading-->
+                    <div class="mb-13 text-center">
+                        <!--begin::Title-->
+                        <h1 class="mb-3">Update Room</h1>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Heading-->
+                    <!--begin::Input group-->
+                    <div class="row">
+                        <div class="col-12">
+                            <!--begin::Alert-->
+                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
+                                <!--begin::Wrapper-->
+                                <div class="d-flex flex-column pe-0 pe-sm-10">
+                                    <!--begin::Title-->
+                                    <h4 class="fw-bold">Room Information</h4>
+                                    <!--end::Title-->
                                 </div>
-                        <!--end::Alert-->
+                                <!--end::Wrapper-->
                             </div>
+                            <!--end::Alert-->
                         </div>
+                    </div>
 
-                        <input type="hidden" name="hotel_id" id="hotel_id">
-                        <input type="hidden" name="room_id" id="room_id">
-                        <div class="g-9 mb-8 row">
-                            <div class="col-12">
-                                <label class="required fs-6 fw-semibold mb-2">Room Name</label>
-                                <input type="text" class="form-control" id="name-edit" name="name" required/>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
+                    <input type="hidden" name="hotel_id" id="hotel_id">
+                    <input type="hidden" name="room_id" id="room_id">
+                    <div class="g-9 mb-8 row">
+                        <div class="col-12">
+                            <label class="required fs-6 fw-semibold mb-2">Room Name</label>
+                            <input type="text" class="form-control" id="name-edit" name="name" required />
+                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
 
-                                @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-6">
-                                <label class="required fs-6 fw-semibold mb-2">Room Price</label>
-                                <input class="form-control " type="number" id="price-edit" name="price" required>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-price-edit"></div>
-                                @error('price')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-6">
-                                <label class="required fs-6 fw-semibold mb-2">Room Selling Price</label>
-                                <input type="number" class="form-control" id="sellingprice-edit" name="sellingprice" required>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-sellingprice-edit"></div>
-                                @error('sellingprice')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                            <div class="col-12">
-                                <label for="" class="form-label">Room Type</label>
-                                <select id="bed_type-edit" class="form-control" name="bed_type" required>
-                                    <option value="studio">Studio</option>
-                                    <option value="1br">1BR</option>
-                                    <option value="2br">2BR</option>
-                                    <option value="3br+">3BR+</option>
-                                </select>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-bed_type-edit"></div>
-                            </div>
-                                @error('bed_type')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
-                            <div class="col-12 mb-10">
-                                <label for="totalroom" class="form-label">Number of Rooms</label>
-                                <input type="text" id="totalroom-edit" class="form-control" name="totalroom" required>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-totalroom-edit"></div>
-                            </div>
-                                @error('totalroom')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
+                            @error('name')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{$message}}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-6">
+                            <label class="required fs-6 fw-semibold mb-2">Room Price</label>
+                            <input class="form-control " type="number" id="price-edit" name="price" required>
+                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-price-edit"></div>
+                            @error('price')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{$message}}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-6">
+                            <label class="required fs-6 fw-semibold mb-2">Room Selling Price</label>
+                            <input type="number" class="form-control" id="sellingprice-edit" name="sellingprice"
+                                required>
+                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-sellingprice-edit"></div>
+                            @error('sellingprice')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{$message}}</strong>
+                            </span>
+                            @enderror
+                        </div>
+                        <div class="col-12">
+                            <label for="" class="form-label">Room Type</label>
+                            <select id="bed_type-edit" class="form-control" name="bed_type" required>
+                                <option value="studio">Studio</option>
+                                <option value="1br">1BR</option>
+                                <option value="2br">2BR</option>
+                                <option value="3br+">3BR+</option>
+                            </select>
+                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-bed_type-edit"></div>
+                        </div>
+                        @error('bed_type')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                        @enderror
+                        <div class="col-12 mb-10">
+                            <label for="totalroom" class="form-label">Number of Rooms</label>
+                            <input type="text" id="totalroom-edit" class="form-control" name="totalroom" required>
+                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-totalroom-edit"></div>
+                        </div>
+                        @error('totalroom')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                        @enderror
                         <div class="col-12">
                             <!--begin::Alert-->
                             <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
@@ -121,15 +122,15 @@
                             <!--end::Alert-->
                         </div>
                         <div class="col-12 mb-10">
-                                <label for="roomsize" class="form-label">Size (m2)</label>
-                                <input type="text" id="roomsize-edit" class="form-control" name="roomsize" required>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-roomsize-edit"></div>
+                            <label for="roomsize" class="form-label">Size (m2)</label>
+                            <input type="text" id="roomsize-edit" class="form-control" name="roomsize" required>
+                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-roomsize-edit"></div>
                         </div>
-                            @error('roomsize')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
+                        @error('roomsize')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                        @enderror
                         <div class="col-12">
                             <!--begin::Alert-->
                             <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
@@ -144,25 +145,27 @@
                             <!--end::Alert-->
                         </div>
                         <div class="row mb-10">
-                        <div class="col-md-6">
+                            <div class="col-md-6">
                                 <label for="guest" class="form-label">Max Occupancy</label>
                                 <input type="text" id="guest-edit" class="form-control" name="guest" required>
                                 <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-guest-edit"></div>
-                        </div>
+                            </div>
                             @error('guest')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{$message}}</strong>
+                            </span>
                             @enderror
-                        <div class="col-md-6">
+                            <div class="col-md-6">
                                 <label for="" class="form-label">Max Extra Bed</label>
-                                <input type="text" id="maxextrabed-edit" class="form-control" name="maxextrabed" required>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-maxextrabed-edit"></div>
-                        </div>
+                                <input type="text" id="maxextrabed-edit" class="form-control" name="maxextrabed"
+                                    required>
+                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-maxextrabed-edit">
+                                </div>
+                            </div>
                             @error('maxextrabed')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{$message}}</strong>
+                            </span>
                             @enderror
                         </div>
                         <div class="col-12">
@@ -182,11 +185,11 @@
                             <label class="form-label">Image</label>
                             <input type="file" id="image_1-edit" class="form-control" name="image_1">
                         </div>
-                                @error('image_1')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                                @enderror
+                        @error('image_1')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{$message}}</strong>
+                        </span>
+                        @enderror
                         <div class="col-12">
                             <!--begin::Alert-->
                             <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
@@ -203,40 +206,41 @@
                         <div class="col-6 d-flex justify-content-around">
                             @foreach ($facilities as $facility)
                             <div class="form-check mx-3">
-                                <input class="form-check-input"  type="checkbox" name="facility_id[]" value="{{ $facility->id }}" id="checkbox_{{ $facility->id }}"/>
+                                <input class="form-check-input" type="checkbox" name="facility_id[]"
+                                    value="{{ $facility->id }}" id="checkbox_{{ $facility->id }}" />
                                 <label class="form-check-label">
                                     {{ $facility->name }}
                                 </label>
                             </div>
                             @endforeach
                         </div>
-                        </div>
-                        <!--end::Input group-->
-                        <!--begin::Actions-->
-                        <div class="text-center">
-                            <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
-                            </button>
-                            <button type="submit" id="update" class="btn btn-primary">
-                                <span class="indicator-label">Update</span>
-                                <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
-                        <!--end::Actions-->
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Actions-->
+                    <div class="text-center">
+                        <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
+                        </button>
+                        <button type="submit" id="update" class="btn btn-primary">
+                            <span class="indicator-label">Update</span>
+                            <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
+                    </div>
+                    <!--end::Actions-->
 
 
                 </div>
-                </form>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
+            </form>
+            <!--end::Modal body-->
         </div>
-        <!--end::Modal dialog-->
+        <!--end::Modal content-->
     </div>
-    <!--end::Modal - New Target-->
+    <!--end::Modal dialog-->
+</div>
+<!--end::Modal - New Target-->
 
-    <script>
-$(document).ready(function() {
+<script>
+    $(document).ready(function() {
     $('body').on('click', '#tombol-edit', function () {
     let room_id = $(this).data('id');
     let hotel_id = $(this).data('hotel-id');

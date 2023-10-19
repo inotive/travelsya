@@ -53,8 +53,9 @@
             <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
             <div class="input-group" id="js_datepicker_list_hotel" data-td-target-input="nearest"
                 data-td-target-toggle="nearest">
-                <input id="checkin" type="text" name="start" class="form-control"
-                    data-td-target="#js_datepicker_list_hotel" value="" x-on:change="handleSelectCheckin" />
+                <input id="checkin" type="text" name="start" class="form-control cursor-pointer" autocomplete="off"
+                    data-td-target="#js_datepicker_list_hotel" data-td-toggle="datetimepicker" value="" x-on:change="handleSelectCheckin"  />
+
                 <span class="input-group-text" data-td-target="#js_datepicker_list_hotel"
                     data-td-toggle="datetimepicker">
                     <i class="ki-duotone ki-calendar fs-2">
