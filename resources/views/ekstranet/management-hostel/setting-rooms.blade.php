@@ -24,7 +24,7 @@
                 <thead>
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
-                        <th class="text-center">Nama Room</th>
+                        <th class="text-center">Nama</th>
                         <th class="text-center">Sewa Bulanan</th>
                         <th class="text-center">Sewa Tahunan</th>
                         <th class="text-center">Jumlah Ruangan</th>
@@ -52,11 +52,17 @@
                                 </div>
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">
+                                    <a href="{{ route('partner.management.hostel.setting.room.edit', ['id'=>$hostel->id, 'room_id'=> $room->id]) }}"
+                                        class="menu-link px-3 text-warning">
+                                        Edit
+                                    </a>
+                                </div>
+                                {{-- <div class="menu-item px-3">
                                     <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit"
                                         data-id="{{ $room->id }}" data-hotel-id="{{ $room->hostel_id }}">
                                         Edit
                                     </a>
-                                </div>
+                                </div> --}}
                                 <!--end::Menu item-->
                                 <!--begin::Menu item-->
                                 <div class="menu-item px-3">

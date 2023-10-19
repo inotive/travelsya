@@ -15,7 +15,7 @@
                             <!--begin::Wrapper-->
                             <div class="d-flex flex-column pe-0 pe-sm-10">
                                 <!--begin::Title-->
-                                <h4 class="fw-bold">Room Information</h4>
+                                <h4 class="fw-bold">Edit Room Information</h4>
                                 <!--end::Title-->
                             </div>
                             <!--end::Wrapper-->

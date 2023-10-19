@@ -41,13 +41,15 @@ class UserController extends Controller
         unset($request['password']);
         $user->update($request->all());
         toast('User has been updated', 'success');
-        return redirect()->route('admin.management-user.index');
+        return redirect()->route('admin.user');
+        // return redirect()->route('admin.management-user.index');
     }
 
     public function delete($id)
     {
         User::find($id)->delete();
         toast('User has been deleted', 'danger');
-        return redirect()->route('admin.management-user.index');
+        return redirect()->route('admin.user');
+        // return redirect()->route('admin.management-user.index');
     }
 }

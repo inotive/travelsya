@@ -274,16 +274,16 @@
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
+                        {{-- <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Role</label>
                             <select class="form-select form-select-solid" id="role" name="role">
                                 <option value="0">Admin</option>
                                 <option value="1">Vendor</option>
                             </select>
-                        </div>
+                        </div> --}}
                         <!--end::Col-->
                         <!--begin::Col-->
-                        <div class="col-md-6 fv-row">
+                        <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Name</label>
                             <!--begin::Input-->
                             <!--begin::Text-->

@@ -68,6 +68,15 @@ class ManagementHostelController extends Controller
         return view('ekstranet.management-hostel.setting-room-create', compact('hostel', 'facility'));
     }
 
+    public function settingRoomEdit($id, $room_id)
+    {
+        $hostel = hostel::with('hostelRoom')->find($id);
+        $facility = Facility::all();
+        $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
+
+        return view('ekstranet.management-hostel.setting-room-update', compact('hostel', 'facility', 'room'));
+    }
+
     public function settingRoomPost(Request $request)
     {
         //$data = $request->all();
@@ -155,7 +164,6 @@ class ManagementHostelController extends Controller
         toast('HostelRoom berhasil dibuat', 'success');
         return redirect()->back();
     }
-
 
     public function settingPhoto($id)
     {
@@ -249,14 +257,13 @@ class ManagementHostelController extends Controller
         ]);
     }
 
-
-
     //ini aksi untuk update
-    public function settingRoomUpdate(Request $request, $hostel_id, $id)
+    // public function settingRoomUpdate(Request $request, $hostel_id, $id)
+    public function settingRoomUpdate(Request $request, $id, $room_id)
     {
         //dd($request->all());
-        $hostelRoom = hostelRoom::where('id', $id)
-            ->where('hostel_id', $hostel_id)
+        $hostelRoom = hostelRoom::where('id', $room_id)
+            ->where('hostel_id', $id)
             ->first();
 
         $facilities = Facility::all();
@@ -286,7 +293,7 @@ class ManagementHostelController extends Controller
             $image_1 = $request->file('image_1');
             $image_1->storeAs('public/media/hostel', $image_1->hashName());
 
-            Storage::delete('public/media/hostel', $hostelRoom->image_1);
+            Storage::delete('public/media/hostel/' . $hostelRoom->image_1);
 
             $hostelRoom->update([
                 'hostel_id' => $request->hostel_id,
