@@ -49,6 +49,7 @@ route::get('/hostel/populer', [HostelController::class, 'hostelPopuler']);
 route::get('/hostel/{id}', [HostelController::class, 'show']);
 route::get('/hostel/room/{id}', [HostelController::class, 'room']);
 
+
 //hotel
 route::post('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
@@ -57,7 +58,6 @@ route::get('/hotel/{id}', [HotelController::class, 'show']);
 
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
-route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
 route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
 route::get('/data', [TopUpController::class, 'getData']);
 
@@ -71,7 +71,6 @@ route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
 
 route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
-route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
 
 
 // ppob product
@@ -79,7 +78,7 @@ route::get('/ppob', [PpobController::class, 'getServices']);
 route::get('/ppob/{id}', [PpobController::class, 'getService']);
 route::post('/ppob/transaction', [PpobController::class, 'transaction']);
 route::post('/ppob/status', [PpobController::class, 'status']);
-route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
+
 // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 
 //setting
@@ -90,8 +89,8 @@ route::get('/service', [SettingController::class, 'getService']);
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
 route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
-route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
-route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
+
 
 Route::middleware('auth:sanctum')->group(function () {
     //auth
@@ -104,8 +103,15 @@ Route::middleware('auth:sanctum')->group(function () {
     // route::post('/transaction/user', [TransactionController::class, 'getTransactionUser']);
     // route::post('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
-    route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
+    route::get('/transaction/user', [TransactionController::class, 'getTransactionUser']);
+    route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
+
     // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+    // Pembayaran
+    route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+    route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
+    route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
+    route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']); // topup token/ewallet/pulsa
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);

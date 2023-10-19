@@ -171,9 +171,14 @@ class ManagementHotelController extends Controller
         $hotelImage = HotelImage::find($id);
 
         if ($hotelImage) {
+            HotelImage::where('hotel_id', $request->hotel_id)
+                ->update([
+                    'main' => 0
+                ]);
             $hotelImage->update([
                 'main' => 1,
             ]);
+
 
             toast('Foto Utama Hotel berhasil diperbarui', 'success');
 

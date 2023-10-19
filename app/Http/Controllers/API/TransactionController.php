@@ -26,42 +26,42 @@ class TransactionController extends Controller
 
     public function getTransactionUser(Request $request)
     {
+        // $user_id = $request->user()->id;
+        $user_id = \Auth::user()->id;
+
+        // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
+        //     ->where('user_id', $user_id)
+        //     ->orderBy('id', 'desc')
+        //     ->get();
+        $transaction = Transaction::where('user_id', $user_id)
+            ->orderByDesc('created_at')
+            ->get();
+
+        $responsTransaction = $transaction->map(function ($transaction) {
+            $detailTransaction = $this->getDetailTransaction($transaction->id,$transaction->service_id);
+            return [
+                'id' => $transaction->id,
+                'no_inv' => $transaction->no_inv,
+                'req_id' => $transaction->req_id,
+                'link' => $transaction->link,
+                'service' => $transaction->service,
+                'payment' => $transaction->payment,
+                'payment_method' => $transaction->payment_method,
+                'payment_channel' => $transaction->payment_channel,
+                'status' => $transaction->status,
+                'total' => $transaction->total,
+                'created_at' => $transaction->created_at,
+                'detail_transactions' => $detailTransaction ? $detailTransaction : null,
+            ];
+        });
+
+        if (count($transaction)) {
+            return ResponseFormatter::success($responsTransaction, 'Data successfully loaded');
+        } else {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
         try {
-            // $user_id = $request->user()->id;
-            $user_id = 5;
 
-            // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
-            //     ->where('user_id', $user_id)
-            //     ->orderBy('id', 'desc')
-            //     ->get();
-            $transaction = Transaction::where('user_id', $user_id)
-                ->latest()
-                ->get();
-
-            $responsTransaction = $transaction->map(function ($transaction) {
-                $detailTransaction = $this->getDetailTransaction($transaction->id,$transaction->service_id);
-              
-                return [
-                    'id' => $transaction->id,
-                    'no_inv' => $transaction->no_inv,
-                    'req_id' => $transaction->req_id,
-                    'link' => $transaction->link,
-                    'service' => $transaction->service,
-                    'payment' => $transaction->payment,
-                    'payment_method' => $transaction->payment_method,
-                    'payment_channel' => $transaction->payment_channel,
-                    'status' => $transaction->status,
-                    'total' => $transaction->total,
-                    'created_at' => $transaction->created_at,
-                    'detail_transactions' => $detailTransaction ? $detailTransaction : null,
-                ];
-            });
-            
-            if (count($transaction)) {
-                return ResponseFormatter::success($responsTransaction, 'Data successfully loaded');
-            } else {
-                return ResponseFormatter::error(null, 'Data not found');
-            }
         } catch (\Throwable $th) {
             return ResponseFormatter::error([
                 $th,
@@ -85,12 +85,12 @@ class TransactionController extends Controller
                     'reservation_duration' => $daysDiff
                 ];
             }
-         
+
         }else if($service_id == 8){
             $data = DetailTransactionHotel::where('transaction_id',$transaction_id)->first();
             if($data){
-                $hotelName = Hotel::where('id',$data->id)->first()->name;
-                $hotelRoom = HotelRoom::where('hotel_id',$data->id)->where('id',$data->room)->first()->name;
+                $hotelName = Hotel::where('id',$data->id)->pluck('name')->first();
+                $hotelRoom = HotelRoom::where('hotel_id',$data->id)->where('id',$data->room)->pluck('name')->first();
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
@@ -100,9 +100,9 @@ class TransactionController extends Controller
                     'reservation_duration' => $daysDiff
                 ];
             }
-           
+
         }else{
-            if($service_id == 1){
+            if($service_id == 1 || $service_id == 11 || $service_id == 12){
                 $dataPulsa = DetailTransactionTopUp::where('transaction_id',$transaction_id)->first();
                 if($dataPulsa){
                     $nomorTelfon = $dataPulsa->nomor_telfon;
@@ -112,7 +112,7 @@ class TransactionController extends Controller
                         'phone_number' => $nomorTelfon,
                     ];
                 }
-               
+
             }else{
                 $dataPPOB = DetailTransactionPPOB::where('transaction_id',$transaction_id)->first();
                 if($dataPPOB){
@@ -123,7 +123,7 @@ class TransactionController extends Controller
                         'customer_number' => $nomorPelanggan,
                     ];
                 }
-               
+
             }
         }
     }

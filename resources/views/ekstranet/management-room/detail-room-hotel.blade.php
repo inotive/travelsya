@@ -99,8 +99,8 @@
 
                                             @endphp
                                             <tr>
-                                                <td class="text-center">{{ $booking->transaction->user->name }} -
-                                                    {{ $booking->transaction->user->phone }}</td>
+                                                <td class="text-center">{{ $booking->transaction->user->name  ?? ''}} -
+                                                    {{ $booking->transaction->user->phone ?? ''}}</td>
                                                 <td class="text-center">CTH123</td>
                                                 <td class="text-center">{{ $startdates }}
                                                 </td>

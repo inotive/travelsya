@@ -92,11 +92,11 @@ class HostelController extends Controller
             'property' => '-'
         ]);
         // Hostel::create([
-        //     'name' => ucwords($request->name), 
-        //     'user_id' => $request->user_id, 
+        //     'name' => ucwords($request->name),
+        //     'user_id' => $request->user_id,
         //     'is_active' => 1,
-        //     'service_id' => 7, 
-        //     'city' => $request->city, 
+        //     'service_id' => 7,
+        //     'city' => $request->city,
         //     'kecamatan' => '-',
         //     'address' => $request->alamat,
         //     'description' => '-',
@@ -316,7 +316,7 @@ class HostelController extends Controller
             '2' => $query->where('rate', 2)->count(),
             '1' => $query->where('rate', 1)->count(),
         ];
-        
+
 
 
         return view('admin.management-mitra.rating.index', compact('ratings', 'hostel_id', 'avg_rate', 'total_review', 'ratingCounts'));
