@@ -162,7 +162,7 @@ class TopUpController extends Controller
                 'service' => $product->service->name,
                 'service_id' => $product->service_id,
                 'payment' => 'xendit',
-                'user_id' => \Auth::user()->id,
+                'user_id' => 3,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
