@@ -16,31 +16,37 @@
                     <!--begin::Row-->
                     <div class="row g-8">
                         <!--begin::Col-->
-                        @if(auth()->user()->role == 0)
+
+                        {{-- ERROR --}}
+
+                        {{-- @if(isset($services) && auth()->user()->role == 0) --}}
                         <div class="col-lg-3">
                             <!--begin::Select-->
                             <select class="form-select form-select-solid" data-control="select2"
                                 data-placeholder="Layanan" data-hide-search="true" name="service">
                                 <option value=""></option>
+
                                 @foreach($services as $service)
-                                <option value="{{$service->id}}" {{$service->id == $_GET['service'] ? 'selected' : ''}}>{{ucfirst($service->name)}}</option>
+                                <option value="{{$service->id}}" {{ isset($_GET['service']) && $service->id == $_GET['service'] ? 'selected' : '' }}>{{ucfirst($service->name)}}</option>
                                 @endforeach
                             </select>
                             <!--end::Select-->
 
                         </div>
-                        @endif
+                        {{-- @endif --}}
+
+
                         <div class="col-lg-3">
                             <!--begin::Input-->
                             <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start" value="{{isset($_GET['start']) ? $_GET['start'] : ''}}">
                             <!--end::Input-->
                         </div>
                         <!--end::Col-->
-                        <div class="col-lg-3">
+                        {{-- <div class="col-lg-3">
                             <!--begin::Input-->
                             <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end" value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">
                             <!--end::Input-->
-                        </div>
+                        </div> --}}
                         <!--end::Col-->
                         <!--begin::Col-->
                         <div class="col-lg-3">
@@ -162,12 +168,12 @@
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{ $transaction->payment_method  }}
+                                        {{ $transaction->payment_method ?? '-' }}
                                     </div>
                                 </td>
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
-                                        {{ $transaction->payment_channel  }}
+                                        {{ $transaction->payment_channel ?? '-'  }}
                                     </div>
                                 </td>
                                 <td>
@@ -176,7 +182,7 @@
                                 <td>
                                     <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">
 
-                                        @if($transaction->status == "SUCCESS")
+                                        @if($transaction->status == "PAID")
                                             <span class="badge badge-rounded badge-success">Sukses</span>
                                         @elseif($transaction->status == "PENDING")
                                             <span class="badge badge-rounded badge-warning">Pending</span>
@@ -369,7 +375,7 @@
 <!--end::Modal - New Target-->
 @endsection
 @push('add-script')
-<script>
+{{-- <script>
         var today = new Date();
         $('.js-daterangepicker').daterangepicker({
             minDate:today,
@@ -395,6 +401,6 @@
                     }
             })
         })
-</script>
+</script> --}}
 @endpush
 

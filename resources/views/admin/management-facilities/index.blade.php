@@ -32,7 +32,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset( $facility->icon) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset('storage/'. $facility->icon) }}" class="rounded" style="width: 150px">
                                 </td>
                                 <td class="text-center">{{ $facility->name }}</td>
                                 <!--end::Menu item-->

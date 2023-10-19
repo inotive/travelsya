@@ -47,8 +47,8 @@ class RiwayatBookingController extends Controller
 
     public function index(Request $request)
     {
-        $hotelbookdates = DetailTransactionHotel::query();
-        $hostelbookdates = DetailTransactionHostel::query();
+        $hotelbookdates = DetailTransactionHotel::query()->with('hotelRoom');
+        $hostelbookdates = DetailTransactionHostel::query()->with('hostelRoom');
 
 
         $year = $request->input('year');
@@ -57,8 +57,8 @@ class RiwayatBookingController extends Controller
 
 
         if ($year != null) {
-            $hotelbookdates->whereYear('reservation_start', $year)->orWhereYear('end', $year);
-            $hostelbookdates->whereYear('reservation_start', $year)->orWhereYear('end', $year);
+            $hotelbookdates->whereYear('reservation_start', $year)->orWhereYear('reservation_end', $year);
+            $hostelbookdates->whereYear('reservation_start', $year)->orWhereYear('reservation_end', $year);
         }
 
         if ($start != null) {
@@ -73,6 +73,7 @@ class RiwayatBookingController extends Controller
 
         $hotelbookdates = $hotelbookdates->get();
         $hostelbookdates = $hostelbookdates->get();
+
         return view('ekstranet.booking.index', compact('hotelbookdates', 'hostelbookdates'));
     }
 

@@ -37,7 +37,7 @@ class CallbackController extends Controller
         fwrite($fp, "\n");
         fclose($fp);
     }
-    
+
     public function xendit(Request $request)
     {
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
@@ -59,8 +59,7 @@ class CallbackController extends Controller
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
             print_r($responseXendit);
-            $transaction = Transaction::with('detailTransaction.product')
-                ->where('no_inv', $responseXendit['external_id'])
+            $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
                 ->first();
 
 
@@ -74,12 +73,14 @@ class CallbackController extends Controller
                         $responseCode = "";
 
                         $transaction->update([
-                            'status' => 'Berhasil',
+                            'status' => 'PAID',
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
                         ]);
+                        $point = new Point();
+                        $point->addPoint($transaction->user_id, $transaction->total, $transaction->id, $transaction->service_id);
 
-                        if($transaction->service == "pulsa")
+                        if($transaction->service == "pulsa"  || $transaction->service == "listrik-token" || $transaction->service == "ewallet")
                         {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
@@ -88,19 +89,20 @@ class CallbackController extends Controller
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
-                            //process retrieve voucher code
-                            $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
-                            $responseMessageSN = explode("SN=",$responseMessage[4]);
-                            $responseMessageSNCode = explode("/",$responseMessageSN[1]);
-                            $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+                            $responseMessageSNCodeFinal = "";
+                            if($transaction->service == "listrik-token")
+                            {
+                                //process retrieve voucher code
+                                $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
+                                $responseMessageSN = explode("SN=",$responseMessage[4]);
+                                $responseMessageSNCode = explode("/",$responseMessageSN[1]);
+                                $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+                            }
 
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
-                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
-                                ->update([
-                                    'kode_voucher' => $responseMessageSNCodeFinal,
-                                ]);
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -109,20 +111,21 @@ class CallbackController extends Controller
                                 $message = "Pembayaran gagal";
                             }
 
-                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
+                            DB::table('detail_transaction_top_up')
+                                ->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
                                     'status' => $status,
-                                    'message'=> $message
+                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
+                                    'kode_voucher' => $responseMessageSNCodeFinal,
                                 ]);
 
                         }
-                        else if($transaction->service == "pln"){
+                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
                                 ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
-                            print_r('sudah masuk pembayaran mili');
 
                             $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, $detailTransactionPPOB->kode_pembayaran, $detailTransactionPPOB->nomor_pelanggan);
 
@@ -137,29 +140,18 @@ class CallbackController extends Controller
                                 $status = "Gagal";
                                 $message = "Pembayaran PLN Berhasil";
                             }
-                            DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionPPOB->id)
-                                ->update([
-                                    'status' => $status,
-                                    'message'=> $message
-                                ]);
                         }
-//                        else if($transaction->service == "hotel" || $transaction->service == "hostel"){
-//                            $type = $transaction->service;
-//                            $detailTransactionPPOB = \DB::table('detail_transaction_hotel as dh')
-//                                ->where('dh.transaction_id', $transaction->id)
-//                                ->first();
-//
-//                            if($type == "hotel")
-//                            {
-//                                DB::table('detail_transaction_hotel')->where('top.id', $detailTransactionPPOB->id)
-//                                    ->update([
-//                                        'status' => $status,
-//                                        'message'=> $message
-//                                    ]);
-//                            }
-//
-//                        }
-
+                        else{
+                            if ($transaction->service == "hotel")
+                            {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hotel Berhasil";
+                            }
+                            else{
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hostel Berhasil";
+                            }
+                        }
                         if($status == "Berhasil" || $status == "Pending")
                         {
                             return ResponseFormatter::success($status, $message);
@@ -226,13 +218,13 @@ class CallbackController extends Controller
                             $status = "FAILED";
                             $message = "Not found service";
                         }
-                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
-                            'status' => $status,
-                            'message' => $message
-                        ]);
-                        if (!$updateDetail) {
-                            return ResponseFormatter::error(null, "Update DB error");
-                        }
+//                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
+//                            'status' => $status,
+//                            'message' => $message
+//                        ]);
+//                        if (!$updateDetail) {
+//                            return ResponseFormatter::error(null, "Update DB error");
+//                        }
                     }
                     $updateTransaction = $transaction->update([
                         'status' => 'PAID',
@@ -298,14 +290,15 @@ class CallbackController extends Controller
         // 99 invalid
     }
 
-    public function callBackPPOB()
+    public function callBackPPOB(Request $request)
     {
-        $responseMili =  $this->mymili->paymentPPOB('test-bayar-dana', 'DNA30', '081253290605');
+        $responseMili =  $this->mymili->paymentPPOB($request->no_inv,$request->kode_pembayaran,$request->nomor_tagihan);
+
         if($responseMili['RESPONSECODE'] == 00)
         {
             return response()->json([
                 'status' => '200',
-                'message' => 'Pulsa sudah masuk'
+                'message' => 'Pembayaran telah berhasil'
             ]);
         }
         elseif($responseMili['RESPONSECODE'] == 68){

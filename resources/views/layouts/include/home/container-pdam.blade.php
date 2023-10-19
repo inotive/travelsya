@@ -3,22 +3,29 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.pdam') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pdam') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
-                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value=""/>
-                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
+                            name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
+                        <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPDAM">
@@ -26,16 +33,9 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPDAM">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Wilayah Pelanggan</span>
-                        </label>
-                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
-                    </div>
-                    <div class="col-xl-4">
-                        @auth
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
-                        @endauth
+                    <div class="col-xl-12">
+                        <button type="button" class="btn btn-lg btn-danger mt-8 w-100"
+                            id="btnPeriksaPDAM">Periksa</button>
                     </div>
                     <div class="row mt-4" id="detailPDAM">
                         <div class="col-12">
@@ -66,13 +66,14 @@
                         </div>
                         <div class="col-12">
                             @auth
-                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM" disabled>Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM"
+                                disabled>Pembayaran</button>
                             @endauth
 
                             @guest
-                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                    Login Terlebih Dahulu
-                                </a>
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
                             @endguest
                         </div>
                     </div>
@@ -95,12 +96,12 @@
 
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
@@ -137,41 +138,29 @@
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pdam') }}",
-                    // url: "https://servicevps.travelsya.com/product/pdam",
                     data: {
                         'no_pelanggan': noPelangganPDAM,
                         'nom': 'CEKPDAMBLP',
                     },
                     success: function (responseTagihan) {
-                        console.log(responseTagihan);
+                        var simulateFeePDAM = parseInt(responseTagihan.data.fee);
 
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct': $('#productPDAM').val(),
-                            },
-                            success: function (response) {
-                                var simulateFeePDAM = parseInt(response[0].value);
+                        var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
+                        var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
 
-                                var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
-                                var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
+                        $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
+                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
+                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
 
-                                $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
-                                $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
-                                $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
-                                $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
+                        $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
+                        $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
+                        $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
+                        $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
 
-                                $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
-                                $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
-                                $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
-                                $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
+                        $('#btnPeriksaPDAM').removeAttr('disabled');
 
-                                $('#btnPeriksaPDAM').removeAttr('disabled');
-
-                                $('#detailPDAM').show();
-                            }
-                        });
+                        $('#detailPDAM').show();
 
                         $('#btnPeriksaPDAM').text('Periksa');
                     },
@@ -179,9 +168,6 @@
                         if (xhr.status === 400) {
                             // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
                             var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-
-                            // Isi elemen div dengan pesan kesalahan dari respons JSON
-                            // alertDiv.text(xhr.responseJSON.data);
 
                             // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertContainer').empty().append(alertDiv);
@@ -194,10 +180,10 @@
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
@@ -244,5 +230,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush

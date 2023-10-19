@@ -70,13 +70,25 @@ class HostelController extends Controller
 
         $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->where('city', 'like', '%' . $request->location . '%')
-            ->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-            }])
+
             ->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
             }])
             ->withCount("rating as rating_count");
+
+        if ($request->has('category')) {
+            if ($request->category == 'monthly') {
+                $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
+                }]);
+            }
+
+            if ($request->category == 'yearly') {
+                $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(sellingrentprice_yearly),0)'));
+                }]);
+            }
+        }
 
         if ($request->has('property')) {
             if ($request->property != '') {
@@ -129,12 +141,12 @@ class HostelController extends Controller
         }
 
         if ($request->has('star')) {
-            $hostels->where('star', $request->star);
+            $hostels->whereIn('star', $request->star);
         }
 
         if ($request->has('facility')) {
             $hostels->whereHas('hostelFacilities', function ($query) use ($request) {
-                $query->where('facility_id', $request->facility);
+                $query->whereIn('facility_id', $request->facility);
             });
         }
 
@@ -184,16 +196,60 @@ class HostelController extends Controller
 
         // return view('hostel.room', compact('hostelget', 'params', 'cities'));
 
-        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities');
 
-        $data['hostelget'] = $hostel->withCount(["hostelRoom as price_avg" => function ($query) {
-            $query->select(DB::raw('coalesce(avg(sellingprice),0)'));
+        $startDate = date("Y-m-d", strtotime($request->start));
+        $endDate = date("Y-m-d", strtotime("+" . $request->duration . " month", strtotime($startDate)));
+
+        if ($request->has('category')) {
+            if ($request->category == 'monthly') {
+                $hostel->withCount(["hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
+                }]);
+            }
+
+            if ($request->category == 'yearly') {
+                $hostel->withCount(["hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(sellingrentprice_yearly),0)'));
+                }]);
+            }
+        }
+
+        $data['hostelget'] = $hostel->withCount(["rating as rating_avg" => function ($query) {
+            $query->select(DB::raw('coalesce(avg(rate),0)'));
         }])
-            ->withCount(["rating as rating_avg" => function ($query) {
-                $query->select(DB::raw('coalesce(avg(rate),0)'));
-            }])
             ->withCount("rating as rating_count")
+            ->addSelect([
+                'availability_count' => DB::raw('COALESCE(
+                    (SELECT COUNT(*) FROM hostel_rooms AS hr
+                        WHERE hr.hostel_id = hostels.id
+                        AND NOT EXISTS (
+                            SELECT * FROM detail_transaction_hostel AS dt
+                            WHERE dt.hostel_room_id = hr.id
+                            AND (
+                                (dt.reservation_start <= ? AND dt.reservation_end >= ?)
+                                OR (dt.reservation_start <= ? AND dt.reservation_end >= ?)
+                            )
+                        )), 0)')
+            ])
+            ->setBindings([$startDate, $startDate, $endDate, $endDate])
             ->find($id);
+
+        // dd($data['hostelget']);
+
+        // foreach ($data['hostelget']->hostelRoom as $room) {
+        //     $transactionCount = DB::table('detail_transaction_hostel')
+        //         ->where('hostel_room_id', $room->id)
+        //         ->where(function ($query) use ($startDate, $endDate) {
+        //             $query->whereBetween('reservation_start', [$startDate, $endDate])
+        //                 ->orWhereBetween('reservation_end', [$startDate, $endDate]);
+        //         })
+        //         ->count();
+
+        //     $room->totalroom -= $transactionCount;
+        // }
+
+        // dd($data['hostelget']);
 
         $data['params'] = $request->all();
 
@@ -248,18 +304,29 @@ class HostelController extends Controller
 
         $data = $request->all();
 
-        // dd($data);
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
+        // dd($hostel);
+        if ($data['category'] == 'monthly') {
+            $sellingprice = $hostel->sellingrentprice_monthly;
+        }
+
+        if ($data['category'] == 'yearly') {
+            $sellingprice = $hostel->sellingrentprice_yearly;
+        }
+
+        $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->sellingprice);
+        $fees = $setting->getFees($data['point'], 7, $request->user()->id, $sellingprice);
         // dd($fees);
 
         if (!$fees) return 'Point invalid';
         // $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
         $qty = $data['duration'];
         if ($qty < 0) return 'Date must be forward';
-        $amount = $setting->getAmount($hostel->sellingprice, $qty, $fees, $data['room']);
+
+
+
+        $amount = $setting->getAmount($sellingprice, $qty, $fees, 1);
         // $amount = $data['grand_total'];
 
         $payoutsXendit = $this->xendit->create([
@@ -268,7 +335,7 @@ class HostelController extends Controller
                 [
                     "product_id" => $data['hostel_room_id'],
                     "name" => $hostel['name'],
-                    "price" => $hostel->sellingprice,
+                    "price" => $sellingprice,
                     "quantity" => $qty,
                 ]
             ],
@@ -292,8 +359,8 @@ class HostelController extends Controller
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HTL-' . time(),
-                'service' => $hostel->hostel->service->name,
-                'service_id' => $hostel->hostel->service_id,
+                'service' => 'hostel',
+                'service_id' => 7,
                 // 'payment' => $payoutsXendit['payment'],
                 'payment' => 'xendit',
                 'user_id' => $request->user()->id,

@@ -12,9 +12,13 @@ return new class extends Migration {
     {
         Schema::create('detail_transaction_hostel', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id');
-            $table->foreignId('hostel_id');
-            $table->foreignId('hostel_room_id');
+            $table->unsignedBigInteger('transaction_id');
+            $table->unsignedBigInteger('hostel_id');
+            $table->unsignedBigInteger('hostel_room_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->foreign('hostel_id')->references('id')->on('hostels')->onDelete('cascade');
+            $table->foreign('hostel_room_id')->references('id')->on('hostel_rooms')->onDelete('cascade');
+
             $table->enum('type_rent', ['bulanan', 'tahunan']);
             $table->string('booking_id');
             $table->date('reservation_start');

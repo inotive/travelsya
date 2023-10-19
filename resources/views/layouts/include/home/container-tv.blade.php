@@ -11,15 +11,21 @@
                 <h2 class="fw-bold mb-5">TV-Internet</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-4">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productTV" id="productTV" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-6">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">No Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="noPelangganTV" class="form-control form-control-lg form-control-solid"
-                            name="noPelangganTV" placeholder="" value="" />
-                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
+                        <input type="text" id="noPelangganTV" class="form-control form-control-lg"
+                            name="noPelangganTV" placeholder="Masukan nomor tagihan" value="" />
+                        <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganTV">
@@ -27,13 +33,8 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminTV">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarTV">
                     </div>
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Wilayah Pelanggan</span>
-                        </label>
-                        <select name="productTV" id="productTV" class="form-select form-select-lg"></select>
-                    </div>
-                    <div class="col-xl-4">
+
+                    <div class="col-xl-12">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaTV">Periksa</button>
                     </div>
                 </div>
@@ -75,7 +76,7 @@
                                 Login Terlebih Dahulu
                             </a>
                         @endguest
-                    </div>                    
+                    </div>
                 </div>
 
                 <div class="row mt-5">
@@ -137,7 +138,7 @@
                     data: {
                         'no_pelanggan': noPelangganTV,
                         'nom': $('#productTV').val(),
-                    },  
+                    },
                     success: function (responseTagihan) {
                         var simulateFeeTV = parseInt(responseTagihan.data.fee);
 

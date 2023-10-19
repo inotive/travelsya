@@ -55,6 +55,33 @@ class TopUpController extends Controller
         }
     }
 
+    public function getEWallet(Request $request)
+    {
+        $products = DB::table('products')->where('service_id', 11)
+        ->distinct('name')->select('id','name')->get();
+
+
+        if ($products) {
+            return ResponseFormatter::success($products, 'Data successfully loaded');
+        } else {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+    }
+    public function detailEwallet(Request $request)
+    {
+        $products = Product::where([
+            ['service_id', 11],
+            ['name', 'like', '%' . strtoupper($request->name) . '%'],
+            ['is_active', 1],
+        ])->get();
+
+        if ($products) {
+            return ResponseFormatter::success($products, 'Data successfully loaded');
+        } else {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+    }
+
     public function testTopUP(Request $request)
     {
         $responseMili =  $this->mymili->paymentTopUp($request->invoice, $request->kode_pembayaran, $request->nomor_telfon);
@@ -97,9 +124,8 @@ class TopUpController extends Controller
             // point masuk - point keluar
             $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow','=','credit')->sum('point') ?? 0;
         }
-
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
+        $grandTotal = $product->price + $fees->value - $saldoPointCustomer;
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
@@ -136,7 +162,7 @@ class TopUpController extends Controller
                 'service' => $product->service->name,
                 'service_id' => $product->service_id,
                 'payment' => 'xendit',
-                'user_id' => 2,
+                'user_id' => 3,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
@@ -144,16 +170,17 @@ class TopUpController extends Controller
 
             // create detail transaction
             $data['detail'] = $request->input('detail');
-            DB::table('detail_transaction_top_up')->insert([
+           DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $transaction->id,
                 'product_id' => $product->id,
                 'nomor_telfon' => $data['no_hp'],
                 'total_tagihan' => $grandTotal,
                 'fee_travelsya' => 2500,
                 'fee_mili' => 2500,
-                'message' => 'Pulsa sedang diproses',
+                'message' => 'Top UP sedang diproses',
                 'status' => "PROCESS"
             ]);
+            // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         }
     }

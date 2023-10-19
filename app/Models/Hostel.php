@@ -59,6 +59,7 @@ class Hostel extends Model
         return $this->hasMany(Rating::class);
     }
 
+
     /**
      * Get the service that owns the Product
      *
@@ -83,5 +84,15 @@ class Hostel extends Model
     public function hostelroomImage()
     {
         return $this->hasMany(HostelRoomImages::class);
+    }
+
+    public function hostelRating()
+    {
+        return $this->hasMany(HostelRating::class);
+    }
+
+    public function hostelReservation()
+    {
+        return $this->hasMany(DetailTransactionHostel::class);
     }
 }

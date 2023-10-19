@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailTransaction;
+use App\Models\DetailTransactionHotel;
 use App\Models\Facility;
 use App\Models\Guest;
 use App\Models\Hotel;
@@ -13,9 +14,10 @@ use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Travelsya;
 use App\Services\Xendit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use App\Helpers\General;
 class HotelController extends Controller
 {
     protected $travelsya, $xendit;
@@ -60,7 +62,6 @@ class HotelController extends Controller
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where([
                     ['totalroom', '>', $request->room],
-                    ['guest', '>=', 3],
                 ]);
             })
             ->where(function ($query) use ($request) {
@@ -91,12 +92,12 @@ class HotelController extends Controller
 
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
-                $query->where('facility_id', $request->facility);
+                $query->whereIn('facility_id', $request->facility);
             });
         }
 
         if ($request->has('star')) {
-            $hotels->where('star', $request->star);
+            $hotels->whereIn('star', $request->star);
         }
 
         $hotels = $hotels->paginate(10);
@@ -258,42 +259,13 @@ class HotelController extends Controller
 
     public function request(Request $request)
     {
-        // $data = $request->all();
-
-        // $hotel = $this->travelsya->requestHotel([
-        //     "service" => $data['service'],
-        //     "payment" => $data['payment_method'],
-        //     "hotel_room_id" => $data['hostel_room_id'],
-        //     "point" => 0,
-        //     "guest" => [
-        //         [
-        //             "type_id" => "KTP",
-        //             "identity" => 123456,
-        //             "name" => $data['name']
-        //         ]
-        //     ],
-        //     "start" => $data['start'],
-        //     "end" => $data['end'],
-        //     "url" => "linkproduct"
-
-        // ]);
-
-        // dd($data);
-
-        // if ($hotel['meta']['code'] != 200) {
-        //     toast($hotel['meta']['message'], 'error');
-        //     return redirect()->back();
-        // }
-
-        // return redirect()->to($hotel['data']['invoice_url'])->send();
-
         $data = $request->all();
 
         // dd($data);
         $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hotel->hotel->service->name) . "-" . time();
+        $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
+        $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
 
         //cekpoint
         // if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
@@ -308,7 +280,9 @@ class HotelController extends Controller
         // dd($data);
 
         // cek book date
-        $checkBook = HotelBookDate::where("hotel_room_id", $data['hostel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
+        $checkBook = DetailTransactionHotel::where("hotel_room_id", $data['hostel_room_id'])
+            ->where('reservation_start', '>=', $data['start'])
+            ->where('reservation_end', "<=", $data['end'])->first();
 
         // if ($checkBook) {
         //     return ResponseFormatter::error($checkBook, 'Book dates is not available');
@@ -345,8 +319,8 @@ class HotelController extends Controller
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HTL-' . time(),
-                'service' => $hotel->hotel->service->name,
-                'service_id' => $hotel->hotel->service_id,
+                'service' => 'HOTEL',
+                'service_id' => 8,
                 // 'payment' => $payoutsXendit['payment'],
                 'payment' => 'xendit',
                 'user_id' => $request->user()->id,
@@ -355,35 +329,23 @@ class HotelController extends Controller
                 'total' => $amount
             ]);
 
-
+            $helper = new General();
             // true buat detail
-            $storeDetailTransaction = DetailTransaction::create([
+
+            $storeDetailTransaction = DetailTransactionHotel::create([
                 'transaction_id' => $storeTransaction->id,
+                'hotel_id' => $data['hotel_id'],
                 'hotel_room_id' => $data['hostel_room_id'],
-                "qty" => $qty,
-                "price" => $hotel->sellingprice
+                "booking_id" => $helper->generateRandomString(6),
+                "reservation_start" => Carbon::parse($data['start'])->format('Y-m-d'),
+                "reservation_end" => Carbon::parse($data['end'])->format('Y-m-d'),
+                "guest" => $data['total_guest'],
+                "room" => $data['room'],
+                "rent_price" => $hotel->sellingprice,
+                "fee_admin" => 2500,
+                "created_at" => Carbon::now(),
+                "updated_at" => Carbon::now(),
             ]);
-
-
-            // true buat bookdate
-            $storeBookDate = HotelBookDate::create([
-                'start' => date_create($data['start']),
-                'end' => date_create($data['end']),
-                'hotel_room_id' => $data["hostel_room_id"],
-                'transaction_id' => $storeTransaction->id
-            ]);
-
-            // true buat guest
-            // foreach ($data['guest'] as $guest) {
-            //     $storeGuest = Guest::create([
-            //         'transaction_id' => $storeTransaction->id,
-            //         // 'type_id' => $guest['type_id'],
-            //         // 'identity' => $guest['identity'],
-            //         'name' => $guest['name'],
-            //         'email' => $guest['email'],
-            //         'phone' => $guest['phone'],
-            //     ]);
-            // }
 
             if ($data['point']) {
                 //deductpoint

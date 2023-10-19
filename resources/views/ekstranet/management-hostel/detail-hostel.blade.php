@@ -109,7 +109,7 @@
                                         class="badge {{ $hostel->is_active == 1 ? 'badge-success' : 'badge-danger' }} ">{{ $hostel->is_active == 1 ? 'live' : 'off' }}</span>
                                 </td>
                             </tr>
-                            
+
                         </tbody>
                     </table>
                 </div>
@@ -131,7 +131,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Riwayat Booking
-                                (0)</a>
+                                ({{$hostel->hostelReservation->count()}})</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Fasilitas
@@ -146,52 +146,112 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
-                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle">
-                    
+                                {{--                                <div class="card-toolbar">--}}
+                                {{--                                    <a class="btn btn-sm btn-light-primary" href="{{route('partner.management.hotel.setting.room',$hotel->id)}}">--}}
+                                {{--                                        <i class="ki-duotone ki-plus fs-2"></i></a>--}}
+                                {{--                                </div>--}}
+                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                                       id="kt_datatable_zero_configuration">
+                                    <thead>
+                                    <tr class="fw-bold fs-6 text-gray-800 ">
+                                        <th class="text-center">No.</th>
+                                        <th class="text-center">Nama Room</th>
+                                        <th class="text-center">Room Rate</th>
+                                        <th class="text-center">Fix Rate</th>
+                                        <th class="text-center">Jumlah Ruangan</th>
+                                        <th class="text-center">Batas Penghuni</th>
+
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                    </thead>
                                     <tbody>
+                                    @foreach ($hostel->hostelRoom as $room)
                                         <tr>
-                                            <td>Tipe Properti</td>
-                                            <td>Rumah</td>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td class="text-center">{{ $room->name }}</td>
+                                            <td class="text-center">@currency($room->price)
+                                            </td>
+                                            <td class="text-center">@currency($room->sellingprice)</td>
+                                            <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
+                                            <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
+                                            <td class="text-center">
+                                                <div
+                                                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                                    data-kt-menu="true" style="">
+
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning"
+                                                           id="tombol-edit" data-id="{{ $hotel->id }}"
+                                                           data-bs-toggle="modal">
+                                                            Edit
+                                                        </a>
+                                                    </div>
+                                                    <!--end::Menu item-->
+                                                    <!--begin::Menu item-->
+                                                    <div class="menu-item px-3">
+                                                        <a href="#" class="menu-link px-3 text-danger"
+                                                           data-bs-toggle="modal"
+                                                           {{-- data-kt-customer-table-filter="delete_row" --}}
+                                                           data-bs-target="#kt_modal_delete_room{{ $room->id }}">
+                                                            Delete
+                                                        </a>
+                                                    </div>
+                                                    <!--end::Menu item-->
+                                                </div>
+                                                <!--begin::Menu-->
+                                                <a href="#"
+                                                   class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                    Actions
+                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                                </a>
+                                                <!--end::Menu-->
+                                            </td>
                                         </tr>
-                                        <tr>
-                                            <td>Kamar Tidur</td>
-                                            <td>Kamar TIdur</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Tipe Furnished</td>
-                                            <td>Tipe Furnished</td>
-                                        </tr>
+                                        <div class="modal fade" id="kt_modal_delete_room{{ $room->id }}"
+                                             tabindex="-1" aria-hidden="true">
+                                            <!-- Konten modal penghapusan -->
+                                            <div class="modal-dialog modal-dialog-centered mw-650px">
+                                                <div class="modal-content">
+                                                    <form
+                                                        action="{{ route('partner.management.hotel.destroyroom', $room->id) }}"
+                                                        method="POST" id="kt_modal_delete_room_form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <div class="modal-header">
+                                                            <h2 class="fw-bold">Delete Room</h2>
+                                                            <button type="button"
+                                                                    class="btn btn-icon btn-sm btn-active-icon-primary"
+                                                                    data-bs-dismiss="modal">
+                                                                <i class="ki-duotone ki-cross fs-1"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body py-10 px-lg-17">
+                                                            <p>Anda yakin ingin menghapus data Ruangan Dengan Nama
+                                                                {{ $room->name }}?
+                                                            </p>
+                                                        </div>
+                                                        <div class="modal-footer d-flex justify-content-center">
+                                                            <button type="button" class="btn btn-light me-3"
+                                                                    data-bs-dismiss="modal">Cancel
+                                                            </button>
+                                                            <button type="submit"
+                                                                    class="btn btn-danger">Delete
+                                                            </button>
+                                                        </div>
+                                                        <!--end::Menu-->
+                                                    </form>
+                                                    <!--end::Menu-->
+                                                    </td>
+                                                    </tr>
 
-                                        <tr>
-                                            <td>Jumlah Kamar Mandi</td>
-                                            <td>Jumlah Kamar Mandi</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Luas Bangunan</td>
-                                            <td>Luas Bangunan</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Sewa Bulanan</td>
-                                            <td>Sewa Bulanan</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>Sewa Tahunan</td>
-                                            <td>Sewa Tahunan</td>
-                                        </tr>
-
-
-
-
-
-
-                
-                                        </td>
-                                        </tr>
+                                                    </td>
+                                                    </tr>
+                                    @endforeach
                                     </tbody>
                                 </table>
+                                @include('ekstranet.management-hotel.create-room')
                                 {{-- MODAL DELETE --}}
 
                                 {{-- <div class="col-4">
@@ -239,7 +299,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset($image->image) }}" class="rounded"
+                                                    <img src="{{ asset('storage/' .$image->image) }}" class="rounded"
                                                         style="width: 150px">
                                                 </td>
                                                 <td class="text-center">
@@ -327,11 +387,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($hotel->hotelbookDate as $booking) --}}
-                        
+                                         @foreach ($hostel->hostel as $booking)
                                             <tr>
                                                 <td class="text-center">Gusti Bagus - 081123123 </td>
-                                                <td class="text-center">CTH123</td>
+                                                <td class="text-center">{{$booking->booking_id}}</td>
                                                 <td class="text-center">20 Juni 2023
                                                 </td>
                                                 <td class="text-center">22 Juni 2023</td>
@@ -366,9 +425,6 @@
                                                     <!--end::Menu-->
                                                 </td>
                                             </tr>
-
-                                            </td>
-                                            </tr>
                                         {{-- @endforeach --}}
                                     </tbody>
                                 </table>
@@ -391,7 +447,7 @@
                                         @foreach ($hostel->hostelFacilities as $facility)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
-                                                <td>{{$facility->facility->name}}</td>                          
+                                                <td>{{$facility->facility->name}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
