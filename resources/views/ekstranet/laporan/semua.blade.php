@@ -53,7 +53,7 @@
                                 <td>INV-123-HOTEL</td>
                                 <td>20 Okt 2023 10:11</td>
                                 <td>Customer A</td>
-                                <td>0812-5123-4123</td>
+                                <9td>0812-5123-4123</9td>
                                 <td>Bank Transfer - BCA</td>
                                 <td>Hotel A - 2 Room Superior - 2 Malam </td>
                                 <td>Rp. 100.000</td>

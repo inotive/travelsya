@@ -92,9 +92,9 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
-Route::get('/profile/order-detail/hotel', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik-voucher', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');

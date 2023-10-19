@@ -18,32 +18,32 @@ class DashboardPartnerController extends Controller
     {
         $id = auth()->user()->id;
 
-        $data['transactions'] = Transaction::with('detailTransaction.product', 'user', 'bookDate')->orderBy('created_at', 'desc')
-            ->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
-                $q->where('user_id', $id);
-            })->orderBy('created_at', 'desc')->take(5)->get();
-
-
-        $data['guest'] = Transaction::withCount('guest')
-            ->whereBetween('created_at', [Carbon::now()->subWeek()->format("Y-m-d H:i:s"), Carbon::now()])
-            ->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
-                $q->where('user_id', $id);
-            })
-            ->count();
-
-        $data['revenueWeek'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
-            $q->whereBetween('created_at', [Carbon::now()->subWeek()->format("Y-m-d H:i:s"), Carbon::now()]);
-            $q->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q2) use ($id) {
-                $q2->where('user_id', $id);
-            });
-        })->sum('price');
-
-        $data['revenueMonth'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
-            $q->whereMonth('created_at', '=', date('m'));
-            $q->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q2) use ($id) {
-                $q2->where('user_id', $id);
-            });
-        })->sum('price');
+//        $data['transactions'] = Transaction::with('detailTransaction.product', 'user', 'bookDate')->orderBy('created_at', 'desc')
+//            ->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
+//                $q->where('user_id', $id);
+//            })->orderBy('created_at', 'desc')->take(5)->get();
+//
+//
+//        $data['guest'] = Transaction::withCount('guest')
+//            ->whereBetween('created_at', [Carbon::now()->subWeek()->format("Y-m-d H:i:s"), Carbon::now()])
+//            ->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
+//                $q->where('user_id', $id);
+//            })
+//            ->count();
+//
+//        $data['revenueWeek'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
+//            $q->whereBetween('created_at', [Carbon::now()->subWeek()->format("Y-m-d H:i:s"), Carbon::now()]);
+//            $q->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q2) use ($id) {
+//                $q2->where('user_id', $id);
+//            });
+//        })->sum('price');
+//
+//        $data['revenueMonth'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
+//            $q->whereMonth('created_at', '=', date('m'));
+//            $q->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q2) use ($id) {
+//                $q2->where('user_id', $id);
+//            });
+//        })->sum('price');
 
         $data['ready'] = HostelRoom::with('hostel', function ($q) use ($id) {
             $q->where('user_id', $id);

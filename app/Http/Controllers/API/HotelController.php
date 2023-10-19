@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HostelRequestUpdate;
+use App\Models\Fee;
 use App\Models\HotelBookDate;
 use App\Models\DetailTransaction;
 use App\Models\Guest;
@@ -16,12 +17,13 @@ use App\Models\User;
 use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Xendit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use PHPUnit\Exception;
-
+use DateTime;
 class HotelController extends Controller
 {
     protected $xendit, $point;
@@ -115,7 +117,7 @@ class HotelController extends Controller
                 // Rating 5
                 if ($jumlahTransaksi > 0) {
                     $avgRating = $totalRating / $jumlahTransaksi;
-                    $resultRating = ($avgRating / 10) * 5;
+                    $resultRating = $hotel->hotelRating->count();
                 } else {
                     $avgRating = 0;
                     $resultRating = 0;
@@ -129,6 +131,7 @@ class HotelController extends Controller
                 ];
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
+                $avg_rating = $hotel->hotelRating->sum('rate') != 0 ? $hotel->hotelRating->sum('rate') / $hotel->hotelRating->count() : 0;
 
                 $hotelFormatJSON[] = [
                     'id' => $hotel->id,
@@ -138,8 +141,8 @@ class HotelController extends Controller
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
                     'lon' => $hotel->lon,
-                    'avg_rating' => $hotelDetails[$hotel->id]['avg_rating'],
-                    'rating_count' => $hotelDetails[$hotel->id]['rating_count'],
+                    'avg_rating' => $avg_rating,
+                    'rating_count' => $hotel->hotelRating->count(),
                     'price' => $hotelDetails[$hotel->id]['price'],
                     'sellingprice' => $hotelDetails[$hotel->id]['sellingprice'],
                 ];
@@ -236,24 +239,22 @@ class HotelController extends Controller
                 });
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
-                $hotel_ratings = null;
-                if ($hotel->hotelRating != null) {
-                    $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
-                        return [
-                            "id" => $hr->id,
-                            "transaction_id" => $hr->transaction_id,
-                            "user_id" => $hr->user_id,
-                            "user_name" => User::where('id', $hr->user_id)->first()->name,
-                            "hotel_id" => $hr->hotel_id,
-                            "rate" => $hr->rate,
-                            "comment" => $hr->comment,
-                            "deleted_at" => $hr->deleted_at,
-                            "created_at" => $hr->created_at,
-                            "updated_at" => $hr->updated_at,
-                        ];
-                    });
-                };
+                $avg_rating = $hotel->hotelRating->sum('rate') != 0 ? $hotel->hotelRating->sum('rate') / $hotel->hotelRating->count() : 0;
 
+                $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
+                    return [
+                        "id" => $hr->id,
+                        "transaction_id" => $hr->transaction_id,
+                        "user_id" => $hr->users_id,
+                        "user_name" => User::where('id', $hr->users_id)->pluck('name')->first(),
+                        "hotel_id" => $hr->hotel_id,
+                        "rate" => $hr->rate,
+                        "comment" => $hr->comment,
+                        "deleted_at" => $hr->deleted_at,
+                        "created_at" => $hr->created_at,
+                        "updated_at" => $hr->updated_at,
+                    ];
+                });
                 return [
                     'id' => $hotel->id,
                     'name' => $hotel->name,
@@ -264,8 +265,8 @@ class HotelController extends Controller
                     'address' => $hotel->address,
                     'lat' => $hotel->lat,
                     'lon' => $hotel->lon,
-                    'avg_rating' => $avgRating,
-                    'rating_count' => $totalRating,
+                    'avg_rating' => $avg_rating,
+                    'rating_count' => $hotel->hotelRating->count(),
                     'hotel_image' => $hotel->hotelImage,
                     'hotel_rooms' => $hotel_room,
                     'hotel_facilities' => $hotel_facilities,
@@ -298,7 +299,10 @@ class HotelController extends Controller
             "guest" => "required",
             "start" => "required",
             "end" => "required",
+            "total_room" => "required",
+            "total_guest" => "required",
         ]);
+
         if ($validator->fails()) {
             return ResponseFormatter::error([
                 'response' => $validator->errors(),
@@ -306,6 +310,10 @@ class HotelController extends Controller
         }
 
         $data = $request->all();
+        $start = Carbon::parse($data['start']);
+        $end = Carbon::parse($data['end']);
+
+        $totalDay = $start->diffInDays($end);
 
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hotel') . "-" . time();
@@ -318,12 +326,13 @@ class HotelController extends Controller
         // if ($qty < 0)
         //     return ResponseFormatter::error(null, 'Date must be forward');
         // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, 1);
-        $amount = $hotel->sellingprice;
-        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+        $amount = ($hotel->sellingprice * $totalDay) * $request->total_room;
+//        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+        $fee = Fee::where('service_id', 8)->first();
         $fees = [
             [
                 'type' => 'admin',
-                'value' => 2500,
+                'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
             ],
         ];
 
@@ -344,8 +353,8 @@ class HotelController extends Controller
                 [
                     "product_id" => $data['hotel_room_id'],
                     "name" => $hotel['name'],
-                    "price" => $hotel->sellingprice,
-                    "quantity" => $qty,
+                    "price" => $hotel->sellingprice * $totalDay,
+                    "quantity" => $request->total_room,
                 ]
             ],
             'amount' => $amount + $fees[0]['value'],
@@ -354,52 +363,27 @@ class HotelController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                // 'given_names' => $request->user()->name,
-                // 'email' => $request->user()->email,
-                // 'mobile_number' => $request->user()->phone ?: "somenumber",
-                'given_names' => 'Admin2',
-                'email' => 'admin2@travelsya.test',
-                'mobile_number' => 'somenumber',
+                 'given_names' => $data['guest'][0]['name'],
+                 'email' => $data['guest'][0]['email'],
+                 'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
             ],
             'fees' => $fees
         ]);
 
         // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $totalDay, $amount, $fees, $hotel) {
 
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HTL-' . time(),
                 'service' => 'hotel',
                 'service_id' => 8,
-                // 'service' => $hotel->hotel->service->name,
-                // 'service_id' => $hotel->hotel->service_id,
                 'payment' => $data['payment'],
-                // 'user_id' => $request->user()->id,
-                'user_id' => 3,
+                'user_id' => \Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount
+                'total' => $amount + $fees[0]['value']
             ]);
-
-
-            // true buat detail
-            // $storeDetailTransaction = DetailTransaction::create([
-            //     'transaction_id' => $storeTransaction->id,
-            //     'hotel_room_id' => $data['hotel_room_id'],
-            //     "qty" => $qty,
-            //     "price" => $hotel->sellingprice
-            // ]);
-
-
-            // true buat bookdate
-            // $storeBookDate = HotelBookDate::create([
-            //     'start' => $data['start'],
-            //     'end' => $data['end'],
-            //     'hotel_room_id' => $data["hotel_room_id"],
-            //     'transaction_id' => $storeTransaction->id
-            // ]);
-
 
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hotel')
@@ -410,8 +394,8 @@ class HotelController extends Controller
                         'booking_id' => Str::random(6),
                         'reservation_start' =>  $data['start'],
                         'reservation_end' =>  $data['end'],
-                        'guest' =>  count($data['guest']),
-                        'room' => 1,
+                        'guest' =>  $request->total_guest,
+                        'room' => $request->total_room,
                         "rent_price" => $hotel->sellingprice,
                         "fee_admin" => $fees[0]['value'],
                     ]);

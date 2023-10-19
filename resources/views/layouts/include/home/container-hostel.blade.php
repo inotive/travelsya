@@ -80,7 +80,7 @@
         </div>
         <div class="col-md-12 ">
             <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
-            <select name="location" id="location" class="form-select select" data-control="select2"
+            <select name="location" id="location" class="form-select select cursor-pointer" data-control="select2"
                 data-placeholder="Pilih Lokasi" autocomplete="on">
                 <optgroup label="Kota"></optgroup>
                 <template x-for="data in $store.hostel.cities">
@@ -101,7 +101,7 @@
             </div> --}}
             <div class="input-group" id="js_datepicker_list_hostel" data-td-target-input="nearest"
                 data-td-target-toggle="nearest">
-                <input name="start" id="checkin" type="text" class="form-control"
+                <input name="start" id="checkin" type="text" class="form-control cursor-pointer" autocomplete="off"
                     data-td-target="#js_datepicker_list_hostel" data-td-toggle="datetimepicker"
                     x-on:change="handleSelectCheckin" value="" />
                 <span class="input-group-text" data-td-target="#js_datepicker_list_hostel"
