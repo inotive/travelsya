@@ -8,6 +8,7 @@ use App\Http\Requests\HostelRequestUpdate;
 use App\Models\BookDate;
 use App\Models\DetailTransaction;
 use App\Models\DetailTransactionHostel;
+use App\Models\Fee;
 use App\Models\Guest;
 use App\Models\Hostel;
 use App\Models\HostelImage;
@@ -280,7 +281,17 @@ class HostelController extends Controller
     public function requestTransaction(Request $request)
     {
         // handle validation
-        $validator = Validator::make($request->all(), ["service" => "required|string", "payment" => "required|string", "point" => "required", "hostel_room_id" => "required", "guest" => "required", "start" => "required", "end" => "required",]);
+        $validator = Validator::make($request->all(), [
+            "service" => "required|string",
+            "payment" => "required|string",
+            "point" => "required",
+            "hostel_room_id" => "required",
+            "guest" => "required",
+            "start" => "required",
+            "end" => "required",
+            "duration_type" => "required",
+            "total_guest" => "required",
+           ]);
 
         if ($validator->fails()) {
             return ResponseFormatter::error(['response' => $validator->errors(),], 'Hostel process failed', 500);
@@ -288,82 +299,83 @@ class HostelController extends Controller
 
         $data = $request->all();
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        // $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hostel') . "-" . time();
-        // $setting = new Setting();
-        // $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->sellingprice);
-        $fees = [['type' => 'Admin', 'value' => 2500,],];
+
 
         //cekpoint
-        // if (!$fees)
-        //     return ResponseFormatter::error(null, 'Point invalid');
         $start = new DateTime($data['start']);
         $end = new DateTime($data['end']);
         $interval = $end->diff($start);
         $qty = $interval->format('%m');
-        // $amount = $setting->getAmount($hostel->sellingprice, $qty, $fees);
-        $amount = $hostel->sellingrentprice_yearly;
 
-        // cek book date
-        $checkBook = DetailTransactionHostel::where("hostel_room_id", $data['hostel_room_id'])->where('reservation_start', '>=', $data['start'])->where('reservation_end', "<=", $data['end'])->first();
-        if ($checkBook) {
-            return ResponseFormatter::error($checkBook, 'Book dates is not available');
+        $amount = 0;
+        if($request->duration_type == "monthly")
+        {
+            $amount = $hostel->sellingrentprice_monthly;
+        }
+        else{
+            $amount = $hostel->sellingrentprice_yearly;
         }
 
+        $fee = Fee::where('service_id', 7)->first();
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
+            ],
+        ];
+
         // ceate xendit
-        $payoutsXendit = $this->xendit->create(['external_id' => $invoice, 'items' => [["product_id" => $data['hostel_room_id'], "name" => $hostel['name'], // "price" => $hostel->sellingprice,
-            "price" => $hostel->sellingrentprice_yearly, "quantity" => $qty,]], 'amount' => $amount + $fees[0]['value'], 'success_redirect_url' => route('redirect.succes'), 'failure_redirect_url' => route('redirect.fail'), 'invoice_duration ' => 72000, 'should_send_email' => true, 'customer' => ['given_names' => $request->user()->name, 'email' => $request->user()->email, 'mobile_number' => $request->user()->phone ?: "somenumber",], 'fees' => $fees]);
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    "product_id" => $data['hostel_room_id'],
+                    "name" => $hostel['name'],
+                    "price" => $amount,
+                    "quantity" => $qty,
+                ]
+            ],
+            'amount' => ($amount * $qty) + $fees[0]['value'] ,
+            'success_redirect_url' => route('redirect.succes'),
+            'failure_redirect_url' => route('redirect.fail'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' =>
+                [
+                    'given_names' => $data['guest'][0]['name'],
+                    'email' => $data['guest'][0]['email'],
+                    'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
+                ],
+            'fees' => $fees
+        ]);
 
-        // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel) {
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'HST-' . time(),
+            'service' => 'hostel', // 'service_id' => $hostel->hostel->service_id,
+            'service_id' => 7,
+            'payment' => $data['payment'],
+            'user_id' => \Auth::user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => ($amount * $qty) + $fees[0]['value']
+        ]);
 
-            $storeTransaction = Transaction::create(['no_inv' => $invoice, 'req_id' => 'HST-' . time(), 'service' => 'hostel', // 'service_id' => $hostel->hostel->service_id,
-                'service_id' => 7, 'payment' => $data['payment'], 'user_id' => $request->user()->id, 'status' => $payoutsXendit['status'], 'link' => $payoutsXendit['invoice_url'], 'total' => $amount]);
-
-
-            //     // true buat detail
-            //     // $storeDetailTransaction = DetailTransaction::create([
-            //     //     'transaction_id' => $storeTransaction->id,
-            //     //     'hostel_room_id' => $data['hostel_room_id'],
-            //     //     "qty" => $qty,
-            //     //     "price" => $hostel->sellingprice
-            //     // ]);
-
-            try {
-                $storeDetailTransaction = DB::table('detail_transaction_hostel')->insert(['transaction_id' => $storeTransaction->id, 'hostel_id' => $hostel->hostel_id, 'hostel_room_id' => $data['hostel_room_id'], 'type_rent' => $hostel->hostel->category, 'booking_id' => Str::random(6), 'reservation_start' => $data['start'], 'reservation_end' => $data['end'], 'guest' => count($data['guest']), 'room' => 1, // "rent_price"        => $hostel->sellingprice,
-                    "rent_price" => $hostel->sellingrentprice_yearly, "fee_admin" => $fees[0]['value'],]);
-            } catch (\Exception $exception) {
-                return response()->json(['message' => 'Error Store Data Transaction']);
-            }
-
-
-            //     // // true buat bookdate
-            //     // $storeBookDate = BookDate::create([
-            //     //     'start' => $data['start'],
-            //     //     'end' => $data['end'],
-            //     //     'hostel_room_id' => $data["hostel_room_id"],
-            //     //     'transaction_id' => $storeTransaction->id
-            //     // ]);
-
-            //     // // true buat guest
-            //     // foreach ($data['guest'] as $guest) {
-            //     //     $storeGuest = Guest::create([
-            //     //         'transaction_id' => $storeTransaction->id,
-            //     //         // 'type_id' => $guest['type_id'],
-            //     //         // 'identity' => $guest['identity'],
-            //     //         'name' => $guest['name'],
-            //     //         'email' => $guest['email'],
-            //     //         'phone' => $guest['phone'],
-            //     //     ]);
-            //     // }
-
-            //     // if ($data['point']) {
-            //     //     //deductpoint
-            //     //     $point = new Point;
-            //     //     $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
-            //     // }
-        });
-
+        DB::table('detail_transaction_hostel')
+            ->insert([
+                'transaction_id' => $storeTransaction->id,
+                'hostel_id' => $hostel->hostel_id,
+                'hostel_room_id' => $data['hostel_room_id'],
+                'type_rent' => $request->duration_type,
+                'booking_id' => Str::random(6),
+                'reservation_start' => $data['start'],
+                'reservation_end' => $data['end'],
+                'guest' => $request->total_guest,
+                'room' => 1, // "rent_price"        => $hostel->sellingprice,
+                "rent_price" => $amount,
+                "fee_admin" => $fees[0]['value']
+            ]);
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }

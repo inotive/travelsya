@@ -71,7 +71,6 @@ route::get('/ads', [AdController::class, 'index']);
 route::get('/ads/{id}', [AdController::class, 'show']);
 
 route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
-route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
 
 
 // ppob product
@@ -79,7 +78,7 @@ route::get('/ppob', [PpobController::class, 'getServices']);
 route::get('/ppob/{id}', [PpobController::class, 'getService']);
 route::post('/ppob/transaction', [PpobController::class, 'transaction']);
 route::post('/ppob/status', [PpobController::class, 'status']);
-route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
+
 // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 
 //setting
@@ -93,9 +92,6 @@ route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
 
 
-
-
-route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
@@ -111,7 +107,11 @@ Route::middleware('auth:sanctum')->group(function () {
     route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
     // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
+    // Pembayaran
+    route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
+    route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
+    route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']); // topup token/ewallet/pulsa
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);
