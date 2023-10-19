@@ -59,8 +59,7 @@ class CallbackController extends Controller
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
             print_r($responseXendit);
-            $transaction = Transaction::with('detailTransaction.product')
-                ->where('no_inv', $responseXendit['external_id'])
+            $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
                 ->first();
 
 
@@ -95,6 +94,7 @@ class CallbackController extends Controller
                             $responseMessageSN = explode("SN=",$responseMessage[4]);
                             $responseMessageSNCode = explode("/",$responseMessageSN[1]);
                             $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+
 
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
@@ -139,7 +139,17 @@ class CallbackController extends Controller
                                 $status = "Gagal";
                                 $message = "Pembayaran PLN Berhasil";
                             }
-
+                        }
+                        else{
+                            if ($transaction->service == "hotel")
+                            {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hotel Berhasil";
+                            }
+                            else{
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hostel Berhasil";
+                            }
                         }
                         if($status == "Berhasil" || $status == "Pending")
                         {
@@ -207,13 +217,13 @@ class CallbackController extends Controller
                             $status = "FAILED";
                             $message = "Not found service";
                         }
-                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
-                            'status' => $status,
-                            'message' => $message
-                        ]);
-                        if (!$updateDetail) {
-                            return ResponseFormatter::error(null, "Update DB error");
-                        }
+//                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
+//                            'status' => $status,
+//                            'message' => $message
+//                        ]);
+//                        if (!$updateDetail) {
+//                            return ResponseFormatter::error(null, "Update DB error");
+//                        }
                     }
                     $updateTransaction = $transaction->update([
                         'status' => 'PAID',

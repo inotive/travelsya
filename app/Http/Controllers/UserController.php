@@ -167,7 +167,7 @@ class UserController extends Controller
         return view('user.order-detail.hotel', compact('transactionHotel', 'hotelPict', 'roomPict', 'roomFacilities'));
     }
 
-    public function orderDetailListrikVoucher()
+    public function orderDetailListrikVoucher($id)
     {
 
         $transactionPPOB = DB::table('detail_transaction_top_up')
@@ -194,7 +194,7 @@ class UserController extends Controller
             )
             ->where('detail_transaction_top_up.id', 1)
             ->first();
-
+        dd($transactionPPOB);
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')

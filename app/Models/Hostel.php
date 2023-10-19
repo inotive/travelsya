@@ -90,4 +90,9 @@ class Hostel extends Model
     {
         return $this->hasMany(HostelRating::class);
     }
+
+    public function hostelReservation()
+    {
+        return $this->hasMany(DetailTransactionHostel::class);
+    }
 }

@@ -124,7 +124,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Riwayat Booking
-                                ({{ 0 }})</a>
+                                ({{ $hotel->hotel_reservation()->count() }})</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Fasilitas Hotel
@@ -273,6 +273,7 @@
                                     @endforeach --}}
 
                             </div>
+
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                             <div class="row">
@@ -392,7 +393,7 @@
                                         <tr>
                                             <td class="text-center">{{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}</td>
-                                            <td class="text-center">CTH123</td>
+                                            <td class="text-center">{{$booking->booking_id}}</td>
                                             <td class="text-center">{{ $startdates }}
                                             </td>
                                             <td class="text-center">{{ $enddates }}</td>
