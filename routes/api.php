@@ -95,6 +95,7 @@ route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
 
 
+route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
@@ -110,7 +111,6 @@ Route::middleware('auth:sanctum')->group(function () {
     route::get('/transaction/invoice', [TransactionController::class, 'getTransactionInv']);
 
     // route::post('/hotel/transaction/request', [HotelController::class, 'requestTransaction']);
-    route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']);
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
 
     route::middleware('admin')->group(function () {

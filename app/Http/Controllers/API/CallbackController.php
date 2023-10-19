@@ -73,7 +73,7 @@ class CallbackController extends Controller
                         $responseCode = "";
 
                         $transaction->update([
-                            'status' => 'Berhasil',
+                            'status' => 'PAID',
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
                         ]);
@@ -89,19 +89,22 @@ class CallbackController extends Controller
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
-                            //process retrieve voucher code
-                            $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
-                            $responseMessageSN = explode("SN=",$responseMessage[4]);
-                            $responseMessageSNCode = explode("/",$responseMessageSN[1]);
-                            $responseMessageSNCodeFinal = $responseMessageSNCode[0];
-
+                            $responseMessageSNCodeFinal = "";
+                            if($transaction->service == "listrik-token")
+                            {
+                                //process retrieve voucher code
+                                $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
+                                $responseMessageSN = explode("SN=",$responseMessage[4]);
+                                $responseMessageSNCode = explode("/",$responseMessageSN[1]);
+                                $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+                            }
 
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
                                 DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
-                                    'kode_voucher' => $responseMessageSNCodeFinal ?? '',
+                                    'kode_voucher' => $responseMessageSNCodeFinal,
                                 ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";

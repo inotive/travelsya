@@ -34,7 +34,7 @@ class TransactionController extends Controller
         //     ->orderBy('id', 'desc')
         //     ->get();
         $transaction = Transaction::where('user_id', $user_id)
-            ->latest()
+            ->orderByDesc('created_at')
             ->get();
 
         $responsTransaction = $transaction->map(function ($transaction) {
