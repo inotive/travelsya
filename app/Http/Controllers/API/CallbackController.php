@@ -102,10 +102,7 @@ class CallbackController extends Controller
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
-                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
-                                ->update([
-                                    'kode_voucher' => $responseMessageSNCodeFinal,
-                                ]);
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -118,7 +115,8 @@ class CallbackController extends Controller
                                 ->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
                                     'status' => $status,
-                                    'message'=> $message,
+                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
+                                    'kode_voucher' => $responseMessageSNCodeFinal,
                                 ]);
 
                         }
