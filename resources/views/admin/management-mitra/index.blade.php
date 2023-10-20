@@ -25,6 +25,7 @@
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
+                        <th class="text-center">Logo</th>
                         <th class="text-center">Vendor</th>
                         <th class="text-center">Hotel atau Hostel</th>
                         <th class="text-center">No.Telp</th>
@@ -37,6 +38,9 @@
                     @foreach($users as $user)
                         <tr>
                             <td class="text-center">{{$loop->iteration}}</td>
+                            <td class="text-center">
+                                <img src="{{ asset('storage/' .$user->image) }}" class="rounded" style="width: 150px">
+                            </td>
                             <td>
                                 <p>{{$user->name}}</p>
                                 <p style="font-size : 9px;">{{$user->email}}</p>
@@ -241,7 +245,7 @@
         <div class="modal-dialog modal-dialog-centered mw-650px">
             <!--begin:Form-->
             <form id="kt_modal_new_target_form" class="form" method="post"
-                  action="{{route('admin.mitra.store')}}">
+                  action="{{route('admin.mitra.store')}}" enctype="multipart/form-data">
                 @csrf
                 <!--begin::Modal content-->
                 <div class="modal-content rounded">
@@ -264,6 +268,58 @@
                     <div class="modal-body scroll-y">
                         <input type="hidden" name="id" id="id">
                         <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6">Logo</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Image input-->
+                                <div class="image-input image-input-outline m-5" data-kt-image-input="true">
+                                    <!--begin::Image preview wrapper-->
+                                    <div class="image-input-wrapper w-125px h-125px"></div>
+                                    <!--end::Image preview wrapper-->
+
+                                    <!--begin::Edit button-->
+                                    <label
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                        data-bs-dismiss="click" title="Change image">
+                                        <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
+                                                class="path2"></span></i>
+
+                                        <!--begin::Inputs-->
+                                        <input type="file" name="image" accept=".png, .jpg, .jpeg" />
+                                        <input type="hidden" name="image_remove" />
+                                        <!--end::Inputs-->
+                                    </label>
+                                    <!--end::Edit button-->
+
+                                    <!--begin::Cancel button-->
+                                    <span
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                        data-bs-dismiss="click" title="Cancel image">
+                                        <i class="ki-outline ki-cross fs-3"></i>
+                                    </span>
+                                    <!--end::Cancel button-->
+
+                                    <!--begin::Remove button-->
+                                    <span
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                        data-bs-dismiss="click" title="Remove image">
+                                        <i class="ki-outline ki-cross fs-3"></i>
+                                    </span>
+                                    <!--end::Remove button-->
+                                </div>
+                                <!--end::Image input-->
+                                <!--begin::Hint-->
+                                <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+                                <!--end::Hint-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
                                 <label class=" required fs-6 fw-semibold mb-2">Nama User</label>

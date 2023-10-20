@@ -333,6 +333,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
 
             Route::get('setting-hotel-information/{id}', [ManagementHotelController::class, 'settingHotel'])->name('partner.management.hotel.setting.hotel');
+            Route::put('setting-hotel-information/{hotel}', [ManagementHotelController::class, 'settingHotelupdate'])->name('partner.management.hotel.setting.hotelupdate');
             Route::get('setting-hotel-photo/{id}', [ManagementHotelController::class, 'settingPhoto'])->name('partner.management.hotel.setting.photo');
             Route::get('setting-hotel-room/{id}', [ManagementHotelController::class, 'settingRoom'])->name('partner.management.hotel.setting.room');
             Route::get('setting-hotel-room/create/{id}', [ManagementHotelController::class, 'settingRoomCreate'])->name('partner.management.hotel.setting.room.create');
@@ -364,6 +365,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::delete('detail-hostel/{id}/deleteroom', [ManagementHostelController::class, 'destroyRoom'])->name('partner.management.hostel.destroyroom');
             //            Route::get('detail-hostel/{hostel}', [ManagementhostelController::class, 'index'])->name('partner.management.hostel');
             Route::get('setting-hostel-information/{id}', [ManagementHostelController::class, 'settinghostel'])->name('partner.management.hostel.setting.hostel');
+            Route::put('setting-hostel-information/{hostel}', [ManagementHostelController::class, 'settinghostelupdate'])->name('partner.management.hostel.setting.hostelupdate');
             Route::get('setting-hostel-photo/{id}', [ManagementHostelController::class, 'settingPhoto'])->name('partner.management.hostel.setting.photo');
             Route::get('setting-hostel-room/{id}', [ManagementHostelController::class, 'settingRoom'])->name('partner.management.hostel.setting.room');
             Route::get('setting-hostel-room/create/{id}', [ManagementHostelController::class, 'settingRoomCreate'])->name('partner.management.hostel.setting.room.create');
