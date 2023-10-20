@@ -41,6 +41,45 @@ class ManagementHostelController extends Controller
 
         return view('ekstranet.management-hostel.setting-hostel', compact('hostel'));
     }
+
+    public function settinghostelupdate(Request $request, Hostel $hostel)
+    {
+        $user_id = auth()->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
+
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // //check if validation fails
+        DB::table('hostels')->where('id', $hostel->id)->update([
+            'user_id' => $user_id,
+            'checkin' => $request->checkin,
+            'checkout' => $request->checkout,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'address' => $request->address,
+            'star' => $request->star,
+            'description' => $request->description,
+            'website' => $request->website,
+            'lat' => $request->ltd,
+            'lon' => $request->long_ltd,
+            'property' => $request->property
+        ]);
+    
+
+
+        toast('Hostel has been updated', 'success');
+        return redirect()->back();
+    }
     public function settingRoom($id)
     {
         $hostel = hostel::with('hostelRoom')->find($id);

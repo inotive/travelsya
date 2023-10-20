@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{route('admin.hotel.update',$hotel->id)}}">
+                        action="{{route('partner.management.hotel.setting.hotelupdate',$hotel->id)}}">
                         @method('put')
                         @csrf
                         <input type="hidden" name="id" value="{{$hotel->id}}">
@@ -33,7 +33,7 @@
                             <div class="col-md-4 fv-row">
                                 <label class="fs-6 fw-semibold mb-2">Bintang</label>
                                 <input type="text" name="star" id="star" class="form-control form-control-lg"
-                                    placeholder="Bintang" value="{{$hotel->star}}" disabled>
+                                    placeholder="Bintang" value="{{$hotel->star}}" readonly>
                                 @error('star')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
