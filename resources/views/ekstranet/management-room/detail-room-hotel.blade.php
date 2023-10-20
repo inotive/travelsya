@@ -96,11 +96,11 @@
                                                 $enddate = \Carbon\Carbon::parse($booking->end);
                                                 $startdates = $startdate->Format('d F Y');
                                                 $enddates = $enddate->Format('d F Y');
-                                                
+
                                             @endphp
                                             <tr>
-                                                <td class="text-center">{{ $booking->transaction->user->name }} -
-                                                    {{ $booking->transaction->user->phone }}</td>
+                                                <td class="text-center">{{ $booking->transaction->user->name  ?? ''}} -
+                                                    {{ $booking->transaction->user->phone ?? ''}}</td>
                                                 <td class="text-center">CTH123</td>
                                                 <td class="text-center">{{ $startdates }}
                                                 </td>
@@ -169,7 +169,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset($roomimage->image) }}" class="rounded"
+                                                    <img src="{{ asset('storage/'. $roomimage->image) }}" class="rounded"
                                                         style="width: 150px">
                                                 </td>
 

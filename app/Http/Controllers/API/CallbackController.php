@@ -59,8 +59,7 @@ class CallbackController extends Controller
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
             print_r($responseXendit);
-            $transaction = Transaction::with('detailTransaction.product')
-                ->where('no_inv', $responseXendit['external_id'])
+            $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
                 ->first();
 
 
@@ -74,7 +73,7 @@ class CallbackController extends Controller
                         $responseCode = "";
 
                         $transaction->update([
-                            'status' => 'Berhasil',
+                            'status' => 'PAID',
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
                         ]);
@@ -90,19 +89,20 @@ class CallbackController extends Controller
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
-                            //process retrieve voucher code
-                            $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
-                            $responseMessageSN = explode("SN=",$responseMessage[4]);
-                            $responseMessageSNCode = explode("/",$responseMessageSN[1]);
-                            $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+                            $responseMessageSNCodeFinal = "";
+                            if($transaction->service == "listrik-token")
+                            {
+                                //process retrieve voucher code
+                                $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
+                                $responseMessageSN = explode("SN=",$responseMessage[4]);
+                                $responseMessageSNCode = explode("/",$responseMessageSN[1]);
+                                $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+                            }
 
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
-                                DB::table('detail_transaction_top_up')->where('top.id', $detailTransactionTopUP->id)
-                                ->update([
-                                    'kode_voucher' => $responseMessageSNCodeFinal,
-                                ]);
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -115,11 +115,12 @@ class CallbackController extends Controller
                                 ->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
                                     'status' => $status,
-                                    'message'=> $message,
+                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
+                                    'kode_voucher' => $responseMessageSNCodeFinal,
                                 ]);
 
                         }
-                        else if($transaction->service == "pln"){
+                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
                                 ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
@@ -139,7 +140,17 @@ class CallbackController extends Controller
                                 $status = "Gagal";
                                 $message = "Pembayaran PLN Berhasil";
                             }
-
+                        }
+                        else{
+                            if ($transaction->service == "hotel")
+                            {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hotel Berhasil";
+                            }
+                            else{
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hostel Berhasil";
+                            }
                         }
                         if($status == "Berhasil" || $status == "Pending")
                         {
@@ -207,13 +218,13 @@ class CallbackController extends Controller
                             $status = "FAILED";
                             $message = "Not found service";
                         }
-                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
-                            'status' => $status,
-                            'message' => $message
-                        ]);
-                        if (!$updateDetail) {
-                            return ResponseFormatter::error(null, "Update DB error");
-                        }
+//                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
+//                            'status' => $status,
+//                            'message' => $message
+//                        ]);
+//                        if (!$updateDetail) {
+//                            return ResponseFormatter::error(null, "Update DB error");
+//                        }
                     }
                     $updateTransaction = $transaction->update([
                         'status' => 'PAID',

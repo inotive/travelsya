@@ -40,9 +40,9 @@ class HomeController extends Controller
             ->select('hotels.*', DB::raw('COALESCE(hotel_ratings.rate, 0) as rating'), DB::raw('COALESCE(hotel_rooms.sellingprice, 0) as selling_price'))
             ->orderByDesc('hotel_ratings.rate')
             ->orderBy('hotel_rooms.sellingprice')
-            // ->limit(4)
-            // ->get();
-            ->take(4);
+            // ->groupBy('hotels.name')
+            ->limit(4)
+            ->get();
 
         $hotelDetails = [];
 
@@ -81,35 +81,10 @@ class HomeController extends Controller
             ->limit(4)
             ->get();
 
-        // $hostelDetails = [];
-
-        // foreach ($hostel_favorite as $favorite) {
-        //     $jumlahTransaksi = $favorite->rating->count();
-        //     $totalRating = $favorite->rating->sum('rate');
-
-        //     // Rating 5
-        //     if ($jumlahTransaksi > 0) {
-        //         $avgRating = $totalRating / $jumlahTransaksi;
-        //         $resultRating = ($avgRating / 10) * 5;
-        //     } else {
-        //         $avgRating = 0;
-        //         $resultRating = 0;
-        //     }
-
-        //     $hostelDetails[$favorite->id] = [
-        //         'total_rating' => $totalRating,
-        //         'result_rating' => $resultRating,
-        //         'star_rating' => floor($resultRating),
-        //     ];
-        // }
-
-        // dd($hostelDetails);
-
         $data['hotels'] = $dummyHotels;
         $data['hotel_favorite'] = $hotel_favorite;
         $data['hotel_detail'] = $hotelDetails;
         $data['hostel_favorite'] = $hostel_favorite;
-        // $data['hostel_detail'] = $hostelDetails;
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)

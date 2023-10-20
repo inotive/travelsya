@@ -53,7 +53,7 @@
                                 <a href="{{route('partner.management.hostel.setting.hostel',$hostel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Profil hostel</a>
                             </div>
                             <div class="col-6">
-                                <a href="{{route('partner.management.hostel.setting.photo',$hostel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo hostel</a>
+                                <a href="{{route('partner.management.hostel.setting.photo',$hostel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo hostel ({{$hostel->hostelImage->count()}})</a>
                             </div>
                             <div class="col-6">
 

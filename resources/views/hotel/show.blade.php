@@ -191,9 +191,9 @@
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
 
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                    href="{{ asset('media/hotel/'. $detailHotel->image) }}">
+                                    href="{{ asset('storage/' . $detailHotel->hotelImage->where('main', 1)->first()->image ?? '') }}">
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                        style="background-image:url('{{ asset('media/hotel/'.$detailHotel->image) }}')">
+                                        style="background-image:url('{{ asset('storage/'.$detailHotel->hotelImage->where('main', 1)->first()->image ?? '') }}')">
                                     </div>
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -295,11 +295,12 @@
         </div>
 
         <div class="row card flex-row w-75 me-auto ms-auto mt-4 p-3">
-            @foreach ($detailHotel->hotelImage->take(3) as $hotelImage)
+            @foreach ($detailHotel->hotelImage->where('main', '!=', 1)->take(3) as $hotelImage)
             <div class="col-4">
-                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset('media/hotel/'.$hotelImage->image) }}">
-                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                        style="background-image:url('{{ asset('media/hotel/'.$hotelImage->image) }}')">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic"
+                    href="{{ asset('storage/'.$hotelImage->image) }}">
+                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
+                        style="background-image:url('{{ asset('storage/'.$hotelImage->image) }}')">
                     </div>
                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                         <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -341,8 +342,8 @@
                         <!--end::Title-->
 
                         <!--begin::Content-->
-                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a role="button"
-                                class="d-inline-block fw-bold" data-toggle="modal" data-target="#exampleModal">Login
+                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a href="{{ route('login') }}"
+                                                                                              class="d-inline-block fw-bold">Login
                                 Disini</a></span>
                         <!--end::Content-->
                     </div>
@@ -410,9 +411,36 @@
                     <div class="card card-hostel mb-3">
                         <div class="row mb-2">
                             <div class="col-4">
-                                <div class="img-fluid rounded-1 w-150px h-150px m-3"
-                                    style="background-image:url('https://service.travelsya.com/storage/kamar/Lnw9eol8C1F759cRDf16qgdLBnsMgKLqjngpfw3H.jpg');background-position: center; ">
-                                </div>
+                                {{-- <a class="d-block overlay" data-fslightbox="lightbox-basic-1"
+                                    href="{{ asset('storage/'.$room->hotelroomImage->first()->image) }}">--}}
+                                    {{-- <div
+                                        class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
+                                        --}} {{--
+                                        style="background-image:url('{{ asset('storage/'.$room->hotelroomImage->first()->image) }}')">
+                                        --}}
+                                        {{-- </div>--}}
+                                    {{-- <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">--}}
+                                        {{-- <i class="bi bi-eye-fill text-white fs-3x"></i>--}}
+                                        {{-- </div>--}}
+                                    {{-- </a>--}}
+                                @php
+                                $i = 0;
+                                @endphp
+                                @foreach ($room->hotelroomImage as $roomImage)
+                                @php
+                                $i += 1;
+                                @endphp
+                                <a class="d-block overlay {{$i == 1 ? '' : 'd-none'}}"
+                                    data-fslightbox="lightbox-basic-{{$room->id}}"
+                                    href="{{ asset('storage/'.$roomImage->image) }}">
+                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
+                                        style="background-image:url('{{ asset('storage/' . $roomImage->image) }}')">
+                                    </div>
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                    </div>
+                                </a>
+                                @endforeach
                             </div>
                             <div class="col">
                                 <div class="row mt-5 px-2">
@@ -430,8 +458,8 @@
                                     </p>
                                     <div class="d-flex align-items-center gap-2">
                                         @foreach ($room->hotelroomFacility->groupBy('facility.name') as $facility)
-                                        <img src="{{ asset($facility->first()->facility->icon) }}" alt="facility"
-                                            width="30" class="me-1">
+                                        <img src="{{ asset('storage/'.$facility->first()->facility->icon) }}"
+                                            alt="facility" width="30" class="me-1">
                                         @endforeach
                                     </div>
                                 </div>
@@ -441,8 +469,7 @@
                             <p class="fw-semibold d-block fs-2 text-danger">Rp.
                                 {{ number_format($room->sellingprice, 0, ',', '.') }}</p>
                             @guest
-                            <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
-                                data-target="#exampleModal">Pesan Kamar</a>
+                            <a href="{{ route('login') }}" class="btn btn-danger px-4 py-2">Login Dulu</a>
                             @endguest
                             @auth
                             <a href="{{ route('hotels.reservation', ['idroom' => $room->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] }}&guest={{ $request['guest'] }}"

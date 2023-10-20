@@ -144,7 +144,7 @@
                 </a>
                 <!--begin:Menu item-->
                 <!--begin:Menu item-->
-                <a href="{{route('partner.riwayat-booking')}}"
+                <a href="{{route('partner.laporan.semua')}}"
                    class="menu-item {{(Request::segment(2)=="riwayat-booking") ? 'here' : ''}} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">

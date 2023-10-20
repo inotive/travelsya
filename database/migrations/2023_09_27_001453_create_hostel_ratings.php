@@ -12,8 +12,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('hostel_id');
             $table->unsignedBigInteger('hostel_room_id');
             $table->unsignedBigInteger('users_id');
-            $table->foreign('hostel_id')->references('id')->on('hotels')->onDelete('cascade');
-            $table->foreign('hostel_room_id')->references('id')->on('hotel_rooms')->onDelete('cascade');
+            $table->foreign('hostel_id')->references('id')->on('hostels')->onDelete('cascade');
+            $table->foreign('hostel_room_id')->references('id')->on('hostel_rooms')->onDelete('cascade');
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
             $table->integer('rate');
             $table->longText('comment');

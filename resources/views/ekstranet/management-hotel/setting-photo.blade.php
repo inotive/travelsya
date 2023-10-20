@@ -10,7 +10,7 @@
             <form id="kt_modal_new_target_form " class="form " method="post" enctype="multipart/form-data"
                   action="{{route('partner.management.hotel.storePhotoHotel',$hotel->id)}}">
                   {{-- {{route('partner.management.hotel.storePhotoHotel',$hotel->first()->id)}} --}}
-                 
+
                 @csrf
                 <div class="card mb-xl-8">
                     <!--begin::Body-->
@@ -83,8 +83,11 @@
                             <div class="col-6">
                                 <div class="card border border-light-subtle">
                                     <div class="card-body">
-                                        <img src="{{asset('media/hotel/' . $image->image)}}" style="width: 100%; height: 250px;"
+                                        <img src="{{asset('storage/'. $image->image)}}" style="width: 100%; height: 250px;"
                                              alt="image">
+                                        @if($image->main == 1 )
+                                            <span class="badge badge-primary my-5">Foto Utama</span>
+                                        @endif
                                     </div>
                                     <div class="card-footer py-2">
                                         <form action="{{route('partner.management.hostel.mainphotoHotel', $image->id)}}" method="post" class="d-flex flex-column">
@@ -92,8 +95,11 @@
                                             @method('PUT')
                                             <input type="hidden" name="id" value="{{$image->id}}">
                                             <input type="hidden" name="hotel_id" value="{{$hotel->id}}">
-                                            <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama
-                                            </button>
+                                            @if($image->main != 1 )
+                                                <button class="btn btn-primary mb-3 w-100 btn-sm">Jadikan Foto Utama
+                                                </button>
+                                            @endif
+
 
                                         </form>
                                         <form action="{{route('partner.management.hostel.destroyphotoHotel', ['id' => $image->id])}}" method="post" class="d-flex flex-column">

@@ -534,10 +534,10 @@
                             <div class="card-body h-100">
                                 <div class="row my-4">
                                     <div class="col-4">
-                                        <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                            href="{{ asset('media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}">
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hostel->id}}"
+                                            href="{{ asset('storage/media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}">
                                             <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                                style="background-image:url('{{ asset('media/hostel/'. $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}')">
+                                                style="background-image:url('{{ asset('storage/media/hostel/' .  $hostel->hostelImage->where('main', 1)->first()->image ?? null) }}')">
                                             </div>
                                             <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                                 <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -545,13 +545,13 @@
                                         </a>
 
                                         <div class="row mt-4">
-                                            @foreach ($hostel->hostelImage->take(3) as $hostelImage)
+                                            @foreach ($hostel->hostelImage->where('main','!=',1)->take(3) as $hostelImage)
                                             <div class="col-4">
-                                                <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                                    href="{{ asset('media/hostel/'.$hostelImage->image) }}">
+                                                <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hostel->id}}"
+                                                    href="{{ asset('storage/media/hostel/'. $hostelImage->image) }}">
                                                     <!--begin::Image-->
                                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                                                        style="background-image:url('{{ asset('media/hostel/'. $hostelImage->image) }}')">
+                                                        style="background-image:url('{{ asset('storage/media/hostel/'. $hostelImage->image) }}')">
                                                     </div>
                                                     <!--end::Image-->
 
