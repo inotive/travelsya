@@ -28,8 +28,8 @@ class TransactionController extends Controller
     public function getTransactionUser(Request $request)
     {
         // $user_id = $request->user()->id;
-        // $user_id = \Auth::user()->id;
-        $user_id = 3;
+        $user_id = \Auth::user()->id;
+        
 
         // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
         //     ->where('user_id', $user_id)
