@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Facility;
 use App\Models\Hostel;
 use App\Models\Hotel;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\Travelsya;
 use Illuminate\Support\Facades\DB;
@@ -85,6 +86,14 @@ class HomeController extends Controller
         $data['hotel_favorite'] = $hotel_favorite;
         $data['hotel_detail'] = $hotelDetails;
         $data['hostel_favorite'] = $hostel_favorite;
+
+        $data['ewallets'] = Product::where('is_active', 1)
+            ->where('service_id', 11)
+            ->distinct('name')
+            // ->pluck('name');
+            ->get();
+
+        dd($data);
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)
