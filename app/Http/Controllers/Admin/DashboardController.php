@@ -18,31 +18,31 @@ class DashboardController extends Controller
 
     public function index()
     {
-// <<<<<<< group/bagus
-//         $transactions = Transaction::with('user')->get();
-//         $countPartner = User::wherein('role', ['1', '2'])->get();
-//         $countTransactionToday = $transactions->where('created_at', date('y-m-d'))->count();
+        // <<<<<<< group/bagus
+        //         $transactions = Transaction::with('user')->get();
+        //         $countPartner = User::wherein('role', ['1', '2'])->get();
+        //         $countTransactionToday = $transactions->where('created_at', date('y-m-d'))->count();
 
 
-//         return view('admin.dashboard', compact('transactions','countPartner','countTransactionToday','sumTranscationToday','sumTranscationToday'));
-// =======
+        //         return view('admin.dashboard', compact('transactions','countPartner','countTransactionToday','sumTranscationToday','sumTranscationToday'));
+        // =======
         $card['partner'] = User::where('role', 1)->count();
         $card['transactionToday'] = Transaction::whereDate('created_at', today())->count();
 
         $sumDayTransaction = Transaction::whereDate('created_at', date('y-m-d'))->sum('total');
         $sumMonthTransaction = Transaction::whereMonth('created_at', date('m'))->sum('total');
-//        $sumDayTransaction = Transaction::whereDate('created_at', today())
-//            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
-//            ->get()
-//            ->map(function ($transaction) {
-//                $price = $transaction->detailTransaction->sum('price');
-//                $price = $transaction->detailTransaction->sum('price');
-//                $price = $transaction->detailTransaction->sum('price');
-//                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
-//                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
-//                return $price + $hotelRentPrice + $hostelRentPrice;
-//            })
-//            ->sum();
+        //        $sumDayTransaction = Transaction::whereDate('created_at', today())
+        //            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
+        //            ->get()
+        //            ->map(function ($transaction) {
+        //                $price = $transaction->detailTransaction->sum('price');
+        //                $price = $transaction->detailTransaction->sum('price');
+        //                $price = $transaction->detailTransaction->sum('price');
+        //                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
+        //                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
+        //                return $price + $hotelRentPrice + $hostelRentPrice;
+        //            })
+        //            ->sum();
 
         $card['sumDayTransaction'] = General::rp($sumDayTransaction);
 
@@ -50,16 +50,16 @@ class DashboardController extends Controller
         $firstDayOfMonth = now()->startOfMonth();
         $lastDayOfMonth = now()->endOfMonth();
 
-//        $sumMonthTransaction = Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
-//            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
-//            ->get()
-//            ->map(function ($transaction) {
-//                $price = $transaction->detailTransaction->sum('price');
-//                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
-//                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
-//                return $price + $hotelRentPrice + $hostelRentPrice;
-//            })
-//            ->sum();
+        //        $sumMonthTransaction = Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
+        //            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
+        //            ->get()
+        //            ->map(function ($transaction) {
+        //                $price = $transaction->detailTransaction->sum('price');
+        //                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
+        //                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
+        //                return $price + $hotelRentPrice + $hostelRentPrice;
+        //            })
+        //            ->sum();
 
 
         $card['sumMonthTransaction'] = General::rp($sumMonthTransaction);
