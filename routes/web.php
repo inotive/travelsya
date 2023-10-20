@@ -83,6 +83,11 @@ Route::get('/company/kebijakan-privasi', function () {
     return view('user.company.terms');
 })->name('company.terms');
 
+Route::get('/company/kebijakan-privasi', function () {
+    return view('user.company.privat');
+})->name('company.privat');
+
+
 
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
