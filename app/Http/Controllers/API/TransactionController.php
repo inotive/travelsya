@@ -24,10 +24,12 @@ class TransactionController extends Controller
 {
     protected $detailTransaction;
 
+    
     public function getTransactionUser(Request $request)
     {
         // $user_id = $request->user()->id;
-        $user_id = \Auth::user()->id;
+        // $user_id = \Auth::user()->id;
+        $user_id = 3;
 
         // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
         //     ->where('user_id', $user_id)
@@ -74,13 +76,13 @@ class TransactionController extends Controller
         if($service_id == 7){
             $data = DetailTransactionHostel::where('transaction_id',$transaction_id)->first();
             if($data != null){
-                $hostelName = Hostel::where('id',$data->id)->first()->name;
-                $hostelRoom = HostelRoom::where('hostel_id',$data->id)->where('id',$data->room)->first()->name;
+                $hostelData = Hostel::where('id',$data->hostel_id)->first();
+                $hostelRoom = HostelRoom::where('hostel_id',$hostelData->id)->where('id',$data->hostel_room_id)->first()->name;
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
                 return  [
-                    'hostel_name' => $hostelName,
+                    'hostel_name' => $hostelData->name,
                     'room_type' => $hostelRoom,
                     'reservation_duration' => $daysDiff
                 ];
@@ -89,13 +91,13 @@ class TransactionController extends Controller
         }else if($service_id == 8){
             $data = DetailTransactionHotel::where('transaction_id',$transaction_id)->first();
             if($data){
-                $hotelName = Hotel::where('id',$data->id)->pluck('name')->first();
-                $hotelRoom = HotelRoom::where('hotel_id',$data->id)->where('id',$data->room)->pluck('name')->first();
+                $hotelData = Hotel::where('id',$data->hotel_id)->first();
+                $hotelRoom = HotelRoom::where('hotel_id',$hotelData->id)->where('id',$data->hotel_room_id)->pluck('name')->first();
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
                 return  [
-                    'hotel_name' => $hotelName,
+                    'hotel_name' => $hotelData->name,
                     'room_type' => $hotelRoom,
                     'reservation_duration' => $daysDiff
                 ];
