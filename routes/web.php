@@ -87,7 +87,9 @@ Route::get('/company/kebijakan-privasi', function () {
     return view('user.company.privat');
 })->name('company.privat');
 
-
+Route::get('/company/kontak', function () {
+    return view('user.company.contact');
+})->name('company.contact');
 
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
