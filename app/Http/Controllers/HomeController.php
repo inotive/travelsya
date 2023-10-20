@@ -90,10 +90,7 @@ class HomeController extends Controller
         $data['ewallets'] = Product::where('is_active', 1)
             ->where('service_id', 11)
             ->distinct('name')
-            // ->pluck('name');
-            ->get();
-
-        dd($data);
+            ->pluck('name');
 
         $data['listAds'] = DB::table('ads')
             ->where('is_active', 1)

@@ -19,9 +19,9 @@
                         </label>
                         <select name="jenis_ewallet" id="jenis_ewallet" class="form-select form-select-lg" required>
                             <option value="">Pilih E-Wallet</option>
-                            <option value="DANA">DANA</option>
-                            <option value="GO-PAY">GO-PAY</option>
-                            <option value="OVO">OVO</option>
+                            @foreach ($ewallets as $ewallet)
+                            <option value="{{ $ewallet }}">{{ $ewallet }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="col-6">
@@ -86,9 +86,17 @@
 
                         // Menambahkan pilihan berdasarkan respons
                         $.each(response, function (key, value) {
+                            // Format Rupiah
+                            var formattedPrice = new Intl.NumberFormat("id-ID", {
+                                style: "currency",
+                                currency: "IDR",
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 0
+                            }).format(value.price);
+
                             $('#produk_ewallet').append($('<option>', {
                                 value: value.id,
-                                text: value.name +' - Rp. '+ value.price
+                                text: value.name +' - '+ formattedPrice
                             }));
                         });
                     }
