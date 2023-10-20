@@ -79,6 +79,12 @@ Route::get('/company/tentang-kami', function () {
     return view('user.company.about');
 })->name('company.about');
 
+Route::get('/company/kebijakan-privasi', function () {
+    return view('user.company.terms');
+})->name('company.terms');
+
+
+
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
