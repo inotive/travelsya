@@ -49,6 +49,7 @@ class AdController extends Controller
 //
 //        $path = public_path('media/ads');
 //        $file->move($path, $nama_foto);
+
         $image = $request->file('image')->store('media/ads');
 
         Ad::create([

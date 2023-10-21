@@ -206,8 +206,8 @@
                                             $text = 'Berhasil';
                                             }
                                             @endphp
-                                            <div class="{{ $text_color }} fw-bold">
-                                                {{ Str::ucfirst($text) }}
+                                            <div class="{{ $text_color ?? 'text-info' }} fw-bold">
+                                                {{ Str::ucfirst($text ?? 'Belum') }}
                                             </div>
                                         </div>
                                         <div class="separator border border-1"
@@ -234,14 +234,31 @@
                                                         @endif
                                                     </a>
                                                     <span class="text-gray-400" style="margin-bottom: 6px">
-                                                        {{ $all->no_inv }}
+                                                        {{ $all->no_inv }} 
                                                     </span>
                                                 </div>
                                             </div>
                                             <div class="kanan">
                                                 <div class="panah">
-                                                    <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
-                                                        alt="frame5" style="height: 18px; width: 18px;">
+
+                                                    @if ($all->service_id == 7 || $all->service_id == 8 )
+                                                    <a href="{{ route('profile.order-detail.hotel', $all->id) }}">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
+                                                            alt="frame5" style="height: 18px; width: 18px;">
+                                                    </a>
+                                                    @elseif($all->service_id == 12)
+                                                    <a href="{{ route('profile.order-detail.listrik', $all->id) }}">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
+                                                            alt="frame5" style="height: 18px; width: 18px;">
+                                                    </a>
+                                                    @else
+                                                    <a href="{{ route('profile.order-detail.listrik-voucher', $all->id) }}">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
+                                                            alt="frame5" style="height: 18px; width: 18px;">
+                                                    </a>
+                                                    @endif
+
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -393,8 +410,10 @@
                                             </div>
                                             <div class="kanan">
                                                 <div class="panah">
-                                                    <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
-                                                        alt="frame5" style="height: 18px; width: 18px;">
+                                                    <a href="{{ route('profile.order-detail.hotel', $pending->id) }}">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
+                                                            alt="frame5" style="height: 18px; width: 18px;">
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -492,8 +511,10 @@
                                             </div>
                                             <div class="kanan">
                                                 <div class="panah">
-                                                    <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
-                                                        alt="frame5" style="height: 18px; width: 18px;">
+                                                    <a href="{{ route('profile.order-detail.hotel', $history->id) }}">
+                                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/down.svg') }}"
+                                                            alt="frame5" style="height: 18px; width: 18px;">
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Facility;
-use App\Models\Hostel;
+use DB;
 use App\Models\Hotel;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\Hostel;
 use App\Services\Travelsya;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+
 
 class HomeController extends Controller
 {
@@ -21,11 +22,6 @@ class HomeController extends Controller
 
     public function home()
     {
-        // $hostelPopulers = $this->travelsya->hostelPopuler();
-        // $cities = $this->travelsya->hostelCity();
-        // $ads = $this->travelsya->ads();
-        // return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
-        //        dd('haloo');
         $hotels = Hotel::with('hotelRoom', 'hotelImage')->latest()->get();
         $dummyHotels = $hotels->map(function ($hotel) {
             return [
@@ -36,14 +32,23 @@ class HomeController extends Controller
         })->toArray();
 
         $hotel_favorite = Hotel::with('hotelRoom', 'hotelImage')
-            ->leftJoin('hotel_rooms', 'hotels.id', '=', 'hotel_rooms.hotel_id')
-            ->leftJoin('hotel_ratings', 'hotels.id', '=', 'hotel_ratings.hotel_id')
-            ->select('hotels.*', DB::raw('COALESCE(hotel_ratings.rate, 0) as rating'), DB::raw('COALESCE(hotel_rooms.sellingprice, 0) as selling_price'))
-            ->orderByDesc('hotel_ratings.rate')
-            ->orderBy('hotel_rooms.sellingprice')
-            // ->groupBy('hotels.name')
-            ->limit(4)
+            ->select('hotels.id', 'hotels.name', 'hotels.user_id') 
+            ->selectSub(function ($query) {
+                $query->selectRaw('COALESCE(MAX(rate), 0)')
+                    ->from('hotel_ratings')
+                    ->whereColumn('hotels.id', 'hotel_ratings.hotel_id');
+            }, 'rating')
+            ->selectSub(function ($query) {
+                $query->selectRaw('COALESCE(MIN(sellingprice), 0)')
+                    ->from('hotel_rooms')
+                    ->whereColumn('hotels.id', 'hotel_rooms.hotel_id');
+            }, 'selling_price')
+            ->groupBy('hotels.id', 'hotels.name', 'hotels.user_id') 
+            ->orderByDesc('rating')
+            ->orderBy('selling_price')
+            ->take(8)
             ->get();
+
 
         $hotelDetails = [];
 
@@ -68,12 +73,16 @@ class HomeController extends Controller
         }
 
         $hostel_favorite = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
-            ->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
-            }])
-            ->withCount(["rating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])
+            ->withCount([
+                "hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
+                }
+            ])
+            ->withCount([
+                "rating as rating_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(rate),0)'));
+                }
+            ])
             ->withCount("rating as rating_count")
             ->leftJoin('hostel_rooms', 'hostels.id', '=', 'hostel_rooms.hostel_id')
             ->leftJoin('hostel_ratings', 'hostels.id', '=', 'hostel_ratings.hostel_id')

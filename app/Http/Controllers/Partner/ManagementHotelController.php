@@ -34,7 +34,7 @@ class ManagementHotelController extends Controller
     public function detailHotel($id)
     {
         //$hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotel', 'hotelroomFacility', 'hotelRule', 'hotelBookDate')->find($id);
-        $hotel = Hotel::with('hotelRoom','hotelImage','hotelRating','hotelroomFacility','hotelRule','hotel_reservation')->find($id);
+        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility', 'hotelRule', 'hotel_reservation')->find($id);
         $avg_rate = DB::table('hotel_ratings')->where('hotel_id', $id)->avg('rate');
         $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
         return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
@@ -44,6 +44,40 @@ class ManagementHotelController extends Controller
         $hotel = Hotel::with('hotelRoom', 'hotelImage')->find($id);
 
         return view('ekstranet.management-hotel.setting-hotel', compact('hotel'));
+    }
+
+    public function settingHotelupdate(Request $request, Hotel $hotel)
+    {
+        $user_id = auth()->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'name'      => 'required',
+            'address'   => 'required',
+            'star'      => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        $hotel->update([
+            'user_id'     => $user_id,
+            'checkin'     => $request->checkin,    
+            'checkout'    => $request->checkout,
+            'name'        => $request->name,
+            'address'     => $request->address,
+            'email'       => $request->email,
+            'star'        => $request->star,
+            'phone'       => $request->phone,
+            'website'     => $request->website,
+            'lon'         => $request->long_ltd,
+            'lat'         => $request->ltd,
+            'description' => $request->description,
+        ]);
+
+        toast('Hotel Has Been Updated', 'success');
+
+        return redirect()->back();
     }
     public function settingRoom($id)
     {
@@ -76,17 +110,17 @@ class ManagementHotelController extends Controller
     {
         $data = $request->all();
         //Ini validasi
-//        $request->validate([
-//            'name' => 'required',
-//            'price' => 'required',
-//            'sellingprice' => 'required',
-//            'totalroom' => 'required',
-//            'roomsize' => 'required',
-//            // 'maxextrabed' => 'required',
-//            'bed_type' => 'required',
-//            'guest' => 'required',
-//            // 'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-//        ]);
+        //        $request->validate([
+        //            'name' => 'required',
+        //            'price' => 'required',
+        //            'sellingprice' => 'required',
+        //            'totalroom' => 'required',
+        //            'roomsize' => 'required',
+        //            // 'maxextrabed' => 'required',
+        //            'bed_type' => 'required',
+        //            'guest' => 'required',
+        //            // 'image_1' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        //        ]);
 
 
 
@@ -94,16 +128,16 @@ class ManagementHotelController extends Controller
         $hotelRoom = HotelRoom::create([
             'hotel_id' => $request->hotel_id,
             'name' => $request->name,
-            'price' => str_replace('.','',$request->price),
+            'price' => str_replace('.', '', $request->price),
             'roomsize' => $request->roomsize,
             'guest' => $request->guest,
             'maxextrabed' => $request->maxextrabed,
             'bed_type' => $request->bed_type,
             'totalroom' => $request->totalroom,
             'is_active' => 1,
-            'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.','',$request->sellingprice),
-            'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.','',$request->extrabedprice),
-            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.','',$request->extrabedsellingprice),
+            'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.', '', $request->sellingprice),
+            'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
+            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
         ]);
 
         $hotelRoomImageFiles = $request->file('hotel_room_image', []);
@@ -153,7 +187,7 @@ class ManagementHotelController extends Controller
 
         toast('Upload foto berhasil', 'success');
         return redirect()->back();
-//        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
+        //        return view('ekstranet.management-hotel.setting-photo', compact('hotel'));
     }
 
     public function mainphotoHotel($id, Request $request)
@@ -191,14 +225,13 @@ class ManagementHotelController extends Controller
     public function destroyphotoHotel($id)
     {
 
-            $hotelImage = HotelImage::findOrFail($id);
-            Storage::delete('media/hotel/'. $hotelImage->image);
+        $hotelImage = HotelImage::findOrFail($id);
+        Storage::delete('media/hotel/' . $hotelImage->image);
 
-            $hotelImage->delete();
+        $hotelImage->delete();
 
-            toast('Hotel Image has been deleted', 'success');
-            return redirect()->back();
-
+        toast('Hotel Image has been deleted', 'success');
+        return redirect()->back();
     }
 
 
