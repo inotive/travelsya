@@ -1,41 +1,49 @@
 @extends('ekstranet.layout',['title' => 'Laporan Transaksi',"url" => "#"])
 
 @section('content-admin')
-    <div class="card">
-        <div class="card-body">
-            <form action="#" method="get">
-                <div class="row">
-                    <div class="col-3">
-
-{{--                        <select name="hotel" id="" class="form-control">--}}
-{{--                            @foreach($hostels as $hostel)--}}
-{{--                                <option value="{{$hostel->id}}" {{(isset($_GET['hotel']) && $_GET['hotel'] == $hostel->id) ? 'selected' : ''}}>{{$hostel->name}}</option>--}}
-{{--                            @endforeach--}}
-{{--                        </select>--}}
-                    </div>
-                    <div class="col-3">
-{{--                        <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start" value="{{isset($_GET['start']) ? $_GET['start'] : ''}}">--}}
-                    </div>
-                    <div class="col-3">
-{{--                        <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end" value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">--}}
-                    </div>
-
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary w-100">Cari Data</button>
-                    </div>
+<div class="card">
+    <div class="card-body">
+        <form action="" method="get">
+            <div class="row">
+                <div class="col-3">
+                    <select class="form-select" name="year">
+                        <option value="" disabled selected>Pilih Tahun</option>
+                        @php
+                        $currentYear = date('Y');
+                        $startYear = 2020; // Tahun awal yang diinginkan
+                        @endphp
+                        @for ($i = $currentYear; $i >= $startYear; $i--)
+                        <option value="{{ $i }}" {{ isset($_GET['year']) && $_GET['year']==$i ? 'selected' : '' }}>
+                            {{ $i }}
+                        </option>
+                        @endfor
+                    </select>
                 </div>
-            </form>
-        </div>
-    </div>
+                <div class="col-3">
+                    <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start"
+                        value="{{isset($_GET['start']) ? $_GET['start'] : ''}}">
+                </div>
+                <div class="col-3">
+                    <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end"
+                        value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">
+                </div>
 
-    <div class="card mt-3">
-        <div class="card-body">
-            <!--begin::Row-->
-            <div class="row gy-5 g-xl-10">
-                <div class="col-12">
-                    <div class="table-responsive">
-                        <table class="table table-bordered fw-normal">
-                            <thead class="fw-bold">
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary w-100">Cari Data</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <!--begin::Row-->
+        <div class="row gy-5 g-xl-10">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-bordered fw-normal">
+                        <thead class="fw-bold">
                             <tr>
                                 <th>No.</th>
                                 <th>Invoice No.</th>
@@ -46,56 +54,77 @@
                                 <th>Deskripsi Pesanan</th>
                                 <th>Grand Total</th>
                             </tr>
-                            </thead>
-                            <tbody>
+                        </thead>
+                        <tbody>
+                            @php
+                            $no =1;
+                            @endphp
+                            @foreach($transaction_hotels as $hotel)
                             <tr>
-                                <td>1</td>
-                                <td>INV-123-HOTEL</td>
-                                <td>20 Okt 2023 10:11</td>
-                                <td>Customer A</td>
-                                <td>0812-5123-4123</td>
-                                <td>Bank Transfer - BCA</td>
-                                <td>Hotel A - 2 Room Superior - 2 Malam </td>
-                                <td>Rp. 100.000</td>
+                                <td>{{$no}}</td>
+                                <td>{{$hotel->transaction->no_inv}}</td>
+                                <td>{{date('d M Y',strtotime($hotel->created_at))}}</td>
+                                <td>{{$hotel->transaction->user->name}}</td>
+                                <td>{{$hotel->transaction->user->phone}}</td>
+                                <td>
+                                    {{$hotel->transaction->payment_method}} - {{ $hotel->transaction->payment_channel }}
+                                </td>
+                                <td>
+                                    {{ $hotel->hotel->name }} - {{ $hotel->room.' '.$hotel->hotelRoom->name }} -
+                                    @php
+                                    $startDate = new DateTime($hotel->reservation_start);
+                                    $endDate = new DateTime($hotel->reservation_end);
+                                    $interval = $startDate->diff($endDate);
+                                    echo $interval->format('%a Malam');
+                                    @endphp
+                                </td>
+                                <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                             </tr>
                             @php
-                                @endphp
-{{--                            @foreach($transactions as $transaction)--}}
-{{--                                <tr>--}}
-{{--                                    <th>{{$loop->iteration}}</th>--}}
-{{--                                    <th>{{$transaction->no_inv}}</th>--}}
-{{--                                    <th>{{$transaction->req_id}}</th>--}}
-{{--                                    <th>{{$transaction->created_at}}</th>--}}
-{{--                                    <th>{{$transaction->user->name}}</th>--}}
-{{--                                    <th>{{$transaction->user->phone}}</th>--}}
-{{--                                    <th>{{$transaction->detailTransaction[0]->hostelRoom->name}}</th>--}}
-{{--                                    <th>{{$transaction->bookDate[0]->start}}</th>--}}
-{{--                                    <th>{{$transaction->bookDate[0]->end}}</th>--}}
-{{--                                    <th>{{$transaction->total}}</th>--}}
-{{--                                    <th><a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-warning btn-sm p-4">Edit</a></th>--}}
-{{--                                </tr>--}}
-{{--                            @endforeach--}}
-
-
-                            </tbody>
-                            <tfoot>
+                            $no++;
+                            @endphp
+                            @endforeach
+                            @foreach($transaction_hostels as $hostel)
+                            <tr>
+                                <td>{{$no}}</td>
+                                <td>{{$hostel->transaction->no_inv}}</td>
+                                <td>{{date('d M Y',strtotime($hostel->created_at))}}</td>
+                                <td>{{$hostel->transaction->user->name}}</td>
+                                <td>{{$hostel->transaction->user->phone}}</td>
+                                <td>
+                                    {{$hostel->transaction->payment_method}} - {{
+                                    $hostel->transaction->payment_channel}}
+                                </td>
+                                <td>
+                                    {{ $hostel->hostel->name }} - {{ $hostel->room.' '.$hostel->hostelRoom->name }} - {{
+                                    $hostel->type_rent == 'tahunan' ? 'Tahunan' : 'Bulanan' }}
+                                </td>
+                                <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
+                            </tr>
+                            @php
+                            $no++;
+                            @endphp
+                            @endforeach
+                        </tbody>
+                        <tfoot>
                             <tr>
                                 <td colspan="12">
-{{--                                    {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}--}}
+                                    {{--
+                                    {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}--}}
                                 </td>
                             </tr>
-                            </tfoot>
-                        </table>
-                    </div>
+                        </tfoot>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 @endsection
 @push('add-script')
-    <script>
-        // $(document).ready(function() {
+<script>
+    // $(document).ready(function() {
         //     $("#kt_datatable_vertical_scroll").DataTable({
         //         search: {
         //             return: true,
@@ -116,5 +145,5 @@
                 }
             }
         });
-    </script>
+</script>
 @endpush
