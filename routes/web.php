@@ -74,6 +74,23 @@ Route::get('/search-pdam', function () {
     return view('search.pdam');
 })->name('search.hostel');
 
+//company
+Route::get('/company/tentang-kami', function () {
+    return view('user.company.about');
+})->name('company.about');
+
+Route::get('/company/kebijakan-privasi', function () {
+    return view('user.company.terms');
+})->name('company.terms');
+
+Route::get('/company/kebijakan-privasi', function () {
+    return view('user.company.privat');
+})->name('company.privat');
+
+Route::get('/company/kontak', function () {
+    return view('user.company.contact');
+})->name('company.contact');
+
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
