@@ -24,12 +24,12 @@ class TransactionController extends Controller
 {
     protected $detailTransaction;
 
-    
+
     public function getTransactionUser(Request $request)
     {
         // $user_id = $request->user()->id;
         $user_id = \Auth::user()->id;
-        
+
 
         // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
         //     ->where('user_id', $user_id)
@@ -161,7 +161,7 @@ class TransactionController extends Controller
 
             $no_inv = $request->input('no_inv');
             // $user_id = $request->user()->id;
-            $user_id = 5;
+            $user_id = \Auth::user()->id;
 
             $transaction = Transaction::where('no_inv', $no_inv)->where('user_id', $user_id);
 
@@ -188,7 +188,8 @@ class TransactionController extends Controller
             }
 
             // UNTUK TOP UP
-            if (in_array($transaction->firstOrFail()->service_id, [1, 2])) {
+            // E-Wallet, LISTRIK TOKEN, Pulsa dan Data
+            if (in_array($transaction->firstOrFail()->service_id, [1, 2,11,12])) {
                 $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id');
 
                 $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
@@ -202,6 +203,7 @@ class TransactionController extends Controller
                         'payment' => $detailTransaction->payment,
                         'payment_method' => $detailTransaction->payment_method,
                         'payment_channel' => $detailTransaction->payment_channel,
+                        'kode_voucher' => $detailTransaction->kode_voucher,
                         'status' => $detailTransaction->status,
                         'total' => $detailTransaction->total,
                         'created_at' => $detailTransaction->created_at,

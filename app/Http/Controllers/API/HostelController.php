@@ -103,11 +103,11 @@ class HostelController extends Controller
                     if ($type_duration == "monthly") {
                         $sellingPrice = $hostelRoom->where('hostel_id', $hostelsget->id)
                             ->orderBy('sellingrentprice_monthly','asc')
-                            ->pluck('sellingrentprice_monthly')->first();
+                            ->pluck('sellingrentprice_monthly')->first() ?? 0;
                     } elseif($type_duration == "yearly") {
                         $sellingPrice = $hostelRoom->where('hostel_id', $hostelsget->id)
                             ->orderBy('sellingrentprice_yearly','asc')
-                            ->pluck('sellingrentprice_yearly')->first();
+                            ->pluck('sellingrentprice_yearly')->first() ?? 0;
                     }
                     $avg_rating = $hostelsget->hostelRating->sum('rate') != 0 ? $hostelsget->hostelRating->sum('rate') / $hostelsget->hostelRating->count() : 0;
                     return [
@@ -117,7 +117,12 @@ class HostelController extends Controller
                         'location' => $hostelsget->city,
                         'avg_rating' => $avg_rating,
                         'rating_count' => $hostelsget->hostelRating->count(),
-                        'sellingprice' => $sellingPrice, 'property_type' => $hostelsget->property, 'rent_category' => $type_duration, 'room_type' => $hostelRoom->roomtype, 'furnish_type' => $hostelRoom->furnish];
+                        'sellingprice' => $sellingPrice,
+                        'property_type' => $hostelsget->property,
+                        'rent_category' => $type_duration,
+                        'room_type' => $hostelRoom->roomtype,
+                        'furnish_type' => $hostelRoom->furnish
+                    ];
                 });
 
                 if (count($hostelShow)) {
