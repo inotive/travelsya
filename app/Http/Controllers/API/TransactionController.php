@@ -143,133 +143,135 @@ class TransactionController extends Controller
     //    }
     public function getTransactionInv(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'no_inv' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseFormatter::error([
+                'response' => $validator->errors(),
+            ], 'Fetch data failed', 500);
+        }
+
+        // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product', 'historyPoint', 'rating', 'guest', 'bookDate')
+        //     ->where('no_inv', $no_inv)
+        //     ->where('user_id', $user_id)
+        //     ->get();
+
+        $no_inv = $request->input('no_inv');
+        // $user_id = $request->user()->id;
+        $user_id = \Auth::user()->id;
+
+        $transaction = Transaction::where('no_inv', $no_inv)->where('user_id', $user_id);
+
+        // UNTUK PPOB
+        if (in_array($transaction->firstOrFail()->service_id, [1, 6, 3, 5, 9, 10])) {
+            $detailTransaction = Transaction::join('detail_transaction_ppob', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id');
+
+            $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                return [
+                    'id' => $detailTransaction->id,
+                    'no_inv' => $detailTransaction->no_inv,
+                    'nomor_pelanggan' => $detailTransaction->nomor_pelanggan,
+                    'req_id' => $detailTransaction->req_id,
+                    'link' => $detailTransaction->link,
+                    'service' => $detailTransaction->service,
+                    'payment' => $detailTransaction->payment,
+                    'payment_method' => $detailTransaction->payment_method,
+                    'payment_channel' => $detailTransaction->payment_channel,
+                    'status' => $detailTransaction->status,
+                    'total' => $detailTransaction->total,
+                    'created_at' => $detailTransaction->created_at,
+                ];
+            });
+        }
+
+        // UNTUK TOP UP
+        // E-Wallet, LISTRIK TOKEN, Pulsa dan Data
+        if (in_array($transaction->firstOrFail()->service_id, [1, 2,11,12])) {
+            $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id');
+
+            $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                return [
+                    'id' => $detailTransaction->id,
+                    'no_inv' => $detailTransaction->no_inv,
+                    'nomor_telfon' => $detailTransaction->nomor_telfon,
+                    'req_id' => $detailTransaction->req_id,
+                    'link' => $detailTransaction->link,
+                    'service' => $detailTransaction->service,
+                    'payment' => $detailTransaction->payment,
+                    'payment_method' => $detailTransaction->payment_method,
+                    'payment_channel' => $detailTransaction->payment_channel,
+                    'kode_voucher' => $detailTransaction->kode_voucher,
+                    'status' => $detailTransaction->status,
+                    'total' => $detailTransaction->total,
+                    'created_at' => $detailTransaction->created_at,
+                ];
+            });
+        }
+
+        // UNTUK HOTEL
+        if (in_array($transaction->firstOrFail()->service_id, [8])) {
+            $detailTransaction = Transaction::join('detail_transaction_hotel', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
+                ->join('hotels', 'hotels.id', '=', 'detail_transaction_hotel.hotel_id')
+                ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id');
+
+            $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                return [
+                    'id' => $detailTransaction->id,
+                    'no_inv' => $detailTransaction->no_inv,
+                    'booking_id' => $detailTransaction->booking_id,
+                    'reservation_start' => $detailTransaction->reservation_start,
+                    'reservation_end' => $detailTransaction->reservation_end,
+                    'guest' => $detailTransaction->guest,
+                    'room' => $detailTransaction->room,
+                    'req_id' => $detailTransaction->req_id,
+                    'link' => $detailTransaction->link,
+                    'service' => $detailTransaction->service,
+                    'payment' => $detailTransaction->payment,
+                    'payment_method' => $detailTransaction->payment_method,
+                    'payment_channel' => $detailTransaction->payment_channel,
+                    'status' => $detailTransaction->status,
+                    'total' => $detailTransaction->total,
+                    'created_at' => $detailTransaction->created_at,
+                ];
+            });
+        }
+
+        // UNTUK HOSTEL
+        if (in_array($transaction->firstOrFail()->service_id, [7])) {
+            $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
+                ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
+                ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id');
+
+            $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
+                return [
+                    'id' => $detailTransaction->id,
+                    'no_inv' => $detailTransaction->no_inv,
+                    'booking_id' => $detailTransaction->booking_id,
+                    'reservation_start' => $detailTransaction->reservation_start,
+                    'reservation_end' => $detailTransaction->reservation_end,
+                    'guest' => $detailTransaction->guest,
+                    'room' => $detailTransaction->room,
+                    'type_rent' => $detailTransaction->type_rent,
+                    'req_id' => $detailTransaction->req_id,
+                    'link' => $detailTransaction->link,
+                    'service' => $detailTransaction->service,
+                    'payment' => $detailTransaction->payment,
+                    'payment_method' => $detailTransaction->payment_method,
+                    'payment_channel' => $detailTransaction->payment_channel,
+                    'status' => $detailTransaction->status,
+                    'total' => $detailTransaction->total,
+                    'created_at' => $detailTransaction->created_at,
+                ];
+            });
+        }
+
+
+        return ResponseFormatter::success($responseTransaction, 'Data successfully loaded');
+
         try {
-            $validator = Validator::make($request->all(), [
-                'no_inv' => 'required',
-            ]);
 
-            if ($validator->fails()) {
-                return ResponseFormatter::error([
-                    'response' => $validator->errors(),
-                ], 'Fetch data failed', 500);
-            }
-
-            // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product', 'historyPoint', 'rating', 'guest', 'bookDate')
-            //     ->where('no_inv', $no_inv)
-            //     ->where('user_id', $user_id)
-            //     ->get();
-
-            $no_inv = $request->input('no_inv');
-            // $user_id = $request->user()->id;
-            $user_id = \Auth::user()->id;
-
-            $transaction = Transaction::where('no_inv', $no_inv)->where('user_id', $user_id);
-
-            // UNTUK PPOB
-            if (in_array($transaction->firstOrFail()->service_id, [1, 6, 3, 5, 9, 10])) {
-                $detailTransaction = Transaction::join('detail_transaction_ppob', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id');
-
-                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
-                    return [
-                        'id' => $detailTransaction->id,
-                        'no_inv' => $detailTransaction->no_inv,
-                        'nomor_pelanggan' => $detailTransaction->nomor_pelanggan,
-                        'req_id' => $detailTransaction->req_id,
-                        'link' => $detailTransaction->link,
-                        'service' => $detailTransaction->service,
-                        'payment' => $detailTransaction->payment,
-                        'payment_method' => $detailTransaction->payment_method,
-                        'payment_channel' => $detailTransaction->payment_channel,
-                        'status' => $detailTransaction->status,
-                        'total' => $detailTransaction->total,
-                        'created_at' => $detailTransaction->created_at,
-                    ];
-                });
-            }
-
-            // UNTUK TOP UP
-            // E-Wallet, LISTRIK TOKEN, Pulsa dan Data
-            if (in_array($transaction->firstOrFail()->service_id, [1, 2,11,12])) {
-                $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id');
-
-                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
-                    return [
-                        'id' => $detailTransaction->id,
-                        'no_inv' => $detailTransaction->no_inv,
-                        'nomor_telfon' => $detailTransaction->nomor_telfon,
-                        'req_id' => $detailTransaction->req_id,
-                        'link' => $detailTransaction->link,
-                        'service' => $detailTransaction->service,
-                        'payment' => $detailTransaction->payment,
-                        'payment_method' => $detailTransaction->payment_method,
-                        'payment_channel' => $detailTransaction->payment_channel,
-                        'kode_voucher' => $detailTransaction->kode_voucher,
-                        'status' => $detailTransaction->status,
-                        'total' => $detailTransaction->total,
-                        'created_at' => $detailTransaction->created_at,
-                    ];
-                });
-            }
-
-            // UNTUK HOTEL
-            if (in_array($transaction->firstOrFail()->service_id, [8])) {
-                $detailTransaction = Transaction::join('detail_transaction_hotel', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
-                    ->join('hotels', 'hotels.id', '=', 'detail_transaction_hotel.hotel_id')
-                    ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id');
-
-                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
-                    return [
-                        'id' => $detailTransaction->id,
-                        'no_inv' => $detailTransaction->no_inv,
-                        'booking_id' => $detailTransaction->booking_id,
-                        'reservation_start' => $detailTransaction->reservation_start,
-                        'reservation_end' => $detailTransaction->reservation_end,
-                        'guest' => $detailTransaction->guest,
-                        'room' => $detailTransaction->room,
-                        'req_id' => $detailTransaction->req_id,
-                        'link' => $detailTransaction->link,
-                        'service' => $detailTransaction->service,
-                        'payment' => $detailTransaction->payment,
-                        'payment_method' => $detailTransaction->payment_method,
-                        'payment_channel' => $detailTransaction->payment_channel,
-                        'status' => $detailTransaction->status,
-                        'total' => $detailTransaction->total,
-                        'created_at' => $detailTransaction->created_at,
-                    ];
-                });
-            }
-
-            // UNTUK HOSTEL
-            if (in_array($transaction->firstOrFail()->service_id, [7])) {
-                $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
-                    ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
-                    ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id');
-
-                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
-                    return [
-                        'id' => $detailTransaction->id,
-                        'no_inv' => $detailTransaction->no_inv,
-                        'booking_id' => $detailTransaction->booking_id,
-                        'reservation_start' => $detailTransaction->reservation_start,
-                        'reservation_end' => $detailTransaction->reservation_end,
-                        'guest' => $detailTransaction->guest,
-                        'room' => $detailTransaction->room,
-                        'type_rent' => $detailTransaction->type_rent,
-                        'req_id' => $detailTransaction->req_id,
-                        'link' => $detailTransaction->link,
-                        'service' => $detailTransaction->service,
-                        'payment' => $detailTransaction->payment,
-                        'payment_method' => $detailTransaction->payment_method,
-                        'payment_channel' => $detailTransaction->payment_channel,
-                        'status' => $detailTransaction->status,
-                        'total' => $detailTransaction->total,
-                        'created_at' => $detailTransaction->created_at,
-                    ];
-                });
-            }
-
-
-            return ResponseFormatter::success($responseTransaction, 'Data successfully loaded');
 
             // if (count($transaction)) {
             //     return ResponseFormatter::success($transaction, 'Data successfully loaded');
