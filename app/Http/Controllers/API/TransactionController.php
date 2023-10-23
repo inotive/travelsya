@@ -24,7 +24,7 @@ class TransactionController extends Controller
 {
     protected $detailTransaction;
 
-    
+
     public function getTransactionUser(Request $request)
     {
         // $user_id = $request->user()->id;
@@ -40,7 +40,7 @@ class TransactionController extends Controller
             ->get();
 
         $responsTransaction = $transaction->map(function ($transaction) {
-            $detailTransaction = $this->getDetailTransaction($transaction->id,$transaction->service_id);
+            $detailTransaction = $this->getDetailTransaction($transaction->id, $transaction->service_id);
             return [
                 'id' => $transaction->id,
                 'no_inv' => $transaction->no_inv,
@@ -63,7 +63,6 @@ class TransactionController extends Controller
             return ResponseFormatter::error(null, 'Data not found');
         }
         try {
-
         } catch (\Throwable $th) {
             return ResponseFormatter::error([
                 $th,
@@ -72,12 +71,13 @@ class TransactionController extends Controller
         }
     }
 
-    protected function getDetailTransaction($transaction_id,$service_id){
-        if($service_id == 7){
-            $data = DetailTransactionHostel::where('transaction_id',$transaction_id)->first();
-            if($data != null){
-                $hostelData = Hostel::where('id',$data->hostel_id)->first();
-                $hostelRoom = HostelRoom::where('hostel_id',$hostelData->id)->where('id',$data->hostel_room_id)->first()->name;
+    protected function getDetailTransaction($transaction_id, $service_id)
+    {
+        if ($service_id == 7) {
+            $data = DetailTransactionHostel::where('transaction_id', $transaction_id)->first();
+            if ($data != null) {
+                $hostelData = Hostel::where('id', $data->hostel_id)->first();
+                $hostelRoom = HostelRoom::where('hostel_id', $hostelData->id)->where('id', $data->hostel_room_id)->first()->name;
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
@@ -87,12 +87,11 @@ class TransactionController extends Controller
                     'reservation_duration' => $daysDiff
                 ];
             }
-
-        }else if($service_id == 8){
-            $data = DetailTransactionHotel::where('transaction_id',$transaction_id)->first();
-            if($data){
-                $hotelData = Hotel::where('id',$data->hotel_id)->first();
-                $hotelRoom = HotelRoom::where('hotel_id',$hotelData->id)->where('id',$data->hotel_room_id)->pluck('name')->first();
+        } else if ($service_id == 8) {
+            $data = DetailTransactionHotel::where('transaction_id', $transaction_id)->first();
+            if ($data) {
+                $hotelData = Hotel::where('id', $data->hotel_id)->first();
+                $hotelRoom = HotelRoom::where('hotel_id', $hotelData->id)->where('id', $data->hotel_room_id)->pluck('name')->first();
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
@@ -102,30 +101,27 @@ class TransactionController extends Controller
                     'reservation_duration' => $daysDiff
                 ];
             }
-
-        }else{
-            if($service_id == 1 || $service_id == 11 || $service_id == 12){
-                $dataPulsa = DetailTransactionTopUp::where('transaction_id',$transaction_id)->first();
-                if($dataPulsa){
+        } else {
+            if ($service_id == 1 || $service_id == 11 || $service_id == 12) {
+                $dataPulsa = DetailTransactionTopUp::where('transaction_id', $transaction_id)->first();
+                if ($dataPulsa) {
                     $nomorTelfon = $dataPulsa->nomor_telfon;
-                    $productName = Product::where('id',$dataPulsa->product_id)->first()->name;
+                    $productName = Product::where('id', $dataPulsa->product_id)->first()->name;
                     return  [
                         'product_name' => $productName,
                         'phone_number' => $nomorTelfon,
                     ];
                 }
-
-            }else{
-                $dataPPOB = DetailTransactionPPOB::where('transaction_id',$transaction_id)->first();
-                if($dataPPOB){
-                    $productName = Product::where('id',$dataPPOB->product_id)->first()->name;
+            } else {
+                $dataPPOB = DetailTransactionPPOB::where('transaction_id', $transaction_id)->first();
+                if ($dataPPOB) {
+                    $productName = Product::where('id', $dataPPOB->product_id)->first()->name;
                     $nomorPelanggan = $dataPPOB->nomor_pelanggan;
                     return  [
                         'product_name' => $productName,
                         'customer_number' => $nomorPelanggan,
                     ];
                 }
-
             }
         }
     }
@@ -143,6 +139,7 @@ class TransactionController extends Controller
     //    }
     public function getTransactionInv(Request $request)
     {
+        // return ResponseFormatter::success($request->input('no_inv'), 'Data successfully loaded');
         try {
             $validator = Validator::make($request->all(), [
                 'no_inv' => 'required',
@@ -160,8 +157,8 @@ class TransactionController extends Controller
             //     ->get();
 
             $no_inv = $request->input('no_inv');
-            // $user_id = $request->user()->id;
-            $user_id = 5;
+            $user_id = $request->user()->id;
+            // $user_id = 5;
 
             $transaction = Transaction::where('no_inv', $no_inv)->where('user_id', $user_id);
 
@@ -188,7 +185,7 @@ class TransactionController extends Controller
             }
 
             // UNTUK TOP UP
-            if (in_array($transaction->firstOrFail()->service_id, [1, 2])) {
+            if (in_array($transaction->firstOrFail()->service_id, [1, 2, 11])) {
                 $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id');
 
                 $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
