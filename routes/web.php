@@ -79,7 +79,7 @@ Route::get('/company/tentang-kami', function () {
     return view('user.company.about');
 })->name('company.about');
 
-Route::get('/company/kebijakan-privasi', function () {
+Route::get('/privasi', function () {
     return view('user.company.terms');
 })->name('company.terms');
 
