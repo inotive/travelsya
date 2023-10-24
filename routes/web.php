@@ -357,7 +357,12 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::post('setting-hotel-room/post', [ManagementHotelController::class, 'settingRoomPost'])->name('partner.management.hotel.setting.room.post');
             Route::delete('setting-hotel-room/delete/{id}', [ManagementHotelController::class, 'settingRoomDelete'])->name('partner.management.setting.room.delete');
             Route::get('setting-hotel-room/hotel-room/{hotel_id}/{id}', [ManagementHotelController::class, 'settingRoomShow'])->name('partner.management.setting.room.show');
-            Route::post('setting-hotel-room/hotel-room/update/{hotel_id}/{id}', [ManagementHotelController::class, 'settingRoomUpdate'])->name('partner.management.setting.room.update');
+
+            Route::get('setting-hotel-room/{id}/edit/{room_id}', [ManagementhotelController::class, 'settingRoomEdit'])
+                ->name('partner.management.hotel.setting.room.edit');
+                Route::put('setting-hotel-room/{id}/edit/{room_id}', [ManagementhotelController::class, 'settingRoomUpdate'])
+                ->name('partner.management.hotel.setting.room.update');
+            // Route::post('setting-hotel-room/hotel-room/update/{hotel_id}/{id}', [ManagementHotelController::class, 'settingRoomUpdate'])->name('partner.management.setting.room.update');
 
             //            Route::get('detail-hotel/{hotel}', [ManagementHotelController::class, 'index'])->name('partner.management.hotel');
 

@@ -109,9 +109,12 @@ class ManagementHostelController extends Controller
 
     public function settingRoomEdit($id, $room_id)
     {
-        $hostel = hostel::with('hostelRoom')->find($id);
+        // $hostel = hostel::with('hostelRoom')->find($id);
+        // $facility = Facility::all();
+        // $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
+        $hostel = Hostel::find($id); // Mengambil hotel dengan id tertentu
+        $room = hostelRoom::where('id', $room_id)->first();
         $facility = Facility::all();
-        $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
 
         return view('ekstranet.management-hostel.setting-room-update', compact('hostel', 'facility', 'room'));
     }

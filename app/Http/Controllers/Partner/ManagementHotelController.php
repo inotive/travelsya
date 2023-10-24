@@ -9,6 +9,7 @@ use App\Models\Hostel;
 use App\Models\HostelRoom;
 use App\Models\Hotel;
 use App\Models\HotelImage;
+use App\Models\HotelRoomImage;
 use App\Models\HotelRoom;
 use App\Models\HotelRoomFacility;
 use App\Models\HotelRule;
@@ -39,6 +40,7 @@ class ManagementHotelController extends Controller
         $total_review = DB::table('hotel_ratings')->where('hotel_id', $id)->count();
         return view('ekstranet.management-hotel.detail-hotel', compact('hotel', 'avg_rate', 'total_review'));
     }
+
     public function settingHotel($id)
     {
         $hotel = Hotel::with('hotelRoom', 'hotelImage')->find($id);
@@ -62,7 +64,7 @@ class ManagementHotelController extends Controller
 
         $hotel->update([
             'user_id'     => $user_id,
-            'checkin'     => $request->checkin,    
+            'checkin'     => $request->checkin,
             'checkout'    => $request->checkout,
             'name'        => $request->name,
             'address'     => $request->address,
@@ -104,6 +106,20 @@ class ManagementHotelController extends Controller
         $facility = Facility::all();
 
         return view('ekstranet.management-hotel.setting-room-create', compact('hotel', 'facility'));
+    }
+
+    public function settingRoomEdit($id, $room_id)
+    {
+
+        // dd($room_id);
+        // $hotel = Hotel::whereHas('hotelRoom', function($query) use ($room_id) {
+        //     $query->where('id', $room_id);
+        // })->first();       
+        $hotel = Hotel::find($id); // Mengambil hotel dengan id tertentu
+        $room = hotelRoom::where('id', $room_id)->first();
+        $facility = Facility::all();
+        // $room = hotelRoom::where('hotel_id', $id)->first();
+        return view('ekstranet.management-hotel.setting-room-update', compact('hotel', 'facility', 'room'));
     }
 
     public function settingRoomPost(Request $request)
@@ -274,16 +290,15 @@ class ManagementHotelController extends Controller
 
         $facilities = Facility::all();
 
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'price' => 'required',
             'roomsize' => 'required',
             'guest' => 'required',
-            'maxextrabed' => 'required',
             'image' => 'image|mimes:jpeg,jpg,png|max:2048',
-            'bed_type' => 'required',
+            // 'bed_type' => 'required',
             'totalroom' => 'required',
-            'image_1' => 'max:2048',
             'sellingprice' => 'required',
             'facility_id' => 'required',
         ]);
@@ -295,23 +310,35 @@ class ManagementHotelController extends Controller
 
         $facilityIds = $request->input('facility_id');
 
-        if ($request->hasFile('image_1')) {
-            $image_1 = $request->file('image_1');
-            $image_1->storeAs('public/media/hotel', $image_1->hashName());
+        
 
-            Storage::delete('public/media/hotel', $hotelRoom->image_1);
-
+    if ($request->hasFile('hotel_room_images')) {
+        $imageFiles = $request->file('hotel_room_images');
+        
+        foreach ($hotelRoom->hotelroomimage as $index => $image) {
+            if (isset($imageFiles[$index])) {
+                Storage::delete('public/' . $image->image);
+    
+                $path = $imageFiles[$index]->store('media/hotel/');
+                $filename = basename($path);
+    
+                $image->update(['image' => 'media/hotel/' . $filename]);
+            }
+        }
+    
+    
             $hotelRoom->update([
                 'hotel_id' => $request->hotel_id,
                 'name' => $request->name,
-                'price' => $request->price,
+                'price' => str_replace('.', '', $request->price),
                 'roomsize' => $request->roomsize,
                 'guest' => $request->guest,
                 'maxextrabed' => $request->maxextrabed,
                 'bed_type' => $request->bed_type,
                 'totalroom' => $request->totalroom,
-                'image_1' => $image_1->hashName(),
-                'sellingprice' => $request->sellingprice,
+                'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.', '', $request->sellingprice),
+                'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
+                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
             ]);
 
             // Hapus fasilitas lama
@@ -323,7 +350,6 @@ class ManagementHotelController extends Controller
             foreach ($facilityIds as $facilityId) {
                 DB::table('hotel_room_facilities')->insert([
                     'hotel_id' => $request->hotel_id,
-                    'service_id' => 8,
                     'hotel_room_id' => $hotelRoom->id,
                     'facility_id' => $facilityId,
                 ]);
@@ -332,13 +358,15 @@ class ManagementHotelController extends Controller
             $hotelRoom->update([
                 'hotel_id' => $request->hotel_id,
                 'name' => $request->name,
-                'price' => $request->price,
+                'price' => str_replace('.', '', $request->price),
                 'roomsize' => $request->roomsize,
                 'guest' => $request->guest,
                 'maxextrabed' => $request->maxextrabed,
                 'bed_type' => $request->bed_type,
                 'totalroom' => $request->totalroom,
-                'sellingprice' => $request->sellingprice,
+                'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.', '', $request->sellingprice),
+                'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
+                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
             ]);
 
             // Hapus fasilitas lama
@@ -350,7 +378,6 @@ class ManagementHotelController extends Controller
             foreach ($facilityIds as $facilityId) {
                 DB::table('hotel_room_facilities')->insert([
                     'hotel_id' => $request->hotel_id,
-                    'service_id' => 8,
                     'hotel_room_id' => $hotelRoom->id,
                     'facility_id' => $facilityId,
                 ]);
@@ -365,14 +392,14 @@ class ManagementHotelController extends Controller
 
         toast('Hotel Room Has Been Updated', 'success');
 
-        return response()->json([
+        return redirect()->back()->with([
             'success' => true,
-            'message' => 'Data HotelRoom Berhasil Diudapte!',
+            'message' => 'Data HotelRoom Berhasil Diupdate!',
             'data' => [
                 'updatedData' => $updatedData,
                 'facilities' => $facilities,
                 'updatedFacilities' => $updatedFacilities,
-            ],
+            ]
         ]);
     }
 
