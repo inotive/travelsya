@@ -170,17 +170,13 @@ class HostelController extends Controller
         DB::table('hostels')->where('id', $hostel->id)->update([
             'user_id' => $request->user_id,
             'is_active' => $request->is_active,
-            'checkin' => $request->checkin,
-            'checkout' => $request->checkout,
             // 'service_id' => 7,
             'name' => $request->name,
             'address' => $request->address,
             'city' => $request->city,
             'star' => $request->star,
             'website' => $request->website,
-            'lat' => $request->ltd,
-            'lon' => $request->long_ltd,
-            'property' => $request->property
+
         ]);
         // $hostel->update([
         //     'user_id' => $request->user_id,

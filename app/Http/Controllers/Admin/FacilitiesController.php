@@ -105,7 +105,7 @@ class FacilitiesController extends Controller
 
 
             //delete old image
-            Storage::delete($facility->image);
+            Storage::delete('public/' . $facility->image);
 
             DB::table('facilities')->where('id', $facility->id)->update([
                 'icon' => $image,
@@ -132,7 +132,7 @@ class FacilitiesController extends Controller
      */
     public function destroy(Facility $facility)
     {
-        Storage::delete($facility->image);
+        Storage::delete('public/' . $facility->image);
         $facility->delete();
 
         toast('Facilities has been deleted', 'success');

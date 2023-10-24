@@ -16,13 +16,13 @@ class MitraController extends Controller
     {
 
         $vendors = Hostel::with('user', 'hostelRoom', 'hostelImage');
-        $cities = DB::table('cities')->orderBy('city_name','asc')->get();
+        // $cities = DB::table('cities')->orderBy('city_name','asc')->get();
         // dd($vendors);
 
-         $users = User::with('hostel','hotel')
-                 ->where('role', 1)->get();
-//         dd($users);
-        return view('admin.management-mitra.index', compact('vendors', 'users','cities'));
+        $users = User::with('hostel', 'hotel')
+            ->where('role', 1)->get();
+        //         dd($users);
+        return view('admin.management-mitra.index', compact('vendors', 'users'));
     }
 
     public function hostelRoomAjax(Request $request)
@@ -45,14 +45,29 @@ class MitraController extends Controller
 
     public function storeMitra(Request $request)
     {
-        $user = User::create([
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'image'    => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+       
+        $image = $request->file('image')->store('media/users');
+        // dd($file);
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password),
+            'image' => $image,
             'phone' => $request->nomor_telfon,
             'point' => 0,
-            'role' => 1
+            'role' => 1,
+            'is_active' => 1,
         ]);
+
+
 
         toast('Mitra has been created', 'success');
         return redirect()->back();
@@ -74,7 +89,7 @@ class MitraController extends Controller
             'phone' => $request->nomor_telfon,
         ]);
 
-/*
+        /*
         //check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -108,14 +123,15 @@ class MitraController extends Controller
         ]);
     }
 
-    public function show(User $user)
+    public function show($id)
     {
         // $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
         // return view('admin.hostel-show', compact('hostel'));
+        $user = User::find($id);
 
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Post',
+            'message' => 'Detail Data User',
             'data'    => $user
         ]);
     }

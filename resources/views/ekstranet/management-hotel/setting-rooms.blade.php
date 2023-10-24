@@ -50,11 +50,20 @@
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
+
+                                    {{-- <div class="menu-item px-3">
                                         <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $room->id }}" data-hotel-id="{{ $room->hotel_id }}">
                                             Edit
                                         </a>
+                                    </div> --}}
+
+                                    <div class="menu-item px-3">
+                                        <a href="{{ route('partner.management.hotel.setting.room.edit', ['id'=>$room->hotel->id, 'room_id'=> $room->id]) }}"
+                                            class="menu-link px-3 text-warning">
+                                            Edit
+                                        </a>
                                     </div>
+                                    
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
