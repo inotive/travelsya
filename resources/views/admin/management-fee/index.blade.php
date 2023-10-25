@@ -63,7 +63,7 @@
 {{--                    <!--begin::Table body-->--}}
 {{--                    <tbody>--}}
 
-{{--                        @foreach($fees as $management-fee)--}}
+{{--                        @foreach($fees as $managementfee)--}}
 {{--                        <tr>--}}
 {{--                            <td>--}}
 {{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$management-fee->category}}</div>--}}

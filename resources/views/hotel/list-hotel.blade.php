@@ -280,8 +280,11 @@
                             <div class="card-body h-100">
                                 <div class="row my-4">
                                     <div class="col-4">
+                                        @php
+                                            $image = $hotel->hotelImage->where('main', 1)->first()->image ?? '';
+                                        @endphp
                                         <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"
-                                            href="{{ asset('storage/'.$hotel->hotelImage->where('main', 1)->first()->image ?? '') }}">
+                                            href="{{ asset('storage/'. $image) }}">
                                             <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
                                                 style="background-image:url('{{ asset('storage/'.$hotel->hotelImage->where('main', 1)->first()->image ?? '') }}')">
                                             </div>

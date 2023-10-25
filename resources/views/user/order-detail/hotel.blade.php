@@ -152,7 +152,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                         Rincian Pesanan
                     </div>
                     <div class="text mt-0">
-                        {{ $transactionHotel->inv_num ?? 'Tidak ada' }}
+                        {{ $transactionHotel->transaction->no_inv ?? 'Tidak ada' }}
                     </div>
                     </div>
                     </div>
@@ -174,8 +174,8 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                 <div class="card border border-1 text-center" style="background: #f4f4f4;">
                                     <div class="info-wrapper-grup" style="padding: 10px 16px 10px 16px;">
                                     <span class="text-gray-400 fs-8" style="margin-bottom: 6px">Checkin</span><br>
-                                    <span class="text fs-6 fw-bold" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('d M Y') }}</span><br>
-                                    <span class="text fs-8" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('H:i') }}</span><br>
+                                    <span class="text fs-6 fw-bold" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel?->reservation_start)->format('d M Y') }}</span><br>
+                                    <span class="text fs-8" style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel?->reservation_start)->format('H:i') }}</span><br>
                                     </div>
                                 </div>
                             </div>
@@ -195,7 +195,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                         <div class="card border border-1 mt-5 mb-5">
                             <div style="height: 250px; background: url('{{ asset('media/hotel/'.$hotelPict->image) }}') center/cover no-repeat; border-top-left-radius: 8px; border-top-right-radius: 8px;"></div>
                             <div class="fw-bold fs-4 m-5">
-                                {{ $transactionHotel->hotel_name }}
+                                {{ $transactionHotel->hotel->name }}
                             </div>
                         </div>
                         </div>
@@ -212,10 +212,10 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="text" style="margin-left: 16px">
                                             <div class="fs-6 fw-bold mb-2">
-                                                {{ $transactionHotel->hotelRoomName }}
+                                                {{ $transactionHotel->hotelRoom->name }}
                                             </div>
                                             <div class="fs-8 text-gray-400">
-                                                City View | 1x | {{ $transactionHotel->room_size }}m²
+                                                City View | 1x | {{ $transactionHotel->hotelRoom->roomsize }}m²
                                             </div>
                                         </div>
                                     </div>
@@ -269,7 +269,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                 <div class="d-flex m-5">
                                     <img src="{{ asset('assets/media/svg/profile-account/order-history/map.svg') }}" style="width: 20px; height:20px; margin-right: 16px;"/>
                                     <div class="text-gray-400 fs-8">
-                                        {{ $transactionHotel->hotel_address }}
+                                        {{ $transactionHotel->hotel->address }}
                                     </div>
                                 </div>
                             </div>
@@ -281,12 +281,12 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Status Transaksi</div>
-                                            @if ($transactionHotel->status_pembayaran === 'EXPIRED')
-                                                <div class="fs-8 fw-bold text-danger">{{ $transactionHotel->status_pembayaran }}</div>
-                                            @elseif ($transactionHotel->status_pembayaran === 'PENDING')
-                                                <div class="fs-8 fw-bold text-warning">{{ $transactionHotel->status_pembayaran }}</div>
-                                            @elseif ($transactionHotel->status_pembayaran === 'PAID')
-                                                <div class="fs-8 fw-bold text-success">{{ $transactionHotel->status_pembayaran }}</div>
+                                            @if ($transactionHotel->transaction->status === 'EXPIRED')
+                                                <div class="fs-8 fw-bold text-danger">{{ $transactionHotel->transaction->status }}</div>
+                                            @elseif ($transactionHotel->transaction->status === 'PENDING')
+                                                <div class="fs-8 fw-bold text-warning">{{ $transactionHotel->transaction->status }}</div>
+                                            @elseif ($transactionHotel->transaction->status === 'PAID')
+                                                <div class="fs-8 fw-bold text-success">{{ $transactionHotel->transaction->status }}</div>
                                             @endif
 
                                         </div>
@@ -296,11 +296,11 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Metode Pembayaran</div>
-                                            <div class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHotel->payment_method) }}</div>
+                                            <div class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHotel->transaction->payment_method) }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Biaya Hotel</div>
-                                            <div class="fs-8 fw-bold">{{ number_format($transactionHotel->sellingPrice, 0, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">{{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                             </div>
@@ -334,7 +334,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     Total Biaya
                                 </div>
                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                    RP {{ number_format($transactionHotel->sellingPrice, 0, ',', '.') }}
+                                    RP {{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}
                                 </div>
                                 </div>
                                 </div>
