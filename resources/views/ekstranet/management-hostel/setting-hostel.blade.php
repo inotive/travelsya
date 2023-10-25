@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{route('admin.hostel.update',$hostel->id)}}">
+                        action="{{route('partner.management.hostel.setting.hostelupdate',$hostel->id)}}">
                         @method('put')
                         @csrf
                         <input type="hidden" name="id" value="{{$hostel->id}}">
@@ -33,7 +33,7 @@
                             <div class="col-md-4 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Bintang</label>
                                 <input type="text" name="star" id="star" class="form-control form-control-solid"
-                                    placeholder="Bintang" value="{{$hostel->star}}" disabled>
+                                    placeholder="Bintang" value="{{$hostel->star}}" readonly>
                                 @error('star')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -222,7 +222,7 @@
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                             </button>
-                            <a href="{{route('admin.hostel.show',$hostel->id)}}" type="reset" id="kt_modal_new_target_cancel"
+                            <a href="{{route('partner.management.hostel',$hostel->id)}}" type="reset" id="kt_modal_new_target_cancel"
                                 class="btn btn-light flex-fill">Back</a>
                         </div>
                         <!--end::Actions-->
