@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use PHPUnit\Exception;
 use DateTime;
+
 class HotelController extends Controller
 {
     protected $xendit, $point;
@@ -172,7 +173,7 @@ class HotelController extends Controller
         try {
             // $hotel = Hotel::find($hotel->id);
             // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-        //     ->find($id);
+            //     ->find($id);
 
             // if ($request->start_date) {
             //     $date = [
@@ -232,7 +233,7 @@ class HotelController extends Controller
                     return [
                         // 'hotel_id' => $facility->hotel_id,
                         // 'hotel_room_id' => $facility->hotel_room_id,
-                         'id' => $facility->facility_id,
+                        'id' => $facility->facility_id,
                         'name' => $facility->facility->name,
                         'image' => 'storage/' . $facility->facility->icon,
                     ];
@@ -327,7 +328,7 @@ class HotelController extends Controller
         //     return ResponseFormatter::error(null, 'Date must be forward');
         // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, 1);
         $amount = ($hotel->sellingprice * $totalDay) * $request->total_room;
-//        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+        //        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
         $fee = Fee::where('service_id', 8)->first();
         $fees = [
             [
@@ -363,9 +364,9 @@ class HotelController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                 'given_names' => $data['guest'][0]['name'],
-                 'email' => $data['guest'][0]['email'],
-                 'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
+                'given_names' => $data['guest'][0]['name'],
+                'email' => $data['guest'][0]['email'],
+                'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
             ],
             'fees' => $fees
         ]);

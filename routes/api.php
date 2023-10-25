@@ -6,6 +6,8 @@ use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
+use App\Http\Controllers\API\RatingHostelController;
+use App\Http\Controllers\API\RatingHotelController;
 use App\Http\Controllers\API\TopUpController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
@@ -90,8 +92,6 @@ route::post('/callback/xendit', [CallbackController::class, 'xendit']);
 route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 
 
-
-;
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     route::post('/logout', [AuthController::class, 'logout']);
@@ -112,6 +112,9 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/hostel/transaction/request', [HostelController::class, 'requestTransaction']);
     route::post('/ppob/transaction/request', [PpobController::class, 'requestTransaction']);
     route::post('/pulsa/topup', [TopUpController::class, 'pembayaranPulsa']); // topup token/ewallet/pulsa
+
+    route::post('/hotel/rating', [RatingHotelController::class, 'submit']);
+    route::post('/hostel/rating', [RatingHostelController::class, 'submit']);
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);
