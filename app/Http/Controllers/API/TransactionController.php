@@ -231,8 +231,7 @@ class TransactionController extends Controller
                     ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id')
                     ->where('detail_transaction_hotel.transaction_id', $transaction->first()->id)
                     ->select(
-
-                        'transaction.id as id_transaksi',
+                        'transactions.id as id_transaksi',
                         'detail_transaction_hotel.*',
                         'hotels.id  as hotel_id',
                         'hotel_rooms.id  as hotel_room_id',
@@ -298,6 +297,8 @@ class TransactionController extends Controller
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
+                    'hostel_id' => $detailTransaction->hostel_id,
+                    'hostel_room_id' => $detailTransaction->hostel_room_id,
                     'hostel_name' => $detailTransaction->hostel_name,
                     'hotel_room_name' => $detailTransaction->hostel_room_name,
                     'booking_id' => $detailTransaction->booking_id,
