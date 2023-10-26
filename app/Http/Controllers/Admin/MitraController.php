@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class MitraController extends Controller
 {
@@ -32,12 +34,61 @@ class MitraController extends Controller
         return response()->json($hostelRoom);
     }
 
-    public function updateMitra(Request $request)
+    public function updateMitra(Request $request, $id)
     {
-        $hostel = Hostel::find($request->id);
+        $user = User::findorFail($id);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            // 'email'    => 'required|email|unique:users,email',
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        // $hostel = Hostel::find($request->id);
         // dd($request->user_id, $hostel);
 
-        $hostel->update(['user_id' => $request->user_id, 'is_active' => $request->active]);
+        if ($request->hasFile('image')) {
+            //upload new image
+            $image = $request->file('image')->store('media/users');
+            // $image->storeAs('media/ads', $image->hashName(), 'public');
+
+            Storage::delete('storage/' . $user->image);
+            // dd($request->all());
+
+
+            // $hostel->update(['user_id' => $request->user_id, 'is_active' => $request->active]);
+
+            $user->update([
+                ['email' => $request->email], // Kriteria
+                
+                  'name' => $request->name,
+                    'password' => bcrypt($request->password),
+                    'phone' => $request->phone,
+                    'point' => 0,
+                    'role' => 1,
+                    'is_active' => $request->is_active,
+                    'image' => $image,
+                 // Nilai
+            ]);
+            
+        } 
+        else {
+
+            //update post without image
+            $user->update([
+                'email' => $request->email, // Kriteria
+                
+                    'name' => $request->name,
+                    'password' => bcrypt($request->password),
+                    'phone' => $request->phone,
+                    'point' => 0,
+                    'role' => 1,
+                    'is_active' => $request->is_active,
+                 // Nilai
+            ]);
+        }
 
         toast('User vendor has been updated', 'success');
         return redirect()->back();
@@ -47,14 +98,15 @@ class MitraController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'image'    => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'image'    => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-       
-        $image = $request->file('image')->store('media/users');
+        if ($request->hasFile('image')) {
+            //upload new image
+            $image = $request->file('image')->store('media/users');
         // dd($file);
         User::create([
             'name' => $request->name,
@@ -64,8 +116,19 @@ class MitraController extends Controller
             'phone' => $request->nomor_telfon,
             'point' => 0,
             'role' => 1,
+            'is_active' => 1,
         ]);
-
+    } else {
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'phone' => $request->nomor_telfon,
+                'point' => 0,
+                'role' => 1,
+                'is_active' => 1,
+            ]);
+        }
 
 
         toast('Mitra has been created', 'success');
@@ -122,22 +185,27 @@ class MitraController extends Controller
         ]);
     }
 
-    public function show(User $user)
+    public function show($id)
     {
         // $hostel = Hostel::with('hostelRoom', 'hostelImage')->find($id);
         // return view('admin.hostel-show', compact('hostel'));
+        $user = User::find($id);
 
         return response()->json([
             'success' => true,
-            'message' => 'Detail Data Post',
+            'message' => 'Detail Data User',
             'data'    => $user
         ]);
     }
 
-    public function destroyMitra(Request $request)
+    public function destroyMitra($id)
     {
-        Hostel::find($request->id)->delete();
+        $mitra = User::find($id)->delete();
+        Storage::delete('storage/'.$mitra->image);
+
         toast('Hostel has been deleted', 'danger');
         return redirect()->back();
     }
+
+
 }

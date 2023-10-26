@@ -207,13 +207,14 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
             Route::post('user', [AdminUserController::class, 'create'])->name('user.create');
             Route::post('user/edit', [AdminUserController::class, 'editJson'])->name('user.edit');
-            Route::put('user/update', [AdminUserController::class, 'update'])->name('user.update');
+            Route::put('user/update/{id}', [AdminUserController::class, 'update'])->name('user.update');
             Route::get('user/{id}/delete', [AdminUserController::class, 'delete'])->name('user.delete');
 
 
             //management-mitra
             Route::get('mitra', [MitraController::class, 'index'])->name('mitra');
-            Route::put('mitra', [MitraController::class, 'updateMitra'])->name('mitra.update');
+            Route::get('mitra/{id}', [MitraController::class, 'show'])->name('mitra.show');
+            Route::post('mitra/update/{id}', [MitraController::class, 'updateMitra'])->name('mitra.update');
             Route::post('mitra', [MitraController::class, 'storeMitra'])->name('mitra.store');
             Route::delete('mitra/{id}/delete', [MitraController::class, 'destroyMitra'])->name('mitra.destroy');
 
@@ -360,7 +361,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
             Route::get('setting-hotel-room/{id}/edit/{room_id}', [ManagementhotelController::class, 'settingRoomEdit'])
                 ->name('partner.management.hotel.setting.room.edit');
-                Route::put('setting-hotel-room/{id}/edit/{room_id}', [ManagementhotelController::class, 'settingRoomUpdate'])
+            Route::put('setting-hotel-room/{id}/edit/{room_id}', [ManagementhotelController::class, 'settingRoomUpdate'])
                 ->name('partner.management.hotel.setting.room.update');
             // Route::post('setting-hotel-room/hotel-room/update/{hotel_id}/{id}', [ManagementHotelController::class, 'settingRoomUpdate'])->name('partner.management.setting.room.update');
 
