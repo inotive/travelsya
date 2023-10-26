@@ -92,8 +92,14 @@ class CallbackController extends Controller
                             $responseMessageSNCodeFinal = "";
                             if($transaction->service == "listrik-token")
                             {
+                                $data = [
+                                    'reqid' => $transaction->no_inv,
+                                    'no_hp' => str($detailTransactionTopUP->kode_pembayaran),
+                                    'nom' => str($detailTransactionTopUP->nomor_telfon)
+                                ];
+                                $transaction = $this->mymili->status($data);
                                 //process retrieve voucher code
-                                $responseMessage = explode(" ",$responseMili["MESSAGE"]);
+                                $responseMessage = explode(" ",$transaction["MESSAGE"]);
                                 $responseMessageSN = explode("SN=",$responseMessage[4]);
                                 $responseMessageSNCode = explode("/",$responseMessageSN[1]);
                                 $responseMessageSNCodeFinal = $responseMessageSNCode[0];

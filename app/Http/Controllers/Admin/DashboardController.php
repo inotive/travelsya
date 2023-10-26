@@ -113,6 +113,7 @@ class DashboardController extends Controller
                             ->orWhereNull('detail_transaction_ppob.id');
                     });
             })
+            ->orderByDesc('created_at')
             ->get();
 
         $detailTransactions = $detailTransactions->groupBy('id')->map(function ($item) {
