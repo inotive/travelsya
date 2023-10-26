@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('services', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->softDeletes();
-            $table->timestamps();
+        Schema::table('hotel_ratings', function (Blueprint $table) {
+            $table->unsignedBigInteger('transaction_id')->after('users_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            
         });
     }
 
@@ -24,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::table('hotel_ratings', function (Blueprint $table) {
+            //
+        });
     }
 };

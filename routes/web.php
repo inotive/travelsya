@@ -74,6 +74,23 @@ Route::get('/search-pdam', function () {
     return view('search.pdam');
 })->name('search.hostel');
 
+//company
+Route::get('/company/tentang-kami', function () {
+    return view('user.company.about');
+})->name('company.about');
+
+Route::get('/privasi', function () {
+    return view('user.company.terms');
+})->name('company.terms');
+
+Route::get('/company/kebijakan-privasi', function () {
+    return view('user.company.privat');
+})->name('company.privat');
+
+Route::get('/company/kontak', function () {
+    return view('user.company.contact');
+})->name('company.contact');
+
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
@@ -92,9 +109,9 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
-Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
+Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel');
+Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher');
+Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDetailListrik'])->name('profile.order-detail.listrik');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');

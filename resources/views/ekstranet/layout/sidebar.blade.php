@@ -78,56 +78,17 @@
                         <span class="menu-icon">
                             <i class="far fa-calendar fs-3"></i>
                         </span>
-                        <span class="menu-title">Pemesanan (17)</span>
+                        @php
+                            $hotel = \App\Models\Hotel::where('user_id', Auth::id())->get();
+                            $hostel = \App\Models\Hostel::where('user_id', Auth::id())->get();
+                            $bookingHotel = \App\Models\DetailTransactionHotel::whereIn('hotel_id',$hotel->pluck('id'))->count();
+                            $bookingHostel = \App\Models\DetailTransactionHostel::whereIn('hostel_id',$hostel->pluck('id'))->count();
+                            $totalPemesanan = $bookingHotel + $bookingHostel;
+                        @endphp
+                        <span class="menu-title">Pemesanan ({{$totalPemesanan}})</span>
                     </span>
                     <!--end:Menu link-->
                 </a>
-                {{-- <div data-kt-menu-trigger="click"
-                     class="menu-item menu-accordion{{(Request::segment(2)=="riwayat-booking") ? 'here show' : ''}}">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
-                       <span class="menu-icon">
-                            <i class="far fa-calendar fs-3"></i>
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                           </i>
-                        </span>
-                        <span class="menu-title">Pemesanan</span>
-                        <span class="menu-arrow"></span>
-                    </span>
-                    <!--end:Menu link-->
-                    <!--begin:Menu sub-->
-                    <div class="menu-sub menu-sub-accordion">
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}"
-                               href="{{route('partner.riwayat-booking')}}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Riwayat Pemesanan Hotel</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                        <!--begin:Menu item-->
-                        <div class="menu-item">
-                            <!--begin:Menu link-->
-                            <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}"
-                               href="{{route('partner.riwayat-booking')}}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Riwayat Pemesanan Hostel</span>
-                            </a>
-                            <!--end:Menu link-->
-                        </div>
-                        <!--end:Menu item-->
-                    </div>
-                    <!--end:Menu sub-->
-                </div> --}}
-                <!--begin:Menu item-->
                 <a href="{{route('partner.review')}}"
                    class="menu-item menu-accordion">
                     <!--begin:Menu link-->
@@ -163,11 +124,7 @@
                     </div>
                     <!--end:Menu content-->
                 </div>
-                @php
-                    $userHasHotel = \App\Models\Hotel::where('user_id', Auth::id())->count();
-                    $userHasHostel = \App\Models\Hostel::where('user_id', Auth::id())->count();
-                @endphp
-                @if($userHasHotel > 0)
+                @if(count($hotel) > 0)
                     <!--begin:Menu item-->
                     <div data-kt-menu-trigger="click"
                          class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
@@ -179,7 +136,7 @@
                                 <span class="path2"></span>
                            </i>
                         </span>
-                        <span class="menu-title">Hotel ({{$userHasHotel}})</span>
+                        <span class="menu-title">Hotel ({{count($hotel)}})</span>
                         <span class="menu-arrow"></span>
                     </span>
                         <!--end:Menu link-->
@@ -217,7 +174,7 @@
                     <!--end:Menu item-->
                 @endif
 
-                @if($userHasHostel > 0)
+                @if(count($hostel) > 0)
                     <!--begin:Menu item-->
                     <div data-kt-menu-trigger="click"
                          class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
@@ -229,7 +186,7 @@
                                 <span class="path2"></span>
                            </i>
                         </span>
-                        <span class="menu-title">Hostel ({{$userHasHostel}})</span>
+                        <span class="menu-title">Hostel ({{count($hostel)}})</span>
                         <span class="menu-arrow"></span>
                     </span>
                         <!--end:Menu link-->

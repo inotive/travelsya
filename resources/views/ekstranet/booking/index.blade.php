@@ -65,7 +65,7 @@
                             {{-- <td class="text-center">{{ $booking->transaction->user->name ?? ''}} -
                                 {{ $booking->transaction->user->phone ?? '' }}</td> --}}
                             <td class="text-center">
-                                {{ $booking->transaction->user->name }} - {{ $booking->transaction->user->phone ?? '' }}
+                                {{ $booking->transaction->user->name ?? ''}} - {{ $booking->transaction->user->phone ?? '' }}
                             </td>
                             <td class="text-center">{{ $booking->booking_id }}</td>
                             <td class="text-center">{{ $startdates }}</td>

@@ -178,13 +178,13 @@
                                     </div>
                                     <div class="col md-4">
                                         <p class="fw-bold fs-5">Dukungan</p>
-                                        <p>Tentang Kami</p>
-                                        <a href="/partner-hotel" class="text-white">
-                                            <p>Partner</p>
+                                        <a href="{{route('company.contact')}}" class="text-white d-block mb-3">Hubungi Kami</a>
+                                        <a href="{{route('company.about')}}" class="text-white d-block mb-3">Tentang Kami</a>
+                                        <a href="/partner-hotel" class="text-white d-block mb-3">
+                                            Partner
                                         </a>
-                                        <p>Layanan Pelanggan</p>
-                                        <p>Kebijakan Privasi</p>
-                                        <p>Syarat & Ketentuan</p>
+                                        <a href="{{route('company.privat')}}" class="text-white d-block mb-3">Kebijakan Privasi</a>
+                                        <a href="{{route('company.about')}}" class="text-white d-block mb-3">Syarat & Ketentuan</a>
                                     </div>
                                 </div>
                             </div>

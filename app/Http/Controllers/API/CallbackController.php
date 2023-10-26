@@ -93,7 +93,7 @@ class CallbackController extends Controller
                             if($transaction->service == "listrik-token")
                             {
                                 //process retrieve voucher code
-                                $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
+                                $responseMessage = explode(" ",$responseMili["MESSAGE"]);
                                 $responseMessageSN = explode("SN=",$responseMessage[4]);
                                 $responseMessageSNCode = explode("/",$responseMessageSN[1]);
                                 $responseMessageSNCodeFinal = $responseMessageSNCode[0];

@@ -79,7 +79,7 @@ class RiwayatBookingController extends Controller
 
     public function detailhotelbookdate($id)
     {
-        $hotelbookdates = HotelBookDate::find($id);
+        $hotelbookdates = DetailTransactionHotel::with('transaction')->findOrFail($id);
 
         return view('ekstranet.booking.detail-book-hotel', compact('hotelbookdates'));
     }
