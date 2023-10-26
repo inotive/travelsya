@@ -241,7 +241,6 @@ class TransactionController extends Controller
                     )
                     ->first();
                 $responseTransaction = array([
-                    'id' => $detailTransaction->transaksi_id,
                     'no_inv' => $detailTransaction->no_inv,
                     'hotel_id' => $detailTransaction->hotel_id,
                     'hotel_room_id' => $detailTransaction->hotel_room_id,
