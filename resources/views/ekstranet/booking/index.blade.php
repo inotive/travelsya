@@ -89,7 +89,7 @@
 
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning" id=""
+                                            <a href="javascript:void(0)" class="menu-link px-3 " id=""
                                                 data-id="" data-bs-toggle="modal">
                                                 Cetak
                                             </a>
@@ -97,7 +97,7 @@
 
                                         <div class="menu-item px-3">
                                             <a href="{{ route('partner.riwayat-booking.detailhotel', $booking->id) }}"
-                                                class="menu-link px-3 text-warning" id="" data-id="">
+                                                class="menu-link px-3 " id="" data-id="">
                                                 Detail Booking
                                             </a>
                                         </div>
@@ -117,7 +117,7 @@
                                     <a href="#"
                                         class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        Actions
+                                        Aksi
                                         <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                     </a>
                                     <!--end::Menu-->
@@ -150,7 +150,7 @@
                                         <td class="text-center">{{ $booking->room }} Kamar | {{ $diffInDays }} Malam
                                         </td>
                                         <td class="text-center">Sisa {{ $remainingDays }} Malam lagi</td>
-                                
+
                                     <td class="text-center">
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                             data-kt-menu="true" style="">
@@ -158,12 +158,12 @@
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-3">
                                                 <a href="{{ route('partner.riwayat-booking.detailhostel', $booking->id) }}"
-                                                    class="menu-link px-3 text-warning" id="" data-id="">
+                                                    class="menu-link px-3 " id="" data-id="">
                                                     Detail Booking
                                                 </a>
                                             </div>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="menu-link px-3 text-warning"
+                                                <a href="javascript:void(0)" class="menu-link px-3 "
                                                     id="" data-id="" data-bs-toggle="modal">
                                                     Cetak
                                                 </a>
@@ -177,7 +177,7 @@
                                         <a href="#"
                                             class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                             data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                            Actions
+                                            Aksi
                                             <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                         </a>
                                         <!--end::Menu-->

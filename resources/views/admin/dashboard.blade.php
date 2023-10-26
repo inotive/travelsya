@@ -300,13 +300,16 @@
 @push('add-script')
     <script>
         $(document).ready(function () {
-            new DataTable('table.display');
-            // $('#kt_datatable_all').DataTable({
+            new DataTable('table.display', {
+                order: [[1, 'desc']],
+            });
+            // $('.display').DataTable({
             //     "scrollY": "500px",
             //     "scrollCollapse": true,
-            //     "language": {
-            //         "lengthMenu": "Show _MENU_",
-            //     },
+            //     order: [[0, 'desc']],
+            //     // "language": {
+            //     //     "lengthMenu": "Show _MENU_",
+            //     // },
             //     "dom":
             //         "<'row'" +
             //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +

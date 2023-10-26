@@ -22,7 +22,6 @@ class PartnerHotelController extends Controller
         // return view('home', ['hostelPopulers' => $hostelPopulers['data'], 'cities' => $cities['data'], 'ads' => $ads['data']]);
 
         $data['partners'] = User::where('role', 1)->get();
-
         return view('partner', $data);
     }
 }

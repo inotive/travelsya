@@ -172,7 +172,7 @@
                 </a>
                 <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} ">
                         <!--begin:Menu link-->
                         <span class="menu-link">
                         <span class="menu-icon">
@@ -190,7 +190,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.mitra')}}" >
+                                <a class="menu-link {{Route::currentRouteName()=='admin.mitra' ? 'active' : ''}}" href="{{route('admin.mitra')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -202,7 +202,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.hotel.index')}}" >
+                                <a class="menu-link {{Route::currentRouteName()=='admin.hotel.index' ? 'active' : ''}}" href="{{route('admin.hotel.index')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -214,7 +214,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.hostel.index')}}" >
+                                <a class="menu-link {{Route::currentRouteName()=='admin.hostel.index' ? 'active' : ''}}" href="{{route('admin.hostel.index')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>

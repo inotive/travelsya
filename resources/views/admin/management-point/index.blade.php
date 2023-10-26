@@ -26,7 +26,7 @@
                             <th class="text-center">Layanan</th>
                             <th class="text-center">Kelipatan Transaksi</th>
                             <th class="text-center">Jumlah Point Yang Di Dapat Oleh Customer</th>
-                            <th>Aksi</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -39,7 +39,7 @@
                             <td class="text-center">{{strtoupper($point->service->name)}}</td>
                             <td class="text-center">Rp. {{number_format($point->multiple,0,',','.')}}</td>
                             <td class="text-center">{{$point->value}} Point / {{General::rp($point->multiple)}}</td>
-                            <td><button class="btn btn-sm btn-primary" data-id="{{$point->id}}" data-categoryid="{{$point->category_id}}" data-multiple="{{$point->multiple}}" data-value="{{$point->value}}" data-bs-toggle="modal" data-bs-target="#edit">Edit Data</button></td>
+                            <td class="text-center"><button class="btn btn-sm btn-primary" data-id="{{$point->id}}" data-categoryid="{{$point->category_id}}" data-multiple="{{$point->multiple}}" data-value="{{$point->value}}" data-bs-toggle="modal" data-bs-target="#edit">Edit Data</button></td>
                         </tbody>
                         @endforeach
                     </table>
