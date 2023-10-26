@@ -236,6 +236,7 @@ class TransactionController extends Controller
                         'hotels.name  as hotel_name',
                         'hotel_rooms.name  as hotel_room_name',
                         'transactions.total  as grand_total',
+                        'detail_transaction_hotel.*',
                     )
                     ->first();
                 $responseTransaction = array([
