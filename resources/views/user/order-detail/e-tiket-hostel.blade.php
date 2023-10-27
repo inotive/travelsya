@@ -113,7 +113,7 @@
                                             <div class=" fw-bold">17 Okt 2023 14:00</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
-                                            <div class="">Lama Booking</div>
+                                            <div class="">Durasi</div>
                                             <div class=" fw-bold">20 Hari 12 Jam</div>
                                         </div>
                                     </div>
