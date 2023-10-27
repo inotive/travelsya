@@ -91,6 +91,15 @@ Route::get('/company/kontak', function () {
     return view('user.company.contact');
 })->name('company.contact');
 
+// Ini Route Hotel-eBooking
+Route::get('/e-tiket/hotel', function(){
+    return view('user.order-detail.e-tiket');
+});
+
+// Ini Route Hostel-eBooking
+Route::get('/e-tiket/hostel', function(){
+    return view('user.order-detail.e-tiket-hostel');
+});
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
