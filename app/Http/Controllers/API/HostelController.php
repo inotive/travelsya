@@ -177,15 +177,15 @@ class HostelController extends Controller
             // }
             // $hostelGet = $hostel->get();
             $hostelGet = collect([$hostel])->map(function ($hostel) use ($duration_type) {
-
-                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type) {
+                $duration_type2 = $duration_type;
+                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type2) {
 
                     $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
                         return ['id' => $room_images->id, 'hostel_room_id' => $room_images->hostel_room_id, 'hostel_room_name' => $room_images->hostelRoom->name, 'image' => 'storage/' . $room_images->image,];
                     });
 
                     $sellingPrice = 0;
-                    if($duration_type == "monthly"){
+                    if($duration_type2 == "monthly"){
                         $sellingPrice = $room->where('id', $room->id)
                             ->orderBy('sellingrentprice_monthly', 'asc')
                             ->pluck('sellingrentprice_monthly')->first();

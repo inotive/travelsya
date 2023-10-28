@@ -39,7 +39,10 @@
                     @foreach ($hotels as $hotel)
                         <tr id="index_{{ $hotel->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td class="text-center">{{ $hotel->user_name }}</td>
+                            <td class="text-center">
+                                <img src="{{asset('storage/'. $hotel->image)}}" alt="" style="width: 25px; height: 25px;">
+                                {{ $hotel->user_name }}
+                            </td>
                             <td class="text-center">{{ $hotel->name }}</td>
                             <td class="text-center">{{ $hotel->city }}</td>
                             <td class="text-center">{{ $hotel->address }}</td>
@@ -61,21 +64,6 @@
                                     data-kt-menu="true" style="">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="/metronic8/demo1/../demo1/apps/customers/view.html"
-                                           class="menu-link px-3">
-                                            Daftar Room
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                                            Detail Hotel
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
                                         <a href="javascript:void(0)" class="menu-link px-3 text-warning"
                                            id="tombol-edit" data-id="{{ $hotel->id }}" data-bs-toggle="modal">
                                             Edit
@@ -94,7 +82,7 @@
                                 <!--begin::Menu-->
                                 <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                    Actions
+                                    Aksi
                                     <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                 </a>
                                 <!--end::Menu-->

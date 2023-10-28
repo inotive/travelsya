@@ -8,6 +8,7 @@ use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\DetailTransactionTopUp;
+use App\Models\HistoryPoint;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
 use App\Models\Hotel;
@@ -160,17 +161,23 @@ class TransactionController extends Controller
             // $user_id = 5;
 
             $transaction = Transaction::where('no_inv', $no_inv);
+            $historyPoint = collect(HistoryPoint::where('transaction_id', $transaction->first()->id)->get());
+            $receivedPoint = $historyPoint->where('flow', 'debit')->pluck('point')->first();
+            $usedPoint = $historyPoint->where('flow', 'kredit')->pluck('point')->first();
             $responseTransaction = null;
             // UNTUK PPOB
             if (in_array($transaction->first()->service_id, [6, 3, 5, 9, 10])) {
                 $detailTransaction = Transaction::join('detail_transaction_ppob', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
                     ->where('detail_transaction_ppob.transaction_id', $transaction->first()->id)
+                    ->select('*','detail_transaction_ppob.nama_pelanggan')
                     ->first();
-
+                $product = Product::where('id', $detailTransaction->product_id)->get();
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
+                    'nama_pelanggan' => $detailTransaction->nama_pelanggan,
                     'nomor_pelanggan' => $detailTransaction->nomor_pelanggan,
+                    'product' => $product,
                     'req_id' => $detailTransaction->req_id,
                     'link' => $detailTransaction->link,
                     'service' => $detailTransaction->service,
@@ -178,7 +185,10 @@ class TransactionController extends Controller
                     'payment_method' => $detailTransaction->payment_method,
                     'payment_channel' => $detailTransaction->payment_channel,
                     'status' => $detailTransaction->status,
+                    'fee_admin' => $detailTransaction->fee_admin,
                     'total' => $detailTransaction->total,
+                    'point_received' => $receivedPoint,
+                    'point_used' => $usedPoint,
                     'created_at' => $detailTransaction->created_at,
                     ]);
             }
@@ -188,6 +198,7 @@ class TransactionController extends Controller
                 $detailTransaction = Transaction::join('detail_transaction_top_up', 'detail_transaction_top_up.transaction_id', '=', 'transactions.id')
                     ->where('detail_transaction_top_up.transaction_id', $transaction->first()->id)
                     ->first();
+                $product = Product::where('id', $detailTransaction->product_id)->get();
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
@@ -195,11 +206,16 @@ class TransactionController extends Controller
                     'req_id' => $detailTransaction->req_id,
                     'link' => $detailTransaction->link,
                     'service' => $detailTransaction->service,
+                    'product' => $product,
                     'payment' => $detailTransaction->payment,
                     'payment_method' => $detailTransaction->payment_method,
                     'payment_channel' => $detailTransaction->payment_channel,
+                    'kode_voucher' => $detailTransaction->kode_voucher,
                     'status' => $detailTransaction->status,
+                    'fee_admin' => $detailTransaction->fee_travelsya,
                     'total' => $detailTransaction->total,
+                    'point_received' => $receivedPoint,
+                    'point_used' => $usedPoint,
                     'created_at' => $detailTransaction->created_at,
                 ]);
 //                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
@@ -214,12 +230,30 @@ class TransactionController extends Controller
                     ->join('hotels', 'hotels.id', '=', 'detail_transaction_hotel.hotel_id')
                     ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id')
                     ->where('detail_transaction_hotel.transaction_id', $transaction->first()->id)
+                    ->select(
+                        'detail_transaction_hotel.*',
+                        'hotels.id  as hotel_id',
+                        'hotel_rooms.id  as hotel_room_id',
+                        'hotels.name  as hotel_name',
+                        'hotel_rooms.name  as hotel_room_name',
+                        'transactions.id  as transaksi_id',
+                        'transactions.total  as grand_total',
+                        'transactions.*',
+                    )
                     ->first();
-
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
+                    'hotel_id' => $detailTransaction->hotel_id,
+                    'hotel_room_id' => $detailTransaction->hotel_room_id,
+                    'hotel_name' => $detailTransaction->hotel_name,
+                    'hotel_room_name' => $detailTransaction->hotel_room_name,
                     'booking_id' => $detailTransaction->booking_id,
+                    'guest_identity' => array([
+                        'name' => $detailTransaction->guest_name,
+                        'handphone' => $detailTransaction->guest_email,
+                        'email' => $detailTransaction->guest_handphone,
+                    ]),
                     'reservation_start' => $detailTransaction->reservation_start,
                     'reservation_end' => $detailTransaction->reservation_end,
                     'guest' => $detailTransaction->guest,
@@ -231,7 +265,10 @@ class TransactionController extends Controller
                     'payment_method' => $detailTransaction->payment_method,
                     'payment_channel' => $detailTransaction->payment_channel,
                     'status' => $detailTransaction->status,
-                    'total' => $detailTransaction->total,
+                    'fee_admin' => $detailTransaction->fee_admin,
+                    'total' => $detailTransaction->grand_total,
+                    'received_point' => $receivedPoint,
+                    'used_point' => $usedPoint,
                     'created_at' => $detailTransaction->created_at,
                 ]);
 //                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
@@ -247,12 +284,30 @@ class TransactionController extends Controller
                     ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
                     ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id')
                     ->where('detail_transaction_hostel.transaction_id', $transaction->first()->id)
+                    ->select(
+                        'detail_transaction_hostel.*',
+                        'transactions.*',
+                        'hostels.id  as hostel_id',
+                        'hostel_rooms.id  as hostel_room_id',
+                        'hostels.name  as hostel_name',
+                        'hostel_rooms.name  as hostel_room_name',
+                        'transactions.total  as grand_total',
+                    )
                     ->first();
 
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
+                    'hostel_id' => $detailTransaction->hostel_id,
+                    'hostel_room_id' => $detailTransaction->hostel_room_id,
+                    'hostel_name' => $detailTransaction->hostel_name,
+                    'hotel_room_name' => $detailTransaction->hostel_room_name,
                     'booking_id' => $detailTransaction->booking_id,
+                    'guest_identity' => array([
+                        'name' => $detailTransaction->guest_name,
+                        'handphone' => $detailTransaction->guest_email,
+                        'email' => $detailTransaction->guest_handphone,
+                    ]),
                     'reservation_start' => $detailTransaction->reservation_start,
                     'reservation_end' => $detailTransaction->reservation_end,
                     'guest' => $detailTransaction->guest,
@@ -265,7 +320,10 @@ class TransactionController extends Controller
                     'payment_method' => $detailTransaction->payment_method,
                     'payment_channel' => $detailTransaction->payment_channel,
                     'status' => $detailTransaction->status,
-                    'total' => $detailTransaction->total,
+                    'fee_admin' => $detailTransaction->fee_admin,
+                    'total' => $detailTransaction->grand_total,
+                    'received_point' => $receivedPoint,
+                    'used_point' => $usedPoint,
                     'created_at' => $detailTransaction->created_at,
                 ]);
             }

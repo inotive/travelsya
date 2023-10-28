@@ -21,20 +21,20 @@
                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
-                        <th>No.</th>
-                        <th>Layanan</th>
-                        <th>Tipe Biaya Admin</th>
-                        <th>Besaran Biya Admin</th>
-                        <th>Aksi</th>
+                        <th class="text-center">No.</th>
+                        <th class="text-center">Layanan</th>
+                        <th class="text-center">Tipe Biaya Admin</th>
+                        <th class="text-center">Besaran Biya Admin</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                     </thead>
                     <tbody>
                         @foreach($fees as $fee)
                         <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{strtoupper($fee->service->name)}}</td>
-                            <td>{{$fee->percent == 1 ? "Presentase" : "Rupiah" }}</td>
-                            <td>
+                            <td class="text-center">{{$loop->iteration}}</td>
+                            <td class="text-center">{{strtoupper($fee->service->name)}}</td>
+                            <td class="text-center">{{$fee->percent == 1 ? "Presentase" : "Rupiah" }}</td>
+                            <td class="text-center">
                                 @if($fee->percent == 1)
                                     {{$fee->value}} %
                                 @else
@@ -42,7 +42,7 @@
                                 @endif
 
                             </td>
-                            <td><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
+                            <td class="text-center"><button class="btn btn-sm btn-primary">Edit Biaya</button></td>
                         </tr>
                         @endforeach
                     </tbody>

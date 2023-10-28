@@ -56,17 +56,34 @@
                                     <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">{{auth()->user()->email}}</a>
                                 </div>
                                 <!--end::Username-->
+
+
                             </div>
                         </div>
                         <!--end::Menu item-->
-                        
+                        <div class="menu-item px-5">
+                            <a href="/metronic8/demo1/../demo1/apps/projects/list.html" class="menu-link px-5">
+                                <span class="menu-text">Profil</span>
+                            </a>
+                        </div>
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
-                            <form action="{{route('admin.logout')}}" method="post">
-                                @csrf
-                                <button type="submit" class="menu-link px-5">Sign Out</button>
-                            </form>
+                            <a href="{{route('admin.logout')}}"  onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();" class="menu-link px-5">
+                                <span class="menu-text">Logout</span>
+                            </a>
                         </div>
+
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+{{--                        <div class="menu-item px-5">--}}
+{{--                            <form action="{{route('admin.logout')}}" method="post">--}}
+{{--                                @csrf--}}
+{{--                                <a type="submit" class="menu-link px-5">Sign Out</a>--}}
+{{--                            </form>--}}
+{{--                        </div>--}}
                         <!--end::Menu item-->
                     </div>
                     <!--end::User account menu-->

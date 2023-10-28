@@ -35,7 +35,7 @@ class TransactionController extends Controller
             $tr = $tr->whereDate('created_at', '>=', $request->start);
         }
 
-        $transactions = $tr->orderBy('created_at', 'desc')->paginate(10);
+        $transactions = $tr->orderBy('created_at', 'desc')->get();
         $services = Service::all();
         return view('admin.transaction', compact('transactions', 'services'));
     }
