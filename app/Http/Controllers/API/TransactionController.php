@@ -8,6 +8,7 @@ use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\DetailTransactionTopUp;
+use App\Models\Fee;
 use App\Models\HistoryPoint;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
@@ -127,6 +128,14 @@ class TransactionController extends Controller
         }
     }
 
+    public function AdminFee()
+    {
+        $fee = Fee::with('service')->get();
+        return response()->json([
+            'status' => 200,
+            'data' => $fee
+        ]);
+    }
     public function __construct()
     {
         Xendit::setApiKey("xnd_development_720yPHpZAyEfNzCycBS6I6nnREM6JrieSYS4zdytWdptFMn68JEyEsoBvPYs");

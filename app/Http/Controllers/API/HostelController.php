@@ -178,14 +178,14 @@ class HostelController extends Controller
             // $hostelGet = $hostel->get();
             $hostelGet = collect([$hostel])->map(function ($hostel) use ($duration_type) {
                 $duration_type2 = $duration_type;
-                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type2) {
+                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type) {
 
                     $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
                         return ['id' => $room_images->id, 'hostel_room_id' => $room_images->hostel_room_id, 'hostel_room_name' => $room_images->hostelRoom->name, 'image' => 'storage/' . $room_images->image,];
                     });
 
                     $sellingPrice = 0;
-                    if($duration_type2 == "monthly"){
+                    if($duration_type == "monthly"){
                         $sellingPrice = $room->where('id', $room->id)
                             ->orderBy('sellingrentprice_monthly', 'asc')
                             ->pluck('sellingrentprice_monthly')->first();
@@ -379,7 +379,10 @@ class HostelController extends Controller
                 'guest' => $request->total_guest,
                 'room' => 1, // "rent_price"        => $hostel->sellingprice,
                 "rent_price" => $amount,
-                "fee_admin" => $fees[0]['value']
+                "fee_admin" => $fees[0]['value'],
+                "guest_name" => $data['guest'][0]['name'],
+                "guest_email" => $data['guest'][0]['email'],
+                "guest_handphone" => $data['guest'][0]['phone']
             ]);
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');

@@ -399,6 +399,9 @@ class HotelController extends Controller
                         'room' => $request->total_room,
                         "rent_price" => $hotel->sellingprice,
                         "fee_admin" => $fees[0]['value'],
+                        "guest_name" => $data['guest'][0]['name'],
+                        "guest_email" => $data['guest'][0]['email'],
+                        "guest_handphone" => $data['guest'][0]['phone']
                     ]);
             } catch (\Exception $exception) {
                 return response()->json([
