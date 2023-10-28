@@ -2,7 +2,9 @@
 
 @section('content-admin')
     <!--begin::Row-->
+
     <div class="row gy-3">
+
         <!--begin::Col-->
     @foreach($hotels as $hotel)
     @php
@@ -16,8 +18,9 @@
             @endphp
 
         <div class="col-sm-6 col-md-6 col-lg-6">
-            <div class="card  card-xl-stretch mb-xl-8">
+            <div class="card">
                 <!--begin::Body-->
+
                 <div class="card-body my-3 py-3">
                     <div class="row">
                         <div class="col-12">
