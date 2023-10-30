@@ -80,7 +80,7 @@ class PpobController extends Controller
         $data = $request->all();
 
         // handle validation
-        $validator = Validator::make($request->all(), ['product_id' => 'required', 'nomor_tagihan' => 'required', 'nominal_tagihan' => 'required', 'point' => 'required',]);
+        $validator = Validator::make($request->all(), ['product_id' => 'required', 'nomor_tagihan' => 'required', 'nominal_tagihan' => 'required', 'point' => 'required', 'kode_unik' => 'required']);
 
         if ($validator->fails()) {
             return ResponseFormatter::error(['response' => $validator->errors(),], 'Transaction failed', 500);
@@ -109,10 +109,10 @@ class PpobController extends Controller
         }
 
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
+        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
 
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $request->nominal_tagihan + $fees->value - $saldoPointCustomer;
+        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
 
         // request xendit
         $payoutsXendit = $this->xendit->create(['external_id' => $data['no_inv'], 'items' => [['name' => $product->name, 'quantity' => 1, 'price' => $grandTotal, 'url' => "someurl"]], 'amount' => $grandTotal, 'success_redirect_url' => route('redirect.succes'), 'failure_redirect_url' => route('redirect.fail'), 'invoice_duration ' => 72000, 'should_send_email' => true, 'customer' => ['given_names' => 'Gusti Bagus', 'email' => 'gustibagus34@gmail.com', 'mobile_number' => "081253290605",],]);
