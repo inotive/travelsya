@@ -302,6 +302,7 @@ class HotelController extends Controller
             "end" => "required",
             "total_room" => "required",
             "total_guest" => "required",
+            "kode_unik" => "required",
         ]);
 
         if ($validator->fails()) {
@@ -335,6 +336,10 @@ class HotelController extends Controller
                 'type' => 'admin',
                 'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
             ],
+            [
+                'type' => 'kode_unik',
+                'value' => $data['kode_unik'],
+            ],
         ];
 
         // cek book date
@@ -358,7 +363,7 @@ class HotelController extends Controller
                     "quantity" => $request->total_room,
                 ]
             ],
-            'amount' => $amount + $fees[0]['value'],
+            'amount' => $amount + $fees[0]['value'] + $data['kode_unik'],
             'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
