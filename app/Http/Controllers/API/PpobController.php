@@ -128,11 +128,11 @@ class PpobController extends Controller
             $data['detail'] = $request->input('detail');
             DB::table('detail_transaction_ppob')->insert(['transaction_id' => $transaction->id, 'product_id' => $product->id, 'nomor_pelanggan' => $request->nomor_tagihan, 'total_tagihan' => $grandTotal, 'fee_travelsya' => 2500, 'fee_mili' => 100, 'message' => 'Sedang menunggu pembayaran', 'status' => "PROCESS"]);
 
-//                if ($data['point']) {
-//                    //deductpoint
-//                    $point = new Point;
-//                    $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
-//                }
+            //                if ($data['point']) {
+            //                    //deductpoint
+            //                    $point = new Point;
+            //                    $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
+            //                }
 
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         }
@@ -152,7 +152,7 @@ class PpobController extends Controller
             $requestMymili = $this->mymili->inquiry(['no_hp' => $data['no_pelanggan'], 'nom' => $data['nom'],]);
 
             $fee_admin = Product::with('service')->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
-            ->price;
+                ->price;
 
             if (str_contains($requestMymili['status'], "SUKSES!")) {
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');

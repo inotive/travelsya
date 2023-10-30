@@ -388,7 +388,7 @@ class HotelController extends Controller
                 'user_id' => \Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount + $fees[0]['value']
+                'total' => $amount + $fees[0]['value'] + $data['kode_unik']
             ]);
 
             try {
