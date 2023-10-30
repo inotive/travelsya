@@ -108,6 +108,7 @@ class TopUpController extends Controller
             'point' => 'required',
             'no_hp' => 'required',
             'kode_pembayaran' => 'required',
+            'kode_unik' => 'required',
         ]);
         $product = Product::with('service')->find($data['product_id']);
         $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
@@ -123,7 +124,7 @@ class TopUpController extends Controller
             $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
         }
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $product->price + $fees->value - $saldoPointCustomer;
+        $grandTotal = $product->price + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
