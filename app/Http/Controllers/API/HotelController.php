@@ -394,16 +394,17 @@ class HotelController extends Controller
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hotel')
                     ->insert([
-                        'transaction_id' => $storeTransaction->id,
-                        'hotel_id' => $hotel->hotel_id,
-                        'hotel_room_id' => $data['hotel_room_id'],
-                        'booking_id' => Str::random(6),
-                        'reservation_start' =>  $data['start'],
-                        'reservation_end' =>  $data['end'],
-                        'guest' =>  $request->total_guest,
-                        'room' => $request->total_room,
-                        "rent_price" => $hotel->sellingprice,
-                        "fee_admin" => $fees[0]['value'],
+                        'transaction_id'    => $storeTransaction->id,
+                        'hotel_id'          => $hotel->hotel_id,
+                        'hotel_room_id'     => $data['hotel_room_id'],
+                        'booking_id'        => Str::random(6),
+                        'reservation_start' => $data['start'],
+                        'reservation_end'   => $data['end'],
+                        'guest'             => $request->total_guest,
+                        'room'              => $request->total_room,
+                        "rent_price"        => $hotel->sellingprice,
+                        "fee_admin"         => $fees[0]['value'],
+                        "kode_unik"         => $data['kode_unik'],
                     ]);
             } catch (\Exception $exception) {
                 return response()->json([

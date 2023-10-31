@@ -374,17 +374,18 @@ class HostelController extends Controller
 
         DB::table('detail_transaction_hostel')
             ->insert([
-                'transaction_id' => $storeTransaction->id,
-                'hostel_id' => $hostel->hostel_id,
-                'hostel_room_id' => $data['hostel_room_id'],
-                'type_rent' => $request->duration_type,
-                'booking_id' => Str::random(6),
+                'transaction_id'    => $storeTransaction->id,
+                'hostel_id'         => $hostel->hostel_id,
+                'hostel_room_id'    => $data['hostel_room_id'],
+                'type_rent'         => $request->duration_type,
+                'booking_id'        => Str::random(6),
                 'reservation_start' => $data['start'],
-                'reservation_end' => $data['end'],
-                'guest' => $request->total_guest,
-                'room' => 1, // "rent_price"        => $hostel->sellingprice,
-                "rent_price" => $amount,
-                "fee_admin" => $fees[0]['value']
+                'reservation_end'   => $data['end'],
+                'guest'             => $request->total_guest,
+                'room'              => 1,                         // "rent_price"        => $hostel->sellingprice,
+                "rent_price"        => $amount,
+                "fee_admin"         => $fees[0]['value'],
+                "kode_unik"         => $data['kode_unik'],
             ]);
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
