@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\General;
+use App\Models\DetailTransactionHostel;
 use App\Models\Facility;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
@@ -13,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use App\Services\Xendit;
+use Carbon\Carbon;
 
 class HostelController extends Controller
 {
@@ -303,6 +306,7 @@ class HostelController extends Controller
         // return redirect()->to($hostel['data']['invoice_url'])->send();
 
         $data = $request->all();
+        // dd($data);
 
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
         // dd($hostel);
@@ -317,6 +321,11 @@ class HostelController extends Controller
         $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($data['point'], 7, $request->user()->id, $sellingprice);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         // dd($fees);
 
         if (!$fees) return 'Point invalid';
@@ -354,25 +363,47 @@ class HostelController extends Controller
 
         // dd($payoutsXendit);
 
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel) {
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel, $sellingprice, $uniqueCode) {
 
             $storeTransaction = Transaction::create([
-                'no_inv' => $invoice,
-                'req_id' => 'HTL-' . time(),
-                'service' => 'hostel',
+                'no_inv'     => $invoice,
+                'req_id'     => 'HTL-' . time(),
+                'service'    => 'hostel',
                 'service_id' => 7,
                 // 'payment' => $payoutsXendit['payment'],
                 'payment' => 'xendit',
                 'user_id' => $request->user()->id,
-                'status' => $payoutsXendit['status'],
-                'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount
+                'status'  => $payoutsXendit['status'],
+                'link'    => $payoutsXendit['invoice_url'],
+                'total'   => $amount
+            ]);
+
+            $helper = new General();
+            // true buat detail
+
+            $storeDetailTransaction = DetailTransactionHostel::create([
+                'transaction_id'    => $storeTransaction->id,
+                'hostel_id'         => $hostel->hostel_id,
+                'hostel_room_id'    => $data['hostel_room_id'],
+                'type_rent'         => $data['category'],
+                "booking_id"        => $helper->generateRandomString(6),
+                "reservation_start" => Carbon::parse($data['start'])->format('Y-m-d'),
+                "reservation_end"   => Carbon::parse($data['end'])->format('Y-m-d'),
+                // "guest"             => $data['total_guest'],
+                // "room"              => $data['room'],
+                "guest"             => 1,
+                "room"              => 1,
+                "rent_price"        => $sellingprice,
+                "fee_admin"         => 2500,
+                "kode_unik"         => $uniqueCode,
+                "created_at"        => Carbon::now(),
+                "updated_at"        => Carbon::now(),
             ]);
 
             if ($data['point']) {
                 //deductpoint
                 $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
             }
         });
 

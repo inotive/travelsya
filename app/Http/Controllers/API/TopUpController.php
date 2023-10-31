@@ -173,13 +173,14 @@ class TopUpController extends Controller
             $data['detail'] = $request->input('detail');
             DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $transaction->id,
-                'product_id' => $product->id,
-                'nomor_telfon' => $data['no_hp'],
-                'total_tagihan' => $grandTotal,
-                'fee_travelsya' => 2500,
-                'fee_mili' => 2500,
-                'message' => 'Top UP sedang diproses',
-                'status' => "PROCESS"
+                'product_id'     => $product->id,
+                'nomor_telfon'   => $data['no_hp'],
+                'total_tagihan'  => $grandTotal,
+                'fee_travelsya'  => 2500,
+                'fee_mili'       => 2500,
+                'message'        => 'Top UP sedang diproses',
+                'status'         => "PROCESS",
+                "kode_unik"      => $data['kode_unik'],
             ]);
             // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
