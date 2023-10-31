@@ -146,7 +146,6 @@ class UserController extends Controller
         //     ->where('detail_transaction_hotel.transaction_id', $id)
         //     ->first();
         $transactionHotel = DetailTransactionHotel::with('transaction.guest','hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom')->where('transaction_id', $id)->first();
-// dd($transactionHotel);
 
         $hotelPict = DB::table('hotel_images')
             ->where('hotel_id', $transactionHotel->hotel_id)
