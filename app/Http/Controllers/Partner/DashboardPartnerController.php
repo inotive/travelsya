@@ -51,17 +51,19 @@ class DashboardPartnerController extends Controller
          */
         $id = auth()->user()->id;
         $startWeek = Carbon::now()->subWeek()->format("Y-m-d H:i:s");
-        $dateNow = Carbon::now();
+        $startYear = Carbon::now()->startOfYear()->format("Y-m-d H:i:s");
+        $dateNow = Carbon::now()->endOfYear()->format("Y-m-d H:i:s");
+        // $dateNow = Carbon::now();
 
         /**
          * PENDAPATAN PER MINGGU ======================================
          */
-        $transaction_hotel = DetailTransactionHotel::whereBetween('created_at', [$startWeek, $dateNow])
+        $transaction_hotel = DetailTransactionHotel::whereBetween('created_at', [$startYear, $dateNow])
             ->withWhereHas('transaction', function ($query) use ($id) {
                 $query->where('user_id', $id);
             });
 
-        $transaction_hostel = DetailTransactionHostel::whereBetween('created_at', [$startWeek, $dateNow])
+        $transaction_hostel = DetailTransactionHostel::whereBetween('created_at', [$startYear, $dateNow])
             ->withWhereHas('transaction', function ($query) use ($id) {
                 $query->where('user_id', $id);
             });
