@@ -12,15 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('image')->nullable()->after('email_verified_at');
+            $table->boolean('is_active')->after('password');
         });
     }
-
 
     /**
      * Reverse the migrations.
      */
-    
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {

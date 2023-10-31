@@ -326,13 +326,16 @@
                             <tbody>
                                 @foreach ($facility as $item)
                                 <tr>
-                                    <td>
-                                        <div class="form-check form-check-lg">
-                                            <input class="form-check-input" type="checkbox" name="facility_id[]"
+                                    <td class="text-center">
+                                        <div class="form-check form-check-lg text-center d-flex justify-content-center">
+                                            <input class="form-check-input text-center" type="checkbox" name="facility_id[]" style="width: 25px; height: 25px"
                                                 value="{{ $item->id }}" id="facility{{ $item->id }}">
                                         </div>
                                     </td>
-                                    <td>{{ $item->name }}</td>
+                                    <td class="text-center">
+                                        <img src="{{asset('storage/'. $item->icon)}}" alt="" style="height: 25px; width: 25px;">
+
+                                        {{ strtoupper($item->name) }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -344,11 +347,11 @@
         </div>
         <!--end:: Body-->
         <div class="card-footer d-flex justify-content-between">
-            <button type="submit" class="btn btn-primary w-50" id="kt_modal_new_target_submit">Simpan
+            <button type="submit" class="btn btn-primary w-50 me-2" id="kt_modal_new_target_submit">Simpan
                 Data</button>
-            {{-- <a href="{{route('partner.management.hostel.setting.room', ['id'=>$hostel->id])}}"
+             <a href="{{route('partner.management.hostel.setting.room', ['id'=>$hostel->id])}}"
                 class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
-            --}}
+
         </div>
         </form>
     </div>

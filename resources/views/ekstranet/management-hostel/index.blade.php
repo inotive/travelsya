@@ -2,7 +2,7 @@
 
 @section('content-admin')
     <!--begin::Row-->
-    <div class="row gy-5 g-xl-10">
+    <div class="row gy-3 ">
         <!--begin::Col-->
     @foreach($hostels as $hostel)
     @php
@@ -18,7 +18,7 @@
         <div class="col-sm-6 col-md-6 col-lg-6">
             <div class="card  card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
-                <div class="card-body my-3">
+                <div class="card-body py-3 my-3">
                     <div class="row">
                         <div class="col-12">
                             <h3 class="fw-bold text-primary">{{$hostel->name}}</h3>
@@ -47,17 +47,17 @@
                         <div class="row my-3 w-100 p-0 gy-4">
                             <div class="col-6">
 
-                                <a href="{{route('partner.management.hostel.detail',$hostel->id)}}" class="btn btn-primary me-2 w-100">Detail hostel</a>
+                                <a href="{{route('partner.management.hostel.detail',$hostel->id)}}" class="btn btn-primary p-4 me-2 w-100">Detail hostel</a>
                             </div>
                             <div class="col-6">
-                                <a href="{{route('partner.management.hostel.setting.hostel',$hostel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Profil hostel</a>
+                                <a href="{{route('partner.management.hostel.setting.hostel',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Profil hostel</a>
                             </div>
                             <div class="col-6">
-                                <a href="{{route('partner.management.hostel.setting.photo',$hostel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo hostel ({{$hostel->hostelImage->count()}})</a>
+                                <a href="{{route('partner.management.hostel.setting.photo',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo hostel ({{$hostel->hostelImage->count()}})</a>
                             </div>
                             <div class="col-6">
 
-                                <a href="{{route('partner.management.hostel.setting.room',$hostel->id)}}" class="btn btn-outline btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Kamar Hostel ({{$hostel->hostelRoom->count()}})</a>
+                                <a href="{{route('partner.management.hostel.setting.room',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Kamar Hostel ({{$hostel->hostelRoom->count()}})</a>
                             </div>
                         </div>
 

@@ -109,7 +109,7 @@ class UserController extends Controller
             ->orderBy('transactions.created_at', 'desc')
             ->get();
 
-        
+
 
         return view('user.orderhistory', $data);
     }
@@ -145,7 +145,7 @@ class UserController extends Controller
         //     )
         //     ->where('detail_transaction_hotel.transaction_id', $id)
         //     ->first();
-        $transactionHotel = DetailTransactionHotel::with('transaction.guest','hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom')->where('transaction_id', $id)->first(); 
+        $transactionHotel = DetailTransactionHotel::with('transaction.guest','hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom')->where('transaction_id', $id)->first();
 // dd($transactionHotel);
 
         $hotelPict = DB::table('hotel_images')
@@ -241,13 +241,13 @@ class UserController extends Controller
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
+            ->where('transaction_id', $id)
             ->first();
 
         $pengeluaran = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'credit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
+            ->where('transaction_id', $id)
             ->first();
 
         return view('user.order-detail.listrik', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));

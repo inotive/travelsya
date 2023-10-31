@@ -56,34 +56,6 @@
                             <!--begin::Table body-->
                             <tbody>
                             <tbody class="fw-semibold text-gray-600" id="dataTbody">
-                                {{-- @foreach ($customers as $customer) --}}
-                                {{-- <tr>
-                                        <td>
-                                            <div class="text-dark fw-bold  mb-1 fs-6">12 A 123</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">INV-20230622-HOSTEL-1687467039</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">Pulsa</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">Custom</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">HOTEL GRAND - SAS</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">Bank</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">Rp</div>
-                                        </td>
-                                        <td>
-                                            <div class="text-dark fw-bold  d-block mb-1 fs-6">25 Point</div>
-                                        </td>
-                                    </tr> --}}
-                                {{-- @endforeach --}}
 
                             </tbody>
                             <!--end::Table body-->
@@ -107,11 +79,11 @@
 <script>
     function showDetailTransactions(customerId) {
     $.ajax({
-        url: 'customer/show', 
+        url: 'customer/show',
         method: 'GET',
         data: { customerId: customerId },
         success: function(response) {
-            
+
             // Fill Table Body
             var tableBody = $('#dataTbody');
             var data = response;

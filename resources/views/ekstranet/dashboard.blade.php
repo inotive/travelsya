@@ -67,7 +67,7 @@
                 <!--begin::Wrapper-->
                 <div class="d-flex flex-column mb-7">
                     <!--begin::Title-->
-                    <a href="#" class="text-dark text-hover-primary fw-bold fs-3">Summary</a>
+                    <a href="#" class="text-dark text-hover-primary fw-bold fs-3">Rooms</a>
                     <!--end::Title-->
                 </div>
                 <!--end::Wrapper-->
@@ -139,6 +139,7 @@
                         <tbody>
                             @foreach($transaction_hotels as $hotel)
                             <tr>
+                                {{-- <h1>{{ dd($hotel) }}</h1> --}}
                                 <td>{{date('d M Y',strtotime($hotel->created_at))}}</td>
                                 <td>{{$hotel->transaction->no_inv}}</td>
                                 <td>{{$hotel->transaction->req_id}}</td>
@@ -148,8 +149,8 @@
                                 <td>{{$hotel->transaction->payment }}</td>
                                 <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hotel->transaction->status == " SUCCESS" ? "badge-success"
-                                        : "badge-danger" }}">{{$hotel->transaction->status }}</span>
+                                    <span class="badge {{$hotel->transaction->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hotel->transaction->status }}</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -164,8 +165,8 @@
                                 <td>{{$hostel->transaction->payment }}</td>
                                 <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hostel->transaction->status == " SUCCESS" ? "badge-success"
-                                        : "badge-danger" }}">{{$hostel->transaction->status }}</span>
+                                    <span class="badge {{$hostel->transaction->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hostel->transaction->status }}</span>
                                 </td>
                             </tr>
                             @endforeach

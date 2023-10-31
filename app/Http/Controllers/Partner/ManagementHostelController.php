@@ -74,7 +74,7 @@ class ManagementHostelController extends Controller
             'lon' => $request->long_ltd,
             'property' => $request->property
         ]);
-    
+
 
 
         toast('Hostel has been updated', 'success');
@@ -109,9 +109,12 @@ class ManagementHostelController extends Controller
 
     public function settingRoomEdit($id, $room_id)
     {
-        $hostel = hostel::with('hostelRoom')->find($id);
+        // $hostel = hostel::with('hostelRoom')->find($id);
+        // $facility = Facility::all();
+        // $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
+        $hostel = Hostel::find($id); // Mengambil hotel dengan id tertentu
+        $room = hostelRoom::where('id', $room_id)->first();
         $facility = Facility::all();
-        $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
 
         return view('ekstranet.management-hostel.setting-room-update', compact('hostel', 'facility', 'room'));
     }
@@ -163,11 +166,11 @@ class ManagementHostelController extends Controller
             'roomsize' => $request->roomsize,
             'max_guest' => $request->guest,
             'maxextrabed' => $request->maxextrabed,
-            // 'totalbathroom' => $request->totalbathroom,
-            // 'maxextrabed' => $request->maxextrabed,
+             'totalbathroom' => $request->totalbathroom,
+             'maxextrabed' => $request->maxextrabed,
             'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
             'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
-            // 'bed_type' => $request->bed_type,
+             'bed_type' => $request->bed_type,
             'totalroom' => $request->totalroom,
             'is_active' => 1,
 

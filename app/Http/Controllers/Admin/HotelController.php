@@ -21,7 +21,7 @@ class HotelController extends Controller
         $users = DB::table('users')->where('role', 1)->get();
         $hotels = DB::table('hotels')
             ->join('users', 'users.id', '=', 'hotels.user_id')
-            ->select('hotels.*', 'users.name as user_name')
+            ->select('hotels.*', 'users.name as user_name', 'users.*')
             ->get();
 
         return view('admin.management-mitra.hotel.index', compact('users', 'hotels'));

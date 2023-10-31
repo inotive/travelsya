@@ -175,7 +175,7 @@ class HostelController extends Controller
             // }
             // $hostelGet = $hostel->get();
             $hostelGet = collect([$hostel])->map(function ($hostel) use ($duration_type) {
-
+                $duration_type2 = $duration_type;
                 $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type) {
 
                     $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
@@ -380,12 +380,15 @@ class HostelController extends Controller
                 'type_rent'         => $request->duration_type,
                 'booking_id'        => Str::random(6),
                 'reservation_start' => $data['start'],
-                'reservation_end'   => $data['end'],
-                'guest'             => $request->total_guest,
-                'room'              => 1,                         // "rent_price"        => $hostel->sellingprice,
-                "rent_price"        => $amount,
-                "fee_admin"         => $fees[0]['value'],
+                'reservation_end' => $data['end'],
+                'guest' => $request->total_guest,
+                'room' => 1, // "rent_price"        => $hostel->sellingprice,
+                "rent_price" => $amount,
+                "fee_admin" => $fees[0]['value'],
                 "kode_unik"         => $data['kode_unik'],
+                "guest_name" => $data['guest'][0]['name'],
+                "guest_email" => $data['guest'][0]['email'],
+                "guest_handphone" => $data['guest'][0]['phone']
             ]);
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
