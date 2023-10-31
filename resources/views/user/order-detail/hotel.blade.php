@@ -54,20 +54,22 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                     {{-- End Bagian Poin --}}
 
                     {{-- Start Bagian e-Wallet --}}
-                    <div class="group-wallet-ini-guys d-flex">
+                     {{-- Start Bagian e-Wallet --}}
+                     <div class="group-wallet-ini-guys d-flex">
                         <div class="menu-item">
-                    <div class="menu-link">
-                    <span class="menu-icon">
-                        <img src="{{ asset('assets/media/svg/profile-account/wallet.svg') }}" class="h-24px me-10"/>
-                    </span>
-                    <div class="ini-pemersatu">
-                    <div class="text-gray-500 fs-8">e-Wallet</div>
-                    <span class=" fw-medium fs-4 menu-title">
-                            <b>
-                                56.500
-                            </b>
-                    </span>
-                    </div>
+                            <div class="menu-link">
+                                <span class="menu-icon">
+                                    <img src="{{ asset('assets/media/svg/profile-account/wallet.svg') }}"
+                                        class="h-24px me-10" />
+                                </span>
+                                <div class="ini-pemersatu">
+                                    <div class="text-gray-500 fs-8">e-Wallet</div>
+                                    <span class=" fw-medium fs-4 menu-title">
+                                        <b>
+                                            Coming Soon
+                                        </b>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
