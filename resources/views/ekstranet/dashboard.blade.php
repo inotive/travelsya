@@ -149,8 +149,8 @@
                                 <td>{{$hotel->transaction->payment }}</td>
                                 <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hotel->transaction->status == " SUCCESS" ? "badge-success"
-                                        : "badge-danger" }}">{{$hotel->transaction->status }}</span>
+                                    <span class="badge {{$hotel->transaction->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hotel->transaction->status }}</span>
                                 </td>
                             </tr>
                             @endforeach
@@ -165,8 +165,8 @@
                                 <td>{{$hostel->transaction->payment }}</td>
                                 <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hostel->transaction->status == " SUCCESS" ? "badge-success"
-                                        : "badge-danger" }}">{{$hostel->transaction->status }}</span>
+                                    <span class="badge {{$hostel->transaction->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hostel->transaction->status }}</span>
                                 </td>
                             </tr>
                             @endforeach
