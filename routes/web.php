@@ -83,7 +83,7 @@ Route::get('/privasi', function () {
     return view('user.company.terms');
 })->name('company.terms');
 
-Route::get('/company/kebijakan-privasi', function () {
+Route::get('/privasi', function () {
     return view('user.company.privat');
 })->name('company.privat');
 
@@ -122,6 +122,30 @@ Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDet
 Route::get('/profile/order-detail/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
 Route::get('/profile/order-detail/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
+
+// Route Bantuan Testing
+Route::get('/bantuan', function(){
+    $helps = [
+            [
+            'title' => "lalal",
+            'content' => "lalala",
+            ],
+            [
+            'title' => "lalal",
+            'content' => "lalala",
+            ],
+            [
+            'title' => "lalal",
+            'content' => "lalala",
+            ],
+            [
+            'title' => "lalal",
+            'content' => "lalala",
+            ]
+        ];
+    return view('user.bantuan', ['helps' => $helps]);
+})->name('bantuan-user');
+
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
