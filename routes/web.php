@@ -83,7 +83,7 @@ Route::get('/privasi', function () {
     return view('user.company.terms');
 })->name('company.terms');
 
-Route::get('/privasi', function () {
+Route::get('/syarat-ketentuan', function () {
     return view('user.company.privat');
 })->name('company.privat');
 
@@ -118,33 +118,13 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
-Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
-Route::get('/profile/order-detail/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
+Route::get('/profile/order-history/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
+Route::get('/profile/order-history/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
+Route::get('/profile/order-history/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
 
 // Route Bantuan Testing
-Route::get('/bantuan', function(){
-    $helps = [
-            [
-            'title' => "lalal",
-            'content' => "lalala",
-            ],
-            [
-            'title' => "lalal",
-            'content' => "lalala",
-            ],
-            [
-            'title' => "lalal",
-            'content' => "lalala",
-            ],
-            [
-            'title' => "lalal",
-            'content' => "lalala",
-            ]
-        ];
-    return view('user.bantuan', ['helps' => $helps]);
-})->name('bantuan-user');
+Route::get('/bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
 
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');

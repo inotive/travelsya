@@ -114,7 +114,7 @@
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Durasi</div>
-                                            <div class=" fw-bold">20 Hari 12 Jam</div>
+                                            <div class=" fw-bold">20 Hari</div>
                                         </div>
                                     </div>
                         </div>

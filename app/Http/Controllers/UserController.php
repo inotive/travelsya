@@ -261,6 +261,13 @@ class UserController extends Controller
         return view('user.help', $data);
     }
 
+    public function bantuan()
+    {
+        $data['helps'] = Help::orderBy('title')->get();
+
+        return view('user.bantuan', $data);
+    }
+
     public function detailTransaction($no_inv)
     {
         if (!session()->get('user'))
