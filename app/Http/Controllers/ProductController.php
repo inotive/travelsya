@@ -16,6 +16,7 @@ use App\Services\Travelsya;
 use App\Services\Xendit;
 use Illuminate\Http\Client\ResponseSequence;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -185,6 +186,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -222,13 +228,16 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['product_id'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganBPJS,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'   => 2500,
+            'fee_mili'        => 100,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
         ]);
 
         //deductpoint
@@ -318,6 +327,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -355,13 +369,16 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['productPDAM'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganPDAM,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'   => 2500,
+            'fee_mili'        => 100,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
         ]);
 
         //deductpoint
@@ -439,6 +456,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -478,13 +500,16 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $product->id,
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganPLN,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'   => 2500,
+            'fee_mili'        => 100,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
         ]);
 
         //deductpoint
@@ -562,6 +587,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -599,13 +629,16 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['productTV'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganTV,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'   => 2500,
+            'fee_mili'        => 100,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
         ]);
 
         //deductpoint
