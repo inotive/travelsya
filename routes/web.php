@@ -398,6 +398,8 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::put('setting-hostel-room/{id}/edit/{room_id}', [ManagementHostelController::class, 'settingRoomUpdate'])
                 ->name('partner.management.hostel.setting.room.update');
 
+            Route::get('setting-hostel-room/delete/{id}', [ManagementHostelController::class, 'settingRoomDelete'])->name('partner.management.room.delete');
+
             Route::post('setting-hostel-room/post', [ManagementHostelController::class, 'settingRoomPost'])->name('partner.management.hostel.setting.room.post');
             // Route::delete('setting-hostel-room/delete/{id}', [ManagementHostelController::class,'settingRoomDelete'])->name('partner.management.setting.room.delete');
             // Route::get('setting-hostel-room/hostel-room/{hostel_id}/{id}', [ManagementHostelController::class,'settingRoomShow'])->name('partner.management.setting.room.show');
