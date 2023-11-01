@@ -545,9 +545,13 @@
                                         </a>
 
                                         <div class="row mt-4">
-                                            @foreach ($hostel->hostelImage->where('main','!=',1)->take(3) as $hostelImage)
+                                            @php
+                                            $hostelImages =$hostel->hostelImage->where('main','!=',1)->take(3);
+                                            @endphp
+                                            @foreach ($hostelImages as $hostelImage)
                                             <div class="col-4">
-                                                <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hostel->id}}"
+                                                <a class="d-block overlay"
+                                                    data-fslightbox="lightbox-basic-{{$hostel->id}}"
                                                     href="{{ asset('storage/media/hostel/'. $hostelImage->image) }}">
                                                     <!--begin::Image-->
                                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
@@ -601,7 +605,7 @@
                                         <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
 
                                         <ul>
-                                            @foreach ($hostel->hostelFacilities as $facility)
+                                            @foreach ($hostel->hostelFacilities->unique() as $facility)
                                             <li>{{ $facility->facility->name }}</li>
                                             @endforeach
                                         </ul>

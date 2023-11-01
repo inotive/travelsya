@@ -134,9 +134,9 @@
                                 {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp"
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                   href="{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}">
+                                    href="{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}">
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                         style="background-image:url('{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}')">
+                                        style="background-image:url('{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}')">
                                     </div>
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
@@ -182,7 +182,8 @@
         <div class="row card flex-row w-75 me-auto ms-auto mt-4 p-3">
             @foreach ($hostelget->hostelImage->where('main', '!=', 1)->take(3) as $hostelImage)
             <div class="col-4">
-                <a class="d-block overlay" data-fslightbox="lightbox-basic" href="{{ asset('storage/media/hostel/'.$hostelImage->image) }}">
+                <a class="d-block overlay" data-fslightbox="lightbox-basic"
+                    href="{{ asset('storage/media/hostel/'.$hostelImage->image) }}">
                     <!--begin::Image-->
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/media/hostel/'.$hostelImage->image) }}')">
@@ -232,8 +233,8 @@
                         <!--end::Title-->
 
                         <!--begin::Content-->
-                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a href="{{ route('login') }}"
-                                class="d-inline-block fw-bold">Login
+                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a
+                                href="{{ route('login') }}" class="d-inline-block fw-bold">Login
                                 Disini</a></span>
                         <!--end::Content-->
                     </div>
@@ -259,77 +260,78 @@
             $startDate = date("Y-m-d", strtotime($params['start']));
             $endDate = date("Y-m-d", strtotime("+" . $params['duration'] . " month", strtotime($startDate)));
             $transactionCount = DB::table('detail_transaction_hostel')
-            ->where('hostel_room_id', $room->id)
-            ->whereBetween('reservation_start', [$startDate, $endDate])
-            ->orWhereBetween('reservation_end', [$startDate, $endDate])
-            ->sum('room');
-            @endphp
-            <div class="col-6">
-                <div class="card card-hostel mb-3">
-                    <div class="row mb-2">
-                        <div class="col-4">
-                            @php
-                                $i = 0;
-                            @endphp
-                            @foreach ($room->hostelroomImage as $roomImage)
+            ->where('hostel_room_id', $room->id)->where('reservation_start', '<=', $startDate)->where('reservation_end',
+                '>=', $endDate)
+                ->sum('room');
+                @endphp
+                <div class="col-6">
+                    <div class="card card-hostel mb-3">
+                        <div class="row mb-2">
+                            <div class="col-4">
                                 @php
-                                    $i += 1;
+                                $i = 0;
                                 @endphp
-                                <a class="d-block overlay {{$i == 1 ? '' : 'd-none'}}" data-fslightbox="lightbox-basic-{{$room->id}}" href="{{ asset('storage/' . $roomImage->image) }}">
+                                @foreach ($room->hostelroomImage as $roomImage)
+                                @php
+                                $i += 1;
+                                @endphp
+                                <a class="d-block overlay {{$i == 1 ? '' : 'd-none'}}"
+                                    data-fslightbox="lightbox-basic-{{$room->id}}"
+                                    href="{{ asset('storage/' . $roomImage->image) }}">
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
-                                         style="background-image:url('{{ asset('storage/' . $roomImage->image) }}')">
+                                        style="background-image:url('{{ asset('storage/' . $roomImage->image) }}')">
                                     </div>
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>
                                     </div>
                                 </a>
-                            @endforeach
-                        </div>
-                        <div class="col">
-                            <div class="row mt-5 px-2">
-                                <h4 class="card-title text-gray-900">Kamar {{ $room->name }}</h4>
-                                <p class="card-text mt-1 text-gray-500">Ukuran Kamar : {{ $room->roomsize }} m2
-                                </p>
-                                <p class="card-text mt-1 text-gray-500">Maximal Penghuni : {{ $room->max_guest }}
-                                    Orang</p>
-                                <p class="card-text mt-1 text-gray-500">
-                                    <b class="text-danger">
-                                        Tersisa {{ $room->totalroom - $transactionCount }} Kamar
-                                    </b>
-                                </p>
-                                <div class="d-flex align-items-center gap-2">
-                                    @foreach ($room->hostelFacilities as $facility)
-                                    {{ asset($facility->image) }}
-                                    @endforeach
+                                @endforeach
+                            </div>
+                            <div class="col">
+                                <div class="row mt-5 px-2">
+                                    <h4 class="card-title text-gray-900">Kamar {{ $room->name }}</h4>
+                                    <p class="card-text mt-1 text-gray-500">Ukuran Kamar : {{ $room->roomsize }} m2
+                                    </p>
+                                    <p class="card-text mt-1 text-gray-500">Maximal Penghuni : {{ $room->max_guest }}
+                                        Orang</p>
+                                    <p class="card-text mt-1 text-gray-500">
+                                        <b class="text-danger">
+                                            Tersisa {{ $room->totalroom - $transactionCount }} Unit
+                                        </b>
+                                    </p>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @foreach ($room->hostelFacilities->unique() as $facility)
+                                        <img src="{{ asset($facility->image) }}" alt="Fasilitas">
+                                        @endforeach
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between">
-                        @if ($params['category'] == 'monthly')
-                        <p class="fw-semibold d-block fs-2 text-danger">Rp.
-                            {{ number_format($room->sellingrentprice_monthly, 0, ',', '.') }}</p>
-                        @endif
+                        <div class="card-footer d-flex justify-content-between">
+                            @if ($params['category'] == 'monthly')
+                            <p class="fw-semibold d-block fs-2 text-danger">Rp.
+                                {{ number_format($room->sellingrentprice_monthly, 0, ',', '.') }}</p>
+                            @endif
 
-                        @if ($params['category'] == 'yearly')
-                        <p class="fw-semibold d-block fs-2 text-danger">Rp.
-                            {{ number_format($room->sellingrentprice_yearly, 0, ',', '.') }}</p>
-                        @endif
+                            @if ($params['category'] == 'yearly')
+                            <p class="fw-semibold d-block fs-2 text-danger">Rp.
+                                {{ number_format($room->sellingrentprice_yearly, 0, ',', '.') }}</p>
+                            @endif
 
-                        {{-- @guest
-                        <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
-                            data-target="#exampleModal">Pesan Kamar</a>
-                        @endguest
+                            {{-- @guest
+                            <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
+                                data-target="#exampleModal">Pesan Kamar</a>
+                            @endguest
 
-                        @auth --}}
-                        <a href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}"
-                            class="btn btn-danger px-4 py-2">Pesan
-                            Kamar</a>
-                        {{-- @endauth --}}
+                            @auth --}}
+                            <a href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}"
+                                class="btn btn-danger px-4 py-2">Pesan
+                                Kamar</a>
+                            {{-- @endauth --}}
+                        </div>
                     </div>
                 </div>
-            </div>
-            @endforeach
+                @endforeach
         </div>
     </div>
     <!--end::Post-->
