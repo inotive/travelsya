@@ -311,6 +311,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}', [ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
         Route::get('daftar-room/detailroom/hostel/{id}', [ManagementRoomController::class, 'detailroomhostel'])->name('partner.management.room.detailroomhostel');
+        Route::delete('daftar-room/delete/{type}/{id}', [ManagementRoomController::class, 'deleteroom'])->name('partner.management.room.deleteroom');
+        Route::get('daftar-room/delete/hotel/{id}', [ManagementRoomController::class, 'HotelRoomDelete'])->name('partner.management.room.deleteroomhotel');
+        Route::get('daftar-room/delete/hostel/{id}', [ManagementRoomController::class, 'HostelRoomDelete'])->name('partner.management.room.deleteroomhotel');
+
 
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
@@ -397,6 +401,8 @@ Route::middleware(['auth', 'role'])->group(function () {
                 ->name('partner.management.hostel.setting.room.edit');
             Route::put('setting-hostel-room/{id}/edit/{room_id}', [ManagementHostelController::class, 'settingRoomUpdate'])
                 ->name('partner.management.hostel.setting.room.update');
+
+            Route::get('setting-hostel-room/delete/{id}', [ManagementHostelController::class, 'settingRoomDelete'])->name('partner.management.room.delete');
 
             Route::post('setting-hostel-room/post', [ManagementHostelController::class, 'settingRoomPost'])->name('partner.management.hostel.setting.room.post');
             // Route::delete('setting-hostel-room/delete/{id}', [ManagementHostelController::class,'settingRoomDelete'])->name('partner.management.setting.room.delete');

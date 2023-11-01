@@ -193,13 +193,16 @@ class ManagementHotelController extends Controller
 
     public function storePhotoHotel($id, Request $request)
     {
+        
         $image = $request->file('image')->store('media/hotel');
-
+        // dd($image);
         HotelImage::create([
             'hotel_id' => $id,
             'image' => $image,
             'main' => 0
         ]);
+
+        
 
         toast('Upload foto berhasil', 'success');
         return redirect()->back();
@@ -407,7 +410,7 @@ class ManagementHotelController extends Controller
     {
         HotelRoom::where('id', $id)->delete();
         HotelRoomFacility::where('hotel_room_id', $id)->delete();
-        toast('Hotel Has Been Removed', 'success');
+        toast('Hotel Room Has Been Removed', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Dihapus!'

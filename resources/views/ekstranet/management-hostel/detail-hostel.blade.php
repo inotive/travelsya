@@ -12,68 +12,87 @@
                     <!--begin: Pic-->
 
                     <div class="me-5 mb-0">
-                        <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
+                        {{-- <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
                             <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="image" />
 
+                        </div> --}}
+                        @php
+                            $image = $hostel->hostelImage->where('main', 1)->first()->image ?? '';
+                        @endphp
+                        <div class="row">
+                            <div class="col-4">
+                                <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hostel->id }}"
+                                    href="{{ asset('storage/' . $image) }}">
+                                    <img class="img-fluid overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
+                                        src="{{ asset('storage/' . $hostel->hostelImage->where('main', 1)->first()->image ?? '') }}"
+                                        alt="image" />
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
+                                        <i class="bi bi-eye-fill fs-2x text-white"></i>
+                                    </div>
+                                </a>
+
+                            </div>
+                            <div class="col-8">
+                                <div class="flex-grow-1">
+
+                                    <!--begin::Title-->
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                        <!--begin::User-->
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Name-->
+                                            <div class="d-flex align-items-center mb-2 mt-5">
+                                                <a
+                                                    class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ $hostel->name }}</a>
+                                            </div>
+                                            <!--end::Name-->
+                                            <!--begin::Info-->
+                                            <div class="d-flex flex-wrap fw-semibold fs-6 mb-1 pe-1">
+                                                <span>{{ $hostel->address }}</span>
+                                                <div>{{ $hostel->description }}</div>
+                                            </div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::User-->
+                                        <!--begin::Actions-->
+
+                                        <!--end::Actions-->
+                                    </div>
+                                    <!--end::Title-->
+                                    <!--begin::Stats-->
+                                    <div class="d-flex flex-wrap flex-stack">
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-column flex-grow-1 pe-8 ">
+                                            <!--begin::Stats-->
+                                            <div class="d-flex flex-wrap">
+                                                <!--begin::Stat-->
+                                                <a href="#"
+                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hostel->description }}</a>
+
+                                                <!--end::Stat-->
+                                            </div>
+                                            <div class="d-flex flex-wrap">
+
+                                            </div>
+                                            <!--end::Stats-->
+                                        </div>
+                                        <!--end::Wrapper-->
+                                        <!--begin::Progress-->
+
+
+                                        <!--end::Progress-->
+                                    </div>
+                                    <!--end::Stats-->
+                                </div>
+                            </div>
                         </div>
+
+                        {{-- <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                    style="background-image: url('{{ asset('assets/media/avatars/300-1.jpg') }}')">
+                                </div> --}}
                     </div>
                     <!--end::Pic-->
                     <!--begin::Info-->
-                    <div class="flex-grow-1">
 
-                        <!--begin::Title-->
-                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                            <!--begin::User-->
-                            <div class="d-flex flex-column">
-                                <!--begin::Name-->
-                                <div class="d-flex align-items-center mb-2 mt-5">
-                                    <a class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ $hostel->name }}</a>
-
-                                </div>
-                                <!--end::Name-->
-                                <!--begin::Info-->
-                                <div class="d-flex flex-wrap fw-semibold fs-6 mb-1 pe-1">
-                                    <a class="d-flex align-items-center text-gray-600 text-hover-primary me-5 mb-2">
-
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        </i>{{ $hostel->address }}</a>
-
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::Actions-->
-
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Title-->
-                        <!--begin::Stats-->
-                        <div class="d-flex flex-wrap flex-stack">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex flex-column flex-grow-1 pe-8 ">
-                                <!--begin::Stats-->
-                                <div class="d-flex flex-wrap">
-                                    <!--begin::Stat-->
-                                    <a href="#"
-                                        class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hostel->description }}</a>
-
-                                    <!--end::Stat-->
-                                </div>
-                                <div class="d-flex flex-wrap">
-
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Progress-->
-
-
-                            <!--end::Progress-->
-                        </div>
-                        <!--end::Stats-->
-                    </div>
                     <!--end::Info-->
                 </div>
                 <!--end:: Body-->
@@ -131,124 +150,121 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Riwayat Booking
-                                ({{$hostel->hostelReservation->count()}})</a>
+                                ({{ $hostel->hostelReservation->count() }})</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Fasilitas
-                                ({{$hostel->hostelFacilities->count()}})</a>
+                                ({{ $hostel->hostelFacilities->count() }})</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5">Peraturan
-                                ({{ $hostel->hostelRule->count()}})</a>
+                                ({{ $hostel->hostelRule->count() }})</a>
                         </li>
                     </ul>
 
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
-                                {{--                                <div class="card-toolbar">--}}
-                                {{--                                    <a class="btn btn-sm btn-light-primary" href="{{route('partner.management.hotel.setting.room',$hotel->id)}}">--}}
-                                {{--                                        <i class="ki-duotone ki-plus fs-2"></i></a>--}}
-                                {{--                                </div>--}}
+                                {{--                                <div class="card-toolbar"> --}}
+                                {{--                                    <a class="btn btn-sm btn-light-primary" href="{{route('partner.management.hotel.setting.room',$hotel->id)}}"> --}}
+                                {{--                                        <i class="ki-duotone ki-plus fs-2"></i></a> --}}
+                                {{--                                </div> --}}
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                                       id="kt_datatable_zero_configuration">
+                                    id="kt_datatable_zero_configuration">
                                     <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800 ">
-                                        <th class="text-center">No.</th>
-                                        <th class="text-center">Nama Room</th>
-                                        <th class="text-center">Room Rate</th>
-                                        <th class="text-center">Fix Rate</th>
-                                        <th class="text-center">Jumlah Ruangan</th>
-                                        <th class="text-center">Batas Penghuni</th>
+                                        <tr class="fw-bold fs-6 text-gray-800 ">
+                                            <th class="text-center">No.</th>
+                                            <th class="text-center">Nama Room</th>
+                                            <th class="text-center">Room Rate</th>
+                                            <th class="text-center">Fix Rate</th>
+                                            <th class="text-center">Jumlah Ruangan</th>
+                                            <th class="text-center">Batas Penghuni</th>
 
-                                        <th class="text-center">Aksi</th>
-                                    </tr>
+                                            <th class="text-center">Aksi</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach ($hostel->hostelRoom as $room)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td class="text-center">{{ $room->name }}</td>
-                                            <td class="text-center">@currency($room->price)
-                                            </td>
-                                            <td class="text-center">@currency($room->sellingprice)</td>
-                                            <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
-                                            <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
-                                            <td class="text-center">
-                                                <div
-                                                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                    data-kt-menu="true" style="">
+                                        @foreach ($hostel->hostelRoom as $room)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td class="text-center">{{ $room->name }}</td>
+                                                <td class="text-center">@currency($room->price)
+                                                </td>
+                                                <td class="text-center">@currency($room->sellingprice)</td>
+                                                <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
+                                                <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
+                                                <td class="text-center">
+                                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                                        data-kt-menu="true" style="">
 
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning"
-                                                           id="tombol-edit" data-id="{{ $hotel->id }}"
-                                                           data-bs-toggle="modal">
-                                                            Edit
-                                                        </a>
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning"
+                                                                id="tombol-edit" data-id="{{ $room->id }}"
+                                                                data-bs-toggle="modal">
+                                                                Edit
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
+                                                        <!--begin::Menu item-->
+                                                        <div class="menu-item px-3">
+                                                            <a href="#" class="menu-link px-3 text-danger"
+                                                                data-bs-toggle="modal" {{-- data-kt-customer-table-filter="delete_row" --}}
+                                                                data-bs-target="#kt_modal_delete_room{{ $room->id }}">
+                                                                Delete
+                                                            </a>
+                                                        </div>
+                                                        <!--end::Menu item-->
                                                     </div>
-                                                    <!--end::Menu item-->
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3 text-danger"
-                                                           data-bs-toggle="modal"
-                                                           {{-- data-kt-customer-table-filter="delete_row" --}}
-                                                           data-bs-target="#kt_modal_delete_room{{ $room->id }}">
-                                                            Delete
-                                                        </a>
-                                                    </div>
-                                                    <!--end::Menu item-->
-                                                </div>
-                                                <!--begin::Menu-->
-                                                <a href="#"
-                                                   class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                    Actions
-                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                </a>
-                                                <!--end::Menu-->
-                                            </td>
-                                        </tr>
-                                        <div class="modal fade" id="kt_modal_delete_room{{ $room->id }}"
-                                             tabindex="-1" aria-hidden="true">
-                                            <!-- Konten modal penghapusan -->
-                                            <div class="modal-dialog modal-dialog-centered mw-650px">
-                                                <div class="modal-content">
-                                                    <form
-                                                        action="{{ route('partner.management.hotel.destroyroom', $room->id) }}"
-                                                        method="POST" id="kt_modal_delete_room_form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <div class="modal-header">
-                                                            <h2 class="fw-bold">Delete Room</h2>
-                                                            <button type="button"
+                                                    <!--begin::Menu-->
+                                                    <a href="#"
+                                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                                        Actions
+                                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                                    </a>
+                                                    <!--end::Menu-->
+                                                </td>
+                                            </tr>
+                                            <div class="modal fade" id="kt_modal_delete_room{{ $room->id }}"
+                                                tabindex="-1" aria-hidden="true">
+                                                <!-- Konten modal penghapusan -->
+                                                <div class="modal-dialog modal-dialog-centered mw-650px">
+                                                    <div class="modal-content">
+                                                        <form
+                                                            action="{{ route('partner.management.hotel.destroyroom', $room->id) }}"
+                                                            method="POST" id="kt_modal_delete_room_form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <div class="modal-header">
+                                                                <h2 class="fw-bold">Delete Room</h2>
+                                                                <button type="button"
                                                                     class="btn btn-icon btn-sm btn-active-icon-primary"
                                                                     data-bs-dismiss="modal">
-                                                                <i class="ki-duotone ki-cross fs-1"></i>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body py-10 px-lg-17">
-                                                            <p>Anda yakin ingin menghapus data Ruangan Dengan Nama
-                                                                {{ $room->name }}?
-                                                            </p>
-                                                        </div>
-                                                        <div class="modal-footer d-flex justify-content-center">
-                                                            <button type="button" class="btn btn-light me-3"
+                                                                    <i class="ki-duotone ki-cross fs-1"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body py-10 px-lg-17">
+                                                                <p>Anda yakin ingin menghapus data Ruangan Dengan Nama
+                                                                    {{ $room->name }}?
+                                                                </p>
+                                                            </div>
+                                                            <div class="modal-footer d-flex justify-content-center">
+                                                                <button type="button" class="btn btn-light me-3"
                                                                     data-bs-dismiss="modal">Cancel
-                                                            </button>
-                                                            <button type="submit"
-                                                                    class="btn btn-danger">Delete
-                                                            </button>
-                                                        </div>
+                                                                </button>
+                                                                <button type="submit" class="btn btn-danger">Delete
+                                                                </button>
+                                                            </div>
+                                                            <!--end::Menu-->
+                                                        </form>
                                                         <!--end::Menu-->
-                                                    </form>
-                                                    <!--end::Menu-->
-                                                    </td>
-                                                    </tr>
+                                                        </td>
+                                                        </tr>
 
-                                                    </td>
-                                                    </tr>
-                                    @endforeach
+                                                        </td>
+                                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                                 @include('ekstranet.management-hotel.create-room')
@@ -299,17 +315,17 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset('storage/' .$image->image) }}" class="rounded"
-                                                        style="width: 150px">
+                                                    <img src="{{ asset('storage/media/hostel/' . $image->image) }}"
+                                                        class="rounded" style="width: 150px">
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                         data-kt-menu="true" style="">
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning"
-                                                                id="tombol-edit" data-id="{{ $hostel->id }}"
-                                                                data-bs-toggle="modal">
+                                                            <a href="javascript:void(0)"
+                                                                class="menu-link px-3 text-warning" id="tombol-edit"
+                                                                data-id="{{ $hostel->id }}" data-bs-toggle="modal">
                                                                 Edit
                                                             </a>
                                                         </div>
@@ -381,20 +397,33 @@
                                             <th class="text-center">Customer</th>
                                             <th class="text-center">Code Booking</th>
                                             <th class="text-center">Check In</th>
+                                            <th class="text-center">Check Out</th>
                                             <th class="text-center">Tipe Kamar</th>
                                             <th class="text-center">Jumlah Ruangan & Menginap</th>
                                             <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                         @foreach ($hostel->hostel as $booking)
+                                        @foreach ($hostel->hostelReservation as $booking)
+                                            @php
+                                                $startdate = \Carbon\Carbon::parse($booking->reservation_start);
+                                                $enddate = \Carbon\Carbon::parse($booking->reservation_end);
+                                                $startdates = $startdate->Format('d F Y');
+                                                $enddates = $enddate->Format('d F Y');
+                                                $diffInDays = $startdate->diffInDays($enddate);
+                                                $now = \Carbon\Carbon::now();
+                                                $remainingDays = $now->diffInDays($enddate);
+                                            @endphp
                                             <tr>
-                                                <td class="text-center">Gusti Bagus - 081123123 </td>
-                                                <td class="text-center">{{$booking->booking_id}}</td>
-                                                <td class="text-center">20 Juni 2023
+                                                <td class="text-center">{{ $booking->transaction->user->name ?? '' }} -
+                                                    {{ $booking->transaction->user->phone ?? '' }} </td>
+                                                <td class="text-center">{{ $booking->booking_id }}</td>
+                                                <td class="text-center">{{ $startdates }}</td>
+                                                <td class="text-center">{{ $enddates }}</td>
+                                                <td class="text-center">{{ $booking->hostelRoom->name ?? '' }}</td>
+                                                <td class="text-center">{{ $booking->room }} Kamar | {{ $diffInDays }}
+                                                    Malam
                                                 </td>
-                                                <td class="text-center">22 Juni 2023</td>
-                                                <td class="text-center">1 Kamar | 8 Malam</td>
 
 
 
@@ -425,7 +454,7 @@
                                                     <!--end::Menu-->
                                                 </td>
                                             </tr>
-                                        {{-- @endforeach --}}
+                                        @endforeach
                                     </tbody>
                                 </table>
 
@@ -435,23 +464,22 @@
 
                         <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
 
-                            <table class="table table-rounded table-striped table-bordered border gy-7 gs-7"
-                                    >
-                                    <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800 ">
-                                            <th>No.</th>
-                                            <th>Fasilitas</th>
+                            <table class="table table-rounded table-striped table-bordered border gy-7 gs-7">
+                                <thead>
+                                    <tr class="fw-bold fs-6 text-gray-800 ">
+                                        <th>No.</th>
+                                        <th>Fasilitas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($hostel->hostelFacilities as $facility)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $facility->facility->name }}</td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($hostel->hostelFacilities as $facility)
-                                            <tr>
-                                                <td>{{$loop->iteration}}</td>
-                                                <td>{{$facility->facility->name}}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                    @endforeach
+                                </tbody>
+                            </table>
 
                         </div>
 
@@ -527,7 +555,8 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body py-10 px-lg-17">
-                                                                <p class="text-center">Anda yakin ingin menghapus data Peraturan
+                                                                <p class="text-center">Anda yakin ingin menghapus data
+                                                                    Peraturan
                                                                     "{{ $rule->description }}"?
                                                                 </p>
                                                             </div>
@@ -580,7 +609,8 @@
                                                     </div>
                                                     <!--end::Heading-->
                                                     <!--begin::Input group-->
-                                                    <input type="hidden" name="hostel_id" id="hotel_id" value="{{ $hostel->id }}">
+                                                    <input type="hidden" name="hostel_id" id="hotel_id"
+                                                        value="{{ $hostel->id }}">
 
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-12">

@@ -47,8 +47,13 @@ class RiwayatBookingController extends Controller
 
     public function index(Request $request)
     {
-        $hotelbookdates = DetailTransactionHotel::query()->with('hotelRoom');
-        $hostelbookdates = DetailTransactionHostel::query()->with('hostelRoom');
+        
+        $hotelbookdates = DetailTransactionHotel::query()->with('hotelRoom', 'Hotel')->whereHas('Hotel', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        });
+        $hostelbookdates = DetailTransactionHostel::query()->with('hostelRoom', 'Hostel')->whereHas('Hostel', function ($query) {
+            $query->where('user_id', auth()->user()->id);
+        });
 
 
         $year = $request->input('year');
