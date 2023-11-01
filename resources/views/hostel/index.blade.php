@@ -555,7 +555,7 @@
                                             <div class="col-4">
                                                 <a class="d-block overlay"
                                                     data-fslightbox="lightbox-basic-{{ $hostel->id }}"
-                                                    href="{{ asset('storage/media/hostel/' . $hostel->hostelImage->where('main', 1)->first()?->image ) }}">
+                                                    href="{{ asset('storage/media/hostel/' . $hostel->hostelImage->where('main', 1)->first()?->image) }}">
                                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
                                                         style="background-image:url('{{ asset('storage/media/hostel/' . $hostel->hostelImage->where('main', 1)->first()?->image) }}')">
                                                     </div>
@@ -568,21 +568,21 @@
                                                     @foreach ($hostel->hostelImage->where('main', '!=', 1)->take(3) as $hostelImage)
 <div class="col-4">
                                                 <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hostel->id }}"
-                                                    href="{{   asset('storage/media/hostel/' . $hostelImage?->image)  }}">
+                                                    href="{{ asset('storage/media/hostel/' . $hostelImage?->image) }}">
                                                     <!--begin::Image-->
                                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                                                        style="background-image:url('{{ asset('storage/media/hostel/' . $hostelImage?->image)  }}')">
-                                                                        </div>
-                                                                        <!--end::Image-->
+                                                        style="background-image:url('{{ asset('storage/media/hostel/' . $hostelImage?->image) }}')">
+                                                                            </div>
+                                                                            <!--end::Image-->
 
-                                                                        <!--begin::Action-->
-                                                                        <div
-                                                                            class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                                                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                                                        </div>
-                                                                        <!--end::Action-->
-                                                                    </a>
-                                                                </div>
+                                                                            <!--begin::Action-->
+                                                                            <div
+                                                                                class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                                            </div>
+                                                                            <!--end::Action-->
+                                                                        </a>
+                                                                    </div>
      @endforeach
                                                         </div>
                                                         </div>
@@ -759,4 +759,4 @@
                             })
                         })
                     </script>
-                @endpush
+                @endpush)
