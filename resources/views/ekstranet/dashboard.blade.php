@@ -12,7 +12,7 @@
                 <span class=" fw-bold text-dark fs-8  d-block">Seminggu Terakhir</span>
 
                 <div class="py-1">
-                    <span class="text-dark fs-1 fw-bold me-2">{{ 1 }} Orang</span>
+                    <span class="text-dark fs-1 fw-bold me-2">{{ $guest }} Orang</span>
                     {{-- <span class="text-dark fs-1 fw-bold me-2">{{$card['guest']}}</span>--}}
 
                     <span class="fw-semibold text-muted fs-7">Orang</span>
@@ -31,7 +31,7 @@
                 <span class=" fw-bold text-dark fs-8  d-block">Seminggu Terakhir</span>
 
                 <div class="py-1">
-                    <span class="text-dark fs-1 fw-bold me-2">{{General::rp(5)}}</span>
+                    <span class="text-dark fs-1 fw-bold me-2">{{General::rp($revenueWeek)}}</span>
                     {{-- <span class="text-dark fs-1 fw-bold me-2">150000</span> --}}
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <span class=" fw-bold text-dark fs-8  d-block">Sebulan Terakhir</span>
 
                 <div class="py-1">
-                    <span class="text-dark fs-1 fw-bold me-2">{{General::rp(5)}}</span>
+                    <span class="text-dark fs-1 fw-bold me-2">{{General::rp($revenueMonth)}}</span>
                     {{-- <span class="text-dark fs-1 fw-bold me-2">123</span> --}}
                     {{-- <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueMonth'])}}</span>--}}
 
@@ -67,7 +67,7 @@
                 <!--begin::Wrapper-->
                 <div class="d-flex flex-column mb-7">
                     <!--begin::Title-->
-                    <a href="#" class="text-dark text-hover-primary fw-bold fs-3">Summary</a>
+                    <a href="#" class="text-dark text-hover-primary fw-bold fs-3">Rooms</a>
                     <!--end::Title-->
                 </div>
                 <!--end::Wrapper-->
@@ -137,21 +137,39 @@
                             </tr>
                         </thead>
                         <tbody>
-
-{{--                            @foreach($transactions as $transaction)--}}
-{{--                            <tr>--}}
-{{--                                <td>{{date('d M y',strtotime($transaction->created_at))}}</td>--}}
-{{--                                <td>{{$transaction->no_inv}}</td>--}}
-{{--                                <td>{{$transaction->req_id}}</td>--}}
-{{--                                <td>{{$transaction->user->name}}</td>--}}
-{{--                                <td>{{date('d M y',strtotime($transaction->bookDate[0]->start))}}</td>--}}
-{{--                                <td>{{date('d M y',strtotime($transaction->bookDate[0]->end))}}</td>--}}
-{{--                                <td>{{$transaction->payment }}</td>--}}
-{{--                                <td>{{ General::rp($transaction->detailTransaction[0]->price) }}</td>--}}
-{{--                                <td><span class="badge {{$transaction->status == " SUCCESS" ? "badge-success"--}}
-{{--                                        : "badge-danger" }}">{{$transaction->status }}</span></td>--}}
-{{--                            </tr>--}}
-{{--                            @endforeach--}}
+                            @foreach($transaction_hotels as $hotel)
+                            <tr>
+                                {{-- <h1>{{ dd($hotel) }}</h1> --}}
+                                <td>{{date('d M Y',strtotime($hotel->created_at))}}</td>
+                                <td>{{$hotel->transaction->no_inv}}</td>
+                                <td>{{$hotel->transaction->req_id}}</td>
+                                <td>{{$hotel->transaction->user->name}}</td>
+                                <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
+                                <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
+                                <td>{{$hotel->transaction->payment }}</td>
+                                <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
+                                <td>
+                                    <span class="badge {{$hotel->transaction->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hotel->transaction->status }}</span>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @foreach($transaction_hostels as $hostel)
+                            <tr>
+                                <td>{{date('d M Y',strtotime($hostel->created_at))}}</td>
+                                <td>{{$hostel->transaction->no_inv}}</td>
+                                <td>{{$hostel->transaction->req_id}}</td>
+                                <td>{{$hostel->transaction->user->name}}</td>
+                                <td>{{date('d M Y',strtotime($hostel->reservation_start))}}</td>
+                                <td>{{date('d M Y',strtotime($hostel->reservation_end))}}</td>
+                                <td>{{$hostel->transaction->payment }}</td>
+                                <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
+                                <td>
+                                    <span class="badge {{$hostel->transaction->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hostel->transaction->status }}</span>
+                                </td>
+                            </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

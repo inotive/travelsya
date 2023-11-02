@@ -8,20 +8,74 @@ use App\Models\HostelRoomImages;
 use App\Models\HotelRoom;
 use Illuminate\Http\Request;
 use App\Models\HotelRoomImage;
+use App\Models\HostelRoomFacility;
+use App\Models\HotelRoomFacility;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Mockery\Generator\Parameter;
 
 class ManagementRoomController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $hotelRooms = HotelRoom::all();
-        $hostelRooms = HostelRoom::all();
 
-        // $rooms = $hotelRooms->merge($hostelRooms);
+        // $category = Parameter$category
+        if ($request->category == 'hotel') {
+            $rooms = HotelRoom::with('hotel')
+                ->whereHas('Hotel', function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate();
+        } elseif ($request->category == 'hostel') {
+            $rooms = HostelRoom::with('hostel')
+                ->whereHas('Hostel', function ($query) {
+                    $query->where('user_id', auth()->user()->id);
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate();
+        }
 
-        return view('ekstranet.management-room.index', compact('hotelRooms', 'hostelRooms'));
+        return view('ekstranet.management-room.index', compact('rooms'));
     }
+    // public function index($category)
+    // {
+    //     // $hotelRooms = HotelRoom::all();
+    //     // $hostelRooms = HostelRoom::all();
+
+    //     if ($category == 'hotel') {
+    //         $rooms = HotelRoom::with('Hotel')
+    //             ->whereHas('Hotel', function ($query) {
+    //                 $query->where('user_id', auth()->user()->id);
+    //             })
+    //             ->orderBy('created_at', 'desc')
+    //             ->paginate(); // Ganti ini dengan cara Anda mengambil data kamar hotel
+    //     } elseif ($category == 'hostel') {
+    //         $rooms = HostelRoom::with('Hostel')
+    //             ->whereHas('Hostel', function ($query) {
+    //                 $query->where('user_id', auth()->user()->id);
+    //             })
+    //             ->orderBy('created_at', 'desc')
+    //             ->paginate();; // Ganti ini dengan cara Anda mengambil data kamar hostel
+    //     }
+    //     // $hotelRooms = HotelRoom::with('Hotel')
+    //     //     ->whereHas('Hotel', function ($query) {
+    //     //         $query->where('user_id', auth()->user()->id);
+    //     //     })
+    //     //     ->orderBy('created_at', 'desc')
+    //     //     ->paginate();
+
+    //     // $hostelRooms = HostelRoom::with('Hostel')
+    //     //     ->whereHas('Hostel', function ($query) {
+    //     //         $query->where('user_id', auth()->user()->id);
+    //     //     })
+    //     //     ->orderBy('created_at', 'desc')
+    //     //     ->paginate();
+
+    //     // $rooms = $hotelRooms->merge($hostelRooms);
+
+    //     return view('ekstranet.management-room.index', compact('rooms'));
+    // }
 
     public function detailroomhotel($id)
     {
@@ -90,21 +144,21 @@ class ManagementRoomController extends Controller
             'hotel_room_id' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
+
         $image = $request->file('image')->store('media/hotel');
-    
+
         $hotelRoomImage = HotelRoomImage::create([
             'hotel_id' => $request->hotel_id,
             'hotel_room_id' => $request->hotel_room_id,
             'image' => $image,
         ]);
-    
+
         toast('Hotel Room Image has been created', 'success');
-    
+
         return redirect()->back();
     }
 
@@ -180,21 +234,21 @@ class ManagementRoomController extends Controller
             'hostel_room_id' => 'required',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
+
         $image = $request->file('image')->store('media/hostel');
-    
+
         $hostelRoomImage = HostelRoomImages::create([
             'hostel_id' => $request->hostel_id,
             'hostel_room_id' => $request->hostel_room_id,
             'image' => $image,
         ]);
-    
+
         toast('Hostel Room Image has been created', 'success');
-    
+
         return redirect()->back();
     }
 
@@ -247,6 +301,41 @@ class ManagementRoomController extends Controller
         $hostelRoomImage->delete();
 
         toast('Hostel Room Image has been deleted', 'success');
+        return redirect()->back();
+    }
+
+    public function deleteroom($type, $id)
+    {
+        if ($type == 'hotel') {
+            $room = HotelRoom::where('id', $id)->delete();
+            HotelRoomFacility::where('hostel_room_id', $id)->delete();
+        } elseif ($type == 'hostel') {
+            $room = HostelRoom::where('id', $id)->delete();
+            HostelRoomFacility::where('hostel_room_id', $id)->delete();
+        }
+
+        if (!$room) {
+            return redirect()->back()->with('error', 'Kamar tidak ditemukan');
+        }
+
+        // Lakukan proses penghapusan di sini
+
+        return redirect()->back()->with('success', 'Kamar berhasil dihapus');
+    }
+
+    public function HotelRoomDelete($id)
+    {
+        HotelRoom::where('id', $id)->delete();
+        HotelRoomFacility::where('hotel_room_id', $id)->delete();
+        toast('Hotel Room Has Been Removed', 'success');
+        return redirect()->back();
+    }
+
+    public function HostelRoomDelete($id)
+    {
+        HostelRoom::where('id', $id)->delete();
+        HostelRoomFacility::where('hostel_room_id', $id)->delete();
+        toast('Hostel Room Has Been Removed', 'success');
         return redirect()->back();
     }
 }

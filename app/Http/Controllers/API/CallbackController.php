@@ -85,15 +85,21 @@ class CallbackController extends Controller
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
-                                ->select('top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
+                                ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
                             $responseMessageSNCodeFinal = "";
                             if($transaction->service == "listrik-token")
                             {
+                                $data = [
+                                    'reqid' => $transaction->no_inv,
+                                    'no_hp' => str($detailTransactionTopUP->kode_pembayaran),
+                                    'nom' => str($detailTransactionTopUP->nomor_telfon)
+                                ];
+                                $transaction = $this->mymili->status($data);
                                 //process retrieve voucher code
-                                $responseMessage = explode(" ",$responseMili["data"]["MESSAGE"]);;
+                                $responseMessage = explode(" ",$transaction["MESSAGE"]);
                                 $responseMessageSN = explode("SN=",$responseMessage[4]);
                                 $responseMessageSNCode = explode("/",$responseMessageSN[1]);
                                 $responseMessageSNCodeFinal = $responseMessageSNCode[0];

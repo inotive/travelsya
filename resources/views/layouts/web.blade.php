@@ -390,7 +390,9 @@
                                         <a href="/partner-hotel" class="text-white">
                                             <p>Partner</p>
                                         </a>
-                                        <p>Layanan Pelanggan</p>
+                                        <a href="{{route('bantuan-user')}}" class="text-white">
+                                            <p>Pusat Bantuan</p>
+                                        </a>
                                         <a href="{{route('company.terms')}}" class="text-white">
                                             <p>Kebijakan Privasi</p>
                                         </a>

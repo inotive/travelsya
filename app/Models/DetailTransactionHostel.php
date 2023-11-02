@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class DetailTransactionHostel extends Model
 {
     public $timestamps = false;
+
     protected $table = 'detail_transaction_hostel';
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
 
     public function hostel()
     {
@@ -18,7 +26,6 @@ class DetailTransactionHostel extends Model
     {
         return $this->belongsTo(HostelRoom::class);
     }
-
 
     public function transaction()
     {

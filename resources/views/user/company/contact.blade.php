@@ -2,9 +2,9 @@
 
 @section('content-web')
 
-<div class="container">
+<div class="container my-10">
     <div class="row">
-        <div class="col-12 mb-5">
+        <div class="col-12 ">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title">

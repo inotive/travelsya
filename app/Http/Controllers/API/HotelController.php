@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use PHPUnit\Exception;
 use DateTime;
+
 class HotelController extends Controller
 {
     protected $xendit, $point;
@@ -172,7 +173,7 @@ class HotelController extends Controller
         try {
             // $hotel = Hotel::find($hotel->id);
             // $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-        //     ->find($id);
+            //     ->find($id);
 
             // if ($request->start_date) {
             //     $date = [
@@ -232,7 +233,7 @@ class HotelController extends Controller
                     return [
                         // 'hotel_id' => $facility->hotel_id,
                         // 'hotel_room_id' => $facility->hotel_room_id,
-                         'id' => $facility->facility_id,
+                        'id' => $facility->facility_id,
                         'name' => $facility->facility->name,
                         'image' => 'storage/' . $facility->facility->icon,
                     ];
@@ -301,6 +302,7 @@ class HotelController extends Controller
             "end" => "required",
             "total_room" => "required",
             "total_guest" => "required",
+            "kode_unik" => "required",
         ]);
 
         if ($validator->fails()) {
@@ -327,12 +329,16 @@ class HotelController extends Controller
         //     return ResponseFormatter::error(null, 'Date must be forward');
         // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, 1);
         $amount = ($hotel->sellingprice * $totalDay) * $request->total_room;
-//        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+        //        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
         $fee = Fee::where('service_id', 8)->first();
         $fees = [
             [
                 'type' => 'admin',
                 'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
+            ],
+            [
+                'type' => 'kode_unik',
+                'value' => $data['kode_unik'],
             ],
         ];
 
@@ -357,15 +363,15 @@ class HotelController extends Controller
                     "quantity" => $request->total_room,
                 ]
             ],
-            'amount' => $amount + $fees[0]['value'],
+            'amount' => $amount + $fees[0]['value'] + $data['kode_unik'],
             'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                 'given_names' => $data['guest'][0]['name'],
-                 'email' => $data['guest'][0]['email'],
-                 'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
+                'given_names' => $data['guest'][0]['name'],
+                'email' => $data['guest'][0]['email'],
+                'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
             ],
             'fees' => $fees
         ]);
@@ -382,22 +388,26 @@ class HotelController extends Controller
                 'user_id' => \Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount + $fees[0]['value']
+                'total' => $amount + $fees[0]['value'] + $data['kode_unik']
             ]);
 
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hotel')
                     ->insert([
-                        'transaction_id' => $storeTransaction->id,
-                        'hotel_id' => $hotel->hotel_id,
-                        'hotel_room_id' => $data['hotel_room_id'],
-                        'booking_id' => Str::random(6),
-                        'reservation_start' =>  $data['start'],
-                        'reservation_end' =>  $data['end'],
-                        'guest' =>  $request->total_guest,
-                        'room' => $request->total_room,
-                        "rent_price" => $hotel->sellingprice,
-                        "fee_admin" => $fees[0]['value'],
+                        'transaction_id'    => $storeTransaction->id,
+                        'hotel_id'          => $hotel->hotel_id,
+                        'hotel_room_id'     => $data['hotel_room_id'],
+                        'booking_id'        => Str::random(6),
+                        'reservation_start' => $data['start'],
+                        'reservation_end'   => $data['end'],
+                        'guest'             => $request->total_guest,
+                        'room'              => $request->total_room,
+                        "rent_price"        => $hotel->sellingprice,
+                        "fee_admin"         => $fees[0]['value'],
+                        "kode_unik"         => $data['kode_unik'],
+                        "guest_name" => $data['guest'][0]['name'],
+                        "guest_email" => $data['guest'][0]['email'],
+                        "guest_handphone" => $data['guest'][0]['phone']
                     ]);
             } catch (\Exception $exception) {
                 return response()->json([

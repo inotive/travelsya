@@ -73,7 +73,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Total Tagihan</div>
-                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->total_tagihan, 0, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->total_tagihan ?? 0, 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                             </div>
@@ -113,10 +113,10 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Point Digunakan</div>
-                                            @if ($pengeluaran->jumlah_point == 0)
+                                            @if ($pengeluaran?->jumlah_point == 0)
                                             <div class="fs-8 fw-bold">Tidak ada</div>
                                             @else
-                                            <div class="fs-8 fw-bold text-danger">- {{ number_format($pengeluaran->jumlah_point, 0, ',', '.') }} Point</div>
+                                            <div class="fs-8 fw-bold text-danger">- {{ number_format($pengeluaran?->jumlah_point, 0, ',', '.') }} Point</div>
                                             @endif
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
@@ -145,7 +145,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                             <div class="col-12 d-grid">
                                 <div class="badge bg-light-success border-success border border-1 mt-5 ">
                                     <div class="mx-auto my-5 fs-4">
-                                        Kamu Dapat <b>{{ number_format($pemasukan->jumlah_point, 0, ',', '.') }} Poin</b>  dari transaksi ini
+                                        Kamu Dapat <b>{{ number_format($pemasukan?->jumlah_point, 0, ',', '.') }} Poin</b>  dari transaksi ini
                                     </div>
                                 </div>
                             </div>

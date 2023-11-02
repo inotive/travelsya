@@ -34,7 +34,7 @@
                     </thead>
                     <tbody>
                         @foreach ($hostels as $hostel)
-                            
+
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="text-center">{{ $hostel->user_name }}</td>
@@ -46,7 +46,7 @@
                                 <td class="text-center"><span class="badge badge-warning">{{ $hostel->star }} Bintang</span>
                                 </td>
 
-                                
+
 
                                 <td class="text-center">
                                     @if ($hostel->is_active)
@@ -59,22 +59,6 @@
                                 <td class="text-center">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="/metronic8/demo1/../demo1/apps/customers/view.html"
-                                                class="menu-link px-3">
-                                                Daftar Room
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="{{ route('admin.hostel.review', $hostel->id) }}" class="menu-link px-3"
-                                                data-kt-customer-table-filter="delete_row">
-                                                Detail Hostel
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
                                             <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
@@ -98,7 +82,7 @@
                                     <a href="#"
                                         class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        Actions
+                                        Aksi
                                         <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                     </a>
                                     <!--end::Menu-->
@@ -693,7 +677,7 @@
     </div>
 
     @push('add-script')
-        
+
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({

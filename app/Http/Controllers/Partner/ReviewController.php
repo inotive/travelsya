@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
+use App\Models\HotelRating;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -15,10 +16,11 @@ class ReviewController extends Controller
         $user_id = auth()->user()->id;
 
         $query = DB::table('hotel_ratings')
-            ->join('users', 'users.id', '=', 'hotel_ratings.users_id')
+            ->join('users', 'users.id', '=', 'hotel_ratings.user_id')
             ->join('hotels', 'hotels.id', '=', 'hotel_ratings.hotel_id')
             ->join('transactions', 'transactions.id', '=', 'hotel_ratings.transaction_id')
             ->where('hotels.user_id', $user_id);
+
 
         if ($request->has('rate')) {
             $query->where('hotel_ratings.rate', $request->rate);

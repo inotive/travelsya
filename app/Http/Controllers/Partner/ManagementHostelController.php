@@ -41,6 +41,45 @@ class ManagementHostelController extends Controller
 
         return view('ekstranet.management-hostel.setting-hostel', compact('hostel'));
     }
+
+    public function settinghostelupdate(Request $request, Hostel $hostel)
+    {
+        $user_id = auth()->user()->id;
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
+
+
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        // //check if validation fails
+        DB::table('hostels')->where('id', $hostel->id)->update([
+            'user_id' => $user_id,
+            'checkin' => $request->checkin,
+            'checkout' => $request->checkout,
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'address' => $request->address,
+            'star' => $request->star,
+            'description' => $request->description,
+            'website' => $request->website,
+            'lat' => $request->ltd,
+            'lon' => $request->long_ltd,
+            'property' => $request->property
+        ]);
+
+
+
+        toast('Hostel has been updated', 'success');
+        return redirect()->back();
+    }
     public function settingRoom($id)
     {
         $hostel = hostel::with('hostelRoom')->find($id);
@@ -70,9 +109,12 @@ class ManagementHostelController extends Controller
 
     public function settingRoomEdit($id, $room_id)
     {
-        $hostel = hostel::with('hostelRoom')->find($id);
+        // $hostel = hostel::with('hostelRoom')->find($id);
+        // $facility = Facility::all();
+        // $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
+        $hostel = Hostel::find($id); // Mengambil hotel dengan id tertentu
+        $room = hostelRoom::where('id', $room_id)->first();
         $facility = Facility::all();
-        $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
 
         return view('ekstranet.management-hostel.setting-room-update', compact('hostel', 'facility', 'room'));
     }
@@ -124,11 +166,11 @@ class ManagementHostelController extends Controller
             'roomsize' => $request->roomsize,
             'max_guest' => $request->guest,
             'maxextrabed' => $request->maxextrabed,
-            // 'totalbathroom' => $request->totalbathroom,
-            // 'maxextrabed' => $request->maxextrabed,
+             'totalbathroom' => $request->totalbathroom,
+             'maxextrabed' => $request->maxextrabed,
             'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
             'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
-            // 'bed_type' => $request->bed_type,
+             'bed_type' => $request->bed_type,
             'totalroom' => $request->totalroom,
             'is_active' => 1,
 
@@ -374,11 +416,8 @@ class ManagementHostelController extends Controller
     {
         hostelRoom::where('id', $id)->delete();
         hostelRoomFacility::where('hostel_room_id', $id)->delete();
-        toast('hostel Has Been Removed', 'success');
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Dihapus!'
-        ]);
+        toast('Hostel Room Has Been Removed', 'success');
+        return redirect()->back();
     }
 
 
@@ -387,7 +426,7 @@ class ManagementHostelController extends Controller
         $hostel_room = hostelRoom::findOrFail($id);
         $hostel_room->delete();
 
-        toast('hostel Room has been deleted', 'success');
+        toast('Hostel Room has been deleted', 'success');
         return redirect()->back();
     }
 
@@ -399,7 +438,7 @@ class ManagementHostelController extends Controller
         $hostelImage->delete();
 
 
-        toast('hostel Image has been deleted', 'success');
+        toast('Hostel Image has been deleted', 'success');
         return redirect()->back();
     }
 
@@ -414,7 +453,7 @@ class ManagementHostelController extends Controller
             'description'  => $request->description,
             'hostel_id' => $request->hostel_id,
         ]);
-        toast('hostel Rule has been created', 'success');
+        toast('Hostel Rule has been created', 'success');
         return redirect()->back();
     }
 
@@ -448,7 +487,7 @@ class ManagementHostelController extends Controller
             'description'  => $request->description
         ]);
 
-        toast('hostel Rule has been Updated', 'success');
+        toast('Hostel Rule has been Updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
@@ -460,7 +499,7 @@ class ManagementHostelController extends Controller
     {
         $hostel_rule = hostelRule::findorfail($id);
         $hostel_rule->delete();
-        toast('hostel Rule has been Deleted', 'success');
+        toast('Hostel Rule has been Deleted', 'success');
         return redirect()->back();
     }
 }

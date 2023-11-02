@@ -15,10 +15,10 @@
             <!--begin::Table container-->
             <div class="table-responsive">
                 <!--begin::Table-->
-                <table class="table table-bordered gs-0 gy-4 text-center">
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                     <!--begin::Table head-->
                     <thead>
-                        <tr class="fw-bold text-muted bg-light">
+                        <tr class="fw-bold fs-6 text-gray-800">
                             <th class="ps-4 rounded-start">No</th>
                             <th class="min-w-125px">Email</th>
                             <th class="min-w-125px">Nama</th>
@@ -34,7 +34,7 @@
                     <tbody>
                         @foreach ($customers as $customer)
                             @php
-                        
+
                                 // $detailTransactionPPOB = DB::table('detail_transaction_ppob')
                                 //     ->join('transactions', 'transactions.id', '=', 'detail_transaction_ppob.transaction_id')
                                 //     ->whereIn('transactions.id', $customer->transaction->pluck('id'))
@@ -64,27 +64,27 @@
                             @endphp
                             <tr>
                                 <td>
-                                    <div class="text-dark fw-bold  mb-1 fs-6">{{ $loop->iteration }}</div>
+                                    <div class=" mb-1 fs-6">{{ $loop->iteration }}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  mb-1 fs-6">{{ $customer->email }}</div>
+                                    <div class=" mb-1 fs-6">{{ $customer->email }}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">{{ $customer->name }}</div>
+                                    <div class=" d-block mb-1 fs-6">{{ $customer->name }}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">
+                                    <div class=" d-block mb-1 fs-6">
                                         {{ $customer->phone ?? 'TIDAK ADA NO TELP' }}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">{{ $customer->point }}</div>
+                                    <div class=" d-block mb-1 fs-6">{{ $customer->point }}</div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">{{ $customer->transaction->count() }}
+                                    <div class=" d-block mb-1 fs-6">{{ $customer->transaction->count() }}
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="text-dark fw-bold  d-block mb-1 fs-6">@currency($totalTransaction)</div>
+                                    <div class=" d-block mb-1 fs-6">@currency($totalTransaction)</div>
                                 </td>
                                 <td>
                                     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#history"
@@ -303,3 +303,28 @@
     </div>
     <!--end::Modal - New Target-->
 @endsection
+@push('add-script')
+    <script>
+        $(document).ready( function () {
+            $('.table').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+        } );
+    </script>
+@endpush

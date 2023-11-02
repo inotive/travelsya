@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\Xendit;
+
 class TopUpController extends Controller
 {
     protected $mymili, $xendit;
@@ -58,7 +59,7 @@ class TopUpController extends Controller
     public function getEWallet(Request $request)
     {
         $products = DB::table('products')->where('service_id', 11)
-        ->distinct('name')->select('id','name')->get();
+            ->distinct('name')->select('id', 'name')->get();
 
 
         if ($products) {
@@ -85,14 +86,12 @@ class TopUpController extends Controller
     public function testTopUP(Request $request)
     {
         $responseMili =  $this->mymili->paymentTopUp($request->invoice, $request->kode_pembayaran, $request->nomor_telfon);
-        if($responseMili['RESPONSECODE'] == 00)
-        {
+        if ($responseMili['RESPONSECODE'] == 00) {
             return response()->json([
                 'status' => '200',
                 'message' => 'Pulsa sudah masuk'
             ]);
-        }
-        elseif($responseMili['RESPONSECODE'] == 68){
+        } elseif ($responseMili['RESPONSECODE'] == 68) {
             return response()->json([
                 'status' => '200',
                 'message' => 'Pulsa sedang diproses'
@@ -109,23 +108,25 @@ class TopUpController extends Controller
             'point' => 'required',
             'no_hp' => 'required',
             'kode_pembayaran' => 'required',
+            'kode_unik' => 'required',
         ]);
         $product = Product::with('service')->find($data['product_id']);
-        $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
+        $countTransaksiUser = DB::table('transactions')->where('user_id', \Auth::user()->id)->count() + 1;
+        $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . \Auth::user()->id . $countTransaksiUser;
 
         $fees = Fee::where('service_id', $product->service_id)->first();
 
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
-        if ($request->point == 1)
-        {
+        if ($request->point == 1) {
             // history point masuk dan keluar customer
             $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->first();
             // point masuk - point keluar
-            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow','=','credit')->sum('point') ?? 0;
+            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
         }
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $product->price + $fees->value - $saldoPointCustomer;
+        $grandTotal = $product->price + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
@@ -170,15 +171,16 @@ class TopUpController extends Controller
 
             // create detail transaction
             $data['detail'] = $request->input('detail');
-           DB::table('detail_transaction_top_up')->insert([
+            DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $transaction->id,
-                'product_id' => $product->id,
-                'nomor_telfon' => $data['no_hp'],
-                'total_tagihan' => $grandTotal,
-                'fee_travelsya' => 2500,
-                'fee_mili' => 2500,
-                'message' => 'Top UP sedang diproses',
-                'status' => "PROCESS"
+                'product_id'     => $product->id,
+                'nomor_telfon'   => $data['no_hp'],
+                'total_tagihan'  => $grandTotal,
+                'fee_travelsya'  => 2500,
+                'fee_mili'       => 2500,
+                'message'        => 'Top UP sedang diproses',
+                'status'         => "PROCESS",
+                "kode_unik"      => $data['kode_unik'],
             ]);
             // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');

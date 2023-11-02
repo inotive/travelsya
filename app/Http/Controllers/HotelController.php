@@ -18,6 +18,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\General;
+
 class HotelController extends Controller
 {
     protected $travelsya, $xendit;
@@ -267,6 +268,12 @@ class HotelController extends Controller
         $setting = new Setting();
         $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
 
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
+
         //cekpoint
         // if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
         // $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
@@ -314,43 +321,45 @@ class HotelController extends Controller
 
 
         // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel, $uniqueCode) {
 
+            // dd($uniqueCode);
             $storeTransaction = Transaction::create([
-                'no_inv' => $invoice,
-                'req_id' => 'HTL-' . time(),
-                'service' => 'HOTEL',
+                'no_inv'     => $invoice,
+                'req_id'     => 'HTL-' . time(),
+                'service'    => 'HOTEL',
                 'service_id' => 8,
                 // 'payment' => $payoutsXendit['payment'],
                 'payment' => 'xendit',
                 'user_id' => $request->user()->id,
-                'status' => $payoutsXendit['status'],
-                'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount
+                'status'  => $payoutsXendit['status'],
+                'link'    => $payoutsXendit['invoice_url'],
+                'total'   => $amount
             ]);
 
             $helper = new General();
             // true buat detail
 
             $storeDetailTransaction = DetailTransactionHotel::create([
-                'transaction_id' => $storeTransaction->id,
-                'hotel_id' => $data['hotel_id'],
-                'hotel_room_id' => $data['hostel_room_id'],
-                "booking_id" => $helper->generateRandomString(6),
+                'transaction_id'    => $storeTransaction->id,
+                'hotel_id'          => $data['hotel_id'],
+                'hotel_room_id'     => $data['hostel_room_id'],
+                "booking_id"        => $helper->generateRandomString(6),
                 "reservation_start" => Carbon::parse($data['start'])->format('Y-m-d'),
-                "reservation_end" => Carbon::parse($data['end'])->format('Y-m-d'),
-                "guest" => $data['total_guest'],
-                "room" => $data['room'],
-                "rent_price" => $hotel->sellingprice,
-                "fee_admin" => 2500,
-                "created_at" => Carbon::now(),
-                "updated_at" => Carbon::now(),
+                "reservation_end"   => Carbon::parse($data['end'])->format('Y-m-d'),
+                "guest"             => $data['total_guest'],
+                "room"              => $data['room'],
+                "rent_price"        => $hotel->sellingprice,
+                "fee_admin"         => 2500,
+                "kode_unik"         => $uniqueCode,
+                "created_at"        => Carbon::now(),
+                "updated_at"        => Carbon::now(),
             ]);
 
             if ($data['point']) {
                 //deductpoint
                 $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
             }
         });
 
