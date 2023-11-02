@@ -57,7 +57,7 @@
                                     <div class="text-gray-500 fs-8">e-Wallet</div>
                                     <span class=" fw-medium fs-4 menu-title">
                                         <b>
-                                            56.500
+                                            Coming Soon
                                         </b>
                                     </span>
                                 </div>

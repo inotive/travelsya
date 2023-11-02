@@ -92,14 +92,10 @@ Route::get('/company/kontak', function () {
 })->name('company.contact');
 
 // Ini Route Hotel-eBooking
-Route::get('/e-tiket/hotel', function(){
-    return view('user.order-detail.e-tiket');
-});
+Route::get('/e-tiket/{hotel}/hotel', [ RiwayatBookingController::class, 'cetakHotel'])->name('e-tiket.hotel');
 
 // Ini Route Hostel-eBooking
-Route::get('/e-tiket/hostel', function(){
-    return view('user.order-detail.e-tiket-hostel');
-});
+Route::get('/e-tiket/{hostel}/hostel',[ RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');

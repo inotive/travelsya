@@ -27,7 +27,6 @@ class DetailTransactionHostel extends Model
         return $this->belongsTo(HostelRoom::class);
     }
 
-
     public function transaction()
     {
         return $this->belongsTo(Transaction::class);
