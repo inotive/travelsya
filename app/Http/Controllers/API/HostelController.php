@@ -236,27 +236,28 @@ class HostelController extends Controller
                         'name' => $facility->facility->name,
                         'image' => 'storage/' . $facility->facility->icon,
                     ];
-                });
+                })->unique('id');
+
                 $avg_rating = $hostel->hostelRating->sum('rate') != 0 ? $hostel->hostelRating->sum('rate') / $hostel->hostelRating->count() : 0;
 
                 return [
-                    'id' => $hostel->id,
-                    'name' => $hostel->name,
-                    'category' => $hostel->category,
-                    'image' => 'storage/' . $hostel->image,
-                    'checkin' => $hostel->checkin,
-                    'checkout' => $hostel->checkout,
-                    'location' => $hostel->city,
-                    'address' => $hostel->address,
-                    'lat' => $hostel->lat,
-                    'lon' => $hostel->lon,
-                    'avg_rating' => $avg_rating,
-                    'rating_count' => $hostel->hostelRating->count(),
-                    'hostel_image' => $hostel->hostelImage,
-                    'hostel_rooms' => $hostel_room,
+                    'id'                => $hostel->id,
+                    'name'              => $hostel->name,
+                    'category'          => $hostel->category,
+                    'image'             => 'storage/' . $hostel->image,
+                    'checkin'           => $hostel->checkin,
+                    'checkout'          => $hostel->checkout,
+                    'location'          => $hostel->city,
+                    'address'           => $hostel->address,
+                    'lat'               => $hostel->lat,
+                    'lon'               => $hostel->lon,
+                    'avg_rating'        => $avg_rating,
+                    'rating_count'      => $hostel->hostelRating->count(),
+                    'hostel_image'      => $hostel->hostelImage,
+                    'hostel_rooms'      => $hostel_room,
                     'hostel_facilities' => $hostelFacilities,
-                    'hostel_rules' => $hostel_rules,
-                    'hostel_reviews' => $hostel_reviews,
+                    'hostel_rules'      => $hostel_rules,
+                    'hostel_reviews'    => $hostel_reviews,
                 ];
             });
 
