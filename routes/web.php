@@ -125,7 +125,7 @@ Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDeta
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
 
 // Route Bantuan Testing
-Route::get('/bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
+Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
 
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
