@@ -146,17 +146,17 @@
                     <div class=" container-xxl ">
                         <div class="row py-10">
                             <div class="col-md-3">
-                                Logo travelsya
+                                <img class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}" alt="logo-travelsya">
                                 <p>Kalimantan Timur, Balikpapan</p>
                                 <p>Indonesia</p>
                                 <p>cs@travelsya.com</p>
-                                <p>+62 811 223 3445</p>
+                                <p>(0542)8795954</p>
 
                             </div>
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col md-4">
-                                        <p class="fw-bold fs-5">Layanansss</p>
+                                        <p class="fw-bold fs-5">Layanan</p>
                                         <p>Booking Hotel</p>
                                         <p>Tiket Pesawat</p>
                                         <p>Tiket Kereta Api</p>
@@ -175,28 +175,43 @@
                                         <p>Pulsa & Data</p>
                                         <p>TV Berbayar</p>
                                         <p>Bayar Pajak</p>
+                                        <p>Health & Beauty</p>
                                     </div>
                                     <div class="col md-4">
                                         <p class="fw-bold fs-5">Dukungan</p>
-                                        <a href="{{route('company.contact')}}" class="text-white d-block mb-3">Hubungi Kami</a>
-                                        <a href="{{route('company.about')}}" class="text-white d-block mb-3">Tentang Kami</a>
-                                        <a href="/partner-hotel" class="text-white d-block mb-3">
-                                            Partner
+                                        <a href="{{ route('company.about') }}" class="text-white">
+                                            <p>Tentang Kami</p>
                                         </a>
-                                        <a href="{{route('company.privat')}}" class="text-white d-block mb-3">Kebijakan Privasi</a>
-                                        <a href="{{route('company.about')}}" class="text-white d-block mb-3">Syarat & Ketentuan</a>
+                                        <a href="/partner-hotel" class="text-white">
+                                            <p>Partner</p>
+                                        </a>
+                                        <p>Layanan Pelanggan</p>
+                                        <a href="{{route('company.terms')}}" class="text-white">
+                                            <p>Kebijakan Privasi</p>
+                                        </a>
+                                        <a href="{{ route('company.privat') }}" class="text-white">
+                                            <p>Syarat & Ketentuan</p>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <p class="fw-bold fs-5">Download Aplikasi</p>
-                                <img alt=""
+                                {{-- <img alt=""
                                     src="{{ asset('assets/media/products-categories/download-apps.png') }}"
-                                    class="w-200px" />
-
+                                    class="w-200px" /> --}}
+                                <div class="col-8" style="margin-bottom: 16px;">
+                                    <a href="{{ url('https://play.google.com/store/apps/details?id=com.travelsya.id&pcampaignid=web_share') }}" target="_blank">
+                                        <img class="img-fluid" src="/media/ads/play_store.png" alt="play_store.png">
+                                    </a>
+                                </div>
+                                <div class="col-8">
+                                    <a href="{{ url('https://apps.apple.com/id/app/travelsya-travel-lifestyle/id6450695778?l=id') }}" target="_blank">
+                                        <img class="img-fluid" src="/media/ads/app_store.png" alt="app_store.png">
+                                    </a>
+                                </div>
                             </div>
                         </div>
-
                         <hr>
                         <div class="row">
                             <!--begin::Copyright-->

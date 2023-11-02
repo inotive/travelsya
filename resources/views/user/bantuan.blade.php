@@ -7,10 +7,8 @@
     {{-- Row --}}
     <div class="row">
 
-        @include('user.user-navigation')
-
         {{-- Kolom Kanan (Form Edit Profile) --}}
-        <div class="col-12 col-lg-7">
+        <div class="col-12">
             <div class="card">
                 <div class="card-header">
                     <div class="card-title text fw-bold fs-1">
@@ -37,7 +35,7 @@
                                             data-bs-target="#kt_accordion_1_body_{{ $key }}"
                                             aria-expanded="{{ $key == 0 ? 'true' : 'false' }}"
                                             aria-controls="kt_accordion_1_body_{{ $key }}">
-                                            {{ $help->title }}
+                                            {{ $help['title'] }}
                                         </button>
                                     </h2>
                                     <div id="kt_accordion_1_body_{{ $key }}"
@@ -45,7 +43,7 @@
                                         aria-labelledby="kt_accordion_1_header_{{ $key }}"
                                         data-bs-parent="#kt_accordion_1">
                                         <div class="accordion-body">
-                                            {!! $help->content !!}
+                                            {!! $help['content'] !!}
                                         </div>
                                     </div>
                                 </div>

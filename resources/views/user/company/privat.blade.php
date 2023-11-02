@@ -5,7 +5,7 @@
 <div class="container my-10">
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <div class="card my-10">
                 <div class="card-header">
                     <div class="card-title">
                         Syarat Dan Ketentuan

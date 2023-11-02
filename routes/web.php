@@ -83,7 +83,7 @@ Route::get('/privasi', function () {
     return view('user.company.terms');
 })->name('company.terms');
 
-Route::get('/company/kebijakan-privasi', function () {
+Route::get('/syarat-ketentuan', function () {
     return view('user.company.privat');
 })->name('company.privat');
 
@@ -92,10 +92,10 @@ Route::get('/company/kontak', function () {
 })->name('company.contact');
 
 // Ini Route Hotel-eBooking
-Route::get('/e-tiket/{hotel}/hotel', [ RiwayatBookingController::class, 'cetakHotel'])->name('e-tiket.hotel');
+Route::get('/e-tiket/{hotel}/hotel', [RiwayatBookingController::class, 'cetakHotel'])->name('e-tiket.hotel');
 
 // Ini Route Hostel-eBooking
-Route::get('/e-tiket/{hostel}/hostel',[ RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel');
+Route::get('/e-tiket/{hostel}/hostel', [RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
@@ -114,10 +114,19 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
+
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel');
 Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher');
 Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDetailListrik'])->name('profile.order-detail.listrik');
+
+// Route::get('/profile/order-history/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
+// Route::get('/profile/order-history/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
+// Route::get('/profile/order-history/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
+
+// Route Bantuan Testing
+Route::get('/bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
+
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
