@@ -605,7 +605,7 @@
                                         <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
 
                                         <ul>
-                                            @foreach ($hostel->hostelFacilities->unique() as $facility)
+                                            @foreach ($hostel->hostelFacilities->unique('facility_id') as $facility)
                                             <li>{{ $facility->facility->name }}</li>
                                             @endforeach
                                         </ul>
