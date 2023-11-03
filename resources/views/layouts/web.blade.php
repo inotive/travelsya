@@ -36,7 +36,10 @@
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-
+<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
+    />
     <!--end::Global Stylesheets Bundle-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -49,6 +52,7 @@
 
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
     <style>
+
         .main {
 
             grid-area: main;
@@ -92,6 +96,171 @@
             width: 100%;
         } */
     </style>
+<style>
+  .item-menubar {
+    cursor: pointer;
+  }
+  .child-item-menubar {
+    display: flex;
+    background: url("./assets/media/bg-icon-menubar.png") no-repeat center center;
+    background-size: 72px 72px;
+    -webkit-box-pack: center;
+    justify-content: center;
+    align-items: center;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto;
+  }
+  .item-label {
+    flex: 1;
+    align-self: center;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    text-align: left;
+    margin-left: 1.2em;
+  }
+  .header-image {
+    border-radius: 0px;
+    background: linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)),
+    url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80") no-repeat center center;
+    background-size: cover;
+    border-bottom-left-radius: 4em;
+    border-bottom-right-radius: 4em;
+  }
+  @media (max-width: 767px) {
+    .item-label {
+      margin-left: 0px;
+      text-align: center;
+    }
+  }
+@-webkit-keyframes come-in {
+  0% {
+    -webkit-transform: translatey(100px);
+            transform: translatey(100px);
+    opacity: 0;
+  }
+  30% {
+    -webkit-transform: translateX(-50px) scale(0.4);
+            transform: translateX(-50px) scale(0.4);
+  }
+  70% {
+    -webkit-transform: translateX(0px) scale(1.2);
+            transform: translateX(0px) scale(1.2);
+  }
+  100% {
+    -webkit-transform: translatey(0px) scale(1);
+            transform: translatey(0px) scale(1);
+    opacity: 1;
+  }
+}
+@keyframes come-in {
+  0% {
+    -webkit-transform: translatey(100px);
+            transform: translatey(100px);
+    opacity: 0;
+  }
+  30% {
+    -webkit-transform: translateX(-50px) scale(0.4);
+            transform: translateX(-50px) scale(0.4);
+  }
+  70% {
+    -webkit-transform: translateX(0px) scale(1.2);
+            transform: translateX(0px) scale(1.2);
+  }
+  100% {
+    -webkit-transform: translatey(0px) scale(1);
+            transform: translatey(0px) scale(1);
+    opacity: 1;
+  }
+}
+
+.floating-container {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  bottom: 0;
+  right: 0;
+  margin: 35px 25px;
+}
+.floating-container:hover {
+  height: 300px;
+}
+.floating-container:hover .floating-button {
+  box-shadow: 0 10px 25px rgba(105, 0, 0, 0.6);
+  -webkit-transform: translatey(5px);
+          transform: translatey(5px);
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.floating-container:hover .element-container .float-element:nth-child(1) {
+  -webkit-animation: come-in 0.4s forwards 0.2s;
+          animation: come-in 0.4s forwards 0.2s;
+}
+.floating-container:hover .element-container .float-element:nth-child(2) {
+  -webkit-animation: come-in 0.4s forwards 0.4s;
+          animation: come-in 0.4s forwards 0.4s;
+}
+.floating-container:hover .element-container .float-element:nth-child(3) {
+  -webkit-animation: come-in 0.4s forwards 0.6s;
+          animation: come-in 0.4s forwards 0.6s;
+}
+.floating-container .floating-button {
+  position: absolute;
+  width: 65px;
+  height: 65px;
+  background: #C02425;
+  bottom: 0;
+  border-radius: 50%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  color: white;
+  line-height: 65px;
+  text-align: center;
+  font-size: 23px;
+  z-index: 100;
+  box-shadow: 0 10px 25px -5px rgba(105, 0, 0, 0.6);
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.floating-container .float-element {
+  position: relative;
+  display: block;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin: 15px auto;
+  color: white;
+  font-weight: 500;
+  text-align: center;
+  line-height: 50px;
+  z-index: 0;
+  opacity: 0;
+  -webkit-transform: translateY(100px);
+          transform: translateY(100px);
+}
+.floating-container .float-element .material-icons {
+  vertical-align: middle;
+  font-size: 16px;
+}
+.floating-container .float-element:nth-child(1) {
+  background: #42A5F5;
+  box-shadow: 0 20px 20px -10px rgba(66, 165, 245, 0.5);
+}
+.floating-container .float-element:nth-child(2) {
+  background: #4CAF50;
+  box-shadow: 0 20px 20px -10px rgba(76, 175, 80, 0.5);
+}
+.floating-container .float-element:nth-child(3) {
+  background: #FF9800;
+  box-shadow: 0 20px 20px -10px rgba(255, 152, 0, 0.5);
+}
+</style>
     @stack('add-style')
 {{--    @vite(['resources/js/app.js'])--}}
 </head>
@@ -157,24 +326,60 @@
                                 <div class="row">
                                     <div class="col md-4">
                                         <p class="fw-bold fs-5">Layanan</p>
-                                        <p>Booking Hotel</p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-hotel">
+                                            <a class="text-white" href="#">
+                                                Booking Hotel
+                                            </a>
+                                        </p>
                                         <p>Tiket Pesawat</p>
                                         <p>Tiket Kereta Api</p>
                                         <p>Tiket Bus & Travel</p>
                                         <p>Tiket Rekreasi</p>
                                         <p>Rental Mobil</p>
-                                        <p>Booking Hostel</p>
-                                        <p>Bayar PLN</p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-hostel">
+                                            <a class="text-white" href="#">
+                                                Booking Hoster
+                                            </a>
+                                        </p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-pln">
+                                            <a class="text-white" href="#">
+                                                Bayar PLN
+                                            </a>
+                                        </p>
                                     </div>
                                     <div class="col md-4">
                                         <p class="fw-bold fs-5">&nbsp;</p>
-                                        <p>Bayar BPJS</p>
-                                        <p>Bayar PDAM</p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-bpjs">
+                                            <a class="text-white" href="#">
+                                                Bayar BPJS
+                                            </a>
+                                        </p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-pdam">
+                                            <a class="text-white" href="#">
+                                                Bayar PDAM
+                                            </a>
+                                        </p>
                                         <p>Transfer Bank</p>
-                                        <p>Top up Ewallet</p>
-                                        <p>Pulsa & Data</p>
-                                        <p>TV Berbayar</p>
-                                        <p>Bayar Pajak</p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-ewallet">
+                                            <a class="text-white" href="#">
+                                                Top up Ewallet
+                                            </a>
+                                        </p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-pulsadata">
+                                            <a class="text-white" href="#">
+                                                Pulsa & Data
+                                            </a>
+                                        </p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-tvBerbayar">
+                                            <a class="text-white" href="#">
+                                                TV Berbayar
+                                            </a>
+                                        </p>
+                                        <p data-bs-toggle="modal" data-bs-target="#modal-pajak">
+                                            <a class="text-white" href="#">
+                                                Bayar Pajak
+                                            </a>
+                                        </p>
                                         <p>Health & Beauty</p>
                                     </div>
                                     <div class="col md-4">
@@ -215,6 +420,323 @@
                             </div>
                         </div>
                         <hr>
+{{-- START MODAL --}}
+    <div class="modal bg-body" id="modal-hotel">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Hotel</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                    @include('layouts.include.home.container-hotel')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-hostel">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Hostel</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                    @include('layouts.include.home.container-hostel')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-bpjs">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">BPJS</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-bpjs')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-pln">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">PLN</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-pln')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-pdam">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">PDAM</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-pdam')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-ewallet">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">E-Wallet</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-wallet')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-pulsadata">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Pulsa dan Data</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-pulsa-data')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-tvBerbayar">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">TV Berbayar</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-tv')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal bg-body" id="modal-pajak">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Pajak</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-tax')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{{-- END MODAL --}}
                         <div class="row">
                             <!--begin::Copyright-->
 
@@ -226,7 +748,6 @@
                             <!--end::Copyright-->
                         </div>
                     </div>
-
                 </div>
                 <!--end::Container-->
             </div>
@@ -244,7 +765,28 @@
         <i class="ki-duotone ki-arrow-up"><span class="path1"></span><span class="path2"></span></i>
     </div>
     <!--end::Scrolltop-->
+<div class="floating-container">
+  <div class="floating-button">+</div>
+  <div class="element-container">
 
+    <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
+        <span class="float-element tooltip-left">
+          <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
+        </span>
+    </a>
+
+    <span class="float-element">
+        <a target="_blank" href="https://mailto:cs@travelsya.com">
+          <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
+        </a>
+    </span>
+    <span class="float-element">
+        <a target="_blank" href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
+          <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
+        </a>
+    </span>
+  </div>
+</div>
     <!--begin::Javascript-->
     <script>
         var hostUrl = "assets/index.html";
@@ -328,6 +870,7 @@
         })
     </script>
 </body>
+
 <!--end::Body-->
 
 <!-- Mirrored from preview.keenthemes.com/metronic8/demo2/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 27 Mar 2023 06:14:47 GMT -->
