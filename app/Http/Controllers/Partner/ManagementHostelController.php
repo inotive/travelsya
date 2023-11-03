@@ -416,11 +416,8 @@ class ManagementHostelController extends Controller
     {
         hostelRoom::where('id', $id)->delete();
         hostelRoomFacility::where('hostel_room_id', $id)->delete();
-        toast('hostel Has Been Removed', 'success');
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Berhasil Dihapus!'
-        ]);
+        toast('Hostel Room Has Been Removed', 'success');
+        return redirect()->back();
     }
 
 
@@ -429,7 +426,7 @@ class ManagementHostelController extends Controller
         $hostel_room = hostelRoom::findOrFail($id);
         $hostel_room->delete();
 
-        toast('hostel Room has been deleted', 'success');
+        toast('Hostel Room has been deleted', 'success');
         return redirect()->back();
     }
 
@@ -441,7 +438,7 @@ class ManagementHostelController extends Controller
         $hostelImage->delete();
 
 
-        toast('hostel Image has been deleted', 'success');
+        toast('Hostel Image has been deleted', 'success');
         return redirect()->back();
     }
 
@@ -456,7 +453,7 @@ class ManagementHostelController extends Controller
             'description'  => $request->description,
             'hostel_id' => $request->hostel_id,
         ]);
-        toast('hostel Rule has been created', 'success');
+        toast('Hostel Rule has been created', 'success');
         return redirect()->back();
     }
 
@@ -490,7 +487,7 @@ class ManagementHostelController extends Controller
             'description'  => $request->description
         ]);
 
-        toast('hostel Rule has been Updated', 'success');
+        toast('Hostel Rule has been Updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
@@ -502,7 +499,7 @@ class ManagementHostelController extends Controller
     {
         $hostel_rule = hostelRule::findorfail($id);
         $hostel_rule->delete();
-        toast('hostel Rule has been Deleted', 'success');
+        toast('Hostel Rule has been Deleted', 'success');
         return redirect()->back();
     }
 }

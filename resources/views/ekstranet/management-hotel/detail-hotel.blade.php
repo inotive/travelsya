@@ -12,62 +12,114 @@
                     <!--begin: Pic-->
 
                     <div class="me-5 mb-0">
-                        <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
+                        {{-- <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
                             <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="image" />
 
+                        </div> --}}
+                        @php
+                            $image = $hotel->hotelImage->where('main', 1)->first()->image ?? '';
+                        @endphp
+                        <div class="row">
+                            <div class="col-4">
+                                @if ($hotel->hotelImage->isNotEmpty())
+                                @php
+                                    $mainImage = $hotel->hotelImage->where('main', 1)->first();
+                                    $image = $mainImage ? $mainImage->image : '';
+                                @endphp
+                                <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hotel->id }}" href="{{ asset('storage/'. $image) }}">
+                                    <img class="img-fluid overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
+                                        src="{{ asset('storage/'.$hotel->hotelImage->where('main', 1)->first()->image ?? '') }}" alt="image" />
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
+                                        <i class="bi bi-eye-fill fs-2x text-white"></i>
+                                    </div>
+                                </a>
+                                @else
+                                    <img src="" alt="Gambar Kosong" class="img-fluid">
+                                @endif
+
+                            </div>
+                            
+                            {{-- <div class="row mt-4">
+                                    <div class="col-4">
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"
+                                           href="{{ asset('storage/'. $hotelImage->image) }}">
+                                            <!--begin::Image-->
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                 style="background-image:url('{{ asset('storage/'. $hotelImage->image) }}')">
+                                            </div>
+                                            <!--end::Image-->
+
+                                            <!--begin::Action-->
+                                            <div
+                                                class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                            </div>
+                                            <!--end::Action-->
+                                        </a>
+                                    </div>
+
+                            </div> --}}
+                            <div class="col-8">
+                                <div class="flex-grow-1">
+
+                                    <!--begin::Title-->
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                        <!--begin::User-->
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Name-->
+                                            <div class="d-flex align-items-center mb-2 mt-5">
+                                                <a
+                                                    class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ $hotel->name }}</a>
+                                            </div>
+                                            <!--end::Name-->
+                                            <!--begin::Info-->
+                                            <div class="d-flex flex-wrap fw-semibold fs-6 mb-1 pe-1">
+                                                <span>{{ $hotel->address }}</span>
+                                                <div>{{ $hotel->description }}</div>
+                                            </div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::User-->
+                                        <!--begin::Actions-->
+
+                                        <!--end::Actions-->
+                                    </div>
+                                    <!--end::Title-->
+                                    <!--begin::Stats-->
+                                    <div class="d-flex flex-wrap flex-stack">
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-column flex-grow-1 pe-8 ">
+                                            <!--begin::Stats-->
+                                            <div class="d-flex flex-wrap">
+                                                <!--begin::Stat-->
+                                                <a href="#"
+                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hotel->description }}</a>
+
+                                                <!--end::Stat-->
+                                            </div>
+                                            <div class="d-flex flex-wrap">
+
+                                            </div>
+                                            <!--end::Stats-->
+                                        </div>
+                                        <!--end::Wrapper-->
+                                        <!--begin::Progress-->
+
+
+                                        <!--end::Progress-->
+                                    </div>
+                                    <!--end::Stats-->
+                                </div>
+                            </div>
                         </div>
+
+                        {{-- <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                    style="background-image: url('{{ asset('assets/media/avatars/300-1.jpg') }}')">
+                                </div> --}}
                     </div>
                     <!--end::Pic-->
                     <!--begin::Info-->
-                    <div class="flex-grow-1">
 
-                        <!--begin::Title-->
-                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                            <!--begin::User-->
-                            <div class="d-flex flex-column">
-                                <!--begin::Name-->
-                                <div class="d-flex align-items-center mb-2 mt-5">
-                                    <a class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ $hotel->name }}</a>
-                                </div>
-                                <!--end::Name-->
-                                <!--begin::Info-->
-                                <div class="d-flex flex-wrap fw-semibold fs-6 mb-1 pe-1">
-                                    <span>{{ $hotel->address }}</span>
-                                    <div>{{ $hotel->description }}</div>
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::Actions-->
-
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Title-->
-                        <!--begin::Stats-->
-                        <div class="d-flex flex-wrap flex-stack">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex flex-column flex-grow-1 pe-8 ">
-                                <!--begin::Stats-->
-                                <div class="d-flex flex-wrap">
-                                    <!--begin::Stat-->
-                                    <a href="#"
-                                        class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hotel->description }}</a>
-
-                                    <!--end::Stat-->
-                                </div>
-                                <div class="d-flex flex-wrap">
-
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Progress-->
-
-
-                            <!--end::Progress-->
-                        </div>
-                        <!--end::Stats-->
-                    </div>
                     <!--end::Info-->
                 </div>
                 <!--end:: Body-->
@@ -638,8 +690,6 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-
-
                                                     </div>
                                                     <!--end::Actions-->
                                                 </form>
@@ -667,6 +717,8 @@
     </div>
 @endsection
 @push('add-script')
+<script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
@@ -688,24 +740,24 @@
                     ">"
             });
 
-            $('#kt_datatable_zero_configuration_1').DataTable({
-                "scrollY": "500px",
-                "scrollCollapse": true,
-                "language": {
-                    "lengthMenu": "Show _MENU_",
-                },
-                "dom": "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                    ">" +
+            // $('#kt_datatable_zero_configuration_1').DataTable({
+            //     "scrollY": "500px",
+            //     "scrollCollapse": true,
+            //     "language": {
+            //         "lengthMenu": "Show _MENU_",
+            //     },
+            //     "dom": "<'row'" +
+            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+            //         ">" +
 
-                    "<'table-responsive'tr>" +
+            //         "<'table-responsive'tr>" +
 
-                    "<'row'" +
-                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                    ">"
-            });
+            //         "<'row'" +
+            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+            //         ">"
+            // });
 
             $('#kt_datatable_zero_configuration_2').DataTable({
                 "scrollY": "500px",
@@ -747,4 +799,16 @@
 
         });
     </script>
+@endpush
+@push('add-style')
+<style>
+    body {
+        background-size: 100% 80px !important;
+    }
+
+    .card-hostel:hover {
+        border: 1px solid #D9214E;
+        cursor: pointer;
+    }
+</style>
 @endpush

@@ -267,7 +267,7 @@
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="form-group">
-                                <label class="font-weight-bold">Gambar Iklan</label>
+                                <label class="font-weight-bold">Gambar Ruangan</label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror"
                                     name="image">
 

@@ -78,10 +78,10 @@
                                         <td class="text-center">{{ $booking->transaction->no_inv }}</td>
                                         <td class="text-center">{{ $startdates }}</td>
                                         <td class="text-center">{{ $enddates }}</td>
-                                        <td class="text-center">{{ $booking->hotelRoom->name }}</td>
+                                        <td class="text-center">{{$booking->hotel->name}} - {{ $booking->hotelRoom->name }}</td>
                                         <td class="text-center">{{ $booking->room }} Kamar | {{ $diffInDays }} Malam
                                         </td>
-                                        <td class="text-center">Sisa {{ $remainingDays }} Malam lagi</td>
+                                        <td class="text-center">{{ $remainingDays }} Hari </td>
 
                                 <td class="text-center">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
@@ -148,10 +148,10 @@
                                         <td class="text-center">{{ $booking->transaction->no_inv }}</td>
                                         <td class="text-center">{{ $startdates }}</td>
                                         <td class="text-center">{{ $enddates }}</td>
-                                        <td class="text-center">{{ $booking->hostelRoom->name }}</td>
+                                        <td class="text-center"> {{$booking->hostel->name}} - {{ $booking->hostelRoom->name }}</td>
                                         <td class="text-center">{{ $booking->room }} Kamar | {{ $diffInDays }} Malam
                                         </td>
-                                        <td class="text-center">Sisa {{ $remainingDays }} Malam lagi</td>
+                                        <td class="text-center">{{ $remainingDays }} Hari </td>
                                 
                                     <td class="text-center">
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
