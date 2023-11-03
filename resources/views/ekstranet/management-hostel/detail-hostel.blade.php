@@ -21,16 +21,19 @@
                         @endphp
                         <div class="row">
                             <div class="col-4">
-                                <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hostel->id }}"
-                                    href="{{ asset('storage/' . $image) }}">
-                                    <img class="img-fluid overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
-                                        src="{{ asset('storage/' . $hostel->hostelImage->where('main', 1)->first()->image ?? '') }}"
-                                        alt="image" />
-                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
-                                        <i class="bi bi-eye-fill fs-2x text-white"></i>
-                                    </div>
-                                </a>
-
+                                @if ($hostel->hostelImage->isNotEmpty())
+                                    @php
+                                        $mainImage = $hostel->hostelImage->where('main', 1)->first();
+                                        $image = $mainImage ? $mainImage->image : '';
+                                    @endphp
+                                    <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hostel->id }}"
+                                        href="{{ asset('storage/media/hostel/' . $image) }}">
+                                        <img class="img-fluid overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
+                                            src="{{ asset('storage/media/hostel/' . $image) }}" alt="Gambar Hostel" />
+                                    </a>
+                                @else
+                                    <img src="" alt="Gambar Kosong" class="img-fluid">
+                                @endif
                             </div>
                             <div class="col-8">
                                 <div class="flex-grow-1">
@@ -198,10 +201,16 @@
                                                         data-kt-menu="true" style="">
 
                                                         <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
+                                                        {{-- <div class="menu-item px-3">
                                                             <a href="javascript:void(0)" class="menu-link px-3 text-warning"
                                                                 id="tombol-edit" data-id="{{ $room->id }}"
                                                                 data-bs-toggle="modal">
+                                                                Edit
+                                                            </a>
+                                                        </div> --}}
+                                                        <div class="menu-item px-3">
+                                                            <a href="{{ route('partner.management.hostel.setting.room.edit', ['id' => $room->hostel->id, 'room_id' => $room->id]) }}"
+                                                                class="menu-link px-3 text-warning">
                                                                 Edit
                                                             </a>
                                                         </div>
@@ -675,26 +684,12 @@
     </div>
 @endsection
 @push('add-script')
+    <script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+    <!-- Masukkan skrip jQuery dan DataTables di bawah link CSS -->
+    {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}
     <script>
         $(document).ready(function() {
-            // $('#kt_datatable_zero_configuration').DataTable({
-            //     "scrollY": "500px",
-            //     "scrollCollapse": true,
-            //     "language": {
-            //         "lengthMenu": "Show _MENU_",
-            //     },
-            //     "dom": "<'row'" +
-            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-            //         ">" +
 
-            //         "<'table-responsive'tr>" +
-
-            //         "<'row'" +
-            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-            //         ">"
-            // });
 
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",
@@ -715,24 +710,28 @@
                     ">"
             });
 
-            $('#kt_datatable_zero_configuration_2').DataTable({
-                "scrollY": "500px",
-                "scrollCollapse": true,
-                "language": {
-                    "lengthMenu": "Show _MENU_",
-                },
-                "dom": "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                    ">" +
+            // $('#kt_datatable_zero_configuration_2').DataTable({
+            //     "scrollY": "500px",
+            //     "scrollCollapse": true,
+            //     "language": {
+            //         "lengthMenu": "Show _MENU_",
+            //     },
+            //     "dom": "<'row'" +
+            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+            //         ">" +
 
-                    "<'table-responsive'tr>" +
+            //         "<'table-responsive'tr>" +
 
-                    "<'row'" +
-                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                    ">"
-            });
+            //         "<'row'" +
+            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+            //         ">"
+            // });
+
+            //             $(document).ready( function () {
+            //     $('#kt_datatable_zero_configuration_2').DataTable();
+            // } );
             $('#kt_datatable_zero_configuration_3').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
