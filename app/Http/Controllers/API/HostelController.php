@@ -274,13 +274,39 @@ class HostelController extends Controller
     public function room($id)
     {
         try {
-            $hostels = HostelRoom::with('hostel')->findOrFail($id);
+            $hostels = HostelRoom::with('hostel', 'hostelFacilities', 'hostelroomImage')->find($id);
 
-            if ($hostels) {
-                return ResponseFormatter::success($hostels, 'Data successfully loaded');
-            } else {
+            if (!$hostels) {
                 return ResponseFormatter::error(null, 'Data not found');
             }
+
+            $hostel = collect([$hostels])->map(function ($room) {
+                $room_facilities = $room->hostelFacilities->map(function ($facilities) {
+                    return [
+                        'id'   => $facilities->facility_id,
+                        'name' => $facilities->facility->name,
+                        'icon' => $facilities->facility->icon,
+                    ];
+                })->unique('facility_id');
+
+                $room_images = $room->hostelroomImage->map(function ($facilities) {
+                    return [
+                        'image' => $facilities->image,
+                    ];
+                })->unique('image');
+
+                return [
+                    'room_size'       => $room->roomsize,
+                    'total_bed_room'  => $room->totalroom,
+                    'total_bath_room' => $room->totalbathroom,
+                    'max_guest'       => $room->max_guest,
+                    'description'     => $room->description,
+                    'room_facilities' => $room_facilities,
+                    'room_images'     => $room_images,
+                ];
+            });
+
+            return ResponseFormatter::success($hostel, 'Data successfully loaded');
         } catch (Exception $th) {
             return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong',], 'Hostel process failed', 500);
         }

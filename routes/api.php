@@ -58,6 +58,7 @@ route::post('/hotel', [HotelController::class, 'index']);
 route::get('/hotel/city', [HotelController::class, 'hotelCity']);
 route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);
+route::get('/hotel/room/{id}', [HotelController::class, 'room']);
 
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
