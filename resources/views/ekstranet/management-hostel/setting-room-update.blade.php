@@ -185,7 +185,7 @@
                         </div>
                         <div class="col-6">
                             <label class="form-label">Maksimal Penghuni Kamar</label>
-                            <input type="text" name="guest" id="guest" class="form-control" value="{{ $room->guest }}"
+                            <input type="text" name="max_guest" id="guest" class="form-control" value="{{ $room->max_guest }}"
                                 required>
                         </div>
                         <div class="col-6">
@@ -220,7 +220,7 @@
                         <div class="col-4 extrabedWidget">
                             <label class="form-label">Maksimal Extra Bed</label>
                             <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
-                                value="Masukkan Maksimal Extra Bed">
+                            value="{{ $room->maxextrabed }}" >
                         </div>
 
                         <div class="col-4 extrabedWidget">
@@ -228,7 +228,7 @@
                             <div class="input-group">
                                 <span class="input-group-text">Rp.</span>
                                 <input type="number" name="extrabedprice" id="extrabedprice" class="form-control"
-                                    value="Masukan Biaya Extra Bed">
+                                value="{{ $room->extrabedprice }}">
                             </div>
                         </div>
                         <div class="col-4 extrabedWidget">
@@ -236,7 +236,7 @@
                             <div class="input-group">
                                 <span class="input-group-text">Rp.</span>
                                 <input type="number" name="extrabedsellingprice" id="extrabedsellingprice"
-                                    class="form-control" value="Masukan Biaya Extra Bed" readonly>
+                                    class="form-control" value="{{ $room->extrabed_sellingprice }}" readonly>
                             </div>
                         </div>
                         <div class="col-12">
@@ -256,85 +256,47 @@
                             {{-- <label class="form-label">Image</label> --}}
                             {{-- <input type="file" name="image_1" id="image_1" class="form-control"> --}}
                             <!--begin::Image input-->
-                            @foreach ($hostel->hostelroomImage as $image)
-                            <div class="image-input image-input-outline m-5" data-kt-image-input="true">
-                                <!--begin::Image preview wrapper-->
-                                <div class="image-input-wrapper w-125px h-125px"
-                                    style="background-image: url(/assets/media/avatars/300-1.jpg)"></div>
-                                <!--end::Image preview wrapper-->
+                            @foreach ($room->hostelroomimage as $image)
+                                    <div class="image-input image-input-outline m-5" data-kt-image-input="true">
+                                        <!--begin::Image preview wrapper-->
+                                        <div class="image-input-wrapper w-125px h-125px"
+                                            style="background-image: url('{{ asset('storage/' . $image->image) }}')"></div>
+                                        <!--end::Image preview wrapper-->
 
-                                <!--begin::Edit button-->
-                                <label
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="change" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Change image">
-                                    <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
-                                            class="path2"></span></i>
+                                        <!--begin::Edit button-->
+                                        <label
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                            data-bs-dismiss="click" title="Change image">
+                                            <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
+                                                    class="path2"></span></i>
 
-                                    <!--begin::Inputs-->
-                                    <input type="file" name="hostel_room_image[]" accept=".png, .jpg, .jpeg" multiple />
-                                    <input type="hidden" name="image_remove" />
-                                    <!--end::Inputs-->
-                                </label>
-                                <!--end::Edit button-->
+                                            <!--begin::Inputs-->
+                                            <input type="file" name="hostel_room_images[]" accept=".png, .jpg, .jpeg"
+                                                multiple />
+                                            <input type="hidden" name="image_remove" />
+                                            <!--end::Inputs-->
+                                        </label>
+                                        <!--end::Edit button-->
 
-                                <!--begin::Cancel button-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Cancel image">
-                                    <i class="ki-outline ki-cross fs-3"></i>
-                                </span>
-                                <!--end::Cancel button-->
-                                <!--begin::Remove button-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Remove image">
-                                    <i class="ki-outline ki-cross fs-3"></i>
-                                </span>
-                                <!--end::Remove button-->
-                            </div>
-                            @endforeach
-
-                            {{-- PENAMBAHAN ROOM IMAGE --}}
-                            <div class="image-input image-input-outline m-5" data-kt-image-input="true">
-                                <!--begin::Image preview wrapper-->
-                                <div class="image-input-wrapper w-125px h-125px"></div>
-                                <!--end::Image preview wrapper-->
-
-                                <!--begin::Edit button-->
-                                <label
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="change" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Change image">
-                                    <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
-                                            class="path2"></span></i>
-
-                                    <!--begin::Inputs-->
-                                    <input type="file" name="hostel_room_image[]" accept=".png, .jpg, .jpeg" multiple />
-                                    <input type="hidden" name="image_remove" />
-                                    <!--end::Inputs-->
-                                </label>
-                                <!--end::Edit button-->
-
-                                <!--begin::Cancel button-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Cancel image">
-                                    <i class="ki-outline ki-cross fs-3"></i>
-                                </span>
-                                <!--end::Cancel button-->
-                                <!--begin::Remove button-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Remove image">
-                                    <i class="ki-outline ki-cross fs-3"></i>
-                                </span>
-                                <!--end::Remove button-->
-                            </div>
+                                        <!--begin::Cancel button-->
+                                        <span
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                            data-bs-dismiss="click" title="Cancel image">
+                                            <i class="ki-outline ki-cross fs-3"></i>
+                                        </span>
+                                        <!--end::Cancel button-->
+                                        <!--begin::Remove button-->
+                                        <span
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                            data-bs-dismiss="click" title="Remove image">
+                                            <i class="ki-outline ki-cross fs-3"></i>
+                                        </span>
+                                        <!--end::Remove button-->
+                                    </div>
+                                @endforeach
 
                             <div class="col-12">
                                 <!--begin::Alert-->
