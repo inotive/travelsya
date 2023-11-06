@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetailTransaction;
-use App\Models\DetailTransactionHotel;
-use App\Models\Facility;
+use Carbon\Carbon;
 use App\Models\Guest;
 use App\Models\Hotel;
-use App\Models\HotelBookDate;
-use App\Models\HotelRoom;
-use App\Models\Transaction;
+use App\Models\Product;
 use App\Services\Point;
-use App\Services\Setting;
-use App\Services\Travelsya;
-use App\Services\Xendit;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Helpers\General;
+use App\Models\Facility;
+use App\Services\Xendit;
+use App\Models\HotelRoom;
+use App\Services\Setting;
+use App\Models\Transaction;
+use App\Services\Travelsya;
+use Illuminate\Http\Request;
+use App\Models\HotelBookDate;
+use App\Models\DetailTransaction;
+use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\DetailTransactionHotel;
 
 class HotelController extends Controller
 {
@@ -135,8 +138,8 @@ class HotelController extends Controller
         $data['facilities'] = Facility::all();
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::all();
+       
 
-        // dd($hotels);
         // dd($hotelPrices);
         return view('hotel.list-hotel', $data);
     }
@@ -198,10 +201,14 @@ class HotelController extends Controller
         $data['result_rating'] = $resultRating;
         $data['star_rating'] = floor($resultRating);
 
+        $data['ewallets'] = Product::where('is_active', 1)
+        ->where('category', 'ewallet')
+        ->where('service_id', 11)
+        ->distinct('name')
+        ->pluck('name');
+
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::all();
-
-        // dd($data['hotel']);
 
         return view('hotel.show', $data);
     }

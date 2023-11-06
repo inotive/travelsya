@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\MitraController;
 use App\Http\Controllers\Admin\PointController;
 
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\AuthController;
@@ -308,6 +309,9 @@ Route::middleware(['auth', 'role'])->group(function () {
 
             //hostel ajax
             //            Route::post('hostel-room/ajax', [MitraController::class, 'hostelRoomAjax'])->name('hostelroom.ajax');
+
+            Route::get('profile/{profile}/edit', [ProfileController::class, 'editProfile'])->name('edit-profile');
+            Route::put('profile/{profile}/update', [ProfileController::class, 'updateProfile'])->name('update-profile');
         });
         //user
 

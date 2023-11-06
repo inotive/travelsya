@@ -16,50 +16,53 @@ class LaporanController extends Controller
          * VARIABEL ======================================
          */
         $id = auth()->user()->id;
+        $year = $request->year;
+        $start = $request->start;
+        $end = $request->end;
 
-        /**
-         * DAFTAR TRANSAKSI HOTEL DAN HOSTEL ======================================
-         */
-        $transaction_hotel = DetailTransactionHotel::withWhereHas('transaction', function ($query) use ($id) {
-            $query->where('user_id', $id);
-        });
+        $transaction_hotel = DetailTransactionHotel::with('transaction')
+            ->whereHas('transaction', function ($query) use ($id, $year, $start, $end) {
+                $query->where('user_id', $id);
 
-        $transaction_hostel = DetailTransactionHostel::withWhereHas('transaction', function ($query) use ($id) {
-            $query->where('user_id', $id);
-        });
+                if ($year != null) {
+                    $query->whereYear('created_at', $year);
+                }
+
+                if ($start != null) {
+                    $startDateTime = $start . ' 00:00:00';
+                    $query->where('created_at', '>=', $startDateTime);
+                }
+
+                if ($end != null) {
+                    $endDateTime = $end . ' 23:59:59'; // Akhiri hari ini
+                    $query->where('created_at', '<=', $endDateTime);
+                }
+            })->get();
+
+        $transaction_hostel = DetailTransactionHostel::with('transaction')
+            ->whereHas('transaction', function ($query) use ($id, $year, $start, $end) {
+                $query->where('user_id', $id);
+
+                if ($year != null) {
+                    $query->whereYear('created_at', $year);
+                }
+
+                if ($start != null) {
+                    $startDateTime = $start . ' 00:00:00';
+                    $query->where('created_at', '>=', $startDateTime);
+                }
+
+                if ($end != null) {
+                    $endDateTime = $end . ' 23:59:59'; // Akhiri hari ini
+                    $query->where('created_at', '<=', $endDateTime);
+                }
+            })->get();
 
 
-        /**
-         * MULTIPLE FILTER LAPORAN ======================================
-         */
-        if ($request->year != '') {
-            $transaction_hotel->whereYear('created_at', $request->year);
-            $transaction_hostel->whereYear('created_at', $request->year);
-        }
+        $data['transaction_hotels'] = $transaction_hotel;
+        $data['transaction_hostels'] = $transaction_hostel;
 
-        if ($request->start != '') {
-            $transaction_hotel->where('created_at', '>=', $request->start . ' 00:00:00');
-            $transaction_hostel->where('created_at', '>=', $request->start . ' 00:00:00');
-        }
 
-        if ($request->end != '') {
-            $transaction_hotel->where('created_at', '<=', $request->end . ' 00:00:00');
-            $transaction_hostel->where('created_at', '<=', $request->end . ' 00:00:00');
-        }
-
-        $data['transaction_hotels'] = $transaction_hotel->get();
-        $data['transaction_hostels'] = $transaction_hostel->get();
-
-        // $transcation_id = $data['transaction_hostels']->first()->transcation_id;
-
-        
-        // $detail_pemesanan = DB::table('book_dates')
-        //     ->join('transactions', 'transactions.id', '=', 'book_dates.transaction_id')
-        //     ->where('transaction_id', $transcation_id)
-        //     ->value('book_dates.id');
-        // dd($transcation_id, $detail_pemesanan);
-
-        // dd($data['transaction_hotels']);
         return view('ekstranet.laporan.semua', $data);
     }
 }
