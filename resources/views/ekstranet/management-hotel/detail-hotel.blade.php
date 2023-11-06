@@ -21,6 +21,11 @@
                         @endphp
                         <div class="row">
                             <div class="col-4">
+                                @if ($hotel->hotelImage->isNotEmpty())
+                                @php
+                                    $mainImage = $hotel->hotelImage->where('main', 1)->first();
+                                    $image = $mainImage ? $mainImage->image : '';
+                                @endphp
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hotel->id }}" href="{{ asset('storage/'. $image) }}">
                                     <img class="img-fluid overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
                                         src="{{ asset('storage/'.$hotel->hotelImage->where('main', 1)->first()->image ?? '') }}" alt="image" />
@@ -28,8 +33,32 @@
                                         <i class="bi bi-eye-fill fs-2x text-white"></i>
                                     </div>
                                 </a>
+                                @else
+                                    <img src="" alt="Gambar Kosong" class="img-fluid">
+                                @endif
 
                             </div>
+                            
+                            {{-- <div class="row mt-4">
+                                    <div class="col-4">
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"
+                                           href="{{ asset('storage/'. $hotelImage->image) }}">
+                                            <!--begin::Image-->
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                 style="background-image:url('{{ asset('storage/'. $hotelImage->image) }}')">
+                                            </div>
+                                            <!--end::Image-->
+
+                                            <!--begin::Action-->
+                                            <div
+                                                class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                            </div>
+                                            <!--end::Action-->
+                                        </a>
+                                    </div>
+
+                            </div> --}}
                             <div class="col-8">
                                 <div class="flex-grow-1">
 
@@ -661,8 +690,6 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-
-
                                                     </div>
                                                     <!--end::Actions-->
                                                 </form>
@@ -690,6 +717,8 @@
     </div>
 @endsection
 @push('add-script')
+<script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
@@ -711,24 +740,24 @@
                     ">"
             });
 
-            $('#kt_datatable_zero_configuration_1').DataTable({
-                "scrollY": "500px",
-                "scrollCollapse": true,
-                "language": {
-                    "lengthMenu": "Show _MENU_",
-                },
-                "dom": "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                    ">" +
+            // $('#kt_datatable_zero_configuration_1').DataTable({
+            //     "scrollY": "500px",
+            //     "scrollCollapse": true,
+            //     "language": {
+            //         "lengthMenu": "Show _MENU_",
+            //     },
+            //     "dom": "<'row'" +
+            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+            //         ">" +
 
-                    "<'table-responsive'tr>" +
+            //         "<'table-responsive'tr>" +
 
-                    "<'row'" +
-                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                    ">"
-            });
+            //         "<'row'" +
+            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+            //         ">"
+            // });
 
             $('#kt_datatable_zero_configuration_2').DataTable({
                 "scrollY": "500px",

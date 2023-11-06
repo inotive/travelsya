@@ -236,27 +236,28 @@ class HostelController extends Controller
                         'name' => $facility->facility->name,
                         'image' => 'storage/' . $facility->facility->icon,
                     ];
-                });
+                })->unique('id');
+
                 $avg_rating = $hostel->hostelRating->sum('rate') != 0 ? $hostel->hostelRating->sum('rate') / $hostel->hostelRating->count() : 0;
 
                 return [
-                    'id' => $hostel->id,
-                    'name' => $hostel->name,
-                    'category' => $hostel->category,
-                    'image' => 'storage/' . $hostel->image,
-                    'checkin' => $hostel->checkin,
-                    'checkout' => $hostel->checkout,
-                    'location' => $hostel->city,
-                    'address' => $hostel->address,
-                    'lat' => $hostel->lat,
-                    'lon' => $hostel->lon,
-                    'avg_rating' => $avg_rating,
-                    'rating_count' => $hostel->hostelRating->count(),
-                    'hostel_image' => $hostel->hostelImage,
-                    'hostel_rooms' => $hostel_room,
+                    'id'                => $hostel->id,
+                    'name'              => $hostel->name,
+                    'category'          => $hostel->category,
+                    'image'             => 'storage/' . $hostel->image,
+                    'checkin'           => $hostel->checkin,
+                    'checkout'          => $hostel->checkout,
+                    'location'          => $hostel->city,
+                    'address'           => $hostel->address,
+                    'lat'               => $hostel->lat,
+                    'lon'               => $hostel->lon,
+                    'avg_rating'        => $avg_rating,
+                    'rating_count'      => $hostel->hostelRating->count(),
+                    'hostel_image'      => $hostel->hostelImage,
+                    'hostel_rooms'      => $hostel_room,
                     'hostel_facilities' => $hostelFacilities,
-                    'hostel_rules' => $hostel_rules,
-                    'hostel_reviews' => $hostel_reviews,
+                    'hostel_rules'      => $hostel_rules,
+                    'hostel_reviews'    => $hostel_reviews,
                 ];
             });
 
@@ -273,13 +274,39 @@ class HostelController extends Controller
     public function room($id)
     {
         try {
-            $hostels = HostelRoom::with('hostel')->findOrFail($id);
+            $hostels = HostelRoom::with('hostel', 'hostelFacilities', 'hostelroomImage')->find($id);
 
-            if ($hostels) {
-                return ResponseFormatter::success($hostels, 'Data successfully loaded');
-            } else {
+            if (!$hostels) {
                 return ResponseFormatter::error(null, 'Data not found');
             }
+
+            $hostel = collect([$hostels])->map(function ($room) {
+                $room_facilities = $room->hostelFacilities->map(function ($facilities) {
+                    return [
+                        'id'   => $facilities->facility_id,
+                        'name' => $facilities->facility->name,
+                        'icon' => $facilities->facility->icon,
+                    ];
+                })->unique('facility_id');
+
+                $room_images = $room->hostelroomImage->map(function ($facilities) {
+                    return [
+                        'image' => $facilities->image,
+                    ];
+                })->unique('image');
+
+                return [
+                    'room_size'       => $room->roomsize,
+                    'total_bed_room'  => $room->totalroom,
+                    'total_bath_room' => $room->totalbathroom,
+                    'max_guest'       => $room->max_guest,
+                    'description'     => $room->description,
+                    'room_facilities' => $room_facilities,
+                    'room_images'     => $room_images,
+                ];
+            });
+
+            return ResponseFormatter::success($hostel, 'Data successfully loaded');
         } catch (Exception $th) {
             return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong',], 'Hostel process failed', 500);
         }

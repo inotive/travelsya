@@ -213,47 +213,20 @@ class HotelController extends Controller
 
     public function reservation(Request $request, $idroom)
     {
-        // $hotelRoom = HotelRoom::with(['hotel' => function ($q1) {
-        //     $q1->withCount(["hotelRating as rating_avg" => function ($q) {
-        //         $q->select(DB::raw('coalesce(avg(rate),0)'));
-        //     }]);
-        // }], 'hotelBookDate')->find($idroom);
-
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = date('d-m-Y', strtotime("+" . $request->duration . " days", strtotime($request->start)));
-        // $params['room'] = ($request->room) ?: '';
-        // $params['guest'] = ($request->guest) ?: '';
-        // $params['duration'] = ($request->duration) ?: '';
-        // dd($hotelRoom);
-        // return view('hotel.reservation', compact('hotelRoom', 'params'));
-
-
         $hotelRoom = HotelRoom::with('hotel')->findOrFail($idroom);
-
-        // $minPrice = $hotel->hotelRoom->min('sellingprice');
-        // $maxPrice = $hotel->hotelRoom->max('sellingprice');
-        // $jumlahTransaksi = $hotel->hotelRating->count();
-        // $totalRating = $hotel->hotelRating->sum('rate');
-
-        // // Rating 5
-        // if ($jumlahTransaksi > 0) {
-        //     $avgRating = $totalRating / $jumlahTransaksi;
-        //     $resultRating = ($avgRating / 10) * 5;
-        // } else {
-        //     $avgRating = 0;
-        //     $resultRating = 0;
-        // }
 
         $data['params'] = $request->all();
         $data['hotelRoom'] = $hotelRoom;
+
         $point = new Point;
         $data['point'] = $point->cekPoint(auth()->user()->id);
-        // $data['min_price'] = $minPrice;
-        // $data['max_price'] = $maxPrice;
-        // $data['total_rating'] = $totalRating;
-        // $data['result_rating'] = $resultRating;
-        // $data['star_rating'] = floor($resultRating);
 
+        $setting = new Setting();
+        $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotelRoom->sellingprice);
+
+        $data['uniqueCode'] = rand(111, 999);
+        $data['grandTotal'] = $hotelRoom->sellingprice + $fees[0]['value'] + $data['uniqueCode'];
+        $data['feeAdmin'] = $fees[0]['value'];
 
         return view('hotel.reservation', $data);
     }
@@ -268,10 +241,10 @@ class HotelController extends Controller
         $setting = new Setting();
         $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
 
-        $uniqueCode = rand(111, 999);
+        // $uniqueCode = rand(111, 999);
         $fees[] = [
             'type' => 'Kode Unik',
-            'value' => $uniqueCode,
+            'value' => $data['uniqueCode'],
         ];
 
         //cekpoint
@@ -321,7 +294,7 @@ class HotelController extends Controller
 
 
         // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel, $uniqueCode) {
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
 
             // dd($uniqueCode);
             $storeTransaction = Transaction::create([
@@ -350,8 +323,8 @@ class HotelController extends Controller
                 "guest"             => $data['total_guest'],
                 "room"              => $data['room'],
                 "rent_price"        => $hotel->sellingprice,
-                "fee_admin"         => 2500,
-                "kode_unik"         => $uniqueCode,
+                "fee_admin"         => $fees[0]['value'],
+                "kode_unik"         => $data['uniqueCode'],
                 "created_at"        => Carbon::now(),
                 "updated_at"        => Carbon::now(),
             ]);
