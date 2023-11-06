@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Xendit;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -415,7 +416,8 @@ class HostelController extends Controller
                 "kode_unik"         => $data['kode_unik'],
                 "guest_name" => $data['guest'][0]['name'],
                 "guest_email" => $data['guest'][0]['email'],
-                "guest_handphone" => $data['guest'][0]['phone']
+                "guest_handphone" => $data['guest'][0]['phone'],
+                "created_at" => Carbon::now()
             ]);
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');

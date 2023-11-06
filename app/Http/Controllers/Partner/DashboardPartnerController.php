@@ -19,103 +19,53 @@ class DashboardPartnerController extends Controller
 {
     public function index()
     {
-        //        $data['transactions'] = Transaction::with('detailTransaction.product', 'user', 'bookDate')->orderBy('created_at', 'desc')
-        //            ->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
-        //                $q->where('user_id', $id);
-        //            })->orderBy('created_at', 'desc')->take(5)->get();
-        //
-        //
-
-
-
-
-        //
-        // $data['revenueWeek'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
-        //     $q->whereBetween('created_at', [Carbon::now()->subWeek()->format("Y-m-d H:i:s"), Carbon::now()]);
-        //     $q->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q2) use ($id) {
-        //         $q2->where('user_id', $id);
-        //     });
-        // })->sum('price');
-
-        //
-        //        $data['revenueMonth'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
-        //            $q->whereMonth('created_at', '=', date('m'));
-        //            $q->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q2) use ($id) {
-        //                $q2->where('user_id', $id);
-        //            });
-        //        })->sum('price');
-
-
-        /**
-         * VARIABEL ======================================
-         */
+  
         $id = auth()->user()->id;
-        $startWeek = Carbon::now()->subWeek()->format("Y-m-d H:i:s");
-        $startYear = Carbon::now()->startOfYear()->format("Y-m-d H:i:s");
-        $dateNow = Carbon::now()->endOfYear()->format("Y-m-d H:i:s");
-        // $dateNow = Carbon::now();
 
-        /**
-         * PENDAPATAN PER MINGGU ======================================
-         */
-        $transaction_hotel = DetailTransactionHotel::whereBetween('created_at', [$startYear, $dateNow])
-            ->withWhereHas('transaction', function ($query) use ($id) {
+        $startDate = Carbon::now()->startOfYear();
+        $endDate = Carbon::now()->endOfYear();
+        
+        $transaction_hotel = DetailTransactionHotel::whereBetween('created_at', [$startDate, $endDate])
+            ->whereHas('transaction', function ($query) use ($id) {
                 $query->where('user_id', $id);
             });
-
-        $transaction_hostel = DetailTransactionHostel::whereBetween('created_at', [$startYear, $dateNow])
-            ->withWhereHas('transaction', function ($query) use ($id) {
+        
+        $transaction_hostel = DetailTransactionHostel::whereBetween('created_at', [$startDate, $endDate])
+            ->whereHas('transaction', function ($query) use ($id) {
                 $query->where('user_id', $id);
             });
-
+        
         $data['revenueWeek'] = $transaction_hotel->sum('rent_price') + $transaction_hostel->sum('rent_price');
-
-        /**
-         * JUMLAH TAMU HOTEL DAN HOSTEL ======================================
-         */
         $data['guest'] = $transaction_hotel->sum('guest') + $transaction_hostel->sum('guest');
-
-        /**
-         * PENDAPATAN PER BULAN ======================================
-         */
-        $trans_hotel_month = DetailTransactionHotel::whereMonth('created_at', '=', date('m'))
-            ->withWhereHas('transaction', function ($query) use ($id) {
+        
+        $trans_hotel_month = DetailTransactionHotel::whereMonth('created_at', '=', now()->month)
+            ->whereHas('transaction', function ($query) use ($id) {
                 $query->where('user_id', $id);
             })->sum('rent_price');
-
-        $trans_hostel_month = DetailTransactionHostel::whereMonth('created_at', '=', date('m'))
-            ->withWhereHas('transaction', function ($query) use ($id) {
+        
+        $trans_hostel_month = DetailTransactionHostel::whereMonth('created_at', '=', now()->month)
+            ->whereHas('transaction', function ($query) use ($id) {
                 $query->where('user_id', $id);
             })->sum('rent_price');
-
+        
         $data['revenueMonth'] = $trans_hotel_month + $trans_hostel_month;
-
-        /**
-         * GET HOTEL DAN HOSTEL YANG SUDAH & BELUM TERBOOKING ======================================
-         */
-        $totalRoomHotel = HotelRoom::with('hostel', function ($q) use ($id) {
+        
+        $totalRoomHotel = HotelRoom::whereHas('hotel', function ($q) use ($id) {
             $q->where('user_id', $id);
         })->where('is_active', 1)->sum('totalroom');
-
-        $totalRoomHostel = HostelRoom::with('hostel', function ($q) use ($id) {
+        
+        $totalRoomHostel = HostelRoom::whereHas('hostel', function ($q) use ($id) {
             $q->where('user_id', $id);
         })->where('is_active', 1)->sum('totalroom');
-
-        $data['ready'] = ($totalRoomHotel + $totalRoomHostel) - ($transaction_hotel->sum('room') + $transaction_hostel->sum('room'));
-
-        $data['notready'] = $transaction_hotel->sum('room') + $transaction_hostel->sum('room');
-
-
-        /**
-         * DAFTAR RIWAYAT TERAKHIR
-         */
+        
+        $roomCount = $transaction_hotel->sum('room') + $transaction_hostel->sum('room');
+        $data['ready'] = ($totalRoomHotel + $totalRoomHostel) - $roomCount;
+        $data['notready'] = $roomCount;
+        
         $data['transaction_hotels'] = $transaction_hotel->get();
         $data['transaction_hostels'] = $transaction_hostel->get();
 
-
-        /**
-         * RETURN VIEW ======================================
-         */
+     
         return view('ekstranet.dashboard', $data);
     }
 }
