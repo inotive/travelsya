@@ -1,9 +1,21 @@
 @extends('layouts.user')
 
 @section('content-user')
+    {{-- CSS Footer --}}
+
+<style>
+#kt_footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #f8f9fa; /* Ganti warna latar belakang sesuai kebutuhan Anda */
+  padding: 10px 0; /* Sesuaikan jarak padding di atas dan bawah sesuai kebutuhan Anda */
+  z-index: 100; /* Pastikan z-index lebih tinggi dari konten di bawahnya */
+}
+    </style>
 
 {{-- Containre --}}
-<div class="container">
+<div class="container" style="margin-bottom: 100px">
     {{-- Row --}}
     <div class="row">
 

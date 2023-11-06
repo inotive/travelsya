@@ -167,7 +167,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset($roomimage->image) }}" class="rounded"
+                                                    <img src="{{ asset('storage/'.$roomimage->image) }}" class="rounded"
                                                         style="width: 150px">
                                                 </td>
                                                 <td class="text-center">

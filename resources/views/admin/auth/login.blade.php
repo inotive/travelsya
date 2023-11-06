@@ -13,7 +13,7 @@
                 <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('admin.login.post')}}">
                     <!--begin::Heading-->
                     @csrf
-                    <div class="text-center mb-11">
+                    <div class="mb-11">
                         <!--begin::Title-->
                         <h1 class="text-dark fw-bolder mb-3">
                             Ekstranet Travelsya
@@ -87,9 +87,10 @@
                     <!--end::Submit button-->
 
                 </form>
-                <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-light btn-outline-light btn-lg w-100 mb-10">
+                <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary btn-lg w-100 mb-10">
                     Kembali Ke Home
                 </a>
+
                 <!--end::Form-->
 
             </div>
