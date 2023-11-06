@@ -226,7 +226,8 @@ Route::middleware(['auth', 'role'])->group(function () {
 
             //management-fee
             Route::get('management-fee', [FeeController::class, 'index'])->name('management-fee');
-            Route::put('management-fee', [FeeController::class, 'updateFee'])->name('management-fee.update');
+            Route::get('management-fee/{id}', [FeeController::class, 'show'])->name('management-fee.show');
+            Route::put('management-fee/edit/{id}', [FeeController::class, 'updateFee'])->name('management-fee.update');
             Route::post('management-fee', [FeeController::class, 'storeFee'])->name('management-fee.store');
 
             //Product
