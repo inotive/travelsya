@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Services\Mymili as ServicesMymili;
 use App\Services\Xendit;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Validator;
@@ -157,6 +158,7 @@ class PpobController extends Controller
                 'message'         => 'Sedang menunggu pembayaran',
                 'status'          => "PROCESS",
                 "kode_unik"       => $data['kode_unik'],
+                "created_at" => Carbon::now()
             ]);
 
             //                if ($data['point']) {

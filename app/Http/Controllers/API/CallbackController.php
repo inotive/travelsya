@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Services\Mymili;
 use App\Services\Point;
 use App\Services\Xendit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Monolog\Formatter\JsonFormatter;
@@ -123,6 +124,7 @@ class CallbackController extends Controller
                                     'status' => $status,
                                     'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
                                     'kode_voucher' => $responseMessageSNCodeFinal,
+                                    'created_at' => Carbon::now()
                                 ]);
 
                         }

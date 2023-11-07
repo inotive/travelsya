@@ -152,4 +152,19 @@ class RiwayatBookingController extends Controller
     {
         //
     }
+    public function cetakHotel(DetailTransactionHotel $hotel)
+    {
+        $data = [
+            'data' =>$hotel->load('hotel.hotelroomFacility.facility', 'hotelRoom', 'transaction.user')
+        ];
+        return view('user.order-detail.e-tiket', $data);
+    }
+
+    public function cetakHostel(DetailTransactionHostel $hostel)
+    {
+        $data = [
+            'data' =>$hostel->load('hostel.hostelFacilities.facility', 'hostelRoom', 'transaction.user')
+        ];
+        return view('user.order-detail.e-tiket-hostel', $data);
+    }
 }

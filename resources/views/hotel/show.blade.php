@@ -342,8 +342,8 @@
                         <!--end::Title-->
 
                         <!--begin::Content-->
-                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a href="{{ route('login') }}"
-                                                                                              class="d-inline-block fw-bold">Login
+                        <span>Harap login terlebih dahulu untuk melakukan pemesanan kamar. <a
+                                href="{{ route('login') }}" class="d-inline-block fw-bold">Login
                                 Disini</a></span>
                         <!--end::Content-->
                     </div>

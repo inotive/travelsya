@@ -678,7 +678,7 @@
                 <div x-show="$store.menubar.selected.code==='pdam'">
                   @include('layouts.include.home.container-pdam')
                 </div>
-                <div x-show="$store.menubar.selected.code==='e-wallet'">
+                <div x-show="$store.menubar.selected.code ==='e-wallet'">
                   @include('layouts.include.home.container-wallet')
                 </div>
                 <div x-show="$store.menubar.selected.code==='pulsa-data'">

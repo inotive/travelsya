@@ -74,22 +74,37 @@
 
                         <hr>
 
-                        <table>
+                        <table width="100%">
                             <tr>
-                                <td>Room Price ({{ $params['duration'] }} Bulan) : </td>
-                                <td>{{ General::rp($params['duration'] * (int) $sellingprice) }}</td>
+                                <td>Room Price ({{ $params['duration'] }} Bulan) </td>
+                                <td>:</td>
+                                <td class="text-end">{{ General::rp($sellingprice) }}</td>
                             </tr>
                             <tr>
-                                <td>Extrabed :</td>
-                                <td>{{ General::rp($params['duration'] * (int) $hostelRoom->extrabedprice) }}</td>
+                                <td>Duration (Bulan) </td>
+                                <td>:</td>
+                                <td class="text-end">{{ $params['duration'] }}</td>
                             </tr>
                             <tr>
-                                @php
-                                $grandTotal = $params['duration'] * (int) $hostelRoom->extrabedprice +
-                                $params['duration'] * (int) $sellingprice;
-                                @endphp
-                                <td>Grand Total :</td>
-                                <td>{{ General::rp($grandTotal) }}</td>
+                                <td>Extrabed</td>
+                                <td>:</td>
+                                <td class="text-end">{{ General::rp($params['duration'] * (int)
+                                    $hostelRoom->extrabedprice) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Fee Admin</td>
+                                <td>:</td>
+                                <td class="text-end">{{ General::rp($feeAdmin) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Kode Unik</td>
+                                <td>:</td>
+                                <td class="text-end">{{ General::rp($uniqueCode) }}</td>
+                            </tr>
+                            <tr>
+                                <td>Grand Total</td>
+                                <td>:</td>
+                                <td class="text-end">{{ General::rp($grandTotal) }}</td>
                             </tr>
                         </table>
                         <div class="mt-10">
@@ -107,6 +122,7 @@
                                 <input type="hidden" name="grand_total" value="{{ $grandTotal }}">
                                 <input type="hidden" name="point" value="{{ $point }}">
                                 <input type="hidden" name="category" value="{{ $params['category'] }}">
+                                <input type="hidden" name="uniqueCode" value="{{ $uniqueCode }}">
                                 <button type="submit" class="btn btn-danger flex-fill">
                                     Lanjut ke pembayaran
                                 </button>

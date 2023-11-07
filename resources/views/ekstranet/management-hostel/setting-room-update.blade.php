@@ -323,7 +323,7 @@
                                 @endforeach
                             </div> --}}
 
-                            <table class="table table-rounded table-bordered border gy-7 gs-7"
+                            <table class="table table-rounded table-bordered border mt-4 gy-7 gs-7"
                                 id="kt_datatable_zero_configuration_1" style="border: 1px solid rgb(112, 112, 112);">
                                 <thead>
                                     <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200 ">
@@ -334,16 +334,16 @@
                                 <tbody>
                                     @foreach ($facility as $item)
                                     <tr>
-                                        <td>
-                                            <div class="form-check form-check-lg">
-                                                <input class="form-check-input" type="checkbox" name="facility_id[]"
+                                        <td class="text-center">
+                                            <div class="form-check form-check-lg d-flex justify-content-center">
+                                                <input class="form-check-input " type="checkbox" name="facility_id[]"
                                                     value="{{ $item->id }}" id="facility{{ $item->id }}" {{
                                                     (in_array($item->id,
                                                 $hostel->hostelFacilities->pluck('facility_id')->toArray())) ?
                                                 'checked' : '' }}>
                                             </div>
                                         </td>
-                                        <td>{{ $item->name }}</td>
+                                        <td class="text-center fs-14">{{ $item->name }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -353,12 +353,12 @@
             </div>
             <!--end:: Body-->
             <div class="card-footer d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary w-50" id="kt_modal_new_target_submit">
+                <button type="submit" class="btn btn-primary me-2 w-50" id="kt_modal_new_target_submit">
                     Simpan Data
                 </button>
-                {{-- <a href="{{route('partner.management.hostel.setting.room', ['id'=>$hostel->id])}}"
+                 <a href="{{route('partner.management.hostel.setting.room', ['id'=>$hostel->id])}}"
                     class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
-                --}}
+
             </div>
             </form>
         </div>

@@ -47,13 +47,13 @@
                         <div class="row my-3 w-100 p-0 gy-4">
                             <div class="col-6">
 
-                                <a href="{{route('partner.management.hostel.detail',$hostel->id)}}" class="btn btn-primary p-4 me-2 w-100">Detail hostel</a>
+                                <a href="{{route('partner.management.hostel.detail',$hostel->id)}}" class="btn btn-primary p-4 me-2 w-100">Detail Hostel</a>
                             </div>
                             <div class="col-6">
-                                <a href="{{route('partner.management.hostel.setting.hostel',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Profil hostel</a>
+                                <a href="{{route('partner.management.hostel.setting.hostel',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Profil Hostel</a>
                             </div>
                             <div class="col-6">
-                                <a href="{{route('partner.management.hostel.setting.photo',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo hostel ({{$hostel->hostelImage->count()}})</a>
+                                <a href="{{route('partner.management.hostel.setting.photo',$hostel->id)}}" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary w-100">Photo Hostel ({{$hostel->hostelImage->count()}})</a>
                             </div>
                             <div class="col-6">
 
