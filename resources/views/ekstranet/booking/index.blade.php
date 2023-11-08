@@ -88,17 +88,18 @@
                                         data-kt-menu="true" style="">
 
                                         <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning" id=""
-                                                data-id="" data-bs-toggle="modal">
-                                                Cetak
-                                            </a>
-                                        </div>
+                                      
 
                                         <div class="menu-item px-3">
                                             <a href="{{ route('partner.riwayat-booking.detailhotel', $booking->id) }}"
                                                 class="menu-link px-3 text-warning" id="" data-id="">
                                                 Detail Booking
+                                            </a>
+                                        </div>
+                                        <div class="menu-item px-3">
+                                            <a href="{{ route('e-tiket.hotel', $booking->id) }}"
+                                                class="menu-link px-3 text-warning" id="" data-id="">
+                                                Cetak
                                             </a>
                                         </div>
 
@@ -165,11 +166,12 @@
                                                 </a>
                                             </div>
                                             <div class="menu-item px-3">
-                                                <a href="javascript:void(0)" class="menu-link px-3 text-warning"
-                                                    id="" data-id="" data-bs-toggle="modal">
+                                                <a href="{{ route('e-tiket.hostel', $booking->id) }}"
+                                                    class="menu-link px-3 text-warning" id="" data-id="">
                                                     Cetak
                                                 </a>
                                             </div>
+                                          
                                             <!--end::Menu item-->
                                             <!--begin::Menu item-->
 

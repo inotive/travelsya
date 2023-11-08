@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\General;
 use App\Models\DetailTransaction;
+use App\Models\DetailTransactionTopUp;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Travelsya;
 use App\Services\Xendit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class EwalletController extends Controller
@@ -47,11 +50,17 @@ class EwalletController extends Controller
         $data = $request->all();
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
+        // dd($data);
 
         $product = Product::with('service')->find($data['produk_ewallet']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($product->price, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -89,14 +98,20 @@ class EwalletController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
+        $helper = new General();
+
+        DetailTransactionTopUp::create([
             'transaction_id' => $storeTransaction->id,
-            'product_id' => $product->id,
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $data['notelp'],
-            'status' => "PROCESS"
+            'product_id'     => $product->id,
+            'nomor_telfon'   => $data['notelp'],
+            'total_tagihan'  => $amount,
+            'fee_travelsya'  => 0,
+            'fee_mili'       => $fees[0]['value'],
+            'message'        => 'Top UP sedang diproses',
+            'status'         => "PROCESS",
+            "kode_unik"      => $uniqueCode,
         ]);
+
 
         //deductpoint
         $point = new Point;

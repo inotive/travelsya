@@ -289,6 +289,45 @@ class HotelController extends Controller
         }
     }
 
+    public function room($id)
+    {
+        try {
+            $hotels = HotelRoom::with('hotel', 'hotelroomFacility', 'hotelroomImage')->find($id);
+
+            if (!$hotels) {
+                return ResponseFormatter::error(null, 'Data not found');
+            }
+
+            $hotel = collect([$hotels])->map(function ($room) {
+                $room_facilities = $room->hotelroomFacility->map(function ($facilities) {
+                    return [
+                        'id'   => $facilities->facility_id,
+                        'name' => $facilities->facility->name,
+                        'icon' => $facilities->facility->icon,
+                    ];
+                })->unique('facility_id');
+
+                $room_images = $room->hotelroomImage->map(function ($facilities) {
+                    return [
+                        'image' => $facilities->image,
+                    ];
+                })->unique('image');
+
+                return [
+                    'room_size'       => $room->roomsize,
+                    'max_guest'       => $room->guest,
+                    'description'     => $room->description,
+                    'room_facilities' => $room_facilities,
+                    'room_images'     => $room_images,
+                ];
+            });
+
+            return ResponseFormatter::success($hotel, 'Data successfully loaded');
+        } catch (Exception $th) {
+            return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong',], 'Hostel process failed', 500);
+        }
+    }
+
     public function requestTransaction(Request $request)
     {
         // handle validation
@@ -407,7 +446,8 @@ class HotelController extends Controller
                         "kode_unik"         => $data['kode_unik'],
                         "guest_name" => $data['guest'][0]['name'],
                         "guest_email" => $data['guest'][0]['email'],
-                        "guest_handphone" => $data['guest'][0]['phone']
+                        "guest_handphone" => $data['guest'][0]['phone'],
+                        "created_at" => Carbon::now()
                     ]);
             } catch (\Exception $exception) {
                 return response()->json([

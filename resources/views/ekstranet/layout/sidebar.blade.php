@@ -81,8 +81,12 @@
                         @php
                             $hotel = \App\Models\Hotel::where('user_id', Auth::id())->get();
                             $hostel = \App\Models\Hostel::where('user_id', Auth::id())->get();
-                            $bookingHotel = \App\Models\DetailTransactionHotel::whereIn('hotel_id', $hotel->pluck('id'))->count();
-                            $bookingHostel = \App\Models\DetailTransactionHostel::whereIn('hostel_id', $hostel->pluck('id'))->count();
+                            $bookingHotel = \App\Models\DetailTransactionHotel::whereIn('hotel_id', $hotel->pluck('id'))
+                            ->where('detail_transaction_hotel.reservation_end','>=' , \Carbon\Carbon::now())
+                            ->count();  
+                            $bookingHostel = \App\Models\DetailTransactionHostel::whereIn('hostel_id', $hostel->pluck('id'))
+                             ->where('detail_transaction_hostel.reservation_end','>=' , \Carbon\Carbon::now())
+                            ->count();
                             $totalPemesanan = $bookingHotel + $bookingHostel;
                         @endphp
                         <span class="menu-title">Pemesanan ({{ $totalPemesanan }})</span>

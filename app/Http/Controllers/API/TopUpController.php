@@ -12,6 +12,7 @@ use App\Models\Transaction;
 use App\Services\Mymili as ServicesMymili;
 use App\Services\Point;
 use App\Services\Setting;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -181,6 +182,7 @@ class TopUpController extends Controller
                 'message'        => 'Top UP sedang diproses',
                 'status'         => "PROCESS",
                 "kode_unik"      => $data['kode_unik'],
+                "created_at" => Carbon::now()
             ]);
             // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');

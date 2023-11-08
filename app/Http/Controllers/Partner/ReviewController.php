@@ -16,7 +16,7 @@ class ReviewController extends Controller
         $user_id = auth()->user()->id;
 
         $query = DB::table('hotel_ratings')
-            ->join('users', 'users.id', '=', 'hotel_ratings.user_id')
+            ->join('users', 'users.id', '=', 'hotel_ratings.users_id')
             ->join('hotels', 'hotels.id', '=', 'hotel_ratings.hotel_id')
             ->join('transactions', 'transactions.id', '=', 'hotel_ratings.transaction_id')
             ->where('hotels.user_id', $user_id);

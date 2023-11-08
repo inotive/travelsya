@@ -264,19 +264,27 @@ class HostelController extends Controller
 
     public function checkout($id, Request $request)
     {
-        // $hostelRoom = HostelRoom::with('hostel', 'bookDate')->find($id);
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = ($request->room) ?: '';
-        // $params['guest'] = ($request->guest) ?: '';
-        // $params['duration'] =  date('d-m-Y', strtotime("+" . $request->duration . " month", strtotime($request->start)));
-        // $params['room'] = ($request->duration) ?: '';
-        // $params['duration'] = ($request->duration) ?: '';
-        // return view('hostel.checkout', compact('hostelRoom', 'params'));
-
         $data['params'] = $request->all();
-        $data['hostelRoom'] = HostelRoom::with('hostel')->findOrFail($id);
+        $hostelRoom = HostelRoom::with('hostel')->findOrFail($id);
+
         $point = new Point;
         $data['point'] = $point->cekPoint(auth()->user()->id);
+
+        if ($request->category == 'monthly') {
+            $sellingprice = $hostelRoom->sellingrentprice_monthly;
+        }
+
+        if ($request->category == 'yearly') {
+            $sellingprice = $hostelRoom->sellingrentprice_yearly;
+        }
+
+        $setting = new Setting();
+        $fees = $setting->getFees($data['point'], 7, $request->user()->id, $sellingprice);
+
+        $data['hostelRoom'] = $hostelRoom;
+        $data['feeAdmin']   = $fees[0]['value'];
+        $data['uniqueCode'] = rand(111, 999);
+        $data['grandTotal'] = ($sellingprice * $request->duration) + $fees[0]['value'] + $data['uniqueCode'];
 
         return view('hostel.checkout', $data);
     }
@@ -321,7 +329,7 @@ class HostelController extends Controller
         $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($data['point'], 7, $request->user()->id, $sellingprice);
-        $uniqueCode = rand(111, 999);
+        $uniqueCode = $data['uniqueCode'];
         $fees[] = [
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
@@ -394,7 +402,7 @@ class HostelController extends Controller
                 "guest"             => 1,
                 "room"              => 1,
                 "rent_price"        => $sellingprice,
-                "fee_admin"         => 2500,
+                "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $uniqueCode,
                 "created_at"        => Carbon::now(),
                 "updated_at"        => Carbon::now(),
