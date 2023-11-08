@@ -12,17 +12,18 @@
                 </div>
             </template> --}}
 
-            @foreach ($hotelByCity as $cityHotel)
-            <a href="{{ url('hotels') }}?location={{ $cityHotel }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=3"
+        @foreach ($hotelByCity as $cityHotel)
+            <a href="{{ url('hotels') }}?location={{ $cityHotel->city_name }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=3"
                 class="col-6 col-md-3 pb-6 text-center">
                 <div class="d-flex align-items-center justify-content-center rounded"
-                    style="height: 150px; background-color: #ccc;">
+                    style="height: 150px; background: url('{{ asset('storage/media/kota/'. $cityHotel->image) }}'); background-size: cover;">
                     <h1 class="text-white m-0">
-                        {{ $cityHotel }}
+                        {{ $cityHotel->city_name }}
                     </h1>
                 </div>
             </a>
-            @endforeach
+        @endforeach
+
         </div>
     </div>
 </div>

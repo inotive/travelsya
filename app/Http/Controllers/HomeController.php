@@ -32,7 +32,7 @@ class HomeController extends Controller
         })->toArray();
 
         $hotel_favorite = Hotel::with('hotelRoom', 'hotelImage')
-            ->select('hotels.id', 'hotels.name', 'hotels.user_id') 
+            ->select('hotels.id', 'hotels.name', 'hotels.user_id')
             ->selectSub(function ($query) {
                 $query->selectRaw('COALESCE(MAX(rate), 0)')
                     ->from('hotel_ratings')
@@ -43,7 +43,7 @@ class HomeController extends Controller
                     ->from('hotel_rooms')
                     ->whereColumn('hotels.id', 'hotel_rooms.hotel_id');
             }, 'selling_price')
-            ->groupBy('hotels.id', 'hotels.name', 'hotels.user_id') 
+            ->groupBy('hotels.id', 'hotels.name', 'hotels.user_id')
             ->orderByDesc('rating')
             ->orderBy('selling_price')
             ->take(8)
@@ -107,9 +107,9 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        $data['hotelByCity'] = Hotel::distinct('city')
-            ->orderBy('city', 'asc')
-            ->pluck('city');
+        $data['hotelByCity'] = DB::table('cities')->where('status', 1)
+            ->orderBy('city_name', 'asc')
+            ->get();
 
         return view('home', $data);
     }
