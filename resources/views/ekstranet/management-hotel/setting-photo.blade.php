@@ -24,7 +24,7 @@
                                 <div class="col-12">
                                     <label class="col-sm-3 col-form-label">Foto Hotel</label>
                                     <input type="file" class="form-control" name="image" @error('image') is-invalid
-                                           @enderror id="selectImage">
+                                           @enderror id="selectImage" required>
                                     @error('image')
                                     <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -83,7 +83,7 @@
                             <div class="col-6">
                                 <div class="card border border-light-subtle">
                                     <div class="card-body">
-                                        <img src="{{asset('storage/media/hotel/'. $image->image)}}" style="width: 100%; height: 250px;"
+                                        <img src="{{asset('storage/'. $image->image)}}" style="width: 100%; height: 250px;"
                                              alt="image">
                                         @if($image->main == 1 )
                                             <span class="badge badge-primary my-5">Foto Utama</span>

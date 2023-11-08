@@ -27,6 +27,7 @@ use App\Http\Controllers\Partner\ManagementHotelController;
 use App\Http\Controllers\Partner\ManagementHostelController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EwalletController;
 use App\Http\Controllers\Partner\ManagementRoomController;
 use App\Http\Controllers\Partner\ReviewController;
@@ -226,7 +227,8 @@ Route::middleware(['auth', 'role'])->group(function () {
 
             //management-fee
             Route::get('management-fee', [FeeController::class, 'index'])->name('management-fee');
-            Route::put('management-fee', [FeeController::class, 'updateFee'])->name('management-fee.update');
+            Route::get('management-fee/{id}', [FeeController::class, 'show'])->name('management-fee.show');
+            Route::put('management-fee/edit/{id}', [FeeController::class, 'updateFee'])->name('management-fee.update');
             Route::post('management-fee', [FeeController::class, 'storeFee'])->name('management-fee.store');
 
             //Product
@@ -415,7 +417,6 @@ Route::middleware(['auth', 'role'])->group(function () {
         });
     });
 });
-
 
 Auth::routes();
 

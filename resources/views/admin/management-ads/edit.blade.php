@@ -156,7 +156,7 @@
                 $('#edit-url').val(response.data.url);
                 $('#edit-name').val(response.data.name);
                 $('#is_active-edit').val(response.data.is_active);
-                $('#image-preview').attr('src', '{{ asset('') }}' + response.data.image);
+                $('#image-preview').attr('src', '{{ asset('') }}' + 'storage/' +response.data.image);
                 $('#image-preview').show();
 
                 $('#modal-edit').modal('show');
