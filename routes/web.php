@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\CityController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\FacilitiesController;
@@ -295,6 +296,12 @@ Route::middleware(['auth', 'role'])->group(function () {
             // Route::post('transaction/', [AdminTransactionController::class, 'store'])->name('transaction.store');
             Route::get('transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('transaction.detail');
             Route::put('transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('transaction.detail.update');
+
+            //city management
+            Route::get('management-city', [CityController::class, 'index'])->name('city-management.index');
+            Route::get('management-city/edit/{id}', [CityController::class, 'edit'])->name('management-city.edit');
+            Route::post('management-city/update/{city_id}', [CityController::class, 'update'])->name('management-city.update');
+            Route::put('management-city/update-landing/{id}', [CityController::class, 'updateLanding'])->name('city-management.updateLanding');
 
             //            Route::resource('hostel',[\App\Http\Controllers\Admin\HostelController::class]);
             //            //hostel

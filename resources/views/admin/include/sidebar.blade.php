@@ -317,6 +317,16 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
+                <a href="{{route('admin.city-management.index')}}" class="menu-item {{(Request::segment(2)=="management-city") ? 'here' : ''}} menu-accordion">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa-solid fa-city"></i>
+                        </span>
+                        <span class="menu-title">Kelola Kota</span>
+                    </span>
+                    <!--end:Menu link-->
+                </a>
                 <!--end:Menu item-->
                 @endif
                 @if(auth()->user()->role == 1)
