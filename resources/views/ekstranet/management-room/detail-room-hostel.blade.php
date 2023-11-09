@@ -71,6 +71,9 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_2">Foto Ruangan
                                 ({{ $hostelrooms->hostelroomimage->count() }})</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Detail Ruangan</a>
+                        </li>
                     </ul>
 
                     <div class="tab-content" id="myTabContent">
@@ -96,7 +99,7 @@
                                                 $enddate = \Carbon\Carbon::parse($booking->end);
                                                 $startdates = $startdate->Format('d F Y');
                                                 $enddates = $enddate->Format('d F Y');
-                                                
+
                                             @endphp
                                             <tr>
                                                 <td class="text-center">{{ $booking->transaction->user->name }} -
@@ -167,7 +170,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset('storage/'.$roomimage->image) }}" class="rounded"
+                                                    <img src="{{ asset('storage/' . $roomimage->image) }}" class="rounded"
                                                         style="width: 150px">
                                                 </td>
                                                 <td class="text-center">
@@ -184,8 +187,7 @@
                                                         <div class="menu-item px-3">
                                                             <a href="#" class="menu-link px-3 text-danger"
                                                                 data-bs-toggle="modal" {{-- data-kt-customer-table-filter="delete_row" --}}
-                                                                id="tombol-delete"
-                                                                data-id="{{ $roomimage->id }}">
+                                                                id="tombol-delete" data-id="{{ $roomimage->id }}">
                                                                 Delete
                                                             </a>
                                                         </div>
@@ -217,13 +219,226 @@
                             </div>
                         </div>
 
+                        <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
+                            <div class="card-body p-lg-20">
+                                <!--begin::Layout-->
+                                <div class="d-flex flex-column flex-xl-row">
+                                    <!--begin::Content-->
+                                    <div class="flex-lg-row-fluid me-xl-18 mb-10 mb-xl-0">
+                                        <!--begin::Invoice 2 content-->
+                                        <div class="mt-n1">
+                                            <!--begin::Top-->
 
+                                            <div class="d-flex justify-content-between flex-column flex-sm-row mb-19">
+                                                <div class="col-6">
+                                                    @php
+                                                        $image = $hostelrooms->hostelroomImage->first()->image ?? '';
+                                                    @endphp
+                                                    <a href="#">
+                                                        <img alt="Logo" src="{{ asset('storage/' . $image) }}"
+                                                            style="width: 200px" />
+                                                    </a>
+                                                    <!--end::Logo-->
 
+                                                </div>
+                                                <div class="col-6">
+                                                    <div class="text-sm-end">
 
+                                                        <!--begin::Logo-->
+                                                        <h4>Room {{ $hostelrooms->name }}</h4>
+                                                        <!--begin::Text-->
+                                                        <div class="text-end fw-semibold fs-7 text-muted mt-7 me-0">
+                                                            {{ $hostelrooms->hostel->address }}</div>
+                                                        <!--end::Text-->
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <!--begin::Logo-->
+
+                                            <!--end::Logo-->
+                                            <!--begin::Action-->
+                                            <!--end::Action--> <!--end::Top-->
+                                            <!--begin::Wrapper-->
+                                            <div class="m-0">
+                                                <!--begin::Label-->
+                                                <div class="fw-bold fs-3 text-gray-800 mb-2">
+                                                    {{ $hostelrooms->hostel->name }}</div>
+                                                <div class="fw-bold fs-6 text-gray-500 mb-8">{{ $hostelrooms->name }}
+                                                </div>
+
+                                                <!--end::Label-->
+                                                <!--begin::Row-->
+                                                <div class="row g-5 mb-11">
+                                                    <!--end::Col-->
+                                                    <div class="col-sm-6">
+                                                        <!--end::Label-->
+                                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Jumlah Kamar:
+                                                        </div>
+                                                        <!--end::Label-->
+                                                        <!--end::Col-->
+                                                        <div class="fw-bold fs-6 text-gray-800">
+                                                            {{ $hostelrooms->totalroom ?? 0 }} Kamar</div>
+                                                        <!--end::Col-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                    <!--end::Col-->
+                                                    <div class="col-sm-6">
+                                                        <!--end::Label-->
+                                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Jumlah Kamar
+                                                            Mandi:</div>
+                                                        <!--end::Label-->
+                                                        <!--end::Info-->
+                                                        <div class="fw-bold fs-6 text-gray-800">
+                                                            {{ $hostelrooms->totalbathroom ?? 0 }} Kamar Mandi</div>
+                                                        <!--end::Info-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                </div>
+                                                <!--end::Row-->
+                                                <!--begin::Row-->
+                                                <div class="row g-5 mb-12">
+                                                    <!--end::Col-->
+                                                    <div class="col-sm-6">
+                                                        <!--end::Label-->
+                                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Maksimal Penghuni
+                                                            Kamar:</div>
+                                                        <!--end::Label-->
+                                                        <!--end::Text-->
+                                                        <div class="fw-bold fs-6 text-gray-800">
+                                                            {{ $hostelrooms->max_guest ?? 0 }} Orang</div> <!--end::Text-->
+                                                        <!--end::Description-->
+                                                        <!--end::Description-->
+                                                    </div>
+                                                    <!--end::Col-->
+                                                    <!--end::Col-->
+                                                    <div class="col-sm-6">
+                                                        <!--end::Label-->
+                                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Luas Properti:
+                                                        </div>
+                                                        <!--end::Label-->
+                                                        <!--end::Text-->
+                                                        <div class="fw-bold fs-6 text-gray-800">
+                                                            {{ $hostelrooms->roomsize ?? 0 }} m2</div>
+                                                    </div>
+
+                                                    <!--end::Col-->
+                                                </div>
+                                                <div class="row g-5 mb-12">
+
+                                                    <div class="col-sm-6">
+                                                        <!--end::Label-->
+                                                        <div class="fw-semibold fs-7 text-gray-600 mb-1">Maksimal Extrabed:
+                                                        </div>
+                                                        <!--end::Label-->
+                                                        <!--end::Text-->
+                                                        <div class="fw-bold fs-6 text-gray-800">
+                                                            {{ $hostelrooms->maxextrabed ?? 0 }} Bed</div>
+                                                    </div>
+                                                </div>
+                                                <!--end::Row-->
+                                                <!--begin::Content-->
+                                                <div class="d-flex justify-content-between flex-column flex-md-row">
+                                                    <div class="flex-grow-1">
+                                                        <!--begin::Table-->
+                                                        <div class="table-responsive border-bottom mb-9">
+                                                            <table class="table mb-3">
+                                                                <thead>
+                                                                    <tr class="border-bottom fs-6 fw-bold text-muted">
+                                                                        <th class="min-w-175px pb-2">Harga Sewa</th>
+                                                                        <th class="min-w-80px text-end pb-2">Rate</th>
+                                                                        <th class="min-w-100px text-end pb-2">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr class="fw-bold text-gray-700 fs-5 text-end">
+                                                                        <td class="d-flex align-items-center pt-6">
+                                                                            <i class="ki-duotone ki-calendar fs-1 me-3">
+                                                                                <span class="path1"></span>
+                                                                                <span class="path2"></span>
+                                                                            </i>Perbulan
+                                                                        </td>
+                                                                        <td class="pt-6">@currency($hostelrooms->rentprice_monthly)</td>
+                                                                        <td class="pt-6 text-dark fw-bolder">
+                                                                            @currency($hostelrooms->sellingrentprice_monthly)
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="fw-bold text-gray-700 fs-5 text-end">
+                                                                        <td class="d-flex align-items-center">
+                                                                            <i class="ki-duotone ki-calendar fs-1 me-3">
+                                                                                <span class="path1"></span>
+                                                                                <span class="path2"></span>
+                                                                            </i>Pertahun
+                                                                        </td>
+                                                                        <td class="pt-6">@currency($hostelrooms->rentprice_yearly)</td>
+                                                                        <td class="pt-6 text-dark fw-bolder">
+                                                                            @currency($hostelrooms->sellingrentprice_yearly)
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr class="fw-bold text-gray-700 fs-5 text-end">
+                                                                        <td class="d-flex align-items-center">
+                                                                            <i class="ki-duotone ki-price-tag fs-1 me-3">
+                                                                                <span class="path1"></span>
+                                                                                <span class="path2"></span>
+                                                                                <span class="path3"></span>
+                                                                            </i>Extrabed
+                                                                        </td>
+                                                                        <td class="pt-6">@currency($hostelrooms->extrabedprice)</td>
+                                                                        <td class="pt-6 text-dark fw-bolder">
+                                                                            @currency($hostelrooms->extrabed_sellingprice)
+                                                                        </td>
+                                                                    </tr>
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <!--end::Table-->
+                                                        <!--begin::Container-->
+                                                        <!--end::Container-->
+                                                    </div>
+                                                    <div class="border-end d-none d-md-block mh-450px mx-9"></div>
+                                                    <!--end::Separator-->
+                                                    <!--begin::Content-->
+                                                    <div class="mx-auto text-center pt-10" style="max-width: 500px;">
+                                                        <!--begin::Total Amount-->
+                                                        <div class="fs-3 fw-bold text-muted mb-3">Fasilitas</div>
+                                                        <div class="row">
+                                                            @foreach ($hostelrooms->hostelFacilities as $facility)
+                                                                <div class="col-4 mb-4">
+                                                                    <div class="d-flex flex-column align-items-center">
+                                                                        <img src="{{ asset('storage/' . $facility->facility->icon) }}"
+                                                                            class="rounded" style="width: 25px"
+                                                                            alt="{{ $facility->facility->name }}">
+                                                                        <p class="mt-2">{{ $facility->facility->name }}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                        <!--end::Total Amount-->
+                                                        <div class="border-bottom w-100 my-7 my-lg-16"></div>
+                                                    </div>
+                                                </div>
+                                                <!--end::Content-->
+                                            </div>
+                                            <!--end::Wrapper-->
+                                        </div>
+                                        <!--end::Invoice 2 content-->
+                                    </div>
+                                    <!--end::Content-->
+                                    <!--begin::Sidebar-->
+                                    <div class="m-0">
+                                        <!--begin::Invoice 2 sidebar-->
+                                        <!--end::Invoice 2 sidebar-->
+                                    </div>
+                                    <!--end::Sidebar-->
+                                </div>
+                                <!--end::Layout-->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
         <!--end::details View-->
         <!--begin::Row-->
