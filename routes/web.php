@@ -327,6 +327,9 @@ Route::middleware(['auth', 'role'])->group(function () {
     });
 
     Route::prefix('partner')->namespace('partner')->group(function () {
+        Route::get('profile/{profile}/edit', [ProfileController::class, 'editProfileMitra'])->name('partner.edit-profile');
+        Route::put('profile/{profile}/update', [ProfileController::class, 'updateProfileMitra'])->name('partner.update-profile');
+
         Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
         Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
         Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
@@ -400,6 +403,8 @@ Route::middleware(['auth', 'role'])->group(function () {
 
 
         });
+
+
 
         Route::prefix('management-hostel')->group(function () {
             Route::get('', [ManagementHostelController::class, 'index'])->name('partner.management.hostel');
