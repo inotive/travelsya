@@ -41,7 +41,7 @@
                                 <li class="nav-item" role="presentation">
                                     <a id="pills-semua-tab" data-bs-toggle="pill" data-bs-target="#pills-semua"
                                         role="tab" aria-controls="pills-semua" aria-selected="true"
-                                        class="nav-link btn btn-light-danger py-1 text-bold px-4 border border-1 rounded-pill fw-bold border-danger">
+                                        class="nav-link btn btn-light-danger py-1 text-bold px-4 border border-1 rounded-pill fw-bold border-danger active">
                                         Semua
                                     </a>
                                 </li>
@@ -61,25 +61,42 @@
                                 </li>
                             </ul>
                             <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade pills-semua" id="pills-semua" role="tabpanel"
+                                <div class="tab-pane fade pills-semua active show" id="pills-semua" role="tabpanel"
                                     aria-labelledby="pills-semua-tab" tabindex="0">
                                     {{-- Card Pertama Revisi --}}
                                     @foreach ($all_transactions as $all)
-                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                        @php
+                                            if($all->service_id == 7 || $all->service_id == 8){
+                                                $route = route('profile.order-detail.hotel', $all->id);
+                                            }
+                                            elseif($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11){
+                                                $route = route('profile.order-detail.listrik-voucher', $all->id);
+                                            }
+                                            else{
+                                                $route = route('profile.order-detail.listrik', $all->id);
+                                            }
+                                        @endphp
+                                    <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer" style="" onclick="window.location.href = '{{$route}}';">
                                         <div class="d-flex justify-content-between m-5">
                                             <div class="text-gray-400 fw-bold">
                                                 {{ Str::ucfirst($all->service) }}
                                             </div>
                                             @php
                                             if($all->status == 'PENDING') {
-                                            $text_color = 'text-danger';
+                                            $text_color = 'badge badge-warning';
                                             $text = 'Menunggu Pembayaran';
                                             }
 
                                             if($all->status == 'SUCCESS') {
-                                            $text_color = 'text-success';
-                                            $text = 'Berhasil';
+                                            $text_color = 'badge badge-success';
+                                            $text = 'Lunas';
                                             }
+
+                                            if($all->status == 'Transaksi Gagal') {
+                                            $text_color = 'badge badge-danger';
+                                            $text = 'Transaksi Gagal';
+                                            }
+
                                             @endphp
                                             <div class="{{ $text_color }} fw-bold">
                                                 {{ Str::ucfirst($text) }}
@@ -228,12 +245,23 @@
                                         </div>
                                     </div> --}}
                                     @foreach ($pending_transactions as $pending)
-                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                        @php
+                                            if($pending->service_id == 7 || $pending->service_id == 8){
+                                                $routePending = route('profile.order-detail.hotel', $pending->id);
+                                            }
+                                            elseif($pending->service_id == 12 || $pending->service_id == 1 || $pending->service_id == 11){
+                                                $routePending = route('profile.order-detail.listrik-voucher', $pending->id);
+                                            }
+                                            else{
+                                                $routePending = route('profile.order-detail.listrik', $pending->id);
+                                            }
+                                        @endphp
+                                    <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer" style="" onclick="window.location.href = '{{$routePending}}';">
                                         <div class="d-flex justify-content-between m-5">
                                             <div class="text-gray-400 fw-bold">
                                                 {{ Str::ucfirst($pending->service) }}
                                             </div>
-                                            <div class="text-danger fw-bold">
+                                            <div class="badge badge-warning fw-bold">
                                                 Menunggu Pembayaran
                                             </div>
                                         </div>
@@ -328,7 +356,18 @@
                                         </div>
                                     </div> --}}
                                     @foreach ($history_transactions as $history)
-                                    <div class="card border border-1 mt-5 bg-gradient-merah" style="">
+                                        @php
+                                            if($history->service_id == 7 || $history->service_id == 8){
+                                                $routeHistory = route('profile.order-detail.hotel', $history->id);
+                                            }
+                                            elseif($history->service_id == 12 || $history->service_id == 1 || $history->service_id == 11){
+                                                $routeHistory = route('profile.order-detail.listrik-voucher', $history->id);
+                                            }
+                                            else{
+                                                $routeHistory = route('profile.order-detail.listrik', $history->id);
+                                            }
+                                        @endphp
+                                    <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer" onclick="window.location.href = '{{$routeHistory}}';" style="">
                                         <div class="d-flex justify-content-between m-5">
                                             <div class="text-gray-400 fw-bold">
                                                 {{ Str::ucfirst($history->service) }}

@@ -26,8 +26,11 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                 <div class="card-header d-flex justify-content-between align-items-center">
                     {{-- <div class="card-title"> --}}
                     <div class="d-flex align-items-center">
-                    <div class="image-back">
+                    <div class="image-back cursor-pointer">
+                        <a href="/profile/order-history">
                     <img src="{{ asset('assets/media/svg/profile-account/order-history/down-2.svg') }}" alt="down" style="margin-right: 16px; margin-bottom: 8px;">
+
+                        </a>
                     </div>
                     <div class="bungkus">
                     <div class="h1 fw-bold mb-0">
@@ -48,6 +51,13 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                         <div class="col-12">
                     <div class="row">
                         {{-- Kolom Kiri --}}
+                        @if($transactionPPOB->status == 'Transaksi Gagal')
+                            <div class="col">
+                                <div class="alert alert-danger" role="alert">
+                                    Nomor yang anda masukan kemungkinan tidak kami temukan. <a href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20transaksi%20saya%20gagal%20mohon%20bantuan%20refund%20pada%20nomor%20transaksi%20{{ $transactionPPOB->inv_num }}" class="alert-link">Klik disini</a> Untuk menghubungi CS agar transaksi kamu bisa direfund.
+                                </div>
+                            </div>
+                        @endif
                         <div class="col-12">
                             {{-- Detail Produk --}}
                             <div class="card border border-1 mb-5">
@@ -57,22 +67,24 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Layanan</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->product_category }}</div>
+                                            <div class="fs-8 fw-bold">{{ ucfirst($transactionPPOB->product_category) }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Produk</div>
                                             <div class="fs-8 fw-bold">{{ $transactionPPOB->product_name }}</div>
                                         </div>
                                         <div class="d-flex mb-4 justify-content-between">
-                                            <div class="fs-8">No. Meter/IdPel</div>
+                                            <div class="fs-8">{{$transactionPPOB->product_category != "pulsa" ? "No. Meter/IdPel" : "Nomor Telfon" }}</div>
                                             <div class="fs-8 fw-bold">{{ $transactionPPOB->nomor_telfon }}</div>
                                         </div>
+                                        @if($transactionPPOB->product_category == "listrik-token")
                                         <div class="card text-center" style="background: #F2F4FF;">
                                             <div class="text-center" style="margin:24px;">
                                                 <div class="fs-4 fw-bold">Kode Voucher</div>
                                                 <div class="fs-6">{{ $transactionPPOB->kode_voucher }}</div>
                                             </div>
                                         </div>
+                                        @endif
                                     </div>
                             </div>
                             {{-- Rincian Pembaayaran --}}
@@ -85,15 +97,19 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                             <div class="fs-8">Status Transaksi</div>
                                                 @if ($transactionPPOB->status == 'EXPIRED')
                                                 <div class="fs-8 fw-bold text-danger">
-                                                    EXPIRED
+                                                    Transaksi Expired
                                                 </div>
                                                 @elseif ($transactionPPOB->status == 'PENDING')
                                                 <div class="fs-8 fw-bold text-warning">
-                                                    PENDING
+                                                    Menunggu Pembayaran
                                                 </div>
                                                 @elseif ($transactionPPOB->status == 'PAID')
                                                 <div class="fs-8 fw-bold text-success">
-                                                    PAID
+                                                    Transaksi Berhasil
+                                                </div>
+                                                @else
+                                                <div class="fs-8 fw-bold text-danger">
+                                                    Transaksi Gagal
                                                 </div>
                                                 @endif
                                         </div>

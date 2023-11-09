@@ -73,14 +73,6 @@ class CallbackController extends Controller
                         $message = "";
                         $responseCode = "";
 
-                        $transaction->update([
-                            'status' => 'PAID',
-                            'payment_channel' => $responseXendit['payment_channel'],
-                            'payment_method' => $responseXendit['payment_method']
-                        ]);
-                        $point = new Point();
-                        $point->addPoint($transaction->user_id, $transaction->total, $transaction->id, $transaction->service_id);
-
                         if($transaction->service == "pulsa"  || $transaction->service == "listrik-token" || $transaction->service == "ewallet")
                         {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
@@ -98,6 +90,9 @@ class CallbackController extends Controller
                                     'no_hp' => str($detailTransactionTopUP->kode_pembayaran),
                                     'nom' => str($detailTransactionTopUP->nomor_telfon)
                                 ];
+
+                                // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
+                                sleep(3);
                                 $transaction = $this->mymili->status($data);
                                 //process retrieve voucher code
                                 $responseMessage = explode(" ",$transaction["MESSAGE"]);
@@ -110,12 +105,25 @@ class CallbackController extends Controller
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
 
+                                $transaction->update([
+                                    'status' => 'PAID',
+                                    'payment_channel' => $responseXendit['payment_channel'],
+                                    'payment_method' => $responseXendit['payment_method']
+                                ]);
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
+
                             } else {
-                                $status = "Gagal";
+                                $status = "Transaksi Gagal";
                                 $message = "Pembayaran gagal";
+
+                                $transaction->update([
+                                    'status' => 'Transaksi Gagal',
+                                    'payment_channel' => $responseXendit['payment_channel'],
+                                    'payment_method' => $responseXendit['payment_method']
+                                ]);
                             }
 
                             DB::table('detail_transaction_top_up')

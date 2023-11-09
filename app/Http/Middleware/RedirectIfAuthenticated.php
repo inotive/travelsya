@@ -29,6 +29,10 @@ class RedirectIfAuthenticated
                 {
                     return redirect()->route('partner.dashboard');
                 }
+                else
+                {
+                    return redirect('');
+                }
             }
         }
 

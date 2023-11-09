@@ -32,19 +32,25 @@
                     <tbody>
                         @foreach ($cities as $city)
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $city->city_name }}</td>
-                                <td><img width="100px" src="{{ asset('storage/media/kota/'. $city->image) }}" alt="{{ $city->image }}"></td>
-                                <td>
-                                    <a href="javascript:void(0)" id="btn-edit-post" data-city_id="{{ $city->city_id }}" class="badge bg-success border-0 text-white">EDIT</a>
-                                    <form action="{{ route('admin.city-management.updateLanding', $city->city_id) }}" method="POST">
-                                        @csrf
-                                        @method('put')
-                                        <input type="hidden" name="status" value="{{ $city->status == 0 ? 1 : 0 }}">
-                                        <button type="submit" class="badge {{ $city->status == 0 ? 'bg-warning' : 'bg-danger' }} border-0 text-white">
-                                            {{ $city->status == 0 ? 'Tampilkan Di Home' : 'Sembunyikan' }}
-                                        </button>
-                                    </form>
+                                <td class="text-center" style='width:10%;'>{{ $loop->iteration }}</td>
+                                <td class="text-center" style='width:20%;'>{{ $city->city_name }}</td>
+                                <td class="text-center" style='width:40%;'><img width="100px" src="{{ asset('storage/media/kota/'. $city->image) }}" alt="{{ $city->image }}"></td>
+                                <td class="text-center" style='width:30%;'>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <a href="javascript:void(0)" id="btn-edit-post" data-city_id="{{ $city->city_id }}" class="btn btn-sm btn-warning w-100">Edit Foto</a>
+                                        </div>
+                                        <div class="col-6">
+                                            <form action="{{ route('admin.city-management.updateLanding', $city->city_id) }}" method="POST">
+                                                @csrf
+                                                @method('put')
+                                                <input type="hidden" name="status" value="{{ $city->status == 0 ? 1 : 0 }}">
+                                                <button type="submit" class="btn  {{ $city->status == 0 ? 'btn-primary' : 'btn-outline-danger' }} btn-sm border-0 text-white w-100">
+                                                    {{ $city->status == 0 ? 'Tampilkan Di Home' : 'Sembunyikan' }}
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
