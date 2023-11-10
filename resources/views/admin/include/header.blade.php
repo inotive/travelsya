@@ -13,13 +13,6 @@
             </div>
         </div>
         <!--end::Sidebar mobile toggle-->
-        <!--begin::Mobile logo-->
-        <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <a href="../../demo1/dist/index.html" class="d-lg-none">
-                <img alt="Logo" src="assets/media/logos/default-small.svg" class="h-30px" />
-            </a>
-        </div>
-        <!--end::Mobile logo-->
         <!--begin::Header wrapper-->
         <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
             <!--begin::Menu wrapper-->
@@ -29,7 +22,6 @@
                 data-kt-drawer-toggle="#kt_app_header_menu_toggle" data-kt-swapper="true"
                 data-kt-swapper-mode="{default: 'append', lg: 'prepend'}"
                 data-kt-swapper-parent="{default: '#kt_app_body', lg: '#kt_app_header_wrapper'}">
-
             </div>
             <!--end::Menu wrapper-->
             <!--begin::Navbar-->
@@ -45,7 +37,7 @@
                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        <img src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/media/avatars/300-1.jpg') }}"
+                        <img src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }}"
                             alt="user" />
                     </div>
                     <!--begin::User account menu-->
@@ -57,21 +49,19 @@
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
                                     <img alt="Logo"
-                                        src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/media/avatars/300-1.jpg') }} " />
+                                        src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }} " />
                                 </div>
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
                                 <div class="d-flex flex-column">
                                     <div class="fw-bold d-flex align-items-center fs-5">{{ auth()->user()->name }}
                                         <span
-                                            class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ auth()->user()->role == 0 ? 'admin' : (auth()->user()->role == 1 ? 'vendor' : 'customer') }}</span>
+                                            class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">{{ auth()->user()->role == 0 ? 'admin' : (auth()->user()->role == 1 ? 'vendor' : 'customer') }}                                      </span>
                                     </div>
                                     <a href="#"
                                         class="fw-semibold text-muted text-hover-primary fs-7">{{ auth()->user()->email }}</a>
                                 </div>
                                 <!--end::Username-->
-
-
                             </div>
                         </div>
                         <!--end::Menu item-->
@@ -83,40 +73,19 @@
                         <!--begin::Menu item-->
                         <div class="menu-item px-5">
                             <a href="{{ route('admin.logout') }}"
-                                onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                 class="menu-link px-5">
                                 <span class="menu-text">Logout</span>
                             </a>
                         </div>
-
-
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
-                        {{--                        <div class="menu-item px-5"> --}}
-                        {{--                            <form action="{{route('admin.logout')}}" method="post"> --}}
-                        {{--                                @csrf --}}
-                        {{--                                <a type="submit" class="menu-link px-5">Sign Out</a> --}}
-                        {{--                            </form> --}}
-                        {{--                        </div> --}}
-                        <!--end::Menu item-->
                     </div>
                     <!--end::User account menu-->
                     <!--end::Menu wrapper-->
                 </div>
                 <!--end::User menu-->
-                <!--begin::Header menu toggle-->
-                <div class="app-navbar-item d-lg-none ms-2 me-n2" title="Show header menu">
-                    <div class="btn btn-flex btn-icon btn-active-color-primary w-30px h-30px"
-                        id="kt_app_header_menu_toggle">
-                        <i class="ki-duotone ki-element-4 fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                </div>
-                <!--end::Header menu toggle-->
             </div>
             <!--end::Navbar-->
         </div>

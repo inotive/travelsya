@@ -12,13 +12,6 @@
             </div>
         </div>
         <!--end::Sidebar mobile toggle-->
-        <!--begin::Mobile logo-->
-        <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-            <a href="../../demo1/dist/index.html" class="d-lg-none">
-                <img alt="Logo" src="assets/media/logos/default-small.svg" class="h-30px" />
-            </a>
-        </div>
-        <!--end::Mobile logo-->
         <!--begin::Header wrapper-->
         <div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
             <!--begin::Menu wrapper-->
@@ -39,7 +32,7 @@
                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        <img src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/media/avatars/300-1.jpg') }}"
+                        <img src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }}"
                             alt="user" />
                     </div>
                     <!--begin::User account menu-->
@@ -51,7 +44,7 @@
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
                                     <img alt="Logo"
-                                        src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/media/avatars/300-1.jpg') }} " />
+                                        src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }} " />
                                 </div>
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
@@ -64,8 +57,6 @@
                                         class="fw-semibold text-muted text-hover-primary fs-7">{{ auth()->user()->email }}</a>
                                 </div>
                                 <!--end::Username-->
-
-
                             </div>
                         </div>
                         <!--end::Menu item-->
