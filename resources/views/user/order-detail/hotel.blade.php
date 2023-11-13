@@ -105,7 +105,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                 <div class="fs-8 text-gray-400 m-5 mb-2">
                                     Benefits
                                 </div>
-                                <div class="fs-6 m-5 mt-0 d-flex">
+                                <div class="fs-6 m-5 mt-0 d-flex flex-wrap">
                                     @forelse ($roomFacilities as $facility)
                                         <div class="text-bold" style="margin-right: 8px">{{ $facility->facility_name }}</div>
                                     @empty
