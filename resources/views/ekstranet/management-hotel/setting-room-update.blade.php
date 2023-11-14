@@ -357,6 +357,7 @@
                                                 <td>{{ $item->name }}</td>
                                             </tr>
                                         @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>

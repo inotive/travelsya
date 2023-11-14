@@ -241,7 +241,7 @@
                                                 <div class="modal-dialog modal-dialog-centered mw-650px">
                                                     <div class="modal-content">
                                                         <form
-                                                            action="{{ route('partner.management.hotel.destroyroom', $room->id) }}"
+                                                            action="{{ route('partner.management.hostel.destroyroom', $room->id) }}"
                                                             method="POST" id="kt_modal_delete_room_form">
                                                             @csrf
                                                             @method('DELETE')
