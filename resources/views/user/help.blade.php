@@ -45,6 +45,12 @@
                                         aria-labelledby="kt_accordion_1_header_{{ $key }}"
                                         data-bs-parent="#kt_accordion_1">
                                         <div class="accordion-body">
+                                            <style>
+                                                img {
+                                                    max-width: 100%; /* Maksimum lebar gambar adalah 100% dari lebar parent */
+                                                    height: auto; /* Biarkan tinggi gambar dihitung otomatis untuk menjaga rasio aspek */
+                                                }
+                                            </style>
                                             {!! $help->content !!}
                                         </div>
                                     </div>

@@ -27,9 +27,12 @@
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
 		<link href="{{asset('admin/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<link href="{{asset('admin/assets/css/style.bundle.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css"/>
 		<!--end::Global Stylesheets Bundle-->
 		<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
         <script type = “text/JavaScript” src = “https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js”></script>
+        
+        <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
 		@stack("add-style")
 
 	</head>
