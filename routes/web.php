@@ -1,39 +1,40 @@
 <?php
 
-use App\Http\Controllers\Admin\AdController;
-use App\Http\Controllers\Admin\AuthController as AdminAuthController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\FacilitiesController;
-use App\Http\Controllers\Admin\FeeController;
-use App\Http\Controllers\Admin\HelpController;
-use App\Http\Controllers\Admin\HostelController as AdminHostelController;
-use App\Http\Controllers\Admin\MitraController;
-use App\Http\Controllers\Admin\PointController;
-
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Partner\RiwayatBookingController;
-use App\Http\Controllers\PartnerHotelController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\HostelController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\Partner\DashboardPartnerController;
-use App\Http\Controllers\Partner\ManagementHotelController;
-use App\Http\Controllers\Partner\ManagementHostelController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ProductController as ProductAdminController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EwalletController;
-use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\AdController;
+use App\Http\Controllers\Admin\FeeController;
+
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\HelpController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\MitraController;
+use App\Http\Controllers\Admin\PointController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\PartnerHotelController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Partner\ReviewController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Partner\LaporanController;
+use App\Http\Controllers\Admin\FacilitiesController;
+use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\Partner\RiwayatBookingController;
+use App\Http\Controllers\Partner\ManagementHotelController;
+use App\Http\Controllers\Partner\DashboardPartnerController;
+use App\Http\Controllers\Partner\ManagementHostelController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\HostelController as AdminHostelController;
+use App\Http\Controllers\Admin\ProductController as ProductAdminController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 
 /*
 |--------------------------------------------------------------------------

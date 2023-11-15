@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\General;
-use App\Helpers\ResponseFormatter;
-use App\Models\DetailTransaction;
-use App\Models\DetailTransactionTopUp;
+use Carbon\Carbon;
 use App\Models\Fee;
 use App\Models\Product;
-use App\Models\Transaction;
-use App\Services\Mymili;
 use App\Services\Point;
-use App\Services\Setting;
-use App\Services\Travelsya;
+use App\Helpers\General;
+use App\Services\Mymili;
 use App\Services\Xendit;
-use Illuminate\Http\Client\ResponseSequence;
+use App\Services\Setting;
+use App\Models\Transaction;
+use App\Services\Travelsya;
 use Illuminate\Http\Request;
+use App\Models\DetailTransaction;
+use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\DetailTransactionTopUp;
+use Illuminate\Http\Client\ResponseSequence;
 
 class ProductController extends Controller
 {
@@ -109,6 +111,7 @@ class ProductController extends Controller
             'message'        => 'Top UP sedang diproses',
             'status'         => "PROCESS",
             "kode_unik"      => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -238,6 +241,7 @@ class ProductController extends Controller
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -379,6 +383,7 @@ class ProductController extends Controller
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -510,6 +515,7 @@ class ProductController extends Controller
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -639,6 +645,7 @@ class ProductController extends Controller
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
