@@ -71,12 +71,42 @@
                                                 class="menu-link px-3 text-danger">
                                                 Delete
                                             </a> --}}
-                                            <a href="javascript:void(0)"
+                                            {{-- <a href="javascript:void(0)"
                                                 class="menu-link px-3 {{ $room->hotel ? 'text-warning' : 'text-danger' }}"
                                                 id="tombol-delete" data-id="{{ $room->id }}" data-bs-toggle="modal"
                                                 onclick="confirmDelete('{{ $room->hotel ? 'hotel' : 'hostel' }}', {{ $room->id }})">
                                                 Delete
-                                            </a>
+                                            </a> --}}
+                                        <form id="statusForm_{{ $room->id }}" action="{{ route('partner.management.hostel.destroyroom', $room->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button id="statusButton_{{ $room->id }}" type="submit" class="menu-link px-3 {{ $room->hotel ? 'text-warning' : 'text-danger' }} border-0">
+                                                Delete
+                                            </button>
+                                        </form>
+
+                                        <script>
+                                        document.getElementById('statusButton_{{ $room->id }}').addEventListener('click', function(event) {
+                                            event.preventDefault();
+                                                                                
+                                            Swal.fire({
+                                                title: 'Konfirmasi Hapus Room',
+                                                text: 'Yakin Ingin Menghapus Room?',
+                                                icon: 'danger',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Ya, Hapus!',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    document.getElementById('statusForm_{{ $room->id }}').submit();
+                                                }
+                                            });
+                                        });
+
+                                        </script>
+
                                             {{-- <a href="javascript:void(0);" class="btn btn-danger btn-sm"
                                     >Hapus</a> --}}
                                         </div>
