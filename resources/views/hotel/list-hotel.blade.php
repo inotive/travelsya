@@ -64,7 +64,7 @@
                                     <input class="form-check-input" name="facility[]" type="checkbox"
                                         value="{{ $facility->id }}" id="flexCheckDefault" {{ ($request['facility'] ??
                                         null)==$facility->id ? 'checked' : ''}} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star1">
                                         {{ $facility->name }}
                                     </label>
                                 </div>
@@ -74,10 +74,11 @@
                             @foreach ($facilities as $facility)
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" name="facility[]" type="checkbox"
-                                        value="{{ $facility->id }}" id="flexCheckDefault" {{ in_array($facility->id,
+                                    <input id="facility{{ $facility->id }}" class="form-check-input" name="facility[]"
+                                        type="checkbox" value="{{ $facility->id }}" id="flexCheckDefault" {{
+                                        in_array($facility->id,
                                     $request['facility'] ?? []) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="facility{{ $facility->id }}">
                                         {{ $facility->name }}
                                     </label>
                                 </div>
@@ -87,7 +88,7 @@
                             {{-- <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star1">
                                         Breakfast
                                     </label>
                                 </div>
@@ -95,7 +96,7 @@
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star1">
                                         Breakfast
                                     </label>
                                 </div>
@@ -103,7 +104,7 @@
                             <div class="col-12">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star1">
                                         Breakfast
                                     </label>
                                 </div>
@@ -115,20 +116,20 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="1"
+                                    <input id="star1" class="form-check-input" type="checkbox" name="star[]" value="1"
                                         id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(1, $_GET['star']))
                                         ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star1">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                     </label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="2"
+                                    <input id="star2" class="form-check-input" type="checkbox" name="star[]" value="2"
                                         id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(2, $_GET['star']))
                                         ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star2">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                     </label>
@@ -136,10 +137,10 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="3"
+                                    <input id="star3" class="form-check-input" type="checkbox" name="star[]" value="3"
                                         id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(3, $_GET['star']))
                                         ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star3">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -148,10 +149,10 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="4"
+                                    <input id="star4" class="form-check-input" type="checkbox" name="star[]" value="4"
                                         id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(4, $_GET['star']))
                                         ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star4">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -161,10 +162,10 @@
                             </div>
                             <div class="col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="5"
+                                    <input id="star5" class="form-check-input" type="checkbox" name="star[]" value="5"
                                         id="flexCheckDefault" {{ (isset($_GET['star']) && in_array(5, $_GET['star']))
                                         ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <label class="form-check-label" for="star5">
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
                                         <span class="card-text fa fa-star" style="color: orange;"></span>
@@ -281,7 +282,7 @@
                                 <div class="row my-4">
                                     <div class="col-4">
                                         @php
-                                            $image = $hotel->hotelImage->where('main', 1)->first()->image ?? '';
+                                        $image = $hotel->hotelImage->where('main', 1)->first()->image ?? '';
                                         @endphp
                                         <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"
                                             href="{{ asset('storage/'. $image) }}">
@@ -294,45 +295,26 @@
                                         </a>
                                         <div class="row mt-4">
                                             @foreach ($hotel->hotelImage->where('main','!=',1)->take(3) as $hotelImage)
-                                                <div class="col-4">
-                                                    <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"
-                                                       href="{{ asset('storage/'. $hotelImage->image) }}">
-                                                        <!--begin::Image-->
-                                                        <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
-                                                             style="background-image:url('{{ asset('storage/'. $hotelImage->image) }}')">
-                                                        </div>
-                                                        <!--end::Image-->
+                                            <div class="col-4">
+                                                <a class="d-block overlay"
+                                                    data-fslightbox="lightbox-basic-{{$hotel->id}}"
+                                                    href="{{ asset('storage/'. $hotelImage->image) }}">
+                                                    <!--begin::Image-->
+                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                        style="background-image:url('{{ asset('storage/'. $hotelImage->image) }}')">
+                                                    </div>
+                                                    <!--end::Image-->
 
-                                                        <!--begin::Action-->
-                                                        <div
-                                                            class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                                        </div>
-                                                        <!--end::Action-->
-                                                    </a>
-                                                </div>
+                                                    <!--begin::Action-->
+                                                    <div
+                                                        class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                    </div>
+                                                    <!--end::Action-->
+                                                </a>
+                                            </div>
                                             @endforeach
                                         </div>
-
-{{--                                        <div class="row mt-4">--}}
-{{--                                            @foreach ($hotel->hotelImage->where('main','!=',1)->take(3) as $hotelImage)--}}
-{{--                                            <div class="col-4">--}}
-{{--                                                 <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"--}}
-{{--                                                    href="{{ asset('storage/'.$hotelImage->image) }}">--}}
-{{--                                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"--}}
-{{--                                                        style="background-image:url('{{ asset('storage/'.$hotelImage->image) }}')">--}}
-{{--                                                    </div>--}}
-{{--                                                    <div--}}
-{{--                                                        class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">--}}
-{{--                                                        <i class="bi bi-eye-fill text-white fs-3x"></i>--}}
-{{--                                                    </div>--}}
-{{--                                                </a>--}}
-{{--                                                <img src="{{ asset('storage/'.$hotelImage->image) }}" alt="image"--}}
-{{--                                                    width="100%" class="rounded" data-fslightbox="lightbox-basic">--}}
-{{--                                            </div>--}}
-{{--                                            @endforeach--}}
-{{--                                        </div>--}}
-
                                     </div>
                                     <div class="col-5">
                                         <div class="row gy-4">
@@ -351,15 +333,9 @@
                                                 @for ($i = 1; $i <= $hotel->star; $i++)
                                                     <span class="card-text fa fa-star" style="color: orange;"></span>
                                                     @endfor
-                                                    {{-- @for ($i = 0; $i <= $hotelDetails[$hotel->id]['star_rating'];
-                                                        $i++)
-                                                        <span class="card-text fa fa-star"
-                                                            style="color: orange;"></span>
-                                                        @endfor --}}
                                             </div>
                                             <div class="col-12">
-                                                <p>{{ $hotel->address }}
-                                                </p>
+                                                <p>{{ $hotel->address }}</p>
                                             </div>
                                             <div class="col-12">
                                                 <h2 class="card-title text-danger">
@@ -375,8 +351,6 @@
                                     </div>
                                     <div class="col-3">
                                         <h3 class="mb-4">Fasilitas</h3>
-                                        {{-- <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span> --}}
                                         <ul>
                                             @foreach ($hotel->hotelroomFacility->groupBy('facility.name') as $facility)
                                             <li>{{ $facility->first()->facility->name }}</li>
@@ -397,316 +371,8 @@
                     {{ $hotels->links() }}
                 </div>
 
-                {{-- <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body h-100">
-                                <div class="row my-4">
-                                    <div class="col-3">
-                                        <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
-                                            height="200" width="200">
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row gy-4">
-                                            <div class="col-12">
-                                                <h3>OVAL GUEST HOUSE</h3>
-                                            </div>
-                                            <div class="col-12">
-                                                <span class="badge badge-danger">4.4</span>
-                                                <span class="badge badge-danger">(123 Rating)</span>
-                                            </div>
-                                            <div class="col-12">
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            </div>
-                                            <div class="col-12">
-                                                <p>Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
-                                            </div>
-                                            <div class="col-12">
-                                                <h2 class="card-title text-danger">Rp 124.000 - Rp 324.000 </h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <h3 class="mb-4">Fasilitas</h3>
-                                        <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
-                                        <a href="{{ route('hotels.room') }}"
-                                            class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body h-100">
-                                <div class="row my-4">
-                                    <div class="col-3">
-                                        <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
-                                            height="200" width="200">
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row gy-4">
-                                            <div class="col-12">
-                                                <h3>OVAL GUEST HOUSE</h3>
-                                            </div>
-                                            <div class="col-12">
-                                                <span class="badge badge-danger">4.4</span>
-                                                <span class="badge badge-danger">(123 Rating)</span>
-                                            </div>
-                                            <div class="col-12">
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            </div>
-                                            <div class="col-12">
-                                                <p>Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
-                                            </div>
-                                            <div class="col-12">
-                                                <h2 class="card-title text-danger">Rp 124.000 - Rp 324.000 </h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <h3 class="mb-4">Fasilitas</h3>
-                                        <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
-                                        <a href="{{ route('hotels.room') }}"
-                                            class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body h-100">
-                                <div class="row my-4">
-                                    <div class="col-3">
-                                        <img src="https://service.travelsya.com/storage/hotel/image3.webp" alt=""
-                                            height="200" width="200">
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="row gy-4">
-                                            <div class="col-12">
-                                                <h3>OVAL GUEST HOUSE</h3>
-                                            </div>
-                                            <div class="col-12">
-                                                <span class="badge badge-danger">4.4</span>
-                                                <span class="badge badge-danger">(123 Rating)</span>
-                                            </div>
-                                            <div class="col-12">
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                                <span class="card-text fa fa-star" style="color: orange;"></span>
-                                            </div>
-                                            <div class="col-12">
-                                                <p>Jln. Mekar Sari RT. 19 NO. 67 Gn. Sari Ilir, Balikpapan</p>
-                                            </div>
-                                            <div class="col-12">
-                                                <h2 class="card-title text-danger">Rp 124.000 - Rp 324.000 </h2>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <h3 class="mb-4">Fasilitas</h3>
-                                        <span class="me-2"><i class="fas fa-bath fs-3"></i></span>
-                                        <span class="me-2"><i class="fas fa-wifi fs-3"></i></span>
-                                        <a href="{{ route('hotels.room') }}"
-                                            class="btn btn-danger d-block mt-10 text-white">Lihat Room</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-12">
-                        <div class="card border-light border border-2">
-                            <div class="card-body">
-                                <ul class="pagination pagination-circle pagination-outline">
-                                    <li class="page-item previous disabled m-1"><a href="#" class="page-link"><i
-                                                class="previous"></i></a></li>
-                                    <li class="page-item m-1"><a href="#" class="page-link">1</a></li>
-                                    <li class="page-item active m-1"><a href="#" class="page-link">2</a></li>
-                                    <li class="page-item m-1"><a href="#" class="page-link">3</a></li>
-                                    <li class="page-item m-1"><a href="#" class="page-link">4</a></li>
-                                    <li class="page-item m-1"><a href="#" class="page-link">5</a></li>
-                                    <li class="page-item m-1"><a href="#" class="page-link">6</a></li>
-                                    <li class="page-item next m-1"><a href="#" class="page-link"><i
-                                                class="next"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
             </div>
-
         </div>
-        {{-- <div class="row justify-content-between mb-5"> --}}
-            {{-- <div class="col-md-6"> --}}
-                {{-- <h2 class="fw-bold text-gray-900 mt-10">Hasil pencarian di {{$params['location']}}, Indonesia</h2>
-                --}}
-                {{-- <span class="text-gray-400 fw-semibold d-block fs-6 mt-n1">{{date('d M Y',$params['start_date'])}}
-                    - {{date('d M Y',$params['end_date'])}} | {{$params['guest']}} Tamu | {{$params['room']}}
-                    Kamar</span> --}}
-                {{-- </div> --}}
-            {{-- <div class="col-md-6 align-self-center text-end"><button class="btn btn-danger"
-                    id="button-refilter">Pencarian</button></div> --}}
-            {{-- </div> --}}
-        {{-- <div class="row card w-75 me-auto ms-auto mt-10" id="card-filter"> --}}
-            {{-- <form action="{{route('hostel.index')}}" method="get"> --}}
-                {{-- <div class="row card-body justify-content-center"> --}}
-                    {{-- <div class="col-md-6"> --}}
-                        {{--
-                        <!--begin::Input--> --}}
-                        {{-- <select name="city" id="city" class="form-control"> --}}
-                            {{-- @foreach ($cities as $city) --}}
-                            {{-- <option value="{{$city}}" {{($params['location']==$city) ? 'selected' : '' }}>{{$city}}
-                            </option> --}}
-                            {{-- @endforeach --}}
-                            {{-- </select> --}}
-                        {{--
-                        <!--end::Input--> --}}
-                        {{--
-                    </div> --}}
-                    {{-- <div class="col-md-6 mb-5"> --}}
-                        {{--
-                        <!--begin::Input--> --}}
-                        {{-- <input type="text" name="date" class="form-control js-daterangepicker"
-                            id="js-daterangepicker"> --}}
-                        {{--
-                        <!--end::Input--> --}}
-                        {{--
-                    </div> --}}
-                    {{-- <div class="col-md-6"> --}}
-                        {{--
-                        <!--begin::Input--> --}}
-                        {{-- <select name="room" id="kamar" class="form-control"> --}}
-                            {{-- @for ($i = 1; $i < 5; $i++) --}} {{-- <option value="{{$i}}" {{($params['room']==$i)
-                                ? 'selected' : '' }}>{{$i}} Kamar</option> --}}
-                                {{-- @endfor --}}
-                                {{-- </select> --}}
-                        {{--
-                        <!--end::Input--> --}}
-                        {{--
-                    </div> --}}
-                    {{-- <div class="col-md-6"> --}}
-                        {{--
-                        <!--begin::Input--> --}}
-                        {{-- <select name="guest" id="tamu" class="form-control"> --}}
-                            {{-- @for ($j = 1; $j < 5; $j++) <option value="{{$j}}" {{($params['guest']==$j)
-                                ? 'selected' : '' }}>{{$j}} Tamu</option> --}}
-                                {{-- @endfor --}}
-                                {{-- </select> --}}
-                        {{--
-                        <!--end::Input--> --}}
-                        {{--
-                    </div> --}}
-
-                    {{-- <div class="text-end"> --}}
-                        {{-- <button type="submit" class="btn btn-danger py-4 mt-10">Cari Hotel</button> --}}
-                        {{-- </div> --}}
-                    {{-- </div> --}}
-                {{-- </form> --}}
-            {{-- </div> --}}
-        {{-- <div class="row mt-5 "> --}}
-            {{-- <div class="card"> --}}
-                {{-- <div class="card-body"> --}}
-                    {{-- <div class="row justify-content-between"> --}}
-                        {{-- <div class="col-md-4"> --}}
-                            {{-- <div class="d-flex flex-row gap-5"> --}}
-                                {{-- <img src="{{$hostelget['hostelImage'][0]['image']}}" width="200" alt=""> --}}
-                                {{-- <div class="d-flex flex-column gap-4 align-items-end"> --}}
-                                    {{-- @foreach ($hostelget['hostelImage'] as $image) --}}
-                                    {{-- <img src="{{$image['image']}}" width="100" alt=""> --}}
-                                    {{-- <img src="{{$image['image']}}" width="100" alt=""> --}}
-                                    {{-- @endforeach --}}
-
-                                    {{-- </div> --}}
-                                {{-- </div> --}}
-                            {{-- </div> --}}
-                        {{-- <div class="col-md-4"> --}}
-                            {{-- <div class="d-flex flex-column gap-4"> --}}
-                                {{-- <h4 class="card-title text-gray-900">{{$hostelget['name']}}</h4> --}}
-                                {{-- <p class="card-text text-gray-500 mt-1">{{$hostelget['address']}}</p> --}}
-                                {{-- <p class="card-text text-gray-500 mt-1">{{$hostelget['kecamatan']}},
-                                    {{$hostelget['city']}}</p> --}}
-
-
-                                {{-- <p class="fw-semibold d-block fs-2 text-danger">
-                                    {{General::rp($hostelget['price_avg'])}}</p> --}}
-                                {{-- </div> --}}
-                            {{-- </div> --}}
-                        {{-- <div class="col-md-4"> --}}
-                            {{-- <div class="d-flex flex-column align-items-center gap-20"> --}}
-                                {{-- <div> --}}
-                                    {{-- @for ($j = 0; $j < $hostelget['rating_avg']; $j++) <span
-                                        class="card-text fa fa-star" style="color: orange;"></span>@endfor --}}
-                                        {{-- @if ($hostelget['rating_avg'] == 0) --}}
-                                        {{-- @for ($j = 0; $j < 4; $j++) <span class="card-text fa fa-star"
-                                            style="color: orange;"></span>@endfor --}}
-                                            {{-- @endif --}}
-                                            {{-- </div> --}}
-                                {{-- <p class="card-text text-gray-500 mt-auto">{{$hostelget['phone']}}</p> --}}
-
-                                {{-- </div> --}}
-                            {{-- </div> --}}
-                        {{-- </div> --}}
-                    {{-- </div> --}}
-                {{-- </div> --}}
-            {{-- </div> --}}
-        {{-- <div class="row mt-5 justify-content-between"> --}}
-            {{-- @foreach ($hostelget['hostelRoom'] as $hostel) --}}
-            {{-- <div class="col-md-5"> --}}
-                {{-- <div class="card"> --}}
-                    {{-- <div class="card-body"> --}}
-                        {{-- <div class="row justify-content-between"> --}}
-                            {{-- <div class="col-md-5"> --}}
-                                {{-- <div class="d-flex flex-row gap-5"> --}}
-                                    {{-- <img src="{{$hostel['image_1']}}" width="200" alt=""> --}}
-                                    {{-- <div class="d-flex flex-column gap-4 align-items-end"> --}}
-
-                                        {{-- </div> --}}
-                                    {{-- </div> --}}
-                                {{-- </div> --}}
-                            {{-- <div class="col-md-5"> --}}
-                                {{-- <div class="d-flex flex-column"> --}}
-                                    {{-- <h4 class="card-title text-gray-900">{{$hostel['name']}}</h4> --}}
-                                    {{-- <p class="card-text text-gray-500 mt-1">{{$hostel['furnish']}}</p> --}}
-                                    {{-- <p class="card-text text-gray-500">{{$hostel['roomtype']}}</p> --}}
-                                    {{-- <div class="d-flex flex-row flex-wrap mt-4 gap-4"> --}}
-                                        {{-- @foreach ($hostel['facilities'] as $fac) --}}
-                                        {{-- <div class="d-flex flex-column align-items-center"> --}}
-                                            {{-- <span class="{{$fac['icon']}}"></span> --}}
-                                            {{-- <span>{{$fac['name']}}</span> --}}
-                                            {{-- </div> --}}
-                                        {{-- @endforeach --}}
-                                        {{-- </div> --}}
-                                    {{-- </div> --}}
-                                {{-- </div> --}}
-                            {{-- </div> --}}
-                        {{-- </div> --}}
-                    {{-- <div class="card-footer d-flex flex-row justify-content-between"> --}}
-                        {{-- <p class="fw-semibold d-block fs-2 text-danger">{{General::rp($hostel['sellingprice'])}}
-                        </p> --}}
-                        {{-- <a href="{{route('hostel.checkout',$hostel['id'])." ?start=".$_GET['start']."
-                            &duration=".$_GET['duration']." &room=".$_GET['room']." &guest=".$_GET['guest']}}"
-                            class="btn btn-danger"> --}}
-                            {{-- Pesan Kamar --}}
-                            {{-- </a> --}}
-                        {{-- </div> --}}
-                    {{-- </div> --}}
-                {{-- </div> --}}
-            {{-- @endforeach --}}
-            {{-- </div> --}}
     </div>
     <!--end::Post-->
 </div>

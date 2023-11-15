@@ -567,10 +567,10 @@ class ProductController extends Controller
 
     public function productTvInternet()
     {
-        $data = Product::where([
-            ['category', '=', 'tv-internet'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where('category', 'tv-internet')
+            ->where('is_active', 1)
+            ->distinct()
+            ->get();
 
         return response()->json($data);
     }
@@ -697,11 +697,10 @@ class ProductController extends Controller
 
     public function productTax()
     {
-        $data = Product::where([
-            ['category', 'negara'],
-            ['name', 'PBB'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where('name', 'PBB')
+            ->where('is_active', 1)
+            ->distinct()
+            ->get();
 
         return response()->json($data);
     }

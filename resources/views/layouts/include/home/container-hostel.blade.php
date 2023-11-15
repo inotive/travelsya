@@ -60,7 +60,7 @@
                 <!--begin::Radio-->
                 <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                     <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" value="monthly" />
+                    <input class="btn-check" type="radio" name="category" value="monthly" required />
                     <!--end::Input-->
                     Bulanan
                 </label>
@@ -69,7 +69,7 @@
                 <!--begin::Radio-->
                 <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
                     <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" value="yearly" />
+                    <input class="btn-check" type="radio" name="category" value="yearly" required />
                     <!--end::Input-->
                     Tahunan
                 </label>
