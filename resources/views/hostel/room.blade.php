@@ -318,16 +318,15 @@
                                 {{ number_format($room->sellingrentprice_yearly, 0, ',', '.') }}</p>
                             @endif
 
-                            {{-- @guest
-                            <a href="#" class="btn btn-danger px-4 py-2" data-toggle="modal"
-                                data-target="#exampleModal">Pesan Kamar</a>
+                            @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger px-4 py-2">Login Dulu</a>
                             @endguest
 
-                            @auth --}}
+                            @auth
                             <a href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}"
                                 class="btn btn-danger px-4 py-2">Pesan
                                 Kamar</a>
-                            {{-- @endauth --}}
+                            @endauth
                         </div>
                     </div>
                 </div>

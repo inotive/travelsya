@@ -45,7 +45,7 @@ class HostelController extends Controller
     public function index(Request $request)
     {
         try {
-            $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+            $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating');
             $type_duration = $request->type_duration;
             if ($request->location != 'semua') {
                 $hostels->where('city', 'like', '%' . $request->location . '%');
@@ -146,7 +146,7 @@ class HostelController extends Controller
     {
         try {
             // $hostel = Hostel::find($hostel->id);
-            $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')->withCount(["hostelRoom as price_avg" => function ($q) {
+            $hostel = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')->withCount(["hostelRoom as price_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(price),0)'));
             }])->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
@@ -434,7 +434,7 @@ class HostelController extends Controller
 
     public function hostelPopuler()
     {
-        $hostelPopuler = Hostel::with('hostelImage', 'rating')->has("hostelRoom") //retrieve only hostel that have hostel room, to avoid data with 0 price_avg
+        $hostelPopuler = Hostel::where('is_active', 1)->with('hostelImage', 'rating')->has("hostelRoom") //retrieve only hostel that have hostel room, to avoid data with 0 price_avg
             ->withCount(["hostelRoom as price_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(price),0)'));
             }])->withCount(["rating as rating_avg" => function ($q) {

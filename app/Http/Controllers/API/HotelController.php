@@ -75,7 +75,7 @@ class HotelController extends Controller
             //     return ResponseFormatter::error(null, 'Data not found');
             // }
 
-            $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
+            $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating');
 
             if ($request->has('location')) {
                 if ($request->location != 'semua') {
@@ -198,7 +198,7 @@ class HotelController extends Controller
             //     // return $filter;
             // }
 
-            $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility', 'hotelRule')
+            $hotel = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility', 'hotelRule')
                 ->find($id);
 
             $jumlahTransaksi = $hotel->hotelRating->count();
@@ -510,7 +510,7 @@ class HotelController extends Controller
         //     ->get();
 
 
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
+        $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating');
 
         if ($request->has('location')) {
             $hotels->where('city', 'like', '%' . $request->location . '%');
