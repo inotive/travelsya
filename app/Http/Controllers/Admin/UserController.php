@@ -22,9 +22,9 @@ class UserController extends Controller
         $request['role'] = 0;
         $request['email'] = $request->email;
         $request['password'] = password_hash($request->password, PASSWORD_DEFAULT);
-        toast('User has been created', 'success');
         User::create($request->all());
 
+        toast('User has been created', 'success');
         return redirect()->route('admin.user');
     }
 
@@ -38,8 +38,13 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $user = User::find($request->id);
-        unset($request['password']);
+        if (!is_null($request->password)) {
+            $request['password'] = bcrypt($request->password);
+        } else {
+            unset($request['password']);
+        }
         $user->update($request->all());
+
         toast('User has been updated', 'success');
         return redirect()->route('admin.user');
         // return redirect()->route('admin.management-user.index');

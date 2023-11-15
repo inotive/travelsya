@@ -62,31 +62,29 @@ class MitraController extends Controller
 
             $user->update([
                 ['email' => $request->email], // Kriteria
-                
-                  'name' => $request->name,
-                    'password' => bcrypt($request->password),
-                    'phone' => $request->phone,
-                    'point' => 0,
-                    'role' => 1,
-                    'is_active' => $request->is_active,
-                    'image' => $image,
-                 // Nilai
+
+                'name' => $request->name,
+                'password' => $request->password ? bcrypt($request->password) : $user->password,
+                'phone' => $request->phone,
+                'point' => 0,
+                'role' => 1,
+                'is_active' => $request->is_active,
+                'image' => $image,
+                // Nilai
             ]);
-            
-        } 
-        else {
+        } else {
 
             //update post without image
             $user->update([
                 'email' => $request->email, // Kriteria
-                
-                    'name' => $request->name,
-                    'password' => bcrypt($request->password),
-                    'phone' => $request->phone,
-                    'point' => 0,
-                    'role' => 1,
-                    'is_active' => $request->is_active,
-                 // Nilai
+
+                'name' => $request->name,
+                'password' => $request->password ? bcrypt($request->password) : $user->password,
+                'phone' => $request->phone,
+                'point' => 0,
+                'role' => 1,
+                'is_active' => $request->is_active,
+                // Nilai
             ]);
         }
 
@@ -107,18 +105,18 @@ class MitraController extends Controller
         if ($request->hasFile('image')) {
             //upload new image
             $image = $request->file('image')->store('media/users');
-        // dd($file);
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'image' => $image,
-            'phone' => $request->nomor_telfon,
-            'point' => 0,
-            'role' => 1,
-            'is_active' => 1,
-        ]);
-    } else {
+            // dd($file);
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'image' => $image,
+                'phone' => $request->nomor_telfon,
+                'point' => 0,
+                'role' => 1,
+                'is_active' => 1,
+            ]);
+        } else {
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -201,11 +199,9 @@ class MitraController extends Controller
     public function destroyMitra($id)
     {
         $mitra = User::find($id)->delete();
-        Storage::delete('storage/'.$mitra->image);
+        Storage::delete('storage/' . $mitra->image);
 
         toast('Hostel has been deleted', 'danger');
         return redirect()->back();
     }
-
-
 }

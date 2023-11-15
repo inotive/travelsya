@@ -224,7 +224,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
             Route::post('user', [AdminUserController::class, 'create'])->name('user.create');
             Route::post('user/edit', [AdminUserController::class, 'editJson'])->name('user.edit');
-            Route::put('user/update/{id}', [AdminUserController::class, 'update'])->name('user.update');
+            Route::put('user/update/', [AdminUserController::class, 'update'])->name('user.update');
             Route::get('user/{id}/delete', [AdminUserController::class, 'delete'])->name('user.delete');
 
 

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ManagementHostelController extends Controller
 {
@@ -194,12 +195,23 @@ class ManagementHostelController extends Controller
         $facilityIds = $request->input('facility_id', []);
         $roomId = $hostelRoom->id;
 
-        foreach ($facilityIds as $facilityId) {
-            DB::table('hostel_room_facilities')->insert([
-                'hostel_id' => $request->hostel_id,
-                'hostel_room_id' => $roomId,
-                'facility_id' => $facilityId,
-            ]);
+        if (is_array($facilityIds) && count($facilityIds) > 0) {
+            // Tambahkan fasilitas yang baru
+            foreach ($facilityIds as $facilityId) {
+                DB::table('hostel_room_facilities')->insert([
+                    'hostel_id' => $request->hostel_id,
+                    'hostel_room_id' => $roomId,
+                    'facility_id' => $facilityId,
+                ]);
+            }
+        } else {
+            // Lakukan sesuatu jika $facilityIds bukan array atau kosong
+            // Misalnya, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+            // ...
+        
+            // Contoh: Tampilkan pesan kesalahan
+            Log::error('Error: $facilityIds is not an array or is empty');
+            // Atau, lakukan tindakan yang sesuai dengan kebutuhan Anda
         }
 
         //Ini untuk pemberitahuan
@@ -318,7 +330,6 @@ class ManagementHostelController extends Controller
             'image' => 'image|mimes:jpeg,jpg,png|max:2048',
             'totalroom' => 'required',
             'sellingrentprice_monthly' => 'required',
-            'facility_id' => 'required',
         ]);
 
 
@@ -397,12 +408,23 @@ class ManagementHostelController extends Controller
                 ->delete();
 
             // Tambahkan fasilitas yang baru
-            foreach ($facilityIds as $facilityId) {
-                DB::table('hostel_room_facilities')->insert([
-                    'hostel_id' => $request->hostel_id,
-                    'hostel_room_id' => $hostelRoom->id,
-                    'facility_id' => $facilityId,
-                ]);
+            if (is_array($facilityIds) && count($facilityIds) > 0) {
+                // Tambahkan fasilitas yang baru
+                foreach ($facilityIds as $facilityId) {
+                    DB::table('hostel_room_facilities')->insert([
+                        'hostel_id' => $request->hostel_id,
+                        'hostel_room_id' => $hostelRoom->id,
+                        'facility_id' => $facilityId,
+                    ]);
+                }
+            } else {
+                // Lakukan sesuatu jika $facilityIds bukan array atau kosong
+                // Misalnya, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
+                // ...
+            
+                // Contoh: Tampilkan pesan kesalahan
+                Log::error('Error: $facilityIds is not an array or is empty');
+                // Atau, lakukan tindakan yang sesuai dengan kebutuhan Anda
             }
         }
         $updatedData = $hostelRoom->fresh();
