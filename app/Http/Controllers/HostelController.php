@@ -71,7 +71,7 @@ class HostelController extends Controller
 
         // return view('hostel.index', ['hostels' => $hostelsget, 'cities' => $cities, 'params' => $params]);
 
-        $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
+        $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->where('city', 'like', '%' . $request->location . '%')
 
             ->withCount(["rating as rating_avg" => function ($q) {
@@ -421,7 +421,7 @@ class HostelController extends Controller
     public function ajaxHostel(Request $request)
     {
         try {
-            $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+            $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating');
             if ($request->name)
                 $hostels->where('name', 'like', '%' . $request->name . '%');
 

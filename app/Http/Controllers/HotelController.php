@@ -62,7 +62,7 @@ class HotelController extends Controller
         // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
         //     ->withAvg('hotelRating', 'rate')
         //     ->orderByDesc('hotel_rating_avg_rate');
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
+        $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where([
                     ['totalroom', '>', $request->room],
@@ -137,7 +137,7 @@ class HotelController extends Controller
         $data['request'] = $request->all();
         $data['facilities'] = Facility::all();
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
-        $data['listHotel'] = Hotel::all();
+        $data['listHotel'] = Hotel::where('is_active', 1)->get();
        
 
         // dd($hotelPrices);
@@ -176,7 +176,7 @@ class HotelController extends Controller
         //        return view('hotel.show', compact('hotelget', 'params', 'cities'));
 
 
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+        $hotel = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating')
             ->findOrFail($id_hotel);
 
         $minPrice = $hotel->hotelRoom->min('sellingprice');
@@ -208,7 +208,7 @@ class HotelController extends Controller
         ->pluck('name');
 
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
-        $data['listHotel'] = Hotel::all();
+        $data['listHotel'] = Hotel::where('is_active', 1)->get();
 
         return view('hotel.show', $data);
     }
@@ -371,7 +371,7 @@ class HotelController extends Controller
 
     public function favoriteHotel()
     {
-        $hotels = Hotel::with('hotelRoom', 'hotelRating')->get();
+        $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelRating')->get();
 
         // Hitung total rating untuk setiap hotel dan simpan dalam array asosiatif
         $hotelRatings = [];
@@ -388,7 +388,7 @@ class HotelController extends Controller
         $sortedHotelIds = array_keys($hotelRatings);
 
         // Ambil data hotel dengan urutan rating terbesar
-        $favoriteHotels = Hotel::with('hotelRoom', 'hotelRating')
+        $favoriteHotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelRating')
             ->whereIn('id', $sortedHotelIds)
             ->limit(4)
             ->get();

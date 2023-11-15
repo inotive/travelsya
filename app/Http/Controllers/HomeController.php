@@ -22,7 +22,7 @@ class HomeController extends Controller
 
     public function home()
     {
-        $hotels = Hotel::with('hotelRoom', 'hotelImage')->latest()->get();
+        $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage')->latest()->get();
         $dummyHotels = $hotels->map(function ($hotel) {
             return [
                 'id' => $hotel->id,
@@ -31,7 +31,7 @@ class HomeController extends Controller
             ];
         })->toArray();
 
-        $hotel_favorite = Hotel::with('hotelRoom', 'hotelImage')
+        $hotel_favorite = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage')
             ->select('hotels.id', 'hotels.name', 'hotels.user_id')
             ->selectSub(function ($query) {
                 $query->selectRaw('COALESCE(MAX(rate), 0)')
@@ -72,7 +72,7 @@ class HomeController extends Controller
             ];
         }
 
-        $hostel_favorite = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
+        $hostel_favorite = Hostel::where('hostels.is_active', '=', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->withCount([
                 "hostelRoom as price_avg" => function ($q) {
                     $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
