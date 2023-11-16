@@ -7,7 +7,7 @@
                     <div class="card-title mb-5">
                         <h3>
                             <b>
-                                John Doe
+                                {{ Auth::user()->name }}
                             </b>
                         </h3>
                     </div>
@@ -72,8 +72,9 @@
                                 <div class="ini-pemersatu" style="margin-left: 16px">
                                     <div class="text-gray-500 fs-8">e-Wallet</div>
                                     <span class=" fw-medium fs-4 menu-title">
-                                        <b>
-                                            56.500
+                                        <b class="text-danger">
+                                            {{-- {{ number_format(auth()->user()->point, 0,',','.') }} --}}
+                                            Coming Soon
                                         </b>
                                     </span>
                                 </div>

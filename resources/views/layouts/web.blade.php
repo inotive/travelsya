@@ -338,7 +338,7 @@
                                         <p>Rental Mobil</p>
                                         <p data-bs-toggle="modal" data-bs-target="#modal-hostel">
                                             <a class="text-white" href="#">
-                                                Booking Hoster
+                                                Booking Hostel
                                             </a>
                                         </p>
                                         <p data-bs-toggle="modal" data-bs-target="#modal-pln">

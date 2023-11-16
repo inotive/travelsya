@@ -154,12 +154,15 @@ class UserController extends Controller
         $roomPict = DB::table('hotel_room_images')
             ->where('hotel_id', $transactionHotel->hotel_id)
             ->first();
+            //dd($transactionHotel);
 
         $roomFacilities = DB::table('hotel_room_facilities')
             ->join('facilities', 'hotel_room_facilities.facility_id', '=', 'facilities.id')
             ->select('hotel_room_facilities.*', 'facilities.name as facility_name')
-            ->where('hotel_id', $transactionHotel->hotel_id)
+            ->where('hotel_room_id', $transactionHotel->hotel_room_id)
             ->get();
+
+            //dd($roomFacilities);
 
 
         return view('user.order-detail.hotel', compact('transactionHotel', 'hotelPict', 'roomPict', 'roomFacilities'));

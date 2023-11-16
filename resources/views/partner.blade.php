@@ -15,8 +15,8 @@
                         </span>
                     </div>
                     <div class="mb-3">
-                        <a href="#" class="btn btn-danger fw-bold me-2">Tentang Kami</a>
-                        <a href="/hotels"
+                        <a href="{{ route('company.about') }}" class="btn btn-danger fw-bold me-2">Tentang Kami</a>
+                        <a href="{{ url('/') }}/hotels?location=&start={{ date('d-m-Y') }}&duration=1&room=1&guest=1""
                             class="btn btn-color-white bg-body bg-opacity-15 bg-hover-opacity-25 fw-bold">Jelajah Hotel</a>
                     </div>
                 </div>

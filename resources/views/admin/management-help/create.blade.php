@@ -54,9 +54,11 @@
                             <!--end::Alert-->
                         </div>
 
-                        <textarea name="content" id="kt_docs_ckeditor_classic" >
-                            
-                        </textarea>
+                        <div id="kt_docs_quill_basic" >
+
+                        </div>
+                        <input type="hidden" name="content" id="hidden-content">
+                        
                 </div>
                 <!--end:: Body-->
                 <div class="card-footer d-flex justify-content-between">
@@ -70,15 +72,23 @@
         </div>
     </div>
     <!--CKEditor Build Bundles:: Only include the relevant bundles accordingly-->
-    <script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
     <script>
-        ClassicEditor
-            .create(document.querySelector('#kt_docs_ckeditor_classic'))
-            .then(editor => {
-                console.log(editor);
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        var quill = new Quill('#kt_docs_quill_basic', {
+            modules: {
+                toolbar: [
+                    [{
+                        header: [1, 2, false]
+                    }],
+                    ['bold', 'italic', 'underline'],
+                    ['image', 'code-block']
+                ]
+            },
+            placeholder: 'Masukkan konten',
+            theme: 'snow' // or 'bubble'
+        });
+        quill.on('text-change', function() {
+        var hiddenInput = document.getElementById('hidden-content');
+        hiddenInput.value = quill.root.innerHTML;
+    });
     </script>
 @endsection
