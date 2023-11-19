@@ -110,6 +110,7 @@ class EwalletController extends Controller
             'message'        => 'Top UP sedang diproses',
             'status'         => "PROCESS",
             "kode_unik"      => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
 
