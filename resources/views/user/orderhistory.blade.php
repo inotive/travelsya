@@ -82,20 +82,28 @@
                                                 {{ Str::ucfirst($all->service) }}
                                             </div>
                                             @php
-                                            if($all->status == 'PENDING') {
-                                            $text_color = 'badge badge-warning';
-                                            $text = 'Menunggu Pembayaran';
-                                            }
 
-                                            if($all->status == 'SUCCESS') {
-                                            $text_color = 'badge badge-success';
-                                            $text = 'Lunas';
-                                            }
+                                                if($all->status == 'PENDING') {
+                                                $text_color = 'badge badge-warning';
+                                                $text = 'Menunggu Pembayaran';
+                                                }
 
-                                            if($all->status == 'Transaksi Gagal') {
-                                            $text_color = 'badge badge-danger';
-                                            $text = 'Transaksi Gagal';
-                                            }
+                                                if($all->status == 'PAID') {
+                                                $text_color = 'badge badge-success';
+                                                $text = 'Lunas';
+                                                }
+
+                                                if($all->status == 'Transaksi Gagal') {
+                                                $text_color = 'badge badge-danger';
+                                                $text = 'Transaksi Gagal';
+                                                }
+
+                                                  if($all->status == 'EXPIRED') {
+                                                $text_color = 'badge badge-danger';
+                                                $text = 'Transaksi Kadaluarsa';
+                                                }
+
+
 
                                             @endphp
                                             <div class="{{ $text_color }} fw-bold">
