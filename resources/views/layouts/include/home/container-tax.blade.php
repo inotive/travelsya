@@ -7,7 +7,8 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.tax') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.tax') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
@@ -21,7 +22,7 @@
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPajak" class="form-control form-control-lg"
-                               name="noPelangganPajak" placeholder="Masukan nomor pelanggan" value=""/>
+                            name="noPelangganPajak" placeholder="Masukan nomor pelanggan" value="" />
                         <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
@@ -50,7 +51,8 @@
                                     <tbody>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                            <td class="text-right" colspan="3"><span id="namaPelangganPajak"></span></td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPajak"></span>
+                                            </td>
                                         </tr>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
@@ -65,17 +67,17 @@
                                     </tbody>
                                 </table>
                             </div>
-    
+
                         </div>
                         <div class="col-12">
                             @auth
-                                <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
                             @endauth
-    
+
                             @guest
-                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                    Login Terlebih Dahulu
-                                </a>
+                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                Login Terlebih Dahulu
+                            </a>
                             @endguest
                         </div>
                     </div>
@@ -97,17 +99,19 @@
 
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tax') }}",
                 success: function (response) {
+                    $('#productPajak').empty();
+
                     $.each(response, function (key, value) {
                         $('#productPajak').append($('<option>', {
                             value: value.kode,
@@ -146,7 +150,7 @@
                     },
                     success: function (response) {
                         // var simulateFeePajak = parseInt(responseTagihan.data.fee)
-                        
+
                         // SIMULASI!!!
                         var simulateFeePajak = 1000;
                         var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
@@ -180,10 +184,10 @@
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
@@ -230,7 +234,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush
-
-
