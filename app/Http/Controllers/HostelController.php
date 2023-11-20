@@ -132,13 +132,32 @@ class HostelController extends Controller
             ) > 0', [$checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
         }
 
+        // if ($request->has('harga')) {
+        //     if ($request->harga == 'tertinggi') {
+        //         $hostels->orderByDesc('price_avg');
+        //     }
+
+        //     if ($request->harga == 'terendah') {
+        //         $hostels->orderBy('price_avg');
+        //     }
+        // }
+
         if ($request->has('harga')) {
-            if ($request->harga == 'tertinggi') {
-                $hostels->orderByDesc('price_avg');
+            $orderDirection = $request->harga === 'tertinggi' ? 'desc' : 'asc';
+
+
+            if ($request->category == 'monthly') {
+                $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_monthly) as min_price'))
+                    ->leftJoin('hostel_rooms', 'hostel_rooms.hotel_id', '=', 'hostels.id')
+                    ->groupBy('hostels.id')
+                    ->orderBy('min_price', $orderDirection);
             }
 
-            if ($request->harga == 'terendah') {
-                $hostels->orderBy('price_avg');
+            if ($request->category == 'yearly') {
+                $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_yearly) as min_price'))
+                    ->leftJoin('hostel_rooms', 'hostel_rooms.hotel_id', '=', 'hostels.id')
+                    ->groupBy('hostels.id')
+                    ->orderBy('min_price', $orderDirection);
             }
         }
 
