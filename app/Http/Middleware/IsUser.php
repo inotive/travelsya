@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class Admin
+class IsUser
 {
     /**
      * Handle an incoming request.
@@ -16,11 +16,10 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
-
-        if ($user->role === 0) {
+        if (auth()->user()?->role === 2 || Auth::guest()) {
             return $next($request);
         }
-        abort(403);
+
+        return redirect()->back();
     }
 }

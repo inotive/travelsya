@@ -101,7 +101,7 @@ Route::get('/e-tiket/{hotel}/hotel', [RiwayatBookingController::class, 'cetakHot
 // Ini Route Hostel-eBooking
 Route::get('/e-tiket/{hostel}/hostel', [RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel')->middleware('auth');
 
-Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/', [HomeController::class, 'home'])->name('home')->middleware(['isUser']);
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
 Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('favorite.hotel');
 // Route::get('/', [AuthController::class, 'login'])->name('home');
@@ -327,7 +327,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
     });
 
-    Route::prefix('partner')->namespace('partner')->group(function () {
+    Route::prefix('partner')->namespace('partner')->middleware('isPartner')->group(function () {
         Route::get('profile/{profile}/edit', [ProfileController::class, 'editProfileMitra'])->name('partner.edit-profile');
         Route::put('profile/{profile}/update', [ProfileController::class, 'updateProfileMitra'])->name('partner.update-profile');
 
