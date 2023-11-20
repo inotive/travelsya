@@ -73,7 +73,6 @@ class HostelController extends Controller
 
         $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->where('city', 'like', '%' . $request->location . '%')
-
             ->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
             }])

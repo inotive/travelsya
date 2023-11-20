@@ -70,11 +70,12 @@
                     </div>
                     <div class="col-md-3 mb-5">
                         <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
-                        <div class="input-group" id="js_datepicker_index_hotel" data-td-target-input="nearest" data-td-target="#js_datepicker_index_hotel"
-                             data-td-toggle="datetimepicker"
+                        <div class="input-group" id="js_datepicker_index_hotel" data-td-target-input="nearest"
+                            data-td-target="#js_datepicker_index_hotel" data-td-toggle="datetimepicker"
                             data-td-target-toggle="nearest">
                             <input id="checkin" type="text" name="start" class="form-control"
-                                data-td-target="#js_datepicker_index_hotel"  data-td-target="#js_datepicker_index_hotel"  x-on:change="handleSelectCheckin" value="{{date('d-M-y')}}" />
+                                data-td-target="#js_datepicker_index_hotel" data-td-target="#js_datepicker_index_hotel"
+                                x-on:change="handleSelectCheckin" value="{{date('d-M-y')}}" />
                             <span class="input-group-text" data-td-target="#js_datepicker_index_hotel"
                                 data-td-toggle="datetimepicker">
                                 <i class="ki-duotone ki-calendar fs-2">

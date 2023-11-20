@@ -80,20 +80,6 @@ class HotelController extends Controller
                 AND ? >= reservation_start
             ) > 0', [$request->end_date, $request->start]);
 
-        if ($request->has('harga')) {
-            if ($request->harga == 'tertinggi') {
-                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->orderByDesc('sellingprice');
-                });
-            }
-
-            if ($request->harga == 'terendah') {
-                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->orderBy('sellingprice');
-                });
-            }
-        }
-
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
                 $query->whereIn('facility_id', $request->facility);
@@ -104,41 +90,51 @@ class HotelController extends Controller
             $hotels->whereIn('star', $request->star);
         }
 
+        if ($request->has('harga')) {
+            $orderDirection = $request->harga === 'tertinggi' ? 'desc' : 'asc';
+
+            $hotels->select('hotels.*', DB::raw('MIN(hotel_rooms.sellingprice) as min_price'))
+                ->leftJoin('hotel_rooms', 'hotel_rooms.hotel_id', '=', 'hotels.id')
+                ->groupBy('hotels.id')
+                ->orderBy('min_price', $orderDirection);
+        }
+
+
         $hotels = $hotels->paginate(10);
 
         $hotelDetails = [];
 
         foreach ($hotels as $hotel) {
-            $minPrice = $hotel->hotelRoom->min('sellingprice');
-            $maxPrice = $hotel->hotelRoom->max('sellingprice');
+            $minPrice        = $hotel->hotelRoom->min('sellingprice');
+            $maxPrice        = $hotel->hotelRoom->max('sellingprice');
             $jumlahTransaksi = $hotel->hotelRating->count();
-            $totalRating = $hotel->hotelRating->sum('rate');
+            $totalRating     = $hotel->hotelRating->sum('rate');
 
             // Rating 5
             if ($jumlahTransaksi > 0) {
-                $avgRating = $totalRating / $jumlahTransaksi;
+                $avgRating    = $totalRating / $jumlahTransaksi;
                 $resultRating = ($avgRating / 10) * 5;
             } else {
-                $avgRating = 0;
+                $avgRating    = 0;
                 $resultRating = 0;
             }
 
             $hotelDetails[$hotel->id] = [
-                'min_price' => $minPrice,
-                'max_price' => $maxPrice,
-                'total_rating' => $totalRating,
+                'min_price'     => $minPrice,
+                'max_price'     => $maxPrice,
+                'total_rating'  => $totalRating,
                 'result_rating' => $resultRating,
-                'star_rating' => floor($resultRating),
+                'star_rating'   => floor($resultRating),
             ];
         }
 
-        $data['hotels'] = $hotels;
+        $data['hotels']       = $hotels;
         $data['hotelDetails'] = $hotelDetails;
         $data['request'] = $request->all();
         $data['facilities'] = Facility::all();
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::where('is_active', 1)->get();
-       
+
 
         // dd($hotelPrices);
         return view('hotel.list-hotel', $data);

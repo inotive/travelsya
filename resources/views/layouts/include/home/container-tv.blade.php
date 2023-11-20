@@ -1,9 +1,10 @@
- <div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
+<div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
     <!--begin::Col-->
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.tvInternet') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.tvInternet') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
@@ -23,8 +24,8 @@
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="noPelangganTV" class="form-control form-control-lg"
-                            name="noPelangganTV" placeholder="Masukan nomor tagihan" value="" />
+                        <input type="text" id="noPelangganTV" class="form-control form-control-lg" name="noPelangganTV"
+                            placeholder="Masukan nomor tagihan" value="" />
                         <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
@@ -47,20 +48,20 @@
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tbody>
-                                <tr class="py-5">
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3"><span id="namaPelangganTV"></span></td>
-                                </tr>
-                                <tr class="py-5">
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. <span id="totalTagihanTV"></span></td>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. <span id="biayaAdminTV"></span></td>
-                                </tr>
-                                <tr class="py-5">
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td colspan="2">Rp. <span id="totalBayarTV"></span></td>
-                                </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                        <td class="text-right" colspan="3"><span id="namaPelangganTV"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                        <td>Rp. <span id="totalTagihanTV"></span></td>
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                        <td>Rp. <span id="biayaAdminTV"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                        <td colspan="2">Rp. <span id="totalBayarTV"></span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -68,13 +69,13 @@
                     </div>
                     <div class="col-12">
                         @auth
-                            <button type="submit" class="btn btn-danger w-100" id="btnSubmiTV" disabled>Pembayaran</button>
+                        <button type="submit" class="btn btn-danger w-100" id="btnSubmiTV" disabled>Pembayaran</button>
                         @endauth
 
                         @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
+                        <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                            Login Terlebih Dahulu
+                        </a>
                         @endguest
                     </div>
                 </div>
@@ -93,17 +94,19 @@
 </div>
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tvInternet') }}",
                 success: function (response) {
+                    $('#productTV').empty();
+
                     $.each(response, function (key, value) {
                         $('#productTV').append($('<option>', {
                             value: value.kode,
@@ -173,10 +176,10 @@
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function() {
+{{-- <script>
+    $(document).ready(function() {
             $('#notelp').on('keyup', function(e) {
 
                 $.ajaxSetup({
@@ -223,5 +226,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush
