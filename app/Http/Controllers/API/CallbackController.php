@@ -111,7 +111,10 @@ class CallbackController extends Controller
 
                             } else {
                                 $status = "Transaksi Gagal";
-                                $message = "Pembayaran gagal";
+                                $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
+                                HistoryPoint::where('transaction_id', $transaction->id)
+                                    ->where('flow', 'credit')
+                                    ->delete();
                             }
 
 
@@ -142,7 +145,7 @@ class CallbackController extends Controller
                                 $message = "Pembayaran Sedang Di Proses";
                             } else {
                                 $status = "Gagal";
-                                $message = "Pembayaran PLN Berhasil";
+                                $message = "Pembayaran "  . $transaction->service . " Gagal";
                             }
 
                             DetailTransactionPPOB::where('transaction_id', $transaction->id)->update([
@@ -162,13 +165,11 @@ class CallbackController extends Controller
                                 $message = "Pemesanan Hostel Berhasil";
                             }
                         }
-
                         $transaction->update([
-                            'status' => $status,
+                            'status' => $status == "Berhasil" ? 'PAID' : $status,
                             'payment_channel' => $responseXendit['payment_channel'],
                             'payment_method' => $responseXendit['payment_method']
                         ]);
-
                         if($status == "Berhasil" || $status == "Pending")
                         {
 
