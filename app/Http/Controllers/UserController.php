@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\Help;
+use App\Models\HotelRating;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\Travelsya;
@@ -145,7 +146,7 @@ class UserController extends Controller
         //     )
         //     ->where('detail_transaction_hotel.transaction_id', $id)
         //     ->first();
-        $transactionHotel = DetailTransactionHotel::with('transaction.guest','hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom')->where('transaction_id', $id)->first();
+        $transactionHotel = DetailTransactionHotel::with('transaction.guest', 'hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom')->where('transaction_id', $id)->first();
 
         $hotelPict = DB::table('hotel_images')
             ->where('hotel_id', $transactionHotel->hotel_id)
@@ -154,7 +155,7 @@ class UserController extends Controller
         $roomPict = DB::table('hotel_room_images')
             ->where('hotel_id', $transactionHotel->hotel_id)
             ->first();
-            //dd($transactionHotel);
+        //dd($transactionHotel);
 
         $roomFacilities = DB::table('hotel_room_facilities')
             ->join('facilities', 'hotel_room_facilities.facility_id', '=', 'facilities.id')
@@ -162,7 +163,7 @@ class UserController extends Controller
             ->where('hotel_room_id', $transactionHotel->hotel_room_id)
             ->get();
 
-            //dd($roomFacilities);
+        //dd($roomFacilities);
 
 
         return view('user.order-detail.hotel', compact('transactionHotel', 'hotelPict', 'roomPict', 'roomFacilities'));
@@ -239,7 +240,7 @@ class UserController extends Controller
             )
             ->where('detail_transaction_ppob.transaction_id', $id)
             ->first();
-                // dd($transactionPPOB->transaction_id);
+        // dd($transactionPPOB->transaction_id);
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
@@ -280,5 +281,21 @@ class UserController extends Controller
         }
 
         return view('user.detailtransaction', ['transaction' => $detailTransaction['data'][0]]);
+    }
+
+    public function createRatingDetailHotel(Request $request, HotelRating $hotelRating)
+    {
+        $user_id = auth()->user()->id;
+
+        $hotelRating->create([
+            'transaction_id' => $request->transaction_id,
+            'user_id'        => $user_id,
+            'hotel_id'       => $request->hotel_id,
+            'hotel_rooms_id' => $request->hotel_rooms_id,
+            'rate'           => $request->rating,
+            'comment'        => $request->comment
+        ]);
+        toast('Hotel Rating Sudah Di Buat', 'success');
+        return redirect()->back();
     }
 }
