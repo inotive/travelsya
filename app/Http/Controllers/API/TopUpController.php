@@ -114,7 +114,7 @@ class TopUpController extends Controller
         $product = Product::with('service')->find($data['product_id']);
         $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
         $countTransaksiUser = DB::table('transactions')->where('user_id', \Auth::user()->id)->count() + 1;
-        $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . \Auth::user()->id . $countTransaksiUser;
+        $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
 
         $fees = Fee::where('service_id', $product->service_id)->first();
 

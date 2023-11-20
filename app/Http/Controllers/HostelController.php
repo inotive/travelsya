@@ -404,7 +404,6 @@ class HostelController extends Controller
                 "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $uniqueCode,
                 "created_at"        => Carbon::now(),
-                "updated_at"        => Carbon::now(),
             ]);
 
             if ($data['point']) {

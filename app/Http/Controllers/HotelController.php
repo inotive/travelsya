@@ -135,7 +135,6 @@ class HotelController extends Controller
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::where('is_active', 1)->get();
 
-
         // dd($hotelPrices);
         return view('hotel.list-hotel', $data);
     }
@@ -329,7 +328,6 @@ class HotelController extends Controller
                 "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $data['uniqueCode'],
                 "created_at"        => Carbon::now(),
-                "updated_at"        => Carbon::now(),
             ]);
 
             if ($data['point']) {

@@ -104,13 +104,6 @@ class CallbackController extends Controller
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
-
-                                $transaction->update([
-                                    'status' => 'PAID',
-                                    'payment_channel' => $responseXendit['payment_channel'],
-                                    'payment_method' => $responseXendit['payment_method']
-                                ]);
-
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -118,23 +111,21 @@ class CallbackController extends Controller
                             } else {
                                 $status = "Transaksi Gagal";
                                 $message = "Pembayaran gagal";
-
-                                $transaction->update([
-                                    'status' => 'Transaksi Gagal',
-                                    'payment_channel' => $responseXendit['payment_channel'],
-                                    'payment_method' => $responseXendit['payment_method']
-                                ]);
                             }
 
+                            $transaction->update([
+                                'status' => $status,
+                                'payment_channel' => $responseXendit['payment_channel'],
+                                'payment_method' => $responseXendit['payment_method']
+                            ]);
                             DB::table('detail_transaction_top_up')
                                 ->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
                                     'status' => $status,
                                     'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
                                     'kode_voucher' => $responseMessageSNCodeFinal,
-                                    'created_at' => Carbon::now()
+                                    'updated_at' => Carbon::now()
                                 ]);
-
                         }
                         else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')

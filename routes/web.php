@@ -1,39 +1,40 @@
 <?php
 
-use App\Http\Controllers\Admin\AdController;
-use App\Http\Controllers\Admin\AuthController as AdminAuthController;
-use App\Http\Controllers\Admin\CityController;
-use App\Http\Controllers\Admin\CustomerController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\FacilitiesController;
-use App\Http\Controllers\Admin\FeeController;
-use App\Http\Controllers\Admin\HelpController;
-use App\Http\Controllers\Admin\HostelController as AdminHostelController;
-use App\Http\Controllers\Admin\MitraController;
-use App\Http\Controllers\Admin\PointController;
-
-use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
-use App\Http\Controllers\Admin\UserController as AdminUserController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Partner\RiwayatBookingController;
-use App\Http\Controllers\PartnerHotelController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\HostelController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\Partner\DashboardPartnerController;
-use App\Http\Controllers\Partner\ManagementHotelController;
-use App\Http\Controllers\Partner\ManagementHostelController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ProductController as ProductAdminController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\EwalletController;
-use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\AdController;
+use App\Http\Controllers\Admin\FeeController;
+
+use App\Http\Controllers\Admin\CityController;
+use App\Http\Controllers\Admin\HelpController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\MitraController;
+use App\Http\Controllers\Admin\PointController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\PartnerHotelController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Partner\ReviewController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Partner\LaporanController;
+use App\Http\Controllers\Admin\FacilitiesController;
+use App\Http\Controllers\Partner\ManagementRoomController;
+use App\Http\Controllers\Partner\RiwayatBookingController;
+use App\Http\Controllers\Partner\ManagementHotelController;
+use App\Http\Controllers\Partner\DashboardPartnerController;
+use App\Http\Controllers\Partner\ManagementHostelController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\HostelController as AdminHostelController;
+use App\Http\Controllers\Admin\ProductController as ProductAdminController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -95,10 +96,10 @@ Route::get('/company/kontak', function () {
 })->name('company.contact');
 
 // Ini Route Hotel-eBooking
-Route::get('/e-tiket/{hotel}/hotel', [RiwayatBookingController::class, 'cetakHotel'])->name('e-tiket.hotel');
+Route::get('/e-tiket/{hotel}/hotel', [RiwayatBookingController::class, 'cetakHotel'])->name('e-tiket.hotel')->middleware('auth');
 
 // Ini Route Hostel-eBooking
-Route::get('/e-tiket/{hostel}/hostel', [RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel');
+Route::get('/e-tiket/{hostel}/hostel', [RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'home'])->name('home');
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
@@ -114,24 +115,24 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 //Route::post('/reset-password/email', [AuthController::class, 'resetPasswordEmailPost'])->name('reset.password.email.post');
 //Route::get('/reset-password', [AuthController::class, 'resetPassword'])->name('reset.password.view');
 //Route::post('/reset-password', [AuthController::class, 'resetPasswordPost'])->name('reset.password');
-Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
-Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update');
-Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory');
+Route::get('/profile', [UserController::class, 'profile'])->name('user.profile')->middleware('auth');
+Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update')->middleware('auth');
+Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory')->middleware('auth');
 
-Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel');
-Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher');
-Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDetailListrik'])->name('profile.order-detail.listrik');
+Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
+Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher')->middleware('auth');
+Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDetailListrik'])->name('profile.order-detail.listrik')->middleware('auth');
 
 // Route::get('/profile/order-history/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('user.transactionDetail');
 // Route::get('/profile/order-history/listrik-voucher/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('user.transactionDetail');
 // Route::get('/profile/order-history/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
-Route::get('/profile/help', [UserController::class, 'help'])->name('user.help');
+Route::get('/profile/help', [UserController::class, 'help'])->name('user.help')->middleware('auth');
 
 // Route Bantuan Testing
-Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
+Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user')->middleware('auth');
 
-Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail');
-Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold');
+Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail')->middleware('auth');
+Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold')->middleware('auth');
 Route::get('/transaction', [UserController::class, 'transaction'])->name('user.transaction');
 Route::get('/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detail');
 
@@ -327,6 +328,9 @@ Route::middleware(['auth', 'role'])->group(function () {
     });
 
     Route::prefix('partner')->namespace('partner')->group(function () {
+        Route::get('profile/{profile}/edit', [ProfileController::class, 'editProfileMitra'])->name('partner.edit-profile');
+        Route::put('profile/{profile}/update', [ProfileController::class, 'updateProfileMitra'])->name('partner.update-profile');
+
         Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
         Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
         Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
@@ -400,6 +404,8 @@ Route::middleware(['auth', 'role'])->group(function () {
 
 
         });
+
+
 
         Route::prefix('management-hostel')->group(function () {
             Route::get('', [ManagementHostelController::class, 'index'])->name('partner.management.hostel');

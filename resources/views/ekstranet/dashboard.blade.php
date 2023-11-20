@@ -141,32 +141,32 @@
                             <tr>
                                 {{-- <h1>{{ dd($hotel) }}</h1> --}}
                                 <td>{{date('d M Y',strtotime($hotel->created_at))}}</td>
-                                <td>{{$hotel->transaction->no_inv}}</td>
-                                <td>{{$hotel->transaction->req_id}}</td>
-                                <td>{{$hotel->transaction->user->name}}</td>
+                                <td>{{$hotel->no_inv ?? ''}}</td>
+                                <td>{{$hotel->req_id ?? ''}}</td>
+                                <td>{{$hotel->transaction->user->name  ?? ''}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
-                                <td>{{$hotel->transaction->payment }}</td>
+                                <td>{{$hotel->payment }}</td>
                                 <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hotel->transaction->status == "SUCCESS" ? "badge-success"
-                                        : "badge-warning" }}">{{$hotel->transaction->status }}</span>
+                                    <span class="badge {{$hotel->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hotel->status }}</span>
                                 </td>
                             </tr>
                             @endforeach
                             @foreach($transaction_hostels as $hostel)
                             <tr>
                                 <td>{{date('d M Y',strtotime($hostel->created_at))}}</td>
-                                <td>{{$hostel->transaction->no_inv}}</td>
-                                <td>{{$hostel->transaction->req_id}}</td>
-                                <td>{{$hostel->transaction->user->name}}</td>
+                                <td>{{$hostel->no_inv}}</td>
+                                <td>{{$hostel->req_id}}</td>
+                                <td>{{$hostel->transaction->user->name ?? ''}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_end))}}</td>
-                                <td>{{$hostel->transaction->payment }}</td>
+                                <td>{{$hostel->payment }}</td>
                                 <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hostel->transaction->status == "SUCCESS" ? "badge-success"
-                                        : "badge-warning" }}">{{$hostel->transaction->status }}</span>
+                                    <span class="badge {{$hostel->status == "SUCCESS" ? "badge-success"
+                                        : "badge-warning" }}">{{$hostel->status }}</span>
                                 </td>
                             </tr>
                             @endforeach
