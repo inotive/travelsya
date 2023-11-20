@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionPPOB;
 use App\Models\HistoryPoint;
 use App\Models\Transaction;
 use App\Models\User;
@@ -113,11 +114,7 @@ class CallbackController extends Controller
                                 $message = "Pembayaran gagal";
                             }
 
-                            $transaction->update([
-                                'status' => $status,
-                                'payment_channel' => $responseXendit['payment_channel'],
-                                'payment_method' => $responseXendit['payment_method']
-                            ]);
+
                             DB::table('detail_transaction_top_up')
                                 ->where('top.id', $detailTransactionTopUP->id)
                                 ->update([
@@ -147,6 +144,12 @@ class CallbackController extends Controller
                                 $status = "Gagal";
                                 $message = "Pembayaran PLN Berhasil";
                             }
+
+                            DetailTransactionPPOB::where('transaction_id', $transaction->id)->update([
+                                'status' => $status,
+                                'message' => $message,
+                                'updated_at' => Carbon::now()
+                            ]);
                         }
                         else{
                             if ($transaction->service == "hotel")
@@ -159,8 +162,16 @@ class CallbackController extends Controller
                                 $message = "Pemesanan Hostel Berhasil";
                             }
                         }
+
+                        $transaction->update([
+                            'status' => $status,
+                            'payment_channel' => $responseXendit['payment_channel'],
+                            'payment_method' => $responseXendit['payment_method']
+                        ]);
+
                         if($status == "Berhasil" || $status == "Pending")
                         {
+
                             return ResponseFormatter::success($status, $message);
                         }
                         else{
