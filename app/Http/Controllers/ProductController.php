@@ -444,6 +444,17 @@ class ProductController extends Controller
         // ];
     }
 
+    public function productPln()
+    {
+        $data = Product::where([
+            ['category', 'pln'],
+            ['description', 'like', '%token%'],
+            ['is_active', '=', 1],
+        ])->get();
+
+        return response()->json($data);
+    }
+
     public function paymentPln(Request $request)
     {
         $data = $request->all();

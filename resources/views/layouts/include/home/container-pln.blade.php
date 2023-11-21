@@ -11,6 +11,23 @@
                 <h2 class="fw-bold mb-5">PLN</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
+                    <div class="col-6">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span>Produk</span>
+                        </label>
+
+                        <select name="categoryPLN" id="categoryPLN" class="form-select form-select-lg">
+                            <option value="pembayaran" selected>Pembayaran</option>
+                            <option value="token">Token Listrik</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span>Nominal</span>
+                        </label>
+
+                        <select name="productPLN" id="productPLN" class="form-select form-select-lg" disabled></select>
+                    </div>
                     <div class="col-xl-8">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">Nomor Pelanggan</span>
@@ -18,7 +35,7 @@
 
                         <input type="text" id="noPelangganPLN" class="form-control form-control-lg"
                             name="noPelangganPLN" placeholder="Masukan nomor pelanggan" value="" />
-                        <small class="text-danger"  id="textAlert">No. Pelanggan harus
+                        <small class="text-danger" id="textAlert">No. Pelanggan harus
                             terisi</small>
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPLN">
@@ -93,70 +110,98 @@
 @push('add-script')
 <script>
     $(document).ready(function () {
-            $('#noPelangganPLN').on('keyup', function () {
-                $('#textAlert').hide();
-            });
+        $('#noPelangganPLN').on('keyup', function () {
+            $('#textAlert').hide();
+        });
 
-            $('#detailPLN').hide();
-
-            $('#btnPeriksaPLN').on('click', function () {
-                var noPelangganPLN = $('#noPelangganPLN').val();
-
-                if(noPelangganPLN == '') {
-                    $('#textAlert').show();
-                    return false;
-                }
-
-                $('#alertPLN').empty()
-                $('#detailPLN').hide();
-                $('#btnPeriksaPLN').attr('disabled', true);
-                $('#btnPeriksaPLN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-
+        $('#categoryPLN').on('change', function () {
+            if($(this).val() == 'token') {
                 $.ajax({
-                    type: "POST",
-                    url: "{{ route('product.pln') }}",
-                    data: {
-                        'no_pelanggan': noPelangganPLN,
-                        'nom': 'CEKPLN',
-                    },
+                    type: "GET",
+                    url: "/product/product-pln",
                     success: function (response) {
-                        var simulateFeePLN = parseInt(response.data.fee);
+                        $('#productPLN').empty();
 
-                        var simulateAmountPLN = parseInt(response.data.tagihan);
-                        var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
+                        $.each(response, function (key, value) {
+                            $('#productPLN').append($('<option>', {
+                                value: value.id,
+                                text: value.description+ ' - Rp. '+value.price
+                            }));
+                        });
 
-                        $('#namaPelangganPLN').text(response.data.nama_pelanggan);
-                        $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
-                        $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
-                        $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
-
-                        $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
-                        $('#inputTotalTagihanPLN').val(simulateAmountPLN);
-                        $('#inputBiayaAdminPLN').val(simulateFeePLN);
-                        $('#inputTotalBayarPLN').val(simulateTotalPLN);
-
-                        $('#btnPeriksaPLN').removeAttr('disabled');
-                        $('#btnPeriksaPLN').text('Periksa');
-
-                        $('#btnSubmitPLN').removeAttr('disabled');
-
-                        $('#detailPLN').show();
-                    },
-                    error: function(xhr, status, error) {
-                        if (xhr.status === 400 || xhr.status === 500) {
-                            // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
-                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-
-                            $('#alertPLN').empty().append(alertDiv);
-                        }
-
-                        // Hapus spinner dan aktifkan tombol
-                        $('#btnPeriksaPLN').removeAttr('disabled');
-                        $('#btnPeriksaPLN').text('Periksa');
+                        $('#productPLN').removeAttr('disabled');
+                        $('#btnPeriksaPLN').text('Bayar');
                     }
                 });
+            }
+
+            if($(this).val() == 'pembayaran') {
+                $('#productPLN').empty();
+                $('#productPLN').attr('disabled', true);
+                $('#btnPeriksaPLN').text('Periksa');
+            }
+        });
+
+        $('#detailPLN').hide();
+
+        $('#btnPeriksaPLN').on('click', function () {
+            var noPelangganPLN = $('#noPelangganPLN').val();
+
+            if(noPelangganPLN == '') {
+                $('#textAlert').show();
+                return false;
+            }
+
+            $('#alertPLN').empty()
+            $('#detailPLN').hide();
+            $('#btnPeriksaPLN').attr('disabled', true);
+            $('#btnPeriksaPLN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('product.pln') }}",
+                data: {
+                    'no_pelanggan': noPelangganPLN,
+                    'nom': 'CEKPLN',
+                },
+                success: function (response) {
+                    var simulateFeePLN = parseInt(response.data.fee);
+
+                    var simulateAmountPLN = parseInt(response.data.tagihan);
+                    var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
+
+                    $('#namaPelangganPLN').text(response.data.nama_pelanggan);
+                    $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
+                    $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
+                    $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
+
+                    $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
+                    $('#inputTotalTagihanPLN').val(simulateAmountPLN);
+                    $('#inputBiayaAdminPLN').val(simulateFeePLN);
+                    $('#inputTotalBayarPLN').val(simulateTotalPLN);
+
+                    $('#btnPeriksaPLN').removeAttr('disabled');
+                    $('#btnPeriksaPLN').text('Periksa');
+
+                    $('#btnSubmitPLN').removeAttr('disabled');
+
+                    $('#detailPLN').show();
+                },
+                error: function(xhr, status, error) {
+                    if (xhr.status === 400 || xhr.status === 500) {
+                        // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
+                        var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+
+                        $('#alertPLN').empty().append(alertDiv);
+                    }
+
+                    // Hapus spinner dan aktifkan tombol
+                    $('#btnPeriksaPLN').removeAttr('disabled');
+                    $('#btnPeriksaPLN').text('Periksa');
+                }
             });
-       });
+        });
+    });
 </script>
 {{-- <script>
     $(document).ready(function() {

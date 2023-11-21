@@ -138,6 +138,7 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
     Route::get('/tv-internet', 'tvInternet')->name('.tvInternet');
     Route::get('/payment-bpjs', 'paymentBpjs')->name('.payment.bpjs');
     Route::post('/pln', 'pln')->name('.pln');
+    Route::get('/product-pln', 'productPln')->name('.product.pln');
     Route::get('/payment-pln', 'paymentPln')->name('.payment.pln');
     Route::post('/pdam', 'pdam')->name('.pdam');
     Route::get('/product-pdam', 'productPdam')->name('.product.pdam');
