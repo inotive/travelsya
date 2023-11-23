@@ -10,7 +10,7 @@ class DetailTransactionHotel extends Model
     protected $table = 'detail_transaction_hotel';
     protected $fillable = ['transaction_id', 'hotel_id', 'hotel_room_id', 'booking_id', 'reservation_start', 'reservation_end', 'guest', 'room', 'rent_price', 'fee_admin', 'kode_unik'];
 
-    public function hotel()
+    public function Hotel()
     {
         return $this->belongsTo(Hotel::class, 'hotel_id');
     }

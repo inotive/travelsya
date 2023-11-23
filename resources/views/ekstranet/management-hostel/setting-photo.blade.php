@@ -19,7 +19,7 @@
                             <div class="fv-row">
                                 <div class="col-12">
                                     <label class="col-sm-3 col-form-label">Foto Hotel</label>
-                                    <input type="file" class="form-control" name="image"
+                                    <input type="file" class="form-control" name="image" required
                                         @error('image') is-invalid
                                            @enderror
                                         id="selectImage">

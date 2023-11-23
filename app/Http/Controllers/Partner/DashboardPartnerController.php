@@ -13,6 +13,7 @@ use App\Models\Service;
 use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class DashboardPartnerController extends Controller
@@ -50,35 +51,35 @@ class DashboardPartnerController extends Controller
          * VARIABEL ======================================
          */
         $id = auth()->user()->id;
-        $startWeek = Carbon::now()->subWeek()->format("Y-m-d H:i:s");
-        $dateNow = Carbon::now();
-
+        $startWeek = Carbon::now()->timezone('Asia/Makassar')->subWeek()->format("Y-m-d H:i:s");
+        $dateNow = Carbon::now()->timezone('Asia/Makassar');
         /**
          * PENDAPATAN PER MINGGU ======================================
          */
-        $transaction_hostel = \DB::table('detail_transaction_hostel as dh')
-            ->join('transactions as t', 'dh.transaction_id', '=' , 't.id')
-            ->join('hostels as h', 'dh.hostel_id', '=' , 'h.id')
+        $transaction_hostel = DB::table('detail_transaction_hostel as dh')
+            ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
+            ->join('hostels as h', 'dh.hostel_id', '=', 'h.id')
             ->where('h.user_id', $id)
-            ->whereBetween('dh.updated_at', [$startWeek,$dateNow])
+            ->whereBetween('dh.updated_at', [$startWeek, $dateNow])
             ->where('t.status', '=', 'PAID');
 
 
-        $transaction_hotel = \DB::table('detail_transaction_hotel as dh')
-            ->join('transactions as t', 'dh.transaction_id', '=' , 't.id')
-            ->join('hotels as h', 'dh.hotel_id', '=' , 'h.id')
+        $transaction_hotel = DB::table('detail_transaction_hotel as dh')
+            ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
+            ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
             ->where('h.user_id', $id)
-            ->whereBetween('dh.updated_at', [$startWeek,$dateNow])
+            ->whereBetween('dh.updated_at', [$startWeek, $dateNow])
             ->where('t.status', '=', 'PAID');
 
-//        DetailTransactionHotel::whereBetween('created_at', [$startWeek, $dateNow])
-//            ->withWhereHas('transaction', function ($query) use ($id) {
-//                $query->where('user_id', $id);
-//            });
-//        $transaction_hostel = DetailTransactionHostel::whereBetween('created_at', [$startWeek, $dateNow])
-//            ->withWhereHas('transaction', function ($query) use ($id) {
-//                $query->where('user_id', $id);
-//            });
+
+        //        DetailTransactionHotel::whereBetween('created_at', [$startWeek, $dateNow])
+        //            ->withWhereHas('transaction', function ($query) use ($id) {
+        //                $query->where('user_id', $id);
+        //            });
+        //        $transaction_hostel = DetailTransactionHostel::whereBetween('created_at', [$startWeek, $dateNow])
+        //            ->withWhereHas('transaction', function ($query) use ($id) {
+        //                $query->where('user_id', $id);
+        //            });
 
         $data['revenueWeek'] = $transaction_hotel->sum('rent_price') + $transaction_hostel->sum('rent_price');
 
@@ -112,7 +113,6 @@ class DashboardPartnerController extends Controller
         $totalRoomHostel = HostelRoom::with('hostel', function ($q) use ($id) {
             $q->where('user_id', $id);
         })->where('is_active', 1)->sum('totalroom');
-
         $data['ready'] = ($totalRoomHotel + $totalRoomHostel) - ($transaction_hotel->sum('room') + $transaction_hostel->sum('room'));
 
         $data['notready'] = $transaction_hotel->sum('room') + $transaction_hostel->sum('room');
