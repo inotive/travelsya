@@ -57,7 +57,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Layanan</div>
-                                            <div class="fs-8 fw-bold">{{ $transactionPPOB->service ?? 'Missing'}}</div>
+                                            <div class="fs-8 fw-bold">{{ strtoupper($transactionPPOB->service) ?? 'Missing'}}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Produk</div>
@@ -85,19 +85,23 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Status Transaksi</div>
-                                                @if ($transactionPPOB->status == 'EXPIRED')
+                                            @if ($transactionPPOB->status == 'EXPIRED')
                                                 <div class="fs-8 fw-bold text-danger">
-                                                    EXPIRED
+                                                    Transaksi Expired
                                                 </div>
-                                                @elseif ($transactionPPOB->status == 'PENDING')
+                                            @elseif ($transactionPPOB->status == 'PENDING')
                                                 <div class="fs-8 fw-bold text-warning">
-                                                    PENDING
+                                                    Menunggu Pembayaran
                                                 </div>
-                                                @elseif ($transactionPPOB->status == 'PAID')
+                                            @elseif ($transactionPPOB->status == 'PAID')
                                                 <div class="fs-8 fw-bold text-success">
-                                                    PAID
+                                                    Transaksi Berhasil
                                                 </div>
-                                                @endif
+                                            @else
+                                                <div class="fs-8 fw-bold text-danger">
+                                                    Transaksi Gagal
+                                                </div>
+                                            @endif
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Tanggal Transaksi</div>
