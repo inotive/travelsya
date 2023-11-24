@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\Ad;
+use App\Models\DetailTransactionHotel;
 use App\Models\Facility;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
@@ -114,7 +115,7 @@ class ManagementHotelController extends Controller
         // dd($room_id);
         // $hotel = Hotel::whereHas('hotelRoom', function($query) use ($room_id) {
         //     $query->where('id', $room_id);
-        // })->first();       
+        // })->first();
         $hotel = Hotel::find($id); // Mengambil hotel dengan id tertentu
         $room = hotelRoom::where('id', $room_id)->first();
         $facility = Facility::all();
@@ -193,7 +194,7 @@ class ManagementHotelController extends Controller
 
     public function storePhotoHotel($id, Request $request)
     {
-        
+
         $image = $request->file('image')->store('media/hotel');
         // dd($image);
         HotelImage::create([
@@ -202,7 +203,7 @@ class ManagementHotelController extends Controller
             'main' => 0
         ]);
 
-        
+
 
         toast('Upload foto berhasil', 'success');
         return redirect()->back();
@@ -313,23 +314,23 @@ class ManagementHotelController extends Controller
 
         $facilityIds = $request->input('facility_id');
 
-        
+
 
     if ($request->hasFile('hotel_room_images')) {
         $imageFiles = $request->file('hotel_room_images');
-        
+
         foreach ($hotelRoom->hotelroomimage as $index => $image) {
             if (isset($imageFiles[$index])) {
                 Storage::delete('public/' . $image->image);
-    
+
                 $path = $imageFiles[$index]->store('media/hotel/');
                 $filename = basename($path);
-    
+
                 $image->update(['image' => 'media/hotel/' . $filename]);
             }
         }
-    
-    
+
+
             $hotelRoom->update([
                 'hotel_id' => $request->hotel_id,
                 'name' => $request->name,
@@ -408,6 +409,10 @@ class ManagementHotelController extends Controller
 
     public function settingRoomDelete(string $id)
     {
+        if(DetailTransactionHotel::where('hotel_room_id', $id)->exists()){
+            toast('Hotel Ini Sudah Memiliki Beberapa Transaksi', 'error');
+            return redirect()->back();
+        }
         HotelRoom::where('id', $id)->delete();
         HotelRoomFacility::where('hotel_room_id', $id)->delete();
         toast('Hotel Room Has Been Removed', 'success');
