@@ -6,6 +6,7 @@ use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\Help;
+use App\Models\HostelRating;
 use App\Models\HotelRating;
 use App\Models\Transaction;
 use App\Models\User;
@@ -325,4 +326,21 @@ class UserController extends Controller
         toast('Hotel Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
+
+    public function createRatingDetailHostel(Request $request, HostelRating $hostelRating)
+    {
+        $user_id = auth()->user()->id;
+
+        $hostelRating->create([
+            'users_id'        => $user_id,
+            'transaction_id' => $request->transaction_id,
+            'hostel_id'       => $request->hostel_id,
+            'hostel_room_id' => $request->hostel_rooms_id,
+            'rate'           => $request->rating,
+            'comment'        => $request->comment
+        ]);
+        toast('Hotel Rating Sudah Di Buat', 'success');
+        return redirect()->back();
+    }
+    
 }
