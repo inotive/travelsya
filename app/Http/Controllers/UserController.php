@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetailTransactionHotel;
+use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\Help;
 use App\Models\HotelRating;
@@ -167,6 +168,32 @@ class UserController extends Controller
 
 
         return view('user.order-detail.hotel', compact('transactionHotel', 'hotelPict', 'roomPict', 'roomFacilities'));
+    }
+    public function orderDetailHostel($id)
+
+    {
+   
+        $transactionHostel = DetailTransactionHostel::with('transaction.guest', 'hostel.hostelImage', 'hostel.hostelRating', 'hostelRoom')->where('transaction_id', $id)->first();
+
+        $hostelPict = DB::table('hostel_images')
+            ->where('hostel_id', $transactionHostel->hostel_id)
+            ->first();
+
+        $roomPict = DB::table('hostel_room_images')
+            ->where('hostel_room_id', $transactionHostel->hostel_room_id)
+            ->first();
+        //dd($transactionHostel);
+
+        $roomFacilities = DB::table('hostel_room_facilities')
+            ->join('facilities', 'hostel_room_facilities.facility_id', '=', 'facilities.id')
+            ->select('hostel_room_facilities.*', 'facilities.name as facility_name')
+            ->where('hostel_room_id', $transactionHostel->hostel_room_id)
+            ->get();
+
+        //dd($roomFacilities);
+
+
+        return view('user.order-detail.hostel', compact('transactionHostel', 'hostelPict', 'roomPict', 'roomFacilities'));
     }
 
     public function orderDetailListrikVoucher($id)

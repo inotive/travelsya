@@ -245,7 +245,7 @@ class ManagementHotelController extends Controller
     {
 
         $hotelImage = HotelImage::findOrFail($id);
-        Storage::delete('media/hotel/' . $hotelImage->image);
+        Storage::delete($hotelImage->image);
 
         $hotelImage->delete();
 
