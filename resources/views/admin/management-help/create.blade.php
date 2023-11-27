@@ -59,8 +59,7 @@
                         </div>
                         <input type="hidden" name="content" id="hidden-content">
                         <div>
-
-                                @if (Auth::user()->role->journals_edit == 1 || Auth::user()->role->journals_delete == 1 || Auth::user()->role->journals_mark == 1)
+                                {{-- @if (Auth::user()->role->journals_edit == 1 || Auth::user()->role->journals_delete == 1 || Auth::user()->role->journals_mark == 1)
                                     @if (Auth::user()->role->journals_edit == 1)
                                         @if($item->verify_at == null)
                                             <button type="button" class="btn btn-primary btn-xs" value="{{ $item->id }}" id="editButton" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fa fa-edit"></i>
@@ -79,7 +78,7 @@
                                         <a href="/journal/journal/{{ $item->id }}/tandai" class="btn btn-warning btn-xs" data-toggle="tooltip" data-placement="bottom" title="Tandai No"><i class="fa fa-pen" style="color:black"></i></a>
                                             @endif
                                     @endif
-                                @endif
+                                @endif --}}
                         </div>
 
                         <!--end:: Body-->
