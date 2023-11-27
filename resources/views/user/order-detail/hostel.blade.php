@@ -35,7 +35,7 @@
                                     Rincian Pesanan
                                 </div>
                                 <div class="text mt-0">
-                                    {{ $transactionHotel->transaction->no_inv ?? 'Tidak ada' }}
+                                    {{ $transactionHostel->transaction->no_inv ?? 'Tidak ada' }}
                                 </div>
                             </div>
                         </div>
@@ -60,9 +60,9 @@
                                                 <span class="text-gray-400 fs-8"
                                                       style="margin-bottom: 6px">Checkin</span><br>
                                                 <span class="text fs-6 fw-bold"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel?->reservation_start)->format('d M Y') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel?->reservation_start)->format('d M Y') }}</span><br>
                                                 <span class="text fs-8"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel?->reservation_start)->format('H:i') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel?->reservation_start)->format('H:i') }}</span><br>
                                             </div>
                                         </div>
                                     </div>
@@ -72,26 +72,26 @@
                                                 <span class="text-gray-400 fs-8"
                                                       style="margin-bottom: 6px">Checkout</span><br>
                                                 <span class="text fs-6 fw-bold"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_end)->format('d M Y') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel->reservation_end)->format('d M Y') }}</span><br>
                                                 <span class="text fs-8"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_end)->format('H:i') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel->reservation_end)->format('H:i') }}</span><br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 m-0">
-                                        {{-- Card-Hotel --}}
+                                        {{-- Card-Hostel --}}
                                         <div class="card border border-1 mt-5 mb-5">
                                             @php
-                                            $hotelImage = optional($hotelPict)->image; // Pastikan $hotelPict tidak null
-                                            $imagePath = $hotelImage !== null ? 'storage/'.$hotelImage : 'assets/media/logos/logo-square.png';
+                                            $hostelImage = optional($hostelPict)->image; // Pastikan $hostelPict tidak null
+                                            $imagePath = $hostelImage !== null ? 'storage/media/hostel/'.$hostelImage : 'assets/media/logos/logo-square.png';
                                             @endphp
 
                                             <div
                                                 style="height: 250px; background: url('{{ asset($imagePath) }}') center/cover no-repeat; border-top-left-radius: 8px; border-top-right-radius: 8px;"></div>
                                             <div class="fw-bold fs-4 m-5">
-                                                {{ $transactionHotel->hotel->name }}
+                                                {{ $transactionHostel->hostel->name }}
                                             </div>
                                         </div>
                                     </div>
@@ -110,23 +110,23 @@
                                                 <div class="symbol symbol-75px"
                                                      style="background:url('{{ asset($imagePath) }}')">
                                                     <img src="{{ asset($imagePath) }}"
-                                                         alt="hotel-main">
+                                                         alt="hostel-main">
                                                 </div>
                                                 <div class="text" style="margin-left: 16px">
                                                     <div class="fs-6 fw-bold mb-2">
-                                                        {{ $transactionHotel->hotelRoom->name }}
+                                                        {{ $transactionHostel->hostelRoom->name }}
                                                     </div>
                                                     <div class="fs-8 text-gray-400">
                                                         @php
-                                                            $startdate = \Carbon\Carbon::parse($transactionHotel->reservation_start);
-                                                           $enddate = \Carbon\Carbon::parse($transactionHotel->reservation_end);
+                                                            $startdate = \Carbon\Carbon::parse($transactionHostel->reservation_start);
+                                                           $enddate = \Carbon\Carbon::parse($transactionHostel->reservation_end);
                                                            $startdates = $startdate->Format('d F Y');
                                                            $enddates = $enddate->Format('d F Y');
                                                            $diffInDays = $startdate->diffInDays($enddate);
                                                         @endphp
                                                         {{ $diffInDays }} Malam
-                                                        | {{ $transactionHotel->room }} Room
-                                                        || {{ $transactionHotel->hotelRoom->roomsize }}m²
+                                                        | {{ $transactionHostel->room }} Room
+                                                        || {{ $transactionHostel->hostelRoom->roomsize }}m²
                                                     </div>
                                                 </div>
                                             </div>
@@ -151,23 +151,23 @@
                                             <div class="m-5">
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Kepala Tamu</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest_name }}</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest_name }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Total Tamu</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest }} Tamu</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest }} Tamu</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Nomor Telepon</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest_handphone }}</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest_handphone }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Alamat Email</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest_email }}</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest_email }}</div>
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- Lokasi Hotel --}}
+                                        {{-- Lokasi Hostel --}}
                                         <div class="card border border-1 mb-5">
                                             {{-- Judul/header --}}
                                             <div class="d-flex justify-content-between m-5">
@@ -184,7 +184,7 @@
                                                     src="{{ asset('assets/media/svg/profile-account/order-history/map.svg') }}"
                                                     style="width: 20px; height:20px; margin-right: 16px;"/>
                                                 <div class="text-gray-400 fs-8">
-                                                    {{ $transactionHotel->hotel->address }}
+                                                    {{ $transactionHostel->hostel->address }}
                                                 </div>
                                             </div>
                                         </div>
@@ -196,13 +196,13 @@
                                             <div class="m-5">
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Status Transaksi</div>
-                                                    @if ($transactionHotel->transaction->status === 'EXPIRED')
+                                                    @if ($transactionHostel->transaction->status === 'EXPIRED')
                                                         <div
                                                             class="fs-8 fw-bold text-danger">Kadaluarsa</div>
-                                                    @elseif ($transactionHotel->transaction->status === 'PENDING')
+                                                    @elseif ($transactionHostel->transaction->status === 'PENDING')
                                                         <div
                                                             class="fs-8 fw-bold text-warning">Menunggu Pembayaran</div>
-                                                    @elseif ($transactionHotel->transaction->status === 'PAID')
+                                                    @elseif ($transactionHostel->transaction->status === 'PAID')
                                                         <div
                                                             class="fs-8 fw-bold text-success">Lunas</div>
                                                     @else
@@ -214,18 +214,19 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Tanggal Transaksi</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('d M Y H:i') }}</div>
+                                                        class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHostel->reservation_start)->format('d M Y H:i') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Metode Pembayaran</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHotel->transaction->payment_method) }}</div>
+                                                        class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHostel->transaction->payment_method) }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
-                                                    <div class="fs-8">Biaya Hotel</div>
+                                                    <div class="fs-8">Biaya Hostel</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->rent_price, 0, ',', '.') }}</div>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -258,7 +259,7 @@
                                                     Total Biaya
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                    RP {{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}
+                                                    RP {{ number_format($transactionHostel->hostelRoom->sellingprice, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

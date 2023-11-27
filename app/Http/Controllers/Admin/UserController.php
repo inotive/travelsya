@@ -25,7 +25,7 @@ class UserController extends Controller
         User::create($request->all());
 
         toast('User has been created', 'success');
-        return redirect()->route('admin.user');
+        return redirect()->back();
     }
 
     public function editJson(Request $request)
@@ -53,7 +53,7 @@ class UserController extends Controller
     public function delete($id)
     {
         User::find($id)->delete();
-        toast('User has been deleted', 'danger');
+        toast('User has been deleted', 'success');
         return redirect()->route('admin.user');
         // return redirect()->route('admin.management-user.index');
     }
