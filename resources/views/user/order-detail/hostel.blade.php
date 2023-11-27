@@ -8,7 +8,9 @@
             background: linear-gradient(270deg, rgba(255, 238, 241, 1) 0%, rgba(255, 255, 255, 1) 50%);
 
         }
-
+        .rating-label i {
+        font-size: 38px;
+    }
     </style>
 
     {{-- Container --}}
@@ -39,10 +41,18 @@
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="btn btn-outline btn-outline-danger border border-danger fw-bold"
-                           style="padding: 12px 16px 12px 16px; border: 1px;">
+                        @php
+                        $reviewCount = DB::table('hostel_ratings')
+                            ->where('hostel_ratings.transaction_id', $transactionHostel->transaction->id)
+                            ->count();
+                    @endphp
+                    @if ($reviewCount == 0)
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#review"
+                            class="btn btn-outline btn-outline-danger border border-danger fw-bold"
+                            style="padding: 12px 16px 12px 16px; border: 1px;">
                             Berikan Review
                         </a>
+                    @endif
                         {{-- </div> --}}
                     </div>
                     {{-- Card Body --}}
@@ -188,6 +198,75 @@
                                                 </div>
                                             </div>
                                         </div>
+                                                                                {{-- Ulasan Review --}}
+                                                                                @php
+                                                                                $transaction_id = $transactionHostel->transaction_id;
+                                                                                $rating_data = DB::table('hostel_ratings')
+                                                                                    ->where('hostel_ratings.transaction_id', '=', $transaction_id)
+                                                                                    ->select('hostel_ratings.created_at', 'hostel_ratings.comment', 'hostel_ratings.rate')
+                                                                                    ->first();
+                                                                                use Carbon\Carbon;
+                                                                                Carbon::setLocale('id');
+                                                                                $formatted_created_at = null;
+                                                                                if ($rating_data) {
+                                                                                    $formatted_created_at = \Carbon\Carbon::parse($rating_data->created_at)->diffForHumans();
+                                                                                }
+                                                                            @endphp
+                                                                            <div class="card border border-1 mb-5">
+                                                                                <div class="fs-4 fw-bold m-5 mb-0">
+                                                                                    Ulasan Review
+                                                                                </div>
+                                                                                @if (isset($rating_data))
+                                                                                    <div class="m-5">
+                                                                                        <div class="m-5 row">
+                                                                                            <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px"
+                                                                                                data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+                                                                                                data-kt-menu-placement="bottom-end">
+                                                                                                <div class="symbol symbol-50px">
+                                                                                                    <div
+                                                                                                        class="symbol-label fs-2 fw-bold bg-grey text-danger">
+                                                                                                        {{ substr(Auth::user()->name, 0, 1) }}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col ms-2">
+                                                                                                <div class="fs-6 fw-bold">
+                                                                                                    {{ Auth::user()->name }}
+                                                                                                </div>
+                                                                                                <div class="fs-6 fw-light-grey-700">
+                                                                                                    Ulasan
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row ms-0">
+                                                                                            <div class="col-4">
+                                                                                                <div class="rating">
+                                                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                                                        <div
+                                                                                                            class="rating-label {{ $i <= $rating_data->rate ? 'checked' : '' }} m-1">
+                                                                                                            <i class="ki-duotone ki-star fs-1"></i>
+                                                                                                        </div>
+                                                                                                    @endfor
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-6">
+                                                                                                <div class="fs-6 fw-light-grey-500">
+                                                                                                    {{ $formatted_created_at ?? 'Data Tidak Ditemukan' }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-6 ms-1 mt-2">
+                                                                                                <div class="fs-6 fw-light-grey-800">
+                                                                                                    {{ $rating_data->comment }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="m-5 text-center">
+                                                                                        <p class="fs-6 fw-light-grey-500">Data Tidak Ditemukan</p>
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
                                         {{-- Rincian Pembaayaran --}}
                                         <div class="card border border-1 mb-5">
                                             <div class="fs-4 fw-bold m-5 mb-0">
@@ -275,5 +354,87 @@
         {{-- End Row --}}
     </div>
     {{-- End Container --}}
-
+    <div class="modal fade" tabindex="-1" id="review" aria-hidden="true">
+        <<div class="modal-dialog modal-dialog-centered mw-550px">
+            <!-- Tambahkan kelas justify-content-center di sini -->
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <div class="fs-4 fw-bold m-3">{{ $transactionHostel->hostel->name }} -
+                        {{ $transactionHostel->hostelroom->name }}
+                    </div>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span
+                                class="path2"></span></i>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <form action="{{ route('profile.order-detail.hostel.rating') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="hostel_rooms_id" value="{{ $transactionHostel->hostelRoom->id }}" />
+                    <input type="hidden" name="transaction_id" value="{{ $transactionHostel->transaction_id }}" />
+                    <input type="hidden" name="hostel_id" value="{{ $transactionHostel->hostel->id }}" />
+                    <div class="modal-body text-center">
+                        <div>
+                            <div class="fs-4 fw-bold m-3 mb-5">Berikan Nilai Pada
+                                {{ $transactionHostel->hostel->name }}
+                            </div>
+                        </div>
+                        <div class="rating text-center justify-content-center d-block">
+                            <input class="rating-input" name="rating" value="0" checked type="radio"
+                                id="kt_rating_input_0" />
+                            <!--begin::Star 1-->
+                            <label class="rating-label mb-2" for="kt_rating_input_1">
+                                <i class="ki-duotone ki-star"></i>
+                            </label>
+                            <input class="rating-input" name="rating" value="1" type="radio"
+                                id="kt_rating_input_1" />
+                            <!--end::Star 1-->
+                            <!--begin::Star 2-->
+                            <label class="rating-label mb-2" for="kt_rating_input_2">
+                                <i class="ki-duotone ki-star"></i>
+                            </label>
+                            <input class="rating-input" name="rating" value="2" type="radio"
+                                id="kt_rating_input_2" />
+                            <!--end::Star 2-->
+                            <!--begin::Star 3-->
+                            <label class="rating-label mb-2" for="kt_rating_input_3">
+                                <i class="ki-duotone ki-star"></i>
+                            </label>
+                            <input class="rating-input" name="rating" value="3" type="radio"
+                                id="kt_rating_input_3" />
+                            <!--end::Star 3-->
+                            <!--begin::Star 4-->
+                            <label class="rating-label mb-2" for="kt_rating_input_4">
+                                <i class="ki-duotone ki-star"></i>
+                            </label>
+                            <input class="rating-input" name="rating" value="4" type="radio"
+                                id="kt_rating_input_4" />
+                            <!--end::Star 4-->
+                            <!--begin::Star 5-->
+                            <label class="rating-label mb-2" for="kt_rating_input_5">
+                                <i class="ki-duotone ki-star"></i>
+                            </label>
+                            <input class="rating-input" name="rating" value="5" type="radio"
+                                id="kt_rating_input_5" />
+                            <!--end::Star 5-->
+                            <!--begin::Reset rating-->
+                            <!--end::Reset rating-->
+                        </div>
+                        <span id="ratingText" class="fw-bold fs-5 mt-3"></span>
+                        <div class="rounded d-flex flex-column p-3 mt-4">
+                            <label for="" class="fs-5 fw-semibold m-3 mb-5">Comment</label>
+                            <textarea class="form-control" name="comment" data-kt-autosize="true" rows="4"></textarea>
+                        </div>
+                        <!--end::basic autosize textarea-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button justify-content-center" class="btn btn-light"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="button justify-content-center" class="btn btn-primary">Submit</button>
+                    </div>
+            </div>
+            </form>
+    </div>
 @endsection

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('hotel_ratings', function (Blueprint $table) {
-            $table->unsignedBigInteger('transaction_id')->after('id');
+        Schema::table('hostel_ratings', function (Blueprint $table) {
+            $table->unsignedBigInteger('transaction_id')->after('users_id');
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             
         });
@@ -23,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hotel_ratings', function (Blueprint $table) {
-            //
-        });
+        //
     }
 };

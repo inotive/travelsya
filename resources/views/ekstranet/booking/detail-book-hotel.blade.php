@@ -98,8 +98,14 @@
                 <div class="d-flex flex-wrap flex-sm-nowrap p-3 m-5 mt-4">
                     <div class="me-5 mb-0">
                         <div class="symbol symbol-100px symbol-lg-200px symbol-fixed position-relative">
-                            <img src="{{ asset('storage/media/hotel/'.$hotelbookdates->hotel->hotelImage->where('main', 1)->first()->image) }}"
-                                alt="image" />
+                            @php
+                            $hotelImage = optional($hotelbookdates->hotel->hotelImage->where('main', 1)->first())->image;
+                            $image = $hotelImage !== null ? 'storage/' . $hotelImage : null;
+                        @endphp
+                        
+                        <img src="{{ asset($image ?: 'assets/media/logos/logo-square.png') }}" alt="image" />
+                            {{-- <img src="{{ asset('storage/media/hotel/'.$hotelbookdates->hotel->hotelImage->where('main', 1)->first()->image) }}"
+                                alt="image" /> --}}
                                 {{-- <img src="{{ optional('storage/z'. $hotelbookdates->hotel->hotelImage->where('main', 1)->first())->image }}"
      alt="image" /> --}}
                         </div>
