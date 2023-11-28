@@ -2,6 +2,15 @@
 
 @section('content-admin')
     <!--begin::Tables Widget 11-->
+    @error('email')
+        <div class="col-md-12">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ $message }} </strong>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    @enderror
+
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
         <div class="card-header border-0 pt-5">
@@ -12,6 +21,7 @@
                 <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Data User</a>
             </div>
+
         </div>
         <!--end::Header-->
         <!--begin::Body-->
@@ -147,15 +157,7 @@
                         <div class="row g-9 mb-8">
 
                             <!--begin::Col-->
-                            {{-- <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Role</label>
-                            <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                data-placeholder="Select Role" name="role">
-                                <option value="">Select user...</option>
-                                <option value="0">Admin</option>
-                                <option value="1">Vendor</option>
-                            </select>
-                        </div> --}}
+
                             <!--end::Col-->
                             <!--begin::Col-->
                             <div class="col-md-12 fv-row">
@@ -306,8 +308,8 @@
                                 <span class="required">Password</span>
                             </label>
                             <!--end::Label-->
-                            <input type="password" class="form-control form-control-solid" placeholder="Password" minlength="8"
-                                name="password" />
+                            <input type="password" class="form-control form-control-solid" placeholder="Password"
+                                minlength="8" name="password" />
                             @error('password')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -402,6 +404,5 @@
                 }
             })
         });
-
     </script>
 @endpush
