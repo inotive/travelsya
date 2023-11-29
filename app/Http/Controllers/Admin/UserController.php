@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -25,7 +27,7 @@ class UserController extends Controller
         User::create($request->all());
 
         toast('User has been created', 'success');
-        return redirect()->route('admin.user');
+        return redirect()->back();
     }
 
     public function editJson(Request $request)
@@ -35,25 +37,54 @@ class UserController extends Controller
         return response()->json($user);
     }
 
+    // public function update(Request $request)
+    // {
+
+    //     $user = User::find($request->id);
+    //     if (!is_null($request->password)) {
+    //         $request['password'] = bcrypt($request->password);
+    //     } else {
+    //         unset($request['password']);
+    //     }
+    //     $user->update($request->all());
+
+    //     toast('User has been updated', 'success');
+    //     return redirect()->route('admin.user');
+    //     // return redirect()->route('admin.management-user.index');
+    // }
+
     public function update(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'email|required|unique:users,email|min:7|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->with([
+                'type' => 'danger',
+                'message' => 'Data Akun yang ditambahkan sudah terdaftar',
+            ])->withErrors($validator->errors());
+        }
+
         $user = User::find($request->id);
+
         if (!is_null($request->password)) {
             $request['password'] = bcrypt($request->password);
         } else {
             unset($request['password']);
         }
+
         $user->update($request->all());
 
         toast('User has been updated', 'success');
         return redirect()->route('admin.user');
-        // return redirect()->route('admin.management-user.index');
     }
 
+    
     public function delete($id)
     {
         User::find($id)->delete();
-        toast('User has been deleted', 'danger');
+        toast('User has been deleted', 'success');
         return redirect()->route('admin.user');
         // return redirect()->route('admin.management-user.index');
     }

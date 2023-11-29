@@ -8,7 +8,9 @@
             background: linear-gradient(270deg, rgba(255, 238, 241, 1) 0%, rgba(255, 255, 255, 1) 50%);
 
         }
-
+        .rating-label i {
+        font-size: 38px;
+    }
     </style>
 
     {{-- Container --}}
@@ -35,16 +37,16 @@
                                     Rincian Pesanan
                                 </div>
                                 <div class="text mt-0">
-                                    {{ $transactionHotel->transaction->no_inv ?? 'Tidak ada' }}
+                                    {{ $transactionHostel->transaction->no_inv ?? 'Tidak ada' }}
                                 </div>
                             </div>
                         </div>
                         @php
-                            $reviewCount = DB::table('hotel_ratings')
-                                ->where('hotel_ratings.transaction_id', $transactionHotel->transaction->id)
-                                ->count();
-                        @endphp
-                        @if ($reviewCount == 0)
+                        $reviewCount = DB::table('hostel_ratings')
+                            ->where('hostel_ratings.transaction_id', $transactionHostel->transaction->id)
+                            ->count();
+                    @endphp
+                    @if ($reviewCount == 0)
                         <a href="#" data-bs-toggle="modal" data-bs-target="#review"
                             class="btn btn-outline btn-outline-danger border border-danger fw-bold"
                             style="padding: 12px 16px 12px 16px; border: 1px;">
@@ -68,9 +70,9 @@
                                                 <span class="text-gray-400 fs-8"
                                                       style="margin-bottom: 6px">Checkin</span><br>
                                                 <span class="text fs-6 fw-bold"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel?->reservation_start)->format('d M Y') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel?->reservation_start)->format('d M Y') }}</span><br>
                                                 <span class="text fs-8"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel?->reservation_start)->format('H:i') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel?->reservation_start)->format('H:i') }}</span><br>
                                             </div>
                                         </div>
                                     </div>
@@ -80,26 +82,26 @@
                                                 <span class="text-gray-400 fs-8"
                                                       style="margin-bottom: 6px">Checkout</span><br>
                                                 <span class="text fs-6 fw-bold"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_end)->format('d M Y') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel->reservation_end)->format('d M Y') }}</span><br>
                                                 <span class="text fs-8"
-                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHotel->reservation_end)->format('H:i') }}</span><br>
+                                                      style="margin-bottom: 6px">{{ \Carbon\Carbon::parse($transactionHostel->reservation_end)->format('H:i') }}</span><br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 m-0">
-                                        {{-- Card-Hotel --}}
+                                        {{-- Card-Hostel --}}
                                         <div class="card border border-1 mt-5 mb-5">
                                             @php
-                                            $hotelImage = optional($hotelPict)->image; // Pastikan $hotelPict tidak null
-                                            $imagePath = $hotelImage !== null ? 'storage/'.$hotelImage : 'assets/media/logos/logo-square.png';
+                                            $hostelImage = optional($hostelPict)->image; // Pastikan $hostelPict tidak null
+                                            $imagePath = $hostelImage !== null ? 'storage/media/hostel/'.$hostelImage : 'assets/media/logos/logo-square.png';
                                             @endphp
 
                                             <div
                                                 style="height: 250px; background: url('{{ asset($imagePath) }}') center/cover no-repeat; border-top-left-radius: 8px; border-top-right-radius: 8px;"></div>
                                             <div class="fw-bold fs-4 m-5">
-                                                {{ $transactionHotel->hotel->name }}
+                                                {{ $transactionHostel->hostel->name }}
                                             </div>
                                         </div>
                                     </div>
@@ -118,23 +120,23 @@
                                                 <div class="symbol symbol-75px"
                                                      style="background:url('{{ asset($imagePath) }}')">
                                                     <img src="{{ asset($imagePath) }}"
-                                                         alt="hotel-main">
+                                                         alt="hostel-main">
                                                 </div>
                                                 <div class="text" style="margin-left: 16px">
                                                     <div class="fs-6 fw-bold mb-2">
-                                                        {{ $transactionHotel->hotelRoom->name }}
+                                                        {{ $transactionHostel->hostelRoom->name }}
                                                     </div>
                                                     <div class="fs-8 text-gray-400">
                                                         @php
-                                                            $startdate = \Carbon\Carbon::parse($transactionHotel->reservation_start);
-                                                           $enddate = \Carbon\Carbon::parse($transactionHotel->reservation_end);
+                                                            $startdate = \Carbon\Carbon::parse($transactionHostel->reservation_start);
+                                                           $enddate = \Carbon\Carbon::parse($transactionHostel->reservation_end);
                                                            $startdates = $startdate->Format('d F Y');
                                                            $enddates = $enddate->Format('d F Y');
                                                            $diffInDays = $startdate->diffInDays($enddate);
                                                         @endphp
                                                         {{ $diffInDays }} Malam
-                                                        | {{ $transactionHotel->room }} Room
-                                                        || {{ $transactionHotel->hotelRoom->roomsize }}m²
+                                                        | {{ $transactionHostel->room }} Room
+                                                        || {{ $transactionHostel->hostelRoom->roomsize }}m²
                                                     </div>
                                                 </div>
                                             </div>
@@ -159,23 +161,23 @@
                                             <div class="m-5">
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Kepala Tamu</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest_name }}</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest_name }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Total Tamu</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest }} Tamu</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest }} Tamu</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Nomor Telepon</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest_handphone }}</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest_handphone }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Alamat Email</div>
-                                                    <div class="fs-8 fw-bold">{{ $transactionHotel->guest_email }}</div>
+                                                    <div class="fs-8 fw-bold">{{ $transactionHostel->guest_email }}</div>
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- Lokasi Hotel --}}
+                                        {{-- Lokasi Hostel --}}
                                         <div class="card border border-1 mb-5">
                                             {{-- Judul/header --}}
                                             <div class="d-flex justify-content-between m-5">
@@ -192,79 +194,79 @@
                                                     src="{{ asset('assets/media/svg/profile-account/order-history/map.svg') }}"
                                                     style="width: 20px; height:20px; margin-right: 16px;"/>
                                                 <div class="text-gray-400 fs-8">
-                                                    {{ $transactionHotel->hotel->address }}
+                                                    {{ $transactionHostel->hostel->address }}
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- Ulasan Review --}}
-                                        @php
-                                        $transaction_id = $transactionHotel->transaction_id;
-                                        $rating_data = DB::table('hotel_ratings')
-                                            ->where('hotel_ratings.transaction_id', '=', $transaction_id)
-                                            ->select('hotel_ratings.created_at', 'hotel_ratings.comment', 'hotel_ratings.rate')
-                                            ->first();
-                                        use Carbon\Carbon;
-                                        Carbon::setLocale('id');
-                                        $formatted_created_at = null;
-                                        if ($rating_data) {
-                                            $formatted_created_at = \Carbon\Carbon::parse($rating_data->created_at)->diffForHumans();
-                                        }
-                                    @endphp
-                                    <div class="card border border-1 mb-5">
-                                        <div class="fs-4 fw-bold m-5 mb-0">
-                                            Ulasan Review
-                                        </div>
-                                        @if (isset($rating_data))
-                                            <div class="m-5">
-                                                <div class="m-5 row">
-                                                    <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px"
-                                                        data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-                                                        data-kt-menu-placement="bottom-end">
-                                                        <div class="symbol symbol-50px">
-                                                            <div
-                                                                class="symbol-label fs-2 fw-bold bg-grey text-danger">
-                                                                {{ substr(Auth::user()->name, 0, 1) }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col ms-2">
-                                                        <div class="fs-6 fw-bold">
-                                                            {{ Auth::user()->name }}
-                                                        </div>
-                                                        <div class="fs-6 fw-light-grey-700">
-                                                            Ulasan
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row ms-0">
-                                                    <div class="col-4">
-                                                        <div class="rating">
-                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                <div
-                                                                    class="rating-label {{ $i <= $rating_data->rate ? 'checked' : '' }} m-1">
-                                                                    <i class="ki-duotone ki-star fs-1"></i>
-                                                                </div>
-                                                            @endfor
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="fs-6 fw-light-grey-500">
-                                                            {{ $formatted_created_at ?? 'Data Tidak Ditemukan' }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6 ms-1 mt-2">
-                                                        <div class="fs-6 fw-light-grey-800">
-                                                            {{ $rating_data->comment }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="m-5 text-center">
-                                                <p class="fs-6 fw-light-grey-500">Data Tidak Ditemukan</p>
-                                            </div>
-                                        @endif
-                                    </div>
+                                                                                {{-- Ulasan Review --}}
+                                                                                @php
+                                                                                $transaction_id = $transactionHostel->transaction_id;
+                                                                                $rating_data = DB::table('hostel_ratings')
+                                                                                    ->where('hostel_ratings.transaction_id', '=', $transaction_id)
+                                                                                    ->select('hostel_ratings.created_at', 'hostel_ratings.comment', 'hostel_ratings.rate')
+                                                                                    ->first();
+                                                                                use Carbon\Carbon;
+                                                                                Carbon::setLocale('id');
+                                                                                $formatted_created_at = null;
+                                                                                if ($rating_data) {
+                                                                                    $formatted_created_at = \Carbon\Carbon::parse($rating_data->created_at)->diffForHumans();
+                                                                                }
+                                                                            @endphp
+                                                                            <div class="card border border-1 mb-5">
+                                                                                <div class="fs-4 fw-bold m-5 mb-0">
+                                                                                    Ulasan Review
+                                                                                </div>
+                                                                                @if (isset($rating_data))
+                                                                                    <div class="m-5">
+                                                                                        <div class="m-5 row">
+                                                                                            <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px"
+                                                                                                data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+                                                                                                data-kt-menu-placement="bottom-end">
+                                                                                                <div class="symbol symbol-50px">
+                                                                                                    <div
+                                                                                                        class="symbol-label fs-2 fw-bold bg-grey text-danger">
+                                                                                                        {{ substr(Auth::user()->name, 0, 1) }}
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col ms-2">
+                                                                                                <div class="fs-6 fw-bold">
+                                                                                                    {{ Auth::user()->name }}
+                                                                                                </div>
+                                                                                                <div class="fs-6 fw-light-grey-700">
+                                                                                                    Ulasan
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="row ms-0">
+                                                                                            <div class="col-4">
+                                                                                                <div class="rating">
+                                                                                                    @for ($i = 1; $i <= 5; $i++)
+                                                                                                        <div
+                                                                                                            class="rating-label {{ $i <= $rating_data->rate ? 'checked' : '' }} m-1">
+                                                                                                            <i class="ki-duotone ki-star fs-1"></i>
+                                                                                                        </div>
+                                                                                                    @endfor
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-6">
+                                                                                                <div class="fs-6 fw-light-grey-500">
+                                                                                                    {{ $formatted_created_at ?? 'Data Tidak Ditemukan' }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="col-6 ms-1 mt-2">
+                                                                                                <div class="fs-6 fw-light-grey-800">
+                                                                                                    {{ $rating_data->comment }}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                @else
+                                                                                    <div class="m-5 text-center">
+                                                                                        <p class="fs-6 fw-light-grey-500">Data Tidak Ditemukan</p>
+                                                                                    </div>
+                                                                                @endif
+                                                                            </div>
                                         {{-- Rincian Pembaayaran --}}
                                         <div class="card border border-1 mb-5">
                                             <div class="fs-4 fw-bold m-5 mb-0">
@@ -273,13 +275,13 @@
                                             <div class="m-5">
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Status Transaksi</div>
-                                                    @if ($transactionHotel->transaction->status === 'EXPIRED')
+                                                    @if ($transactionHostel->transaction->status === 'EXPIRED')
                                                         <div
                                                             class="fs-8 fw-bold text-danger">Kadaluarsa</div>
-                                                    @elseif ($transactionHotel->transaction->status === 'PENDING')
+                                                    @elseif ($transactionHostel->transaction->status === 'PENDING')
                                                         <div
                                                             class="fs-8 fw-bold text-warning">Menunggu Pembayaran</div>
-                                                    @elseif ($transactionHotel->transaction->status === 'PAID')
+                                                    @elseif ($transactionHostel->transaction->status === 'PAID')
                                                         <div
                                                             class="fs-8 fw-bold text-success">Lunas</div>
                                                     @else
@@ -291,18 +293,19 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Tanggal Transaksi</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHotel->reservation_start)->format('d M Y H:i') }}</div>
+                                                        class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHostel->reservation_start)->format('d M Y H:i') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Metode Pembayaran</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHotel->transaction->payment_method) }}</div>
+                                                        class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHostel->transaction->payment_method) }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
-                                                    <div class="fs-8">Biaya Hotel</div>
+                                                    <div class="fs-8">Biaya Hostel</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->rent_price, 0, ',', '.') }}</div>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -335,7 +338,7 @@
                                                     Total Biaya
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                    RP {{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}
+                                                    RP {{ number_format($transactionHostel->hostelRoom->sellingprice, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>
@@ -356,8 +359,8 @@
             <!-- Tambahkan kelas justify-content-center di sini -->
             <div class="modal-content">
                 <div class="modal-header text-center">
-                    <div class="fs-4 fw-bold m-3">{{ $transactionHotel->hotel->name }} -
-                        {{ $transactionHotel->hotelroom->name }}
+                    <div class="fs-4 fw-bold m-3">{{ $transactionHostel->hostel->name }} -
+                        {{ $transactionHostel->hostelroom->name }}
                     </div>
                     <!--begin::Close-->
                     <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
@@ -367,15 +370,15 @@
                     </div>
                     <!--end::Close-->
                 </div>
-                <form action="{{ route('profile.order-detail.hotel.rating') }}" method="POST">
+                <form action="{{ route('profile.order-detail.hostel.rating') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="hotel_rooms_id" value="{{ $transactionHotel->hotelRoom->id }}" />
-                    <input type="hidden" name="transaction_id" value="{{ $transactionHotel->transaction_id }}" />
-                    <input type="hidden" name="hotel_id" value="{{ $transactionHotel->hotel->id }}" />
+                    <input type="hidden" name="hostel_rooms_id" value="{{ $transactionHostel->hostelRoom->id }}" />
+                    <input type="hidden" name="transaction_id" value="{{ $transactionHostel->transaction_id }}" />
+                    <input type="hidden" name="hostel_id" value="{{ $transactionHostel->hostel->id }}" />
                     <div class="modal-body text-center">
                         <div>
                             <div class="fs-4 fw-bold m-3 mb-5">Berikan Nilai Pada
-                                {{ $transactionHotel->hotel->name }}
+                                {{ $transactionHostel->hostel->name }}
                             </div>
                         </div>
                         <div class="rating text-center justify-content-center d-block">
@@ -434,5 +437,4 @@
             </div>
             </form>
     </div>
-</div>
 @endsection

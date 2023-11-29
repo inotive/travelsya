@@ -133,10 +133,16 @@
                             <div class="col-4">
                                 {{-- <img src="https://service.travelsya.com/storage/hotel/image3.webp"
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
+                                    @php
+                                    $hostelImage = $hostelget->hostelImage->where('main', 1)->first();
+                                    $image = $hostelImage !== null ? 'storage/media/hostel/' . $hostelImage->image : null;
+                                @endphp
+
                                 <a class="d-block overlay" data-fslightbox="lightbox-basic"
-                                    href="{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}">
+                                    href="{{ asset($image ?: 'assets/media/logos/logo-square.png') }}">
+
                                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                        style="background-image:url('{{ asset('storage/media/hostel/' . $hostelget->hostelImage->where('main', 1)->first()->image ?? '') }}')">
+                                        style="background-image:url('{{ asset($image ?: 'assets/media/logos/logo-square.png') }}')">
                                     </div>
                                     <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
                                         <i class="bi bi-eye-fill text-white fs-3x"></i>

@@ -25,4 +25,9 @@ class HostelRating extends Model
     {
         return $this->belongsTo(HostelRoom::class, 'hostel_room_id');
     }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 }

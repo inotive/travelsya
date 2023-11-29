@@ -100,7 +100,7 @@ class HotelController extends Controller
         }
 
 
-        $hotels = $hotels->paginate(10);
+        $hotels = $hotels->paginate(10)->appends(request()->query());
 
         $hotelDetails = [];
 
@@ -197,10 +197,10 @@ class HotelController extends Controller
         $data['star_rating'] = floor($resultRating);
 
         $data['ewallets'] = Product::where('is_active', 1)
-        ->where('category', 'ewallet')
-        ->where('service_id', 11)
-        ->distinct('name')
-        ->pluck('name');
+            ->where('category', 'ewallet')
+            ->where('service_id', 11)
+            ->distinct('name')
+            ->pluck('name');
 
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::where('is_active', 1)->get();

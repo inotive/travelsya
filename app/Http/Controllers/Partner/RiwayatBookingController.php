@@ -47,12 +47,16 @@ class RiwayatBookingController extends Controller
 
     public function index(Request $request)
     {
-        
-        $hotelbookdates = DetailTransactionHotel::query()->with('hotelRoom', 'Hotel')->whereHas('Hotel', function ($query) {
-            $query->where('user_id', auth()->user()->id);
+        $user_id = auth()->user()->id;
+
+        $hotelbookdates = DetailTransactionHotel::with('hotelRoom', 'hotel')
+        ->whereHas('hotel', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
         });
-        $hostelbookdates = DetailTransactionHostel::query()->with('hostelRoom', 'Hostel')->whereHas('Hostel', function ($query) {
-            $query->where('user_id', auth()->user()->id);
+
+    $hostelbookdates = DetailTransactionHostel::with('hostelRoom', 'hostel')
+        ->whereHas('hostel', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
         });
 
 
@@ -78,7 +82,6 @@ class RiwayatBookingController extends Controller
 
         $hotelbookdates = $hotelbookdates->get();
         $hostelbookdates = $hostelbookdates->get();
-
         return view('ekstranet.booking.index', compact('hotelbookdates', 'hostelbookdates'));
     }
 
@@ -155,7 +158,7 @@ class RiwayatBookingController extends Controller
     public function cetakHotel(DetailTransactionHotel $hotel)
     {
         $data = [
-            'data' =>$hotel->load('hotel.hotelroomFacility.facility', 'hotelRoom', 'transaction.user')
+            'data' => $hotel->load('hotel.hotelroomFacility.facility', 'hotelRoom', 'transaction.user')
         ];
         return view('user.order-detail.e-tiket', $data);
     }
@@ -163,7 +166,7 @@ class RiwayatBookingController extends Controller
     public function cetakHostel(DetailTransactionHostel $hostel)
     {
         $data = [
-            'data' =>$hostel->load('hostel.hostelFacilities.facility', 'hostelRoom', 'transaction.user')
+            'data' => $hostel->load('hostel.hostelFacilities.facility', 'hostelRoom', 'transaction.user')
         ];
         return view('user.order-detail.e-tiket-hostel', $data);
     }

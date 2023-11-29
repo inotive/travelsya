@@ -65,8 +65,10 @@
                                         {{-- Card Pertama Revisi --}}
                                         @foreach ($all_transactions as $all)
                                             @php
-                                                if ($all->service_id == 7 || $all->service_id == 8) {
+                                                if ($all->service_id == 8 ) {
                                                     $route = route('profile.order-detail.hotel', $all->id);
+                                                } elseif ( $all->service_id == 7){
+                                                    $route = route('profile.order-detail.hostel', $all->id);
                                                 } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11) {
                                                     $route = route('profile.order-detail.listrik-voucher', $all->id);
                                                 } else {

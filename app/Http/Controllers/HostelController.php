@@ -198,7 +198,7 @@ class HostelController extends Controller
 
         // return view('hostel.room', compact('hostelget', 'params', 'cities'));
 
-        $hostel = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities');
+        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities');
 
         $startDate = date("Y-m-d", strtotime($request->start));
         $endDate = date("Y-m-d", strtotime("+" . $request->duration . " month", strtotime($startDate)));
