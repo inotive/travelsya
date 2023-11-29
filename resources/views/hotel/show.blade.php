@@ -472,7 +472,7 @@
                             <a href="{{ route('login') }}" class="btn btn-danger px-4 py-2">Login Dulu</a>
                             @endguest
                             @auth
-                            <a href="{{ route('hotels.reservation', ['idroom' => $room->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] }}&guest={{ $request['guest'] }}"
+                            <a href="{{ route('hotels.reservation', ['idroom' => $room->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] == 0 ? 1 : $request['room'] }}&guest={{ $request['guest'] == 0 ? 1 : $request['guest']}}"
                                 class="btn btn-danger px-4 py-2">Pesan
                                 Kamar</a>
                             @endauth

@@ -31,6 +31,10 @@
                     success:function(response){
                         $(`#index_${room_id}`).remove();
                         location.reload();
+                    },
+                    error:function(response){
+                        $(`#index_${room_id}`).remove();
+                        location.reload();
                     }
                 });
             }

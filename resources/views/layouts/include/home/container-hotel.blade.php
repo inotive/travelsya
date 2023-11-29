@@ -69,9 +69,8 @@
             <label class="form-label fw-bold fs-6">Duration</label>
             <select name="duration" id="duration" class="form-select" x-bind:value="durationValue"
                 x-on:change="handleSelectDuration">
-                <template x-for="data in [ ...Array(totalDuration).keys() ]" key="data">
-                    <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Malam` : `${data} Malam`">-
-                    </option>
+                <template x-for="data in Array.from({ length: totalDuration }).map((_, index) => index + 1)">
+                    <option x-if="data > 0" x-bind:value="data" x-text="`${data} Malam`"></option>
                 </template>
             </select>
         </div>
@@ -79,24 +78,25 @@
             <label class="form-label fw-bold fs-6">Tanggal Checkout</label>
             <input type="text" class="form-control" name="end_date" disabled x-bind:value="checkoutValue" />
         </div>
+
         <div class="col-md-6 col-6 mb-5">
             <label class="form-label fw-bold fs-6">Total Kamar</label>
             <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom">
-                <template x-for="data in [ ...Array(totalRoom).keys() ]" key="data">
-                    <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Kamar` : `${data} Kamar`">-
-                    </option>
+                <template x-for="data in Array.from({ length: totalRoom }).map((_, index) => index + 1)">
+                    <option x-if="data > 0" x-bind:value="data" x-text="`${data} Kamar`"></option>
                 </template>
             </select>
         </div>
+
         <div class="col-md-6 col-6 mb-5">
             <label class="form-label fw-bold fs-6">Total Tamu</label>
             <select name="guest" id="guest" class="form-select">
-                <template x-for="data in [ ...Array(totalGuest).keys() ].slice(filterGuest)" key="data">
-                    <option x-bind:value="data" x-text="data === 0 ? `Pilih Jumlah Tamu` : `${data} Tamu`">-
-                    </option>
+                <template x-for="data in Array.from({ length: totalGuest }).map((_, index) => index + 1)" :key="data">
+                    <option x-if="data > 0" x-bind:value="data" x-text="`${data} Tamu`"></option>
                 </template>
             </select>
         </div>
+
         <div class="col-md-12 mb-5 text-end">
             <button style="margin-right: 1em" type="button" class="btn btn-flush"
                 data-bs-dismiss="modal">Kembali</button>

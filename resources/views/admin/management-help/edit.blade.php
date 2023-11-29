@@ -55,8 +55,10 @@
                             <!--end::Alert-->
                         </div>
 
-                        <textarea name="content" id="kt_docs_ckeditor_classic">{{ old('content', $help->content) }}
-                    </textarea>
+                        <div id="kt_docs_quill_basic">
+                            {!! $help->content !!}
+                        </div>
+                        <input type="hidden" name="content" id="hidden-content">
                 </div>
                 <!--end:: Body-->
                 <div class="card-footer d-flex justify-content-between">
@@ -69,16 +71,40 @@
             </div>
         </div>
     </div>
-    <!--CKEditor Build Bundles:: Only include the relevant bundles accordingly-->
-    <script src="{{ asset('assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#kt_docs_ckeditor_classic'))
-            .then(editor => {
-                console.log(editor);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    </script>
 @endsection
+
+@push('add-script')
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var myToolbar = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+        ['clean'],
+        ['image']
+    ];
+
+    var quill = new Quill('#kt_docs_quill_basic', {
+        modules: {
+            toolbar: {
+                container: myToolbar,
+            }
+        },
+        placeholder: 'Masukkan konten',
+        theme: 'snow'
+    });
+
+    quill.on('text-change', function() {
+        var hiddenInput = document.getElementById('hidden-content');
+        hiddenInput.value = quill.root.innerHTML;
+    });
+
+    // // Set konten dari textarea ke dalam Quill
+    // var hiddenInput = document.getElementById('hidden-content');
+    // quill.clipboard.dangerouslyPasteHTML(hiddenInput.value);
+</script>
+
+@endpush
+

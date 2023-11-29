@@ -54,8 +54,10 @@
                             </div>
                         </div>
 
-                        <div id="quill-container">
+                        <div id="kt_docs_quill_basic">
+
                         </div>
+                        <input type="hidden" name="content" id="hidden-content">
                         <div>
 
                                 @if (Auth::user()->role->journals_edit == 1 || Auth::user()->role->journals_delete == 1 || Auth::user()->role->journals_mark == 1)
@@ -97,10 +99,9 @@
 @endsection
 
 @push('add-script')
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-        $(document).ready(function() {
-            var myToolbar= [
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+                var myToolbar= [
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
 
@@ -110,28 +111,20 @@
 
                 ['clean'],
                 ['image'] //add image here
-            ];
-            var quill = new Quill('#quill-container', {
-                theme: 'snow',
-                placeholder: 'Masukan konten',
-                modules: {
-                    toolbar: {
-                        container: myToolbar,
-                        // handlers: {
-                        //     image: imageHandler
-                        // }
-                    }
-                },
-            });
-
-
-            // function imageHandler() {
-            //     var range = this.quill.getSelection();
-            //     var value = prompt('please copy paste the image url here.');
-            //     if(value){
-            //         this.quill.insertEmbed(range.index, 'image', value, Quill.sources.USER);
-            //     }
-            // }
+                ];
+var quill = new Quill('#kt_docs_quill_basic', {
+            modules: {
+                toolbar: {
+                    container: myToolbar,
+                }
+            },
+            placeholder: 'Masukkan konten',
+            theme: 'snow' // or 'bubble'
         });
-    </script>
+        quill.on('text-change', function() {
+        var hiddenInput = document.getElementById('hidden-content');
+        hiddenInput.value = quill.root.innerHTML;
+    });
+</script>
+
 @endpush
