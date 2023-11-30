@@ -11,8 +11,8 @@
                 <h2 class="fw-bold mb-5">BPJS</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-6">
+                        <label class="fs-5 fw-semibold mb-3">
                             <span class="required">Produk</span>
                         </label>
 
@@ -20,14 +20,14 @@
                             <option value="362" selected>BPJS Kesehatan</option>
                         </select>
                     </div>
-                    <div class="col-xl-8">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-3">
                             <span class="required">Nomor BPJS</span>
                         </label>
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganBPJS" class="form-control form-control-lg" name="noPelangganBPJS" placeholder="Masukan nomor BPJS" value=""/>
-                        <small class="text-danger textAlert" style="display: none">No. BPJS harus terisi</small>
+                        <small class="text-danger textAlert">No. BPJS harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganBPJS">
@@ -35,10 +35,8 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminBPJS">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarBPJS">
                     </div>
-                    <div class="col-4">
-                        @auth
+                    <div class="col-12">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaBPJS">Periksa</button>
-                        @endauth
                     </div>
                     <div class="row mt-4" id="detailBPJS">
                         <div class="col-12">
@@ -125,52 +123,41 @@
             $.ajax({
                 type: "POST",
                 url: "{{ route('product.bpjs') }}",
-                // url: "https://servicevps.travelsya.com/product/bpjs",
                 data: {
                     'no_pelanggan': noPelangganBPJS,
                     'nom': 'CEKBPJSKS',
                 },
                 success: function (responseTagihan) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('product.adminFee') }}",
-                        data: {
-                            'idProduct':  362,
-                        },
-                        success: function (response) {
-                            var simulateFeeBPJS = parseInt(response[0].value);
 
-                            var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
-                            var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
+                    var simulateFeeBPJS = parseInt(responseTagihan.data.fee);
 
-                            $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
-                            $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
-                            $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
-                            $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
+                    var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
+                    var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
 
-                            $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
-                            $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
-                            $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
-                            $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+                    $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
+                    $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
+                    $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
+                    $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
 
-                            $('#btnPeriksaBPJS').removeAttr('disabled');
-                            $('#btnPeriksaBPJS').text('Periksa');
+                    $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
+                    $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
+                    $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
+                    $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
 
-                            $('#btnSubmitBPJS').removeAttr('disabled');
+                    $('#btnPeriksaBPJS').removeAttr('disabled');
+                    $('#btnPeriksaBPJS').text('Periksa');
 
-                            $('#detailBPJS').show();
-                        },
-                    });
+                    $('#btnSubmitBPJS').removeAttr('disabled');
+
+                    $('#detailBPJS').show();
                 },
                 error: function(xhr, status, error) {
                     if (xhr.status === 400) {
                         var alertBPJS = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
 
                         $('#alertBPJS').empty().append(alertBPJS);
-                        // alert(xhr.responseJSON.data);
                     }
 
-                    // Hapus spinner dan aktifkan tombol
                     $('#btnPeriksaBPJS').removeAttr('disabled');
                     $('#btnPeriksaBPJS').html('Periksa');
                 }

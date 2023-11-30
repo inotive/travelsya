@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionHostel;
+use App\Models\DetailTransactionHotel;
 use App\Models\Hostel;
 use App\Models\HotelBookDate;
 use App\Models\Transaction;
@@ -45,8 +47,17 @@ class RiwayatBookingController extends Controller
 
     public function index(Request $request)
     {
-        $hotelbookdates = HotelBookDate::query();
-        $hostelbookdates = BookDate::query();
+        $user_id = auth()->user()->id;
+
+        $hotelbookdates = DetailTransactionHotel::with('hotelRoom', 'hotel')
+        ->whereHas('hotel', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        });
+
+    $hostelbookdates = DetailTransactionHostel::with('hostelRoom', 'hostel')
+        ->whereHas('hostel', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        });
 
 
         $year = $request->input('year');
@@ -55,18 +66,18 @@ class RiwayatBookingController extends Controller
 
 
         if ($year != null) {
-            $hotelbookdates->whereYear('start', $year)->orWhereYear('end', $year);
-            $hostelbookdates->whereYear('start', $year)->orWhereYear('end', $year);
+            $hotelbookdates->whereYear('reservation_start', $year)->orWhereYear('reservation_end', $year);
+            $hostelbookdates->whereYear('reservation_start', $year)->orWhereYear('reservation_end', $year);
         }
 
         if ($start != null) {
-            $hotelbookdates = $hotelbookdates->where('start', '>=', $start);
-            $hostelbookdates = $hostelbookdates->where('start', '>=', $start);
+            $hotelbookdates = $hotelbookdates->where('reservation_start', '>=', $start);
+            $hostelbookdates = $hostelbookdates->where('reservation_start', '>=', $start);
         }
 
         if ($end != null) {
-            $hotelbookdates = $hotelbookdates->where('end', '<=', $end);
-            $hostelbookdates = $hostelbookdates->where('end', '<=', $end);
+            $hotelbookdates = $hotelbookdates->where('reservation_end', '<=', $end);
+            $hostelbookdates = $hostelbookdates->where('reservation_end', '<=', $end);
         }
 
         $hotelbookdates = $hotelbookdates->get();
@@ -76,15 +87,17 @@ class RiwayatBookingController extends Controller
 
     public function detailhotelbookdate($id)
     {
-        $hotelbookdates = HotelBookDate::find($id);
-        
+        $hotelbookdates = DetailTransactionHotel::with('transaction')->findOrFail($id);
+
         return view('ekstranet.booking.detail-book-hotel', compact('hotelbookdates'));
     }
 
     public function detailhostelbookdate($id)
     {
-        $hostelbookdates = BookDate::find($id);
-        
+        // $hostelbookdates = BookDate::find($id);
+        $hostelbookdates = DetailTransactionHostel::with('transaction')->findOrFail($id);
+
+
         return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
     }
 
@@ -141,5 +154,20 @@ class RiwayatBookingController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function cetakHotel(DetailTransactionHotel $hotel)
+    {
+        $data = [
+            'data' => $hotel->load('hotel.hotelroomFacility.facility', 'hotelRoom', 'transaction.user')
+        ];
+        return view('user.order-detail.e-tiket', $data);
+    }
+
+    public function cetakHostel(DetailTransactionHostel $hostel)
+    {
+        $data = [
+            'data' => $hostel->load('hostel.hostelFacilities.facility', 'hostelRoom', 'transaction.user')
+        ];
+        return view('user.order-detail.e-tiket-hostel', $data);
     }
 }

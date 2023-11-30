@@ -1,9 +1,10 @@
- <div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
+<div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
     <!--begin::Col-->
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.tvInternet') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.tvInternet') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
@@ -11,15 +12,21 @@
                 <h2 class="fw-bold mb-5">TV-Internet</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-4">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productTV" id="productTV" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-6">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">No Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="noPelangganTV" class="form-control form-control-lg form-control-solid"
-                            name="noPelangganTV" placeholder="" value="" />
-                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
+                        <input type="text" id="noPelangganTV" class="form-control form-control-lg" name="noPelangganTV"
+                            placeholder="Masukan nomor tagihan" value="" />
+                        <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganTV">
@@ -27,13 +34,8 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminTV">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarTV">
                     </div>
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Wilayah Pelanggan</span>
-                        </label>
-                        <select name="productTV" id="productTV" class="form-select form-select-lg"></select>
-                    </div>
-                    <div class="col-xl-4">
+
+                    <div class="col-xl-12">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaTV">Periksa</button>
                     </div>
                 </div>
@@ -46,20 +48,20 @@
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <tbody>
-                                <tr class="py-5">
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                    <td class="text-right" colspan="3"><span id="namaPelangganTV"></span></td>
-                                </tr>
-                                <tr class="py-5">
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                    <td>Rp. <span id="totalTagihanTV"></span></td>
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                    <td>Rp. <span id="biayaAdminTV"></span></td>
-                                </tr>
-                                <tr class="py-5">
-                                    <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                    <td colspan="2">Rp. <span id="totalBayarTV"></span></td>
-                                </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                        <td class="text-right" colspan="3"><span id="namaPelangganTV"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                        <td>Rp. <span id="totalTagihanTV"></span></td>
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                        <td>Rp. <span id="biayaAdminTV"></span></td>
+                                    </tr>
+                                    <tr class="py-5">
+                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                        <td colspan="2">Rp. <span id="totalBayarTV"></span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -67,15 +69,15 @@
                     </div>
                     <div class="col-12">
                         @auth
-                            <button type="submit" class="btn btn-danger w-100" id="btnSubmiTV" disabled>Pembayaran</button>
+                        <button type="submit" class="btn btn-danger w-100" id="btnSubmiTV" disabled>Pembayaran</button>
                         @endauth
 
                         @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
+                        <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                            Login Terlebih Dahulu
+                        </a>
                         @endguest
-                    </div>                    
+                    </div>
                 </div>
 
                 <div class="row mt-5">
@@ -92,21 +94,22 @@
 </div>
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tvInternet') }}",
-                // url: "https://servicevps.travelsya.com/product/tv-internet",
                 success: function (response) {
+                    $('#productTV').empty();
+
                     $.each(response, function (key, value) {
                         $('#productTV').append($('<option>', {
-                            value: value.id,
+                            value: value.kode,
                             text: value.name
                         }));
                     });
@@ -137,58 +140,46 @@
                     url: "{{ route('product.tvInternet') }}",
                     data: {
                         'no_pelanggan': noPelangganTV,
-                        'nom': 'CEKTELKOM',
+                        'nom': $('#productTV').val(),
                     },
                     success: function (responseTagihan) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct':  $('#productTV').val(),
-                            },
-                            success: function (response) {
-                                var simulateFeeTV = parseInt(response[0].value);
+                        var simulateFeeTV = parseInt(responseTagihan.data.fee);
 
-                                var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
-                                var simulateTotalTV = simulateAmountTV + simulateFeeTV;
+                        var simulateAmountTV = parseInt(responseTagihan.data.tagihan);
+                        var simulateTotalTV = simulateAmountTV + simulateFeeTV;
 
-                                $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
-                                $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
-                                $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
-                                $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
+                        $('#namaPelangganTV').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanTV').text(new Intl.NumberFormat('id-ID').format(simulateAmountTV));
+                        $('#biayaAdminTV').text(new Intl.NumberFormat('id-ID').format(simulateFeeTV));
+                        $('#totalBayarTV').text(new Intl.NumberFormat('id-ID').format(simulateTotalTV));
 
-                                $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
-                                $('#inputTotalTagihanTV').val(simulateAmountTV);
-                                $('#inputBiayaAdminTV').val(simulateFeeTV);
-                                $('#inputTotalBayarTV').val(simulateTotalTV);
+                        $('#inputNamaPelangganTV').val(responseTagihan.data.nama_pelanggan);
+                        $('#inputTotalTagihanTV').val(simulateAmountTV);
+                        $('#inputBiayaAdminTV').val(simulateFeeTV);
+                        $('#inputTotalBayarTV').val(simulateTotalTV);
 
-                                $('#btnPeriksaTV').removeAttr('disabled');
-                                $('#btnPeriksaTV').html('Pembayaran');
+                        $('#btnPeriksaTV').removeAttr('disabled');
+                        $('#btnPeriksaTV').html('Pembayaran');
 
-                                $('#detailTV').show();
-                            }
-                        });
+                        $('#detailTV').show();
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status === 400 || xhr.status === 500) {
-                            // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
                             var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
 
-                            // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertTV').empty().append(alertDiv);
                         }
 
-                        // Hapus spinner dan aktifkan tombol
                         $('#btnPeriksaTV').removeAttr('disabled');
                         $('#btnPeriksaTV').html('Pembayaran');
                     }
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function() {
+{{-- <script>
+    $(document).ready(function() {
             $('#notelp').on('keyup', function(e) {
 
                 $.ajaxSetup({
@@ -235,5 +226,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush

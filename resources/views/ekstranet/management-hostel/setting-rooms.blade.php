@@ -1,4 +1,4 @@
-@extends('ekstranet.layout',['title' => 'Detail Hotel - '.$hotel->name ,"url" => "#"])
+@extends('ekstranet.layout', ['title' => 'Detail Hostel - ' . $hostel->name, 'url' => '#'])
 @section('content-admin')
     <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
     <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
@@ -8,7 +8,8 @@
         <!--begin::Header-->
         <div class="card-header pt-5">
             <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.management.hotel.setting.room.create', ['id'=>$hotel->id]) }}" >
+                <a class="btn btn-sm btn-light-primary"
+                    href="{{ route('partner.management.hostel.setting.room.create', ['id' => $hostel->id]) }}">
                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Room</a>
             </div>
         </div>
@@ -19,66 +20,108 @@
                 <!--begin::Table-->
 
                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                       id="kt_datatable_zero_configuration">
+                    id="kt_datatable_zero_configuration">
                     <thead>
-                    <tr class="fw-bold fs-6 text-gray-800 ">
-                        <th class="text-center">No.</th>
-                        <th class="text-center">Nama Room</th>
-                        <th class="text-center">Room Rate</th>
-                        <th class="text-center">Fix Rate</th>
-                        <th class="text-center">Jumlah Ruangan</th>
-                        <th class="text-center">Batas Penghuni</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                        <tr class="fw-bold fs-6 text-gray-800 ">
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Nama</th>
+                            <th class="text-center">Sewa Bulanan</th>
+                            <th class="text-center">Sewa Tahunan</th>
+                            <th class="text-center">Jumlah Ruangan</th>
+                            <th class="text-center">Batas Penghuni</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
                     </thead>
                     <tbody>
-                        @foreach ($hotel->hotelRoom as $room)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td class="text-center">{{ $room->name }}</td>
-                            <td class="text-center">@currency($room->price)</td>
-                            <td class="text-center">@currency($room->sellingprice)</td>
-                            <td class="text-center">{{ $room->totalroom }}</td>
-                            <td class="text-center">{{ $room->guest }}</td>
-                            <td class="text-center">
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="/metronic8/demo1/../demo1/apps/customers/view.html" class="menu-link px-3">
-                                            Daftar Room
-                                        </a>
+                        @foreach ($hostel->hostelRoom as $room)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">{{ $room->name }}</td>
+                                <td class="text-center">@currency($room->sellingrentprice_monthly)</td>
+                                <td class="text-center">@currency($room->sellingrentprice_yearly)</td>
+                                <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
+                                <td class="text-center">{{ $room->max_guest ?? 0 }} Orang</td>
+                                <td class="text-center">
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                        data-kt-menu="true" style="">
+                                        <div class="menu-item px-3">
+                                            <a href="{{ route('partner.management.room.detailroomhostel', $room->id) }}"
+                                                class="menu-link px-3">
+                                                Detail Room
+                                            </a>
+                                        </div>
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="{{ route('partner.management.hostel.setting.room.edit', ['id' => $hostel->id, 'room_id' => $room->id]) }}"
+                                                class="menu-link px-3 text-warning">
+                                                Edit
+                                            </a>
+                                        </div>
+                                        {{-- <div class="menu-item px-3">
+                                    <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit"
+                                        data-id="{{ $room->id }}" data-hotel-id="{{ $room->hostel_id }}">
+                                        Edit
+                                    </a>
+                                </div> --}}
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            {{-- <a href="javascript:void(0)" id="tombol-delete"
+                                                onclick="confirmDelete({{ $room->id }})" data-bs-toggle="modal"
+                                                class="menu-link px-3 text-danger">
+                                                Delete
+                                            </a> --}}
+                                            {{-- <a href="javascript:void(0)"
+                                                class="menu-link px-3 {{ $room->hotel ? 'text-warning' : 'text-danger' }}"
+                                                id="tombol-delete" data-id="{{ $room->id }}" data-bs-toggle="modal"
+                                                onclick="confirmDelete('{{ $room->hotel ? 'hotel' : 'hostel' }}', {{ $room->id }})">
+                                                Delete
+                                            </a> --}}
+                                        <form id="statusForm_{{ $room->id }}" action="{{ route('partner.management.hostel.destroyroom', $room->id) }}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button id="statusButton_{{ $room->id }}" type="submit" class="menu-link px-3 {{ $room->hotel ? 'text-warning' : 'text-danger' }} border-0">
+                                                Delete
+                                            </button>
+                                        </form>
+
+                                        <script>
+                                        document.getElementById('statusButton_{{ $room->id }}').addEventListener('click', function(event) {
+                                            event.preventDefault();
+                                                                                
+                                            Swal.fire({
+                                                title: 'Konfirmasi Hapus Room',
+                                                text: 'Yakin Ingin Menghapus Room?',
+                                                icon: 'danger',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Ya, Hapus!',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    document.getElementById('statusForm_{{ $room->id }}').submit();
+                                                }
+                                            });
+                                        });
+
+                                        </script>
+
+                                            {{-- <a href="javascript:void(0);" class="btn btn-danger btn-sm"
+                                    >Hapus</a> --}}
+                                        </div>
+                                        <!--end::Menu item-->
                                     </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                                            Detail Hotel
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $room->id }}" data-hotel-id="{{ $room->hotel_id }}">
-                                            Edit
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $room->id }}" data-bs-toggle="modal" class="menu-link px-3 text-danger">
-                                            Delete
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                                <!--begin::Menu-->
-                                <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                    Actions
-                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                </a>
-                                <!--end::Menu-->
-                            </td>
-                        </tr>
+                                    <!--begin::Menu-->
+                                    <a href="#"
+                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                        Actions
+                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                    </a>
+                                    <!--end::Menu-->
+                                </td>
+                            </tr>
                         @endforeach
 
 
@@ -91,20 +134,19 @@
     </div>
 
     {{-- MODAL Disini --}}
-    @include('ekstranet.management-hotel.setting-room-delete')
-    @include('ekstranet.management-hotel.setting-room-edit')
+    {{-- @include('ekstranet.management-hotel.setting-room-delete')
+@include('ekstranet.management-hotel.setting-room-edit') --}}
 @endsection
 @push('add-script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
-                "dom":
-                    "<'row'" +
+                "dom": "<'row'" +
                     "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
@@ -116,7 +158,26 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
-        } );
-    </script>
+        });
 
+        function confirmDelete(id) {
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: "Apakah anda yakin ingin menghapus data ini?",
+                icon: 'error',
+                showCancelButton: true,
+                cancelButtonText: 'Kembali',
+                confirmButtonText: 'Ya, Hapus!',
+                customClass: {
+                    confirmButton: "btn btn-danger",
+                    cancelButton: 'btn btn-secondary text-white'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengklik Ya, kirimkan permintaan penghapusan
+                    window.location = `delete/${type}/${id}`;
+                }
+            });
+        }
+    </script>
 @endpush

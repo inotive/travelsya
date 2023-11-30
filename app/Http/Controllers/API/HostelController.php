@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\HostelRequestUpdate;
 use App\Models\BookDate;
 use App\Models\DetailTransaction;
+use App\Models\DetailTransactionHostel;
+use App\Models\Fee;
 use App\Models\Guest;
 use App\Models\Hostel;
 use App\Models\HostelImage;
@@ -16,8 +18,10 @@ use App\Models\User;
 use App\Services\Point;
 use App\Services\Setting;
 use App\Services\Xendit;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -26,35 +30,36 @@ use PHPUnit\Exception;
 class HostelController extends Controller
 {
     protected $xendit, $point;
+
     public function __construct(Xendit $xendit, Point $point)
     {
         $this->xendit = $xendit;
         $this->point = $point;
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(Request $request)
     {
         try {
-            $hostels = Hostel::with('hostelRoom', 'hostelImage', 'rating');
-
-            if ($request->location) {
+            $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating');
+            $type_duration = $request->type_duration;
+            if ($request->location != 'semua') {
                 $hostels->where('city', 'like', '%' . $request->location . '%');
             }
 
-            if ($request->type_duration) {
-                $hostels->where('category', $request->type_duration);
-            }
+            //            if ($request->type_duration) {
+            //                $hostels->where('category', $request->type_duration);
+            //            }
 
             if ($request->has('property_type')) {
                 if ($request->property_type != 'semua') {
                     $hostels->where('property', $request->property_type);
                 }
             }
-
             if ($request->has('property_room')) {
                 if ($request->property_room != 'semua') {
                     $roomtype = $request->property_room;
@@ -84,28 +89,40 @@ class HostelController extends Controller
             }
 
 
-            $hostelsget = $hostels->withCount([
-                "hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(price),0)'));
-                }
-            ])->withCount([
-                "rating as rating_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(rate),0)'));
-                }
-            ])->withCount("rating as rating_count")->get();
+            $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(price),0)'));
+            }])->withCount(["rating as rating_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(rate),0)'));
+            }])->withCount("rating as rating_count")->get();
 
-            $hostelShow = $hostelsget->map(function ($hostelsget) {
+            // dd($hostelsget);
 
+            $hostelShow = $hostelsget->map(function ($hostelsget) use ($type_duration, $hostels) {
                 $hostelImage = $hostelsget->hostelImage->where('main', 1)->first();
+                $hostelRoom = $hostelsget->hostelRoom->where('hostel_id', $hostelsget->id)->first();
 
+                if ($type_duration == "monthly") {
+                    $sellingPrice = $hostelRoom->where('hostel_id', $hostelsget->id)
+                        ->orderBy('sellingrentprice_monthly', 'asc')
+                        ->pluck('sellingrentprice_monthly')->first() ?? 0;
+                } elseif ($type_duration == "yearly") {
+                    $sellingPrice = $hostelRoom->where('hostel_id', $hostelsget->id)
+                        ->orderBy('sellingrentprice_yearly', 'asc')
+                        ->pluck('sellingrentprice_yearly')->first() ?? 0;
+                }
+                $avg_rating = $hostelsget->hostelRating->sum('rate') != 0 ? $hostelsget->hostelRating->sum('rate') / $hostelsget->hostelRating->count() : 0;
                 return [
                     'id' => $hostelsget->id,
                     'name' => $hostelsget->name,
-                    'image' => $hostelImage ? asset($hostelImage->image) : null,
+                    'image' => $hostelImage ? asset('storage/media/hostel/' . $hostelImage->image) : null,
                     'location' => $hostelsget->city,
-                    'rating_avg' => intval($hostelsget->rating_avg),
-                    'rating_count' => $hostelsget->rating_count,
-                    'sellingprice' => intval($hostelsget->price_avg),
+                    'avg_rating' => $avg_rating,
+                    'rating_count' => $hostelsget->hostelRating->count(),
+                    'sellingprice' => $sellingPrice,
+                    'property_type' => $hostelsget->property,
+                    'rent_category' => $type_duration,
+                    'room_type' => $hostelRoom->roomtype,
+                    'furnish_type' => $hostelRoom->furnish
                 ];
             });
 
@@ -115,35 +132,26 @@ class HostelController extends Controller
                 return ResponseFormatter::error(null, 'Data not found');
             }
         } catch (Exception $th) {
-            return ResponseFormatter::error([
-                $th->getMessage(),
-                'message' => 'Something wrong',
-            ], 'Hostel process failed', 500);
+            return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong',], 'Hostel process failed', 500);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Hostel  $hostel
-     * @return \Illuminate\Http\Response
+     * @param Hostel $hostel
+     * @return Response
      */
     public function show(Request $request, $id)
     {
         try {
             // $hostel = Hostel::find($hostel->id);
-            $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
-                ->withCount([
-                    "hostelRoom as price_avg" => function ($q) {
-                        $q->select(DB::raw('coalesce(avg(price),0)'));
-                    }
-                ])->withCount([
-                    "rating as rating_avg" => function ($q) {
-                        $q->select(DB::raw('coalesce(avg(rate),0)'));
-                    }
-                ])->withCount("rating as rating_count")
-                ->find($id);
-
+            $hostel = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')->withCount(["hostelRoom as price_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(price),0)'));
+            }])->withCount(["rating as rating_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(rate),0)'));
+            }])->withCount("rating as rating_count")->findOrFail($id);
+            $duration_type = $request->duration_type;
             // if ($request->start_date) {
             //     $date = [
             //         'start' => $request->start_date,
@@ -167,40 +175,88 @@ class HostelController extends Controller
             //     // return $filter;
             // }
             // $hostelGet = $hostel->get();
-            $hostelGet = collect([$hostel])->map(function ($hostel) {
+            $hostelGet = collect([$hostel])->map(function ($hostel) use ($duration_type) {
+                $duration_type2 = $duration_type;
+                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type) {
 
-                $hostel_rules = $hostel->hostelRules->map(function ($rule) {
+                    $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
+                        return ['id' => $room_images->id, 'hostel_room_id' => $room_images->hostel_room_id, 'hostel_room_name' => $room_images->hostelRoom->name, 'image' => 'storage/' . $room_images->image,];
+                    });
+
+                    $sellingPrice = 0;
+                    if ($duration_type == "monthly") {
+                        $sellingPrice = $room->where('id', $room->id)
+                            ->orderBy('sellingrentprice_monthly', 'asc')
+                            ->pluck('sellingrentprice_monthly')->first();
+                    } else {
+                        $sellingPrice = $room->where('id', $room->id)
+                            ->orderBy('sellingrentprice_yearly', 'asc')
+                            ->pluck('sellingrentprice_yearly')->first();
+                    }
                     return [
-                        'id'          => $rule->id,
-                        'description' => $rule->description,
+                        'id' => $room->id,
+                        'name' => $room->name,
+                        'description' => $room->description,
+                        'price' => $room->price,
+                        'sellingprice' => $sellingPrice,
+                        'bed_type' => $room->bed_type,
+                        'roomsize' => $room->roomsize,
+                        'maxextrabed' => $room->maxextrabed,
+                        'totalroom' => $room->totalroom,
+                        'guest' => $room->guest,
+                        'hostel_room_image' => $hostel_room_image
                     ];
                 });
 
-                $hostel_reviews = $hostel->rating->map(function ($reviews) {
+                $hostel_rules = $hostel->hostelRule->map(function ($rule) {
+                    return ['id' => $rule->id, 'description' => $rule->description,];
+                });
+
+                $hostel_reviews = null;
+                //                if ($hostel->rating != null) {
+                $hostel_reviews = $hostel->hostelRating->map(function ($reviews) {
                     return [
                         'id' => $reviews->id,
-                        'user_id' => $reviews->user_id,
+                        'room' => $reviews->hostelRoom->name,
+                        'user_id' => $reviews->users_id,
                         'user_name' => $reviews->user->name,
                         'rate' => $reviews->rate,
                         'comment' => $reviews->comment,
+                        'deleted_at' => $reviews->deleted_at,
+                        'created_at' => $reviews->created_at,
+                        'updated_at' => $reviews->updated_at,
                     ];
                 });
+                //                }
+
+                $hostelFacilities = $hostel->hostelFacilities->map(function ($facility) {
+                    return [
+                        // 'hotel_id' => $facility->hotel_id,
+                        // 'hotel_room_id' => $facility->hotel_room_id,
+                        'id' => $facility->facility_id,
+                        'name' => $facility->facility->name,
+                        'image' => 'storage/' . $facility->facility->icon,
+                    ];
+                })->unique('id');
+
+                $avg_rating = $hostel->hostelRating->sum('rate') != 0 ? $hostel->hostelRating->sum('rate') / $hostel->hostelRating->count() : 0;
 
                 return [
                     'id'                => $hostel->id,
                     'name'              => $hostel->name,
                     'category'          => $hostel->category,
-                    'image'             => $hostel->image,
+                    'image'             => 'storage/' . $hostel->image,
                     'checkin'           => $hostel->checkin,
                     'checkout'          => $hostel->checkout,
                     'location'          => $hostel->city,
                     'address'           => $hostel->address,
                     'lat'               => $hostel->lat,
                     'lon'               => $hostel->lon,
-                    'avg_rating'        => intval($hostel->rating_avg),
-                    'rating_count'      => $hostel->rating_count,
-                    'hostel_rooms'      => $hostel->hostelRoom,
-                    'hostel_facilities' => $hostel->hostelFacilities,
+                    'avg_rating'        => $avg_rating,
+                    'rating_count'      => $hostel->hostelRating->count(),
+                    'hostel_image'      => $hostel->hostelImage,
+                    'hostel_rooms'      => $hostel_room,
+                    'hostel_facilities' => $hostelFacilities,
                     'hostel_rules'      => $hostel_rules,
                     'hostel_reviews'    => $hostel_reviews,
                 ];
@@ -212,28 +268,48 @@ class HostelController extends Controller
                 return ResponseFormatter::error(null, 'Data not found');
             }
         } catch (Exception $th) {
-            return ResponseFormatter::error([
-                $th,
-                'message' => 'Something wrong',
-            ], 'Hostel process failed', 500);
+            return ResponseFormatter::error([$th, 'message' => 'Something wrong',], 'Hostel process failed', 500);
         }
     }
 
     public function room($id)
     {
         try {
-            $hostels = HostelRoom::with('hostel')->findOrFail($id);
+            $hostels = HostelRoom::with('hostel', 'hostelFacilities', 'hostelroomImage')->find($id);
 
-            if ($hostels) {
-                return ResponseFormatter::success($hostels, 'Data successfully loaded');
-            } else {
+            if (!$hostels) {
                 return ResponseFormatter::error(null, 'Data not found');
             }
+
+            $hostel = collect([$hostels])->map(function ($room) {
+                $room_facilities = $room->hostelFacilities->map(function ($facilities) {
+                    return [
+                        'id'   => $facilities->facility_id,
+                        'name' => $facilities->facility->name,
+                        'icon' => $facilities->facility->icon,
+                    ];
+                })->unique('facility_id');
+
+                $room_images = $room->hostelroomImage->map(function ($facilities) {
+                    return [
+                        'image' => $facilities->image,
+                    ];
+                })->unique('image');
+
+                return [
+                    'room_size'       => $room->roomsize,
+                    'total_bed_room'  => $room->totalroom,
+                    'total_bath_room' => $room->totalbathroom,
+                    'max_guest'       => $room->max_guest,
+                    'description'     => $room->description,
+                    'room_facilities' => $room_facilities,
+                    'room_images'     => $room_images,
+                ];
+            });
+
+            return ResponseFormatter::success($hostel, 'Data successfully loaded');
         } catch (Exception $th) {
-            return ResponseFormatter::error([
-                $th->getMessage(),
-                'message' => 'Something wrong',
-            ], 'Hostel process failed', 500);
+            return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong',], 'Hostel process failed', 500);
         }
     }
 
@@ -248,42 +324,44 @@ class HostelController extends Controller
             "guest" => "required",
             "start" => "required",
             "end" => "required",
-
+            "duration_type" => "required",
+            "total_guest" => "required",
+            "kode_unik" => "required",
         ]);
 
         if ($validator->fails()) {
-            return ResponseFormatter::error([
-                'response' => $validator->errors(),
-            ], 'Hostel process failed', 500);
+            return ResponseFormatter::error(['response' => $validator->errors(),], 'Hostel process failed', 500);
         }
 
         $data = $request->all();
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hostel->hostel->service->name) . "-" . time();
-        // $setting = new Setting();
-        // $fees = $setting->getFees($data['point'], $hostel->hostel->service_id, $request->user()->id, $hostel->sellingprice);
-        $fees = [
-            [
-                'type' => 'Admin',
-                'value' => 2500,
-            ],
-        ];
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hostel') . "-" . time();
 
-        //cekpoint 
-        // if (!$fees)
-        //     return ResponseFormatter::error(null, 'Point invalid');
+
+        //cekpoint
         $start = new DateTime($data['start']);
         $end = new DateTime($data['end']);
         $interval = $end->diff($start);
         $qty = $interval->format('%m');
-        // $amount = $setting->getAmount($hostel->sellingprice, $qty, $fees);
-        $amount = $hostel->sellingprice;
 
-        // cek book date
-        $checkBook = BookDate::where("hostel_room_id", $data['hostel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
-        if ($checkBook) {
-            return ResponseFormatter::error($checkBook, 'Book dates is not available');
+        $amount = 0;
+        if ($request->duration_type == "monthly") {
+            $amount = $hostel->sellingrentprice_monthly;
+        } else {
+            $amount = $hostel->sellingrentprice_yearly;
         }
+
+        $fee = Fee::where('service_id', 7)->first();
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
+            ],
+            [
+                'type' => 'kode_unik',
+                'value' => $data['kode_unik'],
+            ],
+        ];
 
         // ceate xendit
         $payoutsXendit = $this->xendit->create([
@@ -292,96 +370,55 @@ class HostelController extends Controller
                 [
                     "product_id" => $data['hostel_room_id'],
                     "name" => $hostel['name'],
-                    "price" => $hostel->sellingprice,
+                    "price" => $amount,
                     "quantity" => $qty,
                 ]
             ],
-            'amount' => $amount + $fees[0]['value'],
+            'amount' => ($amount * $qty) + $fees[0]['value'] + $data['kode_unik'],
             'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
             'should_send_email' => true,
-            'customer' => [
-                'given_names' => $request->user()->name,
-                'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: "somenumber",
+            'customer' =>
+            [
+                'given_names' => $data['guest'][0]['name'],
+                'email' => $data['guest'][0]['email'],
+                'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
             ],
             'fees' => $fees
         ]);
 
-        // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel) {
+        $storeTransaction = Transaction::create([
+            'no_inv' => $invoice,
+            'req_id' => 'HST-' . time(),
+            'service' => 'hostel', // 'service_id' => $hostel->hostel->service_id,
+            'service_id' => 7,
+            'payment' => $data['payment'],
+            'user_id' => \Auth::user()->id,
+            'status' => $payoutsXendit['status'],
+            'link' => $payoutsXendit['invoice_url'],
+            'total' => ($amount * $qty) + $fees[0]['value'] + $data['kode_unik']
+        ]);
 
-            $storeTransaction = Transaction::create([
-                'no_inv' => $invoice,
-                'req_id' => 'HST-' . time(),
-                'service' => $hostel->hostel->service->name,
-                'service_id' => $hostel->hostel->service_id,
-                'payment' => $data['payment'],
-                'user_id' => $request->user()->id,
-                'status' => $payoutsXendit['status'],
-                'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount
+        DB::table('detail_transaction_hostel')
+            ->insert([
+                'transaction_id'    => $storeTransaction->id,
+                'hostel_id'         => $hostel->hostel_id,
+                'hostel_room_id'    => $data['hostel_room_id'],
+                'type_rent'         => $request->duration_type,
+                'booking_id'        => Str::random(6),
+                'reservation_start' => $data['start'],
+                'reservation_end' => $data['end'],
+                'guest' => $request->total_guest,
+                'room' => 1, // "rent_price"        => $hostel->sellingprice,
+                "rent_price" => $amount,
+                "fee_admin" => $fees[0]['value'],
+                "kode_unik"         => $data['kode_unik'],
+                "guest_name" => $data['guest'][0]['name'],
+                "guest_email" => $data['guest'][0]['email'],
+                "guest_handphone" => $data['guest'][0]['phone'],
+                "created_at" => Carbon::now()
             ]);
-
-
-            // true buat detail
-            // $storeDetailTransaction = DetailTransaction::create([
-            //     'transaction_id' => $storeTransaction->id,
-            //     'hostel_room_id' => $data['hostel_room_id'],
-            //     "qty" => $qty,
-            //     "price" => $hostel->sellingprice
-            // ]);
-
-            try {
-                $storeDetailTransaction = DB::table('detail_transaction_hostel')
-                    ->insert([
-                        'transaction_id'    => $storeTransaction->id,
-                        'hostel_id'         => $hostel->hostel_id,
-                        'hostel_room_id'    => $data['hostel_room_id'],
-                        'type_rent'         => $hostel->hostel->category,
-                        'booking_id'        => Str::random(6),
-                        'reservation_start' => $data['start'],
-                        'reservation_end'   => $data['end'],
-                        'guest'             => count($data['guest']),
-                        'room'              => 1,
-                        "rent_price"        => $hostel->sellingprice,
-                        "fee_admin"         => $fees[0]['value'],
-                    ]);
-            } catch (\Exception $exception) {
-                return response()->json([
-                    'message' => 'Error Store Data Transaction'
-                ]);
-            }
-
-
-            // // true buat bookdate
-            // $storeBookDate = BookDate::create([
-            //     'start' => $data['start'],
-            //     'end' => $data['end'],
-            //     'hostel_room_id' => $data["hostel_room_id"],
-            //     'transaction_id' => $storeTransaction->id
-            // ]);
-
-            // // true buat guest
-            // foreach ($data['guest'] as $guest) {
-            //     $storeGuest = Guest::create([
-            //         'transaction_id' => $storeTransaction->id,
-            //         // 'type_id' => $guest['type_id'],
-            //         // 'identity' => $guest['identity'],
-            //         'name' => $guest['name'],
-            //         'email' => $guest['email'],
-            //         'phone' => $guest['phone'],
-            //     ]);
-            // }
-
-            // if ($data['point']) {
-            //     //deductpoint
-            //     $point = new Point;
-            //     $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
-            // }
-        });
-
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }
@@ -390,31 +427,59 @@ class HostelController extends Controller
     {
         $hostelCity = Hostel::distinct()->pluck('city');
 
-        if (!$hostelCity)
-            return ResponseFormatter::error(null, 'Data not found');
+        if (!$hostelCity) return ResponseFormatter::error(null, 'Data not found');
 
         return ResponseFormatter::success($hostelCity, 'Data successfully loaded');
     }
 
     public function hostelPopuler()
     {
-        $hostelPopuler = Hostel::with('hostelImage', 'rating')
-            ->withCount([
-                "hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(price),0)'));
-                }
-            ])->withCount([
-                "rating as rating_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(rate),0)'));
-                }
-            ])->withCount("rating as rating_count")
-            ->orderBy('rating_count', 'DESC')
-            ->orderBy('rating_avg', 'DESC')
-            ->orderBy('price_avg', "desc")->get();
+        $hostelPopuler = Hostel::where('is_active', 1)->with('hostelImage', 'rating')->has("hostelRoom") //retrieve only hostel that have hostel room, to avoid data with 0 price_avg
+            ->withCount(["hostelRoom as price_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(price),0)'));
+            }])->withCount(["rating as rating_avg" => function ($q) {
+                $q->select(DB::raw('coalesce(avg(rate),0)'));
+            }])->withCount("rating as rating_count")->orderBy('price_avg', "asc")->orderBy('rating_count', 'DESC')->orderBy('rating_avg', 'DESC')->get();
+        $hostelFormatJSON = [];
+        foreach ($hostelPopuler as $hostel) {
+            $minPrice = $hostel->hostelRoom->min('price');
+            $maxPrice = $hostel->hostelRoom->min('sellingprice');
+            $jumlahTransaksi = $hostel->rating->count();
+            $totalRating = $hostel->rating->sum('rate');
 
-        if (!$hostelPopuler)
-            return ResponseFormatter::error(null, 'Data not found');
+            // Rating 5
+            if ($jumlahTransaksi > 0) {
+                $avgRating = $totalRating / $jumlahTransaksi;
+            } else {
+                $avgRating = 0;
+            }
+            $imageUrl = "-";
+            //retrieve image url
+            if (!$hostel->hostelImage->isEmpty()) {
+                $imageUrl = $hostel->hostelImage[0]->image;
+            }
 
-        return ResponseFormatter::success($hostelPopuler, 'Data successfully loaded');
+            $hotelDetails[$hostel->id] = ['avg_rating' => $avgRating, 'rating_count' => $jumlahTransaksi, 'price' => $minPrice, 'sellingprice' => $maxPrice,];
+
+            $hostelRoom = $hostel->hostelRoom->where('hostel_id', $hostel->id)->first();
+
+            $hostelFormatJSON[] = ['id' => $hostel->id, 'name' => $hostel->name, 'image' => $imageUrl, 'location' => $hostel->city, 'rating_avg' => $hotelDetails[$hostel->id]['avg_rating'], 'rating_count' => $hotelDetails[$hostel->id]['rating_count'], 'sellingprice' => $hotelDetails[$hostel->id]['sellingprice'], 'property_type' => $hostel->property, 'rent_category' => $hostel->category, 'room_type' => $hostelRoom->roomtype, 'furnish_type' => $hostelRoom->furnish];
+
+            usort($hostelFormatJSON, function ($a, $b) {
+                // Mengurutkan berdasarkan avg_rating secara menurun (dari tertinggi ke terendah)
+                $avgRatingComparison = $b['rating_avg'] - $a['rating_avg'];
+
+                // Jika avg_rating sama, maka urutkan berdasarkan rating_count secara menurun
+                if ($avgRatingComparison === 0) {
+                    return $b['rating_count'] - $a['rating_count'];
+                }
+
+                return $avgRatingComparison;
+            });
+        }
+        if (!$hostelPopuler) return ResponseFormatter::error(null, 'Data not found');
+
+
+        return ResponseFormatter::success($hostelFormatJSON, 'Data successfully loaded');
     }
 }

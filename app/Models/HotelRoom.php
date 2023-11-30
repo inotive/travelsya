@@ -58,11 +58,15 @@ class HotelRoom extends Model
         return $this->belongsTo(Hotel::class);
     }
 
+    //    public function hotelBookDate()
+    //    {
+    //        return $this->hasMany(HotelBookDate::class)->select('id', 'transaction_id', 'hotel_room_id', 'start', 'end');
+    //    }
+
     public function hotelBookDate()
     {
-        return $this->hasMany(HotelBookDate::class)->select('id', 'transaction_id', 'hotel_room_id', 'start', 'end');
+        return $this->hasMany(DetailTransactionHotel::class)->select('id', 'transaction_id', 'hotel_room_id', 'reservation_start', 'reservation_end');
     }
-
 
     public function facility()
     {
@@ -79,4 +83,8 @@ class HotelRoom extends Model
         return $this->hasMany(HotelRoomImage::class);
     }
 
+    public function detailTransactionHotel()
+    {
+        return $this->hasMany(DetailTransactionHotel::class);
+    }
 }

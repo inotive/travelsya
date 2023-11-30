@@ -30,7 +30,6 @@ class HotelRoomFacility extends Model
     {
         return $this->belongsTo(Service::class);
     }
-
     public function facility()
     {
         return $this->belongsTo(Facility::class);

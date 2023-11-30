@@ -13,7 +13,7 @@
                 <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('admin.login.post')}}">
                     <!--begin::Heading-->
                     @csrf
-                    <div class="text-center mb-11">
+                    <div class="mb-11">
                         <!--begin::Title-->
                         <h1 class="text-dark fw-bolder mb-3">
                             Ekstranet Travelsya
@@ -70,7 +70,7 @@
                     <!--end::Wrapper-->
 
                     <!--begin::Submit button-->
-                    <div class="d-grid mb-10">
+                    <div class="d-grid mb-5">
                         <button type="submit" id="kt_sign_in_submit" class="btn btn-primary py-5">
 
                             <!--begin::Indicator label-->
@@ -87,7 +87,10 @@
                     <!--end::Submit button-->
 
                 </form>
-                <a href="#" class="btn btn-icon btn-lg btn-danger w-100"><i class="fa-brands fa-whatsapp fs-3 me-2"></i>Pendaftaran Mitra</a>
+                <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary btn-lg w-100 mb-10">
+                    Kembali Ke Home
+                </a>
+
                 <!--end::Form-->
 
             </div>

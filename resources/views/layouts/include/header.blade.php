@@ -102,7 +102,12 @@
             <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                 <!--begin::Menu wrapper-->
                 <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                    <img class="h-30px w-30px rounded" src="{{asset('assets/media/avatars/300-2.jpg')}}" alt="" />
+                    <div class="symbol symbol-30px">
+                        <div class="symbol-label fs-2 fw-bold bg-white text-danger">
+                            {{ substr( Auth::user()->name, 0,1 ) }}
+                        </div>
+                    </div>
+{{--                    <img class="h-30px w-30px rounded" src="{{asset('assets/media/avatars/300-2.jpg')}}" alt="" />--}}
                 </div>
 
                 <!--begin::User account menu-->
@@ -151,15 +156,15 @@
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
                         <a href="{{route('user.profile')}}" class="menu-link px-5">
-                            My Profile
+                            Akun Saya
                         </a>
                     </div>
                     <!--end::Menu item-->
 
                     <!--begin::Menu item-->
                     <div class="menu-item px-5">
-                        <a href="account/statements.html" class="menu-link px-5">
-                            My Transaction
+                        <a href="{{route('user.orderHistory')}}" class="menu-link px-5">
+                            Riwayat Transaksi
                         </a>
                     </div>
                     <!--end::Menu item-->

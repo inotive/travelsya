@@ -2,7 +2,7 @@
 
 @section('content-admin')
     <!--begin::Row-->
-    <div class="row gy-5 g-xl-10">  
+    <div class="row gy-5 g-xl-10">
         <!--begin::Col-->
         <div class="col-xl-8 col-md-8">
             <div class="card ">
@@ -12,68 +12,114 @@
                     <!--begin: Pic-->
 
                     <div class="me-5 mb-0">
-                        <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
+                        {{-- <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
                             <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="image" />
 
+                        </div> --}}
+                        @php
+                            $image = $hotel->hotelImage->where('main', 1)->first()->image ?? '';
+                        @endphp
+                        <div class="row">
+                            <div class="col-4">
+                                @if ($hotel->hotelImage->isNotEmpty())
+                                @php
+                                    $mainImage = $hotel->hotelImage->where('main', 1)->first();
+                                    $image = $mainImage ? $mainImage->image : '';
+                                @endphp
+                                <a class="d-block overlay" data-fslightbox="lightbox-basic-{{ $hotel->id }}" href="{{ asset('storage/'. $image) }}">
+                                    <img class="img-fluid overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded"
+                                        src="{{ asset('storage/'.$hotel->hotelImage->where('main', 1)->first()->image ?? '') }}" alt="image" />
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
+                                        <i class="bi bi-eye-fill fs-2x text-white"></i>
+                                    </div>
+                                </a>
+                                @else
+                                    <img src="" alt="Gambar Kosong" class="img-fluid">
+                                @endif
+
+                            </div>
+                            
+                            {{-- <div class="row mt-4">
+                                    <div class="col-4">
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic-{{$hotel->id}}"
+                                           href="{{ asset('storage/'. $hotelImage->image) }}">
+                                            <!--begin::Image-->
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                 style="background-image:url('{{ asset('storage/'. $hotelImage->image) }}')">
+                                            </div>
+                                            <!--end::Image-->
+
+                                            <!--begin::Action-->
+                                            <div
+                                                class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                            </div>
+                                            <!--end::Action-->
+                                        </a>
+                                    </div>
+
+                            </div> --}}
+                            <div class="col-8">
+                                <div class="flex-grow-1">
+
+                                    <!--begin::Title-->
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
+                                        <!--begin::User-->
+                                        <div class="d-flex flex-column">
+                                            <!--begin::Name-->
+                                            <div class="d-flex align-items-center mb-2 mt-5">
+                                                <a
+                                                    class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ $hotel->name }}</a>
+                                            </div>
+                                            <!--end::Name-->
+                                            <!--begin::Info-->
+                                            <div class="d-flex flex-wrap fw-semibold fs-6 mb-1 pe-1">
+                                                <span>{{ $hotel->address }}</span>
+                                                <div>{{ $hotel->description }}</div>
+                                            </div>
+                                            <!--end::Info-->
+                                        </div>
+                                        <!--end::User-->
+                                        <!--begin::Actions-->
+
+                                        <!--end::Actions-->
+                                    </div>
+                                    <!--end::Title-->
+                                    <!--begin::Stats-->
+                                    <div class="d-flex flex-wrap flex-stack">
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-column flex-grow-1 pe-8 ">
+                                            <!--begin::Stats-->
+                                            <div class="d-flex flex-wrap">
+                                                <!--begin::Stat-->
+                                                <a href="#"
+                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hotel->description }}</a>
+
+                                                <!--end::Stat-->
+                                            </div>
+                                            <div class="d-flex flex-wrap">
+
+                                            </div>
+                                            <!--end::Stats-->
+                                        </div>
+                                        <!--end::Wrapper-->
+                                        <!--begin::Progress-->
+
+
+                                        <!--end::Progress-->
+                                    </div>
+                                    <!--end::Stats-->
+                                </div>
+                            </div>
                         </div>
+
+                        {{-- <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                    style="background-image: url('{{ asset('assets/media/avatars/300-1.jpg') }}')">
+                                </div> --}}
                     </div>
                     <!--end::Pic-->
                     <!--begin::Info-->
-                    <div class="flex-grow-1">
 
-                        <!--begin::Title-->
-                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
-                            <!--begin::User-->
-                            <div class="d-flex flex-column">
-                                <!--begin::Name-->
-                                <div class="d-flex align-items-center mb-2 mt-5">
-                                    <a class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ $hotel->name }}</a>
-
-                                </div>
-                                <!--end::Name-->
-                                <!--begin::Info-->
-                                <div class="d-flex flex-wrap fw-semibold fs-6 mb-1 pe-1">
-                                    <a class="d-flex align-items-center text-gray-600 text-hover-primary me-5 mb-2">
-
-                                        <span class="path1"></span>
-                                        <span class="path2"></span>
-                                        <span class="path3"></span>
-                                        </i>{{ $hotel->address }}</a>
-
-                                </div>
-                                <!--end::Info-->
-                            </div>
-                            <!--end::User-->
-                            <!--begin::Actions-->
-
-                            <!--end::Actions-->
-                        </div>
-                        <!--end::Title-->
-                        <!--begin::Stats-->
-                        <div class="d-flex flex-wrap flex-stack">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex flex-column flex-grow-1 pe-8 ">
-                                <!--begin::Stats-->
-                                <div class="d-flex flex-wrap">
-                                    <!--begin::Stat-->
-                                    <a href="#"
-                                        class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hotel->description }}</a>
-
-                                    <!--end::Stat-->
-                                </div>
-                                <div class="d-flex flex-wrap">
-
-                                </div>
-                                <!--end::Stats-->
-                            </div>
-                            <!--end::Wrapper-->
-                            <!--begin::Progress-->
-
-
-                            <!--end::Progress-->
-                        </div>
-                        <!--end::Stats-->
-                    </div>
                     <!--end::Info-->
                 </div>
                 <!--end:: Body-->
@@ -130,7 +176,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Riwayat Booking
-                                ({{ $hotel->hotelbookDate->count() }})</a>
+                                ({{ $hotel->hotel_reservation()->count() }})</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Fasilitas Hotel
@@ -145,11 +191,10 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                             <div class="row">
-                                <div class="card-toolbar">
-                                    <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal"
-                                        data-bs-target="#create-room">
-                                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Room</a>
-                                </div>
+                                {{--                                <div class="card-toolbar"> --}}
+                                {{--                                    <a class="btn btn-sm btn-light-primary" href="{{route('partner.management.hotel.setting.room',$hotel->id)}}"> --}}
+                                {{--                                        <i class="ki-duotone ki-plus fs-2"></i></a> --}}
+                                {{--                                </div> --}}
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
                                     id="kt_datatable_zero_configuration">
                                     <thead>
@@ -174,19 +219,14 @@
                                                 <td class="text-center">@currency($room->sellingprice)</td>
                                                 <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
                                                 <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
-
-
-
-
                                                 <td class="text-center">
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                         data-kt-menu="true" style="">
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning"
-                                                                id="tombol-edit" data-id="{{ $hotel->id }}"
-                                                                data-bs-toggle="modal">
+                                                            <a href="{{ route('partner.management.hotel.setting.room.edit', ['id' => $room->hotel->id, 'room_id' => $room->id]) }}"
+                                                                class="menu-link px-3 text-warning">
                                                                 Edit
                                                             </a>
                                                         </div>
@@ -205,7 +245,7 @@
                                                     <a href="#"
                                                         class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                        Actions
+                                                        Aksi
                                                         <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                                     </a>
                                                     <!--end::Menu-->
@@ -236,16 +276,17 @@
                                                             </div>
                                                             <div class="modal-footer d-flex justify-content-center">
                                                                 <button type="button" class="btn btn-light me-3"
-                                                                    data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
+                                                                    data-bs-dismiss="modal">Cancel
+                                                                </button>
+                                                                <button type="submit" class="btn btn-danger">Delete
+                                                                </button>
                                                             </div>
                                                             <!--end::Menu-->
                                                         </form>
                                                         <!--end::Menu-->
                                                         </td>
                                                         </tr>
-                                                        
+
                                                         </td>
                                                         </tr>
                                         @endforeach
@@ -280,13 +321,11 @@
                                     @endforeach --}}
 
                             </div>
+
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                             <div class="row">
-
-
-                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                                    id="kt_datatable_zero_configuration_1">
+                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle ">
                                     <thead>
                                         <tr class="fw-bold fs-6 text-gray-800 ">
                                             <th class="text-center">No.</th>
@@ -299,20 +338,20 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset($image->image) }}" class="rounded"
-                                                        style="width: 150px">
+                                                    <img src="{{ asset('storage/media/hotel/' . $image->image) }}"
+                                                        class="rounded" style="width: 150px">
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                         data-kt-menu="true" style="">
                                                         <!--begin::Menu item-->
-                                                        <div class="menu-item px-3">
+                                                        {{-- <div class="menu-item px-3">
                                                             <a href="javascript:void(0)"
                                                                 class="menu-link px-3 text-warning" id="tombol-edit"
                                                                 data-id="{{ $hotel->id }}" data-bs-toggle="modal">
                                                                 Edit
                                                             </a>
-                                                        </div>
+                                                        </div> --}}
                                                         <div class="menu-item px-3">
                                                             <a href="#" class="menu-link px-3 text-danger"
                                                                 data-bs-toggle="modal" {{-- data-kt-customer-table-filter="delete_row" --}}
@@ -356,9 +395,10 @@
                                                             </div>
                                                             <div class="modal-footer d-flex justify-content-center">
                                                                 <button type="button" class="btn btn-light me-3"
-                                                                    data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
+                                                                    data-bs-dismiss="modal">Cancel
+                                                                </button>
+                                                                <button type="submit" class="btn btn-danger">Delete
+                                                                </button>
                                                             </div>
                                                             <!--end::Menu-->
                                                         </form>
@@ -369,16 +409,16 @@
                                 </table>
 
 
-
                             </div>
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_3" role="tabpanel">
                             <div class="row">
                                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                                    id="kt_datatable_zero_configuration_2">
+                                    id="kt_datatable_zero_configuration_1">
                                     <thead>
                                         <tr class="fw-bold fs-6 text-gray-800 ">
                                             <th class="text-center">Customer</th>
+                                            <th class="text-center">Invoice</th>
                                             <th class="text-center">Code Booking</th>
                                             <th class="text-center">Check In</th>
                                             <th class="text-center">Check Out</th>
@@ -388,24 +428,27 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($hotel->hotelbookDate as $booking)
+                                        @foreach ($hotel->hotel_reservation as $booking)
                                             @php
-                                                $startdate = \Carbon\Carbon::parse($booking->start);
-                                                $enddate = \Carbon\Carbon::parse($booking->end);
+                                                $startdate = \Carbon\Carbon::parse($booking->reservation_start);
+                                                $enddate = \Carbon\Carbon::parse($booking->reservation_end);
                                                 $startdates = $startdate->Format('d F Y');
                                                 $enddates = $enddate->Format('d F Y');
-                                                
+                                                $diffInDays = $startdate->diffInDays($enddates);
+                                                $now = \Carbon\Carbon::now();
+
                                             @endphp
                                             <tr>
-                                                <td class="text-center">{{ $booking->transaction->user->name }} -
-                                                    {{ $booking->transaction->user->phone }}</td>
-                                                <td class="text-center">CTH123</td>
+                                                <td class="text-center">{{ $booking->transaction->user->name ?? '' }} -
+                                                    {{ $booking->transaction->user->phone ?? '' }}</td>
+                                                <td class="text-center">{{ $booking->transaction->no_inv }}</td>
+                                                <td class="text-center">{{ $booking->booking_id }}</td>
                                                 <td class="text-center">{{ $startdates }}
                                                 </td>
                                                 <td class="text-center">{{ $enddates }}</td>
-                                                <td class="text-center">{{ $booking->hotelroom->name     }}</td>
-                                                <td class="text-center">1 Kamar | 8 Malam</td>
-
+                                                <td class="text-center">{{ $booking->hotelroom->name ?? '' }}</td>
+                                                <td class="text-center">{{ $booking->room }} Kamar | {{ $diffInDays }}
+                                                    Malam
 
 
                                                 <td class="text-center">
@@ -417,7 +460,7 @@
                                                             <a href="javascript:void(0)"
                                                                 class="menu-link px-3 text-warning" id=""
                                                                 data-id="" data-bs-toggle="modal">
-                                                                Cetak
+                                                                Detail Booking
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->
@@ -446,24 +489,18 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="kt_tab_pane_4" role="tabpanel">
-
                             @foreach ($hotel->hotelRoom as $room)
-                                <div class="d-flex flex-wrap flex-sm-nowrap border border-secondary p-3 m-18 mt-2"
-                                    style="border-radius: 20px;" >
-
-                                    <div class="container">
-                                        <!-- Header -->
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div class="text-start">
-                                                <h4 class="m-1">{{ $room->name }}</h4>
-                                            </div>
-                                            <div class="text-end">
-                                                <h5 class="m-1">Terdapat {{ $room->hotelroomFacility->count() }}
+                                <div class="card card-bordered mb-5">
+                                    <div class="card-header">
+                                        <div class="card-title d-flex justify-content-between">
+                                            <h4 class="m-1">{{ $room->name }}</h4>
+                                            <div>
+                                                <h5>Terdapat {{ $room->hotelroomFacility->count() }}
                                                     Fasilitas</h5>
                                             </div>
                                         </div>
-                                        <!-- Garis -->
-                                        <hr class="mb-4">
+                                    </div>
+                                    <div class="card-body">
                                         <!--begin: Pic-->
                                         <div class="row">
                                             @foreach ($room->hotelroomFacility as $facilityhotel)
@@ -471,7 +508,7 @@
                                                     <div class="col-md-1 mb-1 text-center">
                                                         <div
                                                             class="symbol symbol-100px symbol-lg-70px symbol-fixed position-relative">
-                                                            <img src="{{ asset($facilityhotel->facility->icon) }}"
+                                                            <img src="{{ asset('storage/' . $facilityhotel->facility->icon) }}"
                                                                 alt="image" />
                                                         </div>
                                                         <div class="mt-2">
@@ -484,11 +521,7 @@
 
                                         </div>
                                         <!--end::Pic-->
-                                        <!--begin::Info-->
-
-                                        <!--end::Info-->
                                     </div>
-
                                 </div>
                             @endforeach
 
@@ -501,8 +534,8 @@
                                         <i class="ki-duotone ki-plus fs-2"></i>Tambah Peraturan</a>
                                 </div>
 
-                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                                    id="kt_datatable_zero_configuration_3">
+
+                                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle">
                                     <thead>
                                         <tr class="fw-bold fs-6 text-gray-800 ">
                                             <th class="text-center">No.</th>
@@ -565,15 +598,17 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body py-10 px-lg-17">
-                                                                <p class="text-center">Anda yakin ingin menghapus data Peraturan
+                                                                <p class="text-center">Anda yakin ingin menghapus data
+                                                                    Peraturan
                                                                     {{ $rule->name }}?
                                                                 </p>
                                                             </div>
                                                             <div class="modal-footer d-flex justify-content-center">
                                                                 <button type="button" class="btn btn-light me-3"
-                                                                    data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-danger">Delete</button>
+                                                                    data-bs-dismiss="modal">Cancel
+                                                                </button>
+                                                                <button type="submit" class="btn btn-danger">Delete
+                                                                </button>
                                                             </div>
                                                             <!--end::Menu-->
                                                         </form>
@@ -618,7 +653,8 @@
                                                     </div>
                                                     <!--end::Heading-->
                                                     <!--begin::Input group-->
-                                                    <input type="hidden" name="hotel_id" id="hotel_id" value="{{ $hotel->id }}">
+                                                    <input type="hidden" name="hotel_id" id="hotel_id"
+                                                        value="{{ $hotel->id }}">
 
                                                     <div class="row g-9 mb-8">
                                                         <div class="col-md-12">
@@ -654,8 +690,6 @@
                                                                 </button>
                                                             </div>
                                                         </div>
-
-
                                                     </div>
                                                     <!--end::Actions-->
                                                 </form>
@@ -683,6 +717,8 @@
     </div>
 @endsection
 @push('add-script')
+<script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
@@ -704,24 +740,24 @@
                     ">"
             });
 
-            $('#kt_datatable_zero_configuration_1').DataTable({
-                "scrollY": "500px",
-                "scrollCollapse": true,
-                "language": {
-                    "lengthMenu": "Show _MENU_",
-                },
-                "dom": "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                    ">" +
+            // $('#kt_datatable_zero_configuration_1').DataTable({
+            //     "scrollY": "500px",
+            //     "scrollCollapse": true,
+            //     "language": {
+            //         "lengthMenu": "Show _MENU_",
+            //     },
+            //     "dom": "<'row'" +
+            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+            //         ">" +
 
-                    "<'table-responsive'tr>" +
+            //         "<'table-responsive'tr>" +
 
-                    "<'row'" +
-                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                    ">"
-            });
+            //         "<'row'" +
+            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+            //         ">"
+            // });
 
             $('#kt_datatable_zero_configuration_2').DataTable({
                 "scrollY": "500px",
@@ -762,7 +798,17 @@
             });
 
         });
-
-    
     </script>
+@endpush
+@push('add-style')
+<style>
+    body {
+        background-size: 100% 80px !important;
+    }
+
+    .card-hostel:hover {
+        border: 1px solid #D9214E;
+        cursor: pointer;
+    }
+</style>
 @endpush

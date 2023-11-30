@@ -29,16 +29,16 @@
                 <form class="form w-100" method="POST" action="{{route('login')}}" novalidate="novalidate" id="kt_sign_in_form"  >
                     <!--begin::Heading-->
                     @csrf
-                    <div class="text-center mb-11">
+                    <div class="mb-7">
                         <!--begin::Title-->
                         <h1 class="text-dark  fw-bolder mb-3">
-                            Login
+                            Masuk
                         </h1>
                         <!--end::Title-->
 
                         <!--begin::Subtitle-->
                         <div class="text-gray-500 fw-semibold fs-6">
-                            Your Account
+                            Login dengan email dan password
                         </div>
                         <!--end::Subtitle--->
                     </div>
@@ -115,16 +115,16 @@
                             <!--end::Indicator progress--> </button>
                     </div>
                     <!--end::Submit button-->
-                    <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-light btn-outline-light btn-lg w-100 mt-5 mb-10">
+                    <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary btn-lg w-100 mt-5 mb-10">
                         Kembali Ke Home
                     </a>
 
                     <!--begin::Sign up-->
                     <div class="text-gray-500 text-center fw-semibold fs-6">
-                        Not a Member yet?
+                        Belum memiliki akun ?
 
                         <a href="{{route('register')}}" class="link-primary">
-                            Sign up
+                            Registrasi
                         </a>
                     </div>
                     <!--end::Sign up-->

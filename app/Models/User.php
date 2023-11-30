@@ -23,7 +23,9 @@ class User extends Authenticatable
         'password',
         'phone',
         'role',
-        'point'
+        'point',
+        'image',
+        'is_active',
     ];
 
     /**
@@ -47,7 +49,7 @@ class User extends Authenticatable
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class);
+        return $this->hasMany(Transaction::class);
     }
 
     /**
