@@ -46,7 +46,7 @@
                             ->where('hostel_ratings.transaction_id', $transactionHostel->transaction->id)
                             ->count();
                     @endphp
-                    @if ($reviewCount == 0)
+                    @if ($reviewCount == 0 && $transactionHostel->transaction->status == "PAID")
                         <a href="#" data-bs-toggle="modal" data-bs-target="#review"
                             class="btn btn-outline btn-outline-danger border border-danger fw-bold"
                             style="padding: 12px 16px 12px 16px; border: 1px;">
@@ -303,9 +303,13 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Hostel</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->rent_price, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->rent_price * $diffInDays * $transactionHostel->room, 0, ',', '.') }}</div>
                                                 </div>
-                                                
+                                                <div class="d-flex mb-1 justify-content-between">
+                                                    <div class="fs-8">Biaya Penanganan</div>
+                                                    <div
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->fee_admin +$transactionHostel->kode_unik, 0, ',', '.') }}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
