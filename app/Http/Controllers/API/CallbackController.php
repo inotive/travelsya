@@ -60,7 +60,6 @@ class CallbackController extends Controller
             $rawRequestInput = file_get_contents("php://input");
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
-            print_r($responseXendit);
             $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
                 ->first();
 
