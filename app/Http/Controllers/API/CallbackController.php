@@ -88,7 +88,7 @@ class CallbackController extends Controller
                                 ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
-
+                            print_r($responseMili);
                             $responseMessageSNCodeFinal = "";
                             if($transaction->service == "listrik-token")
                             {
