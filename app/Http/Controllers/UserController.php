@@ -228,13 +228,13 @@ class UserController extends Controller
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
+            ->where('transaction_id', $id)
             ->first();
 
         $pengeluaran = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'credit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
+            ->where('transaction_id', $id)
             ->first();
 
 

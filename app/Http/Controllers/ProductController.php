@@ -515,19 +515,36 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DB::table('detail_transaction_ppob')->insert([
-            'transaction_id'  => $storeTransaction->id,
-            'product_id'      => $product->id,
-            'nomor_pelanggan' => $request->noPelangganPLN,
-            'total_tagihan'   => $amount,
-            'fee_travelsya'  => $fees[0]['value'],
-            'fee_mili'       => 0,
-            'message'         => 'Sedang menunggu pembayaran',
-            'status'          => "PROCESS",
-            "kode_unik"       => $uniqueCode,
-            "created_at" => Carbon::now()
-        ]);
 
+        if($product->service->name == "listrik-token")
+        {
+            DB::table('detail_transaction_top_up')->insert([
+                'transaction_id'  => $storeTransaction->id,
+                'product_id'      => $product->id,
+                'nomor_telfon' => $request->noPelangganPLN,
+                'total_tagihan'   => $amount,
+                'fee_travelsya'  => $fees[0]['value'],
+                'fee_mili'       => 0,
+                'message'         => 'Sedang menunggu pembayaran',
+                'status'          => "PROCESS",
+                "kode_unik"       => $uniqueCode,
+                "created_at" => Carbon::now()
+            ]);
+        }
+        {
+            DB::table('detail_transaction_ppob')->insert([
+                'transaction_id'  => $storeTransaction->id,
+                'product_id'      => $product->id,
+                'nomor_pelanggan' => $request->noPelangganPLN,
+                'total_tagihan'   => $amount,
+                'fee_travelsya'  => $fees[0]['value'],
+                'fee_mili'       => 0,
+                'message'         => 'Sedang menunggu pembayaran',
+                'status'          => "PROCESS",
+                "kode_unik"       => $uniqueCode,
+                "created_at" => Carbon::now()
+            ]);
+        }
         //deductpoint
         $point = new Point;
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
