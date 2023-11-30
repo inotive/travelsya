@@ -28,7 +28,7 @@ class ProfileController extends Controller
         $view = [
             'data' => $profile
         ];
-        return view('profile.profile', $view);
+        return view('ekstranet.profile.profile', $view);
     }
 
     public function updateProfile(Request $request,User $profile){
@@ -45,27 +45,27 @@ class ProfileController extends Controller
                 throw new Exception('Email Telah Tepakai!');
             }
 
-            
-            $imageProfile = $profile->image; 
+
+            $imageProfile = $profile->image;
 
             if ($request->hasFile('image')) {
-                Storage::disk('public')->delete('profile/' . $profile->image); 
+                Storage::disk('public')->delete('profile/' . $profile->image);
                 $image = $this->storeFile($request->file('image'), 'profile');
                 $imageProfile = $image;
             }
-            
+
             $data = [
                 'name' => $request->name,
                 'email' => $request->email,
                 'phone' => $request->phone,
             ];
-            
+
             if ($request->password !== null) {
                 $data['password'] = bcrypt($request->password);
             }
-            
-            $data['image'] = $imageProfile; 
-            
+
+            $data['image'] = $imageProfile;
+
             $profile->fill($data);
             $profile->update();
 
@@ -78,7 +78,7 @@ class ProfileController extends Controller
 
             return redirect()->route('admin.edit-profile', $profile->id);
         } catch (Exception $e) {
-         
+
             DB::rollBack();
 
             session()->flash('flash', [
@@ -99,31 +99,31 @@ class ProfileController extends Controller
             if ($exist !== null) {
                 throw new Exception('Nama Telah Tepakai!');
             }
-            if ($emailExist !== null) {
-                throw new Exception('Email Telah Tepakai!');
-            }
+//            if ($emailExist !== null) {
+//                throw new Exception('Email Telah Tepakai!');
+//            }
 
-            
-            $imageProfile = $profile->image; 
+
+            $imageProfile = $profile->image;
 
             if ($request->hasFile('image')) {
-                Storage::disk('public')->delete('profile/' . $profile->image); 
+                Storage::disk('public')->delete('profile/' . $profile->image);
                 $image = $this->storeFile($request->file('image'), 'profile');
                 $imageProfile = $image;
             }
-            
+
             $data = [
                 'name' => $request->name,
-                'email' => $request->email,
+//                'email' => $request->email,
                 'phone' => $request->phone,
             ];
-            
+
             if ($request->password !== null) {
                 $data['password'] = bcrypt($request->password);
             }
-            
-            $data['image'] = $imageProfile; 
-            
+
+            $data['image'] = $imageProfile;
+
             $profile->fill($data);
             $profile->update();
 
@@ -136,7 +136,7 @@ class ProfileController extends Controller
 
             return redirect()->route('partner.edit-profile', $profile->id);
         } catch (Exception $e) {
-         
+
             DB::rollBack();
 
             session()->flash('flash', [

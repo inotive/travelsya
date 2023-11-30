@@ -81,7 +81,7 @@ class DashboardPartnerController extends Controller
         //                $query->where('user_id', $id);
         //            });
 
-        $data['revenueWeek'] = $transaction_hotel->sum('rent_price') + $transaction_hostel->sum('rent_price');
+        $data['revenueWeek'] = $transaction_hotel->sum('t.total') + $transaction_hostel->sum('t.total');
 
         /**
          * JUMLAH TAMU HOTEL DAN HOSTEL ======================================
@@ -91,15 +91,32 @@ class DashboardPartnerController extends Controller
         /**
          * PENDAPATAN PER BULAN ======================================
          */
-        $trans_hotel_month = DetailTransactionHotel::whereMonth('created_at', '=', date('m'))
-            ->withWhereHas('transaction', function ($query) use ($id) {
-                $query->where('user_id', $id);
-            })->sum('rent_price');
+        $startMonth = Carbon::now()->timezone('Asia/Makassar')->subMonth()->format("Y-m-d H:i:s");
+        $dateNow = Carbon::now()->timezone('Asia/Makassar');
+        $trans_hotel_month = DB::table('detail_transaction_hotel as dh')
+            ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
+            ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
+            ->where('h.user_id', $id)
+            ->whereBetween('dh.updated_at', [$startMonth, $dateNow])
+            ->where('t.status', '=', 'PAID')->sum('t.total');
 
-        $trans_hostel_month = DetailTransactionHostel::whereMonth('created_at', '=', date('m'))
-            ->withWhereHas('transaction', function ($query) use ($id) {
-                $query->where('user_id', $id);
-            })->sum('rent_price');
+
+        $trans_hostel_month = DB::table('detail_transaction_hostel as dh')
+            ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
+            ->join('hostels as h', 'dh.hostel_id', '=', 'h.id')
+            ->where('h.user_id', $id)
+            ->whereBetween('dh.updated_at', [$startMonth, $dateNow])
+            ->where('t.status', '=', 'PAID')->sum('t.total');
+
+//        $trans_hotel_month = DetailTransactionHotel::whereMonth('created_at', '=', date('m'))
+//            ->withWhereHas('transaction', function ($query) use ($id) {
+//                $query->where('user_id', $id);
+//            })->sum('rent_price');
+//
+//        $trans_hostel_month = DetailTransactionHostel::whereMonth('created_at', '=', date('m'))
+//            ->withWhereHas('transaction', function ($query) use ($id) {
+//                $query->where('user_id', $id);
+//            })->sum('rent_price');
 
         $data['revenueMonth'] = $trans_hotel_month + $trans_hostel_month;
 

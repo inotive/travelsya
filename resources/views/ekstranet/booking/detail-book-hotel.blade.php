@@ -15,12 +15,12 @@
                         <div class="d-flex justify-content-between align-items-start flex-wrap mb-5">
                             <div class="d-flex flex-column">
                                 <div class="d-flex align-items-center mb-2 mt-2">
-                                    <h2 class="text-gray-900 text-hover-primary fs-3 fw-bold me-1">Nama</h2>
+                                    <h2 class="text-gray-900 text-hover-primary fs-3 fw-bold me-1">Nama Tamu</h2>
                                 </div>
                                 <div class="d-flex flex-wrap fw-semibold fs-3 mb-1 pe-1">
-                                    <h2 class="d-flex align-items-center text-gray-700 text-hover-primary me-5 mb-2">
+                                    <h1 class="d-flex align-items-center me-5 mb-2">
                                         {{ $hotelbookdates->transaction->user->name }}
-                                    </h2>
+                                    </h1>
                                 </div>
                             </div>
                         </div>
@@ -33,54 +33,54 @@
                         @endphp
                         <div class="d-flex flex-wrap flex-stack">
                             <div class="d-flex flex-column flex-grow-1 pe-12 ">
-                                <div class="d-flex flex-wrap mb-2">
-                                    <h5 href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                <div class="d-flex flex-wrap ">
+                                    <p href="#" class="fw-medium">
                                         Tanggal Check In
-                                    </h5>
+                                    </p>
                                 </div>
                                 <div class="d-flex flex-wrap">
-                                    <h5 href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                    <p  class="fw-bold">
                                         {{ $startdates}}
-                                    </h5>
+                                    </p>
                                 </div>
                             </div>
 
                             <div class="d-flex flex-column flex-grow-1 pe-8 ">
-                                <div class="d-flex flex-wrap mb-2">
-                                    <h5 href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                <div class="d-flex flex-wrap ">
+                                    <p href="#" class="fw-medium">
                                         Tanggal Check Out
-                                    </h5>
+                                    </p>
                                 </div>
                                 <div class="d-flex flex-wrap mt-1">
-                                    <h5 href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                    <p href="#" class="fw-bold">
                                         {{ $enddates}} ({{ $diffInDays }} Malam)
-                                    </h5>
+                                    </p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="d-flex flex-wrap flex-stack mt-5 ">
                             <div class="d-flex flex-column flex-grow-1">
-                                <div class="d-flex flex-wrap mb-2">
-                                    <h5 class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                <div class="d-flex flex-wrap ">
+                                    <p class="fw-medium">
                                         Jumlah Tamu
-                                    </h5>
+                                    </p>
                                 </div>
                                 <div class="d-flex flex-wrap ">
-                                    <h5 class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                    <p class="fw-bold">
                                         {{ $hotelbookdates->guest }} Orang
-                                    </h5>
+                                    </p>
                                 </div>
                             </div>
 
                             <div class="d-flex flex-column flex-grow-1 pe-8">
-                                <div class="d-flex flex-wrap mb-2">
-                                    <h5 class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">Room</h5>
+                                <div class="d-flex flex-wrap ">
+                                    <p class="fw-medium">Room</p>
                                 </div>
                                 <div class="d-flex flex-wrap mt-1">
-                                    <h5 class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                    <p class="fw-bold">
                                         {{$hotelbookdates->hotelRoom->name}}
-                                    </h5>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                             $hotelImage = optional($hotelbookdates->hotel->hotelImage->where('main', 1)->first())->image;
                             $image = $hotelImage !== null ? 'storage/' . $hotelImage : null;
                         @endphp
-                        
+
                         <img src="{{ asset($image ?: 'assets/media/logos/logo-square.png') }}" alt="image" />
                             {{-- <img src="{{ asset('storage/media/hotel/'.$hotelbookdates->hotel->hotelImage->where('main', 1)->first()->image) }}"
                                 alt="image" /> --}}
@@ -114,18 +114,18 @@
                         <div class="d-flex flex-wrap flex-stack ">
                             <div class="d-flex flex-column flex-grow-1 pe-12 ">
                                 <div class="d-flex flex-wrap mb-4">
-                                    <h4 class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
-                                        Indonesia Standard {{ ucwords($hotelbookdates->hotelRoom->bed_type)}}
+                                    <h4 class="fw-medium">
+                                        {{ ucwords($hotelbookdates->hotelRoom->name)}}
                                     </h4>
                                 </div>
                                 <div class="d-flex flex-wrap mb-4">
-                                    <a class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">Room
-                                        Size: {{$hotelbookdates->hotelRoom->roomsize}} sqft</a>
+                                    <p class="fw-light">
+                                        Room  Size: {{$hotelbookdates->hotelRoom->roomsize}} m2</p>
                                 </div>
                                 <div class="d-flex flex-wrap mb-4">
-                                    <a class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">Tersewa
+                                    <p class="fw-medium text-danger">Tersewa
                                         {{$hotelbookdates->count()}} Kali
-                                    </a>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -146,20 +146,20 @@
                     <div class="row mb-5">
                         <div class="col-md-6">
                             <div class="d-flex flex-column mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1 mb-2">
+                                <p class="fw-medium mb-2">
                                     {{$hotelbookdates->hotelRoom->name}}
-                                </a>
-                                <a href="#" class="text-gray-900 text-hover-primary fs-7 fw-bold me-1">
+                                </p>
+                                <p class="fs-7 fw-bold me-1">
                                     ({{ $diffInDays }} Malam)
-                                </a>
+                                </p>
                             </div>
                         </div>
 
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                <h5 class="fw-bold">
                                     {{ General::rp($hotelbookdates->rent_price) }}
-                                </a>
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -167,19 +167,19 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="d-flex flex-column mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1 mb-2">
-                                    Biaya Penanganan</a>
-                                <a href="#" class="text-gray-900 text-hover-primary fs-7 fw-bold me-1">
+                                <p  class="fw-medium mb-2">
+                                    Biaya Penanganan</p>
+                                <p href="#" class="text-gray-900 text-hover-primary fs-7 fw-bold me-1">
                                     15 %
-                                </a>
+                                </p>
                             </div>
                         </div>
 
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                <h5 class="fw-bold ">
                                     {{ General::rp($hotelbookdates->fee_admin) }}
-                                </a>
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -187,17 +187,17 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="d-flex flex-column mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1 mb-2">
+                                <p  class="fw-medium mb-2">
                                     Total Diterima
-                                </a>
+                                </p>
                             </div>
                         </div>
 
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
+                                <h5 class="fw-bold">
                                     {{ General::rp($hotelbookdates->rent_price + $hotelbookdates->fee_admin) }}
-                                </a>
+                                </h5>
                             </div>
                         </div>
                     </div>

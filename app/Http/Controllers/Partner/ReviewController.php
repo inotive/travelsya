@@ -55,17 +55,17 @@ class ReviewController extends Controller
         $user_id = auth()->user()->id;
 
         $review_hotel = DB::table('hotel_ratings')
-            ->join('users', 'users.id', '=', 'hotel_ratings.user_id')
+            ->join('users', 'users.id', '=', 'hotel_ratings.users_id')
             ->join('hotels', 'hotels.id', '=', 'hotel_ratings.hotel_id')
             ->join('transactions', 'transactions.id', '=', 'hotel_ratings.transaction_id')
-            ->where('hotels.user_id', $user_id)->select('hotel_ratings.*', 'hotel_ratings.created_at as createdat', 'users.name as user_name', 'hotels.*', 'transactions.id as transaction_id')
+            ->where('hotels.user_id', $user_id)->select('hotel_ratings.*', 'hotel_ratings.created_at as createdat', 'users.name as user_name','users.image as foto_user', 'hotels.*', 'transactions.id as transaction_id')
             ->get();
 
         $review_hostel = DB::table('hostel_ratings')
             ->join('users', 'users.id', '=', 'hostel_ratings.users_id')
             ->join('hostels', 'hostels.id', '=', 'hostel_ratings.hostel_id')
             ->join('transactions', 'transactions.id', '=', 'hostel_ratings.transaction_id')
-            ->where('hostels.user_id', $user_id)->select('hostel_ratings.*', 'hostel_ratings.created_at as createdat', 'users.name as user_name', 'hostels.*', 'transactions.id as transaction_id')
+            ->where('hostels.user_id', $user_id)->select('hostel_ratings.*', 'hostel_ratings.created_at as createdat', 'users.name as user_name', 'hostels.*','users.image as foto_user', 'transactions.id as transaction_id')
             ->get();
 
         $review_hotel_collection = collect($review_hotel);
@@ -75,7 +75,6 @@ class ReviewController extends Controller
         $data['ratings_5'] = $data['ratings']->filter(function ($item) {
             return $item->rate == 5;
         });
-
         $data['ratings_4'] = $data['ratings']->filter(function ($item) {
             return $item->rate == 4;
         });
@@ -119,7 +118,6 @@ class ReviewController extends Controller
             ->count();
 
         $data['total_review'] = $total_hotel_review + $total_hostel_review;
-
         return view('ekstranet.review.index', compact('data'));
     }
 }

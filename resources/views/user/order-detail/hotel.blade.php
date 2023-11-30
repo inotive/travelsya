@@ -44,7 +44,7 @@
                                 ->where('hotel_ratings.transaction_id', $transactionHotel->transaction->id)
                                 ->count();
                         @endphp
-                        @if ($reviewCount == 0)
+                        @if ($reviewCount == 0 && $transactionHotel->transaction->status == "PAID")
                         <a href="#" data-bs-toggle="modal" data-bs-target="#review"
                             class="btn btn-outline btn-outline-danger border border-danger fw-bold"
                             style="padding: 12px 16px 12px 16px; border: 1px;">
@@ -303,6 +303,11 @@
                                                     <div
                                                         class="fs-8 fw-bold">{{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}</div>
                                                 </div>
+                                                <div class="d-flex mb-1 justify-content-between">
+                                                    <div class="fs-8">Biaya Penanganan</div>
+                                                    <div
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->fee_admin +$transactionHotel->kode_unik, 0, ',', '.') }}</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -335,7 +340,7 @@
                                                     Total Biaya
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                    RP {{ number_format($transactionHotel->hotelRoom->sellingprice, 0, ',', '.') }}
+                                                    RP {{ number_format($transactionHotel->transaction->total, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

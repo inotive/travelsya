@@ -64,9 +64,9 @@ class HotelController extends Controller
         //     ->orderByDesc('hotel_rating_avg_rate');
         $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
-                $query->where([
-                    ['totalroom', '>', $request->room],
-                ]);
+                $query->where(
+                    'totalroom', '>=', $request->room,
+                );
             })
             ->where(function ($query) use ($request) {
                 $query->where('hotels.city', 'like', '%' . $request->location . '%')
@@ -79,7 +79,6 @@ class HotelController extends Controller
                 AND ? <= guest
                 AND ? >= reservation_start
             ) > 0', [$request->end_date, $request->start]);
-
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
                 $query->whereIn('facility_id', $request->facility);
@@ -101,7 +100,6 @@ class HotelController extends Controller
 
 
         $hotels = $hotels->paginate(10)->appends(request()->query());
-
         $hotelDetails = [];
 
         foreach ($hotels as $hotel) {
@@ -327,6 +325,9 @@ class HotelController extends Controller
                 "rent_price"        => $hotel->sellingprice,
                 "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $data['uniqueCode'],
+                "guest_name"         => $request->user()->name,
+                "guest_email"         => $request->user()->email,
+                "guest_handphone"         => $request->user()->handphone,
                 "created_at"        => Carbon::now(),
             ]);
 

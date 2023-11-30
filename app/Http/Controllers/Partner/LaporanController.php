@@ -20,10 +20,9 @@ class LaporanController extends Controller
         $start = $request->start;
         $end = $request->end;
 
-        $transaction_hotel = DetailTransactionHotel::with('transaction')
-            ->whereHas('transaction', function ($query) use ($id, $year, $start, $end) {
-                $query->where('user_id', $id);
-
+        $transaction_hotel = DetailTransactionHotel::with('transaction', 'hotel')
+            ->whereHas('transaction', function ($query) use ($year,$start,$end){
+                $query->where('status', 'PAID');
                 if ($year != null) {
                     $query->whereYear('created_at', $year);
                 }
@@ -37,16 +36,19 @@ class LaporanController extends Controller
                     $endDateTime = $end . ' 23:59:59'; // Akhiri hari ini
                     $query->where('created_at', '<=', $endDateTime);
                 }
-            })->get();
+            })
+            ->whereHas('hotel', function ($query) use ($id){
+                $query->where('user_id',$id);
+            })->orderByDesc('updated_at')
+            ->get();
 
-        $transaction_hostel = DetailTransactionHostel::with('transaction')
-            ->whereHas('transaction', function ($query) use ($id, $year, $start, $end) {
-                $query->where('user_id', $id);
+        $transaction_hostel = DetailTransactionHostel::with('transaction','hostel')
+            ->whereHas('transaction', function ($query) use ( $year, $start, $end) {
+                $query->where('status', 'PAID');
 
                 if ($year != null) {
                     $query->whereYear('created_at', $year);
                 }
-
                 if ($start != null) {
                     $startDateTime = $start . ' 00:00:00';
                     $query->where('created_at', '>=', $startDateTime);
@@ -56,7 +58,11 @@ class LaporanController extends Controller
                     $endDateTime = $end . ' 23:59:59'; // Akhiri hari ini
                     $query->where('created_at', '<=', $endDateTime);
                 }
-            })->get();
+            })
+            ->whereHas('hostel', function ($query) use ($id){
+                $query->where('user_id',$id);
+            })->orderByDesc('updated_at')
+            ->get();
 
 
         $data['transaction_hotels'] = $transaction_hotel;

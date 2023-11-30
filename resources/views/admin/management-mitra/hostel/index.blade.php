@@ -37,7 +37,11 @@
 
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $hostel->user_name }}</td>
+                                <td class="text-center">
+                                    <img src="{{asset('storage/'. $hostel->image)}}" alt="" style="width: 25px; height: 25px;">
+                                    {{ $hostel->user_name }}
+
+                                </td>
                                 <td class="text-center">{{ $hostel->name }}</td>
                                 <td class="text-center">{{ $hostel->city }}</td>
                                 <td class="text-center">{{ $hostel->address }}</td>

@@ -74,6 +74,12 @@ class CallbackController extends Controller
                         $message = "";
                         $responseCode = "";
 
+                        $transaction->update([
+                            'status' =>  'PAID',
+                            'payment_channel' => $responseXendit['payment_channel'],
+                            'payment_method' => $responseXendit['payment_method']
+                        ]);
+
                         if($transaction->service == "pulsa"  || $transaction->service == "listrik-token" || $transaction->service == "ewallet")
                         {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
@@ -105,6 +111,7 @@ class CallbackController extends Controller
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -115,8 +122,12 @@ class CallbackController extends Controller
                                 HistoryPoint::where('transaction_id', $transaction->id)
                                     ->where('flow', 'credit')
                                     ->delete();
+                                $transaction->update([
+                                    'status' => "Transaksi Gagal",
+                                    'payment_channel' => $responseXendit['payment_channel'],
+                                    'payment_method' => $responseXendit['payment_method']
+                                ]);
                             }
-
 
                             DB::table('detail_transaction_top_up')
                                 ->where('top.id', $detailTransactionTopUP->id)
@@ -144,8 +155,14 @@ class CallbackController extends Controller
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
                             } else {
-                                $status = "Gagal";
+                                $status = "Transaksi Gagal";
                                 $message = "Pembayaran "  . $transaction->service . " Gagal";
+
+                                $transaction->update([
+                                    'status' => "Transaksi Gagal",
+                                    'payment_channel' => $responseXendit['payment_channel'],
+                                    'payment_method' => $responseXendit['payment_method']
+                                ]);
                             }
 
                             DetailTransactionPPOB::where('transaction_id', $transaction->id)->update([
@@ -165,14 +182,11 @@ class CallbackController extends Controller
                                 $message = "Pemesanan Hostel Berhasil";
                             }
                         }
-                        $transaction->update([
-                            'status' => $status == "Berhasil" ? 'PAID' : $status,
-                            'payment_channel' => $responseXendit['payment_channel'],
-                            'payment_method' => $responseXendit['payment_method']
-                        ]);
+
+
+
                         if($status == "Berhasil" || $status == "Pending")
                         {
-
                             return ResponseFormatter::success($status, $message);
                         }
                         else{

@@ -173,7 +173,7 @@ class UserController extends Controller
     public function orderDetailHostel($id)
 
     {
-   
+
         $transactionHostel = DetailTransactionHostel::with('transaction.guest', 'hostel.hostelImage', 'hostel.hostelRating', 'hostelRoom')->where('transaction_id', $id)->first();
 
         $hostelPict = DB::table('hostel_images')
@@ -317,9 +317,9 @@ class UserController extends Controller
 
         $hotelRating->create([
             'transaction_id' => $request->transaction_id,
-            'user_id'        => $user_id,
+            'users_id'        => $user_id,
             'hotel_id'       => $request->hotel_id,
-            'hotel_rooms_id' => $request->hotel_rooms_id,
+            'hotel_room_id' => $request->hotel_rooms_id,
             'rate'           => $request->rating,
             'comment'        => $request->comment
         ]);
@@ -342,5 +342,5 @@ class UserController extends Controller
         toast('Hotel Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
-    
+
 }

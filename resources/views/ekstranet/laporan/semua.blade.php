@@ -48,7 +48,7 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Invoice No.</th>
-                                    <th>Tanggal Transaksi</th>
+                                    <th>Tanggal & Waktu</th>
                                     <th>Customer</th>
                                     <th>Contact</th>
                                     <th>Metode & Channel Pembayaran</th>
@@ -75,9 +75,9 @@
                                             ->value('detail_transaction_hotel.id');
                                     @endphp
                                     <tr>
-                                        <td>{{ $no }}</td>   
+                                        <td>{{ $no }}</td>
                                         <td>{{ $hotel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y', strtotime($hotel->created_at)) }}</td>
+                                        <td>{{ date('d M Y h:i:s', strtotime($hotel->updated_at)) }}</td>
                                         <td>{{ $hotel->transaction->user->name }}</td>
                                         <td>{{ $hotel->transaction->user->phone }}</td>
                                         <td>
@@ -86,7 +86,7 @@
                                         </td>
                                         <td>
                                             {{ $hotel->hotel->name }} - {{ $hotel->room . ' ' . $hotel->hotelRoom->name }}
-                                            
+
                                             @php
                                                 $startDate = new DateTime($hotel->reservation_start);
                                                 $endDate = new DateTime($hotel->reservation_end);
@@ -96,39 +96,11 @@
                                         </td>
                                         <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                         <td class="text-center">
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                data-kt-menu="true" style="">
-                                                <!--begin::Menu item-->
-                                                <div class="menu-item px-3">
-                                                    <a href="{{ route('partner.riwayat-booking.detailhotel', ['id' => $detail_pemesanan]) }}"
-                                                        class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                                                        Detail Pesanan
-                                                    </a>
-                                                </div>
-                                                <!--end::Menu item-->
-                                                <!--begin::Menu item-->
-                                                {{-- <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="" data-bs-toggle="modal">
-                                                Edit
+                                            <a href="{{ route('partner.riwayat-booking.detailhotel', ['id' => $detail_pemesanan]) }}"
+                                               class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100" data-kt-customer-table-filter="delete_row">
+                                                Detail Pesanan
                                             </a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" id="tombol-delete" data-id="" data-bs-toggle="modal" class="menu-link px-3 text-danger">
-                                                Delete
-                                            </a>
-                                        </div> --}}
-                                                <!--end::Menu item-->
-                                            </div>
-                                            <!--begin::Menu-->
-                                            <a href="#"
-                                                class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                Actions
-                                                <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                            </a>
-                                            <!--end::Menu-->
+
                                         </td>
                                     </tr>
                                     @php
@@ -152,7 +124,7 @@
                                     <tr>
                                         <td>{{ $no }}</td>
                                         <td>{{ $hostel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y', strtotime($hostel->created_at)) }}</td>
+                                        <td>{{ date('d M Y h:i:s', strtotime($hostel->updated_at)) }}</td>
                                         <td>{{ $hostel->transaction->user->name }}</td>
                                         <td>{{ $hostel->transaction->user->phone }}</td>
                                         <td>
@@ -166,39 +138,10 @@
                                         </td>
                                         <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
                                         <td class="text-center">
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                data-kt-menu="true" style="">
-                                                <!--begin::Menu item-->
-                                                <div class="menu-item px-3">
-                                                   <a href="{{ route('partner.riwayat-booking.detailhostel', ['id' => $detail_pemesanan]) }}"
-                                                        class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                                                        Detail Pesanan
-                                                    </a>
-                                                </div>
-                                                <!--end::Menu item-->
-                                                <!--begin::Menu item-->
-                                                {{-- <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="" data-bs-toggle="modal">
-                                                Edit
+                                            <a href="{{ route('partner.riwayat-booking.detailhostel', ['id' => $detail_pemesanan]) }}"
+                                               class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100" data-kt-customer-table-filter="delete_row">
+                                                Detail Pesanan
                                             </a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="javascript:void(0)" id="tombol-delete" data-id="" data-bs-toggle="modal" class="menu-link px-3 text-danger">
-                                                Delete
-                                            </a>
-                                        </div> --}}
-                                                <!--end::Menu item-->
-                                            </div>
-                                            <!--begin::Menu-->
-                                            <a href="#"
-                                                class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                Actions
-                                                <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                            </a>
-                                            <!--end::Menu-->
                                         </td>
                                     </tr>
                                     @php

@@ -5,7 +5,7 @@
 <div class="row gy-5 g-xl-10">
     <!--begin::Col-->
     <div class="col-sm-6 col-xl-3 ">
-        <div class="card bg-light-success card-xl-stretch mb-xl-8">
+        <div class="card  card-xl-stretch mb-xl-8">
             <!--begin::Body-->
             <div class="card-body my-3">
                 <h3 class="card-title fw-bold text-success fs-5  d-block">Jumlah Tamu</h3>
@@ -24,7 +24,7 @@
     <!--end::Col-->
     <!--begin::Col-->
     <div class="col-sm-6 col-xl-3 ">
-        <div class="card bg-light-success card-xl-stretch mb-xl-8">
+        <div class="card  card-xl-stretch mb-xl-8">
             <!--begin::Body-->
             <div class="card-body my-3">
                 <h3 class="card-title fw-bold text-success fs-5  d-block">Pendapatan</h3>
@@ -41,7 +41,7 @@
     <!--end::Col-->
     <!--begin::Col-->
     <div class="col-sm-6 col-xl-3 ">
-        <div class="card bg-light-success card-xl-stretch mb-xl-8">
+        <div class="card card-xl-stretch mb-xl-8">
             <!--begin::Body-->
             <div class="card-body my-3">
                 <h3 class="card-title fw-bold text-success fs-5  d-block">Pendapatan</h3>
@@ -60,54 +60,20 @@
     <!--end::Col-->
     <!--begin::Col-->
     <div class="col-sm-6 col-xl-3 ">
-
-        <div class="card card-xxl-stretch mb-5 mb-xl-8">
+        <div class="card card-xl-stretch mb-xl-8">
             <!--begin::Body-->
-            <div class="card-body d-flex flex-column">
-                <!--begin::Wrapper-->
-                <div class="d-flex flex-column mb-7">
-                    <!--begin::Title-->
-                    <a href="#" class="text-dark text-hover-primary fw-bold fs-3">Rooms</a>
-                    <!--end::Title-->
+            <div class="card-body my-3">
+                <h3 class="card-title fw-bold text-success fs-5  d-block">Kamar Terjual</h3>
+                <span class=" fw-bold text-dark fs-8  d-block">Bulan Ini</span>
+
+                <div class="py-1">
+                    <span class="text-dark fs-1 fw-bold me-2">  {{$notready}} Kamar</span>
+                    {{-- <span class="text-dark fs-1 fw-bold me-2">123</span> --}}
+                    {{-- <span class="text-dark fs-1 fw-bold me-2">{{General::rp($card['revenueMonth'])}}</span>--}}
+
                 </div>
-                <!--end::Wrapper-->
-
-                <!--begin::Row-->
-                <div class="row g-0">
-                    <!--begin::Col-->
-                    <div class="col-6">
-                        <div class="d-flex align-items-center mb-9 me-2">
-
-                            <!--begin::Title-->
-                            <div>
-                                <div class="fs-7 text-success fw-bold">Ready </div>
-                                <div class="fs-5 text-dark fw-bold lh-1">{{$ready}} Rooms</div>
-                                {{-- <div class="fs-5 text-dark fw-bold lh-1">123 Rooms</div> --}}
-                            </div>
-                            <!--end::Title-->
-                        </div>
-                    </div>
-                    <!--end::Col-->
-
-                    <!--begin::Col-->
-                    <div class="col-6">
-                        <div class="d-flex align-items-center mb-9 ms-2">
-
-                            <!--begin::Title-->
-                            <div>
-                                <div class="fs-7 text-danger fw-bold">Not Ready</div>
-                                <div class="fs-5 text-dark fw-bold lh-1">{{$notready}} Rooms</div>
-                                {{-- <div class="fs-5 text-dark fw-bold lh-1">123 Rooms</div> --}}
-                                {{-- <div class="fs-5 text-dark fw-bold lh-1">{{$card['notready']}} Rooms</div>--}}
-
-                            </div>
-                            <!--end::Title-->
-                        </div>
-                    </div>
-                    <!--end::Col-->
-                </div>
-                <!--end::Row-->
             </div>
+            <!--end:: Body-->
         </div>
     </div>
     <!--end::Col-->
@@ -118,7 +84,7 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Riwayat Booking Terakhir</h5>
+                <h5 class="card-title">Riwayat Booking Bulan Ini</h5>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
@@ -149,8 +115,9 @@
                                 <td>{{$hotel->payment }}</td>
                                 <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                 <td>
-                                    <span class="badge {{$hotel->status == "SUCCESS" ? "badge-success"
-                                        : "badge-warning" }}">{{$hotel->status }}</span>
+                                    <span class="badge {{$hotel->status == "PAID" ? "badge-success"
+                                        : "badge-warning" }}">{{$hotel->status == "PAID" ? "Lunas"
+                                        : "Menunggu Pembayaran" }}</span>
                                 </td>
                             </tr>
                             @endforeach

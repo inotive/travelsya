@@ -73,8 +73,8 @@
                 </div>
                 <div class="col-md-6">
                     <label class=" required fs-6 fw-semibold mb-2">Email</label>
-                    <input class="form-control form-control-lg" id="email" name="email"
-                        placeholder="Masukan nama email" required value="{{ old('email', $data->email) }}" />
+                    <input class="form-control form-control-lg" id="email" name="email" disabled
+                        placeholder="Masukan nama email" value="{{ old('email', $data->email) }}" />
                 </div>
                 <div class="col-md-6">
                     <label class=" required fs-6 fw-semibold mb-2">Password</label>
@@ -103,5 +103,5 @@
 </div>
 @endsection
 @push('add-script')
-   
+
 @endpush

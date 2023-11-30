@@ -31,7 +31,7 @@ class HostelController extends Controller
 
         $hostels = DB::table('hostels')
             ->join('users', 'users.id', '=', 'hostels.user_id')
-            ->select('hostels.*', 'users.name as user_name')
+            ->select('hostels.*',  'users.name as user_name', 'users.image')
             ->get();
 
         $ratings = DB::table('ratings')

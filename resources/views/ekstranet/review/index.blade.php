@@ -31,7 +31,6 @@
                             <div class="d-flex my-4 flex-column mt-0 m-5">
                                 <a href="#"
                                     class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ number_format($data['avg_rate'], 1) }}
-                                    ()
                                     / 5</a>
                                 <span class="fw-semibold fs-7 text-gray-700">Dari {{ $data['total_review'] }} Review</span>
                                 <!--begin::Menu-->
@@ -101,7 +100,7 @@
                             <!--begin: Pic-->
                             <div class="me-15 mb-1">
                                 <div class="symbol symbol-100px symbol-lg-150px symbol-fixed position-relative">
-                                    <img src="{{ asset('assets/media/avatars/300-1.jpg') }}" alt="image" />
+                                    <img src="{{ asset($rating->foto_user ?? 'assets/media/avatars/300-1.jpg') }}" alt="image" />
                                 </div>
                             </div>
                             <!--end::Pic-->
@@ -117,16 +116,6 @@
                                                 class="text-gray-900 text-hover-primary fs-2 fw-bold me-1">{{ $rating->user_name }}</a>
                                         </div>
                                         <!--end::Name-->
-                                        <!--begin::Info-->
-                                        <div class="d-flex flex-wrap fw-semibold fs-5 mb-1 pe-1">
-                                            <a href="#"
-                                                class="d-flex align-items-center text-gray-600 text-hover-primary me-5 mb-2">
-                                                <span class="path1"></span>
-                                                <span class="path2"></span>
-                                                <span class="path3"></span>
-                                                </i>Contoh Fasilitas</a>
-                                        </div>
-                                        <!--end::Info-->
                                     </div>
                                     <!--end::User-->
                                     <!--begin::Actions-->
