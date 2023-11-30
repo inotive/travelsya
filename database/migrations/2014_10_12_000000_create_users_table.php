@@ -20,8 +20,6 @@ return new class extends Migration
             $table->integer('point');
             $table->integer('role');
             $table->string('password');
-            $table->integer('point');
-            $table->integer('role');
             $table->rememberToken();
             $table->timestamps();
         });

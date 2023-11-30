@@ -46,18 +46,15 @@ class FacilitiesController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
+            $image = $request->file('image')->store('media/facilities');
             
-            // Simpan gambar dengan nama yang di-hash
-            $image->storeAs('public/facilities/', $image->hashName());
             
-            // Lanjutkan dengan logika lain terkait pengunggahan file jika ada
         } else {
             return response()->json(['error' => 'Tidak ada file yang diunggah'], 422);
         }
 
         Facility::create([
-            'icon' => $image->hashName(),
+            'icon' => $image,
             'name' => $request->name,
         ]);
 
@@ -91,27 +88,27 @@ class FacilitiesController extends Controller
      */
     public function update(Request $request, Facility $facility)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required',
-        //     'icon' => 'required'
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
-        // ]);
+        ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         if ($request->hasFile('image')) {
 
             //upload new image
-            $image = $request->file('image');
-            $image->storeAs('public/facilities/', $image->hashName());
+            $image = $request->file('image')->store('media/facilities');
+
 
             //delete old image
-            Storage::delete('public/facilities/' . $facility->image);
+            Storage::delete('public/' . $facility->image);
 
             DB::table('facilities')->where('id', $facility->id)->update([
-                'icon' => $image->hashName(),
+                'icon' => $image,
                 'name' => $request->name,
             ]);
         } else {
@@ -135,7 +132,7 @@ class FacilitiesController extends Controller
      */
     public function destroy(Facility $facility)
     {
-        Storage::delete('public/facilities/' . $facility->image);
+        Storage::delete('public/' . $facility->image);
         $facility->delete();
 
         toast('Facilities has been deleted', 'success');

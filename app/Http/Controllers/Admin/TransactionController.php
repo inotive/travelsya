@@ -12,6 +12,7 @@ use App\Models\HostelRoom;
 use App\Models\Service;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent;
 use Illuminate\Support\Facades\DB;
 
 class TransactionController extends Controller
@@ -19,10 +20,10 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->role == 0) {
-            $tr = Transaction::with('user', 'detailTransaction');
+            $tr = Transaction::with('user');
         } else {
             $id = auth()->user()->id;
-            $tr = Transaction::with('user', 'detailTransaction')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
+            $tr = Transaction::with('user')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
                 $q->where('user_id', $id);
             })->where('service', 'hostel');
         }
@@ -31,10 +32,10 @@ class TransactionController extends Controller
             $tr = $tr->where('service_id', $request->service);
 
         if ($request->start != null) {
-            $tr = $tr->whereDate('created_at', '>=', $request->start)->whereDate('created_at', '<=', $request->end);
+            $tr = $tr->whereDate('created_at', '>=', $request->start);
         }
 
-        $transactions = $tr->orderBy('created_at', 'desc')->paginate(10);
+        $transactions = $tr->orderBy('created_at', 'desc')->get();
         $services = Service::all();
         return view('admin.transaction', compact('transactions', 'services'));
     }

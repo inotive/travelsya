@@ -7,7 +7,8 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.tax') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.tax') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
@@ -21,7 +22,7 @@
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPajak" class="form-control form-control-lg"
-                               name="noPelangganPajak" placeholder="Masukan nomor pelanggan" value=""/>
+                            name="noPelangganPajak" placeholder="Masukan nomor pelanggan" value="" />
                         <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
@@ -39,42 +40,52 @@
                     <div class="col-xl-4">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPajak">Periksa</button>
                     </div>
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold my-3">
-                            <span>Detail Pelanggan</span>
-                        </label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                        <td class="text-right" colspan="3"><span id="namaPelangganPajak"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                        <td>Rp. <span id="totalTagihanPajak"></span></td>
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                        <td>Rp. <span id="biayaAdminPajak"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                        <td colspan="2">Rp. <span id="totalBayarPajak"></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+                    <div class="row mt-4" id="detailPajak">
+                        <div class="col-12">
+                            <label class="fs-5 fw-semibold my-3">
+                                <span>Detail Pelanggan</span>
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPajak"></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                            <td>Rp. <span id="totalTagihanPajak"></span></td>
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                            <td>Rp. <span id="biayaAdminPajak"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                            <td colspan="2">Rp. <span id="totalBayarPajak"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
-
-                    </div>
-                    <div class="col-12">
-                        @auth
+                        <div class="col-12">
+                            @auth
                             <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
-                        @endauth
+                            @endauth
 
-                        @guest
+                            @guest
                             <a href="{{ route('login') }}" class="btn btn-danger w-100">
                                 Login Terlebih Dahulu
                             </a>
-                        @endguest
+                            @endguest
+                        </div>
+                    </div>
+
+                    <div class="row mt-5">
+                        <div class="col-xl-12">
+                            <div id="alertPajak"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,20 +99,22 @@
 
 
 @push('add-style')
-    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-    <script>
-        $(document).ready(function () {
+<script>
+    $(document).ready(function () {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tax') }}",
                 success: function (response) {
+                    $('#productPajak').empty();
+
                     $.each(response, function (key, value) {
                         $('#productPajak').append($('<option>', {
-                            value: value.id,
+                            value: value.kode,
                             text: value.description
                         }));
                     });
@@ -112,6 +125,9 @@
                 $('.textAlert').hide();
             });
 
+
+            $('#detailPajak').hide();
+
             $('#btnPeriksaPajak').on('click', function () {
                 var noPelangganPajak = $('#noPelangganPajak').val();
 
@@ -120,47 +136,58 @@
                     return false;
                 }
 
+                $('#alertPajak').empty()
+                $('#detailPajak').hide();
+                $('#btnPeriksaPajak').attr('disabled', true);
+                $('#btnPeriksaPajak').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.tax') }}",
                     data: {
                         'no_pelanggan': noPelangganPajak,
-                        'nom': 'CEKPLN',
+                        'nom': $('#productPajak').val()
                     },
                     success: function (response) {
-                        $.ajax({
-                            type: "POST",
-                            url: "{{ route('product.adminFee') }}",
-                            data: {
-                                'idProduct':  $('#productPajak').val(),
-                            },
-                            success: function (response) {
+                        // var simulateFeePajak = parseInt(responseTagihan.data.fee)
 
-                                var simulateFeePajak = response[0].value;
+                        // SIMULASI!!!
+                        var simulateFeePajak = 1000;
+                        var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
+                        var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
 
-                                 // SIMULASI!!!
-                                var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                                var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
+                        $('#namaPelangganPajak').text('Joko Susilo');
+                        $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
+                        $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
+                        $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
 
-                                $('#namaPelangganPajak').text('Joko Susilo');
-                                $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
-                                $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
-                                $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
+                        $('#inputNamaPelangganPajak').val('Joko Susilo');
+                        $('#inputTotalTagihanPajak').val(simulateAmountPajak);
+                        $('#inputBiayaAdminPajak').val(simulateFeePajak);
+                        $('#inputTotalBayarPajak').val(simulateTotalPajak);
 
-                                $('#inputNamaPelangganPajak').val('Joko Susilo');
-                                $('#inputTotalTagihanPajak').val(simulateAmountPajak);
-                                $('#inputBiayaAdminPajak').val(simulateFeePajak);
-                                $('#inputTotalBayarPajak').val(simulateTotalPajak);
-                            }
-                        });
+                        $('#btnPeriksaPajak').removeAttr('disabled');
+                        $('#btnPeriksaPajak').html('Periksa');
+                        $('#detailPajak').show();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400 || xhr.status === 500) {
+                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+
+                            $('#alertPajak').empty().append(alertDiv);
+                        }
+
+                        // Hapus spinner dan aktifkan tombol
+                        $('#btnPeriksaPajak').removeAttr('disabled');
+                        $('#btnPeriksaPajak').html('Periksa');
                     }
                 });
             });
         });
-    </script>
+</script>
 
-    {{-- <script>
-        $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
@@ -207,7 +234,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush
-
-

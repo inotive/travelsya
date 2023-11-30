@@ -27,6 +27,26 @@ class Transaction extends Model
         return $this->hasMany(DetailTransaction::class);
     }
 
+    public function detailTransactionPPOB()
+    {
+        return $this->hasMany(DetailTransactionPPOB::class);
+    }
+    public function detailTransactionTopUp()
+    {
+        return $this->hasMany(DetailTransactionTopUp::class);
+    }
+
+    public function detailTransactionHotel()
+    {
+        return $this->hasMany(DetailTransactionHotel::class);
+    }
+
+    public function detailTransactionHostel()
+    {
+        return $this->hasMany(DetailTransactionHostel::class);
+    }
+
+
     /**
      * Get all of the product for the Transaction
      *

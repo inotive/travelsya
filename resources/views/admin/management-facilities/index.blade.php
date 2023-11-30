@@ -32,7 +32,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset($facility->icon) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset('storage/'. $facility->icon) }}" class="rounded" style="width: 150px">
                                 </td>
                                 <td class="text-center">{{ $facility->name }}</td>
                                 <!--end::Menu item-->
@@ -258,7 +258,7 @@
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Icon</label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" required>
-                            
+
                                 <!-- error message untuk title -->
                                 @error('image')
                                     <div class="alert alert-danger mt-2">
@@ -266,7 +266,7 @@
                                     </div>
                                 @enderror
                             </div>
-                            
+
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                 <input class="form-control form-control-lg" id="name"

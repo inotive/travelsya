@@ -2,17 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ResponseFormatter;
-use App\Models\DetailTransaction;
+use Carbon\Carbon;
+use App\Models\Fee;
 use App\Models\Product;
-use App\Models\Transaction;
-use App\Services\Mymili;
 use App\Services\Point;
-use App\Services\Setting;
-use App\Services\Travelsya;
+use App\Helpers\General;
+use App\Services\Mymili;
 use App\Services\Xendit;
-use Illuminate\Http\Client\ResponseSequence;
+use App\Services\Setting;
+use App\Models\Transaction;
+use App\Services\Travelsya;
 use Illuminate\Http\Request;
+use App\Models\DetailTransaction;
+use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\DetailTransactionTopUp;
+use Illuminate\Http\Client\ResponseSequence;
 
 class ProductController extends Controller
 {
@@ -51,6 +57,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($product->price, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -88,13 +99,19 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
+        $helper = new General();
+
+        DetailTransactionTopUp::create([
             'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['product'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $data['notelp'],
-            'status' => "PROCESS"
+            'product_id'     => $product->id,
+            'nomor_telfon'   => $data['notelp'],
+            'total_tagihan'  => $amount,
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
+            'message'        => 'Top UP sedang diproses',
+            'status'         => "PROCESS",
+            "kode_unik"      => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -119,24 +136,46 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        return [
-            "meta" => [
-                "code" => 200,
-                "status" => "success",
-                "message" => "Inquiry loaded"
-            ],
-            "data" => [
-                "status" => "SUKSES!",
-                "nama_pelanggan" => "GUSTI BAGUS WAHYU SAPUTRA",
-                "tagihan" => "152500"
-            ]
-        ];
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error('Tidak ada', 'Inquiry failed');
+        }
+
+
+        // return [
+        //     "meta" => [
+        //         "code" => 200,
+        //         "status" => "success",
+        //         "message" => "Inquiry loaded"
+        //     ],
+        //     "data" => [
+        //         "status" => "SUKSES!",
+        //         "nama_pelanggan" => "GUSTI BAGUS WAHYU SAPUTRA",
+        //         "tagihan" => "152500"
+        //     ]
+        // ];
     }
 
     public function paymentBpjs(Request $request)
@@ -150,6 +189,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -187,13 +231,17 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['product_id'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganBPJS,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -220,18 +268,45 @@ class ProductController extends Controller
         //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
         // }
 
-        return [
-            "meta" => [
-                "code" => 200,
-                "status" => "success",
-                "message" => "Inquiry loaded"
-            ],
-            "data" => [
-                "status" => "SUKSES!",
-                "nama_pelanggan" => "ERIKH",
-                "tagihan" => "346034"
-            ]
-        ];
+        // return [
+        //     "meta" => [
+        //         "code" => 200,
+        //         "status" => "success",
+        //         "message" => "Inquiry loaded"
+        //     ],
+        //     "data" => [
+        //         "status" => "SUKSES!",
+        //         "nama_pelanggan" => "ERIKH",
+        //         "tagihan" => "346034"
+        //     ]
+        // ];
+
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
     }
 
     public function productPdam()
@@ -256,6 +331,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -293,13 +373,17 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['productPDAM'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganPDAM,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -320,28 +404,60 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        return [
-            "meta" => [
-                "code" => 200,
-                "status" => "success",
-                "message" => "Inquiry loaded"
-            ],
-            "data" => [
-                "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
-                "tagihan" => "82636",
-                "no_pelanggan" => "232010890459",
-                "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
-                "nama_pelanggan" => "ERNA SARI",
-                "bulan_tahun_tagihan" => "Jun23",
-                "pemakaian" => "39212-3924"
-            ],
-        ];
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
+
+        // return [
+        //     "meta" => [
+        //         "code" => 200,
+        //         "status" => "success",
+        //         "message" => "Inquiry loaded"
+        //     ],
+        //     "data" => [
+        //         "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
+        //         "tagihan" => "82636",
+        //         "no_pelanggan" => "232010890459",
+        //         "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
+        //         "nama_pelanggan" => "ERNA SARI",
+        //         "bulan_tahun_tagihan" => "Jun23",
+        //         "pemakaian" => "39212-3924"
+        //     ],
+        // ];
+    }
+
+    public function productPln()
+    {
+        $data = Product::where([
+            ['category', 'pln'],
+            ['description', 'like', '%token%'],
+            ['is_active', '=', 1],
+        ])->get();
+
+        return response()->json($data);
     }
 
     public function paymentPln(Request $request)
@@ -352,19 +468,23 @@ class ProductController extends Controller
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find(459);
+        $product = Product::with('service')->where('id', $request->productPLN)->first();
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
-        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
-
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
+        $amount = $setting->getAmount($product->price, 1, $fees, 1);
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
-                    "price" => $data['totalTagihan'],
+                    "price" => $product->price,
                     "quantity" => 1,
                 ]
             ],
@@ -378,7 +498,7 @@ class ProductController extends Controller
                 'email' => $request->user()->email,
                 'mobile_number' => $request->user()->phone ?: "somenumber",
             ],
-            // 'fees' => $fees
+             'fees' => $fees
         ]);
 
         // dd($payoutsXendit);
@@ -395,15 +515,36 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $product->id,
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
-        ]);
 
+        if($product->service->name == "listrik-token")
+        {
+            DB::table('detail_transaction_top_up')->insert([
+                'transaction_id'  => $storeTransaction->id,
+                'product_id'      => $product->id,
+                'nomor_telfon' => $request->noPelangganPLN,
+                'total_tagihan'   => $amount,
+                'fee_travelsya'  => $fees[0]['value'],
+                'fee_mili'       => 0,
+                'message'         => 'Sedang menunggu pembayaran',
+                'status'          => "PROCESS",
+                "kode_unik"       => $uniqueCode,
+                "created_at" => Carbon::now()
+            ]);
+        }
+        {
+            DB::table('detail_transaction_ppob')->insert([
+                'transaction_id'  => $storeTransaction->id,
+                'product_id'      => $product->id,
+                'nomor_pelanggan' => $request->noPelangganPLN,
+                'total_tagihan'   => $amount,
+                'fee_travelsya'  => $fees[0]['value'],
+                'fee_mili'       => 0,
+                'message'         => 'Sedang menunggu pembayaran',
+                'status'          => "PROCESS",
+                "kode_unik"       => $uniqueCode,
+                "created_at" => Carbon::now()
+            ]);
+        }
         //deductpoint
         $point = new Point;
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
@@ -421,33 +562,48 @@ class ProductController extends Controller
             'no_hp' => $data['no_pelanggan'],
             'nom' => $data['nom'],
         ]);
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(10, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+            if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
 
-        return [
-            "meta" => [
-                "code" => 200,
-                "status" => "success",
-                "message" => "Inquiry loaded"
-            ],
-            "data" => [
-                "status" => "TRX CEKTELKOM 02189493022 SUKSES! SN=02189493022",
-                "nama_pelanggan" => "AGIL TRIYAS MOKO",
-                "tagihan" => "305250"
-            ],
-        ];
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "ERROR 88 TRANSAKSI DITOLAK")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
     }
 
     public function productTvInternet()
     {
-        $data = Product::where([
-            ['category', '=', 'tv-internet'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where('category', 'tv-internet')
+            ->where('is_active', 1)
+            ->distinct()
+            ->get();
 
         return response()->json($data);
     }
@@ -464,6 +620,11 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $uniqueCode = rand(111, 999);
+        $fees[] = [
+            'type' => 'Kode Unik',
+            'value' => $uniqueCode,
+        ];
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -501,13 +662,17 @@ class ProductController extends Controller
             'total' => $amount
         ]);
 
-        DetailTransaction::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $data['productTV'],
-            'price' => $amount,
-            'qty' => 1,
-            'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id'  => $storeTransaction->id,
+            'product_id'      => $product->id,
+            'nomor_pelanggan' => $request->noPelangganTV,
+            'total_tagihan'   => $amount,
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
+            'message'         => 'Sedang menunggu pembayaran',
+            'status'          => "PROCESS",
+            "kode_unik"       => $uniqueCode,
+            "created_at" => Carbon::now()
         ]);
 
         //deductpoint
@@ -528,20 +693,48 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
+        if (str_contains($requestMymili['status'], "SUKSES!")) {
+            $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
+            return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
+        } else {
+            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
+            }
+
+            if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
+                $status = "Tagihan Sudah Terbayar atau Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "INVALID! Produk tidak tersedia")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
+            }
+
+            return ResponseFormatter::error($status, 'Inquiry failed');
+        }
     }
 
     public function productTax()
     {
-        $data = Product::where([
-            ['category', 'negara'],
-            ['name', 'PBB'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where('name', 'PBB')
+            ->where('is_active', 1)
+            ->distinct()
+            ->get();
 
         return response()->json($data);
     }
@@ -611,18 +804,28 @@ class ProductController extends Controller
         return redirect($payoutsXendit['invoice_url']);
     }
 
-    public function getAdminFee(Request $request)
+    public function getAdminFee($service_id, $price)
     {
-        $data = $request->all();
+        // $data = $request->all();
 
-        $point = new Point;
-        $userPoint = $point->cekPoint(auth()->user()->id);
+        // $point = new Point;
+        // $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find($data['idProduct']);
-        $setting = new Setting();
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        // $product = Product::with('service')->find($data['idProduct']);
+        // $setting = new Setting();
+        // $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
 
-        return $fees;
+        // return $fees;
+
+        $fee = Fee::where('service_id', $service_id)->first();
+
+        if ($fee->percent) {
+            $feeValue = $price * ($fee->value / 100);
+        } else {
+            $feeValue = $fee->value;
+        }
+
+        return $feeValue;
     }
 
     public function show($product)

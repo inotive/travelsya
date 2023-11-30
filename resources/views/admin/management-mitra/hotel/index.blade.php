@@ -36,63 +36,59 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach ($hotels as $hotel)
+                    @foreach ($hotels as $hotel)
                         <tr id="index_{{ $hotel->id }}">
                             <td>{{ $loop->iteration }}</td>
-                            <td class="text-center">{{ $hotel->user_name }}</td>
+                            <td class="text-center">
+                                <img src="{{asset('storage/'. $hotel->image)}}" alt="" style="width: 25px; height: 25px;">
+                                {{ $hotel->user_name }}
+                            </td>
                             <td class="text-center">{{ $hotel->name }}</td>
                             <td class="text-center">{{ $hotel->city }}</td>
                             <td class="text-center">{{ $hotel->address }}</td>
-                            <td class="text-center"><a href="{{ $hotel->website }}" target="_blank">Link Website</a></td>
-                            <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }} Bintang</span></td>
+                            <td class="text-center"><a href="{{ $hotel->website }}" target="_blank">Link Website</a>
+                            </td>
+                            <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }} Bintang</span>
+                            </td>
                             <td class="text-center">
 
                                 @if ($hotel->is_active)
-                                <span class="badge badge-success">Aktif</span>
+                                    <span class="badge badge-success">Aktif</span>
                                 @else
-                                <span class="badge badge-danger">Tidak Aktif</span>
+                                    <span class="badge badge-danger">Tidak Aktif</span>
                                 @endif
                             </td>
                             <td class="text-center">
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">
+                                <div
+                                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                    data-kt-menu="true" style="">
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="/metronic8/demo1/../demo1/apps/customers/view.html" class="menu-link px-3">
-                                            Daftar Room
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="#" class="menu-link px-3" data-kt-customer-table-filter="delete_row">
-                                            Detail Hotel
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning" id="tombol-edit" data-id="{{ $hotel->id }}" data-bs-toggle="modal">
+                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning"
+                                           id="tombol-edit" data-id="{{ $hotel->id }}" data-bs-toggle="modal">
                                             Edit
                                         </a>
                                     </div>
                                     <!--end::Menu item-->
                                     <!--begin::Menu item-->
                                     <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $hotel->id }}" data-bs-toggle="modal" class="menu-link px-3 text-danger">
+                                        <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $hotel->id }}"
+                                           data-bs-toggle="modal" class="menu-link px-3 text-danger">
                                             Delete
                                         </a>
                                     </div>
                                     <!--end::Menu item-->
                                 </div>
                                 <!--begin::Menu-->
-                                <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                    Actions
+                                <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                    Aksi
                                     <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                 </a>
                                 <!--end::Menu-->
                             </td>
                         </tr>
-                        @endforeach
+                    @endforeach
 
 
                     </tbody>
@@ -114,38 +110,35 @@
     <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
-            <!--begin::Modal content-->
-            <div class="modal-content rounded">
-                <!--begin::Modal header-->
-                <div class="modal-header pb-0 border-0 justify-content-end">
-                    <!--begin::Close-->
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span>
-                            <span class="path2"></span>
-                        </i>
-                    </div>
-                    <!--end::Close-->
-                </div>
-                <!--begin::Modal header-->
-                <!--begin::Modal body-->
-                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                    <!--begin:Form-->
-                    <form id="kt_modal_new_target_form" class="form" method="post"
-                          action="{{route('admin.hotel.store')}}">
-                        @csrf
-                        <!--begin::Heading-->
-                        <div class="mb-13 text-center">
-                            <!--begin::Title-->
-                            <h1 class="mb-3">Create Mitra</h1>
-                            <!--end::Title-->
+            <!--begin:Form-->
+            <form id="kt_modal_new_target_form" class="form" method="post"
+                  action="{{route('admin.hotel.store')}}">
+                @csrf
+                <!--begin::Modal content-->
+                <div class="modal-content">
+                    <!--begin::Modal header-->
+                    <div class="modal-header justify-content-between">
+                        <!--begin::Title-->
+                        <h1 class="mb-3">Tambah Hotel</h1>
+                        <!--end::Title-->
+                        <!--begin::Close-->
+                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <i class="ki-duotone ki-cross fs-1">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                            </i>
                         </div>
-                        <!--end::Heading-->
+                        <!--end::Close-->
+                    </div>
+                    <!--begin::Modal header-->
+                    <!--begin::Modal body-->
+                    <div class="modal-body">
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                                <input class="form-control form-control-lg" id="name" placeholder="Masukan nama hotel" name="name" required/>
+                                <input class="form-control form-control-lg" id="name" placeholder="Masukan nama hotel"
+                                       name="name" required/>
 
                                 @error('name')
                                 <span class="text-danger mt-1" role="alert">
@@ -168,7 +161,7 @@
                                 <input type="hidden" value="1">
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2" >City</label>
+                                <label class="required fs-6 fw-semibold mb-2">City</label>
                                 <select name="city" id="" class="form-control">
                                     <option value="Balikpapan">Balikpapan</option>
                                     <option value="Samarinda">Samarinda</option>
@@ -182,19 +175,23 @@
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"
+                                          required></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="website" class="form-label">Website</label>
-                                <input type="text" id="website" name="website" class="form-control" placeholder="Masukan website" required>
+                                <input type="text" id="website" name="website" class="form-control"
+                                       placeholder="Masukan website" required>
                             </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Bintang</label>
 
                                 <!--begin::Radio group-->
-                                <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+                                <div class="btn-group w-100" data-kt-buttons="true"
+                                     data-kt-buttons-target="[data-kt-button]">
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success"
+                                           data-kt-button="true">
                                         <!--begin::Input-->
                                         <input class="btn-check" type="radio" name="star" id="star" value="1" required/>
                                         <!--end::Input-->
@@ -203,35 +200,40 @@
                                     <!--end::Radio-->
 
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success active"
+                                           data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" checked="checked" value="2"/>
+                                        <input class="btn-check" type="radio" name="star" id="star" checked="checked"
+                                               value="2"/>
                                         <!--end::Input-->
                                         2
                                     </label>
                                     <!--end::Radio-->
 
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success"
+                                           data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="3" />
+                                        <input class="btn-check" type="radio" name="star" id="star" value="3"/>
                                         <!--end::Input-->
                                         3
                                     </label>
                                     <!--end::Radio-->
 
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success"
+                                           data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="4"  />
+                                        <input class="btn-check" type="radio" name="star" id="star" value="4"/>
                                         <!--end::Input-->
                                         4
                                     </label>
                                     <!--end::Radio-->
                                     <!--begin::Radio-->
-                                    <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                                    <label class="btn btn-outline btn-color-muted btn-active-success"
+                                           data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="5"  />
+                                        <input class="btn-check" type="radio" name="star" id="star" value="5"/>
                                         <!--end::Input-->
                                         5
                                     </label>
@@ -241,31 +243,26 @@
                             </div>
                         </div>
                         <!--end::Input group-->
+                    </div>
+                    <!--end::Modal body-->
+
+                    <div class="modal-footer">
                         <!--begin::Actions-->
                         <div class="text-center">
-                            <div class="row">
-                                <div class="col-6">
-                                    <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
-                                    </button>
-                                </div>
-                                <div class="col-6">
-                                    <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                                        <span class="indicator-label">Submit</span>
-                                        <span class="indicator-progress">Please wait...
+                            <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
+                            </button>
+                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                                <span class="indicator-label">Submit</span>
+                                <span class="indicator-progress">Please wait...
                             <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                    </button>
-                                </div>
-                            </div>
-
-
+                            </button>
                         </div>
                         <!--end::Actions-->
-                    </form>
-                    <!--end:Form-->
+                    </div>
+
                 </div>
-                <!--end::Modal body-->
-            </div>
-            <!--end::Modal content-->
+                <!--end::Modal content-->
+            </form>
         </div>
         <!--end::Modal dialog-->
     </div>
@@ -274,7 +271,7 @@
 @endsection
 @push('add-script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function () {
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
@@ -294,7 +291,7 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
-        } );
+        });
     </script>
 
 @endpush

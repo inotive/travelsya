@@ -12,13 +12,18 @@ class HotelImage extends Model
 
     protected $guarded = [];
 
-    public function getImageAttribute($value)
-    {
-        return url('storage/hostel/' . $value);
-    }
+    // public function getImageAttribute($value)
+    // {
+    //     return url('storage/hostel/' . $value);
+    // }
 
     public function hotel()
     {
         $this->belongsTo(Hotel::class);
+    }
+
+    public function hotelroomImage()
+    {
+        return $this->hasMany(HotelRoomImage::class);
     }
 }

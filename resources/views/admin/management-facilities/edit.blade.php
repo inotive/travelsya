@@ -114,7 +114,7 @@
             cache: false,
             success: function(response) {
                 $('#facility_id').val(response.data.id);
-                $('#image-preview').attr('src', response.data.icon);
+                $('#image-preview').attr('src', '{{ asset('') }}' + response.data.icon);
                 $('#image-preview').show();
                 $('#edit-name').val(response.data.name);
 
