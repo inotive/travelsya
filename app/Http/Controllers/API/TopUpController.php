@@ -87,10 +87,12 @@ class TopUpController extends Controller
     public function testTopUP(Request $request)
     {
         $responseMili =  $this->mymili->paymentTopUp($request->invoice, $request->kode_pembayaran, $request->nomor_telfon);
+
         if ($responseMili['RESPONSECODE'] == 00) {
             return response()->json([
                 'status' => '200',
-                'message' => 'Pulsa sudah masuk'
+                'message' => 'Pulsa sudah masuk',
+                'response_mili' => $responseMili
             ]);
         } elseif ($responseMili['RESPONSECODE'] == 68) {
             return response()->json([
