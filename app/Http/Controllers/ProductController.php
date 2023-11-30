@@ -106,8 +106,8 @@ class ProductController extends Controller
             'product_id'     => $product->id,
             'nomor_telfon'   => $data['notelp'],
             'total_tagihan'  => $amount,
-            'fee_travelsya'  => 0,
-            'fee_mili'       => $fees[0]['value'],
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
             'message'        => 'Top UP sedang diproses',
             'status'         => "PROCESS",
             "kode_unik"      => $uniqueCode,
@@ -236,8 +236,8 @@ class ProductController extends Controller
             'product_id'      => $product->id,
             'nomor_pelanggan' => $request->noPelangganBPJS,
             'total_tagihan'   => $amount,
-            'fee_travelsya'  => 0,
-            'fee_mili'       => $fees[0]['value'],
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
@@ -378,8 +378,8 @@ class ProductController extends Controller
             'product_id'      => $product->id,
             'nomor_pelanggan' => $request->noPelangganPDAM,
             'total_tagihan'   => $amount,
-            'fee_travelsya'  => 0,
-            'fee_mili'       => $fees[0]['value'],
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
@@ -468,7 +468,7 @@ class ProductController extends Controller
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->find(459);
+        $product = Product::with('service')->where('id', $request->productPLN)->first();
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
@@ -477,15 +477,14 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
-
+        $amount = $setting->getAmount($product->price, 1, $fees, 1);
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
-                    "price" => $data['totalTagihan'],
+                    "price" => $product->price,
                     "quantity" => 1,
                 ]
             ],
@@ -499,7 +498,7 @@ class ProductController extends Controller
                 'email' => $request->user()->email,
                 'mobile_number' => $request->user()->phone ?: "somenumber",
             ],
-            // 'fees' => $fees
+             'fees' => $fees
         ]);
 
         // dd($payoutsXendit);
@@ -521,8 +520,8 @@ class ProductController extends Controller
             'product_id'      => $product->id,
             'nomor_pelanggan' => $request->noPelangganPLN,
             'total_tagihan'   => $amount,
-            'fee_travelsya'  => 0,
-            'fee_mili'       => $fees[0]['value'],
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,
@@ -651,8 +650,8 @@ class ProductController extends Controller
             'product_id'      => $product->id,
             'nomor_pelanggan' => $request->noPelangganTV,
             'total_tagihan'   => $amount,
-            'fee_travelsya'  => 0,
-            'fee_mili'       => $fees[0]['value'],
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
             'message'         => 'Sedang menunggu pembayaran',
             'status'          => "PROCESS",
             "kode_unik"       => $uniqueCode,

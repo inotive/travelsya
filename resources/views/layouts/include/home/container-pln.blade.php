@@ -45,6 +45,7 @@
                     </div>
                     <div class="col-4">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
+                        <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
                     </div>
 
                     <div class="row mt-4" id="detailPLN">
@@ -73,18 +74,6 @@
                                 </table>
                             </div>
 
-                        </div>
-                        <div class="col-12">
-                            @auth
-                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPLN"
-                                disabled>Pembayaran</button>
-                            @endauth
-
-                            @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
-                            @endguest
                         </div>
                     </div>
 
@@ -130,7 +119,9 @@
                         });
 
                         $('#productPLN').removeAttr('disabled');
-                        $('#btnPeriksaPLN').text('Bayar');
+                        // $('#btnPeriksaPLN').attr('type', 'submit');
+                        $('#btnPeriksaPLN').addClass('d-none');
+                        $('#btnBayar').removeClass('d-none');
                     }
                 });
             }
@@ -138,7 +129,10 @@
             if($(this).val() == 'pembayaran') {
                 $('#productPLN').empty();
                 $('#productPLN').attr('disabled', true);
-                $('#btnPeriksaPLN').text('Periksa');
+                // $('#btnPeriksaPLN').text('Periksa');
+
+                $('#btnPeriksaPLN').removeClass('d-none');
+                $('#btnBayar').addClass('d-none');
             }
         });
 
