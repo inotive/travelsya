@@ -111,11 +111,25 @@ class CallbackController extends Controller
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
-
+                                DB::table('detail_transaction_top_up')
+                                    ->where('top.id', $detailTransactionTopUP->id)
+                                    ->update([
+                                        'status' => $status,
+//                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
+                                        'kode_voucher' => $responseMessageSNCodeFinal,
+                                        'updated_at' => Carbon::now()
+                                    ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
-
+                                DB::table('detail_transaction_top_up')
+                                    ->where('top.id', $detailTransactionTopUP->id)
+                                    ->update([
+                                        'status' => $status,
+//                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
+                                        'kode_voucher' => $responseMessageSNCodeFinal,
+                                        'updated_at' => Carbon::now()
+                                    ]);
                             } else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
@@ -127,16 +141,14 @@ class CallbackController extends Controller
                                     'payment_channel' => $responseXendit['payment_channel'],
                                     'payment_method' => $responseXendit['payment_method']
                                 ]);
+                                DB::table('detail_transaction_top_up')
+                                    ->where('top.id', $detailTransactionTopUP->id)
+                                    ->update([
+                                        'status' => $status,
+//                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
+                                        'updated_at' => Carbon::now()
+                                    ]);
                             }
-
-                            DB::table('detail_transaction_top_up')
-                                ->where('top.id', $detailTransactionTopUP->id)
-                                ->update([
-                                    'status' => $status,
-                                    'message'=> "Response Mili : " .  $responseMili . "  / Kode Voucher : " . $responseMessageSNCodeFinal,
-                                    'kode_voucher' => $responseMessageSNCodeFinal,
-                                    'updated_at' => Carbon::now()
-                                ]);
                         }
                         else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
