@@ -422,7 +422,7 @@ class HostelController extends Controller
                 "rent_price"        => $sellingprice,
                 "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $uniqueCode,
-                "created_at"        => Carbon::now(),
+                "created_at"        => Carbon::now()->timezone('Asia/Makassar'),
             ]);
 
             if ($data['point']) {

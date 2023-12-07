@@ -163,10 +163,11 @@ class RiwayatBookingController extends Controller
         return view('user.order-detail.e-tiket', $data);
     }
 
-    public function cetakHostel(DetailTransactionHostel $hostel)
+    public function cetakHostel($id)
     {
+        $hostel = DetailTransactionHostel::findorFail($id);
         $data = [
-            'data' => $hostel->load('hostel.hostelFacilities.facility', 'hostelRoom', 'transaction.user')
+            'data' => $hostel->load('hostel.hostelFacilities.facility', 'hostelRoom.hostelFacilities.facility', 'transaction.user')
         ];
         return view('user.order-detail.e-tiket-hostel', $data);
     }

@@ -184,7 +184,7 @@
                                                 <h3 class="fw-bold">
                                                     Lokasi
                                                 </h3>
-                                                <a href="https://maps.app.goo.gl/W6jC3hgz8v7ocsi16" target="_blank"
+                                                <a href="https://maps.google.com/?q={{$transactionHostel->hostel->lat}},{{$transactionHostel->hostel->lon}}" target="_blank"
                                                    class="text-danger fw-bold block">
                                                     Buka di Map
                                                 </a>
@@ -293,7 +293,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Tanggal Transaksi</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHostel->reservation_start)->format('d M Y H:i') }}</div>
+                                                        class="fs-8 fw-bold">{{ \Carbon\Carbon::parse($transactionHostel->transaction->created_at)->format('d M Y H:i') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Metode Pembayaran</div>
