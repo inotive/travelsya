@@ -155,7 +155,7 @@
                             <div class="col-md-6 text-end">
                                 <div class="d-flex flex-column mb-2">
                                     <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
-                                        {{ General::rp($hostelbookdates->rent_price) }}
+                                        {{ General::rp($hostelbookdates->rent_price * $diffInDays * $hostelbookdates->room) }}
                                     </a>
                                 </div>
                             </div>
@@ -193,7 +193,7 @@
                             <div class="col-md-6 text-end">
                                 <div class="d-flex flex-column">
                                     <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
-                                        {{ General::rp($hostelbookdates->rent_price + $hostelbookdates->fee_admin) }}
+                                        {{ General::rp($hostelbookdates->transaction->total) }}
                                     </a>
                                 </div>
                             </div>
