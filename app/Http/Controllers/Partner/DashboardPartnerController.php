@@ -53,6 +53,7 @@ class DashboardPartnerController extends Controller
         $id = auth()->user()->id;
         $startWeek = Carbon::now()->timezone('Asia/Makassar')->subWeek()->format("Y-m-d H:i:s");
         $dateNow = Carbon::now()->timezone('Asia/Makassar');
+
         /**
          * PENDAPATAN PER MINGGU ======================================
          */

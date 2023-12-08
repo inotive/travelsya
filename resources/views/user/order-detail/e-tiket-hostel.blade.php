@@ -65,13 +65,12 @@
                             </div>
                             <div class="col-12 offset-lg-1 col-lg-6">
                                 <div class="bintang mt-5">
+                                    @for ($i = 0; $i < $data->hostel->star; $i++)
                                     <span class="fa fa-star fs-1" style="color: orange;"></span>
-                                    <span class="fa fa-star fs-1" style="color: orange;"></span>
+                                @endfor
                                 </div>
-                                <div class="fs-2 fw-bold ">Hostel A</div>
-                                <div class="fs-6 mt-5">Jl. MT Haryono No.5, RW No.85, Damai,
-                                    Balikpapan Kota, Kota Balikpapan,
-                                    Kalimantan Timur 76114
+                                <div class="fs-2 fw-bold ">{{$data->hostel->name}}</div>
+                                <div class="fs-6 mt-5">{{ $data->hostel->address }}
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-12 col-md-6 col-lg-6  mt-5">
@@ -79,8 +78,9 @@
                                             Check IN
                                         </div>
                                         <div class="fs-6" style="color: #c02425">
-                                            14 Desember 2021 <br>
-                                            14:00:00
+                                            {{ \Carbon\Carbon::parse($data->reservation_start)->translatedFormat('d F Y') }}
+                                            <br>
+                                            {{ $data->hostel->checkin }}
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-lg-6 mt-5">
@@ -88,8 +88,9 @@
                                             Check Out
                                         </div>
                                         <div class="fs-6" style="color: #c02425">
-                                            14 Desember 2021 <br>
-                                            14:00:00
+                                            {{ \Carbon\Carbon::parse($data->reservation_end)->translatedFormat('d F Y') }}
+                                            <br>
+                                            {{ $data->hostel->checkout }}
                                         </div>
                                     </div>
                                 </div>
@@ -106,15 +107,16 @@
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Kode Booking</div>
-                                            <div class=" fw-bold">K00D11NG01234</div>
+                                            <div class=" fw-bold">{{ $data->booking_id }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Booking Dilakukan Pada</div>
-                                            <div class=" fw-bold">17 Okt 2023 14:00</div>
+                                            <div class=" fw-bold">                                {{ \Carbon\Carbon::parse($data->reservation_start)->translatedFormat('d F Y') }}
+                                            </div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Durasi</div>
-                                            <div class=" fw-bold">20 Hari</div>
+                                            <div class=" fw-bold">BELUMM</div>
                                         </div>
                                     </div>
                         </div>
@@ -127,23 +129,26 @@
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Tipe Kamar</div>
-                                            <div class=" fw-bold">Deluxe Twin</div>
+                                            <div class=" fw-bold">{{ $data->hostelRoom->name }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Jumlah Kamar</div>
-                                            <div class=" fw-bold">1 Kamar</div>
+                                            <div class=" fw-bold">{{ $data->room }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Kapasitas Kamar</div>
-                                            <div class=" fw-bold">2 Tamu</div>
+                                            <div class=" fw-bold">{{ $data->hostelRoom->roomsize }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Fasilitas Kamar</div>
-                                            <div class=" fw-bold">-</div>
+                                            <div class=" fw-bold">
+                                                @foreach ($data->hostelRoom->hostelFacilities as $facilityItem)
+                                                    <li>{{ $facilityItem->facility->name }}</li>
+                                                @endforeach
+                                            </div>
                                         </div>
                                     </div>
                         </div>
-
                         {{-- Informasi Tamu --}}
                         <div class="card border border-1 mb-5">
                                 <div class="fs-4 fw-bold m-5 mb-0">
@@ -152,23 +157,22 @@
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Kepala Tamu</div>
-                                            <div class=" fw-bold">Agus Hendrawan</div>
+                                            <div class=" fw-bold">{{ $data->guest_name ?? '-' }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Total Tamu</div>
-                                            <div class=" fw-bold">4 Tamu</div>
+                                            <div class=" fw-bold">{{ $data->guest }} Tamu</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Nomor Telepon</div>
-                                            <div class=" fw-bold">081280043549</div>
+                                            <div class=" fw-bold">{{ $data->guest_handphone ?? '-' }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Alamat Email</div>
-                                            <div class=" fw-bold">agung@gmail.com</div>
+                                            <div class=" fw-bold">{{ $data->guest_email ?? '-' }}</div>
                                         </div>
                                     </div>
                         </div>
-
 {{-- Rincian Pembaayaran --}}
                             <div class="card border border-1 mb-5">
                                 <div class="fs-4 fw-bold m-5 mb-0">
@@ -177,26 +181,26 @@
                                     <div class="m-5">
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Status Transaksi</div>
-                                            <div class=" fw-bold text-danger">Sukses</div>
+                                            <div class=" fw-bold text-danger">{{ $data->transaction->status }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Tanggal Transaksi</div>
-                                            <div class=" fw-bold">17 Okt 2023 14:00</div>
+                                            <div class=" fw-bold">
+                                                {{ \Carbon\Carbon::parse($data->transaction->created_at)->translatedFormat('d F Y H:m') }}
+                                            </div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Metode Pembayaran</div>
-                                            <div class=" fw-bold">Bank Channel</div>
+                                            <div class=" fw-bold">{{ $data->transaction->payment_method }}</div>
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="">Biaya Hotel</div>
-                                            <div class=" fw-bold">Rp. 2.000.000</div>
+                                            <div class=" fw-bold">Rp. {{ number_format($data->transaction->total, 0, ',', '.') }}
+                                            </div>
                                         </div>
                                     </div>
                             </div>
                     </div>
-
-
-
                     <div class="col-12 mb-10">
                         <div class="catatan-penting">
                             <h3 style="color: #c02425">Catatan Penting</h3>
@@ -206,7 +210,7 @@
                                     tambahan, permintaan khusus tidak dijamin akan terpenuhi.</li>
                                 <li>Biaya penambahan orang dapat berlaku dan berbeda-beda menurut kebijakan akomodasi</li>
                                 <li>Biaya tambahan seperti parkir, deposito, telepon, layanan kamar ditangani langsung antara anda dan akomodasi</li>
-                                <li>Pemesanan kamar hotel tidak dapat dibatalkan & biaya pemesanan tidak dapat dikembalikan</li>
+                                <li>Pemesanan kamar hostel tidak dapat dibatalkan & biaya pemesanan tidak dapat dikembalikan</li>
                                 <li>Jika anda check-in awal/terlambat diluar jam yang telah ditentukan, sebaiknya hubungi akomodasi terlebih dahulu demi kelancaran</li>
                             </ul>
                         </div>

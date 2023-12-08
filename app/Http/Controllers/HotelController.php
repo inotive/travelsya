@@ -328,7 +328,7 @@ class HotelController extends Controller
                 "guest_name"         => $request->user()->name,
                 "guest_email"         => $request->user()->email,
                 "guest_handphone"         => $request->user()->handphone,
-                "created_at"        => Carbon::now(),
+                "created_at"        => Carbon::now()->timezone('Asia/Makassar'),
             ]);
 
             if ($data['point']) {
