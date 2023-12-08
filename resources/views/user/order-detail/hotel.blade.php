@@ -306,7 +306,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Penanganan</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->fee_admin +$transactionHotel->kode_unik, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->fee_admin + $transactionHotel->kode_unik, 0, ',', '.') }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -340,7 +340,10 @@
                                                     Total Biaya
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                    RP {{ number_format($transactionHotel->transaction->total, 0, ',', '.') }}
+                                                    @php
+                                                        $totalBiayaHotel = $transactionHotel->fee_admin + $transactionHotel->rent_price
+                                                    @endphp
+                                                    RP {{ number_format($totalBiayaHotel, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

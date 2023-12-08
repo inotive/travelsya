@@ -357,6 +357,7 @@
                         </div>
                     </form>
                 </div>
+                </div>
                 <div class="col-9">
                     <div class="row gy-4">
                         <div class="col-12">
