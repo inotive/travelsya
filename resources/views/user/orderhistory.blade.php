@@ -71,8 +71,10 @@
                                                     $route = route('profile.order-detail.hostel', $all->id);
                                                 } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11) {
                                                     $route = route('profile.order-detail.listrik-voucher', $all->id);
-                                                } else {
+                                                } elseif($all->service_id == 2 ) {
                                                     $route = route('profile.order-detail.listrik', $all->id);
+                                                } else {
+                                                    $route = route('profile.order-detail.listrik-voucher', $all->id);
                                                 }
                                             @endphp
                                             <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer"

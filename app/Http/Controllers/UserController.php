@@ -237,6 +237,8 @@ class UserController extends Controller
             ->where('transaction_id', $id)
             ->first();
 
+        //dd($transactionPPOB);
+
 
         // $transaction = DetailTransactionPPOB::where('id', 2)->first();
         return view('user.order-detail.listrik-voucher', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
@@ -280,6 +282,8 @@ class UserController extends Controller
             ->where('flow', 'credit')
             ->where('transaction_id', $id)
             ->first();
+
+        //dd($transactionPPOB);
 
         return view('user.order-detail.listrik', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
     }
