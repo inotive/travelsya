@@ -158,7 +158,7 @@
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column mb-2">
                                 <h5 class="fw-bold">
-                                    {{ General::rp($hotelbookdates->rent_price) }}
+                                    {{  General::rp($hotelbookdates->rent_price * $diffInDays * $hotelbookdates->room) }}
                                 </h5>
                             </div>
                         </div>
@@ -196,7 +196,7 @@
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column">
                                 <h5 class="fw-bold">
-                                    {{ General::rp($hotelbookdates->rent_price + $hotelbookdates->fee_admin) }}
+                                    {{ General::rp($hotelbookdates->transaction->total) }}
                                 </h5>
                             </div>
                         </div>
