@@ -134,7 +134,7 @@ class CallbackController extends Controller
                                 ->update([
                                     'status' => $status,
                                     'kode_voucher' => $responseMessageSNCodeFinal,
-                                    'updated_at' => Carbon::now()
+                                    'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
                                 ]);
                         }
                         else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
@@ -167,7 +167,7 @@ class CallbackController extends Controller
                             DetailTransactionPPOB::where('transaction_id', $transaction->id)->update([
                                 'status' => $status,
                                 'message' => $message,
-                                'updated_at' => Carbon::now()
+                                'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
                             ]);
                         }
                         else{

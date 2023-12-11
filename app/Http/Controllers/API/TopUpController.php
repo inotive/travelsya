@@ -184,7 +184,7 @@ class TopUpController extends Controller
                 'message'        => 'Top UP sedang diproses',
                 'status'         => "PROCESS",
                 "kode_unik"      => $data['kode_unik'],
-                "created_at" => Carbon::now()
+                "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
             // Jika user menggunakan point untuk transaksi
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
