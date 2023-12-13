@@ -102,9 +102,9 @@
                                 $hotelImage = optional($hostelbookdates->hostel->hostelImage->where('main', 1)->first())->image;
                                 $image = $hotelImage !== null ? 'storage/media/hostel/' . $hotelImage : null;
                             @endphp
-                            
+
                             <img src="{{ asset($image ?: 'assets/media/logos/logo-square.png') }}" alt="image" />
-                                
+
                             </div>
                         </div>
                         <div class="flex-grow-1">
@@ -154,8 +154,15 @@
 
                             <div class="col-md-6 text-end">
                                 <div class="d-flex flex-column mb-2">
+                                    @php
+                                        $bayar = $diffInDays * $hostelbookdates->rent_price * $hostelbookdates->room;
+                                        $totalBiayaPenanganan = $bayar * 15 / 100;
+                                        $biayaPenanganan = $totalBiayaPenanganan + $hostelbookdates->fee_admin;
+                                        $grandTotal = $bayar - $biayaPenanganan;
+
+                                    @endphp
                                     <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
-                                        {{ General::rp($hostelbookdates->rent_price * $diffInDays * $hostelbookdates->room) }}
+                                        {{ General::rp($bayar) }}
                                     </a>
                                 </div>
                             </div>
@@ -175,7 +182,7 @@
                             <div class="col-md-6 text-end">
                                 <div class="d-flex flex-column mb-2">
                                     <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
-                                        {{ General::rp($hostelbookdates->fee_admin) }}
+                                        {{ General::rp($biayaPenanganan) }}
                                     </a>
                                 </div>
                             </div>
@@ -193,7 +200,7 @@
                             <div class="col-md-6 text-end">
                                 <div class="d-flex flex-column">
                                     <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
-                                        {{ General::rp($hostelbookdates->transaction->total) }}
+                                        {{ General::rp($grandTotal) }}
                                     </a>
                                 </div>
                             </div>

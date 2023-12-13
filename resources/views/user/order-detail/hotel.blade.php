@@ -298,15 +298,19 @@
                                                     <div
                                                         class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionHotel->transaction->payment_method) }}</div>
                                                 </div>
+                                                @php
+                                                    $biayaHotel = $transactionHotel->rent_price * $diffInDays * $transactionHotel->room;
+                                                    $biayaPenanganan = $transactionHotel->fee_admin + $transactionHotel->kode_unik
+                                                @endphp
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Hotel</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->rent_price * $diffInDays * $transactionHotel->room, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($biayaHotel, 0, ',', '.') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Penanganan</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHotel->fee_admin + $transactionHotel->kode_unik, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($biayaPenanganan, 0, ',', '.') }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -341,7 +345,7 @@
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
                                                     @php
-                                                        $totalBiayaHotel = $transactionHotel->fee_admin + $transactionHotel->rent_price
+                                                        $totalBiayaHotel = $biayaHotel + $biayaPenanganan
                                                     @endphp
                                                     RP {{ number_format($totalBiayaHotel, 0, ',', '.') }}
                                                 </div>
