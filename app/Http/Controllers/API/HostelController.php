@@ -417,7 +417,7 @@ class HostelController extends Controller
                 "guest_name" => $data['guest'][0]['name'],
                 "guest_email" => $data['guest'][0]['email'],
                 "guest_handphone" => $data['guest'][0]['phone'],
-                "created_at" => Carbon::now()
+                "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
