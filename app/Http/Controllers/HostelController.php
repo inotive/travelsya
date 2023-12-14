@@ -309,31 +309,7 @@ class HostelController extends Controller
 
     public function request(Request $request)
     {
-        // $data = $request->all();
-
-        // $hostel = $this->travelsya->requestHostel([
-        //     "service" => $data['service'],
-        //     "payment" => $data['payment_method'],
-        //     "hostel_room_id" => $data['hostel_room_id'],
-        //     "point" => 0,
-        //     "guest" => [[
-        //         "type_id" => "KTP",
-        //         "identity" => 123456,
-        //         "name" => $data['name']
-        //     ]],
-        //     "start" => $data['start'],
-        //     "end" => $data['end'],
-        //     "url" => "linkproduct"
-
-        // ]);
-
-        // dd($hostel);
-
-        // return redirect()->to($hostel['data']['invoice_url'])->send();
-
         $data = $request->all();
-        // dd($data);
-
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
         // dd($hostel);
         if ($data['category'] == 'monthly') {
@@ -417,12 +393,15 @@ class HostelController extends Controller
                 "reservation_end"   => Carbon::parse($data['end'])->format('Y-m-d'),
                 // "guest"             => $data['total_guest'],
                 // "room"              => $data['room'],
+                "guest_name"         => $data['nama_lengkap'],
+                "guest_email"         => $data['email'],
+                "guest_handphone"         => $data['no_telfon'],
                 "guest"             => 1,
                 "room"              => 1,
                 "rent_price"        => $sellingprice,
                 "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $uniqueCode,
-                "created_at"        => Carbon::now()->timezone('Asia/Makassar'),
+                "created_at"        => Carbon::now(),
             ]);
 
             if ($data['point']) {

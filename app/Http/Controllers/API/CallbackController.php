@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionHostel;
+use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\HistoryPoint;
 use App\Models\Transaction;
@@ -171,14 +173,23 @@ class CallbackController extends Controller
                             ]);
                         }
                         else{
+
                             if ($transaction->service == "hotel")
                             {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hotel Berhasil";
+                                  $detailTransactionPPOB = DetailTransactionHotel::
+                                  where('transaction_id', $transaction->id)->update([
+                                      'updated_at' => Carbon::now()
+                                  ]);
                             }
                             else{
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hostel Berhasil";
+                                $detailTransactionPPOB = DetailTransactionHostel::
+                                where('transaction_id', $transaction->id)->update([
+                                    'updated_at' => Carbon::now()
+                                ]);
                             }
                         }
 

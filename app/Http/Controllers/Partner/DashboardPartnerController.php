@@ -94,6 +94,7 @@ class DashboardPartnerController extends Controller
          */
         $startMonth = Carbon::now()->timezone('Asia/Makassar')->subMonth()->format("Y-m-d H:i:s");
         $dateNow = Carbon::now()->timezone('Asia/Makassar');
+
         $trans_hotel_month = DB::table('detail_transaction_hotel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')

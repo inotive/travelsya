@@ -234,7 +234,6 @@ class HotelController extends Controller
     public function request(Request $request)
     {
         $data = $request->all();
-
         // dd($data);
         $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
@@ -256,8 +255,6 @@ class HotelController extends Controller
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
         if ($qty < 0) return 'Date must be forward';
         $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, $data['room']);
-
-        // dd($data);
 
         // cek book date
         $checkBook = DetailTransactionHotel::where("hotel_room_id", $data['hostel_room_id'])
@@ -325,10 +322,10 @@ class HotelController extends Controller
                 "rent_price"        => $hotel->sellingprice,
                 "fee_admin"         => $fees[0]['value'],
                 "kode_unik"         => $data['uniqueCode'],
-                "guest_name"         => $request->user()->name,
-                "guest_email"         => $request->user()->email,
-                "guest_handphone"         => $request->user()->handphone,
-                "created_at"        => Carbon::now()->timezone('Asia/Makassar'),
+                "guest_name"         => $data['nama_lengkap'],
+                "guest_email"         => $data['email'],
+                "guest_handphone"         => $data['no_telfon'],
+                "created_at"        => Carbon::now(),
             ]);
 
             if ($data['point']) {
