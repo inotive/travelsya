@@ -174,11 +174,11 @@ class CallbackController extends Controller
                         }
                         else{
 
-                            if ($transaction->service == "hotel")
+                            if ($transaction->service == "hotel" || $transaction->service == "HOTEL")
                             {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hotel Berhasil";
-                                  $detailTransactionPPOB = DetailTransactionHotel::
+                                   DetailTransactionHotel::
                                   where('transaction_id', $transaction->id)->update([
                                       'updated_at' => Carbon::now()
                                   ]);
@@ -186,7 +186,7 @@ class CallbackController extends Controller
                             else{
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hostel Berhasil";
-                                $detailTransactionPPOB = DetailTransactionHostel::
+                                DetailTransactionHostel::
                                 where('transaction_id', $transaction->id)->update([
                                     'updated_at' => Carbon::now()
                                 ]);
