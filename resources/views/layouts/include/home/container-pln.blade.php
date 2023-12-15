@@ -45,7 +45,12 @@
                     </div>
                     <div class="col-4">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
+                        @guest
+                        <a href="{{ route('login') }}" class="btn btn-danger mt-8 w-100 d-none" id="btnLogin">Login Dulu</a>
+                        @endguest
+                        @auth
                         <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
+                        @endauth
                     </div>
 
                     <div class="row mt-4" id="detailPLN">
@@ -122,6 +127,7 @@
                         // $('#btnPeriksaPLN').attr('type', 'submit');
                         $('#btnPeriksaPLN').addClass('d-none');
                         $('#btnBayar').removeClass('d-none');
+                        $('#btnLogin').removeClass('d-none');
                     }
                 });
             }

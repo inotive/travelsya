@@ -147,7 +147,7 @@
                                             <div class="fs-6 m-5 mt-0 d-flex flex-wrap">
                                                 @forelse ($roomFacilities as $facility)
                                                     <div class="text-bold"
-                                                         style="margin-right: 8px">{{ ucfirst($facility->facility_name) , }}</div>
+                                                         style="margin-right: 8px">{{ ucfirst($facility->facility_name) }}</div>
                                                 @empty
                                                     Tidak ada fasilitas
                                                 @endforelse

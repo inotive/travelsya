@@ -32,7 +32,7 @@
             this.filterGuest = value;
         },
         handleSelectGuest(e) {
-
+    
         }
     }">
         <div class="col-md-12 mb-5">
@@ -53,8 +53,9 @@
             <label class="form-label fw-bold fs-6">Tanggal Check-in</label>
             <div class="input-group" id="js_datepicker_list_hotel" data-td-target-input="nearest"
                 data-td-target-toggle="nearest">
-                <input id="checkin" type="text" name="start" class="form-control cursor-pointer" autocomplete="off"
-                    data-td-target="#js_datepicker_list_hotel" data-td-toggle="datetimepicker" value="" x-on:change="handleSelectCheckin"  />
+                <input id="checkin" type="text" name="start" class="form-control cursor-pointer"
+                    autocomplete="off" data-td-target="#js_datepicker_list_hotel" data-td-toggle="datetimepicker"
+                    value="" x-on:change="handleSelectCheckin" />
 
                 <span class="input-group-text" data-td-target="#js_datepicker_list_hotel"
                     data-td-toggle="datetimepicker">
@@ -79,64 +80,109 @@
             <input type="text" class="form-control" name="end_date" disabled x-bind:value="checkoutValue" />
         </div>
 
-        <div class="col-md-6 col-6 mb-5">
-            <label class="form-label fw-bold fs-6">Total Kamar</label>
-            <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom">
-                <template x-for="data in Array.from({ length: totalRoom }).map((_, index) => index + 1)">
-                    <option x-if="data > 0" x-bind:value="data" x-text="`${data} Kamar`"></option>
-                </template>
-            </select>
-        </div>
+        <div x-data="{ totalRoom: 0, totalGuest: 0 }" class="row">
+            <div class="col-md-6 col-6 mb-5">
+                <label class="form-label fw-bold fs-6">Total Kamar</label>
+                <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom"
+                    x-model="totalRoom">
+                    <template x-for="data in Array.from({ length: 10 }).map((_, index) => index + 1)">
+                        <option x-if="data > 0" x-bind:value="data" x-text="`${data} Kamar`"></option>
+                    </template>
+                </select>
+            </div>
 
-        <div class="col-md-6 col-6 mb-5">
-            <label class="form-label fw-bold fs-6">Total Tamu</label>
-            <select name="guest" id="guest" class="form-select">
-                <template x-for="data in Array.from({ length: totalGuest }).map((_, index) => index + 1)" :key="data">
-                    <option x-if="data > 0" x-bind:value="data" x-text="`${data} Tamu`"></option>
-                </template>
-            </select>
-        </div>
+            <div class="col-md-6 col-6 mb-5">
+                <label class="form-label fw-bold fs-6">Total Tamu</label>
+                <select name="guest" id="guest" class="form-select" x-model="totalGuest">
+                    <template x-for="data in Array.from({ length: 10 }).map((_, index) => index + 1)"
+                        :key="data">
+                        <option x-if="data > 0" x-bind:value="data" x-text="`${data} Tamu`"></option>
+                    </template>
+                </select>
+            </div>
+            <!-- Validation message -->
+            <p x-show=" totalRoom > totalGuest" class="text-danger" x-cloak>Total Tamu Harus Lebih atau sama dengan
+                Total Kamar.</p>
 
+        </div>
         <div class="col-md-12 mb-5 text-end">
             <button style="margin-right: 1em" type="button" class="btn btn-flush"
                 data-bs-dismiss="modal">Kembali</button>
-            {{-- <a href="{{ route('hotels.list-hotel') }}" type="button" class="btn btn-danger">Cari Hotel</a> --}}
-            <button type="submit" class="btn btn-danger">Cari Hotel</button>
+            <button type="submit" class="btn btn-danger" x-on:click="handleSubmit">Cari Hotel</button>
         </div>
+
     </div>
 </form>
 @push('add-script')
-<script>
-    function calculateCheckoutDate(checkinDate, duration) {
-        var parts = checkinDate.split('-');
-        var day = parseInt(parts[0], 10);
-        var month = parseInt(parts[1], 10) - 1;
-        var year = parseInt(parts[2], 10);
-        var checkin = new Date(year, month, day);
-        checkin.setDate(checkin.getDate() + duration);
-        var checkoutDate = ("0" + checkin.getDate()).slice(-2) + "-" + ("0" + (checkin.getMonth() + 1)).slice(-2) + "-" + checkin.getFullYear();
+    <script>
+        function calculateCheckoutDate(checkinDate, duration) {
+            var parts = checkinDate.split('-');
+            var day = parseInt(parts[0], 10);
+            var month = parseInt(parts[1], 10) - 1;
+            var year = parseInt(parts[2], 10);
+            var checkin = new Date(year, month, day);
+            checkin.setDate(checkin.getDate() + duration);
+            var checkoutDate = ("0" + checkin.getDate()).slice(-2) + "-" + ("0" + (checkin.getMonth() + 1)).slice(-2) +
+                "-" + checkin.getFullYear();
 
-        return checkoutDate;
-    }
+            return checkoutDate;
+        }
 
-    var todayHotel = new Date();
-    new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hotel"), {
-        display: {
-            viewMode: "calendar",
-            components: {
-                date: true,
-                hours: false,
-                minutes: false,
-                seconds: false
+        var todayHotel = new Date();
+        new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hotel"), {
+            display: {
+                viewMode: "calendar",
+                components: {
+                    date: true,
+                    hours: false,
+                    minutes: false,
+                    seconds: false
+                }
+            },
+            localization: {
+                locale: "id",
+                format: "dd-MM-yyyy",
+            },
+            restrictions: {
+                minDate: todayHotel,
+            },
+        });
+
+        let guest = document.getElementById('guest');
+        guest.addEventListener('change', function() {
+            let room = document.getElementById('room').value;
+            if (guest.value < room) {
+                alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
+                guest.value = room;
+                return;
             }
-        },
-        localization: {
-            locale: "id",
-            format: "dd-MM-yyyy",
-        },
-        restrictions: {
-            minDate: todayHotel,
-        },
-    });
-</script>
+        });
+
+        function handleSelectRoom() {
+            let room = document.getElementById('room').value;
+            let guest = document.getElementById('guest').value;
+
+            if (guest < room) {
+                alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
+                guest=room
+                return;
+            }
+
+            console.log(room, guest);
+
+        }
+        function handleSubmit() {
+            let room = document.getElementById('room').value;
+            let guest = document.getElementById('guest').value;
+
+            if (guest < room) {
+                alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
+                guest=room
+                return;
+            }
+
+            console.log(room, guest);
+
+        }
+    </script>
 @endpush

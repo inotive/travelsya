@@ -281,6 +281,8 @@ class ProductController extends Controller
         //     ]
         // ];
 
+        $status = '';
+
         if (str_contains($requestMymili['status'], "SUKSES!")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');

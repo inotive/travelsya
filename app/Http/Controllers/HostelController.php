@@ -71,7 +71,7 @@ class HostelController extends Controller
 
         // return view('hostel.index', ['hostels' => $hostelsget, 'cities' => $cities, 'params' => $params]);
 
-        $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
+        $hostels = Hostel::where('hostels.is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->where('city', 'like', '%' . $request->location . '%')
             ->withCount(["rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
@@ -148,7 +148,7 @@ class HostelController extends Controller
 
             if ($request->category == 'monthly') {
                 $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_monthly) as min_price'))
-                    ->leftJoin('hostel_rooms', 'hostel_rooms.hotel_id', '=', 'hostels.id')
+                    ->leftJoin('hostel_rooms', 'hostel_rooms.hostel_id', '=', 'hostels.id')
                     ->groupBy('hostels.id')
                     ->orderBy('min_price', $orderDirection);
             }

@@ -352,7 +352,8 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button class="w-100 btn-danger btn">Terapkan</button>
+                                <button class="w-100 btn-danger btn mb-2">Terapkan</button>
+                                <a href="/hostel?location={{ $params['location'] }}&start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}&property={{ $params['property'] }}&roomtype={{ $params['roomtype'] }}&furnish={{ $params['furnish'] }}" class="w-100 btn btn-success">Reset</a>
                             </div>
                         </div>
                     </form>
