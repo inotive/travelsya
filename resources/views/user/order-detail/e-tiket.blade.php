@@ -117,7 +117,7 @@
                         <div class="d-flex mb-1 justify-content-between">
                             <div class="">Fasilitas Kamar</div>
                             <div class=" fw-bold">
-                                @foreach ($data->hotel->hotelroomFacility as $facilityItem)
+                                @foreach ($data->hotelRoom->hotelroomFacility as $facilityItem)
                                     <li>{{ $facilityItem->facility->name }}</li>
                                 @endforeach
                             </div>

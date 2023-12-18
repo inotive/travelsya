@@ -94,22 +94,28 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($hostelrooms->bookDate as $booking)
-                                            @php
-                                                $startdate = \Carbon\Carbon::parse($booking->start);
-                                                $enddate = \Carbon\Carbon::parse($booking->end);
-                                                $startdates = $startdate->Format('d F Y');
-                                                $enddates = $enddate->Format('d F Y');
-
-                                            @endphp
-                                            <tr>
-                                                <td class="text-center">{{ $booking->transaction->user->name }} -
-                                                    {{ $booking->transaction->user->phone }}</td>
-                                                <td class="text-center">CTH123</td>
-                                                <td class="text-center">{{ $startdates }}
-                                                </td>
-                                                <td class="text-center">{{ $enddates }}</td>
-                                                <td class="text-center">{{ $booking->hostelroom->name }}</td>
-                                                <td class="text-center">1 Kamar | 8 Malam</td>
+                                        @php
+                                        $startdate = \Carbon\Carbon::parse($booking->reservation_start);
+                                        $enddate = \Carbon\Carbon::parse($booking->reservation_end);
+                                        $startdates = $startdate->Format('d F Y');
+                                        $enddates = $enddate->Format('d F Y');
+                                        $diffInDays = $startdate->diffInDays($enddate);
+                                        $now = \Carbon\Carbon::now();
+                                        $remainingDays = $now->diffInDays($enddate);
+                                    @endphp
+                                        <tr>
+                                            {{-- <td class="text-center">{{ $booking->transaction->user->name ?? ''}} -
+                                    {{ $booking->transaction->user->phone ?? '' }}</td> --}}
+                                            <td class="text-center">
+                                                {{ $booking->transaction->user->name ?? '' }} -
+                                                {{ $booking->transaction->user->phone ?? '' }}
+                                            </td>
+                                            <td class="text-center">{{ $booking->booking_id }}</td>
+                                            <td class="text-center">{{ $startdates }}</td>
+                                            <td class="text-center">{{ $enddates }}</td>
+                                            <td class="text-center"> {{ $booking->hostelRoom->hostel->name ?? '-'}} - {{ $booking->hostelRoom->name ?? '-' }}</td>
+                                            <td class="text-center">{{ $booking->room }} Kamar | {{ $diffInDays }} Malam
+                                            </td>
 
 
 
@@ -119,8 +125,8 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning"
-                                                                id="" data-id="" data-bs-toggle="modal">
+                                                            <a href="{{ route('e-tiket.hostel', $booking->id) }}"
+                                                                class="menu-link px-3 text-warning" id="" data-id="">
                                                                 Cetak
                                                             </a>
                                                         </div>

@@ -175,7 +175,7 @@
     <!--end::Modal dialog-->
 </div>
 <!--end::Modal - New Target-->
-
+@push('add-script')
 <script>
     $('body').on('click', '#tombol-edit', function () {
 
@@ -302,3 +302,4 @@
 
     });
 </script>
+@endpush

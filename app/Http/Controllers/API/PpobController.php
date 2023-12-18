@@ -158,7 +158,7 @@ class PpobController extends Controller
                 'message'         => 'Sedang menunggu pembayaran',
                 'status'          => "PROCESS",
                 "kode_unik"       => $data['kode_unik'],
-                "created_at" => Carbon::now()
+                "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
 
             //                if ($data['point']) {

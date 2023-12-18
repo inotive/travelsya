@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionHostel;
+use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\HistoryPoint;
 use App\Models\Transaction;
@@ -134,7 +136,7 @@ class CallbackController extends Controller
                                 ->update([
                                     'status' => $status,
                                     'kode_voucher' => $responseMessageSNCodeFinal,
-                                    'updated_at' => Carbon::now()
+                                    'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
                                 ]);
                         }
                         else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
@@ -167,18 +169,27 @@ class CallbackController extends Controller
                             DetailTransactionPPOB::where('transaction_id', $transaction->id)->update([
                                 'status' => $status,
                                 'message' => $message,
-                                'updated_at' => Carbon::now()
+                                'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
                             ]);
                         }
                         else{
-                            if ($transaction->service == "hotel")
+
+                            if ($transaction->service == "hotel" || $transaction->service == "HOTEL")
                             {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hotel Berhasil";
+                                   DetailTransactionHotel::
+                                  where('transaction_id', $transaction->id)->update([
+                                      'updated_at' => Carbon::now()
+                                  ]);
                             }
                             else{
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hostel Berhasil";
+                                DetailTransactionHostel::
+                                where('transaction_id', $transaction->id)->update([
+                                    'updated_at' => Carbon::now()
+                                ]);
                             }
                         }
 
