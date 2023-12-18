@@ -332,13 +332,6 @@
                                                         data-kt-menu="true" style="">
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)"
-                                                                class="menu-link px-3 text-warning" id="tombol-edit"
-                                                                data-id="{{ $hostel->id }}" data-bs-toggle="modal">
-                                                                Edit
-                                                            </a>
-                                                        </div>
-                                                        <div class="menu-item px-3">
                                                             <a href="#" class="menu-link px-3 text-danger"
                                                                 data-bs-toggle="modal" {{-- data-kt-customer-table-filter="delete_row" --}}
                                                                 data-bs-target="#kt_modal_delete_image{{ $image->id }}">
@@ -360,7 +353,7 @@
                                             <div class="modal fade" id="kt_modal_delete_image{{ $image->id }}"
                                                 tabindex="-1" aria-hidden="true">
                                                 <!-- Konten modal penghapusan -->
-                                                <div class="modal-dialog modal-dialog-centered mw-650px">
+                                                <div class="modal-dialog modal-dialog-centered mw-400px">
                                                     <div class="modal-content">
                                                         <form
                                                             action="{{ route('partner.management.hostel.destroyimage', $image->id) }}"
@@ -442,10 +435,9 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)"
-                                                                class="menu-link px-3 text-warning" id=""
-                                                                data-id="" data-bs-toggle="modal">
-                                                                Cetak
+                                                            <a href="{{ route('partner.riwayat-booking.detailhostel', $booking->id) }}"
+                                                                class="menu-link px-3 text-warning" id="" data-id="">
+                                                                Detail Booking
                                                             </a>
                                                         </div>
                                                         <!--end::Menu item-->

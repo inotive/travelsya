@@ -304,7 +304,6 @@
                                                         {{ Str::ucfirst($pending->service) }}
                                                     </div>
                                                     @php
-
                                                         if ($pending->status == 'PENDING') {
                                                             $text_color = 'badge badge-warning';
                                                             $text = 'Menunggu Pembayaran';
@@ -324,7 +323,6 @@
                                                             $text_color = 'badge badge-danger';
                                                             $text = 'Transaksi Kadaluarsa';
                                                         }
-
                                                     @endphp
                                                     <div class="{{ $text_color }} fw-bold">
                                                         {{ Str::ucfirst($text) }}

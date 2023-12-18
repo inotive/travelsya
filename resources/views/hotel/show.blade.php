@@ -195,7 +195,7 @@
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
                                     @php
                                         $hotelImage = $detailHotel->hotelImage->where('main', 1)->first();
-                                        $image = $hotelImage !== null ? 'storage/'.$hotelImage->image : null;
+                                        $image = $hotelImage !== null ? 'storage/' . $hotelImage->image : null;
                                     @endphp
 
                                     <a class="d-block overlay" data-fslightbox="lightbox-basic"
@@ -243,13 +243,64 @@
                                             </div>
                                             <p style="font-size: 13px">{{ $detailHotel->address }}</p>
 
-                                            <div id="bintang ">
+                                            <div id="bintang " class="mb-1">
                                                 @for ($j = 0; $j <= $star_rating; $j++)
                                                     <span class="card-text fa fa-star" style="color: orange;"></span>
                                                 @endfor
                                             </div>
-
-                                            <span class="badge badge-danger mt-4">
+                                            <div class="row g-5 mb-3">
+                                                <div class="col-sm-6">
+                                                    <div class="fw-semibold fs-7 text-gray-700 mb-2">Checkin:</div>
+                                                    <span
+                                                        class="badge badge-light-danger me-2">{{ $detailHotel->checkin }}</span>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="fw-semibold fs-7 text-gray-700 mb-2">Checkout:</div>
+                                                    <span
+                                                        class="badge badge-light-danger me-2">{{ $detailHotel->checkout }}</span>
+                                                </div>
+                                            </div>
+                                            <div class="separator"></div>
+                                            <div class="row mt-1">
+                                                <div class="col-md-2">
+                                                    <div class="fw-semibold text-gray-600 fs-7">Phone:</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="fw-bold text-gray-800 fs-6">
+                                                        {{ $detailHotel->phone ?? '-' }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <div class="fw-semibold text-gray-600 fs-7">Website:</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="fw-bold text-gray-800 fs-6">
+                                                        {!! isset($detailHotel->website)
+                                                            ? '<a href="' .
+                                                                (str_starts_with($detailHotel->website, 'http://') || str_starts_with($detailHotel->website, 'https://')
+                                                                    ? $detailHotel->website
+                                                                    : 'http://' . $detailHotel->website) .
+                                                                '" target="_blank" rel="noopener">' .
+                                                                (str_starts_with($detailHotel->website, 'http://') || str_starts_with($detailHotel->website, 'https://')
+                                                                    ? substr($detailHotel->website, strpos($detailHotel->website, '://') + 3)
+                                                                    : $detailHotel->website) .
+                                                                '</a>'
+                                                            : '-' !!}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row mb-1">
+                                                <div class="col-md-2">
+                                                    <div class="fw-semibold text-gray-600 fs-7">Email:</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="fw-bold text-gray-800 fs-6">
+                                                        {{ $detailHotel->email ?? '-' }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="separator"></div>
+                                            <span class="badge badge-danger mt-4 mb-2">
                                                 {{ $result_rating }}
                                             </span>
                                             <span class="badge badge-danger">({{ $total_rating }} Rating)</span>
@@ -310,12 +361,12 @@
                     href="{{ asset('storage/' . $hotelImage->image) }}">
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/' . $hotelImage->image) }}')">
-                        </div>
-                        <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                        </div>
-                    </a>
-                </div>
+                                    </div>
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                    </div>
+                                </a>
+                            </div>
      @endforeach
                     </div>
 
@@ -407,7 +458,7 @@
                 @php
                     $transactionRoom = [];
                 @endphp
-                @foreach ($detailHotel->hotelRoom as $room)
+                @foreach ($detailHotel->hotelRoom->sortBy('sellingprice') as $room)
                 @php
                     $startDate = date('Y-m-d', strtotime($_GET['start']));
                     $endDate = date('Y-m-d', strtotime('+' . $_GET['duration'] . ' days', strtotime($startDate)));
@@ -416,6 +467,7 @@
                         ->whereBetween('reservation_start', [$startDate, $endDate])
                         ->orWhereBetween('reservation_end', [$startDate, $endDate])
                         ->sum('room');
+                        
                 @endphp
                 <div class="col-6">
                 <div class="card card-hostel mb-3">

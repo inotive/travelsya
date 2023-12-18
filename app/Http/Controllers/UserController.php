@@ -109,11 +109,7 @@ class UserController extends Controller
 
         $history_transactions = clone $transactions;
         $data['history_transactions'] = $history_transactions
-            ->where(function ($query) {
-                $query->where('transactions.status', 'SUCCESS')
-                    ->orWhere('transactions.status', 'PAID')
-                    ->orWhere('transactions.status', 'EXPIRED');
-            })
+            ->where('transactions.status', '!=', 'PENDING')
             ->orderBy('transactions.created_at', 'desc')
             ->get();
 

@@ -164,7 +164,58 @@
                                                 <span class="card-text fa fa-star" style="color: orange;"></span>
                                                 @endfor
                                         </div>
-
+                                        <div class="row g-5 mb-3">
+                                            <div class="col-sm-6">
+                                                <div class="fw-semibold fs-7 text-gray-700 mb-2">Checkin:</div>
+                                                <span
+                                                    class="badge badge-light-danger me-2">{{ $hostelget->checkin }}</span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="fw-semibold fs-7 text-gray-700 mb-2">Checkout:</div>
+                                                <span
+                                                    class="badge badge-light-danger me-2">{{ $hostelget->checkout }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="separator"></div>
+                                        <div class="row mt-1">
+                                            <div class="col-md-2">
+                                                <div class="fw-semibold text-gray-600 fs-7">Phone:</div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-bold text-gray-800 fs-6">
+                                                    {{ $hostelget->phone ?? '-' }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <div class="fw-semibold text-gray-600 fs-7">Website:</div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-bold text-gray-800 fs-6">
+                                                    {!! isset($hostelget->website)
+                                                        ? '<a href="' .
+                                                            (str_starts_with($hostelget->website, 'http://') || str_starts_with($hostelget->website, 'https://')
+                                                                ? $hostelget->website
+                                                                : 'http://' . $hostelget->website) .
+                                                            '" target="_blank" rel="noopener">' .
+                                                            (str_starts_with($hostelget->website, 'http://') || str_starts_with($hostelget->website, 'https://')
+                                                                ? substr($hostelget->website, strpos($hostelget->website, '://') + 3)
+                                                                : $hostelget->website) .
+                                                            '</a>'
+                                                        : '-' !!}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-1">
+                                            <div class="col-md-2">
+                                                <div class="fw-semibold text-gray-600 fs-7">Email:</div>
+                                            </div>
+                                            <div class="col">
+                                                <div class="fw-bold text-gray-800 fs-6">
+                                                    {{ $hostelget->email ?? '-' }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="separator"></div>
                                         <span class="badge badge-danger mt-4">
                                             ({{ floor($hostelget->rating_avg) }} Rating)
                                         </span>
@@ -261,7 +312,7 @@
         @endguest
 
         <div class="row w-75 me-auto ms-auto mt-5">
-            @foreach ($hostelget->hostelRoom as $room)
+            @foreach ($hostelget->hostelRoom->sortBy('sellingprice') as $room)
             @php
             $startDate = date("Y-m-d", strtotime($params['start']));
             $endDate = date("Y-m-d", strtotime("+" . $params['duration'] . " month", strtotime($startDate)));
