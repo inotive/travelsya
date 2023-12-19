@@ -7,7 +7,7 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3 class="card-title fw-bold text-success fs-5  d-block">Jumlah Mitra (Hotel)</h3>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Mitra (Hotel & Hostel)</h3>
                     <div class="py-1">
                         <span class=" fw-bold text-dark fs-8  d-block">Keseluruhan</span>
                         <div class="py-1">
