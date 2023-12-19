@@ -208,7 +208,7 @@ class ManagementHostelController extends Controller
             // Lakukan sesuatu jika $facilityIds bukan array atau kosong
             // Misalnya, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
             // ...
-        
+
             // Contoh: Tampilkan pesan kesalahan
             Log::error('Error: $facilityIds is not an array or is empty');
             // Atau, lakukan tindakan yang sesuai dengan kebutuhan Anda
@@ -371,19 +371,18 @@ class ManagementHostelController extends Controller
                 'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
             ]);
 
-            // Hapus fasilitas lama
             DB::table('hostel_room_facilities')
                 ->where('hostel_room_id', $hostelRoom->id)
                 ->delete();
 
-            // Tambahkan fasilitas yang baru
+            if($facilityIds != null){
             foreach ($facilityIds as $facilityId) {
                 DB::table('hostel_room_facilities')->insert([
                     'hostel_id' => $request->hostel_id,
                     'hostel_room_id' => $hostelRoom->id,
                     'facility_id' => $facilityId,
                 ]);
-            }
+            }}
         } else {
             $hostelRoom->update([
                 'hostel_id' => $request->hostel_id,
@@ -421,7 +420,7 @@ class ManagementHostelController extends Controller
                 // Lakukan sesuatu jika $facilityIds bukan array atau kosong
                 // Misalnya, tampilkan pesan kesalahan atau lakukan tindakan yang sesuai
                 // ...
-            
+
                 // Contoh: Tampilkan pesan kesalahan
                 Log::error('Error: $facilityIds is not an array or is empty');
                 // Atau, lakukan tindakan yang sesuai dengan kebutuhan Anda

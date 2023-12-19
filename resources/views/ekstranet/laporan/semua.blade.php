@@ -75,9 +75,9 @@
                                             ->value('detail_transaction_hotel.id');
                                     @endphp
                                     <tr>
-                                        <td>{{ $no }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>{{ $hotel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y h:i:s', strtotime($hotel->updated_at)) }}</td>
+                                        <td>{{ date('d M Y h:i:s', strtotime($hotel->transaction->created_at)) }}</td>
                                         <td>{{ $hotel->transaction->user->name }}</td>
                                         <td>{{ $hotel->transaction->user->phone }}</td>
                                         <td>
