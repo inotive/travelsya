@@ -115,6 +115,7 @@ class DashboardController extends Controller
             })
             ->get();
 
+
         $detailTransactions = $detailTransactions->groupBy('id')->map(function ($item) {
             return [
                 'id' => $item[0]->id,
@@ -141,8 +142,26 @@ class DashboardController extends Controller
         $detailTransactionHostel = collect($detailTransactions)->filter(function ($item) {
             return $item['service_name'] === 'hostel';
         });
+        $transaksiPPOB = Transaction::with('detailTransactionPPOB','user','services')
+            ->whereIn('service_id', [3,4,5,6,9,10])
+            ->where('status', 'PAID')
+            ->get();
 
-        $detailTransactionPPOB = collect($detailTransactions)->filter(function ($item) {
+        $transaksiTopUp = Transaction::with('detailTransactionTopUp','user','services')
+            ->whereIn('service_id', [1,2,11,12])
+            ->where('status', 'PAID')
+            ->get();
+
+
+//            DB::table('transactions as t')
+//            ->join('services as s', 't.service_id', '=', 's.id')
+//            ->join('users as u', 't.user_id', '=', 'u.id')
+//            ->rightJoin('detail_transaction_ppob as dp', 'dp.transaction_id', '=', 't.id')
+//            ->whereIn('service_id', [1,2,3,4,5,6,9,10])
+//            ->select('t.*', 'u.name as pelanggan', 's.name as service_name','dp.nomor_pelanggan')
+//            ->get();
+        $detailTransactionPPOB =
+            collect($detailTransactions)->filter(function ($item) {
             return strpos($item['no_inv'], 'PPOB') !== false || strpos($item['no_inv'], '%PPOB%') !== false;
         });
 
@@ -150,7 +169,7 @@ class DashboardController extends Controller
             return (strpos(strtolower($item['service_name']), 'pulsa') !== false || strpos(strtolower($item['service_name']), 'data') !== false)
                 && strpos(strtolower($item['service_name']), 'ppob-pulsa') === false;
         });
-        return view('admin.dashboard', compact('card', 'detailTransactions', 'detailTransactionHotel', 'detailTransactionHostel', 'detailTransactionPPOB', 'detailTransactionPulsa'));
+        return view('admin.dashboard', compact('card','transaksiTopUp', 'transaksiPPOB','detailTransactions', 'detailTransactionHotel', 'detailTransactionHostel', 'detailTransactionPPOB', 'detailTransactionPulsa'));
     }
     //    public function index(Request $request)
     //    {

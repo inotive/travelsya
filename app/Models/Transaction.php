@@ -29,7 +29,7 @@ class Transaction extends Model
 
     public function detailTransactionPPOB()
     {
-        return $this->hasMany(DetailTransactionPPOB::class);
+        return $this->hasMany(DetailTransactionPPOB::class, 'transaction_id', 'id');
     }
     public function detailTransactionTopUp()
     {
