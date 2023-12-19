@@ -11,8 +11,10 @@ use App\Models\DetailTransactionTopUp;
 use App\Models\Fee;
 use App\Models\HistoryPoint;
 use App\Models\Hostel;
+use App\Models\HostelRating;
 use App\Models\HostelRoom;
 use App\Models\Hotel;
+use App\Models\HotelRating;
 use App\Models\HotelRoom;
 use App\Models\Product;
 use App\Models\Transaction;
@@ -77,6 +79,7 @@ class TransactionController extends Controller
     {
         if ($service_id == 7) {
             $data = DetailTransactionHostel::where('transaction_id', $transaction_id)->first();
+
             if ($data != null) {
                 $hostelData = Hostel::where('id', $data->hostel_id)->first();
                 $hostelRoom = HostelRoom::where('hostel_id', $hostelData->id)->where('id', $data->hostel_room_id)->first()->name;
@@ -86,7 +89,7 @@ class TransactionController extends Controller
                 return  [
                     'hostel_name' => $hostelData->name,
                     'room_type' => $hostelRoom,
-                    'reservation_duration' => $daysDiff
+                    'reservation_duration' => $daysDiff,
                 ];
             }
         } else if ($service_id == 8) {
@@ -100,7 +103,7 @@ class TransactionController extends Controller
                 return  [
                     'hotel_name' => $hotelData->name,
                     'room_type' => $hotelRoom,
-                    'reservation_duration' => $daysDiff
+                    'reservation_duration' => $daysDiff,
                 ];
             }
         } else {
@@ -250,6 +253,9 @@ class TransactionController extends Controller
                         'transactions.*',
                     )
                     ->first();
+
+                $review = HotelRating::where('transaction_id', $transaction->first()->id)->first();
+
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
@@ -278,6 +284,7 @@ class TransactionController extends Controller
                     'total' => $detailTransaction->grand_total,
                     'received_point' => $receivedPoint,
                     'used_point' => $usedPoint,
+                    'review_hotel' => $review,
                     'created_at' => $detailTransaction->created_at,
                 ]);
 //                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {
@@ -289,7 +296,7 @@ class TransactionController extends Controller
 
             // UNTUK HOSTEL
             if (in_array($transaction->first()->service_id, [7])) {
-                
+
                 $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
                     ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
                     ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id')
@@ -305,7 +312,7 @@ class TransactionController extends Controller
                     )
                     ->first();
 
-
+                $review = HostelRating::where('transaction_id', $transaction->first()->id)->first();
 
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
@@ -336,6 +343,7 @@ class TransactionController extends Controller
                     'total' => $detailTransaction->grand_total,
                     'received_point' => $receivedPoint,
                     'used_point' => $usedPoint,
+                    'review' => $review,
                     'created_at' => $detailTransaction->created_at,
                 ]);
             }
