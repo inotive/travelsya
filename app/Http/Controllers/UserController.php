@@ -108,11 +108,10 @@ class UserController extends Controller
             ->get();
 
         $history_transactions = clone $transactions;
-        $data['history_transactions'] = $history_transactions->where('transactions.status', 'SUCCESS')
+        $data['history_transactions'] = $history_transactions
+            ->where('transactions.status', '!=', 'PENDING')
             ->orderBy('transactions.created_at', 'desc')
             ->get();
-
-
 
         return view('user.orderhistory', $data);
     }
@@ -346,5 +345,4 @@ class UserController extends Controller
         toast('Hotel Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
-
 }

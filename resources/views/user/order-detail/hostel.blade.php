@@ -133,6 +133,8 @@
                                                            $startdates = $startdate->Format('d F Y');
                                                            $enddates = $enddate->Format('d F Y');
                                                            $diffInDays = $startdate->diffInDays($enddate);
+                                                           $diff = $startdate->diff($enddate);
+                                                           $diffInMonths = $diff->m + ($diff->y * 12);
                                                         @endphp
                                                         {{ $diffInDays }} Malam
                                                         | {{ $transactionHostel->room }} Room
@@ -303,7 +305,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Hostel</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->rent_price * $diffInDays * $transactionHostel->room, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->rent_price * $diffInMonths * $transactionHostel->room, 0, ',', '.') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Penanganan</div>
@@ -342,7 +344,7 @@
                                                     Total Biaya
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                    RP {{ number_format($transactionHostel->hostelRoom->sellingprice, 0, ',', '.') }}
+                                                    RP {{ number_format($transactionHostel->transaction->total, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

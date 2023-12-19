@@ -457,9 +457,8 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)"
-                                                                class="menu-link px-3 text-warning" id=""
-                                                                data-id="" data-bs-toggle="modal">
+                                                            <a href="{{ route('partner.riwayat-booking.detailhotel', $booking->id) }}"
+                                                                class="menu-link px-3 text-warning" id="" data-id="">
                                                                 Detail Booking
                                                             </a>
                                                         </div>

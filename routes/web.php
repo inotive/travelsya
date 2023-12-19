@@ -132,7 +132,7 @@ Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDeta
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help')->middleware('auth');
 
 // Route Bantuan Testing
-Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user')->middleware('auth');
+Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
 
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail')->middleware('auth');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold')->middleware('auth');
