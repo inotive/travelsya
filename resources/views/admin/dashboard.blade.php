@@ -218,7 +218,7 @@
                                        id="kt_datatable_zero_configuration">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal</th>
+                                        <th>Transaksi Dibuat</th>
                                         <th>Invoice</th>
                                         <th>Produk</th>
                                         <th>Customer</th>

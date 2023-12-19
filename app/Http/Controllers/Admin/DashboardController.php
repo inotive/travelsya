@@ -145,11 +145,13 @@ class DashboardController extends Controller
         $transaksiPPOB = Transaction::with('detailTransactionPPOB','user','services')
             ->whereIn('service_id', [3,4,5,6,9,10])
             ->where('status', 'PAID')
+            ->orderByDesc('created_at')
             ->get();
 
         $transaksiTopUp = Transaction::with('detailTransactionTopUp','user','services')
             ->whereIn('service_id', [1,2,11,12])
             ->where('status', 'PAID')
+            ->orderByDesc('created_at')
             ->get();
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -125,7 +126,7 @@ class CustomerController extends Controller
     //         ->leftJoin('points', 'transactions.service_id', '=', 'points.service_id')
     //         ->leftJoin('products', 'detail_transactions.product_id', '=', 'products.id')
     //         ->leftJoin('users', 'transactions.user_id', '=', 'users.id') // Join dengan tabel products
-    //         ->selectRaw('transactions.id, transactions.user_id, users.name as user, detail_transactions.price as transaction_price, 
+    //         ->selectRaw('transactions.id, transactions.user_id, users.name as user, detail_transactions.price as transaction_price,
     //                     detail_transaction_hotel.rent_price as hotel_rent_price,
     //                     hotels.name as hotel_name, hotel_rooms.name as hotel_room,
     //                     hostels.name as hostel_name, hostel_rooms.name as hostel_room,
