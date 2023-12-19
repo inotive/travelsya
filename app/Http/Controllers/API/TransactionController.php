@@ -289,6 +289,7 @@ class TransactionController extends Controller
 
             // UNTUK HOSTEL
             if (in_array($transaction->first()->service_id, [7])) {
+                
                 $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
                     ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
                     ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id')
@@ -303,6 +304,8 @@ class TransactionController extends Controller
                         'transactions.total  as grand_total',
                     )
                     ->first();
+
+
 
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,

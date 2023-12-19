@@ -96,4 +96,8 @@ class Transaction extends Model
     {
         return $this->belongsTo(Service::class, 'service_id', 'id');
     }
+
+    public function hostelRating(){
+        return $this->hasMany(HostelRating::class);
+    }
 }

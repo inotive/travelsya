@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Helpers\ResponseFormatter;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\HostelRequestUpdate;
-use App\Models\BookDate;
-use App\Models\DetailTransaction;
-use App\Models\DetailTransactionHostel;
+use DateTime;
+use Carbon\Carbon;
 use App\Models\Fee;
+use App\Models\User;
 use App\Models\Guest;
 use App\Models\Hostel;
-use App\Models\HostelImage;
-use App\Models\HostelRoom;
-use App\Models\Transaction;
-use App\Models\User;
+use PHPUnit\Exception;
 use App\Services\Point;
-use App\Services\Setting;
+use App\Models\BookDate;
 use App\Services\Xendit;
-use Carbon\Carbon;
-use DateTime;
+use App\Services\Setting;
+use App\Models\HostelRoom;
+use App\Models\HostelImage;
+use App\Models\Transaction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Models\DetailTransaction;
+use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Models\DetailTransactionHostel;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-use PHPUnit\Exception;
+use App\Http\Requests\HostelRequestUpdate;
 
 class HostelController extends Controller
 {
@@ -315,6 +316,7 @@ class HostelController extends Controller
 
     public function requestTransaction(Request $request)
     {
+        // dd($request->all());
         // handle validation
         $validator = Validator::make($request->all(), [
             "service" => "required|string",
@@ -339,10 +341,15 @@ class HostelController extends Controller
 
 
         //cekpoint
-        $start = new DateTime($data['start']);
-        $end = new DateTime($data['end']);
+        // $start = new DateTime($data['start']);
+        // $end = new DateTime($data['end']);
+        // $interval = $end->diff($start);
+        // $qty = $interval->format('%m');
+
+        $start = DateTime::createFromFormat('d-m-Y', $data['start']);
+        $end = DateTime::createFromFormat('d-m-Y', $data['end']);
         $interval = $end->diff($start);
-        $qty = $interval->format('%m');
+        $qty = $interval->format('%y') * 12 + $interval->format('%m');
 
         $amount = 0;
         if ($request->duration_type == "monthly") {
@@ -381,20 +388,21 @@ class HostelController extends Controller
             'should_send_email' => true,
             'customer' =>
             [
-                'given_names' => $data['guest'][0]['name'],
-                'email' => $data['guest'][0]['email'],
-                'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: "somenumber",
             ],
             'fees' => $fees
         ]);
 
+
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
             'req_id' => 'HST-' . time(),
-            'service' => 'hostel', // 'service_id' => $hostel->hostel->service_id,
+            'service' => 'hostel',
             'service_id' => 7,
             'payment' => $data['payment'],
-            'user_id' => \Auth::user()->id,
+            'user_id' => Auth::user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
             'total' => ($amount * $qty) + $fees[0]['value'] + $data['kode_unik']
@@ -410,7 +418,7 @@ class HostelController extends Controller
                 'reservation_start' => $data['start'],
                 'reservation_end' => $data['end'],
                 'guest' => $request->total_guest,
-                'room' => 1, // "rent_price"        => $hostel->sellingprice,
+                'room' => 1,
                 "rent_price" => $amount,
                 "fee_admin" => $fees[0]['value'],
                 "kode_unik"         => $data['kode_unik'],
