@@ -7,7 +7,7 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3 class="card-title fw-bold text-success fs-5  d-block">Jumlah Partner</h3>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Jumlah Mitra (Hotel)</h3>
                     <div class="py-1">
                         <span class=" fw-bold text-dark fs-8  d-block">Keseluruhan</span>
                         <div class="py-1">
@@ -164,8 +164,8 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
                                         <th>Fee Admin</th>
+                                        <th>Grand Total</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -183,8 +183,8 @@
                                             <td>{{ $transaction['transaction_name'] }} -
                                                 {{ $transaction['transaction_desc'] }}</td>
                                             <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
+                                            <td>{{$transaction['transaction_price'] * 15 / 100}}</td>
                                             <td>@currency($transaction['transaction_price'])</td>
-                                            <td>@currency($transaction['fee'])</td>
                                     @endforeach
 
                                     @foreach ($detailTransactionHostel as $transaction)
