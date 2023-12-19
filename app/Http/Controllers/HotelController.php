@@ -34,35 +34,7 @@ class HotelController extends Controller
 
     public function index(Request $request)
     {
-        // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
-
-        // if ($request->name)
-        //     $hotels->where('name', 'like', '%' . $request->name . '%');
-
-        // if ($request->location)
-        //     $hotels->where('city', 'like', '%' . $request->location . '%');
-
-        // $hotelsget = $hotels->withCount(["hotelRoom as price_avg" => function ($q) {
-        //     $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-        // }])->withCount(["hotelRating as rating_avg" => function ($q) {
-        //     $q->select(DB::raw('coalesce(avg(rate),0)'));
-        // }])->withCount("hotelRating as rating_count")->get();
-
-        // dd($hostelsget);
-        // $cities = Hotel::distinct()->pluck('city');
-        // $params = $request->all();
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = strtotime($request->start);
-        // $params['city'] = ($request->location) ?: '';
-        // $params['name'] = ($request->name) ?: '';
-
-        // return view('hotel.index', ['hotels' => $hotelsget, 'cities' => $cities, 'params' => $params]);
-
-
-        // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-        //     ->withAvg('hotelRating', 'rate')
-        //     ->orderByDesc('hotel_rating_avg_rate');
-        $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
+        $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where(
                     'totalroom', '>=', $request->room,
@@ -133,7 +105,6 @@ class HotelController extends Controller
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
         $data['listHotel'] = Hotel::where('is_active', 1)->get();
 
-        // dd($hotelPrices);
         return view('hotel.list-hotel', $data);
     }
 

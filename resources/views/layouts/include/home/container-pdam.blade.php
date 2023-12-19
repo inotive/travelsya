@@ -139,7 +139,7 @@
                     type: "POST",
                     url: "{{ route('product.pdam') }}",
                     data: {
-                        'no_pelanggan': noPelangganPDAM,
+                        'no_pelanggan': "0"+noPelangganPDAM,
                         'nom': 'CEKPDAMBLP',
                     },
                     success: function (responseTagihan) {

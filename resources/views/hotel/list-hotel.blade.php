@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col-3">
                 <div class="card border-1 border-light">
-                    <form class="card-body h-100" method="GET" action="">
+                    <form class="card-body h-100" method="GET" action="" id="searchForm">
                         <input type="hidden" name="location" value="{{ $request['location']}}">
                         <input type="hidden" name="start" value="{{ $request['start']}}">
                         <input type="hidden" name="duration" value="{{ $request['duration']}}">
@@ -175,7 +175,8 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button class="w-100 btn-danger btn">Terapkan</button>
+                                <button class="w-100 btn-danger btn mb-2">Terapkan</button>
+                               <a href="/hotels?location={{ $request['location']}}&start={{ $request['start']}}&duration={{ $request['duration']}}&room={{ $request['room']}}&guest={{ $request['guest']}}" class="w-100 btn btn-success">Reset</a>
                             </div>
                         </div>
                     </form>
@@ -419,5 +420,6 @@
             },
         });
     })
+
 </script>
 @endpush
