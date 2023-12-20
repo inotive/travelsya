@@ -115,6 +115,11 @@ class CallbackController extends Controller
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
 
                                 $pointDiterima = $settingPoint->calculatePoint($detailTransactionTopUP->total_tagihan, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
                                 HistoryPoint::create([
                                     'user_id' => $transaction->user_id,
                                     'point' => $pointDiterima,
@@ -164,6 +169,11 @@ class CallbackController extends Controller
                                 $message = "Pembayaran " . $transaction->service . ' Berhasil';
 
                                 $pointDiterima = $settingPoint->calculatePoint($detailTransactionPPOB->total_tagihan, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
                                 HistoryPoint::create([
                                     'user_id' => $transaction->user_id,
                                     'point' => $pointDiterima,

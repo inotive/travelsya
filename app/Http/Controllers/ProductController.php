@@ -117,7 +117,7 @@ class ProductController extends Controller
             'transaction_id' => $storeTransaction->id,
             'product_id'     => $product->id,
             'nomor_telfon'   => $data['notelp'],
-            'total_tagihan'  => $grandTotal,
+            'total_tagihan'  => $product->price,
             'fee_travelsya'  => $fees[0]['value'],
             'fee_mili'       => 0,
             'message'        => 'Top UP sedang diproses',
@@ -249,7 +249,7 @@ class ProductController extends Controller
             'transaction_id'  => $storeTransaction->id,
             'product_id'      => $product->id,
             'nomor_pelanggan' => $request->noPelangganBPJS,
-            'total_tagihan'   => $amount,
+            'total_tagihan'   => $data['totalTagihan'],
             'fee_travelsya'  => $fees[0]['value'],
             'fee_mili'       => 0,
             'message'         => 'Sedang menunggu pembayaran',
@@ -397,7 +397,7 @@ class ProductController extends Controller
             'transaction_id'  => $storeTransaction->id,
             'product_id'      => $product->id,
             'nomor_pelanggan' => $request->noPelangganPDAM,
-            'total_tagihan'   => $amount,
+            'total_tagihan'   => $data['totalTagihan'],
             'fee_travelsya'  => $fees[0]['value'],
             'fee_mili'       => 0,
             'message'         => 'Sedang menunggu pembayaran',
@@ -482,6 +482,7 @@ class ProductController extends Controller
 
     public function paymentPln(Request $request)
     {
+        dd($request->all());
         $data = $request->all();
         // dd($data);
 
@@ -491,13 +492,17 @@ class ProductController extends Controller
         $product = Product::with('service')->where('id', $request->productPLN)->first();
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
+
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
+
         $fees[] = [
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
         $amount = $setting->getAmount($product->price, 1, $fees, 1);
+
+
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
@@ -542,7 +547,7 @@ class ProductController extends Controller
                 'transaction_id'  => $storeTransaction->id,
                 'product_id'      => $product->id,
                 'nomor_telfon' => $request->noPelangganPLN,
-                'total_tagihan'   => $amount,
+                'total_tagihan'   => $product->price,
                 'fee_travelsya'  => $fees[0]['value'],
                 'fee_mili'       => 0,
                 'message'         => 'Sedang menunggu pembayaran',

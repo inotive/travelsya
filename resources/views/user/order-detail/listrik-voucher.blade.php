@@ -135,7 +135,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Total Bayar</div>
-                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total_after_fee, 0, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total, 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                             </div>
@@ -150,7 +150,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                     Total Biaya
                                 </div>
                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                    Rp. {{ number_format($transactionPPOB->total_after_fee, 0, ',', '.') }}
+                                    Rp. {{ number_format($transactionPPOB->total, 0, ',', '.') }}
                                 </div>
                                 </div>
                                 </div>
