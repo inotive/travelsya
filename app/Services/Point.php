@@ -34,7 +34,7 @@ class Point
     {
         $user = User::find($id);
 
-        $sumpoint = $user->point + $point;
+        $sumpoint = $user->point - $point;
         $update = $user->update(['point' => $sumpoint < 0 ? 0 : $sumpoint]);
 
         HistoryPoint::create([
