@@ -153,14 +153,14 @@ class CallbackController extends Controller
                                     'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
                                 ]);
                         }
-                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
+                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs" || $transaction->service == "tv-internet"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
                                 ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan', 'ppob.total_tagihan')
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
-
-                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, $detailTransactionPPOB->kode_pembayaran, $detailTransactionPPOB->nomor_pelanggan);
+                            $kode = $detailTransactionPPOB->kode_pembayaran == "CEKTELKOM" ? "PAYTELKOM" : $detailTransactionPPOB->kode_pembayaran;
+                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, $kode, $detailTransactionPPOB->nomor_pelanggan);
 
                             // return $responseMili;
                             if ($responseMili['RESPONSECODE'] == 00) {
