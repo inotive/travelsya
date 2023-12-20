@@ -113,9 +113,9 @@ class EwalletController extends Controller
             "created_at" => Carbon::now()
         ]);
 
-        //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        //deductpoint
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }

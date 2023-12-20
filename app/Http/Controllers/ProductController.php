@@ -72,7 +72,7 @@ class ProductController extends Controller
         ];
 
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $product->price + $fees[0]['value'] + $data['kode_unik'] ;
+        $grandTotal = $product->price + $fees[0]['value'] + $uniqueCode ;
 
 //        $amount = $setting->getAmount($product->price, 1, $fees, 1);
 
