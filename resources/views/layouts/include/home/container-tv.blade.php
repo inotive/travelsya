@@ -110,7 +110,7 @@
                     $.each(response, function (key, value) {
                         $('#productTV').append($('<option>', {
                             value: value.kode,
-                            text: value.name
+                            text: value.description
                         }));
                     });
                 }

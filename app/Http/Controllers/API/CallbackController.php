@@ -207,26 +207,63 @@ class CallbackController extends Controller
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hotel Berhasil";
 
-                                DetailTransactionHotel::
-                                  where('transaction_id', $transaction->id)->update([
+
+                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
+
+                                $detailHotel->update([
                                       'updated_at' => Carbon::now()
                                   ]);
+                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
+                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
+                                $startdates = $startdate->Format('d F Y');
+                                $enddates = $enddate->Format('d F Y');
+                                $diffInDays = $startdate->diffInDays($enddate);
+
+
+                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
 //
-//                                $pointDiterima = $settingPoint->calculatePoint($detailTransactionPPOB->total_tagihan, $transaction->service_id);
-//                                HistoryPoint::create([
-//                                    'user_id' => $transaction->user_id,
-//                                    'point' => $pointDiterima,
-//                                    'transaction_id' => $transaction->id,
-//                                    'date' => now(),
-//                                    'flow' => "debit"
-//                                ]);
+                                $pointDiterima = $settingPoint->calculatePoint($grandtotal, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
                             }
                             else{
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hostel Berhasil";
-                                DetailTransactionHostel::
-                                where('transaction_id', $transaction->id)->update([
+
+                                $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
+
+                                $detailHostel->update([
                                     'updated_at' => Carbon::now()
+                                ]);
+                                $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
+                                $enddate = \Carbon\Carbon::parse($detailHostel->reservation_end);
+                                $startdates = $startdate->Format('d F Y');
+                                $enddates = $enddate->Format('d F Y');
+                                $diffInDays = $startdate->diffInDays($enddate);
+
+
+                                $grandtotal = $diffInDays * $detailHostel->first()->rent_price * $detailHostel->first()->room;
+//
+                                $pointDiterima = $settingPoint->calculatePoint($grandtotal, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
                                 ]);
                             }
                         }
