@@ -68,8 +68,8 @@
                                         method="POST" class="me-2">
                                         @csrf
                                         @method('put')
-                                        <input type="hidden" name="status" value="{{ $city->status == 0 ? 1 : 0 }}">
-                                        <button id="statusButton_{{ $city->city_id }}" type="button"
+{{--                                        <input type="hidden" id="field_status" name="status" value="{{ $city->status == 0 ? 1 : 0 }}">--}}
+                                        <button  type="button" onclick="confirm({{ $city->city_id }}, {{ $city->status ?? 0 }})"
                                             class="btn btn-sm {{ $city->status == 0 ? 'btn-success' : 'btn-danger' }} border-0 text-white">
                                             {{ $city->status == 0 ? 'Aktifkan' : 'Nonaktifkan' }}
                                         </button>
@@ -82,47 +82,47 @@
                                 $kunci = $city->city_id;
                                 @endphp
 
-                                @if ($cityStatus == 0)
-                                <script>
-                                    document.getElementById('statusButton_{{ $kunci }}').addEventListener('click', function() {
-                                                Swal.fire({
-                                                    title: 'Konfirmasi Tampilkan Kota',
-                                                    text: 'Apakah Anda ingin menampilkan kota ini ke landing page?',
-                                                    icon: 'question',
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: '#3085d6',
-                                                    cancelButtonColor: '#d33',
-                                                    confirmButtonText: 'Ya, Tampilkan!',
-                                                    cancelButtonText: 'Batal'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        // Jika pengguna mengonfirmasi, kirim formulir
-                                                        document.getElementById('statusForm_{{ $kunci }}').submit();
-                                                    }
-                                                });
-                                            });
-                                </script>
-                                @elseif ($cityStatus == 1)
-                                <script>
-                                    document.getElementById('statusButton_{{ $kunci }}').addEventListener('click', function() {
-                                                Swal.fire({
-                                                    title: 'Konfirmasi Sembunyikan Kota',
-                                                    text: 'Apakah Anda ingin menyembunyikan kota ini dari landing page?',
-                                                    icon: 'question',
-                                                    showCancelButton: true,
-                                                    confirmButtonColor: '#3085d6',
-                                                    cancelButtonColor: '#d33',
-                                                    confirmButtonText: 'Ya, Sembunyikan!',
-                                                    cancelButtonText: 'Batal'
-                                                }).then((result) => {
-                                                    if (result.isConfirmed) {
-                                                        // Jika pengguna mengonfirmasi, kirim formulir
-                                                        document.getElementById('statusForm_{{ $kunci }}').submit();
-                                                    }
-                                                });
-                                            });
-                                </script>
-                                @endif
+{{--                                @if ($cityStatus == 0)--}}
+{{--                                <script>--}}
+{{--                                    document.getElementById('statusButton_{{ $kunci }}').addEventListener('click', function() {--}}
+{{--                                                Swal.fire({--}}
+{{--                                                    title: 'Konfirmasi Tampilkan Kota',--}}
+{{--                                                    text: 'Apakah Anda ingin menampilkan kota ini ke landing page?',--}}
+{{--                                                    icon: 'question',--}}
+{{--                                                    showCancelButton: true,--}}
+{{--                                                    confirmButtonColor: '#3085d6',--}}
+{{--                                                    cancelButtonColor: '#d33',--}}
+{{--                                                    confirmButtonText: 'Ya, Tampilkan!',--}}
+{{--                                                    cancelButtonText: 'Batal'--}}
+{{--                                                }).then((result) => {--}}
+{{--                                                    if (result.isConfirmed) {--}}
+{{--                                                        // Jika pengguna mengonfirmasi, kirim formulir--}}
+{{--                                                        document.getElementById('statusForm_{{ $kunci }}').submit();--}}
+{{--                                                    }--}}
+{{--                                                });--}}
+{{--                                            });--}}
+{{--                                </script>--}}
+{{--                                @elseif ($cityStatus == 1)--}}
+{{--                                <script>--}}
+{{--                                    document.getElementById('statusButton_{{ $kunci }}').addEventListener('click', function() {--}}
+{{--                                                Swal.fire({--}}
+{{--                                                    title: 'Konfirmasi Sembunyikan Kota',--}}
+{{--                                                    text: 'Apakah Anda ingin menyembunyikan kota ini dari landing page?',--}}
+{{--                                                    icon: 'question',--}}
+{{--                                                    showCancelButton: true,--}}
+{{--                                                    confirmButtonColor: '#3085d6',--}}
+{{--                                                    cancelButtonColor: '#d33',--}}
+{{--                                                    confirmButtonText: 'Ya, Sembunyikan!',--}}
+{{--                                                    cancelButtonText: 'Batal'--}}
+{{--                                                }).then((result) => {--}}
+{{--                                                    if (result.isConfirmed) {--}}
+{{--                                                        // Jika pengguna mengonfirmasi, kirim formulir--}}
+{{--                                                        document.getElementById('statusForm_{{ $kunci }}').submit();--}}
+{{--                                                    }--}}
+{{--                                                });--}}
+{{--                                            });--}}
+{{--                                </script>--}}
+{{--                                @endif--}}
                             </td>
                     </tr>
                     @endforeach
@@ -143,6 +143,43 @@
 
 {{-- Datatables --}}
 <script>
+    function confirm(id, status){
+        if(status == 0)
+        {
+            Swal.fire({
+                title: 'Konfirmasi Tampilkan Kota',
+                text: 'Apakah Anda ingin menampilkan kota ini ke landing page?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Tampilkan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengonfirmasi, kirim formulir
+                    document.getElementById('statusForm_' + id).submit();
+                }
+            });
+        }
+        else{
+            Swal.fire({
+                title: 'Konfirmasi Sembunyikan Kota',
+                text: 'Apakah Anda ingin menyembunyikan kota ini dari landing page?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sembunyikan!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Jika pengguna mengonfirmasi, kirim formulir
+                    document.getElementById('statusForm_' + id).submit();
+                }
+            });
+        }
+    }
     $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
                     "scrollY": "500px",
@@ -164,7 +201,8 @@
                 });
 
 
-            });
+
+    });
 </script>
 @endpush
 @endsection

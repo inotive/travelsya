@@ -173,26 +173,33 @@
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
                             <!--begin::Title-->
-                            <h1 class="mb-3">Update Point</h1>
+                            <h1 class="mb-3">Setting Point Yang Diperoleh Customer</h1>
                             <!--end::Title-->
                         </div>
                         <!--end::Heading-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Kelipatan</label>
-                                <input type="text" name="multiple" id="multiple" class="form-control form-control-solid"
-                                    placeholder="Kelipatan">
+                            <div class="col-md-12">
+                                <label class="form-label required">Kelipatan Transaksi</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">Rp.</span>
+                                    <input type="text" name="multiple" id="multiple" class="form-control"
+                                           placeholder="Masukan kelipatan transaksi">
+                                </div>
                                 @error('multiple')
                                     <span class="text-danger mt-1" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Value</label>
-                                <input type="text" name="value" id="value" class="form-control form-control-solid"
-                                    placeholder="Value">
+                            <div class="col-md-12 ">
+                                <label class="form-label required">Jumlah Point Yang Akan Diterima Setiap Kelipatan Transaksi</label>
+                                <div class="input-group">
+                                    <input type="text" name="value" id="value" class="form-control"
+                                           placeholder="Masukan Jumlah Point">
+                                    <span class="input-group-text" id="basic-addon1">Point</span>
+                                </div>
+
                                 @error('value')
                                     <span class="text-danger mt-1" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -202,11 +209,11 @@
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
-                        <div class="text-center">
+                        <div class="d-flex justify-content-between">
                             <button type="reset" id="kt_modal_new_target_cancel"
-                                class="btn btn-light me-3">Cancel</button>
-                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                                <span class="indicator-label">Submit</span>
+                                class="btn btn-light me-3 w-100">Cancel</button>
+                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">
+                                <span class="indicator-label">Simpan Perubahan</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                             </button>
