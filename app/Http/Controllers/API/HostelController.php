@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\HistoryPoint;
 use DateTime;
 use Carbon\Carbon;
 use App\Models\Fee;
@@ -362,13 +363,23 @@ class HostelController extends Controller
         $fees = [
             [
                 'type' => 'admin',
-                'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
+                'value' => $fee->percent == 0 ? $fee->value :  $amount * $fee->value / 100,
             ],
             [
                 'type' => 'kode_unik',
                 'value' => $data['kode_unik'],
             ],
         ];
+
+        $saldoPointCustomer = 0;
+        // Jika user menggunakan point untuk transaksi
+        if ($request->point == 1) {
+            // history point masuk dan keluar customer
+            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+            // point masuk - point keluar
+            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+        }
+
 
         // ceate xendit
         $payoutsXendit = $this->xendit->create([
@@ -381,7 +392,7 @@ class HostelController extends Controller
                     "quantity" => $qty,
                 ]
             ],
-            'amount' => ($amount * $qty) + $fees[0]['value'] + $data['kode_unik'],
+            'amount' => ($amount * $qty) + $fees[0]['value'] + $data['kode_unik'] - $saldoPointCustomer,  // Akumulasi total pembayaran sewa hotel, biaya admin dan saldo customer
             'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
@@ -427,6 +438,12 @@ class HostelController extends Controller
                 "guest_handphone" => $data['guest'][0]['phone'],
                 "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
+
+        if ($request->point == 1) {
+            $point = new Point;
+
+            $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
+        }
 
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }

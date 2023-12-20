@@ -86,6 +86,11 @@
                         <div class="col-xl-12">
                             <div id="alertPLN"></div>
                         </div>
+                        <div class="col-12">
+                            @auth
+                                <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
+                            @endauth
+                        </div>
                     </div>
                 </div>
             </div>
@@ -184,7 +189,7 @@
                     $('#btnPeriksaPLN').text('Periksa');
 
                     $('#btnSubmitPLN').removeAttr('disabled');
-
+                    $('#btnBayar').removeClass('d-none');
                     $('#detailPLN').show();
                 },
                 error: function(xhr, status, error) {

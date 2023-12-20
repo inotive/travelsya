@@ -299,11 +299,11 @@ class HotelController extends Controller
                 "created_at"        => Carbon::now(),
             ]);
 
-            if ($data['point']) {
-                //deductpoint
-                $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
-            }
+//            if ($data['point']) {
+//                //deductpoint
+//                $point = new Point;
+//                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//            }
         });
 
         return redirect($payoutsXendit['invoice_url']);

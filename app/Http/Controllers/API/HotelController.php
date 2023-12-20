@@ -477,7 +477,7 @@ class HotelController extends Controller
 
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
-        return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+        return ResponseFormatter::success($payoutsXendit,   'Payment successfully created');
     }
 
     public function hotelCity()
