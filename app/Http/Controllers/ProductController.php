@@ -55,14 +55,26 @@ class ProductController extends Controller
 
         $product = Product::with('service')->find($data['product']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+
         $setting = new Setting();
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        $fee = Fee::where('service_id', $product->service_id)->first();
         $uniqueCode = rand(111, 999);
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $uniqueCode,
+
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fee->percent == 0 ? $fee->value :  $product->price * $fee->value / 100,
+            ],
+            [
+                'type' => 'kode_unik',
+                'value' => $uniqueCode,
+            ],
         ];
-        $amount = $setting->getAmount($product->price, 1, $fees, 1);
+
+        // total pembayaran termasuk dikurangi point
+        $grandTotal = $product->price + $fees[0]['value'] + $data['kode_unik'] ;
+
+//        $amount = $setting->getAmount($product->price, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
@@ -74,7 +86,7 @@ class ProductController extends Controller
                     "quantity" => 1,
                 ]
             ],
-            'amount' => $amount,
+            'amount' => $grandTotal,
             'success_redirect_url'  => route('user.profile'),
             'failure_redirect_url' => route('user.profile'),
             'invoice_duration ' => 72000,
@@ -89,14 +101,14 @@ class ProductController extends Controller
 
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
-            'req_id' => 'PULSA-' . time(),
+            'req_id' => $product->service->name. '-' . time(),
             'service' => $product->service->name,
             'service_id' => $product->service->id,
             'payment' => 'xendit',
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $grandTotal
         ]);
 
         $helper = new General();
@@ -105,7 +117,7 @@ class ProductController extends Controller
             'transaction_id' => $storeTransaction->id,
             'product_id'     => $product->id,
             'nomor_telfon'   => $data['notelp'],
-            'total_tagihan'  => $amount,
+            'total_tagihan'  => $grandTotal,
             'fee_travelsya'  => $fees[0]['value'],
             'fee_mili'       => 0,
             'message'        => 'Top UP sedang diproses',
@@ -115,8 +127,8 @@ class ProductController extends Controller
         ]);
 
         //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -188,7 +200,9 @@ class ProductController extends Controller
         $product = Product::with('service')->find($data['product_id']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
+
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+
         $uniqueCode = rand(111, 999);
         $fees[] = [
             'type' => 'Kode Unik',
@@ -245,8 +259,8 @@ class ProductController extends Controller
         ]);
 
         //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -331,13 +345,17 @@ class ProductController extends Controller
 
         $product = Product::with('service')->find($data['productPDAM']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+
         $setting = new Setting();
+
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
+
         $fees[] = [
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
+
         $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -388,9 +406,9 @@ class ProductController extends Controller
             "created_at" => Carbon::now()
         ]);
 
-        //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        //deductpoint
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
 
         return redirect($payoutsXendit['invoice_url']);
@@ -548,8 +566,8 @@ class ProductController extends Controller
             ]);
         }
         //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -677,9 +695,9 @@ class ProductController extends Controller
             "created_at" => Carbon::now()
         ]);
 
-        //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        //deductpoint
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -800,8 +818,8 @@ class ProductController extends Controller
         ]);
 
         //deductpoint
-        $point = new Point;
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+//        $point = new Point;
+//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
     }

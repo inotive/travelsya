@@ -65,7 +65,7 @@ class CallbackController extends Controller
             print_r($responseXendit);
             $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
                 ->first();
-
+            $settingPoint = new Point();
 
             if ($transaction) {
                 //CEK STATUS PENDING
@@ -114,6 +114,15 @@ class CallbackController extends Controller
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
 
+                                $pointDiterima = $settingPoint->calculatePoint($detailTransactionTopUP->total_tagihan, $transaction->service_id);
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -121,6 +130,7 @@ class CallbackController extends Controller
                             } else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
+
                                 HistoryPoint::where('transaction_id', $transaction->id)
                                     ->where('flow', 'credit')
                                     ->delete();
@@ -152,6 +162,15 @@ class CallbackController extends Controller
                             if ($responseMili['RESPONSECODE'] == 00) {
                                 $status = "Berhasil";
                                 $message = "Pembayaran " . $transaction->service . ' Berhasil';
+
+                                $pointDiterima = $settingPoint->calculatePoint($detailTransactionPPOB->total_tagihan, $transaction->service_id);
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = "Pending";
                                 $message = "Pembayaran Sedang Di Proses";
@@ -178,10 +197,20 @@ class CallbackController extends Controller
                             {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hotel Berhasil";
-                                   DetailTransactionHotel::
+
+                                DetailTransactionHotel::
                                   where('transaction_id', $transaction->id)->update([
                                       'updated_at' => Carbon::now()
                                   ]);
+//
+//                                $pointDiterima = $settingPoint->calculatePoint($detailTransactionPPOB->total_tagihan, $transaction->service_id);
+//                                HistoryPoint::create([
+//                                    'user_id' => $transaction->user_id,
+//                                    'point' => $pointDiterima,
+//                                    'transaction_id' => $transaction->id,
+//                                    'date' => now(),
+//                                    'flow' => "debit"
+//                                ]);
                             }
                             else{
                                 $status = "Berhasil";
@@ -197,6 +226,7 @@ class CallbackController extends Controller
 
                         if($status == "Berhasil" || $status == "Pending")
                         {
+
                             return ResponseFormatter::success($status, $message);
                         }
                         else{
