@@ -37,7 +37,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                         Rincian Pesanan
                     </div>
                     <div class="text mt-0">
-                        {{ $transactionPPOB->inv_num }}
+                        {{ $transactionPPOB->inv_num ?? '-'}}
                     </div>
                     </div>
                     </div>

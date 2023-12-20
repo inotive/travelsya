@@ -117,7 +117,6 @@ class CallbackController extends Controller
                                 $pointDiterima = $settingPoint->calculatePoint($detailTransactionTopUP->total_tagihan, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
 
-
                                 $user->update(['point' => $user->point + $pointDiterima]);
 
                                 HistoryPoint::create([

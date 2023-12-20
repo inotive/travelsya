@@ -214,6 +214,7 @@ class UserController extends Controller
                 'transactions.created_at as created_transaction',
                 'transactions.payment_method as payment_method',
                 'transactions.status as status',
+                'transactions.total',
                 'history_points.point as points',
                 'users.name as user_name',
                 DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
@@ -261,6 +262,7 @@ class UserController extends Controller
                 'transactions.payment_method as payment_method',
                 'transactions.status as status',
                 'history_points.point as points',
+                'transactions.total',
                 'users.name as user_name',
                 DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
                 DB::raw('detail_transaction_ppob.total_tagihan +
