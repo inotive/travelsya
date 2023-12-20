@@ -84,8 +84,8 @@
 
                             <div class="form-text fs-6">Email</div>
                             <div class="input-group mb-10">
-                                <input type="text" class="form-control" name="email" value="{{ auth()->user()->email }}"
-                                    required />
+                                <input type="text" class="form-control" name="email" value="{{ auth()->user()->email }}" readonly
+                                     />
                             </div>
                             <h3>
                                 <b>
@@ -136,7 +136,7 @@
                             <div class="input-group mb-10">
                                 <input type="text" class="form-control" />
                             </div> --}}
-                            <button type="submit" class="btn btn-danger px-16">Simpan</button>
+                            <button type="submit" class="btn btn-danger px-16">Update Profile</button>
                         </form>
                     </div>
                 </div>

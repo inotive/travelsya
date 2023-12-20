@@ -346,8 +346,8 @@ class HostelController extends Controller
         // $interval = $end->diff($start);
         // $qty = $interval->format('%m');
 
-        $start = DateTime::createFromFormat('d-m-Y', $data['start']);
-        $end = DateTime::createFromFormat('d-m-Y', $data['end']);
+        $start = DateTime::createFromFormat('Y-m-d', $data['start']);
+        $end = DateTime::createFromFormat('Y-m-d', $data['end']);
         $interval = $end->diff($start);
         $qty = $interval->format('%y') * 12 + $interval->format('%m');
 

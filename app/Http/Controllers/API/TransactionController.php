@@ -11,6 +11,7 @@ use App\Models\DetailTransactionTopUp;
 use App\Models\Fee;
 use App\Models\HistoryPoint;
 use App\Models\Hostel;
+use App\Models\HostelRating;
 use App\Models\HostelRoom;
 use App\Models\Hotel;
 use App\Models\HotelRoom;
@@ -305,7 +306,15 @@ class TransactionController extends Controller
                     )
                     ->first();
 
+                $allRatings = HostelRating::where('hostel_room_id', $detailTransaction->hostel_room_id)->get();
 
+                $review = $allRatings->map(function ($item){
+                    return [
+                        'rate' => $item->rate,
+                        'comment' => $item->comment
+                    ];
+
+                });
 
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
@@ -336,8 +345,11 @@ class TransactionController extends Controller
                     'total' => $detailTransaction->grand_total,
                     'received_point' => $receivedPoint,
                     'used_point' => $usedPoint,
+                    'review' => $review,
                     'created_at' => $detailTransaction->created_at,
+                    
                 ]);
+
             }
             return ResponseFormatter::success($responseTransaction, 'Data successfully loaded');
 

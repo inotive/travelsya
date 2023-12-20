@@ -147,17 +147,17 @@ class HostelController extends Controller
 
 
             if ($request->category == 'monthly') {
-                $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_monthly) as min_price'))
+                $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_monthly) as price_avg'))
                     ->leftJoin('hostel_rooms', 'hostel_rooms.hostel_id', '=', 'hostels.id')
                     ->groupBy('hostels.id')
-                    ->orderBy('min_price', $orderDirection);
+                    ->orderBy('price_avg', $orderDirection);
             }
 
             if ($request->category == 'yearly') {
-                $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_yearly) as min_price'))
+                $hostels->select('hostels.*', DB::raw('MIN(hostel_rooms.sellingrentprice_yearly) as price_avg'))
                     ->leftJoin('hostel_rooms', 'hostel_rooms.hotel_id', '=', 'hostels.id')
                     ->groupBy('hostels.id')
-                    ->orderBy('min_price', $orderDirection);
+                    ->orderBy('price_avg', $orderDirection);
             }
         }
 
