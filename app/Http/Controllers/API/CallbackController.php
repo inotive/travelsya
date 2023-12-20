@@ -208,21 +208,22 @@ class CallbackController extends Controller
                                 $message = "Pemesanan Hotel Berhasil";
 
 
-                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
-
+//                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
+//
                                 DetailTransactionHotel::where('transaction_id', $transaction->id)->update([
                                       'updated_at' => Carbon::now()
                                   ]);
-                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
-                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
-                                $startdates = $startdate->Format('d F Y');
-                                $enddates = $enddate->Format('d F Y');
-                                $diffInDays = $startdate->diffInDays($enddate);
-
-
-                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
 //
-                                $pointDiterima = $settingPoint->calculatePoint($grandtotal, $transaction->service_id);
+//                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
+//                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
+//                                $startdates = $startdate->Format('d F Y');
+//                                $enddates = $enddate->Format('d F Y');
+//                                $diffInDays = $startdate->diffInDays($enddate);
+//
+//
+//                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
+//
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
 
                                 $user->update(['point' => $user->point + $pointDiterima]);
@@ -239,22 +240,22 @@ class CallbackController extends Controller
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hostel Berhasil";
 
-                                $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
+//                                $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
 
 
                                 DetailTransactionHostel::where('transaction_id', $transaction->id)->update([
                                     'updated_at' => Carbon::now()
                                 ]);
-                                $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
-                                $enddate = \Carbon\Carbon::parse($detailHostel->reservation_end);
-                                $startdates = $startdate->Format('d F Y');
-                                $enddates = $enddate->Format('d F Y');
-                                $diffInDays = $startdate->diffInDays($enddate);
-
-
-                                $grandtotal = $diffInDays * $detailHostel->first()->rent_price * $detailHostel->first()->room;
+//                                $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
+//                                $enddate = \Carbon\Carbon::parse($detailHostel->reservation_end);
+//                                $startdates = $startdate->Format('d F Y');
+//                                $enddates = $enddate->Format('d F Y');
+//                                $diffInDays = $startdate->diffInDays($enddate);
 //
-                                $pointDiterima = $settingPoint->calculatePoint($grandtotal, $transaction->service_id);
+//
+//                                $grandtotal = $diffInDays * $detailHostel->first()->rent_price * $detailHostel->first()->room;
+////
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
 
                                 $user->update(['point' => $user->point + $pointDiterima]);
