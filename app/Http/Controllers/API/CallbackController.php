@@ -210,7 +210,7 @@ class CallbackController extends Controller
 
                                 $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
 
-                                $detailHotel->update([
+                                DetailTransactionHotel::where('transaction_id', $transaction->id)->update([
                                       'updated_at' => Carbon::now()
                                   ]);
                                 $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
@@ -241,7 +241,8 @@ class CallbackController extends Controller
 
                                 $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
 
-                                $detailHostel->update([
+
+                                DetailTransactionHostel::where('transaction_id', $transaction->id)->update([
                                     'updated_at' => Carbon::now()
                                 ]);
                                 $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
