@@ -125,7 +125,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form_create" class="form" method="post"
-                        action="{{ route('admin.user.create') }}" onsubmit="return validatePassword()">
+                        action="{{ route('admin.user.create') }}">
                         @csrf
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
@@ -155,10 +155,6 @@
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-
-                            <!--begin::Col-->
-
-                            <!--end::Col-->
                             <!--begin::Col-->
                             <div class="col-md-12 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Name</label>
@@ -180,7 +176,7 @@
                             </label>
                             <!--end::Label-->
                             <input type="password" class="form-control form-control-solid" placeholder="Password"
-                                id="password" name="password" minlength="8" required />
+                                id="password_create" name="password" minlength="8" autocomplete="new-password" required />
                             @error('password')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -196,7 +192,9 @@
                             </label>
                             <!--end::Label-->
                             <input type="password" class="form-control form-control-solid" placeholder="Password"
-                                name="password_confirmation" id="password_confirmation" required />
+                                name="password_confirmation" id="password_confirmation_create" autocomplete="new-password" required />
+
+                            <span id="passwordError" style="color: red;"></span>
                             @error('password_confirmation')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -204,12 +202,11 @@
                             @enderror
                         </div>
                         <!--end::Input group-->
-
                         <!--begin::Actions-->
                         <div class="text-center">
                             <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3"
                                 data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                            <button type="submit" id="submitButton" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -249,8 +246,8 @@
                 <!--begin::Modal body-->
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
-                    <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.user.update') }}">
+                    <form class="form" method="post"
+                        action="{{ route('admin.user.update') }}" id="passwordForm">
                         @method('put')
                         @csrf
                         <input type="hidden" name="id" id="id">
@@ -280,15 +277,6 @@
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <!--begin::Col-->
-                            {{-- <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Role</label>
-                            <select class="form-select form-select-solid" id="role" name="role">
-                                <option value="0">Admin</option>
-                                <option value="1">Vendor</option>
-                            </select>
-                        </div> --}}
-                            <!--end::Col-->
-                            <!--begin::Col-->
                             <div class="col-md-12 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Name</label>
                                 <!--begin::Input-->
@@ -309,7 +297,7 @@
                             </label>
                             <!--end::Label-->
                             <input type="password" class="form-control form-control-solid" placeholder="Password"
-                                minlength="8" name="password" />
+                                minlength="8" name="password" id="password_edit" />
                             @error('password')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -325,7 +313,8 @@
                             </label>
                             <!--end::Label-->
                             <input type="password" class="form-control form-control-solid" placeholder="Password"
-                                name="password_confirmation" />
+                                name="password_confirmation" id="password_confirmation_edit" />
+                            <span id="passwordError_edit" style="color: red;"></span>
                             @error('password_confirmation')
                                 <span class="text-danger" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -338,7 +327,7 @@
                         <div class="text-center">
                             <button type="reset" id="kt_modal_new_target_cancel"
                                 class="btn btn-light me-3">Cancel</button>
-                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                            <button type="submit" id="submitButton_edit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -357,6 +346,69 @@
     <!--end::Modal - New Target-->
 @endsection
 @push('add-script')
+<script>
+    $(document).ready(function() {
+    // Ambil elemen input password dan password_confirmation
+    var passwordInput = $("#password_edit");
+    var confirmPasswordInput = $("#password_confirmation_edit");
+
+    // Ambil elemen pesan error dan tombol submit
+    var passwordError = $("#passwordError_edit");
+    var submitButton = $("#submitButton_edit");
+
+    // Handler untuk setiap perubahan pada kedua input
+    passwordInput.on('input', validatePasswordMatch);
+    confirmPasswordInput.on('input', validatePasswordMatch);
+
+    function validatePasswordMatch() {
+        var password = passwordInput.val();
+        var confirmPassword = confirmPasswordInput.val();
+
+        if (password !== confirmPassword) {
+            // Password tidak cocok, tampilkan pesan error
+            passwordError.text("Password dan Confirm Password tidak cocok!");
+            submitButton.prop("disabled", true);
+            console.log(passwordError);
+        } else {
+            // Password cocok, hapus pesan error dan aktifkan tombol submit
+            passwordError.text("");
+            submitButton.prop("disabled", false);
+        }
+    }
+});
+</script>
+
+<script>
+    $(document).ready(function() {
+    // Ambil elemen input password dan password_confirmation
+    var passwordInput = $("#password_create");
+    var confirmPasswordInput = $("#password_confirmation_create");
+
+    // Ambil elemen pesan error dan tombol submit
+    var passwordError = $("#passwordError");
+    var submitButton = $("#submitButton");
+
+    // Handler untuk setiap perubahan pada kedua input
+    passwordInput.on('input', validatePasswordMatch);
+    confirmPasswordInput.on('input', validatePasswordMatch);
+
+    function validatePasswordMatch() {
+        var password = passwordInput.val();
+        var confirmPassword = confirmPasswordInput.val();
+
+        if (password !== confirmPassword) {
+            // Password tidak cocok, tampilkan pesan error
+            passwordError.text("Password dan Confirm Password tidak cocok!");
+            submitButton.prop("disabled", true);
+        } else {
+            // Password cocok, hapus pesan error dan aktifkan tombol submit
+            passwordError.text("");
+            submitButton.prop("disabled", false);
+        }
+    }
+});
+</script>
+
     <script>
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({

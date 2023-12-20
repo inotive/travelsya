@@ -17,8 +17,19 @@ class UserController extends Controller
         return view('admin.management-user.index', compact('users'));
     }
 
-    public function create(CreateUserRequest $request)
+    public function create(Request $request)
     {
+        $validators = Validator::make($request->all(), [
+            'name' => 'required|min:3|max:255',
+            'email' => 'email|required|unique:users,email|min:7|max:255',
+            'password' => 'required|min:7|confirmed'
+        ]);
+
+        if($validators->fails()){
+            toast('Tolong berikan konfirmasi yang benar', 'warning');
+            return redirect()->back();
+        }
+
         $request['name'] = $request->name;
         // $request['role'] = $request->role;
         $request['role'] = 0;
