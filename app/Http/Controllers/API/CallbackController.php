@@ -87,7 +87,7 @@ class CallbackController extends Controller
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
-                                ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon')
+                                ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon', 'top.total_tagihan')
                                 ->first();
                             $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
@@ -152,7 +152,7 @@ class CallbackController extends Controller
                         else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
-                                ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
+                                ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan', 'ppob.total_tagihan')
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
 

@@ -57,6 +57,6 @@ class Point
     {
         $point = ModelsPoint::where('service_id', $categoryid)->first();
 
-        return ($amount / $point->multiple) * $point->value;
+        return round(($amount / $point->multiple) * $point->value);
     }
 }
