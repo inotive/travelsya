@@ -32,7 +32,7 @@
                     <div class="cursor-pointer symbol symbol-30px symbol-md-40px"
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
-                        <img src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }}"
+                        <img src="{{ auth()->user()->image != null ? asset('storage/' . auth()->user()->image) : asset('assets/img/default-company.png') }}"
                             alt="user" />
                     </div>
                     <!--begin::User account menu-->
