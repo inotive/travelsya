@@ -339,7 +339,7 @@
                                                 <input class="form-check-input " type="checkbox" name="facility_id[]"
                                                     value="{{ $item->id }}" id="facility{{ $item->id }}" {{
                                                     (in_array($item->id,
-                                                $hostel->hostelFacilities->pluck('facility_id')->toArray())) ?
+                                                $room->hostelFacilities->pluck('facility_id')->toArray())) ?
                                                 'checked' : '' }}>
                                             </div>
                                         </td>
