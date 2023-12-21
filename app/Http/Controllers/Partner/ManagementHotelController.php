@@ -54,9 +54,9 @@ class ManagementHotelController extends Controller
         $user_id = auth()->user()->id;
 
         $validator = Validator::make($request->all(), [
-            'name'      => 'required',
-            'address'   => 'required',
-            'star'      => 'required',
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -64,17 +64,17 @@ class ManagementHotelController extends Controller
         }
 
         $hotel->update([
-            'user_id'     => $user_id,
-            'checkin'     => $request->checkin,
-            'checkout'    => $request->checkout,
-            'name'        => $request->name,
-            'address'     => $request->address,
-            'email'       => $request->email,
-            'star'        => $request->star,
-            'phone'       => $request->phone,
-            'website'     => $request->website,
-            'lon'         => $request->long_ltd,
-            'lat'         => $request->ltd,
+            'user_id' => $user_id,
+            'checkin' => $request->checkin,
+            'checkout' => $request->checkout,
+            'name' => $request->name,
+            'address' => $request->address,
+            'email' => $request->email,
+            'star' => $request->star,
+            'phone' => $request->phone,
+            'website' => $request->website,
+            'lon' => $request->long_ltd,
+            'lat' => $request->ltd,
             'description' => $request->description,
         ]);
 
@@ -116,8 +116,8 @@ class ManagementHotelController extends Controller
         // $hotel = Hotel::whereHas('hotelRoom', function($query) use ($room_id) {
         //     $query->where('id', $room_id);
         // })->first();
-        $hotel = Hotel::find($id); // Mengambil hotel dengan id tertentu
-        $room = hotelRoom::where('id', $room_id)->first();
+        $hotel = Hotel::with('hotelRoom')->find($id); // Mengambil hotel dengan id tertentu
+        $room = hotelRoom::with('hotelroomFacility')->where('id', $room_id)->first();
         $facility = Facility::all();
         // $room = hotelRoom::where('hotel_id', $id)->first();
         return view('ekstranet.management-hotel.setting-room-update', compact('hotel', 'facility', 'room'));
@@ -154,7 +154,7 @@ class ManagementHotelController extends Controller
             'is_active' => 1,
             'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.', '', $request->sellingprice),
             'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
-            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
+            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice),
         ]);
 
         $hotelRoomImageFiles = $request->file('hotel_room_image', []);
@@ -213,7 +213,7 @@ class ManagementHotelController extends Controller
     public function mainphotoHotel($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'hotel_id'  => 'required',
+            'hotel_id' => 'required',
         ]);
 
         //check if validation fails
@@ -287,7 +287,7 @@ class ManagementHotelController extends Controller
     //ini aksi untuk update
     public function settingRoomUpdate(Request $request, $hotel_id, $id)
     {
-        //dd($request->all());
+        // dd($id);
         $hotelRoom = HotelRoom::where('id', $id)
             ->where('hotel_id', $hotel_id)
             ->first();
@@ -304,31 +304,54 @@ class ManagementHotelController extends Controller
             // 'bed_type' => 'required',
             'totalroom' => 'required',
             'sellingprice' => 'required',
-            'facility_id' => 'required',
+            'facility_id' => 'nullable',
         ]);
 
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            // return response()->json($validator->errors(), 422);
+
+            $errors = $validator->errors();
+            $errorMessage = $errors->first('facility_id');
+            if ($errorMessage != null) {
+                toast($errorMessage, 'error');
+            }
+
+
+            return redirect()->back()->with([
+                'success' => false,
+                'message' => 'Gagal Update Room!',
+
+            ]);
         }
 
         $facilityIds = $request->input('facility_id');
 
+        // if ($facilityIds == null) {
+        //     toast('Facilitas Wajib Di Pilih', 'error');
+
+        //     return redirect()->back()->with([
+        //         'success' => false,
+        //         'message' => 'Gagal Update Room!',
+
+        //     ]);
+        // }
 
 
-    if ($request->hasFile('hotel_room_images')) {
-        $imageFiles = $request->file('hotel_room_images');
 
-        foreach ($hotelRoom->hotelroomimage as $index => $image) {
-            if (isset($imageFiles[$index])) {
-                Storage::delete('public/' . $image->image);
+        if ($request->hasFile('hotel_room_images')) {
+            $imageFiles = $request->file('hotel_room_images');
 
-                $path = $imageFiles[$index]->store('media/hotel/');
-                $filename = basename($path);
+            foreach ($hotelRoom->hotelroomimage as $index => $image) {
+                if (isset($imageFiles[$index])) {
+                    Storage::delete('public/' . $image->image);
 
-                $image->update(['image' => 'media/hotel/' . $filename]);
+                    $path = $imageFiles[$index]->store('media/hotel/');
+                    $filename = basename($path);
+
+                    $image->update(['image' => 'media/hotel/' . $filename]);
+                }
             }
-        }
 
 
             $hotelRoom->update([
@@ -342,22 +365,26 @@ class ManagementHotelController extends Controller
                 'totalroom' => $request->totalroom,
                 'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.', '', $request->sellingprice),
                 'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
-                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
+                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice),
             ]);
+
 
             // Hapus fasilitas lama
             DB::table('hotel_room_facilities')
-                ->where('hotel_room_id', $hotelRoom->id)
+                ->where('hotel_room_id', $id)
                 ->delete();
+            if ($facilityIds !== null) {
+                // Tambahkan fasilitas yang baru
+                foreach ($facilityIds as $facilityId) {
+                    DB::table('hotel_room_facilities')->insert([
+                        'hotel_id' => $request->hotel_id,
+                        'hotel_room_id' => $hotelRoom->id,
+                        'facility_id' => $facilityId,
+                    ]);
+                }
 
-            // Tambahkan fasilitas yang baru
-            foreach ($facilityIds as $facilityId) {
-                DB::table('hotel_room_facilities')->insert([
-                    'hotel_id' => $request->hotel_id,
-                    'hotel_room_id' => $hotelRoom->id,
-                    'facility_id' => $facilityId,
-                ]);
             }
+
         } else {
             $hotelRoom->update([
                 'hotel_id' => $request->hotel_id,
@@ -370,21 +397,24 @@ class ManagementHotelController extends Controller
                 'totalroom' => $request->totalroom,
                 'sellingprice' => $request->sellingprice == null ? 0 : str_replace('.', '', $request->sellingprice),
                 'extrabed_price' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
-                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 :  str_replace('.', '', $request->extrabedsellingprice),
+                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice),
             ]);
+
 
             // Hapus fasilitas lama
             DB::table('hotel_room_facilities')
-                ->where('hotel_room_id', $hotelRoom->id)
+                ->where('hotel_room_id', $id)
                 ->delete();
 
-            // Tambahkan fasilitas yang baru
-            foreach ($facilityIds as $facilityId) {
-                DB::table('hotel_room_facilities')->insert([
-                    'hotel_id' => $request->hotel_id,
-                    'hotel_room_id' => $hotelRoom->id,
-                    'facility_id' => $facilityId,
-                ]);
+            if ($facilityIds !== null) {
+                // Tambahkan fasilitas yang baru
+                foreach ($facilityIds as $facilityId) {
+                    DB::table('hotel_room_facilities')->insert([
+                        'hotel_id' => $request->hotel_id,
+                        'hotel_room_id' => $hotelRoom->id,
+                        'facility_id' => $facilityId,
+                    ]);
+                }
             }
         }
 
@@ -409,7 +439,7 @@ class ManagementHotelController extends Controller
 
     public function settingRoomDelete(string $id)
     {
-        if(DetailTransactionHotel::where('hotel_room_id', $id)->exists()){
+        if (DetailTransactionHotel::where('hotel_room_id', $id)->exists()) {
             toast('Hotel Ini Sudah Memiliki Beberapa Transaksi', 'error');
             return redirect()->back();
         }
@@ -448,11 +478,11 @@ class ManagementHotelController extends Controller
     {
         $this->validate($request, [
             // 'hotel_id'  => 'required',
-            'description'  => 'required'
+            'description' => 'required'
         ]);
 
         HotelRule::create([
-            'description'  => $request->description,
+            'description' => $request->description,
             'hotel_id' => $request->hotel_id,
         ]);
         toast('Hotel Rule has been created', 'success');
@@ -465,15 +495,15 @@ class ManagementHotelController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Hotel Rules',
-            'data'    => $hotelRule
+            'data' => $hotelRule
         ]);
     }
 
     public function updaterule(Request $request, HotelRule $HotelRule, $id)
     {
         $validator = Validator::make($request->all(), [
-            'hotel_id'  => 'required',
-            'description'  => 'required',
+            'hotel_id' => 'required',
+            'description' => 'required',
         ]);
 
         //check if validation fails
@@ -485,15 +515,15 @@ class ManagementHotelController extends Controller
 
         $HotelRule = HotelRule::find($id);
         $HotelRule->update([
-            'hotel_id'  => $request->hotel_id,
-            'description'  => $request->description
+            'hotel_id' => $request->hotel_id,
+            'description' => $request->description
         ]);
 
         toast('Hotel Rule has been Updated', 'success');
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
-            'data'    => $HotelRule
+            'data' => $HotelRule
         ]);
         // return redirect()->back();
     }

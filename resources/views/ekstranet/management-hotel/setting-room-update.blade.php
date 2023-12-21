@@ -184,7 +184,8 @@
                                         data-kt-button="false">
                                         <!--begin::Input-->
                                         <input class="btn-check" type="radio" name="maxextrabed" value="0"
-                                        {{ $room->maxextrabed === null ? 'checked' : '' }} id="extrabedTidakCheckbox" />
+                                            {{ $room->maxextrabed === null ? 'checked' : '' }}
+                                            id="extrabedTidakCheckbox" />
                                         <!--end::Input--> Tidak Ada
                                     </label>
                                     <!--end::Radio-->
@@ -233,7 +234,8 @@
                                     <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                         <!--begin::Image preview wrapper-->
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ asset('storage/' . $image->image) }}')"></div>
+                                            style="background-image: url('{{ asset('storage/' . $image->image) }}')">
+                                        </div>
                                         <!--end::Image preview wrapper-->
 
                                         <!--begin::Edit button-->
@@ -345,19 +347,20 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($facility as $item)
-                                            <tr>
-                                                <td>
-                                                    <div class="form-check form-check-lg">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            name="facility_id[]" value="{{ $item->id }}"
-                                                            id="facility{{ $item->id }}"
-                                                            {{ in_array($item->id, $hotel->hotelroomFacility->pluck('facility_id')->toArray()) ? 'checked' : '' }}>
-                                                    </div>
-                                                </td>
-                                                <td>{{ $item->name }}</td>
-                                            </tr>
-                                        @endforeach
-                                        
+                                        <tr>
+                                            <td>
+                                                <div class="form-check form-check-lg">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        name="facility_id[]" value="{{ $item->id }}"
+                                                        id="facility{{ $item->id }}"
+                                                        {{ in_array($item->id, $room->hotelroomFacility->pluck('facility_id')->toArray()) ? 'checked' : '' }}>
+                                                </div>
+                                            </td>
+                                            <td>{{ $item->name }}</td>
+                                        </tr>
+                                    @endforeach
+                                    
+
                                     </tbody>
                                 </table>
                             </div>
