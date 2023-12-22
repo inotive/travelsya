@@ -482,7 +482,6 @@ class ProductController extends Controller
 
     public function paymentPln(Request $request)
     {
-        dd($request->all());
         $data = $request->all();
         // dd($data);
 
