@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\General;
-use App\Models\DetailTransactionHostel;
-use App\Models\Facility;
+use Carbon\Carbon;
 use App\Models\Hostel;
+use App\Services\Point;
+use App\Helpers\General;
+use App\Models\Facility;
+use App\Services\Xendit;
+use App\Services\Setting;
 use App\Models\HostelRoom;
 use App\Models\Transaction;
-use App\Services\Point;
-use App\Services\Setting;
 use App\Services\Travelsya;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
-use App\Services\Xendit;
-use Carbon\Carbon;
+use App\Models\DetailTransactionHostel;
 
 class HostelController extends Controller
 {
@@ -117,30 +118,21 @@ class HostelController extends Controller
         }
 
         if ($request->has('start')) {
-            $checkin = \Carbon\Carbon::parse($request->start);
+            $checkin = Carbon::parse($request->start);
             $duration = $request->duration;
 
             // Hitung tanggal checkout
             $checkout = $checkin->copy()->addMonths($duration);
 
             $hostels->whereRaw('(
-                SELECT SUM(totalroom) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
+                SELECT COUNT(*) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
             ) - (
                 SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hostel WHERE hostel_id = hostels.id
                 AND ? <= reservation_end
                 AND ? >= reservation_start
             ) > 0', [$checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+        
         }
-
-        // if ($request->has('harga')) {
-        //     if ($request->harga == 'tertinggi') {
-        //         $hostels->orderByDesc('price_avg');
-        //     }
-
-        //     if ($request->harga == 'terendah') {
-        //         $hostels->orderBy('price_avg');
-        //     }
-        // }
 
         if ($request->has('harga')) {
             $orderDirection = $request->harga === 'tertinggi' ? 'desc' : 'asc';

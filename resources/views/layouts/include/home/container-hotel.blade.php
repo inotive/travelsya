@@ -43,10 +43,10 @@
                 <template x-for="data in $store.hotel.cities">
                     <option x-bind:value="data.name" x-text="data.label"></option>
                 </template>
-                <optgroup label="Hotel"></optgroup>
+                {{-- <optgroup label="Hotel"></optgroup>
                 <template x-for="data in $store.hotel.hotels">
                     <option x-bind:value="data.name" x-text="data.label"></option>
-                </template>
+                </template> --}}
             </select>
         </div>
         <div class="col-md-4 mb-5">

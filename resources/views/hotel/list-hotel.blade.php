@@ -199,12 +199,12 @@
                                                 {{ $city->city }}</option>
                                             @endforeach
 
-                                            <optgroup label="Hotel"></optgroup>
+                                            {{-- <optgroup label="Hotel"></optgroup>
                                             @foreach ($listHotel as $hotel)
                                             <option value="{{ $hotel->name }}" {{ $request['location']==$hotel->name ?
                                                 'selected' : '' }}>
                                                 {{ $hotel->name }}</option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>
                                     </div>
                                     <div class="col-3">

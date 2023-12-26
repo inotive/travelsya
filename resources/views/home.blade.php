@@ -266,6 +266,11 @@
                     id: 1,
                     name: "unfurnished",
                     label: "Unfurnished"
+                },
+                {
+                    id: 0,
+                    name: "semifurnished",
+                    label: "Semi Furnish"
                 }
             ]
         }

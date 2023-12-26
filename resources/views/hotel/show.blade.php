@@ -88,12 +88,12 @@
                                                         {{ $city->city }}</option>
                                                 @endforeach
 
-                                                <optgroup label="Hotel"></optgroup>
+                                                {{-- <optgroup label="Hotel"></optgroup>
                                                 @foreach ($listHotel as $hotel)
                                                     <option value="{{ $hotel->name }}"
                                                         {{ $request['location'] == $hotel->name ? 'selected' : '' }}>
                                                         {{ $hotel->name }}</option>
-                                                @endforeach
+                                                @endforeach --}}
                                                 {{-- <template x-for="data in $store.hotel.hotels">
                                                 <option x-bind:value="data.name" x-text="data.label"></option>
                                             </template> --}}
