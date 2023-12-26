@@ -27,8 +27,8 @@
                         <tr class="fw-bold fs-6 text-gray-800 ">
                             <th class="text-center">No.</th>
                             <th class="text-center">Logo</th>
-                            <th class="text-center">Vendor</th>
-                            <th class="text-center">Hotel atau Hostel</th>
+                            <th class="text-center">Mitra</th>
+                            <th class="text-center">Bisnis</th>
                             <th class="text-center">No.Telp</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Aksi</th>

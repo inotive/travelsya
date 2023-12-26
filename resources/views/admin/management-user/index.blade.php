@@ -133,7 +133,7 @@
                             <h1 class="mb-3">Create User</h1>
                             <!--end::Title-->
                             <!--begin::Description-->
-                            <div class="text-muted fw-semibold fs-5">Only create vendor/admin role</div>
+                            <div class="text-muted fw-semibold fs-5">Only create mitra/admin role</div>
                             <!--end::Description-->
                         </div>
                         <!--end::Heading-->
