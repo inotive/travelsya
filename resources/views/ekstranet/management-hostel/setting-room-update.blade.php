@@ -43,7 +43,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Tarif Per Bulan (Termasuk Pajak 25%)</label>
+                            <label class="form-label">Tarif Per Bulan (Termasuk Pajak)</label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp.</span>
                                 <input type="text" name="sellingrentprice_monthly" id="sellingrentprice_monthly"
@@ -61,7 +61,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Tarif Per Tahun (Termasuk Pajak 25%)</label>
+                            <label class="form-label">Tarif Per Tahun (Termasuk Pajak)</label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp.</span>
                                 <input type="text" name="sellingrentprice_yearly" id="sellingrentprice_yearly"

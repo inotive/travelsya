@@ -338,7 +338,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset('storage/media/hotel/' . $image->image) }}"
+                                                    <img src="{{ asset('storage/' . $image->image) }}"
                                                         class="rounded" style="width: 150px">
                                                 </td>
                                                 <td class="text-center">

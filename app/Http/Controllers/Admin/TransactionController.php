@@ -20,7 +20,37 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->role == 0) {
-            $tr = Transaction::with('user');
+            $tr = Transaction::with('user')
+            ->leftJoin('detail_transaction_top_up', function ($join) {
+                $join->on('transactions.id', '=', 'detail_transaction_top_up.transaction_id');
+            })
+            ->leftJoin('detail_transaction_ppob', function ($join) {
+                $join->on('transactions.id', '=', 'detail_transaction_ppob.transaction_id');
+            })
+            ->leftJoin('detail_transaction_hotel', function ($join) {
+                $join->on('transactions.id', '=', 'detail_transaction_hotel.transaction_id');
+            })
+            ->leftJoin('detail_transaction_hostel', function ($join) {
+                $join->on('transactions.id', '=', 'detail_transaction_hostel.transaction_id');
+            })
+            ->where('transactions.deleted_at', null)
+            ->groupBy('transactions.id')
+            ->orderBy('transactions.created_at', 'desc')
+            ->selectRaw('
+                transactions.id,
+                transactions.no_inv,
+                transactions.payment_method,
+                transactions.payment_channel,
+                transactions.status,
+                transactions.total,
+                transactions.service as service,
+                transactions.created_at,
+                transactions.service_id,
+                MAX(detail_transaction_hotel.fee_admin) + MAX(detail_transaction_hotel.kode_unik) as hotel_fee,
+                MAX(detail_transaction_hostel.fee_admin) + MAX(detail_transaction_hostel.kode_unik) as hostel_fee,
+                MAX(detail_transaction_ppob.fee_travelsya) + MAX(detail_transaction_ppob.kode_unik) as ppob_fee,
+                MAX(detail_transaction_top_up.fee_travelsya) + MAX(detail_transaction_top_up.kode_unik) as topup_fee')
+            ->get();
         } else {
             $id = auth()->user()->id;
             $tr = Transaction::with('user')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
@@ -31,12 +61,15 @@ class TransactionController extends Controller
         if ($request->service != null)
             $tr = $tr->where('service_id', $request->service);
 
-        if ($request->start != null) {
-            $tr = $tr->whereDate('created_at', '>=', $request->start);
-        }
+            if ($request->filled('start') && $request->filled('end')) {
+                $start = date('Y-m-d', strtotime($request->start));
+                $end = date('Y-m-d', strtotime($request->end));
+            
+                $tr = $tr->whereBetween('created_at', [$start, $end]);
+            }
 
-        $transactions = $tr->orderBy('created_at', 'desc')
-            ->get();
+        $transactions = $tr;
+
         $services = Service::all();
         return view('admin.transaction', compact('transactions', 'services'));
     }
