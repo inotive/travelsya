@@ -84,7 +84,10 @@ class ManagementHotelController extends Controller
     }
     public function settingRoom($id)
     {
-        $hotel = Hotel::with('hotelRoom')->find($id);
+        $hotel = Hotel::with(['hotelRoom', 'detailTransactionHotel' => function ($query) {
+            $query->withCount('hotelRoom');
+        }])->find($id);
+        // dd($hotel);
         $hotelRoom = $hotel->hotelRoom;
         $hotelroomimage = $hotel->hotelroomImage;
         $facilities = Facility::all();

@@ -131,7 +131,7 @@
                                     <div class="col-12 d-flex justify-content-between">
                                         <p>Grand Total</p>
                                         <h4>
-                                            {{ General::rp($grandTotal) }}
+                                            {{ General::rp(($hotelRoom->sellingprice * $params['duration'] * $params['room']) + $feeAdmin +  $uniqueCode) }}
                                         </h4>
                                     </div>
                                     {{-- <div class="col-12 d-flex justify-content-between">--}}

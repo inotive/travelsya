@@ -27,6 +27,8 @@
                         <th class="text-center">Room Rate</th>
                         <th class="text-center">Selling Price</th>
                         <th class="text-center">Jumlah Ruangan</th>
+                        <th class="text-center">Jumlah Ruangan Tersedia</th>
+                        <th class="text-center">Jumlah Ruangan Terpakai</th>
                         <th class="text-center">Batas Penghuni</th>
                         <th class="text-center">Aksi</th>
                     </tr>
@@ -38,7 +40,9 @@
                             <td class="text-center">{{ $room->name }}</td>
                             <td class="text-center">@currency($room->price)</td>
                             <td class="text-center">@currency($room->sellingprice)</td>
-                            <td class="text-center">{{ $room->totalroom ?? 0 }} Kamar</td>
+                            <td class="text-center">{{ ($room->totalroom ?? 0)  }} Kamar</td>
+                            <td class="text-center">{{ ($room->totalroom ?? 0) - $room->detailTransactionHotel->count() }} Kamar</td>
+                            <td class="text-center">{{ $room->detailTransactionHotel->count() }} Kamar</td>
                             <td class="text-center">{{ $room->guest ?? 0 }} Orang</td>
                             <td class="text-center">
                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">

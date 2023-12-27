@@ -195,7 +195,7 @@
                                     style="max-width: 250px; max-height: 250px" alt=""> --}}
                                     @php
                                         $hotelImage = $detailHotel->hotelImage->where('main', 1)->first();
-                                        $image = $hotelImage !== null ? 'storage/'.$hotelImage->image : null;
+                                        $image = $hotelImage !== null ? 'storage/' . $hotelImage->image : null;
                                     @endphp
 
                                     <a class="d-block overlay" data-fslightbox="lightbox-basic"
@@ -310,12 +310,12 @@
                     href="{{ asset('storage/' . $hotelImage->image) }}">
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/' . $hotelImage->image) }}')">
-                        </div>
-                        <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                            <i class="bi bi-eye-fill text-white fs-3x"></i>
-                        </div>
-                    </a>
-                </div>
+                            </div>
+                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                            </div>
+                        </a>
+                    </div>
      @endforeach
                     </div>
 
@@ -468,7 +468,7 @@
                 </p>
                 <div class="d-flex align-items-center gap-2">
                 @foreach ($room->hotelroomFacility->groupBy('facility.name') as $facility)
-                <img src="{{ asset('storage/' . $facility->first()->facility->icon) }}"
+                <img src="{{ asset($facility->first()->facility->icon) }}"
                 alt="facility" width="30" class="me-1">
                 @endforeach
                 </div>

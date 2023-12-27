@@ -49,6 +49,11 @@ class Hotel extends Model
     {
         return $this->hasMany(HotelRoom::class);
     }
+    public function detailTransactionHotel()
+    {
+        return $this->hasMany(DetailTransactionHotel::class);
+    }
+    
 
     /**
      * Get the user that owns the Hostel

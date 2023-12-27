@@ -32,10 +32,11 @@ class TransactionController extends Controller
             $tr = $tr->where('service_id', $request->service);
 
         if ($request->start != null) {
-            $tr = $tr->whereDate('created_at', '>=', $request->start);
+            $tr = $tr->whereDate('created_at', '>=', $request->start );
         }
 
-        $transactions = $tr->orderBy('created_at', 'desc')->get();
+        $transactions = $tr->orderBy('no_inv', 'desc')->get();
+
         $services = Service::all();
         return view('admin.transaction', compact('transactions', 'services'));
     }

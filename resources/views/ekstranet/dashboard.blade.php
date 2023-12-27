@@ -1,6 +1,7 @@
 @extends('ekstranet.layout',['title' => 'Dashboard',"url" => "#"])
 
 @section('content-admin')
+
 <!--begin::Row-->
 <div class="row gy-5 g-xl-10">
     <!--begin::Col-->
@@ -87,6 +88,19 @@
                 <h5 class="card-title">Riwayat Booking Bulan Ini</h5>
             </div>
             <div class="card-body">
+                <form action="">
+                <div class="row mb-2">
+                        <div class="col-4">
+                            <input class="form-control" placeholder="Tanggal Mulai" name="start_date" id="kt_datepicker_1" value="{{ old('start_date', $start_date) }}"/>
+                        </div>
+                        {{-- <div class="col-4">
+                            <input class="form-control" placeholder="Tanggal Akhir" name="end_date" id="kt_datepicker_2"/>
+                        </div> --}}
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary">Cari</button>
+                        </div>
+                    </div>
+                </form>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
@@ -146,3 +160,10 @@
     </div>
 </div>
 @endsection
+
+@push('add-script')
+<script>
+    $("#kt_datepicker_1").flatpickr();
+    $("#kt_datepicker_2").flatpickr();
+</script>
+@endpush

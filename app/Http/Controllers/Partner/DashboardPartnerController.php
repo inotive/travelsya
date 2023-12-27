@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 
 class DashboardPartnerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         //        $data['transactions'] = Transaction::with('detailTransaction.product', 'user', 'bookDate')->orderBy('created_at', 'desc')
         //            ->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
@@ -26,9 +26,6 @@ class DashboardPartnerController extends Controller
         //            })->orderBy('created_at', 'desc')->take(5)->get();
         //
         //
-
-
-
 
         //
         // $data['revenueWeek'] = DetailTransaction::withWhereHas('Transaction', function ($q) use ($id) {
@@ -46,12 +43,18 @@ class DashboardPartnerController extends Controller
         //            });
         //        })->sum('price');
 
-
         /**
          * VARIABEL ======================================
          */
         $id = auth()->user()->id;
-        $startWeek = Carbon::now()->timezone('Asia/Makassar')->subWeek()->format("Y-m-d H:i:s");
+        $startWeek = $request->has('start_date')
+            ? Carbon::parse($request->start_date)
+                // ->subWeek()
+                ->format('Y-m-d')
+            : Carbon::now()
+                // ->subWeek()
+                ->format('Y-m-d');
+
         $dateNow = Carbon::now()->timezone('Asia/Makassar');
 
         /**
@@ -61,17 +64,16 @@ class DashboardPartnerController extends Controller
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hostels as h', 'dh.hostel_id', '=', 'h.id')
             ->where('h.user_id', $id)
-            ->whereBetween('dh.updated_at', [$startWeek, $dateNow])
+            ->whereBetween('dh.created_at', [$startWeek, $dateNow])
             ->where('t.status', '=', 'PAID');
-
 
         $transaction_hotel = DB::table('detail_transaction_hotel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
             ->where('h.user_id', $id)
-            ->whereBetween('dh.updated_at', [$startWeek, $dateNow])
+            ->whereBetween('dh.created_at', [$startWeek, $dateNow])
             ->where('t.status', '=', 'PAID');
-
+        // dd($transaction_hotel);
 
         //        DetailTransactionHotel::whereBetween('created_at', [$startWeek, $dateNow])
         //            ->withWhereHas('transaction', function ($query) use ($id) {
@@ -92,7 +94,10 @@ class DashboardPartnerController extends Controller
         /**
          * PENDAPATAN PER BULAN ======================================
          */
-        $startMonth = Carbon::now()->timezone('Asia/Makassar')->subMonth()->format("Y-m-d H:i:s");
+        $startMonth = Carbon::now()
+            ->timezone('Asia/Makassar')
+            ->subMonth()
+            ->format('Y-m-d H:i:s');
         $dateNow = Carbon::now()->timezone('Asia/Makassar');
 
         $trans_hotel_month = DB::table('detail_transaction_hotel as dh')
@@ -100,25 +105,26 @@ class DashboardPartnerController extends Controller
             ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
             ->where('h.user_id', $id)
             ->whereBetween('dh.updated_at', [$startMonth, $dateNow])
-            ->where('t.status', '=', 'PAID')->sum('t.total');
-
+            ->where('t.status', '=', 'PAID')
+            ->sum('t.total');
 
         $trans_hostel_month = DB::table('detail_transaction_hostel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hostels as h', 'dh.hostel_id', '=', 'h.id')
             ->where('h.user_id', $id)
             ->whereBetween('dh.updated_at', [$startMonth, $dateNow])
-            ->where('t.status', '=', 'PAID')->sum('t.total');
+            ->where('t.status', '=', 'PAID')
+            ->sum('t.total');
 
-//        $trans_hotel_month = DetailTransactionHotel::whereMonth('created_at', '=', date('m'))
-//            ->withWhereHas('transaction', function ($query) use ($id) {
-//                $query->where('user_id', $id);
-//            })->sum('rent_price');
-//
-//        $trans_hostel_month = DetailTransactionHostel::whereMonth('created_at', '=', date('m'))
-//            ->withWhereHas('transaction', function ($query) use ($id) {
-//                $query->where('user_id', $id);
-//            })->sum('rent_price');
+        //        $trans_hotel_month = DetailTransactionHotel::whereMonth('created_at', '=', date('m'))
+        //            ->withWhereHas('transaction', function ($query) use ($id) {
+        //                $query->where('user_id', $id);
+        //            })->sum('rent_price');
+        //
+        //        $trans_hostel_month = DetailTransactionHostel::whereMonth('created_at', '=', date('m'))
+        //            ->withWhereHas('transaction', function ($query) use ($id) {
+        //                $query->where('user_id', $id);
+        //            })->sum('rent_price');
 
         $data['revenueMonth'] = $trans_hotel_month + $trans_hostel_month;
 
@@ -127,22 +133,25 @@ class DashboardPartnerController extends Controller
          */
         $totalRoomHotel = HotelRoom::with('hostel', function ($q) use ($id) {
             $q->where('user_id', $id);
-        })->where('is_active', 1)->sum('totalroom');
+        })
+            ->where('is_active', 1)
+            ->sum('totalroom');
 
         $totalRoomHostel = HostelRoom::with('hostel', function ($q) use ($id) {
             $q->where('user_id', $id);
-        })->where('is_active', 1)->sum('totalroom');
-        $data['ready'] = ($totalRoomHotel + $totalRoomHostel) - ($transaction_hotel->sum('room') + $transaction_hostel->sum('room'));
+        })
+            ->where('is_active', 1)
+            ->sum('totalroom');
+        $data['ready'] = $totalRoomHotel + $totalRoomHostel - ($transaction_hotel->sum('room') + $transaction_hostel->sum('room'));
 
         $data['notready'] = $transaction_hotel->sum('room') + $transaction_hostel->sum('room');
-
 
         /**
          * DAFTAR RIWAYAT TERAKHIR
          */
         $data['transaction_hotels'] = $transaction_hotel->get();
         $data['transaction_hostels'] = $transaction_hostel->get();
-
+        $data['start_date'] = $startWeek;
 
         /**
          * RETURN VIEW ======================================
