@@ -355,7 +355,7 @@
                                                             </div>
                                                         @elseif ($pending->service_id == 11)
                                                             <div class="symbol symbol-40px">
-                                                                <img src="{{ asset('assets/media/products-categories/icon-wpendinget.png') }}"
+                                                                <img src="{{ asset('assets/media/products-categories/icon-wallet.png') }}"
                                                                     alt="frame5">
                                                             </div>
                                                         @else

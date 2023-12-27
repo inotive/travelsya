@@ -6,6 +6,7 @@ use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\Help;
+use App\Models\HistoryPoint;
 use App\Models\HostelRating;
 use App\Models\HotelRating;
 use App\Models\Transaction;
@@ -301,6 +302,14 @@ class UserController extends Controller
         $data['helps'] = Help::orderBy('title')->get();
 
         return view('user.bantuan', $data);
+    }
+
+    public function point()
+    {
+        $user_id = auth()->user()->id;
+
+        $historyPoints = HistoryPoint::with('user', 'transaction')->where('user_id', $user_id)->get();
+        return view('user.point', compact('historyPoints'));
     }
 
     public function detailTransaction($no_inv)
