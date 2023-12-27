@@ -171,8 +171,8 @@
                                                     class="path2"></span></i>
 
                                             <!--begin::Inputs-->
-                                            <input type="file" name="hotel_room_image[]" accept=".png, .jpg, .jpeg"
-                                                multiple />
+                                            <input type="file" value="{{ asset('assets/media/noimage.png')}}" name="hotel_room_image[]" accept=".png, .jpg, .jpeg"
+                                                multiple  />
                                             <input type="hidden" name="image_remove" />
                                             <!--end::Inputs-->
                                         </label>

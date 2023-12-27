@@ -84,62 +84,6 @@
                             {{-- <div class="col-12">
                             <!--begin::Alert-->
                             <!--begin::Heading-->
-                            <div class="mb-3">
-                                <!--begin::Label-->
-                                <label class="d-flex align-items-center fs-5 fw-semibold">
-                                    <span class="required">Tipe Properti</span>
-
-                                    <span class="m2-1" data-bs-toggle="tooltip"
-                                        title="Your billing numbers will be calculated based on your API method">
-                                        <i class="ki-duotone ki-information fs-7"><span class="path1"></span><span
-                                                class="path2"></span><span class="path3"></span></i>
-                                    </span>
-                                </label>
-                                <!--end::Label-->
-                            </div>
-                            <!--end::Heading-->
-
-                            <!--begin::Radio group-->
-                            <div class="btn-group w-100 mb-5" data-kt-buttons="true"
-                                data-kt-buttons-target="[data-kt-button]">
-                                <!--begin::Radio-->
-                                <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
-                                    <!--begin::Input-->
-                                    <input class="btn-check" type="radio" name="property_type" value="Apartemen" />
-                                    <!--end::Input-->
-                                    Apartemen
-                                </label>
-                                <!--end::Radio-->
-
-                                <!--begin::Radio-->
-                                <label class="btn btn-outline btn-color-muted btn-active-success active"
-                                    data-kt-button="true">
-                                    <!--begin::Input-->
-                                    <input class="btn-check" type="radio" name="property_type" checked="checked"
-                                        value="Villa" />
-                                    <!--end::Input-->
-                                    Villa
-                                </label>
-                                <!--end::Radio-->
-
-                                <!--begin::Radio-->
-                                <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
-                                    <!--begin::Input-->
-                                    <input class="btn-check" type="radio" name="property_type" value="Residance" />
-                                    <!--end::Input-->
-                                    Residence
-                                </label>
-                                <!--end::Radio-->
-
-                                <!--begin::Radio-->
-                                <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
-                                    <!--begin::Input-->
-                                    <input class="btn-check" type="radio" name="property_type" value="Rumah" />
-                                    <!--end::Input-->
-                                    Rumah
-                                </label>
-                                <!--end::Radio-->
-                            </div>
                             <!--end::Radio group-->
                             <!--end::Alert-->
                         </div> --}}
@@ -230,6 +174,7 @@
                                 {{-- <label class="form-label">Image</label> --}}
                                 {{-- <input type="file" name="image_1" id="image_1" class="form-control"> --}}
                                 <!--begin::Image input-->
+
                                 @foreach ($room->hotelroomimage as $image)
                                     <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                         <!--begin::Image preview wrapper-->
@@ -271,8 +216,53 @@
                                         </span>
                                         <!--end::Remove button-->
                                     </div>
-                                @endforeach
 
+                                @endforeach
+                                @if ($room->hotelroomimage->count() < 5)
+
+                                @for ($i = 0; $i < 5-$room->hotelroomimage->count(); $i++)
+                                <div class="image-input image-input-outline m-5" data-kt-image-input="true">
+                                    <!--begin::Image preview wrapper-->
+                                    <div class="image-input-wrapper w-125px h-125px"></div>
+                                    <!--end::Image preview wrapper-->
+
+                                    <!--begin::Edit button-->
+                                    <label
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                        data-bs-dismiss="click" title="Change image">
+                                        <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
+                                                class="path2"></span></i>
+
+                                        <!--begin::Inputs-->
+                                        <input type="file" name="hotel_room_images[]" accept=".png, .jpg, .jpeg"
+                                            multiple  />
+                                        <input type="hidden" name="image_remove" />
+                                        <!--end::Inputs-->
+                                    </label>
+                                    <!--end::Edit button-->
+
+                                    <!--begin::Cancel button-->
+                                    <span
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                        data-bs-dismiss="click" title="Cancel image">
+                                        <i class="ki-outline ki-cross fs-3"></i>
+                                    </span>
+                                    <!--end::Cancel button-->
+
+                                    <!--begin::Remove button-->
+                                    <span
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                        data-bs-dismiss="click" title="Remove image">
+                                        <i class="ki-outline ki-cross fs-3"></i>
+                                    </span>
+                                    <!--end::Remove button-->
+                                </div>
+                            @endfor
+                                    
+                                @endif
                                 {{-- PENAMBAHAN ROOM IMAGE --}}
                                 {{-- <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                 <!--begin::Image preview wrapper-->
