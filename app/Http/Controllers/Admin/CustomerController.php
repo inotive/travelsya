@@ -48,17 +48,21 @@ class CustomerController extends Controller
             ->leftJoin('products as ppob_products', 'detail_transaction_ppob.product_id', '=', 'ppob_products.id') // Tambah leftJoin ke tabel products (sebagai ppob_products)
             ->leftJoin('users', 'transactions.user_id', '=', 'users.id') // Join dengan tabel products
             ->selectRaw('transactions.id, transactions.user_id, users.name as user,
-                        detail_transaction_ppob.total_tagihan as ppob_price,
-                        hotels.name as hotel_name, hotel_rooms.name as hotel_room,
-                        hostels.name as hostel_name, hostel_rooms.name as hostel_room,
-                        services.name as service_name,
-                        transactions.service as services_nama,
-                        transactions.total as transaction_price,
-                        products.name as product_name, products.description as product_desc,
-                        ppob_products.name as ppob_product_name, ppob_products.description as ppob_product_desc,
-                        transactions.no_inv, transactions.service, transactions.payment_method,
-                        debit_points.point as debit_point, credit_points.point as credit_point,
-                        transactions.created_at')
+                detail_transaction_ppob.total_tagihan as ppob_price,
+                hotels.name as hotel_name, hotel_rooms.name as hotel_room,
+                hostels.name as hostel_name, hostel_rooms.name as hostel_room,
+                services.name as service_name,
+                transactions.service as services_nama,
+                transactions.total as transaction_price,
+                products.name as product_name, products.description as product_desc,
+                ppob_products.name as ppob_product_name, ppob_products.description as ppob_product_desc,
+                transactions.no_inv, transactions.service, transactions.payment_method,
+                debit_points.point as debit_point, credit_points.point as credit_point,
+                COALESCE(SUM(COALESCE(detail_transaction_top_up.fee_travelsya, 0) + COALESCE(detail_transaction_top_up.fee_mili, 0) + COALESCE(detail_transaction_top_up.kode_unik, 0)), 0) as fee_admin_top,
+                COALESCE(SUM(COALESCE(detail_transaction_ppob.fee_travelsya, 0) + COALESCE(detail_transaction_ppob.fee_mili, 0) + COALESCE(detail_transaction_ppob.kode_unik, 0)), 0) as fee_admin_ppob,
+                COALESCE(SUM(COALESCE(detail_transaction_hotel.fee_admin, 0) + COALESCE(detail_transaction_hotel.kode_unik, 0)), 0) as fee_admin_hotel,
+                COALESCE(SUM(COALESCE(detail_transaction_hostel.fee_admin, 0) + COALESCE(detail_transaction_hostel.kode_unik, 0)), 0) as fee_admin_hostel,
+                transactions.created_at')
             ->where('transactions.user_id', $customerId)
             ->where(function ($query) {
                 $query->where(function ($query) {
@@ -77,9 +81,22 @@ class CustomerController extends Controller
                 $query->where('credit_points.flow', 'credit')
                       ->orWhereNull('credit_points.flow');
             })
+            ->groupBy('transactions.id', 'transactions.user_id', 'users.name', 'detail_transaction_ppob.total_tagihan', 'hotels.name', 'hotel_rooms.name', 'hostels.name', 'hostel_rooms.name', 'services.name', 'transactions.service', 'transactions.total', 'products.name', 'products.description', 'ppob_products.name', 'ppob_products.description', 'transactions.no_inv', 'transactions.service', 'transactions.payment_method', 'debit_points.point', 'credit_points.point', 'transactions.created_at')
             ->get();
 
         $detailTransactions = $detailTransactions->groupBy('id')->map(function ($item) {
+            $feeAdmin = 0;
+            if ($item[0]->fee_admin_top !== "0") {
+                $feeAdmin = $item[0]->fee_admin_top;
+            } elseif ($item[0]->fee_admin_ppob !== "0") {
+                $feeAdmin = $item[0]->fee_admin_ppob;
+            } elseif ($item[0]->fee_admin_hotel !== "0") {
+                $feeAdmin = $item[0]->fee_admin_hotel;
+            } elseif ($item[0]->fee_admin_hostel !== "0") {
+                $feeAdmin = $item[0]->fee_admin_hostel;
+            } else {
+                $feeAdmin = 0;
+            }
             return [
                 'id' => $item[0]->id,
                 'user_id' => $item[0]->user_id,
@@ -87,18 +104,18 @@ class CustomerController extends Controller
                 'transaction_price' => $item[0]->transaction_price,
                 'transaction_name' => $item[0]->hotel_name ?? $item[0]->hostel_name ?? $item[0]->product_name ?? $item[0]->ppob_product_name,
                 'transaction_desc' => $item[0]->hotel_room ?? $item[0]->hostel_room ?? $item[0]->product_desc ?? $item[0]->ppob_product_desc,
+                'fee_admin' => (int)$feeAdmin ,
                 'service_name' => $item[0]->service_name,
                 'debit_point' => $item[0]->debit_point ?? 0,
                 'credit_point' => $item[0]->credit_point ?? 0,
                 'no_inv' => $item[0]->no_inv,
                 'payment_method' => $item[0]->payment_method,
                 'created_at' => $item[0]->created_at,
-
             ];
         })->values()->all();
 
-        // dd($detailTransactions);
-        // return view('admin.management-customer.detail_transactions', compact('detailTransactions'));
+        //dd($detailTransactions);
+
         return response()->json($detailTransactions);
     }
 
@@ -125,7 +142,7 @@ class CustomerController extends Controller
     //         ->leftJoin('points', 'transactions.service_id', '=', 'points.service_id')
     //         ->leftJoin('products', 'detail_transactions.product_id', '=', 'products.id')
     //         ->leftJoin('users', 'transactions.user_id', '=', 'users.id') // Join dengan tabel products
-    //         ->selectRaw('transactions.id, transactions.user_id, users.name as user, detail_transactions.price as transaction_price, 
+    //         ->selectRaw('transactions.id, transactions.user_id, users.name as user, detail_transactions.price as transaction_price,
     //                     detail_transaction_hotel.rent_price as hotel_rent_price,
     //                     hotels.name as hotel_name, hotel_rooms.name as hotel_room,
     //                     hostels.name as hostel_name, hostel_rooms.name as hostel_room,
