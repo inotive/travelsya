@@ -77,7 +77,8 @@
                                     <tr>
                                         <td>{{ $no }}</td>
                                         <td>{{ $hotel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y h:i:s', strtotime($hotel->updated_at)) }}</td>
+                                        <td>{{  \Carbon\Carbon::parse($hotel->created_at)->format('d M Y H:i:s')
+                                        }}</td>
                                         <td>{{ $hotel->transaction->user->name }}</td>
                                         <td>{{ $hotel->transaction->user->phone }}</td>
                                         <td>
@@ -124,7 +125,8 @@
                                     <tr>
                                         <td>{{ $no }}</td>
                                         <td>{{ $hostel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y h:i:s', strtotime($hostel->updated_at)) }}</td>
+                                        <td>{{  \Carbon\Carbon::parse($hostel->updated_at)->format('d M Y H:i:s') }}
+                                        </td>
                                         <td>{{ $hostel->transaction->user->name }}</td>
                                         <td>{{ $hostel->transaction->user->phone }}</td>
                                         <td>

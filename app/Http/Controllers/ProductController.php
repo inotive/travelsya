@@ -136,12 +136,14 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
+        // dd($requestMymili);
+
         
+        $status = '';
         if (str_contains($requestMymili['status'], "SUKSES!")) {
             $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            $status = '';
             if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
                 $status = "Tagihan Sudah Terbayar";
             }
@@ -283,7 +285,7 @@ class ProductController extends Controller
         //     ]
         // ];
 
-        $status = '';
+        dd($requestMymili);
 
         if (str_contains($requestMymili['status'], "SUKSES!")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);

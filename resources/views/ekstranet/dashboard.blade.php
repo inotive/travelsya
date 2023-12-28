@@ -106,12 +106,12 @@
                         <thead>
                             <tr class="fw-bold fs-6 text-gray-800">
                                 <th>Tanggal</th>
+                                <th>Tanggal Expired</th>
                                 <th>Invoice</th>
                                 <th>Code Booking</th>
                                 <th>Customer</th>
                                 <th>Check IN</th>
                                 <th>Check Out</th>
-                                <th>Metode Pembayaran</th>
                                 <th>Grand Total</th>
                                 <th>Status</th>
                             </tr>
@@ -120,34 +120,39 @@
                             @foreach($transaction_hotels as $hotel)
                             <tr>
                                 {{-- <h1>{{ dd($hotel) }}</h1> --}}
-                                <td>{{date('d M Y',strtotime($hotel->created_at))}}</td>
+                                <td>{{ \Carbon\Carbon::parse($hotel->created_at)->format('d M Y') }}
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($hotel->created_at)->addDay()->format('d M Y') }}
+                                </td>
                                 <td>{{$hotel->no_inv ?? ''}}</td>
                                 <td>{{$hotel->req_id ?? ''}}</td>
                                 <td>{{$hotel->transaction->user->name  ?? ''}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
-                                <td>{{$hotel->payment }}</td>
-                                <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
+                                {{-- <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td> --}}
+                                <td>{{ General::rp($hotel->rent_price ) }}</td>
                                 <td>
                                     <span class="badge {{$hotel->status == "PAID" ? "badge-success"
-                                        : "badge-warning" }}">{{$hotel->status == "PAID" ? "Lunas"
+                                        : "badge-warning" }}">{{$hotel->status == "PAID" ? "Sukses"
                                         : "Menunggu Pembayaran" }}</span>
                                 </td>
                             </tr>
                             @endforeach
                             @foreach($transaction_hostels as $hostel)
                             <tr>
-                                <td>{{date('d M Y',strtotime($hostel->created_at))}}</td>
+                                <td>{{\Carbon\Carbon::parse($hostel->created_at)->format('d M Y')}}</td>
+                                <td>{{\Carbon\Carbon::parse($hostel->created_at)->addDay()->format('d M Y')}}</td>
                                 <td>{{$hostel->no_inv}}</td>
                                 <td>{{$hostel->req_id}}</td>
                                 <td>{{$hostel->transaction->user->name ?? ''}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_end))}}</td>
-                                <td>{{$hostel->payment }}</td>
-                                <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
+                                {{-- <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td> --}}
+                                <td>{{ General::rp($hostel->rent_price ) }}</td>
                                 <td>
                                     <span class="badge {{$hostel->status == "SUCCESS" ? "badge-success"
-                                        : "badge-warning" }}">{{$hostel->status }}</span>
+                                        : "badge-warning" }}">{{$hostel->status == "SUCCESS" ? "Sukses"
+                                        : "Menunggu Pembayaran" }}</span>
                                 </td>
                             </tr>
                             @endforeach

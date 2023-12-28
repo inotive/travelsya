@@ -307,7 +307,7 @@
                                     </p>
                                     <div class="d-flex align-items-center gap-2">
                                         @foreach ($room->hostelFacilities->unique() as $facility)
-                                        <img src="{{ asset($facility->image) }}" alt="Fasilitas">
+                                        <img src="{{ asset('storage/'.$facility->icon) }}" alt="Fasilitas">
                                         @endforeach
                                     </div>
                                 </div>

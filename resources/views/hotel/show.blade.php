@@ -310,12 +310,12 @@
                     href="{{ asset('storage/' . $hotelImage->image) }}">
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/' . $hotelImage->image) }}')">
-                            </div>
-                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                <i class="bi bi-eye-fill text-white fs-3x"></i>
-                            </div>
-                        </a>
-                    </div>
+                                                    </div>
+                                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                    </div>
+                                                </a>
+                                            </div>
      @endforeach
                     </div>
 
@@ -409,13 +409,37 @@
                 @endphp
                 @foreach ($detailHotel->hotelRoom as $room)
                 @php
-                    $startDate = date('Y-m-d', strtotime($_GET['start']));
-                    $endDate = date('Y-m-d', strtotime('+' . $_GET['duration'] . ' days', strtotime($startDate)));
-                    $transactionRoom[$room->id] = DB::table('detail_transaction_hotel')
+                    // Validate and sanitize input
+                    $startDate = isset($_GET['start']) ? \Carbon\Carbon::parse($_GET['start'])->format('Y-m-d') : \Carbon\Carbon::today()->format('Y-m-d');
+                    $duration = isset($_GET['duration']) ? intval($_GET['duration']) : 0;
+
+                    // Calculate end date based on start date and duration
+                    $endDate = \Carbon\Carbon::parse($startDate)
+                        ->addDays($duration)
+                        ->format('Y-m-d');
+
+                    $roomCount = DB::table('detail_transaction_hotel')
                         ->where('hotel_room_id', $room->id)
-                        ->whereBetween('reservation_start', [$startDate, $endDate])
-                        ->orWhereBetween('reservation_end', [$startDate, $endDate])
-                        ->sum('room');
+                        ->where(function ($query) use ($startDate, $endDate) {
+                            $query->whereBetween('reservation_start', [$startDate, $endDate])->orWhereBetween('reservation_end', [$startDate, $endDate]);
+                        })
+                        ->count();
+
+                    // dd($roomCount);
+
+                    // $transactionRoom = DB::table('detail_transaction_hotel')
+                    //     ->where('hotel_room_id', $room->id)
+                    //     ->whereBetween('reservation_start', [$startDate, $endDate])
+                    //     ->orWhereBetween('reservation_end', [$startDate, $endDate])
+                    //     ->sum('room');
+
+                    //             $transactionCount = DB::table('detail_transaction_hotel')
+                    // ->where('hotel_room_id', $room->id)->where('reservation_start', '<=', $startDate)->where('reservation_end',
+                    //     '>=', $endDate)
+                    //     ->sum('room');
+
+                    // dd($transactionCount);
+
                 @endphp
                 <div class="col-6">
                 <div class="card card-hostel mb-3">
@@ -462,7 +486,7 @@
                 <p class="card-text mt-1 text-gray-500">
                 <b class="text-danger">
                 Tersisa
-                {{ $room->totalroom - ($transactionRoom[$room->id] == $room->id ? $transactionRoom[$room->id] : 0) }}
+                {{ $room->totalroom - $roomCount }}
                 Kamar
                 </b>
                 </p>
@@ -482,10 +506,14 @@
                     <a href="{{ route('login') }}" class="btn btn-danger px-4 py-2">Login Dulu</a>
                 @endguest
                 @auth
+                    @if ($room->totalroom - $roomCount == 0)
+                    <span class="badge badge-secondary badge-lg  px-4 py-2">Kamar Penuh</span>
+                @else
                     <a
                     href="{{ route('hotels.reservation', ['idroom' => $room->id]) }}?location={{ $request['location'] }}&start={{ $request['start'] }}&duration={{ $request['duration'] }}&room={{ $request['room'] == 0 ? 1 : $request['room'] }}&guest={{ $request['guest'] == 0 ? 1 : $request['guest'] }}"
                     class="btn btn-danger px-4 py-2">Pesan
                     Kamar</a>
+                    @endif
                 @endauth
                 </div>
                 </div>

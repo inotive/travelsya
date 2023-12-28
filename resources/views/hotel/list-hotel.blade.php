@@ -11,7 +11,7 @@
                 <div class="card border-1 border-light">
                     <form class="card-body h-100" method="GET" action="" id="searchForm">
                         <input type="hidden" name="location" value="{{ $request['location']}}">
-                        <input type="hidden" name="start" value="{{ $request['start']}}">
+                        <input type="hidden" name="start" value="{{ $request['start'] ?? ''}}">
                         <input type="hidden" name="duration" value="{{ $request['duration']}}">
                         <input type="hidden" name="room" value="{{ $request['room']}}">
                         <input type="hidden" name="guest" value="{{ $request['guest']}}">

@@ -369,7 +369,8 @@ class HostelController extends Controller
                 'user_id' => $request->user()->id,
                 'status'  => $payoutsXendit['status'],
                 'link'    => $payoutsXendit['invoice_url'],
-                'total'   => $amount
+                'total'   => $amount,
+                "created_at" => Carbon::now(),
             ]);
 
             $helper = new General();
