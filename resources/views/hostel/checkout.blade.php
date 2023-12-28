@@ -80,21 +80,21 @@
 
                                 <table width="100%">
                                     <tr>
-                                        <td>Room Price ({{ $duration }} {{$params['category'] == "yearly" ? 'Tahun' : 'Bulan'}})</td>
+                                        <td>Room Price ({{ $duration }} {{$params['category'] == "yearly" ? 'Year' : 'Month'}})</td>
                                         <td>:</td>
                                         <td class="text-end">{{ General::rp($sellingprice) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Duration ({{$params['category'] == "yearly" ? 'Tahun' : 'Bulan'}})</td>
+                                        <td>Duration ({{$params['category'] == "yearly" ? 'Year' : 'Month'}})</td>
                                         <td>:</td>
                                         <td class="text-end">{{ $duration }}</td>
                                     </tr>
-                                    <tr>
+                                    {{-- <tr>
                                         <td>Extrabed</td>
                                         <td>:</td>
                                         <td class="text-end">{{ General::rp($duration * (int)
                                     $hostelRoom->extrabedprice) }}</td>
-                                    </tr>
+                                    </tr> --}}
                                     <tr>
                                         <td>Fee Admin</td>
                                         <td>:</td>
@@ -108,7 +108,7 @@
                                     <tr>
                                         <td>Grand Total</td>
                                         <td>:</td>
-                                        <td class="text-end">{{ General::rp($duration * $sellingprice) }}</td>
+                                        <td class="text-end">{{ General::rp($duration * $sellingprice + $feeAdmin + $uniqueCode ) }}</td>
                                     </tr>
                                 </table>
                                 <div class="mt-10">
