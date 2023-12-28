@@ -18,31 +18,11 @@ class DashboardController extends Controller
 
     public function index()
     {
-        // <<<<<<< group/bagus
-        //         $transactions = Transaction::with('user')->get();
-        //         $countPartner = User::wherein('role', ['1', '2'])->get();
-        //         $countTransactionToday = $transactions->where('created_at', date('y-m-d'))->count();
-
-
-        //         return view('admin.dashboard', compact('transactions','countPartner','countTransactionToday','sumTranscationToday','sumTranscationToday'));
-        // =======
         $card['partner'] = User::where('role', 1)->count();
         $card['transactionToday'] = Transaction::whereDate('created_at', today())->count();
 
         $sumDayTransaction = Transaction::whereDate('created_at', date('y-m-d'))->sum('total');
         $sumMonthTransaction = Transaction::whereMonth('created_at', date('m'))->sum('total');
-        //        $sumDayTransaction = Transaction::whereDate('created_at', today())
-        //            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
-        //            ->get()
-        //            ->map(function ($transaction) {
-        //                $price = $transaction->detailTransaction->sum('price');
-        //                $price = $transaction->detailTransaction->sum('price');
-        //                $price = $transaction->detailTransaction->sum('price');
-        //                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
-        //                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
-        //                return $price + $hotelRentPrice + $hostelRentPrice;
-        //            })
-        //            ->sum();
 
         $card['sumDayTransaction'] = General::rp($sumDayTransaction);
 
@@ -50,20 +30,7 @@ class DashboardController extends Controller
         $firstDayOfMonth = now()->startOfMonth();
         $lastDayOfMonth = now()->endOfMonth();
 
-        //        $sumMonthTransaction = Transaction::whereBetween('created_at', [$firstDayOfMonth, $lastDayOfMonth])
-        //            ->with(['detailTransaction', 'detailTransactionHotel', 'detailTransactionHostel'])
-        //            ->get()
-        //            ->map(function ($transaction) {
-        //                $price = $transaction->detailTransaction->sum('price');
-        //                $hotelRentPrice = $transaction->detailTransactionHotel->sum('rent_price');
-        //                $hostelRentPrice = $transaction->detailTransactionHostel->sum('rent_price');
-        //                return $price + $hotelRentPrice + $hostelRentPrice;
-        //            })
-        //            ->sum();
-
-
         $card['sumMonthTransaction'] = General::rp($sumMonthTransaction);
-        // dd($sumDayTransaction);
 
         $detailTransactions = DB::table('transactions')
             ->leftJoin('detail_transaction_top_up', function ($join) {
@@ -102,6 +69,10 @@ class DashboardController extends Controller
                     ppob_products.name as ppob_product_name, ppob_products.description as ppob_product_desc,
                     transactions.no_inv, transactions.service, transactions.payment_method,
                     transactions.created_at,
+                    COALESCE(SUM(COALESCE(detail_transaction_top_up.fee_travelsya, 0) + COALESCE(detail_transaction_top_up.fee_mili, 0) + COALESCE(detail_transaction_top_up.kode_unik, 0)), 0) as fee_admin_top,
+                    COALESCE(SUM(COALESCE(detail_transaction_ppob.fee_travelsya, 0) + COALESCE(detail_transaction_ppob.fee_mili, 0) + COALESCE(detail_transaction_ppob.kode_unik, 0)), 0) as fee_admin_ppob,
+                    COALESCE(SUM(COALESCE(detail_transaction_hotel.fee_admin, 0) + COALESCE(detail_transaction_hotel.kode_unik, 0)), 0) as fee_admin_hotel,
+                    COALESCE(SUM(COALESCE(detail_transaction_hostel.fee_admin, 0) + COALESCE(detail_transaction_hostel.kode_unik, 0)), 0) as fee_admin_hostel,
                     detail_transaction_hostel.rent_price as hostel_rent_price')
             ->where(function ($query) {
                 $query->where(function ($query) {
@@ -113,9 +84,22 @@ class DashboardController extends Controller
                             ->orWhereNull('detail_transaction_ppob.id');
                     });
             })
+            ->groupBy('transactions.id', 'transactions.user_id', 'users.name', 'detail_transaction_ppob.total_tagihan', 'hotels.name', 'hotel_rooms.name', 'hostels.name', 'hostel_rooms.name', 'services.name', 'transactions.service', 'transactions.total', 'products.name', 'products.description', 'ppob_products.name', 'ppob_products.description', 'transactions.no_inv', 'transactions.service', 'transactions.payment_method', 'transactions.created_at', 'detail_transaction_hotel.fee_admin', 'travelsya.detail_transaction_hostel.fee_admin', 'travelsya.detail_transaction_ppob.fee_travelsya', 'travelsya.detail_transaction_top_up.fee_travelsya', 'travelsya.points.value', 'travelsya.detail_transaction_hostel.rent_price')
             ->get();
 
         $detailTransactions = $detailTransactions->groupBy('id')->map(function ($item) {
+                $feeAdmin = 0;
+                if ($item[0]->fee_admin_top !== "0") {
+                    $feeAdmin = $item[0]->fee_admin_top;
+                } elseif ($item[0]->fee_admin_ppob !== "0") {
+                    $feeAdmin = $item[0]->fee_admin_ppob;
+                } elseif ($item[0]->fee_admin_hotel !== "0") {
+                    $feeAdmin = $item[0]->fee_admin_hotel;
+                } elseif ($item[0]->fee_admin_hostel !== "0") {
+                    $feeAdmin = $item[0]->fee_admin_hostel;
+                } else {
+                    $feeAdmin = 0;
+                }
             return [
                 'id' => $item[0]->id,
                 'user_id' => $item[0]->user_id,
@@ -125,7 +109,7 @@ class DashboardController extends Controller
                 'transaction_desc' => $item[0]->hotel_room ?? $item[0]->hostel_room ?? $item[0]->product_desc ?? $item[0]->ppob_product_desc,
                 'service_name' => $item[0]->service_nama,
                 'point' => $item[0]->points_value,
-                'fee' => $item[0]->hotel_fee ?? $item[0]->hostel_fee ?? $item[0]->ppob_fee ?? $item[0]->topup_fee,
+                'fee' => (int)$feeAdmin,
                 'no_inv' => $item[0]->no_inv,
                 'payment_method' => $item[0]->payment_method,
                 'created_at' => Carbon::parse($item[0]->created_at)->format('d M Y'), // Memformat tanggal
