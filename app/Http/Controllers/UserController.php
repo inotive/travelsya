@@ -14,6 +14,7 @@ use App\Services\Travelsya;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -51,6 +52,8 @@ class UserController extends Controller
 
         $data['point'] = auth()->user()->point;
 
+        //dd(Auth::user()->image);
+
         return view('user.profile', $data);
     }
 
@@ -63,13 +66,42 @@ class UserController extends Controller
             $password = bcrypt($request->new_password);
         }
 
-        $user->update([
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'password' => $password,
-        ]);
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+            $image->storeAs('users', $image->hashName());
+
+            Storage::delete('users/'.$user->image);
+
+            $user->update([
+                'image' => $image->hashName(),
+                'name' => $request->name,
+                'email'    => $request->email,
+                'phone'    => $request->phone,
+                'password' => $password,
+            ]);
+
+        } else {
+                $user->update([
+                'name' => $request->name,
+                'email'    => $request->email,
+                'phone'    => $request->phone,
+                'password' => $password,
+            ]);
+        }
+
+
 
         return redirect()->back();
+    }
+
+    public function photoProfile(){
+        $user = Auth::user();
+        $image = $user->image;
+
+        return response()->json([
+            'data' => $image
+        ]);
     }
 
     public function orderHistory()

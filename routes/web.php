@@ -118,6 +118,7 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile')->middleware('auth');
 Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update')->middleware('auth');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory')->middleware('auth');
+Route::get('profile/photo-profile', [UserController::class, 'photoProfile']);
 
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
 Route::get('/profile/order-detail/hostel/{id}', [UserController::class, 'orderDetailHostel'])->name('profile.order-detail.hostel')->middleware('auth');
