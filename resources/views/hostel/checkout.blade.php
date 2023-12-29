@@ -80,7 +80,7 @@
 
                                 <table width="100%">
                                     <tr>
-                                        <td>Room Price ({{ $duration }} {{$params['category'] == "yearly" ? 'Year' : 'Month'}})</td>
+                                        <td>Room Price / {{$params['category'] == "yearly" ? 'Year' : 'Month'}}</td>
                                         <td>:</td>
                                         <td class="text-end">{{ General::rp($sellingprice) }}</td>
                                     </tr>
