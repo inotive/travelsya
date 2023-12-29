@@ -205,7 +205,6 @@ class HotelController extends Controller
     public function request(Request $request)
     {
         $data = $request->all();
-        // dd($data);
         $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();

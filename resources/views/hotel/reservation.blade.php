@@ -5,8 +5,7 @@
     <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
         <!--begin::Post-->
         <div class="content flex-row-fluid mb-10" id="kt_content">
-            <form action="{{ route('hotels.request', $hotelRoom->id) }}" class="d-flex flex-column"
-                  method="post">
+            <form action="{{ route('hotels.request', $hotelRoom->id) }}" class="d-flex flex-column" method="post">
                 @csrf
                 <div class="row w-75 me-auto ms-auto mt-10">
                     <div class="col-7">
@@ -42,17 +41,17 @@
                                     <div class="">
                                         <label class="form-label fw-bold fs-6">Nama Lengkap</label>
                                         <input type="name" class="form-control" value="{{ Auth()->user()->name }}"
-                                               name="nama_lengkap">
+                                            name="nama_lengkap">
                                     </div>
                                     <div class="mt-10">
                                         <label class="form-label fw-bold fs-6">Email Address</label>
                                         <input type="email" class="form-control" value="{{ Auth()->user()->email }}"
-                                               name="email">
+                                            name="email">
                                     </div>
                                     <div class="mt-10">
                                         <label class="form-label fw-bold fs-6">Nomor Telepon</label>
                                         <input type="phone" class="form-control" value="{{ Auth()->user()->phone }}"
-                                               name="no_telfon">
+                                            name="no_telfon">
                                     </div>
                                 @endauth
 
@@ -76,7 +75,7 @@
                                         <span class="">{{ $hotelRoom->hotel->address }}</span>
                                         @for ($j = 0; $j < $hotelRoom->hotel->rating_avg; $j++)
                                             <span class="card-text fa fa-star mt-3" style="color: orange;">
-                                    </span>
+                                            </span>
                                         @endfor
                                     </div>
                                     @php
@@ -129,15 +128,31 @@
                                         </h5>
                                     </div>
                                     <div class="col-12 d-flex justify-content-between">
-                                        <p>Grand Total</p>
+                                        <p class="fw-light-grey-900">Pakai Point <span>{{ auth()->user()->point }}</span>
+                                        </p>
                                         <h4>
-                                            {{ General::rp(($hotelRoom->sellingprice * $params['duration'] * $params['room']) + $feeAdmin +  $uniqueCode) }}
+                                            <div class="form-check form-switch form-check-custom form-check-solid">
+                                                <input class="form-check-input pakai-point" type="checkbox"
+                                                    id="flexSwitchChecked" />
+                                            </div>
                                         </h4>
                                     </div>
-                                    {{-- <div class="col-12 d-flex justify-content-between">--}}
-                                    {{-- <p>Extra Bed (0 Kasur)</p>--}}
-                                    {{-- <h4>Rp. {{ $hotelRoom->extrabedprice ?? 0 }}</h4>--}}
-                                    {{-- </div>--}}
+                                    <div class="col-12 d-flex justify-content-between grand-total-1">
+                                        <p>Grand Total </p>
+                                        <h4>
+                                            {{ General::rp($hotelRoom->sellingprice * $params['duration'] * $params['room'] + $feeAdmin + $uniqueCode - auth()->user()->point) }}
+                                        </h4>
+                                    </div>
+                                    <div class="col-12 d-flex justify-content-between grand-total-2">
+                                        <p>Grand Total</p>
+                                        <h4>
+                                            {{ General::rp($hotelRoom->sellingprice * $params['duration'] * $params['room'] + $feeAdmin + $uniqueCode) }}
+                                        </h4>
+                                    </div>
+                                    {{-- <div class="col-12 d-flex justify-content-between"> --}}
+                                    {{-- <p>Extra Bed (0 Kasur)</p> --}}
+                                    {{-- <h4>Rp. {{ $hotelRoom->extrabedprice ?? 0 }}</h4> --}}
+                                    {{-- </div> --}}
                                     <div class="col-12">
 
                                         <input type="hidden" name="service" value="hotel">
@@ -188,4 +203,27 @@
             cursor: pointer;
         }
     </style>
+@endpush
+
+@push('add-script')
+    <script>
+        $(document).ready(function() {
+            $(".grand-total-1").addClass("d-none");
+            $(".grand-total-2").removeClass("d-none");
+
+            // Handle the change event of the checkbox
+            $("#flexSwitchChecked").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $(".grand-total-1").removeClass("d-none");
+                    $(".grand-total-2").addClass("d-none");
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $(".grand-total-1").addClass("d-none");
+                    $(".grand-total-2").removeClass("d-none");
+                }
+            });
+        });
+    </script>
 @endpush

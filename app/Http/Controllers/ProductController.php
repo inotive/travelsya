@@ -259,11 +259,11 @@ class ProductController extends Controller
     {
         // return view('product.pdam');
 
-        $data = $request->all();
+      
 
         $requestMymili = $this->mymili->inquiry([
-            'no_hp' => $data['no_pelanggan'],
-            'nom' => $data['nom'],
+            'no_hp' => $request->no_pelanggan,
+            'nom' => $request->nom,
         ]);
 
         // if (str_contains($requestMymili['status'], "SUKSES")) {
@@ -285,8 +285,7 @@ class ProductController extends Controller
         //     ]
         // ];
 
-        dd($requestMymili);
-
+        $status = '';
         if (str_contains($requestMymili['status'], "SUKSES!")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
