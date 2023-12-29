@@ -272,6 +272,25 @@ class HostelController extends Controller
 
         // dd($data['hostelget']);
 
+        $ratings  = DB::table('hostel_ratings')->join('users', 'hostel_ratings.users_id', '=', 'users.id')
+            ->where('hostel_id', $id)
+            ->select('hostel_ratings.*', 'hostel_ratings.created_at as created', 'users.*')
+            ->limit(30)
+            ->get();
+
+        Carbon::setLocale('id');
+        // $formatted_created_at = null;
+
+        if ($ratings->isNotEmpty()) {
+            // Menggunakan first() untuk mendapatkan satu baris hasil
+            $rating = $ratings->first();
+            // $data['formatted_created_at'] = Carbon::parse($rating->created_at)->diffForHumans();
+        }
+
+        $data['avg_rate'] = $ratings->avg('rate');
+
+        $data['rating'] = $ratings;
+
         $data['params'] = $request->all();
 
         // dd($request->all());
@@ -404,11 +423,11 @@ class HostelController extends Controller
                 "created_at"        => Carbon::now(),
             ]);
 
-//            if ($data['point']) {
-//                //deductpoint
-//                $point = new Point;
-//                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
-//            }
+            //            if ($data['point']) {
+            //                //deductpoint
+            //                $point = new Point;
+            //                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+            //            }
         });
 
         return redirect($payoutsXendit['invoice_url']);

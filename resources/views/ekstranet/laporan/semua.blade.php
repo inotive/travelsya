@@ -54,6 +54,7 @@
                                     <th>Metode & Channel Pembayaran</th>
                                     <th>Deskripsi Pesanan</th>
                                     <th>Grand Total</th>
+                                    <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -95,6 +96,13 @@
                                             @endphp
                                         </td>
                                         <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
+                                        <td>
+                                            <span class="badge 
+                                            {{$hotel->transaction->status == "PAID" ? "badge-success"
+                                                : "badge-warning" }}"
+                                                >{{$hotel->transaction->status == "PAID" ? "Lunas" : "Menunggu Pembayaran" }}
+                                                </span>
+                                        </td>
                                         <td class="text-center">
                                             <a href="{{ route('partner.riwayat-booking.detailhotel', ['id' => $detail_pemesanan]) }}"
                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100" data-kt-customer-table-filter="delete_row">
@@ -137,6 +145,13 @@
                                             {{ $hostel->type_rent == 'tahunan' ? 'Tahunan' : 'Bulanan' }}
                                         </td>
                                         <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
+                                        <td>
+                                            <span class="badge 
+                                            {{$hostel->transaction->status == "PAID" ? "badge-success"
+                                                : "badge-warning" }}"
+                                                >{{$hostel->transaction->status == "PAID" ? "Lunas" : "Menunggu Pembayaran" }}
+                                                </span>
+                                        </td>
                                         <td class="text-center">
                                             <a href="{{ route('partner.riwayat-booking.detailhostel', ['id' => $detail_pemesanan]) }}"
                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100" data-kt-customer-table-filter="delete_row">
