@@ -351,7 +351,7 @@
                                     @if ($transactionHotel->transaction->status === 'PENDING')
                                         <div class="col-12 mt-4">
                                             <div class="row">
-                                                <a href="/hotels/{{ $transactionHotel->hotel_room_id }}/reservation?start={{ optional(\Carbon\Carbon::parse($transactionHotel->reservation_start))->format('d-m-Y') }}&duration={{ $diffInDays }}&room={{ $transactionHotel->room }}&guest={{ $transactionHotel->guest }}"
+                                                <a href="{{ $transactionHotel->transaction->link }}"
                                                     class="btn btn-danger btn-block">Bayar</a>
 
                                             </div>

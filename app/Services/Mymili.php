@@ -13,7 +13,7 @@ class Mymili
 
     public function __construct()
     {
-        $this->url = 'http://180.250.247.166:6856/xmlh2h/v2/';
+        $this->url = 'http://180.250.247.166:6856/xmlh2h/v2/'; 
         $this->requestid = 'H2H2712';
         $this->msisdn = '08115417708';
         $this->pin = '5614';
@@ -252,8 +252,8 @@ class Mymili
                 'body' => $xml
             ])->getBody()->getContents();
 
+            // dd($responseRaw);
             $responseArray = ResponseFormatter::namespacedXMLToArray($responseRaw);
-            // dd(ResponseFormatter::namespacedXMLToArray($responseRaw));
             $messageArray = [];
             $message = [];
             if ($responseArray['RESPONSECODE'] == 00) {

@@ -204,11 +204,12 @@ class HotelController extends Controller
 
     public function request(Request $request)
     {
+        // dd($request->point);
         $data = $request->all();
         $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
+        $fees = $setting->getFees($data['pointFee'], 8, $request->user()->id, $hotel->sellingprice);
 
         // $uniqueCode = rand(111, 999);
         $fees[] = [
@@ -224,7 +225,8 @@ class HotelController extends Controller
         if (!$fees) return 'Point invalid';
         $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
         if ($qty < 0) return 'Date must be forward';
-        $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, $data['room']);
+        $sellingPrice = $request->point == null ? $hotel->sellingprice : $hotel->sellingprice - $request->point;
+        $amount = $setting->getAmount($sellingPrice, $qty, $fees, $data['room']);
 
         // cek book date
         $checkBook = DetailTransactionHotel::where("hotel_room_id", $data['hostel_room_id'])
@@ -242,7 +244,7 @@ class HotelController extends Controller
                 [
                     "product_id" => $data['hostel_room_id'],
                     "name" => $hotel['name'],
-                    "price" => $hotel->sellingprice,
+                    "price" =>  $hotel->sellingprice,
                     "quantity" => $qty,
                 ]
             ],

@@ -303,13 +303,12 @@ class HostelController extends Controller
     {
         $data = $request->all();
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        // dd($hostel);
         if ($data['category'] == 'monthly') {
-            $sellingprice = $hostel->sellingrentprice_monthly;
+            $sellingprice = $request->pointCheked === null ?  $hostel->sellingrentprice_monthly :  $hostel->sellingrentprice_monthly - $request->pointCheked;
         }
 
         if ($data['category'] == 'yearly') {
-            $sellingprice = $hostel->sellingrentprice_yearly;
+            $sellingprice =  $request->pointCheked === null ? $hostel->sellingrentprice_yearly :  $hostel->sellingrentprice_yearly - $request->pointCheked;
         }
 
         $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();

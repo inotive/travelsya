@@ -124,6 +124,7 @@
 
             $('#btnPeriksaPDAM').on('click', function () {
                 var noPelangganPDAM = $('#noPelangganPDAM').val();
+                console.log(noPelangganPDAM);
 
                 if(noPelangganPDAM == '') {
                     $('.textAlert').show();
@@ -143,6 +144,7 @@
                         'nom': 'CEKPDAMBLP',
                     },
                     success: function (responseTagihan) {
+                        console.log(responseTagihan);
                         var simulateFeePDAM = parseInt(responseTagihan.data.fee);
 
                         var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);

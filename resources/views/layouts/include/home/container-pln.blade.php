@@ -28,7 +28,7 @@
 
                         <select name="productPLN" id="productPLN" class="form-select form-select-lg" disabled></select>
                     </div>
-                    <div class="col-xl-8">
+                    <div class="col-xl-6">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
@@ -43,14 +43,15 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPLN">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPLN">
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
-                        @guest
-                        <a href="{{ route('login') }}" class="btn btn-danger mt-8 w-100 d-none" id="btnLogin">Login Dulu</a>
-                        @endguest
                         @auth
-                        <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
+                            <button type="submit" class="btn btn-danger mt-8 w-1000 d-none" id="btnBayar">Bayar</button>
                         @endauth
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger mt-8 w-100 d-none" id="btnLogin">Login
+                                Dulu</a>
+                        @endguest
                     </div>
 
                     <div class="row mt-4" id="detailPLN">
@@ -63,7 +64,8 @@
                                     <tbody>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800 mb-4">Nama Pelanggan</td>
-                                            <td class="text-right" colspan="3"><span id="namaPelangganPLN"></span></td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPLN"></span>
+                                            </td>
                                         </tr>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
@@ -98,112 +100,121 @@
 </div>
 
 @push('add-style')
-{{-- <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script> --}}
+    {{-- <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script> --}}
 @endpush
 
 @push('add-script')
-<script>
-    $(document).ready(function () {
-        $('#noPelangganPLN').on('keyup', function () {
-            $('#textAlert').hide();
-        });
+    <script>
+        $(document).ready(function() {
+            $('#noPelangganPLN').on('keyup', function() {
+                $('#textAlert').hide();
+            });
 
-        $('#categoryPLN').on('change', function () {
-            if($(this).val() == 'token') {
-                $.ajax({
-                    type: "GET",
-                    url: "/product/product-pln",
-                    success: function (response) {
-                        $('#productPLN').empty();
+            $('#categoryPLN').on('change', function() {
+                if ($(this).val() == 'token') {
+                    $.ajax({
+                        type: "GET",
+                        url: "/product/product-pln",
+                        success: function(response) {
+                            $('#productPLN').empty();
 
-                        $.each(response, function (key, value) {
-                            $('#productPLN').append($('<option>', {
-                                value: value.id,
-                                text: value.description+ ' - Rp. '+value.price
-                            }));
-                        });
+                            $.each(response, function(key, value) {
+                                $('#productPLN').append($('<option>', {
+                                    value: value.id,
+                                    text: value.description + ' - Rp. ' +
+                                        value.price
+                                }));
+                            });
 
-                        $('#productPLN').removeAttr('disabled');
-                        // $('#btnPeriksaPLN').attr('type', 'submit');
-                        $('#btnPeriksaPLN').addClass('d-none');
-                        $('#btnBayar').removeClass('d-none');
-                        $('#btnLogin').removeClass('d-none');
-                    }
-                });
-            }
+                            $('#productPLN').removeAttr('disabled');
+                            // $('#btnPeriksaPLN').attr('type', 'submit');
+                            // $('#btnPeriksaPLN').addClass('d-none');
+                            // $('#btnBayar').removeClass('d-none');
+                            $('#btnLogin').removeClass('d-none');
+                        }
+                    });
 
-            if($(this).val() == 'pembayaran') {
-                $('#productPLN').empty();
-                $('#productPLN').attr('disabled', true);
-                // $('#btnPeriksaPLN').text('Periksa');
+                }
 
-                $('#btnPeriksaPLN').removeClass('d-none');
-                $('#btnBayar').addClass('d-none');
-            }
-        });
+                if ($(this).val() == 'pembayaran') {
+                    $('#productPLN').empty();
+                    $('#productPLN').attr('disabled', true);
+                    // $('#btnPeriksaPLN').text('Periksa');
 
-        $('#detailPLN').hide();
-
-        $('#btnPeriksaPLN').on('click', function () {
-            var noPelangganPLN = $('#noPelangganPLN').val();
-
-            if(noPelangganPLN == '') {
-                $('#textAlert').show();
-                return false;
-            }
-
-            $('#alertPLN').empty()
-            $('#detailPLN').hide();
-            $('#btnPeriksaPLN').attr('disabled', true);
-            $('#btnPeriksaPLN').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('product.pln') }}",
-                data: {
-                    'no_pelanggan': noPelangganPLN,
-                    'nom': 'CEKPLN',
-                },
-                success: function (response) {
-                    var simulateFeePLN = parseInt(response.data.fee);
-
-                    var simulateAmountPLN = parseInt(response.data.tagihan);
-                    var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
-
-                    $('#namaPelangganPLN').text(response.data.nama_pelanggan);
-                    $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(simulateAmountPLN));
-                    $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(simulateFeePLN));
-                    $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(simulateTotalPLN));
-
-                    $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
-                    $('#inputTotalTagihanPLN').val(simulateAmountPLN);
-                    $('#inputBiayaAdminPLN').val(simulateFeePLN);
-                    $('#inputTotalBayarPLN').val(simulateTotalPLN);
-
-                    $('#btnPeriksaPLN').removeAttr('disabled');
-                    $('#btnPeriksaPLN').text('Periksa');
-
-                    $('#btnSubmitPLN').removeAttr('disabled');
-
-                    $('#detailPLN').show();
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 400 || xhr.status === 500) {
-                        // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
-                        var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-
-                        $('#alertPLN').empty().append(alertDiv);
-                    }
-
-                    // Hapus spinner dan aktifkan tombol
-                    $('#btnPeriksaPLN').removeAttr('disabled');
-                    $('#btnPeriksaPLN').text('Periksa');
+                    // $('#btnPeriksaPLN').removeClass('d-none');
+                    // $('#btnBayar').addClass('d-none');
                 }
             });
+
+            $('#detailPLN').hide();
+
+            $('#btnPeriksaPLN').on('click', function() {
+                var noPelangganPLN = $('#noPelangganPLN').val();
+
+                if (noPelangganPLN == '') {
+                    $('#textAlert').show();
+                    return false;
+                }
+
+                $('#alertPLN').empty()
+                $('#detailPLN').hide();
+                $('#btnPeriksaPLN').attr('disabled', true);
+                $('#btnPeriksaPLN').html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                );
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('product.pln') }}",
+                    data: {
+                        'no_pelanggan': noPelangganPLN,
+                        'nom': 'CEKPLN',
+                    },
+                    success: function(response) {
+                        var simulateFeePLN = parseInt(response.data.fee);
+
+                        var simulateAmountPLN = parseInt(response.data.tagihan);
+                        var simulateTotalPLN = simulateAmountPLN + simulateFeePLN;
+
+                        $('#namaPelangganPLN').text(response.data.nama_pelanggan);
+                        $('#totalTagihanPLN').text(new Intl.NumberFormat('id-ID').format(
+                            simulateAmountPLN));
+                        $('#biayaAdminPLN').text(new Intl.NumberFormat('id-ID').format(
+                            simulateFeePLN));
+                        $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(
+                            simulateTotalPLN));
+
+                        $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
+                        $('#inputTotalTagihanPLN').val(simulateAmountPLN);
+                        $('#inputBiayaAdminPLN').val(simulateFeePLN);
+                        $('#inputTotalBayarPLN').val(simulateTotalPLN);
+
+                        $('#btnPeriksaPLN').removeAttr('disabled');
+                        $('#btnPeriksaPLN').text('Periksa');
+
+                        $('#btnSubmitPLN').removeAttr('disabled');
+
+                        $('#detailPLN').show();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400 || xhr.status === 500) {
+                            // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
+                            var alertDiv = $(
+                                `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
+                            );
+
+                            $('#alertPLN').empty().append(alertDiv);
+                        }
+
+                        // Hapus spinner dan aktifkan tombol
+                        $('#btnPeriksaPLN').removeAttr('disabled');
+                        $('#btnPeriksaPLN').text('Periksa');
+                    }
+                });
+            });
         });
-    });
-</script>
-{{-- <script>
+    </script>
+    {{-- <script>
     $(document).ready(function() {
             $('#notelp').on('keyup', function(e) {
 

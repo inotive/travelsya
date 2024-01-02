@@ -132,7 +132,7 @@
                                         </p>
                                         <h4>
                                             <div class="form-check form-switch form-check-custom form-check-solid">
-                                                <input class="form-check-input pakai-point" type="checkbox"
+                                                <input class="form-check-input pakai-point" type="checkbox" name=""
                                                     id="flexSwitchChecked" />
                                             </div>
                                         </h4>
@@ -159,6 +159,7 @@
                                         <input type="hidden" name="payment_method" value="xendit">
                                         <input type="hidden" name="hotel_id" value="{{ $hotelRoom->hotel->id }}">
                                         <input type="hidden" name="hostel_room_id" value="{{ $hotelRoom->id }}">
+                                        <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="pointInput" disabled>
                                         {{-- <input type="hidden" name="start"
                                             value="{{ date('Y-m-d', $params['start']) }}"> --}}
                                         {{-- <input type="hidden" name="end"
@@ -171,7 +172,7 @@
                                         <input type="hidden" name="start" value="{{ $params['start'] }}">
                                         <input type="hidden" name="end" value="{{ $checkout->format('d-m-Y') }}">
                                         <input type="hidden" name="name" value="{{ Auth()->user()->name }}">
-                                        <input type="hidden" name="point" value="{{ $point }}">
+                                        <input type="hidden" name="pointFee" value="{{ $point }}">
                                         <input type="hidden" name="room" value="{{ $params['room'] }}">
                                         <input type="hidden" name="total_guest" value="{{ $params['guest'] }}">
                                         <input type="hidden" name="uniqueCode" value="{{ $uniqueCode }}">
@@ -218,10 +219,13 @@
                     // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
                     $(".grand-total-1").removeClass("d-none");
                     $(".grand-total-2").addClass("d-none");
+                    $("#pointInput").prop("disabled", false);
                 } else {
                     // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
                     $(".grand-total-1").addClass("d-none");
                     $(".grand-total-2").removeClass("d-none");
+                    $("#pointInput").prop("disabled", true);
+                    $("#pointInput").remove();
                 }
             });
         });

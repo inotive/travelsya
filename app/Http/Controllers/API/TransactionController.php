@@ -38,7 +38,7 @@ class TransactionController extends Controller
         //     ->where('user_id', $user_id)
         //     ->orderBy('id', 'desc')
         //     ->get();
-        $transaction = Transaction::where('user_id', $user_id)
+        $transaction = Transaction::where('user_id', $user_id)->where('status', 'PAID')
             ->orderByDesc('created_at')
             ->get();
 

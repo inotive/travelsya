@@ -144,6 +144,8 @@
                                     <input type="hidden" name="hostel_room_id" value="{{ $hostelRoom->id }}">
                                     <input type="hidden" name="start"
                                         value="{{ date('d-m-Y', strtotime($params['start'])) }}">
+                                    <input type="hidden" name="pointCheked" value="{{ auth()->user()->point }}"
+                                        id="pointInput" disabled>
                                     <input type="hidden" name="end" value="{{ $checkout->format('d-m-Y') }}">
                                     <input type="hidden" name="name" value="{{ Auth::user()->name }}">
                                     <input type="hidden" name="duration" value="{{ $duration }}">
@@ -198,12 +200,15 @@
                     $(".grand-total-2").addClass("d-none");
                     $("#grand-total-1").prop("disabled", false);
                     $("#grand-total-2").prop("disabled", true);
+                    $("#pointInput").prop("disabled", false);
                 } else {
                     // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
                     $(".grand-total-1").addClass("d-none");
                     $(".grand-total-2").removeClass("d-none");
                     $("#grand-total-1").prop("disabled", true);
                     $("#grand-total-2").prop("disabled", false);
+                    $("#pointInput").prop("disabled", true);
+                    $("#pointInput").remove();
                 }
             });
         });

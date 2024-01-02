@@ -314,6 +314,10 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    @php
+                                        $grandTotal = $transactionHostel->rent_price * $diffInDays * $transactionHostel->room + $transactionHostel->fee_admin + $transactionHostel->kode_unik;
+                                    @endphp
                                     {{-- Kolom Kanan --}}
                                     {{--                        <div class="col-12 col-lg-3 col-md-3"> --}}
                                     {{--                            <div class="card border border-1"> --}}
@@ -344,7 +348,7 @@
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
                                                     RP
-                                                    {{ number_format($transactionHostel->hostelRoom->sellingprice, 0, ',', '.') }}
+                                                    {{ number_format($grandTotal, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>
@@ -352,7 +356,7 @@
                                     @if ($transactionHostel->transaction->status === 'PENDING')
                                         <div class="col-12 mt-4">
                                             <div class="row">
-                                                <a href="/hostel/room/{{ $transactionHostel->hostel_room_id }}/checkout?start={{ optional(\Carbon\Carbon::parse($transactionHostel->reservation_start))->format('d-m-Y') }}&duration={{ $diffInMonths }}&category={{  $transactionHostel->type_rent }}"
+                                                <a href="{{ $transactionHostel->transaction->link }}"
                                                     class="btn btn-danger btn-block">Bayar</a>
 
                                             </div>
