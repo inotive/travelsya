@@ -158,7 +158,7 @@
                         @php
                             $bayar = $diffInDays * $hotelbookdates->rent_price * $hotelbookdates->room;
                             $totalBiayaPenanganan = $bayar * 15 / 100;
-                            $biayaPenanganan = $totalBiayaPenanganan + $hotelbookdates->fee_admin;
+                            $biayaPenanganan = $totalBiayaPenanganan + $hotelbookdates->fee_admin + $hotelbookdates->kode_unik;
                             $grandTotal = $bayar - $biayaPenanganan;
                         @endphp
 

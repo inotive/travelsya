@@ -310,7 +310,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Penanganan</div>
                                                     <div
-                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->fee_admin +$transactionHostel->kode_unik, 0, ',', '.') }}</div>
+                                                        class="fs-8 fw-bold">{{ number_format($transactionHostel->fee_admin + $transactionHostel->kode_unik, 0, ',', '.') }}</div>
                                                 </div>
                                             </div>
                                         </div>

@@ -157,9 +157,8 @@
                                     @php
                                         $bayar = $diffInDays * $hostelbookdates->rent_price * $hostelbookdates->room;
                                         $totalBiayaPenanganan = $bayar * 15 / 100;
-                                        $biayaPenanganan = $totalBiayaPenanganan + $hostelbookdates->fee_admin;
+                                        $biayaPenanganan = $totalBiayaPenanganan + $hostelbookdates->fee_admin + $hostelbookdates->kode_unik;
                                         $grandTotal = $bayar - $biayaPenanganan;
-
                                     @endphp
                                     <a href="#" class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">
                                         {{ General::rp($bayar) }}

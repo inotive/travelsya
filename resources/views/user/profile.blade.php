@@ -28,13 +28,72 @@
                     {{-- Row --}}
                     <div class="row">
                         {{-- kolom batas form --}}
-                        <form class="col-12" method="post" action="{{ route('user.profile.update') }}">
+                        <form class="col-12" method="post" action="{{ route('user.profile.update') }}" enctype="multipart/form-data">
                             @csrf @method('PUT')
                             <h3>
                                 <b>
                                     Data Pemilik Akun
                                 </b>
                             </h3>
+
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-semibold fs-6">Logo</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Image input-->
+                                <div class="image-input image-input-outline m-5" data-kt-image-input="true">
+                                    <!--begin::Image preview wrapper-->
+                                    <div class="image-input-wrapper w-125px h-125px" id="img" style="background-image: url('{{ asset("storage/users/" . Auth::user()->image) }}')">
+                                    </div>
+                                    <!--end::Image preview wrapper-->
+                                    <!--begin::Edit button-->
+                                    <label
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="change" data-bs-toggle="tooltip" data-bs-dismiss="click"
+                                        title="Change image">
+                                        <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
+                                                class="path2"></span></i>
+
+                                        <!--begin::Inputs-->
+                                        <input type="file" name="image" accept=".png, .jpg, .jpeg" />
+                                        <input type="hidden" name="image_remove" />
+                                        <!--end::Inputs-->
+                                    </label>
+                                    <!--end::Edit button-->
+
+                                    <!--begin::Cancel button-->
+                                    <span
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-dismiss="click"
+                                        title="Cancel image">
+                                        <i class="ki-outline ki-cross fs-3"></i>
+                                    </span>
+                                    <!--end::Cancel button-->
+
+                                    <!--begin::Remove button-->
+                                    <span
+                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click"
+                                        title="Remove image">
+                                        <i class="ki-outline ki-cross fs-3"></i>
+                                    </span>
+                                    <!--end::Remove button-->
+                                </div>
+                                <!--end::Image input-->
+                                <!--begin::Hint-->
+                                <div class="form-text">Type file yang diijinkan: png, jpg, jpeg.</div>
+                                <!--end::Hint-->
+                            </div>
+                            <!--end::Col-->
+
+                            <div class="mb-5">
+                                <label class="form-label">
+                                    Username
+                                </label>
+                                <input type="text" class="form-control" name="name" value="{{ old('name', Auth::user()->name) }}"/>
+                                {{-- <div class="form-text fs-8">Seperti di KTP/SIM/Paspor</div> --}}
+                            </div>
                             {{-- <div class="mb-10 mt-5 d-flex">
                                 <div class="form-check form-check form-check-danger form-check-solid me-5">
                                     <input type="radio" class="form-check-input h-20px w-20px" name="radio" value=""
@@ -148,5 +207,7 @@
     {{-- End Row --}}
 </div>
 {{-- End Container --}}
+
+
 
 @endsection
