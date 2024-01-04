@@ -203,10 +203,21 @@
                                         {{-- Ulasan Review --}}
                                         @php
                                             $transaction_id = $transactionHostel->transaction_id;
-                                            $rating_data = DB::table('hostel_ratings')
-                                                ->where('hostel_ratings.transaction_id', '=', $transaction_id)
-                                                ->select('hostel_ratings.created_at', 'hostel_ratings.comment', 'hostel_ratings.rate')
+                                            $user = Auth::id();
+                                            $rating_data = DB::table('transactions')
+                                                ->join('detail_transaction_hostel', 'transactions.id', '=', 'detail_transaction_hostel.transaction_id')
+                                                ->join('hostel_ratings', function ($join) {
+                                                    $join
+                                                        ->on('detail_transaction_hostel.hostel_id', '=', 'hostel_ratings.hostel_id')
+                                                        ->on('detail_transaction_hostel.hostel_room_id', '=', 'hostel_ratings.hostel_room_id');
+                                                        // ->on('detail_transaction_hostel.user_id', '=', 'hostel_ratings.user_id');
+                                                })
+                                                ->where('transactions.id', '=', $transaction_id)
+                                                ->where('hostel_ratings.users_id', '=', $user)
+                                                ->orderBy('hostel_ratings.created_at', 'desc')
+                                                ->select('transactions.*', 'detail_transaction_hostel.*', 'hostel_ratings.*')
                                                 ->first();
+
                                             use Carbon\Carbon;
                                             Carbon::setLocale('id');
                                             $formatted_created_at = null;

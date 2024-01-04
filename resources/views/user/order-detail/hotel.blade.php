@@ -198,10 +198,27 @@
                                         {{-- Ulasan Review --}}
                                         @php
                                             $transaction_id = $transactionHotel->transaction_id;
-                                            $rating_data = DB::table('hotel_ratings')
-                                                ->where('hotel_ratings.transaction_id', '=', $transaction_id)
-                                                ->select('hotel_ratings.created_at', 'hotel_ratings.comment', 'hotel_ratings.rate')
+                                            // $rating_data = DB::table('hotel_ratings')
+                                            //     ->where('hotel_ratings.transaction_id', '=', $transaction_id)
+                                            //     ->select('hotel_ratings.created_at', 'hotel_ratings.comment', 'hotel_ratings.rate')
+                                            //     ->first();
+
+                                            $user = Auth::id();
+                                            $rating_data = DB::table('transactions')
+                                                ->join('detail_transaction_hotel', 'transactions.id', '=', 'detail_transaction_hotel.transaction_id')
+                                                ->join('hotel_ratings', function ($join) {
+                                                    $join
+                                                        ->on('detail_transaction_hotel.hotel_id', '=', 'hotel_ratings.hotel_id')
+                                                        ->on('detail_transaction_hotel.hotel_room_id', '=', 'hotel_ratings.hotel_room_id');
+                                                        // ->on('detail_transaction_hostel.user_id', '=', 'hostel_ratings.user_id');
+                                                })
+                                                ->where('transactions.id', '=', $transaction_id)
+                                                ->where('hotel_ratings.users_id', '=', $user)
+                                                ->orderBy('hotel_ratings.created_at', 'desc')
+                                                ->select('transactions.*', 'detail_transaction_hotel.*', 'hotel_ratings.*')
                                                 ->first();
+
+
                                             use Carbon\Carbon;
                                             Carbon::setLocale('id');
                                             $formatted_created_at = null;
