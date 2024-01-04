@@ -21,6 +21,7 @@ use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransactionHotel;
+use App\Models\HotelRating;
 
 class HotelController extends Controller
 {
@@ -37,7 +38,9 @@ class HotelController extends Controller
         $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where(
-                    'totalroom', '>=', $request->room,
+                    'totalroom',
+                    '>=',
+                    $request->room,
                 );
             })
             ->where(function ($query) use ($request) {
@@ -156,6 +159,25 @@ class HotelController extends Controller
             $avgRating = 0;
             $resultRating = 0;
         }
+
+        $ratings  = DB::table('hotel_ratings')->join('users', 'hotel_ratings.users_id', '=', 'users.id')
+            ->where('hotel_id', $id_hotel)
+            ->select('hotel_ratings.*', 'hotel_ratings.created_at as created' , 'users.*')
+            ->limit(30)
+            ->get();
+        
+        Carbon::setLocale('id');
+        // $formatted_created_at = null;
+
+        if ($ratings ->isNotEmpty()) {
+            // Menggunakan first() untuk mendapatkan satu baris hasil
+            $rating = $ratings->first();
+            // $data['formatted_created_at'] = Carbon::parse($rating->created_at)->diffForHumans();
+        }
+
+        $data['avg_rate'] = $ratings->avg('rate');
+        
+        $data['rating'] = $ratings;
 
         $data['request'] = $request->all();
         $data['detailHotel'] = $hotel;
@@ -299,11 +321,11 @@ class HotelController extends Controller
                 "created_at"        => Carbon::now(),
             ]);
 
-//            if ($data['point']) {
-//                //deductpoint
-//                $point = new Point;
-//                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
-//            }
+            //            if ($data['point']) {
+            //                //deductpoint
+            //                $point = new Point;
+            //                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+            //            }
         });
 
         return redirect($payoutsXendit['invoice_url']);

@@ -42,7 +42,6 @@
                                 </a>
                             </div>
                             <p class="fs-6 text-gray-600 text-dark mt-3">-</p>
-                            <p class="fs-7 text-gray-800 text-dark mt-3 mb-0">Telp: {{ $partner->phone }}</p>
                             <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $partner->email }}</p>
                             <p class="fs-7 text-gray-800 text-dark mb-0">Website: -</p>
                         </div>

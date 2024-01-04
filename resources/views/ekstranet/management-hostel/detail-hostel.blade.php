@@ -493,7 +493,7 @@
                                 </div>
 
                                 <table class="table table-rounded table-bordered table-striped gy-7 gs-7"
-                                    id="kt_datatable_zero_configuration_4">
+                                    >
                                     <thead>
                                         <tr class="fw-bold fs-6 text-gray-800 ">
                                             <th class="text-center">No.</th>

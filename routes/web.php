@@ -132,6 +132,8 @@ Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDeta
 // Route::get('/profile/order-history/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help')->middleware('auth');
 
+Route::get('/profile/points', [UserController::class, 'point'])->name('user.points')->middleware('auth');
+
 // Route Bantuan Testing
 Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
 

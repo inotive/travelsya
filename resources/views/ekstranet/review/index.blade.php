@@ -77,15 +77,15 @@
                         ({{$data['ratings_4']->count()}})</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Biasa
+                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Cukup
                         ({{$data['ratings_3']->count()}})</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Jelek
+                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Kurang
                         ({{$data['ratings_2']->count()}})</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5">Sangat Jelek
+                    <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_5">Sangat Kurang
                         ({{$data['ratings_1']->count()}})</a>
                 </li>
             </ul>

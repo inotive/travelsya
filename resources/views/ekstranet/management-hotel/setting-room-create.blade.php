@@ -52,7 +52,7 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Tarif Per Malam (Termasuk Pajak 25%)</label>
+                                <label class="form-label">Tarif Per Malam (Termasuk Pajak)</label>
                                 <div class="input-group">
                                     <span class="input-group-text">Rp.</span>
                                     <input type="text" name="sellingprice" id="sellingprice" class="form-control"
@@ -171,8 +171,8 @@
                                                     class="path2"></span></i>
 
                                             <!--begin::Inputs-->
-                                            <input type="file" name="hotel_room_image[]" accept=".png, .jpg, .jpeg"
-                                                multiple />
+                                            <input type="file" value="{{ asset('assets/media/noimage.png')}}" name="hotel_room_image[]" accept=".png, .jpg, .jpeg"
+                                                multiple  />
                                             <input type="hidden" name="image_remove" />
                                             <!--end::Inputs-->
                                         </label>

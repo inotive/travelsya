@@ -76,4 +76,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(HistoryPoint::class);
     }
+
+    public function hotelRating()
+    {
+        return $this->hasMany(HotelRating::class);
+    }
 }
