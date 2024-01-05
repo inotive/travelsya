@@ -177,6 +177,7 @@
                 <option value="">Semua</option>
                 <option value="fullfurnished">Full Furnished</option>
                 <option value="unfurnished">Unfurnished</option>
+                <option value="semifurnished">Semi Furnished</option>
             </select>
         </div>
         <div class="col-md-12  text-end">

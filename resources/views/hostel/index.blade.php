@@ -532,6 +532,9 @@
                                                 <option value="unfurnished"
                                                     {{ $params['furnish'] == 'unfurnished' ? 'selected' : '' }}>
                                                     Unfurnished</option>
+                                                <option value="semifurnished"
+                                                    {{ $params['furnish'] == 'semifurnished' ? 'selected' : '' }}>
+                                                    Unfurnished</option>
                                             </select>
                                         </div>
                                         {{-- <div class="col-3">

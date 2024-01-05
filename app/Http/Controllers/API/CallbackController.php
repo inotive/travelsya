@@ -33,7 +33,7 @@ class CallbackController extends Controller
     }
     function logReq()
     {
-        file_put_contents('xendit.log',file_get_contents('php://input'));
+        file_put_contents('xendit.log', file_get_contents('php://input'));
         $fp = fopen('xendit.log', 'a');
         $data = file_get_contents('php://input');
         $json_string = json_encode(json_decode($data), JSON_PRETTY_PRINT);
@@ -52,14 +52,14 @@ class CallbackController extends Controller
         // Bagian ini untuk mendapatkan Token callback dari permintaan header,
         // yang kemudian akan dibandingkan dengan token verifikasi callback Xendit
         $reqHeaders = getallheaders();
-        $xIncomingCallbackTokenHeader = isset($reqHeaders['X-Callback-Token']) ? $reqHeaders['X-Callback-Token'] : "Incoming Header belum ada";
+        $xIncomingCallbackTokenHeader = isset($reqHeaders['X-Callback-Token']) ? $reqHeaders['X-Callback-Token'] : 'Incoming Header belum ada';
         // Untuk memastikan permintaan datang dari Xendit
         // Anda harus membandingkan token yang masuk sama dengan token verifikasi callback Anda
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.
         if ($xIncomingCallbackTokenHeader === $xenditXCallbackToken) {
             // Permintaan masuk diverifikasi berasal dari Xendit
             // Baris ini untuk mendapatkan semua input pesan dalam format JSON teks mentah
-            $rawRequestInput = file_get_contents("php://input");
+            $rawRequestInput = file_get_contents('php://input');
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
             print_r($responseXendit);
@@ -69,44 +69,42 @@ class CallbackController extends Controller
 
             if ($transaction) {
                 //CEK STATUS PENDING
-                if ($transaction->status == "PENDING") {
+                if ($transaction->status == 'PENDING') {
                     //PAID
                     if ($responseXendit['status'] == 'PAID') {
-                        $status = "";
-                        $message = "";
-                        $responseCode = "";
+                        $status = '';
+                        $message = '';
+                        $responseCode = '';
 
                         $transaction->update([
-                            'status' =>  'PAID',
+                            'status' => 'PAID',
                             'payment_channel' => $responseXendit['payment_channel'],
-                            'payment_method' => $responseXendit['payment_method']
+                            'payment_method' => $responseXendit['payment_method'],
                         ]);
 
-                        if($transaction->service == "pulsa"  || $transaction->service == "listrik-token" || $transaction->service == "ewallet")
-                        {
+                        if ($transaction->service == 'pulsa' || $transaction->service == 'listrik-token' || $transaction->service == 'ewallet' || $transaction->service == 'data') {
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
                                 ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon', 'top.total_tagihan')
                                 ->first();
-                            $responseMili =  $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
+                            $responseMili = $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
-                            $responseMessageSNCodeFinal = "";
-                            if($transaction->service == "listrik-token")
-                            {
+                            $responseMessageSNCodeFinal = '';
+                            if ($transaction->service == 'listrik-token') {
                                 $data = [
                                     'reqid' => $transaction->no_inv,
                                     'no_hp' => str($detailTransactionTopUP->kode_pembayaran),
-                                    'nom' => str($detailTransactionTopUP->nomor_telfon)
+                                    'nom' => str($detailTransactionTopUP->nomor_telfon),
                                 ];
 
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
                                 sleep(3);
                                 $transaction = $this->mymili->status($data);
                                 //process retrieve voucher code
-                                $responseMessage = explode(" ",$transaction["MESSAGE"]);
-                                $responseMessageSN = explode("SN=",$responseMessage[4]);
-                                $responseMessageSNCode = explode("/",$responseMessageSN[1]);
+                                $responseMessage = explode(' ', $transaction['MESSAGE']);
+                                $responseMessageSN = explode('SN=', $responseMessage[4]);
+                                $responseMessageSNCode = explode('/', $responseMessageSN[1]);
                                 $responseMessageSNCodeFinal = $responseMessageSNCode[0];
                             }
 
@@ -128,9 +126,8 @@ class CallbackController extends Controller
                                 ]);
 
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
-                                $status = "Pending";
-                                $message = "Pembayaran Sedang Di Proses";
-
+                                $status = 'Pending';
+                                $message = 'Pembayaran Sedang Di Proses';
                             } else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
@@ -139,9 +136,9 @@ class CallbackController extends Controller
                                     ->where('flow', 'credit')
                                     ->delete();
                                 $transaction->update([
-                                    'status' => "Transaksi Gagal",
+                                    'status' => 'Transaksi Gagal',
                                     'payment_channel' => $responseXendit['payment_channel'],
-                                    'payment_method' => $responseXendit['payment_method']
+                                    'payment_method' => $responseXendit['payment_method'],
                                 ]);
                             }
 
@@ -150,7 +147,7 @@ class CallbackController extends Controller
                                 ->update([
                                     'status' => $status,
                                     'kode_voucher' => $responseMessageSNCodeFinal,
-                                    'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
+                                    'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                                 ]);
                         }
                         else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs" || $transaction->service == "tv-internet"){
@@ -181,23 +178,23 @@ class CallbackController extends Controller
                                     'flow' => "debit"
                                 ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
-                                $status = "Pending";
-                                $message = "Pembayaran Sedang Di Proses";
+                                $status = 'Pending';
+                                $message = 'Pembayaran Sedang Di Proses';
                             } else {
-                                $status = "Transaksi Gagal";
-                                $message = "Pembayaran "  . $transaction->service . " Gagal";
+                                $status = 'Transaksi Gagal';
+                                $message = 'Pembayaran ' . $transaction->service . ' Gagal';
 
                                 $transaction->update([
-                                    'status' => "Transaksi Gagal",
+                                    'status' => 'Transaksi Gagal',
                                     'payment_channel' => $responseXendit['payment_channel'],
-                                    'payment_method' => $responseXendit['payment_method']
+                                    'payment_method' => $responseXendit['payment_method'],
                                 ]);
                             }
 
                             DetailTransactionPPOB::where('transaction_id', $transaction->id)->update([
                                 'status' => $status,
                                 'message' => $message,
-                                'updated_at' =>  Carbon::now()->timezone('Asia/Makassar')
+                                'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                             ]);
                         }
                         else{
@@ -276,14 +273,12 @@ class CallbackController extends Controller
                         {
 
                             return ResponseFormatter::success($status, $message);
-                        }
-                        else{
+                        } else {
                             return ResponseFormatter::error($status, $message);
                         }
                     }
                 }
             }
-
         } else {
             // Permintaan bukan dari Xendit, tolak dan buang pesan dengan HTTP status 403
             http_response_code(403);
@@ -294,13 +289,12 @@ class CallbackController extends Controller
         $callbackSignature = $request->server('HTTP_X_CALLBACK_TOKEN');
         $json = $request->getContent();
 
-
         // dd($callbackSignature, $json);
         if (config('xendit.TOKEN_CALLBACK') !== $callbackSignature) {
             return 'Invalid signature';
         }
 
-        $data = json_decode($json, TRUE);
+        $data = json_decode($json, true);
         $transaction = Transaction::with('detailTransaction.product')
             ->where('no_inv', $data['external_id'])
             ->first();
@@ -308,58 +302,58 @@ class CallbackController extends Controller
         // dd($transaction->detailTransaction, $data);
         if ($transaction) {
             //CEK STATUS PENDING
-            if ($transaction->status == "PENDING") {
+            if ($transaction->status == 'PENDING') {
                 //PAID
                 if ($data['status'] == 'PAID') {
                     // make trans Mymili
                     foreach ($transaction->detailTransaction as $detail) {
-                        if ($transaction->service_id <> 7) {
+                        if ($transaction->service_id != 7) {
                             if ($detail->no_hp) {
                                 $responseMili = $this->mymili->transaction([
                                     'no_hp' => $detail->no_hp,
                                     'nom' => $detail->product->kode,
-                                    'reqid' => $transaction->no_inv . '-' . $detail->id
+                                    'reqid' => $transaction->no_inv . '-' . $detail->id,
                                 ]);
                                 $message = $responseMili['MESSAGE'];
                                 // return $responseMili;
                                 if ($responseMili['RESPONSECODE'] == 00) {
-                                    $status = "SUCCESS";
+                                    $status = 'SUCCESS';
                                 } elseif ($responseMili['RESPONSECODE'] == 68) {
-                                    $status = "PENDING-PRODUCT";
+                                    $status = 'PENDING-PRODUCT';
                                 } else {
-                                    $status = "FAILED";
+                                    $status = 'FAILED';
                                 }
                             } else {
-                                $status = "FAIL";
+                                $status = 'FAIL';
                             }
                         } elseif ($transaction->service_id == 7 || $transaction->service_id == 8) {
-                            $status = "SUCCESS";
-                            $message = "SUCCESS HOSTEL";
+                            $status = 'SUCCESS';
+                            $message = 'SUCCESS HOSTEL';
                         } else {
-                            $status = "FAILED";
-                            $message = "Not found service";
+                            $status = 'FAILED';
+                            $message = 'Not found service';
                         }
-//                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
-//                            'status' => $status,
-//                            'message' => $message
-//                        ]);
-//                        if (!$updateDetail) {
-//                            return ResponseFormatter::error(null, "Update DB error");
-//                        }
+                        //                        $updateDetail = $transaction->detailTransaction()->find($detail->id)->update([
+                        //                            'status' => $status,
+                        //                            'message' => $message
+                        //                        ]);
+                        //                        if (!$updateDetail) {
+                        //                            return ResponseFormatter::error(null, "Update DB error");
+                        //                        }
                     }
                     $updateTransaction = $transaction->update([
                         'status' => 'PAID',
                         'payment_channel' => $data['payment_channel'],
-                        'payment_method' => $data['payment_method']
+                        'payment_method' => $data['payment_method'],
                     ]);
                     if (!$updateTransaction) {
-                        return ResponseFormatter::error(null, "Update DB error");
+                        return ResponseFormatter::error(null, 'Update DB error');
                     }
-                    $point = new Point;
+                    $point = new Point();
                     if (count($data['fees']) == 2) {
                         $feepoint = 0;
                         foreach ($data['fees'] as $fee) {
-                            if ($fee['type'] == "point") {
+                            if ($fee['type'] == 'point') {
                                 $feepoint = $fee['value'];
                             }
                         }
@@ -368,19 +362,18 @@ class CallbackController extends Controller
                         $point->addPoint($transaction->user_id, $data['paid_amount'], $transaction->id, $transaction->service_id);
                     }
                 } else {
-
-                    if ($transaction->service == "hostel") {
-                        BookDate::where("hostel_room_id", $transaction->detailTransaction['hostel_room_id'])->delete();
+                    if ($transaction->service == 'hostel') {
+                        BookDate::where('hostel_room_id', $transaction->detailTransaction['hostel_room_id'])->delete();
                     }
-                    if ($transaction->service == "hotel") {
-                        BookDate::where("hotel_room_id", $transaction->detailTransaction['hotel_room_id'])->delete();
+                    if ($transaction->service == 'hotel') {
+                        BookDate::where('hotel_room_id', $transaction->detailTransaction['hotel_room_id'])->delete();
                     }
                     //EXPIRED
                     $updateTransaction = $transaction->update([
-                        'status' => "EXPIRED"
+                        'status' => 'EXPIRED',
                     ]);
                     $updateDetail = $transaction->detailTransaction()->update([
-                        'status' => "EXPIRED"
+                        'status' => 'EXPIRED',
                     ]);
 
                     //add back point
@@ -390,7 +383,7 @@ class CallbackController extends Controller
                             'point' => $data['fees'][1]['value'],
                             'transaction_id' => $transaction->id,
                             'date' => now(),
-                            'flow' => "debit"
+                            'flow' => 'debit',
                         ]);
                         User::find($transaction->user_id)->update(['point' => $data['fees'][1]['value']]);
                     }
@@ -402,7 +395,6 @@ class CallbackController extends Controller
         // get reponse code
         // change status
 
-
         // reponse code Mymili
         // 00 Success
         // 14 Failed
@@ -413,24 +405,22 @@ class CallbackController extends Controller
 
     public function callBackPPOB(Request $request)
     {
-        $responseMili =  $this->mymili->paymentPPOB($request->no_inv,$request->kode_pembayaran,$request->nomor_tagihan);
+        $responseMili = $this->mymili->paymentPPOB($request->no_inv, $request->kode_pembayaran, $request->nomor_tagihan);
 
-        if($responseMili['RESPONSECODE'] == 00)
-        {
+        if ($responseMili['RESPONSECODE'] == 00) {
             return response()->json([
                 'status' => '200',
-                'message' => 'Pembayaran telah berhasil'
+                'message' => 'Pembayaran telah berhasil',
             ]);
-        }
-        elseif($responseMili['RESPONSECODE'] == 68){
+        } elseif ($responseMili['RESPONSECODE'] == 68) {
             return response()->json([
                 'status' => '200',
-                'message' => 'Pulsa sedang diproses'
+                'message' => 'Pulsa sedang diproses',
             ]);
         }
         return response()->json([
             'status' => '400',
-            'message' => $responseMili
+            'message' => $responseMili,
         ]);
     }
 }

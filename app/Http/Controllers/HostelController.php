@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\General;
-use App\Models\DetailTransactionHostel;
-use App\Models\Facility;
+use Carbon\Carbon;
 use App\Models\Hostel;
+use App\Services\Point;
+use App\Helpers\General;
+use App\Models\Facility;
+use App\Services\Xendit;
+use App\Services\Setting;
 use App\Models\HostelRoom;
 use App\Models\Transaction;
-use App\Services\Point;
-use App\Services\Setting;
 use App\Services\Travelsya;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
-use App\Services\Xendit;
-use Carbon\Carbon;
+use App\Models\DetailTransactionHostel;
 
 class HostelController extends Controller
 {
@@ -117,30 +118,21 @@ class HostelController extends Controller
         }
 
         if ($request->has('start')) {
-            $checkin = \Carbon\Carbon::parse($request->start);
+            $checkin = Carbon::parse($request->start);
             $duration = $request->duration;
 
             // Hitung tanggal checkout
             $checkout = $checkin->copy()->addMonths($duration);
 
             $hostels->whereRaw('(
-                SELECT SUM(totalroom) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
+                SELECT COUNT(*) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
             ) - (
                 SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hostel WHERE hostel_id = hostels.id
                 AND ? <= reservation_end
                 AND ? >= reservation_start
             ) > 0', [$checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+        
         }
-
-        // if ($request->has('harga')) {
-        //     if ($request->harga == 'tertinggi') {
-        //         $hostels->orderByDesc('price_avg');
-        //     }
-
-        //     if ($request->harga == 'terendah') {
-        //         $hostels->orderBy('price_avg');
-        //     }
-        // }
 
         if ($request->has('harga')) {
             $orderDirection = $request->harga === 'tertinggi' ? 'desc' : 'asc';
@@ -330,13 +322,12 @@ class HostelController extends Controller
     {
         $data = $request->all();
         $hostel = HostelRoom::with('hostel.service')->find($data['hostel_room_id']);
-        // dd($hostel);
         if ($data['category'] == 'monthly') {
-            $sellingprice = $hostel->sellingrentprice_monthly;
+            $sellingprice = $request->pointCheked === null ?  $hostel->sellingrentprice_monthly :  $hostel->sellingrentprice_monthly - $request->pointCheked;
         }
 
         if ($data['category'] == 'yearly') {
-            $sellingprice = $hostel->sellingrentprice_yearly;
+            $sellingprice =  $request->pointCheked === null ? $hostel->sellingrentprice_yearly :  $hostel->sellingrentprice_yearly - $request->pointCheked;
         }
 
         $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();
@@ -396,7 +387,8 @@ class HostelController extends Controller
                 'user_id' => $request->user()->id,
                 'status'  => $payoutsXendit['status'],
                 'link'    => $payoutsXendit['invoice_url'],
-                'total'   => $amount
+                'total'   => $amount,
+                "created_at" => Carbon::now(),
             ]);
 
             $helper = new General();

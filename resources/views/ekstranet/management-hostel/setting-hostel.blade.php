@@ -23,7 +23,7 @@
                             <div class="col-md-8 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Nama Hostel</label>
                                 <input type="text" name="name" id="name" class="form-control form-control-solid"
-                                    placeholder="Masukan nama hostel" value="{{$hostel->name}}">
+                                    placeholder="Masukan nama hostel" value="{{$hostel->name}}" readonly>
                                 @error('name')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -47,7 +47,7 @@
                             <div class="col-md-6 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Nomor Telfon</label>
                                 <input type="text" name="phone" id="phone" class="form-control form-control-solid"
-                                    placeholder="Masukan nomor telfon" value="{{$hostel->phone}}">
+                                    placeholder="Masukan nomor telfon" value="{{$hostel->phone}}" readonly>
                                 @error('phone')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -57,7 +57,7 @@
                             <div class="col-md-6 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Email</label>
                                 <input type="text" name="email" id="email" class="form-control form-control-solid"
-                                    placeholder="Masukan email" value="{{$hostel->email}}">
+                                    placeholder="Masukan email" value="{{$hostel->email}}" readonly>
                                 @error('email')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -96,7 +96,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Latitude (Google Maps)</label>
                             <input type="text" name="ltd" id="email" class="form-control form-control-solid"
-                                   placeholder="Masukan latitude" value="{{$hostel->lat}}">
+                                   placeholder="Masukan latitude" value="{{$hostel->lat}}" readonly>
                             @error('email')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{$message}}</strong>
@@ -106,7 +106,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Long Latitude (Google Maps)</label>
                             <input type="text" name="long_ltd" id="email" class="form-control form-control-solid"
-                                   placeholder="Masukan long latitude" value="{{$hostel->lon}}" >
+                                   placeholder="Masukan long latitude" value="{{$hostel->lon}}" readonly>
                             @error('email')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{$message}}</strong>
@@ -140,7 +140,7 @@
                             <div class="col-md-12 fv-row mb-6">
                                 <label class="required fs-6 fw-semibold mb-2">Website</label>
                                 <input type="text" name="website" id="website" class="form-control form-control-solid"
-                                    placeholder="Masukan alamat website berupa URL" value="{{$hostel->website}}">
+                                    placeholder="Masukan alamat website berupa URL" value="{{$hostel->website}}" readonly>
                                 @error('website')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>

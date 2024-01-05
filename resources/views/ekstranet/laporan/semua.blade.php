@@ -78,7 +78,8 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $hotel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y h:i:s', strtotime($hotel->transaction->created_at)) }}</td>
+                                        <td>{{  \Carbon\Carbon::parse($hotel->created_at)->format('d M Y H:i:s')
+                                        }}</td>
                                         <td>{{ $hotel->transaction->user->name }}</td>
                                         <td>{{ $hotel->transaction->user->phone }}</td>
                                         <td>
@@ -97,7 +98,7 @@
                                         </td>
                                         <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                         <td>
-                                            <span class="badge 
+                                            <span class="badge
                                             {{$hotel->transaction->status == "PAID" ? "badge-success"
                                                 : "badge-warning" }}"
                                                 >{{$hotel->transaction->status == "PAID" ? "Lunas" : "Menunggu Pembayaran" }}
@@ -132,7 +133,8 @@
                                     <tr>
                                         <td>{{ $no }}</td>
                                         <td>{{ $hostel->transaction->no_inv }}</td>
-                                        <td>{{ date('d M Y h:i:s', strtotime($hostel->updated_at)) }}</td>
+                                        <td>{{  \Carbon\Carbon::parse($hostel->updated_at)->format('d M Y H:i:s') }}
+                                        </td>
                                         <td>{{ $hostel->transaction->user->name }}</td>
                                         <td>{{ $hostel->transaction->user->phone }}</td>
                                         <td>
@@ -146,7 +148,7 @@
                                         </td>
                                         <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
                                         <td>
-                                            <span class="badge 
+                                            <span class="badge
                                             {{$hostel->transaction->status == "PAID" ? "badge-success"
                                                 : "badge-warning" }}"
                                                 >{{$hostel->transaction->status == "PAID" ? "Lunas" : "Menunggu Pembayaran" }}

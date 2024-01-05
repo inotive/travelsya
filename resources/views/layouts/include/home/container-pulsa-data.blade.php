@@ -6,30 +6,34 @@
         <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
-            <form action="{{ route('product.payment.pulsa.data') }}" method="GET" class="card-body d-flex flex-column justify-content-between">
+            <form action="{{ route('product.payment.pulsa.data') }}" method="GET"
+                class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">Pulsa & Data</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
                     <div class="col-12">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span >Produk</span>
+                            <span>Produk</span>
                         </label>
 
-                        <select name="category" id="category" class="form-control form-control-lg" onchange="checkOperator()">
+                        <select name="category" id="category" class="form-control form-control-lg"
+                            onchange="checkOperator()">
                             <option value="pulsa" selected>Pulsa</option>
                             <option value="data">Paket Data</option>
                         </select>
                     </div>
                     <div class="col-xl-6">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span >Nomor Handphone</span>
+                            <span>Nomor Handphone</span>
                         </label>
                         <div class="input-group input-group-lg">
                             <span class="input-group-text" id="inputGroup-sizing-lg">
-                                <img src="https://image.gambarpng.id/pngs/gambar-transparent-pin-code_60985.png" id="logo_provider" alt="" height="25" width="25">
+                                <img src="https://image.gambarpng.id/pngs/gambar-transparent-pin-code_60985.png"
+                                    id="logo_provider" alt="" height="25" width="25">
                             </span>
-                            <input type="text" id="no_telp" name="notelp" class="form-control" placeholder="08xx" onkeyup="checkOperator()"/>
+                            <input type="text" id="no_telp" name="notelp" class="form-control" placeholder="08xx"
+                                onkeyup="checkOperator()" />
                         </div>
                     </div>
 
@@ -40,6 +44,19 @@
 
                         <select name="product" id="product" class="form-control form-control-lg"></select>
                     </div>
+                    @auth
+                        <div class="col-12 d-flex justify-content-between">
+                            <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai Point
+                            </p>
+                            <h4>
+                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input pakai-point" type="checkbox" name=""
+                                        id="flexSwitchChecked" />
+                                </div>
+                            </h4>
+                        </div>
+                        <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="pointInput" disabled>
+                    @endauth
 
                 </div>
 
@@ -65,7 +82,7 @@
 
     <!-- modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -75,14 +92,14 @@
                     <div class="row gy-4">
                         <div class="col-12">
                             <label for="" class="form-label">Email</label>
-                            <input type="text" class="form-control form-control-lg"
-                                placeholder="Masukan Email Anda">
+                            <input type="text" class="form-control form-control-lg" placeholder="Masukan Email Anda">
                         </div>
                         <div class="col-12">
                             <label for="" class="form-label">Password</label>
                             <input type="password" class="form-control form-control-lg"
                                 placeholder="Masukan Password Anda">
                         </div>
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -114,19 +131,23 @@
 
             // Telkomsel
             if (/^0812|^0822|^0852|^0853|^0811|^0813|^0851|^0821/.test(nomerHP)) {
-                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/1200px-Telkomsel_2021_icon.svg.png');
+                $('#logo_provider').attr('src',
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/1200px-Telkomsel_2021_icon.svg.png'
+                    );
                 provider = 'telkomsel'
             }
 
             // Indosat
             if (/^0857|^0856/.test(nomerHP)) {
-                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Indosat_Ooredoo_logo_%282017%29.svg');
+                $('#logo_provider').attr('src',
+                    'https://upload.wikimedia.org/wikipedia/commons/a/ac/Indosat_Ooredoo_logo_%282017%29.svg');
                 provider = 'indosat'
             }
 
             // Three
             if (/^0896|^0895|^0897|^0898|^0899/.test(nomerHP)) {
-                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Three_logo.svg/370px-Three_logo.svg.png');
+                $('#logo_provider').attr('src',
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/Three_logo.svg/370px-Three_logo.svg.png');
                 provider = 'three'
             }
 
@@ -138,7 +159,9 @@
 
             // AXIS
             if (/^0831|^0832|^0833|^0838/.test(nomerHP)) {
-                $('#logo_provider').attr('src', 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/2560px-Axis_logo_2015.svg.png');
+                $('#logo_provider').attr('src',
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/2560px-Axis_logo_2015.svg.png'
+                    );
                 provider = 'axis'
             }
 
@@ -149,20 +172,20 @@
             }
 
             if (nomerHP.length <= 4) {
-                if(provider !== '') {
+                if (provider !== '') {
                     $.ajax({
                         type: "GET",
-                        url: "/product/"+category+"/"+provider,
-                        success: function (response) {
+                        url: "/product/" + category + "/" + provider,
+                        success: function(response) {
                             // console.log(response)
 
                             $('#product').empty();
 
                             // Menambahkan pilihan berdasarkan respons
-                            $.each(response, function (key, value) {
+                            $.each(response, function(key, value) {
                                 $('#product').append($('<option>', {
                                     value: value.id,
-                                    text: value.description+ ' - Rp. '+value.price
+                                    text: value.description + ' - Rp. ' + value.price
                                 }));
                             });
                         }
@@ -173,7 +196,9 @@
 
         $(document).ready(function() {
 
-            const { getOperator} = window.NoTelp;
+            const {
+                getOperator
+            } = window.NoTelp;
 
             $('#no_telp').on('keyup', function(e) {
                 var notelp = e.target.value;
@@ -225,6 +250,20 @@
                 }
             })
 
-        })
+        });
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#flexSwitchChecked").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#pointInput").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#pointInput").prop("disabled", true);
+                    $("#pointInput").remove();
+                }
+            });
+        });
     </script>
 @endpush
