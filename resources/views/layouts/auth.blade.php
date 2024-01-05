@@ -76,7 +76,7 @@
                 <!--begin::Content-->
                 <div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
                     <!--begin::Image-->
-                    <img class="theme-light-show mx-auto  mb-10 mb-lg-20" style="width : 90%" src="{{asset('assets/media/desain.png')}}" alt="" />
+                    <img class="theme-light-show mx-auto  mb-10 mb-lg-20" style="width : 90%" src="{{asset('assets/media/bg-login.png')}}" alt="" />
 {{--                    <img class="d-block w-100 h-400px" src="https://fastly.picsum.photos/id/861/1200/400.jpg?hmac=oEEp9Zqn58JvH4Jr3KtUz1MIhsZl__Xh-W8RZIqv4a4" alt="second slide">--}}
                     <img class="theme-dark-show mx-auto  mb-10 mb-lg-20" src="{{asset('assets/media/desain.jpg')}}" alt="" />
                     <!--end::Image-->
