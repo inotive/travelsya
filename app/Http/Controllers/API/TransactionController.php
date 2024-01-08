@@ -2,26 +2,28 @@
 
 namespace App\Http\Controllers\API;
 
+use DateTime;
+use Carbon\Carbon;
+use Xendit\Xendit;
+use App\Models\Fee;
+use App\Models\Hotel;
+use App\Models\Hostel;
+use App\Models\Product;
+use App\Models\HotelRoom;
+use App\Models\HostelRoom;
+use App\Models\HotelRating;
+use App\Models\Transaction;
+use App\Models\HistoryPoint;
+use App\Models\HostelRating;
+use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\DetailTransactionHostel;
-use App\Models\DetailTransactionHotel;
+use Illuminate\Support\Facades\Auth;
 use App\Models\DetailTransactionPPOB;
+use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionTopUp;
-use App\Models\Fee;
-use App\Models\HistoryPoint;
-use App\Models\Hostel;
-use App\Models\HostelRating;
-use App\Models\HostelRoom;
-use App\Models\Hotel;
-use App\Models\HotelRoom;
-use App\Models\Product;
-use App\Models\Transaction;
-use DateTime;
-use Illuminate\Http\Request;
+use App\Models\DetailTransactionHostel;
 use Illuminate\Support\Facades\Validator;
-use Xendit\Xendit;
-use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -251,6 +253,16 @@ class TransactionController extends Controller
                         'transactions.*',
                     )
                     ->first();
+
+                    $allRatings = HotelRating::where('hotel_room_id', $detailTransaction->hotel_room_id)->get();
+
+                    $review = $allRatings->map(function ($item){
+                        return [
+                            'rate' => $item->rate,
+                            'comment' => $item->comment
+                        ];
+    
+                    });
                 $responseTransaction = array([
                     'id' => $detailTransaction->id,
                     'no_inv' => $detailTransaction->no_inv,
@@ -279,6 +291,7 @@ class TransactionController extends Controller
                     'total' => $detailTransaction->grand_total,
                     'received_point' => $receivedPoint,
                     'used_point' => $usedPoint,
+                    'review' => $review,
                     'created_at' => $detailTransaction->created_at,
                 ]);
 //                $responseTransaction = collect([$detailTransaction->firstOrFail()])->map(function ($detailTransaction) {

@@ -51,6 +51,7 @@ class HotelController extends Controller
                 AND ? <= guest
                 AND ? >= reservation_start
             ) > 0', [$request->end_date, $request->start]);
+            
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
                 $query->whereIn('facility_id', $request->facility);
