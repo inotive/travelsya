@@ -205,47 +205,27 @@ class HotelController extends Controller
 
     public function request(Request $request)
     {
-        // dd($request->point);
         $data = $request->all();
-        $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
+        $hotel = HotelRoom::with('hotel.service')->find($request->hostel_room_id);
         $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['pointFee'], 8, $request->user()->id, $hotel->sellingprice);
-
-        // $uniqueCode = rand(111, 999);
+        $sellingPrice = $request->point === null ? $hotel->sellingprice : $hotel->sellingprice - $request->point;
+        $fees = $setting->getFees($request->pointFee, 8, $request->user()->id, $sellingPrice);
         $fees[] = [
             'type' => 'Kode Unik',
-            'value' => $data['uniqueCode'],
-        ];
-
-        //cekpoint
-        // if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
-        // $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
-        // if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
-        // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
+            'value' => $request->uniqueCode,
+        ];;
         if (!$fees) return 'Point invalid';
-        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
-        if ($qty < 0) return 'Date must be forward';
-        $sellingPrice = $request->point == null ? $hotel->sellingprice : $hotel->sellingprice - $request->point;
-        $amount = $setting->getAmount($sellingPrice, $qty, $fees, $data['room']);
-
-        // cek book date
-        $checkBook = DetailTransactionHotel::where("hotel_room_id", $data['hostel_room_id'])
-            ->where('reservation_start', '>=', $data['start'])
-            ->where('reservation_end', "<=", $data['end'])->first();
-
-        // if ($checkBook) {
-        //     return ResponseFormatter::error($checkBook, 'Book dates is not available');
-        // }
-
-        // ceate xendit
+        $qty = (date_diff(date_create($request->start), date_create($request->end))->days);
+        if ($qty <= 0) return 'Date must be forward';
+        $amount = $setting->getAmount($sellingPrice, $qty, $fees, $request->room);
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $data['hostel_room_id'],
-                    "name" => $hotel['name'],
-                    "price" =>  $hotel->sellingprice,
+                    "product_id" => $request->hostel_room_id,
+                    "name" => $request->name,
+                    "price" =>   $sellingPrice,
                     "quantity" => $qty,
                 ]
             ],
@@ -262,8 +242,6 @@ class HotelController extends Controller
             'fees' => $fees
         ]);
 
-
-        // true buat trans
         DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
 
             // dd($uniqueCode);
@@ -272,7 +250,6 @@ class HotelController extends Controller
                 'req_id'     => 'HTL-' . time(),
                 'service'    => 'HOTEL',
                 'service_id' => 8,
-                // 'payment' => $payoutsXendit['payment'],
                 'payment' => 'xendit',
                 'user_id' => $request->user()->id,
                 'status'  => $payoutsXendit['status'],

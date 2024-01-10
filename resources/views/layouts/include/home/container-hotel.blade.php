@@ -83,22 +83,46 @@
         <div x-data="{ totalRoom: 0, totalGuest: 0 }" class="row">
             <div class="col-md-6 col-6 mb-5">
                 <label class="form-label fw-bold fs-6">Total Kamar</label>
-                <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom"
+                <select name="room" id="room" class="form-select" onchange="handleSelectRoom(this)">
+                    <option value="1">1 Kamar</option>
+                    <option value="2">2 Kamar</option>
+                    <option value="3">3 Kamar</option>
+                    <option value="4">4 Kamar</option>
+                    <option value="5">5 Kamar</option>
+                    <option value="6">6 Kamar</option>
+                    <option value="7">7 Kamar</option>
+                    <option value="8">8 Kamar</option>
+                    <option value="9">9 Kamar</option>
+                    <option value="10">10 Kamar</option>
+                </select>
+                {{-- <select name="room" id="room" class="form-select" x-on:change="handleSelectRoom"
                     x-model="totalRoom">
                     <template x-for="data in Array.from({ length: 10 }).map((_, index) => index + 1)">
                         <option x-if="data > 0" x-bind:value="data" x-text="`${data} Kamar`"></option>
                     </template>
-                </select>
+                </select> --}}
             </div>
 
             <div class="col-md-6 col-6 mb-5">
                 <label class="form-label fw-bold fs-6">Total Tamu</label>
-                <select name="guest" id="guest" class="form-select" x-model="totalGuest">
+                <select name="guest" id="guest" class="form-select" onchange="handleSubmit()">
+                    <option value="1">1 Tamu</option>
+                    <option value="2">2 Tamu</option>
+                    <option value="3">3 Tamu</option>
+                    <option value="4">4 Tamu</option>
+                    <option value="5">5 Tamu</option>
+                    <option value="6">6 Tamu</option>
+                    <option value="7">7 Tamu</option>
+                    <option value="8">8 Tamu</option>
+                    <option value="9">9 Tamu</option>
+                    <option value="10">10 Tamu</option>
+                </select>
+                {{-- <select name="guest" id="guest" class="form-select" x-model="totalGuest">
                     <template x-for="data in Array.from({ length: 10 }).map((_, index) => index + 1)"
                         :key="data">
                         <option x-if="data > 0" x-bind:value="data" x-text="`${data} Tamu`"></option>
                     </template>
-                </select>
+                </select> --}}
             </div>
             <!-- Validation message -->
             <p x-show=" totalRoom > totalGuest" class="text-danger" x-cloak>Total Tamu Harus Lebih atau sama dengan
@@ -158,26 +182,33 @@
             }
         });
 
-        function handleSelectRoom() {
-            let room = document.getElementById('room').value;
-            let guest = document.getElementById('guest').value;
+        function handleSelectRoom(x) {
+            console.log(x.value);
+            let roomInput = document.getElementById('room');
+            let guest = document.getElementById('guest');
 
-            if (guest < room) {
-                alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
-                guest=room
-                return;
-            }
+            // let room = parseInt(roomInput.value);
+            // let guest = parseInt(guestInput.value);
 
-            console.log(room, guest);
+            guest.value = x.value
+            // if (guest.value <  x.value) {
+            //     // alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
+            //     return;
+            // }
+
+            // x.value=guest;
+
+            console.log(guest.value, x.value);
 
         }
+
         function handleSubmit() {
             let room = document.getElementById('room').value;
             let guest = document.getElementById('guest').value;
 
             if (guest < room) {
                 alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
-                guest=room
+                guest = room
                 return;
             }
 

@@ -152,6 +152,7 @@ class DashboardController extends Controller
         });
         return view('admin.dashboard', compact('card', 'detailTransactions', 'detailTransactionHotel', 'detailTransactionHostel', 'detailTransactionPPOB', 'detailTransactionPulsa'));
     }
+    
     //    public function index(Request $request)
     //    {
     //        if (auth()->user()->role == 0) {
