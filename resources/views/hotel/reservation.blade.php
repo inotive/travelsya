@@ -208,9 +208,11 @@
 
 @push('add-script')
     <script>
-        $(document).ready(function() {
+          $(document).ready(function() {
             $(".grand-total-1").addClass("d-none");
             $(".grand-total-2").removeClass("d-none");
+            $("#grand-total-1").prop("disabled", false);
+            $("#grand-total-2").prop("disabled", true);
 
             // Handle the change event of the checkbox
             $("#flexSwitchChecked").change(function() {
@@ -219,11 +221,15 @@
                     // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
                     $(".grand-total-1").removeClass("d-none");
                     $(".grand-total-2").addClass("d-none");
+                    $("#grand-total-1").prop("disabled", false);
+                    $("#grand-total-2").prop("disabled", true);
                     $("#pointInput").prop("disabled", false);
                 } else {
                     // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
                     $(".grand-total-1").addClass("d-none");
                     $(".grand-total-2").removeClass("d-none");
+                    $("#grand-total-1").prop("disabled", true);
+                    $("#grand-total-2").prop("disabled", false);
                     $("#pointInput").prop("disabled", true);
                     $("#pointInput").remove();
                 }

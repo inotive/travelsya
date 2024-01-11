@@ -373,7 +373,6 @@ class HostelController extends Controller
             'fees' => $fees
         ]);
 
-        // dd($payoutsXendit);
 
         DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel, $sellingprice, $uniqueCode) {
 

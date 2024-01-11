@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransaction;
+use App\Models\DetailTransactionTopUp;
 use App\Models\Fee;
 use App\Models\HistoryPoint;
 use App\Models\Product;
@@ -155,10 +156,11 @@ class TopUpController extends Controller
 
         // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
 
-        if (isset($payoutsXendit['status'])) {
+        // if (isset($payoutsXendit['status'])) {
 
             $data['status'] = $payoutsXendit['status'];
             $data['link'] = $payoutsXendit['invoice_url'];
+            $data['detail'] = $request->input('detail');
 
             // create transaction
             $transaction = Transaction::create([
@@ -173,8 +175,7 @@ class TopUpController extends Controller
             ]);
 
             // create detail transaction
-            $data['detail'] = $request->input('detail');
-            DB::table('detail_transaction_top_up')->insert([
+            DetailTransactionTopUp::create([
                 'transaction_id' => $transaction->id,
                 'product_id'     => $product->id,
                 'nomor_telfon'   => $data['no_hp'],
@@ -200,6 +201,6 @@ class TopUpController extends Controller
 
 
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
-        }
+        // }
     }
 }
