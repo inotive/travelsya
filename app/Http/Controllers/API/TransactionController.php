@@ -289,6 +289,7 @@ class TransactionController extends Controller
                     'status' => $detailTransaction->status,
                     'fee_admin' => $detailTransaction->fee_admin,
                     'total' => $detailTransaction->grand_total,
+                    // 'kode_unik' => $detailTransaction->kode_unik,
                     'received_point' => $receivedPoint,
                     'used_point' => $usedPoint,
                     'review' => $review,

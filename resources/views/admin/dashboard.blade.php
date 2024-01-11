@@ -7,7 +7,7 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3 class="card-title fw-bold text-success fs-5  d-block">Jumlah Partner</h3>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Mitra (Hotel & Hostel)</h3>
                     <div class="py-1">
                         <span class=" fw-bold text-dark fs-8  d-block">Keseluruhan</span>
                         <div class="py-1">
@@ -94,16 +94,16 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-5 fs-6 fw-bold text-dark">
                         <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi</a>
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi ({{count($detailTransactions)}})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan ({{count($detailTransactionHotel) +  count($detailTransactionHostel)}})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">PPOB</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">PPOB Tagihan ({{count($transaksiPPOB)}})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_pulsa">Pulsa & Data</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_top_up">Top UP ({{count($transaksiTopUp)}})</a>
                         </li>
                         {{--                        @foreach ($services as $key => $service) --}}
                         {{--                        <li class="nav-item"> --}}
@@ -164,8 +164,9 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
+                                        <th>Fee Admin (15% + Layanan + Kode Unik)</th>
+                                        <th>Total Client Terima</th>
                                         <th>Grand Total</th>
-                                        <th>Fee Admin</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -183,8 +184,9 @@
                                             <td>{{ $transaction['transaction_name'] }} -
                                                 {{ $transaction['transaction_desc'] }}</td>
                                             <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td>@currency($transaction['transaction_price'])</td>
-                                            <td>@currency($transaction['fee'])</td>
+                                            <td class="text-success text-center">Rp. {{number_format(( $transaction['transaction_price'] * 15 / 100) + $transaction['fee'], 0,',','.') }}</td>
+                                            <td class=" text-center">@currency($transaction['transaction_price'] - ($transaction['transaction_price'] * 15 / 100))</td>
+                                            <td class=" text-center">@currency($transaction['transaction_price'] )</td>
                                     @endforeach
 
                                     @foreach ($detailTransactionHostel as $transaction)
@@ -200,8 +202,9 @@
                                             <td>{{ $transaction['transaction_name'] }} -
                                                 {{ $transaction['transaction_desc'] }}</td>
                                             <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td>@currency($transaction['transaction_price'])</td>
-                                            <td>@currency($transaction['fee'])</td>
+                                            <td class="text-success text-center">Rp. {{number_format(( $transaction['transaction_price'] * 15 / 100) + $transaction['fee'], 0,',','.') }}</td>
+                                            <td class=" text-center">@currency($transaction['transaction_price'] - ($transaction['transaction_price'] * 15 / 100))</td>
+                                            <td class=" text-center">@currency($transaction['transaction_price'] )</td>
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -215,33 +218,33 @@
                                        id="kt_datatable_zero_configuration">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal</th>
+                                        <th>Transaksi Dibuat</th>
                                         <th>Invoice</th>
                                         <th>Produk</th>
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
                                         <th>Fee Admin</th>
+                                        <th>Grand Total</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {{-- @foreach ($transactions as $key => $transaction) --}}
-                                    @foreach ($detailTransactionPPOB as $transaction)
+                                    @foreach ($transaksiPPOB as $transaction)
                                         <tr>
-                                            <td>{{ $transaction['created_at'] }}</td>
-                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y h:i') }}</td>
+                                            <td>{{ $transaction->no_inv }}</td>
                                             <td>
                                                     <span class="badge badge-rounded badge-primary">
-                                                        {{ strtoupper($transaction['service_name']) }}
+                                                        {{ strtoupper($transaction->services->name ?? '-') }}
                                                     </span>
                                             </td>
-                                            <td>{{ $transaction['user'] }}</td>
-                                            <td>{{ $transaction['transaction_name'] }} -
+                                            <td>{{$transaction->user->name}}</td>
+                                            <td>Pembayaran Tagihan {{ strtoupper($transaction->services->name ?? '-') }} Ke Nomor Pelanggan {{$transaction->detailTransactionPPOB->first()->nomor_pelanggan ?? '-'}}
                                                 {{ $transaction['transaction_desc'] }}</td>
-                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td>@currency($transaction['transaction_price'])</td>
-                                            <td>@currency($transaction['fee'])</td>
+                                            <td>{{$transaction->payment_method . " - " . $transaction->payment_channel}}</td>
+                                            <td>@currency($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0)</td>
+                                            <td>@currency($transaction->total)</td>
                                     @endforeach
 
 
@@ -251,9 +254,10 @@
                         </div>
                     </div>
                     <div class="tab-content" id="myTabContent">
-                        <div class="tab-pane fade" id="kt_tab_pane_pulsa" role="tabpanel">
+                        <div class="tab-pane fade" id="kt_tab_pane_top_up" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table-row-dashed display fs-6 gy-5 table-bordered table align-middle">
+                                <table class="table-row-dashed display fs-6 gy-5 table-bordered table align-middle"
+                                       id="kt_datatable_zero_configuration">
                                     <thead>
                                     <tr class="fw-bold fs-6 text-gray-800">
                                         <th>Tanggal</th>
@@ -262,27 +266,27 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
                                         <th>Fee Admin</th>
+                                        <th>Grand Total</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {{-- @foreach ($transactions as $key => $transaction) --}}
-                                    @foreach ($detailTransactionPulsa as $transaction)
+                                    @foreach ($transaksiTopUp as $transaction)
                                         <tr>
-                                            <td>{{ $transaction['created_at'] }}</td>
-                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y h:i') }}</td>
+                                            <td>{{ $transaction->no_inv }}</td>
                                             <td>
                                                     <span class="badge badge-rounded badge-primary">
-                                                        {{ strtoupper($transaction['service_name']) }}
+                                                        {{ strtoupper($transaction->services->name ?? '-') }}
                                                     </span>
                                             </td>
-                                            <td>{{ $transaction['user'] }}</td>
-                                            <td>{{ $transaction['transaction_name'] }} -
+                                            <td>{{$transaction->user->name}}</td>
+                                            <td>Pembelian {{ strtoupper($transaction->detailTransactionTopUp->first()->product->description ?? '-') }} Ke Nomor {{$transaction->detailTransactionTopUp->first()->nomor_telfon ?? '-'}}
                                                 {{ $transaction['transaction_desc'] }}</td>
-                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td>@currency($transaction['transaction_price'])</td>
-                                            <td>@currency($transaction['fee'])</td>
+                                            <td>{{$transaction->payment_method . " - " . $transaction->payment_channel}}</td>
+                                            <td>@currency($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0)</td>
+                                            <td>@currency($transaction->total)</td>
                                     @endforeach
 
 

@@ -469,9 +469,10 @@ class HotelController extends Controller
             // }
 
             if ($data['point']) {
-                //deductpoint
                 $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+                // $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+                $point->pakaiPoint($request->user()->id, abs($data['point']), $storeTransaction->id);
+                //deductpoint
             }
         });
 
