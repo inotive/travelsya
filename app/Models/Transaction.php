@@ -87,6 +87,16 @@ class Transaction extends Model
         return $this->hasMany(HistoryPoint::class);
     }
 
+    public function historyPointIN()
+    {
+        return $this->hasMany(HistoryPoint::class)->where('flow','debit');
+    }
+
+    public function historyPointOut()
+    {
+        return $this->hasMany(HistoryPoint::class)->where('flow','credit');
+    }
+
     /**
      * Get the category that owns the Product
      *

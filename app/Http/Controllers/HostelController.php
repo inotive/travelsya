@@ -131,7 +131,7 @@ class HostelController extends Controller
                 AND ? <= reservation_end
                 AND ? >= reservation_start
             ) > 0', [$checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
-        
+
         }
 
         if ($request->has('harga')) {
@@ -356,8 +356,8 @@ class HostelController extends Controller
                 [
                     "product_id" => $data['hostel_room_id'],
                     "name" => $hostel['name'],
-                    "price" => $sellingprice,
-                    "quantity" => $qty,
+                    "price" => $sellingprice * $qty,
+                    "quantity" => 1,
                 ]
             ],
             'amount' => $amount,

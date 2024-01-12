@@ -94,16 +94,20 @@
                 <div class="card-body">
                     <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-5 fs-6 fw-bold text-dark">
                         <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi ({{count($detailTransactions)}})</a>
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi
+                                ({{count($semuaTransaksi)}})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan ({{count($detailTransactionHotel) +  count($detailTransactionHostel)}})</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan
+                                ({{count($transaksiHotel) +  count($transaksiHostel)}})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">PPOB Tagihan ({{count($transaksiPPOB)}})</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">PPOB Tagihan
+                                ({{count($transaksiPPOB)}})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_top_up">Top UP ({{count($transaksiTopUp)}})</a>
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_top_up">Top UP
+                                ({{count($transaksiTopUp)}})</a>
                         </li>
                         {{--                        @foreach ($services as $key => $service) --}}
                         {{--                        <li class="nav-item"> --}}
@@ -124,27 +128,59 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
                                         <th>Fee Admin</th>
+                                        <th>Potongan Point</th>
+                                        <th>Grand Total</th>
+
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {{-- @foreach ($transactions as $key => $transaction) --}}
-                                    @foreach ($detailTransactions as $transaction)
+                                    @foreach ($semuaTransaksi as $all)
                                         <tr>
-                                            <td>{{ $transaction['created_at'] }}</td>
-                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>{{ $all->created_at }}</td>
+                                            <td>{{ $all->no_inv }}</td>
                                             <td>
                                                     <span class="badge badge-rounded badge-primary">
-                                                        {{ strtoupper($transaction['service_name']) }}
+                                                        {{ strtoupper($all->services->name) }}
                                                     </span>
                                             </td>
-                                            <td>{{ $transaction['user'] }}</td>
-                                            <td>{{ $transaction['transaction_name'] }} -
-                                                {{ $transaction['transaction_desc'] }}</td>
-                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td>@currency($transaction['transaction_price'])</td>
-                                            <td>@currency($transaction['fee'])</td>
+                                            <td>{{ $all->user->name }}</td>
+                                            <td>
+                                                @if(in_array($all->service_id, [3,4,5,6,9,10]))
+                                                    Pembayaran
+                                                    Tagihan {{ strtoupper($all->services->name ?? '-') }}
+                                                    Ke Nomor
+                                                    Pelanggan {{$all->detailTransactionPPOB->first()->nomor_pelanggan ?? '-'}}
+                                                @elseif(in_array($all->service_id, [1,2,11,12]))
+                                                    Pembelian {{ strtoupper($all->detailTransactionTopUp->first()->product->description ?? '-') }}
+                                                    Ke
+                                                    Nomor {{$all->detailTransactionTopUp->first()->nomor_telfon ?? '-'}}
+                                                @elseif($all->service_id == 8)
+                                                    Reservasi Hostel {{ $all->detailTransactionHotel->first()->hotel->name ?? '-' }}
+                                                    Pada Kamar {{$all->detailTransactionHotel->first()->hotelRoom?->name ?? '-'}}
+                                                @elseif($all->service_id == 7)
+                                                    Reservasi Hostel {{ $all->detailTransactionHostel->first()->hostel->name ?? '-' }}
+                                                    Pada Kamar {{$all->detailTransactionHostel->first()->hostelRoom?->name ?? '-'}}
+                                                @endif
+                                            </td>
+                                            <td>{!! $all->payment_method ? str_replace('_', ' ', $all->payment_method) : '-' !!}</td>
+                                            <td class="text-success fw-bold">
+                                                @if(in_array($all->service_id, [3,4,5,6,9,10]))
+                                                    @currency(($all->detailTransactionPPOB->first()->fee_travelsya ?? 0)  + ($all->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                                @elseif(in_array($all->service_id, [1,2,11,12]))
+                                                    @currency(($all->detailTransactionTopUp->first()->fee_travelsya ?? 0)  + ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                @elseif($all->service_id == 8)
+                                                    @currency(($all->detailTransactionHotel->first()->fee_admin ?? 0)  + ($all->detailTransactionHotel->first()->kode_unik ?? 0))
+                                                @elseif($all->service_id == 7)
+                                                    @currency(($all->detailTransactionHostel->first()->fee_admin ?? 0) + ($all->detailTransactionHostel->first()->kode_unik ?? 0))
+                                                @endif
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($all->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td>@currency($all->total)</td>
+                                        </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -164,6 +200,7 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
+                                        <th>Point Digunakan Customer</th>
                                         <th>Fee Admin (15% + Layanan + Kode Unik)</th>
                                         <th>Total Client Terima</th>
                                         <th>Grand Total</th>
@@ -171,40 +208,58 @@
                                     </thead>
                                     <tbody>
                                     {{-- @foreach ($transactions as $key => $transaction) --}}
-                                    @foreach ($detailTransactionHotel as $transaction)
+                                    @foreach ($transaksiHotel as $hotel)
                                         <tr>
-                                            <td>{{ $transaction['created_at'] }}</td>
-                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>{{ $hotel['created_at'] }}</td>
+                                            <td>{{ $hotel['no_inv'] }}</td>
                                             <td>
                                                     <span class="badge badge-rounded badge-primary">
-                                                        {{ strtoupper($transaction['service_name']) }}
+                                                        {{ strtoupper($hotel->services->name ?? '-') }}
                                                     </span>
                                             </td>
-                                            <td>{{ $transaction['user'] }}</td>
-                                            <td>{{ $transaction['transaction_name'] }} -
-                                                {{ $transaction['transaction_desc'] }}</td>
-                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td class="text-success text-center">Rp. {{number_format(( $transaction['transaction_price'] * 15 / 100) + $transaction['fee'], 0,',','.') }}</td>
-                                            <td class=" text-center">@currency($transaction['transaction_price'] - ($transaction['transaction_price'] * 15 / 100))</td>
-                                            <td class=" text-center">@currency($transaction['transaction_price'] )</td>
+                                            <td>{{ $hotel->user->name ?? '-' }}</td>
+                                            <td>
+                                                @if($all->service_id == 8)
+                                                    Reservasi Hostel {{ $all->detailTransactionHotel->first()->hotel->name ?? '-' }}
+                                                    Pada Kamar {{$all->detailTransactionHotel->first()->hotelRoom?->name ?? '-'}}
+                                                @elseif($all->service_id == 7)
+                                                    Reservasi Hostel {{ $all->detailTransactionHostel->first()->hostel->name ?? '-' }}
+                                                    Pada Kamar {{$all->detailTransactionHostel->first()->hostelRoom?->name ?? '-'}}
+                                                @endif
+                                                {{ $hotel['transaction_name'] }} -
+                                                {{ $hotel['transaction_desc'] }}
+                                            </td>
+                                            <td>{!! $hotel['payment_method'] ? str_replace('_', ' ', $hotel['payment_method']) : '-' !!}</td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($hotel->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-success text-center">
+                                                Rp. {{number_format(( $hotel['transaction_price'] * 15 / 100) + $hotel['fee'], 0,',','.') }}</td>
+                                            <td class=" text-center">@currency($hotel['transaction_price'] - ($hotel['transaction_price'] * 15 / 100))</td>
+                                            <td class=" text-center">@currency($hotel['transaction_price'] )</td>
+                                        </tr>
                                     @endforeach
 
-                                    @foreach ($detailTransactionHostel as $transaction)
+                                    @foreach ($transaksiHostel as $hostel)
                                         <tr>
-                                            <td>{{ $transaction['created_at'] }}</td>
-                                            <td>{{ $transaction['no_inv'] }}</td>
+                                            <td>{{ $hostel['created_at'] }}</td>
+                                            <td>{{ $hostel['no_inv'] }}</td>
                                             <td>
                                                     <span class="badge badge-rounded badge-primary">
-                                                        {{ strtoupper($transaction['service_name']) }}
+                                                        {{ strtoupper($hotel->services->name ?? '-') }}
                                                     </span>
                                             </td>
-                                            <td>{{ $transaction['user'] }}</td>
-                                            <td>{{ $transaction['transaction_name'] }} -
-                                                {{ $transaction['transaction_desc'] }}</td>
-                                            <td>{!! $transaction['payment_method'] ? str_replace('_', ' ', $transaction['payment_method']) : '-' !!}</td>
-                                            <td class="text-success text-center">Rp. {{number_format(( $transaction['transaction_price'] * 15 / 100) + $transaction['fee'], 0,',','.') }}</td>
-                                            <td class=" text-center">@currency($transaction['transaction_price'] - ($transaction['transaction_price'] * 15 / 100))</td>
-                                            <td class=" text-center">@currency($transaction['transaction_price'] )</td>
+                                            <td>{{ $hostel->user->name ?? '-' }}</td>
+                                            <td>{{ $hostel['transaction_name'] }} -
+                                                {{ $hostel['transaction_desc'] }}</td>
+                                            <td>{!! $hostel['payment_method'] ? str_replace('_', ' ', $hostel['payment_method']) : '-' !!}</td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($hotel->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-success text-center">
+                                                Rp. {{number_format(( $hostel['transaction_price'] * 15 / 100) + $hostel['fee'], 0,',','.') }}</td>
+                                            <td class=" text-center">@currency($hostel['transaction_price'] - ($hostel['transaction_price'] * 15 / 100))</td>
+                                            <td class=" text-center">@currency($hostel['transaction_price'] )</td>
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -224,6 +279,7 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
+                                        <th>Point Digunakan Customer</th>
                                         <th>Fee Admin</th>
                                         <th>Grand Total</th>
                                     </tr>
@@ -240,10 +296,18 @@
                                                     </span>
                                             </td>
                                             <td>{{$transaction->user->name}}</td>
-                                            <td>Pembayaran Tagihan {{ strtoupper($transaction->services->name ?? '-') }} Ke Nomor Pelanggan {{$transaction->detailTransactionPPOB->first()->nomor_pelanggan ?? '-'}}
+                                            <td>Pembayaran Tagihan {{ strtoupper($transaction->services->name ?? '-') }}
+                                                Ke Nomor
+                                                Pelanggan {{$transaction->detailTransactionPPOB->first()->nomor_pelanggan ?? '-'}}
                                                 {{ $transaction['transaction_desc'] }}</td>
+
                                             <td>{{$transaction->payment_method . " - " . $transaction->payment_channel}}</td>
-                                            <td>@currency($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0)</td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($transaction->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td>
+                                                @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0)  + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                            </td>
                                             <td>@currency($transaction->total)</td>
                                     @endforeach
 
@@ -266,6 +330,7 @@
                                         <th>Customer</th>
                                         <th>Deskripsi</th>
                                         <th>Metode Pembayaran</th>
+                                        <th>Point Digunakan Customer</th>
                                         <th>Fee Admin</th>
                                         <th>Grand Total</th>
                                     </tr>
@@ -282,10 +347,18 @@
                                                     </span>
                                             </td>
                                             <td>{{$transaction->user->name}}</td>
-                                            <td>Pembelian {{ strtoupper($transaction->detailTransactionTopUp->first()->product->description ?? '-') }} Ke Nomor {{$transaction->detailTransactionTopUp->first()->nomor_telfon ?? '-'}}
+                                            <td>
+                                                Pembelian {{ strtoupper($transaction->detailTransactionTopUp->first()->product->description ?? '-') }}
+                                                Ke
+                                                Nomor {{$transaction->detailTransactionTopUp->first()->nomor_telfon ?? '-'}}
                                                 {{ $transaction['transaction_desc'] }}</td>
                                             <td>{{$transaction->payment_method . " - " . $transaction->payment_channel}}</td>
-                                            <td>@currency($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0)</td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($hotel->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td>
+                                                @currency(($all->detailTransactionTopUp->first()->fee_travelsya ?? 0)  + ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                            </td>
                                             <td>@currency($transaction->total)</td>
                                     @endforeach
 

@@ -54,7 +54,7 @@ class HotelController extends Controller
                 AND ? <= guest
                 AND ? >= reservation_start
             ) > 0', [$request->end_date, $request->start]);
-            
+
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
                 $query->whereIn('facility_id', $request->facility);
@@ -166,7 +166,7 @@ class HotelController extends Controller
             ->select('hotel_ratings.*', 'hotel_ratings.created_at as created' , 'users.*')
             ->limit(30)
             ->get();
-        
+
         Carbon::setLocale('id');
         // $formatted_created_at = null;
 
@@ -177,7 +177,7 @@ class HotelController extends Controller
         }
 
         $data['avg_rate'] = $ratings->avg('rate');
-        
+
         $data['rating'] = $ratings;
 
         $data['request'] = $request->all();
@@ -237,6 +237,7 @@ class HotelController extends Controller
             'type' => 'Kode Unik',
             'value' => $request->uniqueCode,
         ];;
+
         if (!$fees) return 'Point invalid';
         $qty = (date_diff(date_create($request->start), date_create($request->end))->days);
         if ($qty <= 0) return 'Date must be forward';
@@ -247,8 +248,8 @@ class HotelController extends Controller
                 [
                     "product_id" => $request->hostel_room_id,
                     "name" => $request->name,
-                    "price" =>   $sellingPrice,
-                    "quantity" => $qty,
+                    "price" =>   $sellingPrice * $qty * $request->room,
+                    "quantity" => 1,
                 ]
             ],
             'amount' => $amount,
@@ -263,7 +264,6 @@ class HotelController extends Controller
             ],
             'fees' => $fees
         ]);
-
         DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
 
             // dd($uniqueCode);

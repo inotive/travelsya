@@ -15,11 +15,12 @@ class Setting
         $total = 0;
 
         $admin = $fees[0]['value'];
-        if (count($fees) == 2) {
+        $point = 0;
+        if (isset($fees[1]['value'])) {
             $point = $fees[1]['value'];
         }
-        $total = $total + ($price * $qty * $room);
-        $grandTotal = $total + $admin + (isset($point) ? $point : 0);
+        $total = $price * $qty * $room;
+        $grandTotal = $total + $admin + $point + $fees[2]['value'];
         return $grandTotal;
     }
 
@@ -39,7 +40,7 @@ class Setting
             'value' => $feeValue,
         ]);
 
-        if ($point == 1) {
+        if ($point) {
             // cek point
             $user = User::find($userid);
             // if ($user && $user->point <= 0) {
