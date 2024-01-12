@@ -40,7 +40,7 @@ class Setting
             'value' => $feeValue,
         ]);
 
-        if ($point) {
+        if (isset($point)) {
             // cek point
             $user = User::find($userid);
             // if ($user && $user->point <= 0) {
