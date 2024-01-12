@@ -359,7 +359,7 @@ class HotelController extends Controller
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hotel') . "-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
+        $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
 
         //cekpoint
         // if (!$fees)
