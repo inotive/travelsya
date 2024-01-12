@@ -18,10 +18,16 @@ class DashboardController extends Controller
     public function index()
     {
         $card['partner'] = User::where('role', 1)->count();
-        $card['transactionToday'] = Transaction::whereDate('created_at', today())->count();
+        $card['transactionToday'] = Transaction::whereDate('created_at', today())
+            ->where('status', '=', 'PAID')
+            ->count();
 
-        $sumDayTransaction = Transaction::whereDate('created_at', date('y-m-d'))->sum('total');
-        $sumMonthTransaction = Transaction::whereMonth('created_at', date('m'))->sum('total');
+        $sumDayTransaction = Transaction::whereDate('created_at', date('y-m-d'))
+            ->where('status', '=', 'PAID')
+            ->sum('total');
+        $sumMonthTransaction = Transaction::whereMonth('created_at', date('m'))
+            ->where('status', '=', 'PAID')
+            ->sum('total');
 
         $card['sumDayTransaction'] = General::rp($sumDayTransaction);
 
