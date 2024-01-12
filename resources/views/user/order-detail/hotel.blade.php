@@ -318,7 +318,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Hotel</div>
                                                     <div class="fs-8 fw-bold">
-                                                        {{ number_format($biayaHotel, 0, ',', '.') }}</div>
+                                                        {{ number_format($transactionHotel->transaction->total + $biayaPenanganan, 0, ',', '.') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Penanganan</div>
@@ -360,7 +360,7 @@
                                                     @php
                                                         $totalBiayaHotel = $biayaHotel + $biayaPenanganan;
                                                     @endphp
-                                                    RP {{ number_format($totalBiayaHotel, 0, ',', '.') }}
+                                                    RP {{ number_format($transactionHotel->transaction->total, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

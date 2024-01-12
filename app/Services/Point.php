@@ -45,6 +45,21 @@ class Point
             'flow' => "credit"
         ]);
     }
+    public function pakaiPoint($id, $point, $transid)
+    {
+        $user = User::find($id);
+
+        $sumpoint = $user->point - $point;
+        $update = $user->update(['point' => $sumpoint < 0 ? 0 : $sumpoint]);
+
+        HistoryPoint::create([
+            'user_id' => $user->id,
+            'point' => $point,
+            'transaction_id' => $transid,
+            'date' => now(),
+            'flow' => "debit"
+        ]);
+    }
 
     public function cekPoint($id)
     {

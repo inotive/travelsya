@@ -313,7 +313,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Hostel</div>
                                                     <div class="fs-8 fw-bold">
-                                                        {{ number_format($transactionHostel->rent_price * $diffInDays * $transactionHostel->room, 0, ',', '.') }}
+                                                        {{ number_format($transactionHostel->transaction->total + $transactionHostel->fee_admin + $transactionHostel->kode_unik, 0, ',', '.') }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
@@ -359,7 +359,7 @@
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
                                                     RP
-                                                    {{ number_format($grandTotal, 0, ',', '.') }}
+                                                    {{ number_format($transactionHostel->transaction->total, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

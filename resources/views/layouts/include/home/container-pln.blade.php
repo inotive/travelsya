@@ -46,7 +46,7 @@
                     <div class="col-6">
                         <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
                         @auth
-                            <button type="submit" class="btn btn-danger mt-8 w-1000 d-none" id="btnBayar">Bayar</button>
+                            <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
                         @endauth
                         @guest
                             <a href="{{ route('login') }}" class="btn btn-danger mt-8 w-100 d-none" id="btnLogin">Login
@@ -133,8 +133,8 @@
 
                             $('#productPLN').removeAttr('disabled');
                             // $('#btnPeriksaPLN').attr('type', 'submit');
-                            // $('#btnPeriksaPLN').addClass('d-none');
-                            // $('#btnBayar').removeClass('d-none');
+                            $('#btnPeriksaPLN').addClass('d-none');
+                            $('#btnBayar').removeClass('d-none');
                             $('#btnLogin').removeClass('d-none');
                         }
                     });
@@ -146,8 +146,9 @@
                     $('#productPLN').attr('disabled', true);
                     // $('#btnPeriksaPLN').text('Periksa');
 
-                    // $('#btnPeriksaPLN').removeClass('d-none');
-                    // $('#btnBayar').addClass('d-none');
+                    $('#btnPeriksaPLN').removeClass('d-none');
+                    $('#btnBayar').addClass('d-none');
+                    $('#btnLogin').addClass('d-none');
                 }
             });
 
