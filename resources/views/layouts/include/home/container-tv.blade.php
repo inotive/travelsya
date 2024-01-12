@@ -65,8 +65,22 @@
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
+                    @auth
+                    <div class="col-12 d-flex justify-content-between d-none">
+                        <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai
+                            Point
+                        </p>
+                        <h4>
+                            <div class="form-check form-switch form-check-custom form-check-solid">
+                                <input class="form-check-input pakai-point" type="checkbox" name=""
+                                    id="tv" />
+                            </div>
+                        </h4>
+                    </div>
+                    <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="tvPoint"
+                        disabled>
+                @endauth
                     <div class="col-12">
                         @auth
                         <button type="submit" class="btn btn-danger w-100" id="btnSubmiTV" disabled>Pembayaran</button>
@@ -174,6 +188,21 @@
                         $('#btnPeriksaTV').html('Pembayaran');
                     }
                 });
+            });
+        });
+
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#tv").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#tvPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#tvPoint").prop("disabled", true);
+                    $("#tvPoint").remove();
+                }
             });
         });
 </script>

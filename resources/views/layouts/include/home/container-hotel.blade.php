@@ -1,3 +1,22 @@
+<div class="modal" tabindex="-1" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pemberitahuan!!!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.</p>
+            </div>
+            <div class="modal-footer">
+                {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> --}}
+                <button type="button" class="btn btn-primary" id="okButton">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <form action="{{ route('hotels.index') }}" method="get">
 
     <div class="row" x-data="{
@@ -172,48 +191,50 @@
             },
         });
 
-        let guest = document.getElementById('guest');
-        guest.addEventListener('change', function() {
-            let room = document.getElementById('room').value;
-            if (guest.value < room) {
-                alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
-                guest.value = room;
-                return;
-            }
-        });
+        // let guest = document.getElementById('guest');
+        // guest.addEventListener('change', function() {
+        //     let room = document.getElementById('room').value;
+        //     if (guest.value < room) {
+        //         alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
+        //         guest.value = room;
+        //         return;
+        //     }
+        // });
 
         function handleSelectRoom(x) {
-            console.log(x.value);
             let roomInput = document.getElementById('room');
             let guest = document.getElementById('guest');
-
-            // let room = parseInt(roomInput.value);
-            // let guest = parseInt(guestInput.value);
-
             guest.value = x.value
             // if (guest.value <  x.value) {
             //     // alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
             //     return;
             // }
 
-            // x.value=guest;
-
-            console.log(guest.value, x.value);
-
         }
 
         function handleSubmit() {
-            let room = document.getElementById('room').value;
-            let guest = document.getElementById('guest').value;
+            let room = $('#room').val();
+            let guest = $('#guest').val();
 
-            if (guest < room) {
-                alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
-                guest = room
+            // if (guest < room) {
+            //     alert('Total Tamu harus Lebih Dari Total Kamar atau sama dengan Total Kamar.');
+            //     guest = room
+            //     return;
+            // }
+
+            if (guest > room && guest >= 10) {
+                $('#myModal').modal('show');
+                room = guest;
+                $('#room').val(room);
                 return;
             }
 
-            console.log(room, guest);
+
 
         }
+
+        $('#okButton').on('click', function() {
+            $('#myModal').modal('hide');
+        });
     </script>
 @endpush

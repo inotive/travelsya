@@ -47,7 +47,8 @@
                                     <tbody>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                            <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span></td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span>
+                                            </td>
                                         </tr>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
@@ -64,16 +65,31 @@
                             </div>
 
                         </div>
+                        @auth
+                            <div class="col-12 d-flex justify-content-between">
+                                <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai
+                                    Point
+                                </p>
+                                <h4>
+                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input pakai-point" type="checkbox" name=""
+                                            id="pdam" />
+                                    </div>
+                                </h4>
+                            </div>
+                            <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="pdamPoint"
+                                disabled>
+                        @endauth
                         <div class="col-12">
                             @auth
-                            <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM"
-                                disabled>Pembayaran</button>
+                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM"
+                                    disabled>Pembayaran</button>
                             @endauth
 
                             @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
+                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                    Login Terlebih Dahulu
+                                </a>
                             @endguest
                         </div>
                     </div>
@@ -96,18 +112,18 @@
 
 
 @push('add-style')
-<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function() {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.pdam') }}",
-                success: function (response) {
-                    $.each(response, function (key, value) {
+                success: function(response) {
+                    $.each(response, function(key, value) {
                         $('#productPDAM').append($('<option>', {
                             value: value.id,
                             text: value.description
@@ -116,17 +132,17 @@
                 }
             });
 
-            $('#noPelangganPDAM').on('keyup', function () {
+            $('#noPelangganPDAM').on('keyup', function() {
                 $('.textAlert').hide();
             });
 
             $('#detailPDAM').hide();
 
-            $('#btnPeriksaPDAM').on('click', function () {
+            $('#btnPeriksaPDAM').on('click', function() {
                 var noPelangganPDAM = $('#noPelangganPDAM').val();
                 console.log(noPelangganPDAM);
 
-                if(noPelangganPDAM == '') {
+                if (noPelangganPDAM == '') {
                     $('.textAlert').show();
                     return false;
                 }
@@ -134,7 +150,9 @@
                 $('#alertContainer').empty()
                 $('#detailPDAM').hide();
                 $('#btnPeriksaPDAM').attr('disabled', true);
-                $('#btnPeriksaPDAM').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                $('#btnPeriksaPDAM').html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
 
                 $.ajax({
                     type: "POST",
@@ -143,7 +161,7 @@
                         'no_pelanggan': noPelangganPDAM,
                         'nom': 'CEKPDAMBLP',
                     },
-                    success: function (responseTagihan) {
+                    success: function(responseTagihan) {
                         console.log(responseTagihan);
                         var simulateFeePDAM = parseInt(responseTagihan.data.fee);
 
@@ -151,9 +169,12 @@
                         var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
 
                         $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
-                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
-                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
-                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
+                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(
+                            simulateAmountPDAM));
+                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(
+                            simulateFeePDAM));
+                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(
+                            simulateTotalPDAM));
 
                         $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
                         $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
@@ -169,7 +190,9 @@
                     error: function(xhr, status, error) {
                         if (xhr.status === 400) {
                             // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
-                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+                            var alertDiv = $(
+                                `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
+                                );
 
                             // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertContainer').empty().append(alertDiv);
@@ -182,9 +205,24 @@
                 });
             });
         });
-</script>
 
-{{-- <script>
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#pdam").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#pdamPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#pdamPoint").prop("disabled", true);
+                    $("#pdamPoint").remove();
+                }
+            });
+        });
+    </script>
+
+    {{-- <script>
     $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 

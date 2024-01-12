@@ -3,7 +3,8 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
@@ -26,7 +27,8 @@
                         </label>
 
                         <!--begin::Input-->
-                        <input type="text" id="noPelangganBPJS" class="form-control form-control-lg" name="noPelangganBPJS" placeholder="Masukan nomor BPJS" value=""/>
+                        <input type="text" id="noPelangganBPJS" class="form-control form-control-lg"
+                            name="noPelangganBPJS" placeholder="Masukan nomor BPJS" value="" />
                         <small class="text-danger textAlert">No. BPJS harus terisi</small>
                         <!--end::Input-->
 
@@ -48,7 +50,8 @@
                                     <tbody>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                            <td class="text-right" colspan="3"><span id="namaPelangganBPJS"></span></td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganBPJS"></span>
+                                            </td>
                                         </tr>
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
@@ -63,11 +66,26 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
+                        @auth
+                            <div class="col-12 d-flex justify-content-between d-none">
+                                <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai
+                                    Point
+                                </p>
+                                <h4>
+                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input pakai-point" type="checkbox" name=""
+                                            id="bpjs" />
+                                    </div>
+                                </h4>
+                            </div>
+                            <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="bpjsPoint"
+                                disabled>
+                        @endauth
                         <div class="col-12">
                             @auth
-                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitBPJS" disabled>Pembayaran</button>
+                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitBPJS"
+                                    disabled>Pembayaran</button>
                             @endauth
 
                             @guest
@@ -98,73 +116,95 @@
 @endpush
 
 @push('add-script')
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function() {
 
-        $('#noPelangganBPJS').on('keyup', function () {
-            $('.textAlert').hide();
+            $('#noPelangganBPJS').on('keyup', function() {
+                $('.textAlert').hide();
+            });
+
+            $('#detailBPJS').hide();
+
+            $('#btnPeriksaBPJS').on('click', function() {
+                var noPelangganBPJS = $('#noPelangganBPJS').val();
+
+                if (noPelangganBPJS == '') {
+                    $('.textAlert').show();
+                    return false;
+                }
+
+                $('#alertBPJS').empty()
+                $('#detailBPJS').hide();
+                $('#btnPeriksaBPJS').attr('disabled', true);
+                $('#btnPeriksaBPJS').html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
+
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('product.bpjs') }}",
+                    data: {
+                        'no_pelanggan': noPelangganBPJS,
+                        'nom': 'CEKBPJSKS',
+                    },
+                    success: function(responseTagihan) {
+
+                        var simulateFeeBPJS = parseInt(responseTagihan.data.fee);
+
+                        var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
+                        var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
+
+                        $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(
+                            simulateAmountBPJS));
+                        $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(
+                            simulateFeeBPJS));
+                        $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(
+                            simulateTotalBPJS));
+
+                        $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
+                        $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
+                        $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
+                        $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
+
+                        $('#btnPeriksaBPJS').removeAttr('disabled');
+                        $('#btnPeriksaBPJS').text('Periksa');
+
+                        $('#btnSubmitBPJS').removeAttr('disabled');
+
+                        $('#detailBPJS').show();
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400) {
+                            var alertBPJS = $(
+                                `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
+                                );
+
+                            $('#alertBPJS').empty().append(alertBPJS);
+                        }
+
+                        $('#btnPeriksaBPJS').removeAttr('disabled');
+                        $('#btnPeriksaBPJS').html('Periksa');
+                    }
+                });
+            });
         });
 
-        $('#detailBPJS').hide();
-
-        $('#btnPeriksaBPJS').on('click', function () {
-            var noPelangganBPJS = $('#noPelangganBPJS').val();
-
-            if(noPelangganBPJS == '') {
-                $('.textAlert').show();
-                return false;
-            }
-
-            $('#alertBPJS').empty()
-            $('#detailBPJS').hide();
-            $('#btnPeriksaBPJS').attr('disabled', true);
-            $('#btnPeriksaBPJS').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('product.bpjs') }}",
-                data: {
-                    'no_pelanggan': noPelangganBPJS,
-                    'nom': 'CEKBPJSKS',
-                },
-                success: function (responseTagihan) {
-
-                    var simulateFeeBPJS = parseInt(responseTagihan.data.fee);
-
-                    var simulateAmountBPJS = parseInt(responseTagihan.data.tagihan);
-                    var simulateTotalBPJS = simulateAmountBPJS + simulateFeeBPJS;
-
-                    $('#namaPelangganBPJS').text(responseTagihan.data.nama_pelanggan);
-                    $('#totalTagihanBPJS').text(new Intl.NumberFormat('id-ID').format(simulateAmountBPJS));
-                    $('#biayaAdminBPJS').text(new Intl.NumberFormat('id-ID').format(simulateFeeBPJS));
-                    $('#totalBayarBPJS').text(new Intl.NumberFormat('id-ID').format(simulateTotalBPJS));
-
-                    $('#inputNamaPelangganBPJS').val(responseTagihan.data.nama_pelanggan);
-                    $('#inputTotalTagihanBPJS').val(simulateAmountBPJS);
-                    $('#inputBiayaAdminBPJS').val(simulateFeeBPJS);
-                    $('#inputTotalBayarBPJS').val(simulateTotalBPJS);
-
-                    $('#btnPeriksaBPJS').removeAttr('disabled');
-                    $('#btnPeriksaBPJS').text('Periksa');
-
-                    $('#btnSubmitBPJS').removeAttr('disabled');
-
-                    $('#detailBPJS').show();
-                },
-                error: function(xhr, status, error) {
-                    if (xhr.status === 400) {
-                        var alertBPJS = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
-
-                        $('#alertBPJS').empty().append(alertBPJS);
-                    }
-
-                    $('#btnPeriksaBPJS').removeAttr('disabled');
-                    $('#btnPeriksaBPJS').html('Periksa');
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#bpjs").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#bpjsPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#bpjsPoint").prop("disabled", true);
+                    $("#bpjsPoint").remove();
                 }
             });
         });
-    });
-</script>
+    </script>
 
     {{-- <script>
         $(document).ready(function() {
