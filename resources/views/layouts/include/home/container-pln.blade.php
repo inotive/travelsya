@@ -21,7 +21,7 @@
                             <option value="token">Token Listrik</option>
                         </select>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 d-none" id="nominal">
                         <label class="fs-5 fw-semibold mb-2">
                             <span>Nominal</span>
                         </label>
@@ -43,13 +43,26 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPLN">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPLN">
                     </div>
-                    <div class="col-6">
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPLN">Periksa</button>
+                    @auth
+                        <div class="col-12 d-flex justify-content-between d-none" id="plnPointItem">
+                            <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai Point
+                            </p>
+                            <h4>
+                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input pakai-point" type="checkbox" name=""
+                                        id="pln" />
+                                </div>
+                            </h4>
+                        </div>
+                        <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="plnPoint" disabled>
+                    @endauth
+                    <div class="col-12">
+                        <button type="button" class="btn btn-danger mx-4 w-100" id="btnPeriksaPLN">Periksa</button>
                         @auth
-                            <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
+                            <button type="submit" class="btn btn-danger mt-4 w-100 d-none" id="btnBayar">Bayar</button>
                         @endauth
                         @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger mt-8 w-100 d-none" id="btnLogin">Login
+                            <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100 d-none" id="btnLogin">Login
                                 Dulu</a>
                         @endguest
                     </div>
@@ -117,11 +130,13 @@
 
             $('#categoryPLN').on('change', function() {
                 if ($(this).val() == 'token') {
+                    $('#plnPointItem').removeClass('d-none');
                     $.ajax({
                         type: "GET",
                         url: "/product/product-pln",
                         success: function(response) {
                             $('#productPLN').empty();
+                            $('#nominal').removeClass('d-none');
 
                             $.each(response, function(key, value) {
                                 $('#productPLN').append($('<option>', {
@@ -145,8 +160,9 @@
                     $('#productPLN').empty();
                     $('#productPLN').attr('disabled', true);
                     // $('#btnPeriksaPLN').text('Periksa');
-
+                    $('#nominal').addClass('d-none');
                     $('#btnPeriksaPLN').removeClass('d-none');
+                    $('#plnPointItem').addClass('d-none');
                     $('#btnBayar').addClass('d-none');
                     $('#btnLogin').addClass('d-none');
                 }
@@ -190,11 +206,17 @@
                         $('#totalBayarPLN').text(new Intl.NumberFormat('id-ID').format(
                             simulateTotalPLN));
 
+
+
                         $('#inputNamaPelangganPLN').val(response.data.no_pelanggan);
                         $('#inputTotalTagihanPLN').val(simulateAmountPLN);
                         $('#inputBiayaAdminPLN').val(simulateFeePLN);
                         $('#inputTotalBayarPLN').val(simulateTotalPLN);
 
+
+                        $('#plnPointItem').removeClass('d-none');
+                        $('#btnBayar').removeClass('d-none');
+                        // $('#btnPeriksaPLN').addClass('d-none');
                         $('#btnPeriksaPLN').removeAttr('disabled');
                         $('#btnPeriksaPLN').text('Periksa');
 
@@ -217,6 +239,21 @@
                         $('#btnPeriksaPLN').text('Periksa');
                     }
                 });
+            });
+        });
+
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#pln").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#plnPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#plnPoint").prop("disabled", true);
+                    $("#plnPoint").remove();
+                }
             });
         });
     </script>

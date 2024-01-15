@@ -50,6 +50,7 @@ class ProductController extends Controller
     public function paymentPulsaData(Request $request)
     {
         $data = $request->all();
+        // dd($data);
         $point = new Point;
         $userPoint = $point->cekPoint(auth()->user()->id);
 
@@ -73,7 +74,7 @@ class ProductController extends Controller
 
 
         $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
-        $sellingPriceFinal = $sellingPrice < 0 ? 0 : $sellingPrice;
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -148,7 +149,6 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        // dd($requestMymili);
 
 
         $status = '';
@@ -215,7 +215,10 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+        $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
@@ -223,7 +226,7 @@ class ProductController extends Controller
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganBPJS']),
-                    "price" => $data['totalTagihan'],
+                    "price" => $sellingPriceFinal,
                     "quantity" => 1,
                 ]
             ],
@@ -362,8 +365,9 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-
-        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+        $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
@@ -371,7 +375,7 @@ class ProductController extends Controller
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPDAM']),
-                    "price" => $data['totalTagihan'],
+                    "price" => $sellingPriceFinal,
                     "quantity" => 1,
                 ]
             ],
@@ -508,16 +512,17 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-        $amount = $setting->getAmount($product->price, 1, $fees, 1);
 
-
+        $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+        $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
-                    "price" => $product->price,
+                    "price" => $sellingPriceFinal,
                     "quantity" => 1,
                 ]
             ],
@@ -657,7 +662,10 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+        $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
@@ -665,7 +673,7 @@ class ProductController extends Controller
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganTV']),
-                    "price" => $data['totalTagihan'],
+                    "price" => $sellingPriceFinal,
                     "quantity" => 1,
                 ]
             ],

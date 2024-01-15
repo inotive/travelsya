@@ -20,7 +20,7 @@
                         <select name="jenis_ewallet" id="jenis_ewallet" class="form-select form-select-lg" required>
                             <option value="">Pilih E-Wallet</option>
                             @foreach ($ewallets as $ewallet)
-                            <option value="{{ $ewallet }}">{{ $ewallet }}</option>
+                                <option value="{{ $ewallet }}">{{ $ewallet }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -39,19 +39,30 @@
                         <input type="text" id="notelp" class="form-control form-control-lg" name="notelp"
                             placeholder="Masukan nomor telfon" required />
                     </div>
-
                 </div>
-
+                @auth
+                <div class="col-12 d-flex justify-content-between">
+                    <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai Point
+                    </p>
+                    <h4>
+                        <div class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input pakai-point" type="checkbox" name=""
+                                id="wallet" />
+                        </div>
+                    </h4>
+                </div>
+                <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="walletPoint" disabled>
+            @endauth
                 <div class="row">
                     <div class="col">
                         @auth
-                        <button type="submit" class="btn btn-danger w-100">Bayar</button>
+                            <button type="submit" class="btn btn-danger mt-4 w-100">Bayar</button>
                         @endauth
 
                         @guest
-                        <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                            Login Terlebih Dahulu
-                        </a>
+                            <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100">
+                                Login Terlebih Dahulu
+                            </a>
                         @endguest
                     </div>
                 </div>
@@ -65,44 +76,45 @@
 </div>
 
 @push('add-style')
-<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-<script>
-    $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-        $('#jenis_ewallet').change(function (e) {
-            e.preventDefault();
+            $('#jenis_ewallet').change(function(e) {
+                e.preventDefault();
 
-            const jenis_ewallet = $(this).val();
+                const jenis_ewallet = $(this).val();
 
-            if(jenis_ewallet !== '') {
-                $.ajax({
-                    type: "GET",
-                    url: "ewallet/products/"+jenis_ewallet,
-                    success: function (response) {
-                        $('#produk_ewallet').empty();
+                if (jenis_ewallet !== '') {
+                    $.ajax({
+                        type: "GET",
+                        url: "ewallet/products/" + jenis_ewallet,
+                        success: function(response) {
+                            $('#produk_ewallet').empty();
 
-                        // Menambahkan pilihan berdasarkan respons
-                        $.each(response, function (key, value) {
-                            // Format Rupiah
-                            var formattedPrice = new Intl.NumberFormat("id-ID", {
-                                style: "currency",
-                                currency: "IDR",
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 0
-                            }).format(value.price);
+                            // Menambahkan pilihan berdasarkan respons
+                            $.each(response, function(key, value) {
+                                // Format Rupiah
+                                var formattedPrice = new Intl.NumberFormat("id-ID", {
+                                    style: "currency",
+                                    currency: "IDR",
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0
+                                }).format(value.price);
 
-                            $('#produk_ewallet').append($('<option>', {
-                                value: value.id,
-                                text: value.name +' - '+ formattedPrice
-                            }));
-                        });
-                    }
-                });
-            }
-        });
+                                $('#produk_ewallet').append($('<option>', {
+                                    value: value.id,
+                                    text: value.name + ' - ' +
+                                        formattedPrice
+                                }));
+                            });
+                        }
+                    });
+                }
+            });
 
             // const {
             //     getOperator
@@ -156,6 +168,24 @@
             //     }
             // })
 
-        })
-</script>
+        });
+
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#wallet").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#walletPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#walletPoint").prop("disabled", true);
+                    $("#walletPoint").remove();
+                }
+            });
+        });
+
+    </script>
+
+   
 @endpush
