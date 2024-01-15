@@ -36,10 +36,12 @@ class TransactionController extends Controller
         $user_id = \Auth::user()->id;
 
 
+
         // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
         //     ->where('user_id', $user_id)
         //     ->orderBy('id', 'desc')
         //     ->get();
+        // $transaction = Transaction::where('status', 'PAID')
         $transaction = Transaction::where('user_id', $user_id)->where('status', 'PAID')
             ->orderByDesc('created_at')
             ->get();
@@ -65,7 +67,7 @@ class TransactionController extends Controller
         if (count($transaction)) {
             return ResponseFormatter::success($responsTransaction, 'Data successfully loaded');
         } else {
-            return ResponseFormatter::error(null, 'Data not found');
+            return ResponseFormatter::success(null, 'Anda Belum Memiliki Transaksi');
         }
         try {
         } catch (\Throwable $th) {

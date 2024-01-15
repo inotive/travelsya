@@ -75,7 +75,7 @@
                                 <h4>
                                     <div class="form-check form-switch form-check-custom form-check-solid">
                                         <input class="form-check-input pakai-point" type="checkbox" name=""
-                                            id="bpjs" />
+                                            {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="bpjs" />
                                     </div>
                                 </h4>
                             </div>
@@ -138,7 +138,7 @@
                 $('#btnPeriksaBPJS').attr('disabled', true);
                 $('#btnPeriksaBPJS').html(
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-                    );
+                );
 
                 $.ajax({
                     type: "POST",
@@ -178,7 +178,7 @@
                         if (xhr.status === 400) {
                             var alertBPJS = $(
                                 `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
-                                );
+                            );
 
                             $('#alertBPJS').empty().append(alertBPJS);
                         }

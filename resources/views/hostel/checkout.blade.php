@@ -119,6 +119,7 @@
                                             <div
                                                 class="form-check form-switch form-check-custom form-check-solid float-end">
                                                 <input class="form-check-input pakai-point" type="checkbox"
+                                                    {{ auth()->user()->point == 0 ? 'disabled' : '' }}
                                                     id="flexSwitchChecked" />
                                             </div>
                                         </td>

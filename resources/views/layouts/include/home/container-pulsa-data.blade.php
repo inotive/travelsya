@@ -51,7 +51,7 @@
                             <h4>
                                 <div class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input pakai-point" type="checkbox" name=""
-                                        id="flexSwitchChecked" />
+                                        {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="flexSwitchChecked" />
                                 </div>
                             </h4>
                         </div>
@@ -133,7 +133,7 @@
             if (/^0812|^0822|^0852|^0853|^0811|^0813|^0851|^0821/.test(nomerHP)) {
                 $('#logo_provider').attr('src',
                     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Telkomsel_2021_icon.svg/1200px-Telkomsel_2021_icon.svg.png'
-                    );
+                );
                 provider = 'telkomsel'
             }
 
@@ -161,7 +161,7 @@
             if (/^0831|^0832|^0833|^0838/.test(nomerHP)) {
                 $('#logo_provider').attr('src',
                     'https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Axis_logo_2015.svg/2560px-Axis_logo_2015.svg.png'
-                    );
+                );
                 provider = 'axis'
             }
 

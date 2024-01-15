@@ -41,18 +41,18 @@
                     </div>
                 </div>
                 @auth
-                <div class="col-12 d-flex justify-content-between">
-                    <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai Point
-                    </p>
-                    <h4>
-                        <div class="form-check form-switch form-check-custom form-check-solid">
-                            <input class="form-check-input pakai-point" type="checkbox" name=""
-                                id="wallet" />
-                        </div>
-                    </h4>
-                </div>
-                <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="walletPoint" disabled>
-            @endauth
+                    <div class="col-12 d-flex justify-content-between">
+                        <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai Point
+                        </p>
+                        <h4>
+                            <div class="form-check form-switch form-check-custom form-check-solid">
+                                <input class="form-check-input pakai-point" type="checkbox" name=""
+                                    {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="wallet" />
+                            </div>
+                        </h4>
+                    </div>
+                    <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="walletPoint" disabled>
+                @endauth
                 <div class="row">
                     <div class="col">
                         @auth
@@ -184,8 +184,5 @@
                 }
             });
         });
-
     </script>
-
-   
 @endpush

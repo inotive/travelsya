@@ -67,17 +67,31 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
+                        @auth
+                            <div class="col-12 d-flex justify-content-between d-none">
+                                <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai
+                                    Point
+                                </p>
+                                <h4>
+                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input pakai-point" type="checkbox" name=""
+                                            {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="pajak" />
+                                    </div>
+                                </h4>
+                            </div>
+                            <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="pajakPoint"
+                                disabled>
+                        @endauth
                         <div class="col-12">
                             @auth
-                            <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+                                <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
                             @endauth
 
                             @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger w-100">
-                                Login Terlebih Dahulu
-                            </a>
+                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                    Login Terlebih Dahulu
+                                </a>
                             @endguest
                         </div>
                     </div>
@@ -99,20 +113,20 @@
 
 
 @push('add-style')
-<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function() {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.tax') }}",
-                success: function (response) {
+                success: function(response) {
                     $('#productPajak').empty();
 
-                    $.each(response, function (key, value) {
+                    $.each(response, function(key, value) {
                         $('#productPajak').append($('<option>', {
                             value: value.kode,
                             text: value.description
@@ -121,17 +135,17 @@
                 }
             });
 
-            $('#noPelangganPajak').on('keyup', function () {
+            $('#noPelangganPajak').on('keyup', function() {
                 $('.textAlert').hide();
             });
 
 
             $('#detailPajak').hide();
 
-            $('#btnPeriksaPajak').on('click', function () {
+            $('#btnPeriksaPajak').on('click', function() {
                 var noPelangganPajak = $('#noPelangganPajak').val();
 
-                if(noPelangganPajak == '') {
+                if (noPelangganPajak == '') {
                     $('.textAlert').show();
                     return false;
                 }
@@ -139,7 +153,9 @@
                 $('#alertPajak').empty()
                 $('#detailPajak').hide();
                 $('#btnPeriksaPajak').attr('disabled', true);
-                $('#btnPeriksaPajak').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...');
+                $('#btnPeriksaPajak').html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
 
                 $.ajax({
                     type: "POST",
@@ -148,18 +164,22 @@
                         'no_pelanggan': noPelangganPajak,
                         'nom': $('#productPajak').val()
                     },
-                    success: function (response) {
+                    success: function(response) {
                         // var simulateFeePajak = parseInt(responseTagihan.data.fee)
 
                         // SIMULASI!!!
                         var simulateFeePajak = 1000;
-                        var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
+                        var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 +
+                            1)) + 150000;
                         var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
 
                         $('#namaPelangganPajak').text('Joko Susilo');
-                        $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(simulateAmountPajak));
-                        $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(simulateFeePajak));
-                        $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(simulateTotalPajak));
+                        $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(
+                            simulateAmountPajak));
+                        $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(
+                            simulateFeePajak));
+                        $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(
+                            simulateTotalPajak));
 
                         $('#inputNamaPelangganPajak').val('Joko Susilo');
                         $('#inputTotalTagihanPajak').val(simulateAmountPajak);
@@ -172,7 +192,9 @@
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status === 400 || xhr.status === 500) {
-                            var alertDiv = $(`<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+                            var alertDiv = $(
+                                `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
+                                );
 
                             $('#alertPajak').empty().append(alertDiv);
                         }
@@ -184,9 +206,24 @@
                 });
             });
         });
-</script>
 
-{{-- <script>
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#pajak").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#pajakPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#pajakPoint").prop("disabled", true);
+                    $("#pajakPoint").remove();
+                }
+            });
+        });
+    </script>
+
+    {{-- <script>
     $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
