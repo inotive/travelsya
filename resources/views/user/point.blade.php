@@ -19,7 +19,7 @@
                                     Points
                                 </b>
                             </h1>
-                            
+
                         </div>
                         <div class="card-title">
                             <a href="/"
@@ -161,9 +161,9 @@
                                                     </svg>
                                                     <div class="fs-4 fw-bold ms-2">
                                                         @if ($point->flow === 'debit')
-                                                            <span class="text-danger">- {{ $point->point }}</span>
-                                                        @elseif($point->flow === 'credit')
                                                             <span class="text-success">+ {{ $point->point }}</span>
+                                                        @elseif($point->flow === 'credit')
+                                                            <span class="text-danger">- {{ $point->point }}</span>
                                                         @endif
                                                     </div>
 

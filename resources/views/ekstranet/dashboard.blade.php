@@ -118,6 +118,15 @@
                         </thead>
                         <tbody>
                             @foreach($transaction_hotels as $hotel)
+                                @php
+                                    $startdate = \Carbon\Carbon::parse($hotel->reservation_start);
+                                      $enddate = \Carbon\Carbon::parse($hotel->reservation_end);
+                                      $startdates = $startdate->Format('d F Y');
+                                      $enddates = $enddate->Format('d F Y');
+                                      $diffInDays = $startdate->diffInDays($enddate);
+                                      $now = \Carbon\Carbon::now();
+                                      $remainingDays = $now->diffInDays($enddate);
+                                @endphp
                             <tr>
                                 {{-- <h1>{{ dd($hotel) }}</h1> --}}
                                 <td>{{ \Carbon\Carbon::parse($hotel->created_at)->format('d M Y') }}
@@ -130,7 +139,7 @@
                                 <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
                                 {{-- <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td> --}}
-                                <td>{{ General::rp($hotel->rent_price ) }}</td>
+                                <td>{{ General::rp($hotel->rent_price * $diffInDays ) }}</td>
                                 <td>
                                     <span class="badge {{$hotel->status == "PAID" ? "badge-success"
                                         : "badge-warning" }}">{{$hotel->status == "PAID" ? "Sukses"

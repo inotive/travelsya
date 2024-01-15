@@ -67,7 +67,7 @@ class ProductController extends Controller
                 'value' => $fee->percent == 0 ? $fee->value :  $product->price * $fee->value / 100,
             ],
             [
-                'type' => 'kode_unik',
+                'type' => 'Kode Unique',
                 'value' => $uniqueCode,
             ],
         ];
@@ -109,7 +109,7 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $grandTotal
+            'total' => $amount
         ]);
 
         $helper = new General();

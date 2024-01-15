@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fee;
 use Carbon\Carbon;
 use App\Models\Guest;
 use App\Models\Hotel;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 use App\Models\HotelBookDate;
 use App\Models\DetailTransaction;
 use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransactionHotel;
@@ -231,17 +233,34 @@ class HotelController extends Controller
         $hotel = HotelRoom::with('hotel.service')->find($request->hostel_room_id);
         $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();
-        $sellingPrice = $request->point === null ? $hotel->sellingprice : $hotel->sellingprice - $request->point;
-        $fees = $setting->getFees($request->pointFee, 8, $request->user()->id, $sellingPrice);
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $request->uniqueCode,
-        ];;
 
-        if (!$fees) return 'Point invalid';
+        $sellingPrice = $hotel->sellingprice;
+        $currentPoint = $request->inputPoint == "on" ? $request->pointFee : 0;
+
+        $fee = Fee::where('service_id', 8)->first();
+        $fees = [
+            [
+                'type' => 'Fee Admin',
+                'value' => $fee->value,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $request->uniqueCode,
+            ],
+        ];
+        $saldoPointCustomer = 0;
+
+        if ($request->inputPoint == "on") {
+            $saldoPointCustomer = Auth::user()->point;
+            array_push($fees, [
+                    'type' => 'Point',
+                    'value' => -$saldoPointCustomer,
+            ]);
+        }
         $qty = (date_diff(date_create($request->start), date_create($request->end))->days);
         if ($qty <= 0) return 'Date must be forward';
         $amount = $setting->getAmount($sellingPrice, $qty, $fees, $request->room);
+
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
@@ -264,7 +283,8 @@ class HotelController extends Controller
             ],
             'fees' => $fees
         ]);
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
+
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel, $saldoPointCustomer) {
 
             // dd($uniqueCode);
             $storeTransaction = Transaction::create([
@@ -300,11 +320,11 @@ class HotelController extends Controller
                 "created_at"        => Carbon::now(),
             ]);
 
-            //            if ($data['point']) {
-            //                //deductpoint
-            //                $point = new Point;
-            //                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
-            //            }
+            if ($request->inputPoint == "on") {
+                //deductpoint
+                $point = new Point;
+                $point->deductPoint($request->user()->id, abs($saldoPointCustomer), $storeTransaction->id);
+            }
         });
 
         return redirect($payoutsXendit['invoice_url']);

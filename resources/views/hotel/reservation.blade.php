@@ -132,7 +132,7 @@
                                         </p>
                                         <h4>
                                             <div class="form-check form-switch form-check-custom form-check-solid">
-                                                <input class="form-check-input pakai-point" type="checkbox" name=""
+                                                <input class="form-check-input pakai-point" type="checkbox" name="inputPoint"
                                                     id="flexSwitchChecked" />
                                             </div>
                                         </h4>

@@ -118,7 +118,7 @@
                                         <td>
                                             <div
                                                 class="form-check form-switch form-check-custom form-check-solid float-end">
-                                                <input class="form-check-input pakai-point" type="checkbox"
+                                                <input class="form-check-input pakai-point" type="checkbox" name="inputPoint"
                                                     id="flexSwitchChecked" />
                                             </div>
                                         </td>
