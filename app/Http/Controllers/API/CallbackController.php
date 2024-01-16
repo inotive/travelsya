@@ -59,7 +59,12 @@ class CallbackController extends Controller
         $responseMessageSNCode = explode('/', $responseMessageSN[1]);
         $responseMessageSNCodeFinal = $responseMessageSNCode[0];
 
-        return $responseMessageSNCodeFinal;
+        return response()->json([
+            '$responseMessage' => $responseMessage,
+            '$responseMessageSN' => $responseMessageSN,
+            '$responseMessageSNCode' => $responseMessageSNCode,
+            '$responseMessageSNCodeFinal' => $responseMessageSNCodeFinal
+        ]);
     }
     public function xendit(Request $request)
     {
