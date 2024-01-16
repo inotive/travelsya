@@ -50,7 +50,7 @@
                             <h4>
                                 <div class="form-check form-switch form-check-custom form-check-solid">
                                     <input class="form-check-input pakai-point" type="checkbox" name=""
-                                        id="pln" />
+                                        {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="pln" />
                                 </div>
                             </h4>
                         </div>

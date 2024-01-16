@@ -133,6 +133,7 @@
                                         <h4>
                                             <div class="form-check form-switch form-check-custom form-check-solid">
                                                 <input class="form-check-input pakai-point" type="checkbox" name="inputPoint"
+                                                    {{ auth()->user()->point == 0 ? 'disabled' : '' }}
                                                     id="flexSwitchChecked" />
                                             </div>
                                         </h4>
@@ -159,7 +160,8 @@
                                         <input type="hidden" name="payment_method" value="xendit">
                                         <input type="hidden" name="hotel_id" value="{{ $hotelRoom->hotel->id }}">
                                         <input type="hidden" name="hostel_room_id" value="{{ $hotelRoom->id }}">
-                                        <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="pointInput" disabled>
+                                        <input type="hidden" name="point" value="{{ auth()->user()->point }}"
+                                            id="pointInput" disabled>
                                         {{-- <input type="hidden" name="start"
                                             value="{{ date('Y-m-d', $params['start']) }}"> --}}
                                         {{-- <input type="hidden" name="end"
@@ -208,7 +210,7 @@
 
 @push('add-script')
     <script>
-          $(document).ready(function() {
+        $(document).ready(function() {
             $(".grand-total-1").addClass("d-none");
             $(".grand-total-2").removeClass("d-none");
             $("#grand-total-1").prop("disabled", false);

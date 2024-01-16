@@ -73,7 +73,7 @@
                                 <h4>
                                     <div class="form-check form-switch form-check-custom form-check-solid">
                                         <input class="form-check-input pakai-point" type="checkbox" name=""
-                                            id="pdam" />
+                                            {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="pdam" />
                                     </div>
                                 </h4>
                             </div>
@@ -152,7 +152,7 @@
                 $('#btnPeriksaPDAM').attr('disabled', true);
                 $('#btnPeriksaPDAM').html(
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-                    );
+                );
 
                 $.ajax({
                     type: "POST",
@@ -192,7 +192,7 @@
                             // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
                             var alertDiv = $(
                                 `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
-                                );
+                            );
 
                             // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
                             $('#alertContainer').empty().append(alertDiv);

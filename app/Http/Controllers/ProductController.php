@@ -794,7 +794,9 @@ class ProductController extends Controller
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
-        $amount = $setting->getAmount($data['totalTagihan'], 1, $fees, 1);
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+        $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
@@ -802,7 +804,7 @@ class ProductController extends Controller
                 [
                     "product_id" => $product->id,
                     "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPajak']),
-                    "price" => $data['totalTagihan'],
+                    "price" =>  $sellingPriceFinal,
                     "quantity" => 1,
                 ]
             ],
