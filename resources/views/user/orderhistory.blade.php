@@ -69,12 +69,11 @@
                                                     $route = route('profile.order-detail.hotel', $all->id);
                                                 } elseif ($all->service_id == 7) {
                                                     $route = route('profile.order-detail.hostel', $all->id);
-                                                } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11) {
+                                                } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11 || $all->service_id == 2) {
+                                                    // top up
                                                     $route = route('profile.order-detail.listrik-voucher', $all->id);
-                                                } elseif ($all->service_id == 2) {
-                                                    $route = route('profile.order-detail.listrik', $all->id);
                                                 } else {
-                                                    $route = route('profile.order-detail.listrik-voucher', $all->id);
+                                                    $route = route('profile.order-detail.listrik', $all->id);
                                                 }
                                             @endphp
                                             <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer"
@@ -288,12 +287,10 @@
                                                     $routePending = route('profile.order-detail.hotel', $pending->id);
                                                 } elseif ($pending->service_id == 7) {
                                                     $routePending = route('profile.order-detail.hostel', $pending->id);
-                                                } elseif ($pending->service_id == 12 || $pending->service_id == 1 || $pending->service_id == 11) {
+                                                } elseif ($pending->service_id == 12 || $pending->service_id == 1 || $pending->service_id == 11 || $pending->service_id == 2) {
                                                     $routePending = route('profile.order-detail.listrik-voucher', $pending->id);
-                                                } elseif ($pending->service_id == 2) {
-                                                    $routePending = route('profile.order-detail.listrik', $pending->id);
                                                 } else {
-                                                    $routePending = route('profile.order-detail.listrik-voucher', $pending->id);
+                                                    $routePending = route('profile.order-detail.listrik', $pending->id);
                                                 }
 
                                             @endphp
@@ -453,12 +450,10 @@
                                             $routeHistory = route('profile.order-detail.hotel', $history->id);
                                         } elseif ($history->service_id == 7) {
                                             $routeHistory = route('profile.order-detail.hostel', $history->id);
-                                        } elseif ($history->service_id == 12 || $history->service_id == 1 || $history->service_id == 11) {
+                                        } elseif ($history->service_id == 12 || $history->service_id == 1 || $history->service_id == 11 || $history->service_id == 2) {
                                             $routeHistory = route('profile.order-detail.listrik-voucher', $history->id);
-                                        } elseif ($history->service_id == 2) {
-                                            $routeHistory = route('profile.order-detail.listrik', $history->id);
                                         } else {
-                                            $routeHistory = route('profile.order-detail.listrik-voucher', $history->id);
+                                            $routeHistory = route('profile.order-detail.listrik', $history->id);
                                         }
 
                                     @endphp

@@ -119,8 +119,8 @@ class CallbackController extends Controller
                             if ($transaction->service == 'listrik-token') {
                                 $data = [
                                     'reqid' => $transaction->no_inv,
-                                    'no_hp' => str($detailTransactionTopUP->kode_pembayaran),
-                                    'nom' => str($detailTransactionTopUP->nomor_telfon),
+                                    'no_hp' => str($detailTransactionTopUP->nomor_telfon),
+                                    'nom' => str($detailTransactionTopUP->kode_pembayaran),
                                 ];
 
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN

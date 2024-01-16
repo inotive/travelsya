@@ -279,7 +279,6 @@ class UserController extends Controller
 
     public function orderDetailListrik($id)
     {
-
         $transactionPPOB = DB::table('detail_transaction_ppob')
             ->join('products', 'detail_transaction_ppob.product_id', '=', 'products.id')
             ->join('transactions', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
@@ -304,7 +303,9 @@ class UserController extends Controller
             )
             ->where('detail_transaction_ppob.transaction_id', $id)
             ->first();
+
         // dd($transactionPPOB->transaction_id);
+
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
