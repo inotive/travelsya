@@ -81,16 +81,16 @@
 
                                 <table width="100%">
                                     <tr>
-                                        <td>Room Price{{ $params['category'] == 'yearly' ? '/Year' : '/Month' }}
-                                            ({{ $duration }} {{ $params['category'] == 'yearly' ? 'Year' : 'Month' }})
+                                        <td>Harga Sewa Kamar {{ $params['category'] == 'yearly' ? '/ Tahun' : '/ Bulan' }}
+{{--                                            ({{ $duration }} {{ $params['category'] == 'yearly' ? 'Year' : 'Month' }})--}}
                                         </td>
                                         <td>:</td>
                                         <td class="text-end">{{ General::rp($sellingprice) }}</td>
                                     </tr>
                                     <tr>
-                                        <td>Duration ({{ $params['category'] == 'yearly' ? 'Tahun' : 'Bulan' }})</td>
+                                        <td>Durasi Sewa</td>
                                         <td>:</td>
-                                        <td class="text-end">{{ $duration }}</td>
+                                        <td class="text-end">{{ $duration }} {{ $params['category'] == 'yearly' ? 'Tahun' : 'Bulan' }}</td>
                                     </tr>
                                     {{-- <tr>
                                         <td>Extrabed</td>

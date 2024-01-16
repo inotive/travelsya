@@ -552,7 +552,7 @@ class ProductController extends Controller
         ]);
 
 
-        if ($product->service->name == "listrik-token") {
+            if ($product->service->name == "listrik-token") {
             DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $storeTransaction->id,
                 'product_id' => $product->id,

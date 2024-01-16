@@ -42,6 +42,25 @@ class CallbackController extends Controller
         fclose($fp);
     }
 
+    public function testCheckVoucher(Request $request)
+    {
+        $data = [
+            'reqid' => $request->inv,
+            'no_hp' => str($request->kode_pembayaran),
+            'nom' => str($request->nomor_telfon),
+        ];
+
+        // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
+        sleep(3);
+        $transaction = $this->mymili->status($data);
+        //process retrieve voucher code
+        $responseMessage = explode(' ', $transaction['MESSAGE']);
+        $responseMessageSN = explode('SN=', $responseMessage[4]);
+        $responseMessageSNCode = explode('/', $responseMessageSN[1]);
+        $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+
+        return $responseMessageSNCodeFinal;
+    }
     public function xendit(Request $request)
     {
         $point = new Point();

@@ -240,7 +240,10 @@
                                                             id="kendaraan{{ $item->id }}">
                                                     </div>
                                                 </td>
-                                                <td>{{ $item->name }}</td>
+                                                <td class="text-center">
+                                                    <img src="{{asset('storage/'. $item->icon)}}" alt="" style="height: 25px; width: 25px;">
+
+                                                    {{ strtoupper($item->name) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -299,7 +302,7 @@
                 var sellingPrice = basePrice + (basePrice * 15 / 100);
                 $('#sellingprice').val(addCommas(sellingPrice));
 
-                
+
             })
 
             $("#extrabedprice").keyup(function () {
