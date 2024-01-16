@@ -144,7 +144,7 @@
                     type: "POST",
                     url: "{{ route('product.bpjs') }}",
                     data: {
-                        'no_pelanggan': noPelangganBPJS,
+                        'no_pelanggan': "0"+noPelangganBPJS,
                         'nom': 'CEKBPJSKS',
                     },
                     success: function(responseTagihan) {

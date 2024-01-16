@@ -38,11 +38,7 @@ class ProductController extends Controller
 
     public function pulsaData($category, $provider)
     {
-        $data = Product::where([
-            ['category', '=', $category],
-            ['name', 'like', '%' . strtoupper($provider) . '%'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where([['category', '=', $category], ['name', 'like', '%' . strtoupper($provider) . '%'], ['is_active', '=', 1]])->get();
 
         return response()->json($data);
     }
@@ -50,12 +46,11 @@ class ProductController extends Controller
     public function paymentPulsaData(Request $request)
     {
         $data = $request->all();
-        // dd($data);
-        $point = new Point;
+        $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['product']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
@@ -63,9 +58,22 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-        
-        
-        $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
+
+        $pointDigunakan = 0;
+        if ($request->point !== null) {
+            $pointTerpakai = $point->pointTerpakai($product->price, $fees[0]['value'], $fees[1]['value']);
+            $pointUser = $request->point;
+    
+            if ($pointUser >= $pointTerpakai) {
+                $pointDigunakan = $request->point;
+            } else {
+                $pointDigunakan = $pointTerpakai;
+            }
+            
+        }
+
+
+        $sellingPrice = $request->point !== null ? $product->price - $pointDigunakan : $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
@@ -73,11 +81,11 @@ class ProductController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $product->id,
-                    "name" => $product->description,
-                    "price" => $sellingPriceFinal,
-                    "quantity" => 1,
-                ]
+                    'product_id' => $product->id,
+                    'name' => $product->description,
+                    'price' => $sellingPriceFinal,
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount,
             'success_redirect_url' => route('user.profile'),
@@ -87,9 +95,9 @@ class ProductController extends Controller
             'customer' => [
                 'given_names' => $request->user()->name,
                 'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: "somenumber",
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
             ],
-            'fees' => $fees
+            'fees' => $fees,
         ]);
 
         $storeTransaction = Transaction::create([
@@ -101,7 +109,7 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $amount,
         ]);
 
         $helper = new General();
@@ -114,13 +122,13 @@ class ProductController extends Controller
             'fee_travelsya' => $fees[0]['value'],
             'fee_mili' => 0,
             'message' => 'Top UP sedang diproses',
-            'status' => "PROCESS",
-            "kode_unik" => $uniqueCode,
-            "created_at" => Carbon::now()
+            'status' => 'PROCESS',
+            'kode_unik' => $uniqueCode,
+            'created_at' => Carbon::now(),
         ]);
 
         //deductpoint
-        $point = new Point;
+        $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
@@ -141,39 +149,36 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-
-
         $status = '';
-        if (str_contains($requestMymili['status'], "SUKSES!")) {
+        if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "Bills already paid")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'Bills already paid')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
-                $status = "IP pada sistem ini belum terdaftar pada mili";
+            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
+                $status = 'IP pada sistem ini belum terdaftar pada mili';
             }
 
             return ResponseFormatter::error('Tidak ada', 'Inquiry failed');
         }
-
 
         // return [
         //     "meta" => [
@@ -193,11 +198,11 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
-        $point = new Point;
+        $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['product_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
@@ -206,7 +211,20 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $pointDigunakan = 0;
+        if ($request->point !== null) {
+            $pointTerpakai = $point->pointTerpakai($data['totalTagihan'], $fees[0]['value'], $fees[1]['value']);
+            $pointUser = $request->point;
+    
+            if ($pointUser >= $pointTerpakai) {
+                $pointDigunakan = $request->point;
+            } else {
+                $pointDigunakan = $pointTerpakai;
+            }
+            
+        }
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $pointDigunakan : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
@@ -214,11 +232,11 @@ class ProductController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganBPJS']),
-                    "price" => $sellingPriceFinal,
-                    "quantity" => 1,
-                ]
+                    'product_id' => $product->id,
+                    'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganBPJS']),
+                    'price' => $sellingPriceFinal,
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount,
             'success_redirect_url' => route('user.profile'),
@@ -228,9 +246,9 @@ class ProductController extends Controller
             'customer' => [
                 'given_names' => $request->user()->name,
                 'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: "somenumber",
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
             ],
-            'fees' => $fees
+            'fees' => $fees,
         ]);
 
         $storeTransaction = Transaction::create([
@@ -242,7 +260,7 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $amount,
         ]);
 
         DB::table('detail_transaction_ppob')->insert([
@@ -253,13 +271,13 @@ class ProductController extends Controller
             'fee_travelsya' => $fees[0]['value'],
             'fee_mili' => 0,
             'message' => 'Sedang menunggu pembayaran',
-            'status' => "PROCESS",
-            "kode_unik" => $uniqueCode,
-            "created_at" => Carbon::now()
+            'status' => 'PROCESS',
+            'kode_unik' => $uniqueCode,
+            'created_at' => Carbon::now(),
         ]);
 
         //deductpoint
-        $point = new Point;
+        $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
@@ -267,7 +285,6 @@ class ProductController extends Controller
 
     public function pdam(Request $request)
     {
-        
         $requestMymili = $this->mymili->inquiry([
             'no_hp' => $request->no_pelanggan,
             'nom' => $request->nom,
@@ -294,31 +311,31 @@ class ProductController extends Controller
         // ];
 
         $status = '';
-        if (str_contains($requestMymili['status'], "SUKSES!")) {
+        if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "Bills already paid")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'Bills already paid')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
-                $status = "IP pada sistem ini belum terdaftar pada mili";
+            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
+                $status = 'IP pada sistem ini belum terdaftar pada mili';
             }
 
             return ResponseFormatter::error($status, 'Inquiry failed');
@@ -327,11 +344,7 @@ class ProductController extends Controller
 
     public function productPdam()
     {
-        $data = Product::where([
-            ['category', 'negara'],
-            ['name', 'PDAM'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where([['category', 'negara'], ['name', 'PDAM'], ['is_active', '=', 1]])->get();
 
         return response()->json($data);
     }
@@ -340,11 +353,11 @@ class ProductController extends Controller
     {
         $data = $request->all();
 
-        $point = new Point;
+        $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['productPDAM']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
@@ -352,7 +365,21 @@ class ProductController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+
+        $pointDigunakan = 0;
+        if ($request->point !== null) {
+            $pointTerpakai = $point->pointTerpakai($data['totalTagihan'], $fees[0]['value'], $fees[1]['value']);
+            $pointUser = $request->point;
+    
+            if ($pointUser >= $pointTerpakai) {
+                $pointDigunakan = $request->point;
+            } else {
+                $pointDigunakan = $pointTerpakai;
+            }
+            
+        }
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $pointDigunakan : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
@@ -360,11 +387,11 @@ class ProductController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPDAM']),
-                    "price" => $sellingPriceFinal,
-                    "quantity" => 1,
-                ]
+                    'product_id' => $product->id,
+                    'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPDAM']),
+                    'price' => $sellingPriceFinal,
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount,
             'success_redirect_url' => route('user.profile'),
@@ -374,9 +401,9 @@ class ProductController extends Controller
             'customer' => [
                 'given_names' => $request->user()->name,
                 'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: "somenumber",
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
             ],
-            'fees' => $fees
+            'fees' => $fees,
         ]);
 
         $storeTransaction = Transaction::create([
@@ -388,7 +415,7 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $amount,
         ]);
 
         DB::table('detail_transaction_ppob')->insert([
@@ -399,15 +426,14 @@ class ProductController extends Controller
             'fee_travelsya' => $fees[0]['value'],
             'fee_mili' => 0,
             'message' => 'Sedang menunggu pembayaran',
-            'status' => "PROCESS",
-            "kode_unik" => $uniqueCode,
-            "created_at" => Carbon::now()
+            'status' => 'PROCESS',
+            'kode_unik' => $uniqueCode,
+            'created_at' => Carbon::now(),
         ]);
 
         //deductpoint
-        $point = new Point;
+        $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
-
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -422,31 +448,31 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], "SUKSES!")) {
+        if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "Bills already paid")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'Bills already paid')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
-                $status = "IP pada sistem ini belum terdaftar pada mili";
+            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
+                $status = 'IP pada sistem ini belum terdaftar pada mili';
             }
 
             return ResponseFormatter::error($status, 'Inquiry failed');
@@ -472,11 +498,7 @@ class ProductController extends Controller
 
     public function productPln()
     {
-        $data = Product::where([
-            ['category', 'pln'],
-            ['description', 'like', '%token%'],
-            ['is_active', '=', 1],
-        ])->get();
+        $data = Product::where([['category', 'pln'], ['description', 'like', '%token%'], ['is_active', '=', 1]])->get();
 
         return response()->json($data);
     }
@@ -485,11 +507,13 @@ class ProductController extends Controller
     {
         $data = $request->all();
         // dd($data);
-        $point = new Point;
+        $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
-        $product = Product::with('service')->where('id', $request->productPLN)->first();
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $product = Product::with('service')
+            ->where('id', $request->productPLN)
+            ->first();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
@@ -505,11 +529,11 @@ class ProductController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
-                    "price" => $sellingPriceFinal,
-                    "quantity" => 1,
-                ]
+                    'product_id' => $product->id,
+                    'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
+                    'price' => $sellingPriceFinal,
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount,
             'success_redirect_url' => route('user.profile'),
@@ -519,9 +543,9 @@ class ProductController extends Controller
             'customer' => [
                 'given_names' => $request->user()->name,
                 'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: "somenumber",
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
             ],
-            'fees' => $fees
+            'fees' => $fees,
         ]);
 
         $storeTransaction = Transaction::create([
@@ -533,11 +557,10 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $amount,
         ]);
 
-
-        if ($product->service->name == "listrik-token") {
+        if ($product->service->name == 'listrik-token') {
             DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $storeTransaction->id,
                 'product_id' => $product->id,
@@ -546,26 +569,25 @@ class ProductController extends Controller
                 'fee_travelsya' => $fees[0]['value'],
                 'fee_mili' => 0,
                 'message' => 'Sedang menunggu pembayaran',
-                'status' => "PROCESS",
-                "kode_unik" => $uniqueCode,
-                "created_at" => Carbon::now()
-            ]);
-        } {
-            DB::table('detail_transaction_ppob')->insert([
-                'transaction_id' => $storeTransaction->id,
-                'product_id' => $product->id,
-                'nomor_pelanggan' => $request->noPelangganPLN,
-                'total_tagihan' => $amount,
-                'fee_travelsya' => $fees[0]['value'],
-                'fee_mili' => 0,
-                'message' => 'Sedang menunggu pembayaran',
-                'status' => "PROCESS",
-                "kode_unik" => $uniqueCode,
-                "created_at" => Carbon::now()
+                'status' => 'PROCESS',
+                'kode_unik' => $uniqueCode,
+                'created_at' => Carbon::now(),
             ]);
         }
+        DB::table('detail_transaction_ppob')->insert([
+            'transaction_id' => $storeTransaction->id,
+            'product_id' => $product->id,
+            'nomor_pelanggan' => $request->noPelangganPLN,
+            'total_tagihan' => $amount,
+            'fee_travelsya' => $fees[0]['value'],
+            'fee_mili' => 0,
+            'message' => 'Sedang menunggu pembayaran',
+            'status' => 'PROCESS',
+            'kode_unik' => $uniqueCode,
+            'created_at' => Carbon::now(),
+        ]);
         //deductpoint
-        $point = new Point;
+        $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
@@ -581,39 +603,39 @@ class ProductController extends Controller
             'no_hp' => $data['no_pelanggan'],
             'nom' => $data['nom'],
         ]);
-        if (str_contains($requestMymili['status'], "SUKSES!")) {
+        if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(10, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'INVALID! Produk sementara tidak tersedia!')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "Bills already paid")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'Bills already paid')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "ERROR 88 TRANSAKSI DITOLAK")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'ERROR 88 TRANSAKSI DITOLAK')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
-                $status = "IP pada sistem ini belum terdaftar pada mili";
+            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
+                $status = 'IP pada sistem ini belum terdaftar pada mili';
             }
 
             return ResponseFormatter::error($status, 'Inquiry failed');
@@ -635,11 +657,11 @@ class ProductController extends Controller
         $data = $request->all();
         // dd($data);
 
-        $point = new Point;
+        $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['productTV']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
@@ -656,11 +678,11 @@ class ProductController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganTV']),
-                    "price" => $sellingPriceFinal,
-                    "quantity" => 1,
-                ]
+                    'product_id' => $product->id,
+                    'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganTV']),
+                    'price' => $sellingPriceFinal,
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount,
             'success_redirect_url' => route('user.profile'),
@@ -668,11 +690,11 @@ class ProductController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                    'given_names' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'mobile_number' => $request->user()->phone ?: "somenumber",
-                ],
-            'fees' => $fees
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
+            ],
+            'fees' => $fees,
         ]);
 
         $storeTransaction = Transaction::create([
@@ -684,7 +706,7 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $amount,
         ]);
 
         DB::table('detail_transaction_ppob')->insert([
@@ -695,13 +717,13 @@ class ProductController extends Controller
             'fee_travelsya' => $fees[0]['value'],
             'fee_mili' => 0,
             'message' => 'Sedang menunggu pembayaran',
-            'status' => "PROCESS",
-            "kode_unik" => $uniqueCode,
-            "created_at" => Carbon::now()
+            'status' => 'PROCESS',
+            'kode_unik' => $uniqueCode,
+            'created_at' => Carbon::now(),
         ]);
 
         //deductpoint
-        $point = new Point;
+        $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
@@ -718,39 +740,39 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], "SUKSES!")) {
+        if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "Bills already paid")) {
-                $status = "Tagihan Sudah Terbayar";
+            if (str_contains($requestMymili['status'], 'Bills already paid')) {
+                $status = 'Tagihan Sudah Terbayar';
             }
 
-            if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
-                $status = "Tagihan Sudah Terbayar atau Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'INVALID! Produk sementara tidak tersedia!')) {
+                $status = 'Tagihan Sudah Terbayar atau Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "INVALID! Produk tidak tersedia")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'INVALID! Produk tidak tersedia')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
 
-            if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-                $status = "Nomor Tagihan Tidak Dikenali";
+            if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
+                $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
-                $status = "IP pada sistem ini belum terdaftar pada mili";
+            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
+                $status = 'IP pada sistem ini belum terdaftar pada mili';
             }
 
             return ResponseFormatter::error($status, 'Inquiry failed');
@@ -772,11 +794,11 @@ class ProductController extends Controller
         $data = $request->all();
         // dd($data);
 
-        $point = new Point;
+        $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['productPajak']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
@@ -787,11 +809,11 @@ class ProductController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $product->id,
-                    "name" => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPajak']),
-                    "price" =>  $sellingPriceFinal,
-                    "quantity" => 1,
-                ]
+                    'product_id' => $product->id,
+                    'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPajak']),
+                    'price' => $sellingPriceFinal,
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount,
             'success_redirect_url' => route('user.profile'),
@@ -799,11 +821,11 @@ class ProductController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                    'given_names' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'mobile_number' => $request->user()->phone ?: "somenumber",
-                ],
-            'fees' => $fees
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
+            ],
+            'fees' => $fees,
         ]);
 
         $storeTransaction = Transaction::create([
@@ -815,7 +837,7 @@ class ProductController extends Controller
             'user_id' => $request->user()->id,
             'status' => $payoutsXendit['status'],
             'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount
+            'total' => $amount,
         ]);
 
         DetailTransaction::create([
@@ -824,11 +846,11 @@ class ProductController extends Controller
             'price' => $amount,
             'qty' => 1,
             'no_hp' => $request->user()->phone,
-            'status' => "PROCESS"
+            'status' => 'PROCESS',
         ]);
 
         //deductpoint
-        $point = new Point;
+        $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
         return redirect($payoutsXendit['invoice_url']);
@@ -860,7 +882,6 @@ class ProductController extends Controller
 
     public function show($product)
     {
-
         return view('product.detail-product');
     }
 
@@ -869,27 +890,31 @@ class ProductController extends Controller
         try {
             $data = $request->all();
 
-            if ($data['operator'] == 3)
-                $data['operator'] = "three";
+            if ($data['operator'] == 3) {
+                $data['operator'] = 'three';
+            }
 
-            if ($data['operator'] == "Indosat Ooredoo")
-                $data['operator'] = "indosat";
+            if ($data['operator'] == 'Indosat Ooredoo') {
+                $data['operator'] = 'indosat';
+            }
 
-            if ($data['operator'] == "XL Axiata")
-                $data['operator'] = "xl";
+            if ($data['operator'] == 'XL Axiata') {
+                $data['operator'] = 'xl';
+            }
 
             $pricelist = $this->travelsya->pricelist();
 
-            if ($pricelist['meta']['code'] != 200)
+            if ($pricelist['meta']['code'] != 200) {
                 return response()->json(['message' => 'not found']);
+            }
 
             $category = array_filter($pricelist['data'], function ($var) use ($data) {
-                return ($var['category'] == $data['category']);
+                return $var['category'] == $data['category'];
             });
 
             $pulsa = array_filter($category, function ($var) use ($data) {
                 // return ($var['name'] == $data['operator']);
-                return (str_contains($var['name'], strtoupper($data['operator'])));
+                return str_contains($var['name'], strtoupper($data['operator']));
             });
 
             return response()->json($pulsa);
