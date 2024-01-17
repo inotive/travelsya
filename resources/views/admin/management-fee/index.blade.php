@@ -8,10 +8,6 @@
             <h3 class="card-title align-items-start flex-column">
                 <span class="card-label fw-bold fs-3 mb-1">List Fee Admin</span>
             </h3>
-            <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>New Fee Admin</a>
-            </div>
         </div>
         <!--end::Header-->
         <!--begin::Body-->
@@ -25,7 +21,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Layanan</th>
                             <th class="text-center">Tipe Biaya Admin</th>
-                            <th class="text-center">Besaran Biya Admin</th>
+                            <th class="text-center">Besaran Biaya Admin</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -241,19 +237,20 @@
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
                             <!--begin::Title-->
-                            <h1 class="mb-3">Update Fee Admin</h1>
+                            <h1 class="mb-3">Ubah Biaya Admin</h1>
                             <!--end::Title-->
                         </div>
                         <!--end::Heading-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="col-md-12 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Category</label>
-                                <select class="form-select form-select-solid" id="service_id" name="service_id">
+                                <label class="required fs-6 fw-semibold mb-2">Layanan</label>
+                                <select class="form-select" id="service_id" disabled>
                                     @foreach ($services as $service)
-                                        <option value="{{ $service->id }}">{{ $service->name }}</option>
+                                        <option value="{{ $service->id }}">{{ strtoupper($service->name) }}</option>
                                     @endforeach
                                 </select>
+                                <input type="hidden" id="service_id" name="service_id">
                                 @error('service_id')
                                     <span class="text-danger mt-1" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -265,8 +262,8 @@
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Type</label>
-                                <select class="form-select form-select-solid" id="percent" name="percent">
+                                <label class="required fs-6 fw-semibold mb-2">Tipe Biaya Admin</label>
+                                <select class="form-select" id="percent" name="percent">
                                     <option value="0">Rupiah</option>
                                     <option value="1">Presentase</option>
                                 </select>
@@ -277,9 +274,13 @@
                                 @enderror
                             </div>
                             <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Value</label>
-                                <input type="text" name="value" class="form-control form-control-solid"
-                                    id="value" placeholder="Value">
+                                <label class="form-label required">Besaran Biaya Admin</label>
+
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">Rp. </span>
+                                    <input type="text" name="value" class="form-control"
+                                           id="value" placeholder="Value">
+                                </div>
                                 @error('value')
                                     <span class="text-danger mt-1" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -289,11 +290,12 @@
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
-                        <div class="text-center">
+                        <div class="d-flex justify-content-between">
+
                             <button type="reset" id="kt_modal_new_target_cancel"
-                                class="btn btn-light me-3">Cancel</button>
-                            <button type="submit" id="update" class="btn btn-primary">
-                                <span class="indicator-label">Submit</span>
+                                class="btn btn-light me-3 w-100">Cancel</button>
+                            <button type="submit" id="update" class="btn btn-primary w-100">
+                                <span class="indicator-label">Simpan Perubahan</span>
                                 <span class="indicator-progress">Please wait...
                                     <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                             </button>
@@ -365,7 +367,7 @@
             //ajax
             // alert(fee_id);
             $.ajax({
-                
+
                 url: `/admin/management-fee/edit/${fee_id}`,
                 type: "PUT",
                 cache: false,

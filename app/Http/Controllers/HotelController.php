@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Fee;
 use Carbon\Carbon;
 use App\Models\Guest;
 use App\Models\Hotel;
@@ -18,9 +19,11 @@ use Illuminate\Http\Request;
 use App\Models\HotelBookDate;
 use App\Models\DetailTransaction;
 use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\DetailTransactionHotel;
+use App\Models\HotelRating;
 
 class HotelController extends Controller
 {
@@ -37,7 +40,9 @@ class HotelController extends Controller
         $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where(
-                    'totalroom', '>=', $request->room,
+                    'totalroom',
+                    '>=',
+                    $request->room,
                 );
             })
             ->where(function ($query) use ($request) {
@@ -51,7 +56,7 @@ class HotelController extends Controller
                 AND ? <= guest
                 AND ? >= reservation_start
             ) > 0', [$request->end_date, $request->start]);
-            
+
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
                 $query->whereIn('facility_id', $request->facility);
@@ -158,6 +163,25 @@ class HotelController extends Controller
             $resultRating = 0;
         }
 
+        $ratings  = DB::table('hotel_ratings')->join('users', 'hotel_ratings.users_id', '=', 'users.id')
+            ->where('hotel_id', $id_hotel)
+            ->select('hotel_ratings.*', 'hotel_ratings.created_at as created' , 'users.*')
+            ->limit(30)
+            ->get();
+
+        Carbon::setLocale('id');
+        // $formatted_created_at = null;
+
+        if ($ratings ->isNotEmpty()) {
+            // Menggunakan first() untuk mendapatkan satu baris hasil
+            $rating = $ratings->first();
+            // $data['formatted_created_at'] = Carbon::parse($rating->created_at)->diffForHumans();
+        }
+
+        $data['avg_rate'] = $ratings->avg('rate');
+
+        $data['rating'] = $ratings;
+
         $data['request'] = $request->all();
         $data['detailHotel'] = $hotel;
         $data['min_price'] = $minPrice;
@@ -209,24 +233,42 @@ class HotelController extends Controller
         $hotel = HotelRoom::with('hotel.service')->find($request->hostel_room_id);
         $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();
-        $sellingPrice = $request->point === null ? $hotel->sellingprice : $hotel->sellingprice - $request->point;
-        $fees = $setting->getFees($request->pointFee, 8, $request->user()->id, $sellingPrice);
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $request->uniqueCode,
-        ];;
-        if (!$fees) return 'Point invalid';
+
+        $sellingPrice = $hotel->sellingprice;
+        $currentPoint = $request->inputPoint == "on" ? $request->pointFee : 0;
+
+        $fee = Fee::where('service_id', 8)->first();
+        $fees = [
+            [
+                'type' => 'Fee Admin',
+                'value' => $fee->value,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $request->uniqueCode,
+            ],
+        ];
+        $saldoPointCustomer = 0;
+
+        if ($request->inputPoint == "on") {
+            $saldoPointCustomer = Auth::user()->point;
+            array_push($fees, [
+                    'type' => 'Point',
+                    'value' => -$saldoPointCustomer,
+            ]);
+        }
         $qty = (date_diff(date_create($request->start), date_create($request->end))->days);
         if ($qty <= 0) return 'Date must be forward';
         $amount = $setting->getAmount($sellingPrice, $qty, $fees, $request->room);
+
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
                     "product_id" => $request->hostel_room_id,
                     "name" => $request->name,
-                    "price" =>   $sellingPrice,
-                    "quantity" => $qty,
+                    "price" =>   $sellingPrice * $qty * $request->room,
+                    "quantity" => 1,
                 ]
             ],
             'amount' => $amount,
@@ -242,7 +284,7 @@ class HotelController extends Controller
             'fees' => $fees
         ]);
 
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel, $saldoPointCustomer) {
 
             // dd($uniqueCode);
             $storeTransaction = Transaction::create([
@@ -278,10 +320,10 @@ class HotelController extends Controller
                 "created_at"        => Carbon::now(),
             ]);
 
-            if ($data['point']) {
+            if ($request->inputPoint == "on") {
                 //deductpoint
                 $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+                $point->deductPoint($request->user()->id, abs($saldoPointCustomer), $storeTransaction->id);
             }
         });
 

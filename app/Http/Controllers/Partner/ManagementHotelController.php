@@ -164,15 +164,16 @@ class ManagementHotelController extends Controller
         $hotel_id = $hotelRoom->hotel->id;
 
         foreach ($hotelRoomImageFiles as $imageFile) {
-            $path = $imageFile->store('media/hotel/');
+            $path = $imageFile->store('media/hotel/'); 
             $filename = basename($path);
 
             DB::table('hotel_room_images')->insert([
                 'hotel_id' => $hotel_id,
-                'hotel_room_id' => $hotelRoom->id, // Menggunakan ID dari kamar hotel yang baru saja dibuat
+                'hotel_room_id' => $hotelRoom->id,
                 'image' => 'media/hotel/' . $filename,
             ]);
         }
+        
 
         $facilityIds = $request->input('facility_id', []);
         $roomId = $hotelRoom->id;
@@ -343,19 +344,26 @@ class ManagementHotelController extends Controller
 
 
         if ($request->hasFile('hotel_room_images')) {
-            $imageFiles = $request->file('hotel_room_images');
+            $imageFiles = $request->file('hotel_room_images',[]);
 
-            foreach ($hotelRoom->hotelroomimage as $index => $image) {
-                if (isset($imageFiles[$index])) {
-                    Storage::delete('public/' . $image->image);
-
-                    $path = $imageFiles[$index]->store('media/hotel/');
-                    $filename = basename($path);
-
-                    $image->update(['image' => 'media/hotel/' . $filename]);
+            foreach ($imageFiles as $index => $imageFile) {
+                $path = $imageFile->store('media/hotel/');
+                $filename = basename($path);
+    
+                $imageData = [
+                    'hotel_id' => $hotel_id,
+                    'hotel_room_id' => $hotelRoom->id,
+                    'image' => 'media/hotel/' . $filename,
+                ];
+    
+                if (isset($hotelRoom->hotelroomimage[$index])) {
+                    $existingImage = $hotelRoom->hotelroomimage[$index];
+                    Storage::delete('public/' . $existingImage->image);
+                    $existingImage->update($imageData);
+                } else {
+                    DB::table('hotel_room_images')->insert($imageData);
                 }
             }
-
 
             $hotelRoom->update([
                 'hotel_id' => $request->hotel_id,
@@ -385,9 +393,7 @@ class ManagementHotelController extends Controller
                         'facility_id' => $facilityId,
                     ]);
                 }
-
             }
-
         } else {
             $hotelRoom->update([
                 'hotel_id' => $request->hotel_id,

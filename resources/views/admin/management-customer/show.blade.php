@@ -48,6 +48,7 @@
                                     <th class="min-w-125px">Deskripsi</th>
                                     <th class="min-w-125px">Metode</th>
                                     <th class="min-w-125px">Grand</th>
+                                    <th class="min-w-125px">Fee Admin</th>
                                     <th class="min-w-70px">Point Yang didapat</th>
                                     <th class="min-w-70px">Point Yang dipakai</th>
                                 </tr>
@@ -100,6 +101,7 @@
                     '<td>' + data[i].transaction_name + ' - ' + data[i].transaction_desc + '</td>' +
                     '<td>' + (data[i].payment_method ? data[i].payment_method.replace(/_/g, ' ') : '-') + '</td>' +
                     '<td>' + (data[i].transaction_price ? 'Rp ' + data[i].transaction_price.toLocaleString('id-ID') : '-') + '</td>' +
+                    '<td>' + (data[i].fee_admin ? 'Rp ' + data[i].fee_admin.toLocaleString('id-ID') : '-') + '</td>' +
                     '<td>' + data[i].debit_point + ' Point' + '</td>' +
                     '<td>' + data[i].credit_point + ' Point' + '</td>' +
                     '</tr>';

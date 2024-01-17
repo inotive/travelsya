@@ -155,10 +155,17 @@
                             </div>
                         </div>
 
+                        @php
+                            $bayar = $diffInDays * $hotelbookdates->rent_price * $hotelbookdates->room;
+                            $totalBiayaPenanganan = $bayar * 15 / 100;
+                            $biayaPenanganan = $totalBiayaPenanganan + $hotelbookdates->fee_admin + $hotelbookdates->kode_unik;
+                            $grandTotal = $bayar - $biayaPenanganan;
+                        @endphp
+
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column mb-2">
                                 <h5 class="fw-bold">
-                                    {{  General::rp($hotelbookdates->rent_price * $diffInDays * $hotelbookdates->room) }}
+                                    {{  General::rp($bayar) }}
                                 </h5>
                             </div>
                         </div>
@@ -178,7 +185,7 @@
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column mb-2">
                                 <h5 class="fw-bold ">
-                                    {{ General::rp($hotelbookdates->fee_admin) }}
+                                    {{ General::rp($biayaPenanganan) }}
                                 </h5>
                             </div>
                         </div>
@@ -196,7 +203,7 @@
                         <div class="col-md-6 text-end">
                             <div class="d-flex flex-column">
                                 <h5 class="fw-bold">
-                                    {{ General::rp($hotelbookdates->transaction->total) }}
+                                    {{ General::rp($grandTotal) }}
                                 </h5>
                             </div>
                         </div>

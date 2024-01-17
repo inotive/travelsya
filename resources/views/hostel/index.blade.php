@@ -247,18 +247,18 @@
                             </div>
                             @endforeach --}}
 
-                            @foreach ($facilities as $facility)
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="facility[]" type="checkbox"
-                                        value="{{ $facility->id }}" id="{{ $facility->id }}" {{ in_array($facility->id,
-                                    $_GET['facility'] ?? []) ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="{{ $facility->id }}">
-                                        {{ $facility->name }}
-                                    </label>
-                                </div>
-                            </div>
-                            @endforeach
+                                @foreach ($facilities as $facility)
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" name="facility[]" type="checkbox"
+                                                value="{{ $facility->id }}" id="{{ $facility->id }}"
+                                                {{ in_array($facility->id, $_GET['facility'] ?? []) ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="{{ $facility->id }}">
+                                                {{ $facility->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
 
                                 {{-- <div class="col-12">
                                 <div class="form-check">
@@ -293,71 +293,77 @@
                                 </div>
                             </div> --}}
 
-                            <div class="col-12">
-                                <label for="" class="form-label">Bintang</label>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="1" id="star-1"
-                                        {{ (isset($_GET['star']) && in_array(1, $_GET['star'])) ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="star-1">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
+                                <div class="col-12">
+                                    <label for="" class="form-label">Bintang</label>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star[]" value="1"
+                                            id="star-1"
+                                            {{ isset($_GET['star']) && in_array(1, $_GET['star']) ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="star-1">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star[]" value="2"
+                                            id="star-2"
+                                            {{ isset($_GET['star']) && in_array(2, $_GET['star']) ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="star-2">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star[]" value="3"
+                                            id="star-3"
+                                            {{ isset($_GET['star']) && in_array(3, $_GET['star']) ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="star-3">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star[]" value="4"
+                                            id="star-4"
+                                            {{ isset($_GET['star']) && in_array(4, $_GET['star']) ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="star-4">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="star[]" value="5"
+                                            id="star-5"
+                                            {{ isset($_GET['star']) && in_array(5, $_GET['star']) ? 'checked' : '' }} />
+                                        <label class="form-check-label" for="star-5">
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button class="w-100 btn-danger btn mb-2">Terapkan</button>
+                                    <a href="/hostel?location={{ $params['location'] }}&start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}&property={{ $params['property'] }}&roomtype={{ $params['roomtype'] }}&furnish={{ $params['furnish'] }}"
+                                        class="w-100 btn btn-success">Reset</a>
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="2" id="star-2"
-                                        {{ (isset($_GET['star']) && in_array(2, $_GET['star'])) ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="star-2">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="3" id="star-3"
-                                        {{ (isset($_GET['star']) && in_array(3, $_GET['star'])) ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="star-3">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="4" id="star-4"
-                                        {{ (isset($_GET['star']) && in_array(4, $_GET['star'])) ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="star-4">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="star[]" value="5" id="star-5"
-                                        {{ (isset($_GET['star']) && in_array(5, $_GET['star'])) ? 'checked' : '' }} />
-                                    <label class="form-check-label" for="star-5">
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                        <span class="card-text fa fa-star" style="color: orange;"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <button class="w-100 btn-danger btn mb-2">Terapkan</button>
-                                <a href="/hostel?location={{ $params['location'] }}&start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}&property={{ $params['property'] }}&roomtype={{ $params['roomtype'] }}&furnish={{ $params['furnish'] }}" class="w-100 btn btn-success">Reset</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </div>
                 </div>
                 <div class="col-9">
                     <div class="row gy-4">
@@ -422,13 +428,26 @@
                                         </div>
                                         <div class="col-3">
                                             <label for="" class="form-label fw-bold fs-6">Durasi</label>
-                                            <select name="duration" class="form-select">
-                                                @for ($i = 1; $i <= 31; $i++)
-                                                    <option value="{{ $i }}"
-                                                        {{ $params['duration'] == $i ? 'selected' : '' }}>{{ $i }}
-                                                        Bulan
-                                                    </option>
-                                                @endfor
+                                            <select name="duration" x-bind:value="durationValue" id="durationHostel"
+                                                class="form-select" x-on:change="handleSelectDuration" required>
+                                                <option value="">Pilih Durasi</option>
+                                                @if ($params['category'] == 'monthly')
+                                                    @for ($i = 1; $i <= 31; $i++)
+                                                        <option value="{{ $i }}"
+                                                            {{ $params['duration'] == $i ? 'selected' : '' }}>
+                                                            {{ $i }} Bulan
+                                                        </option>
+                                                    @endfor
+                                                @endif
+
+                                                @if ($params['category'] == 'yearly')
+                                                    @for ($i = 1; $i <= 10; $i++)
+                                                        <option value="{{ $i * 12 }}"
+                                                            {{ $params['duration'] == $i * 12 ? 'selected' : '' }}>
+                                                            {{ $i }} Tahun
+                                                        </option>
+                                                    @endfor
+                                                @endif
                                             </select>
                                         </div>
                                         <div class="col-3">
@@ -487,13 +506,16 @@
                                                 <option value="" {{ $params['roomtype'] == '' ? 'selected' : '' }}>
                                                     Semua
                                                 </option>
-                                                <option value="1BR" {{ $params['roomtype'] == '1BR' ? 'selected' : '' }}>
+                                                <option value="1BR"
+                                                    {{ $params['roomtype'] == '1BR' ? 'selected' : '' }}>
                                                     1BR
                                                 </option>
-                                                <option value="2BR" {{ $params['roomtype'] == '2BR' ? 'selected' : '' }}>
+                                                <option value="2BR"
+                                                    {{ $params['roomtype'] == '2BR' ? 'selected' : '' }}>
                                                     2BR
                                                 </option>
-                                                <option value="3BR+" {{ $params['roomtype'] == '3BR' ? 'selected' : '' }}>
+                                                <option value="3BR+"
+                                                    {{ $params['roomtype'] == '3BR' ? 'selected' : '' }}>
                                                     3BR+
                                                 </option>
                                             </select>
@@ -769,6 +791,38 @@
                     }
                 })
             })
-        })
+        });
+        $(document).ready(function() {
+
+            $('input[name=category]').change(function() {
+                var categoryValue = $(this).val();
+                var durationSelect = $('#durationHostel');
+                durationSelect.empty();
+
+                durationSelect.append($('<option>', {
+                    value: '',
+                    text: 'Pilih Durasi'
+                }));
+
+                if (categoryValue === 'monthly') {
+                    for (var i = 1; i <= 31; i++) {
+                        durationSelect.append($('<option>', {
+                            value: i,
+                            text: i + ' Bulan'
+                        }));
+                    }
+                }
+
+                if (categoryValue === 'yearly') {
+                    for (var i = 1; i <= 10; i++) {
+                        durationSelect.append($('<option>', {
+                            value: i * 12,
+                            text: i + ' Tahun'
+                        }));
+                    }   
+                }
+                durationSelect.trigger('change');
+            });
+        });
     </script>
 @endpush

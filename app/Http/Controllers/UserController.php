@@ -6,6 +6,7 @@ use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionPPOB;
 use App\Models\Help;
+use App\Models\HistoryPoint;
 use App\Models\HostelRating;
 use App\Models\HotelRating;
 use App\Models\Transaction;
@@ -14,6 +15,7 @@ use App\Services\Travelsya;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -51,6 +53,8 @@ class UserController extends Controller
 
         $data['point'] = auth()->user()->point;
 
+        //dd(Auth::user()->image);
+
         return view('user.profile', $data);
     }
 
@@ -63,13 +67,42 @@ class UserController extends Controller
             $password = bcrypt($request->new_password);
         }
 
-        $user->update([
-            'email'    => $request->email,
-            'phone'    => $request->phone,
-            'password' => $password,
-        ]);
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+            $image->storeAs('users', $image->hashName());
+
+            Storage::delete('users/'.$user->image);
+
+            $user->update([
+                'image' => $image->hashName(),
+                'name' => $request->name,
+                'email'    => $request->email,
+                'phone'    => $request->phone,
+                'password' => $password,
+            ]);
+
+        } else {
+                $user->update([
+                'name' => $request->name,
+                'email'    => $request->email,
+                'phone'    => $request->phone,
+                'password' => $password,
+            ]);
+        }
+
+
 
         return redirect()->back();
+    }
+
+    public function photoProfile(){
+        $user = Auth::user();
+        $image = $user->image;
+
+        return response()->json([
+            'data' => $image
+        ]);
     }
 
     public function orderHistory()
@@ -108,11 +141,10 @@ class UserController extends Controller
             ->get();
 
         $history_transactions = clone $transactions;
-        $data['history_transactions'] = $history_transactions->where('transactions.status', 'SUCCESS')
+        $data['history_transactions'] = $history_transactions
+            ->where('transactions.status', '!=', 'PENDING')
             ->orderBy('transactions.created_at', 'desc')
             ->get();
-
-
 
         return view('user.orderhistory', $data);
     }
@@ -215,6 +247,7 @@ class UserController extends Controller
                 'transactions.created_at as created_transaction',
                 'transactions.payment_method as payment_method',
                 'transactions.status as status',
+                'transactions.total',
                 'history_points.point as points',
                 'users.name as user_name',
                 DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
@@ -246,7 +279,6 @@ class UserController extends Controller
 
     public function orderDetailListrik($id)
     {
-
         $transactionPPOB = DB::table('detail_transaction_ppob')
             ->join('products', 'detail_transaction_ppob.product_id', '=', 'products.id')
             ->join('transactions', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
@@ -262,6 +294,7 @@ class UserController extends Controller
                 'transactions.payment_method as payment_method',
                 'transactions.status as status',
                 'history_points.point as points',
+                'transactions.total',
                 'users.name as user_name',
                 DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
                 DB::raw('detail_transaction_ppob.total_tagihan +
@@ -270,7 +303,9 @@ class UserController extends Controller
             )
             ->where('detail_transaction_ppob.transaction_id', $id)
             ->first();
+
         // dd($transactionPPOB->transaction_id);
+
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
@@ -300,6 +335,14 @@ class UserController extends Controller
         $data['helps'] = Help::orderBy('title')->get();
 
         return view('user.bantuan', $data);
+    }
+
+    public function point()
+    {
+        $user_id = auth()->user()->id;
+
+        $historyPoints = HistoryPoint::with('user', 'transaction')->where('user_id', $user_id)->get();
+        return view('user.point', compact('historyPoints'));
     }
 
     public function detailTransaction($no_inv)
@@ -346,5 +389,4 @@ class UserController extends Controller
         toast('Hotel Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
-
 }

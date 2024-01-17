@@ -75,7 +75,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Layanan</div>
                                                     <div class="fs-8 fw-bold">
-                                                        {{ ucfirst($transactionPPOB->product_category) }}</div>
+                                                        {{ ucfirst($transactionPPOB->service) }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Produk</div>
@@ -87,7 +87,7 @@
                                                     </div>
                                                     <div class="fs-8 fw-bold">{{ $transactionPPOB->nomor_telfon }}</div>
                                                 </div>
-                                                @if ($transactionPPOB->product_category == 'listrik-token')
+                                                @if ($transactionPPOB->service == 'listrik-token')
                                                     <div class="card text-center" style="background: #F2F4FF;">
                                                         <div class="text-center" style="margin:24px;">
                                                             <div class="fs-4 fw-bold">Kode Voucher</div>

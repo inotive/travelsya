@@ -102,7 +102,7 @@
                     </div>
                 </form>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table id="kt_datatable_dom_positioning" class="table table-bordered">
                         <thead>
                             <tr class="fw-bold fs-6 text-gray-800">
                                 <th>Tanggal</th>
@@ -118,6 +118,15 @@
                         </thead>
                         <tbody>
                             @foreach($transaction_hotels as $hotel)
+                                @php
+                                    $startdate = \Carbon\Carbon::parse($hotel->reservation_start);
+                                      $enddate = \Carbon\Carbon::parse($hotel->reservation_end);
+                                      $startdates = $startdate->Format('d F Y');
+                                      $enddates = $enddate->Format('d F Y');
+                                      $diffInDays = $startdate->diffInDays($enddate);
+                                      $now = \Carbon\Carbon::now();
+                                      $remainingDays = $now->diffInDays($enddate);
+                                @endphp
                             <tr>
                                 {{-- <h1>{{ dd($hotel) }}</h1> --}}
                                 <td>{{ \Carbon\Carbon::parse($hotel->created_at)->format('d M Y') }}
@@ -130,7 +139,7 @@
                                 <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
                                 {{-- <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td> --}}
-                                <td>{{ General::rp($hotel->rent_price ) }}</td>
+                                <td>{{ General::rp($hotel->rent_price * $diffInDays ) }}</td>
                                 <td>
                                     <span class="badge {{$hotel->status == "PAID" ? "badge-success"
                                         : "badge-warning" }}">{{$hotel->status == "PAID" ? "Sukses"
@@ -170,5 +179,21 @@
 <script>
     $("#kt_datepicker_1").flatpickr();
     $("#kt_datepicker_2").flatpickr();
+    $("#kt_datatable_dom_positioning").DataTable({
+            "language": {
+                "lengthMenu": "Show _MENU_",
+            },
+            "dom": "<'row'" +
+                "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                ">" +
+
+                "<'table-responsive'tr>" +
+
+                "<'row'" +
+                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                ">"
+        });
 </script>
 @endpush

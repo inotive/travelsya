@@ -25,7 +25,7 @@
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
-                        <th class="text-center">Vendor</th>
+                        <th class="text-center">Mitra</th>
                         <th class="text-center">Hotel</th>
                         <th class="text-center">Kota</th>
                         <th class="text-center">Alamat</th>
@@ -147,7 +147,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
+                                <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                                 <select class="form-control" id="user_id" name="user_id">
                                     @foreach($users as $user)
                                         <option value="{{$user->id}}">{{$user->name}}</option>

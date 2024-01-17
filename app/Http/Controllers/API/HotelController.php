@@ -6,6 +6,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HostelRequestUpdate;
 use App\Models\Fee;
+use App\Models\HistoryPoint;
 use App\Models\HotelBookDate;
 use App\Models\DetailTransaction;
 use App\Models\Guest;
@@ -19,6 +20,7 @@ use App\Services\Setting;
 use App\Services\Xendit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -359,50 +361,51 @@ class HotelController extends Controller
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hotel') . "-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
+        $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
 
-        //cekpoint
-        // if (!$fees)
-        //     return ResponseFormatter::error(null, 'Point invalid');
-        // if ($qty < 0)
-        //     return ResponseFormatter::error(null, 'Date must be forward');
-        // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, 1);
         $amount = ($hotel->sellingprice * $totalDay) * $request->total_room;
-        //        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
+
         $fee = Fee::where('service_id', 8)->first();
         $fees = [
             [
-                'type' => 'admin',
+                'type' => 'Admin',
                 'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
             ],
             [
-                'type' => 'kode_unik',
+                'type' => 'Kode Unik',
                 'value' => $data['kode_unik'],
             ],
         ];
 
-        // cek book date
-        // $checkBook = HotelBookDate::where("hotel_room_id", $data['hotel_room_id'])
-        //     ->where('start', '>=', $data['start'])
-        //     ->where('end', "<=", $data['end'])
-        //     ->first();
+        $saldoPointCustomer = 0;
+        // Jika user menggunakan point untuk transaksi
+        if ($request->point == 1) {
 
-        // if ($checkBook) {
-        //     return ResponseFormatter::error($checkBook, 'Book dates is not available');
-        // }
+            // history point masuk dan keluar customer
+//            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+            // point masuk - point keluar
+//            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+            $saldoPointCustomer = Auth::user()->point;
+            $fees = [
+                [
+                    'type' => 'Point',
+                    'value' => $saldoPointCustomer,
+                ]
+            ];
+        }
 
-        // ceate xendit
+        // Create xendit
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
                     "product_id" => $data['hotel_room_id'],
                     "name" => $hotel['name'],
-                    "price" => $hotel->sellingprice * $totalDay,
-                    "quantity" => $request->total_room,
+                    "price" => $amount, // tanpa pajak
+                    "quantity" => 1,
                 ]
             ],
-            'amount' => $amount + $fees[0]['value'] + $data['kode_unik'],
+            'amount' => $amount + $fees[0]['value'] + $data['kode_unik'], // include pajak
             'success_redirect_url' => route('redirect.succes'),
             'failure_redirect_url' => route('redirect.fail'),
             'invoice_duration ' => 72000,
@@ -416,8 +419,7 @@ class HotelController extends Controller
         ]);
 
         // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $totalDay, $amount, $fees, $hotel) {
-
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $totalDay, $amount, $fees, $hotel, $saldoPointCustomer) {
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'HTL-' . time(),
@@ -429,6 +431,11 @@ class HotelController extends Controller
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $amount + $fees[0]['value'] + $data['kode_unik']
             ]);
+            // Pengurangan Point
+            if ($request->point == 1) {
+                $point = new Point;
+                $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
+            }
 
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hotel')
@@ -454,31 +461,10 @@ class HotelController extends Controller
                     'message' => 'Error Store Data Transaction'
                 ]);
             }
-
-
-            // true buat guest
-            // foreach ($data['guest'] as $guest) {
-            //     $storeGuest = Guest::create([
-            //         'transaction_id' => $storeTransaction->id,
-            //         // 'type_id' => $guest['type_id'],
-            //         // 'identity' => $guest['identity'],
-            //         'name' => $guest['name'],
-            //         'email' => $guest['email'],
-            //         'phone' => $guest['phone'],
-            //     ]);
-            // }
-
-            if ($data['point']) {
-                $point = new Point;
-                // $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
-                $point->pakaiPoint($request->user()->id, abs($data['point']), $storeTransaction->id);
-                //deductpoint
-            }
         });
 
-
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
-        return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+        return ResponseFormatter::success($payoutsXendit,   'Payment successfully created');
     }
 
     public function hotelCity()

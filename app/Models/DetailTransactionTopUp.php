@@ -15,4 +15,14 @@ class DetailTransactionTopUp extends Model
      * @var array
      */
     protected $guarded = [];
+
+    public function transactions()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

@@ -118,6 +118,7 @@ Route::get('/favorite-hotel', [HotelController::class, 'favoriteHotel'])->name('
 Route::get('/profile', [UserController::class, 'profile'])->name('user.profile')->middleware('auth');
 Route::put('/profile', [UserController::class, 'profileUpdate'])->name('user.profile.update')->middleware('auth');
 Route::get('/profile/order-history', [UserController::class, 'orderHistory'])->name('user.orderHistory')->middleware('auth');
+Route::get('profile/photo-profile', [UserController::class, 'photoProfile']);
 
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
 Route::get('/profile/order-detail/hostel/{id}', [UserController::class, 'orderDetailHostel'])->name('profile.order-detail.hostel')->middleware('auth');
@@ -131,8 +132,10 @@ Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDeta
 // Route::get('/profile/order-history/listrik/{id}', [UserController::class, 'orderDetailListrik'])->name('user.transactionDetail');
 Route::get('/profile/help', [UserController::class, 'help'])->name('user.help')->middleware('auth');
 
+Route::get('/profile/points', [UserController::class, 'point'])->name('user.points')->middleware('auth');
+
 // Route Bantuan Testing
-Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user')->middleware('auth');
+Route::get('/pusat-bantuan', [UserController::class, 'bantuan'])->name('bantuan-user');
 
 Route::get('/profile/help-detail', [UserController::class, 'helpDetail'])->name('user.help.detail')->middleware('auth');
 Route::get('/profile/transaction/detail/{no_inv}', [UserController::class, 'detailTransaction'])->name('user.transaction.detailold')->middleware('auth');

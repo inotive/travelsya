@@ -17,8 +17,13 @@ class CityController extends Controller
     }
 
     public function updateLanding(Request $request,$id){
+
+        $status = DB::table('cities')->where('city_id', $id)
+            ->pluck('status')
+            ->first();
+
         DB::table('cities')->where('city_id', $id)->update([
-            'status' => $request->status
+            'status' => $status == "0" ? "1" : "0"
         ]);
 
         return redirect()->route('admin.city-management.index');

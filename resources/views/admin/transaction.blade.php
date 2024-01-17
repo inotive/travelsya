@@ -1,7 +1,6 @@
-@extends('admin.layout',['title' => 'Transaction','url' => route('admin.transaction')])
+@extends('admin.layout', ['title' => 'Transaction', 'url' => route('admin.transaction')])
 
 @section('content-admin')
-
     <!--begin::Form-->
     <form action="#" method="get">
         <!--begin::Card-->
@@ -15,16 +14,19 @@
 
                     {{-- ERROR --}}
 
-                    {{-- @if(isset($services) && auth()->user()->role == 0) --}}
+                    {{-- @if (isset($services) && auth()->user()->role == 0) --}}
                     <div class="col-4">
                         <!--begin::Select-->
-                        <select class="form-select form-select-solid" data-control="select2"
-                                data-placeholder="Layanan" data-hide-search="true" name="service">
+                        <label for="service" class="form-label">Layanan</label>
+
+                        <select class="form-select form-select-solid" data-control="select2" id="service"
+                            data-placeholder="Layanan" data-hide-search="true" name="service">
                             <option value=""></option>
 
-                            @foreach($services as $service)
-                                <option
-                                    value="{{$service->id}}" {{ isset($_GET['service']) && $service->id == $_GET['service'] ? 'selected' : '' }}>{{ucfirst($service->name)}}</option>
+                            @foreach ($services as $service)
+                                <option value="{{ $service->id }}"
+                                    {{ isset($_GET['service']) && $service->id == $_GET['service'] ? 'selected' : '' }}>
+                                    {{ ucfirst($service->name) }}</option>
                             @endforeach
                         </select>
                         <!--end::Select-->
@@ -33,13 +35,24 @@
                     {{-- @endif --}}
 
 
-                    <div class="col-4">
+                    <div class="col-3">
+                        <!--begin::Label-->
+                        <label for="start" class="form-label">Tanggal Awal</label>
+                        <!--end::Label-->
                         <!--begin::Input-->
-                        <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start"
-                               value="{{isset($_GET['start']) ? $_GET['start'] : ''}}">
+                        <input type="date" class="form-control" id="start" name="start"
+                            value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
                         <!--end::Input-->
                     </div>
-                    <!--end::Col-->
+                    <div class="col-3">
+                        <!--begin::Label-->
+                        <label for="end" class="form-label">Tanggal Akhir</label>
+                        <!--end::Label-->
+                        <!--begin::Input-->
+                        <input type="date" class="form-control" id="end" name="end"
+                            value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
+                        <!--end::Input-->
+                    </div>
                     {{-- <div class="col-lg-3">
                         <!--begin::Input-->
                         <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end" value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">
@@ -47,8 +60,10 @@
                     </div> --}}
                     <!--end::Col-->
                     <!--begin::Col-->
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary">Cari Data</button>
+                    <div class="col-2">
+                        <label class="form-label" style="width: 100%; display: inline-block;">&nbsp;</label>
+
+                        <button type="submit" id="cari" class="btn btn-primary">Cari Data</button>
 
                     </div>
                     <!--end::Col-->
@@ -64,8 +79,9 @@
     <div class="d-flex flex-wrap flex-stack pb-7">
         <!--begin::Title-->
         <div class="d-flex flex-wrap align-items-center my-1">
-            <h3 class="fw-bold me-5 my-1">{{$transactions->count()}} Transaction Found
-                <span class="text-gray-400 fs-6">by Recent Updates ↓</span></h3>
+            <h3 class="fw-bold me-5 my-1">{{ $transactions->count() }} Transaction Found
+                <span class="text-gray-400 fs-6">by Recent Updates ↓</span>
+            </h3>
         </div>
         <!--end::Title-->
         {{-- <!--begin::Controls-->
@@ -134,73 +150,81 @@
                         <table class="table table-bordered gs-0 gy-4 text-center">
                             <!--begin::Table head-->
                             <thead>
-                            <tr class="fw-bold fs-6 text-gray-800">
-                                <th style="width:15%">Created</th>
-                                <th style="width:20%">No Invoice</th>
-                                <th style="width:10%">Service</th>
-                                <th style="width:15%">Metode Pembayaran</th>
-                                <th style="width:15%">Channel Pembayaran</th>
-                                <th style="width:15%">Grand Total</th>
-                                <th style="width:10%">Status</th>
-                            </tr>
+                                <tr class="fw-bold fs-6 text-gray-800">
+                                    <th style="width:15%">Created</th>
+                                    <th style="width:20%">No Invoice</th>
+                                    <th style="width:10%">Service</th>
+                                    <th style="width:15%">Metode Pembayaran</th>
+                                    <th style="width:15%">Channel Pembayaran</th>
+                                    <th style="width:15%">Biaya Admin</th>
+                                    <th style="width:15%">Grand Total</th>
+                                    <th style="width:10%">Status</th>
+                                </tr>
                             </thead>
                             <!--end::Table head-->
                             <!--begin::Table body-->
                             <tbody>
-                            @foreach($transactions as $transaction)
-                                <tr>
-                                    <td>
-                                        <div
-                                            class="text-dark   mb-1 fs-6">{{\Carbon\Carbon::parse($transaction->created_at)->format('d M y h:m')}}</div>
-                                    </td>
-                                    <td>
-                                        <div class="text-dark   mb-1 fs-6">{{$transaction->no_inv}}</div>
-                                    </td>
-                                    <td>
-                                   <span class="badge badge-rounded badge-primary">
-                                       {{strtoupper($transaction->service)}}
-                                   </span>
-                                    </td>
-                                    <td>
-                                        <div class="text-dark   d-block mb-1 fs-6">
-                                            {{ $transaction->payment_method ?? '-' }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="text-dark   d-block mb-1 fs-6">
-                                            {{ $transaction->payment_channel ?? '-'  }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        Rp. {{number_format($transaction->total,0,',','.')}}
-                                    </td>
-                                    <td>
-                                        <div class="text-dark   d-block mb-1 fs-6">
+                                @foreach ($transactions as $transaction)
+                                    @php
+                                        $biayaAdmin = $transaction->hotel_fee ?? ($transaction->hostel_fee ?? ($transaction->ppob_fee ?? $transaction->topup_fee));
+                                    @endphp
+                                    <tr>
+                                        <td>
+                                            <div class="text-dark   mb-1 fs-6">
+                                                {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M y h:m') }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-dark   mb-1 fs-6">{{ $transaction->no_inv }}</div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-rounded badge-primary">
+                                                {{ strtoupper($transaction->service) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="text-dark   d-block mb-1 fs-6">
+                                                {{ $transaction->payment_method ?? '-' }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="text-dark   d-block mb-1 fs-6">
+                                                {{ $transaction->payment_channel ?? '-' }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            Rp. {{ number_format($biayaAdmin, 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            Rp. {{ number_format($transaction->total, 0, ',', '.') }}
+                                        </td>
+                                        <td>
+                                            <div class="text-dark   d-block mb-1 fs-6">
 
-                                            @if($transaction->status == "PAID")
-                                                <span class="badge badge-rounded badge-success">Sukses</span>
-                                            @elseif($transaction->status == "PENDING")
-                                                <span class="badge badge-rounded badge-warning">Pending</span>
-                                            @else
-                                                <span class="badge badge-rounded badge-danger">Gagal</span>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    {{--                                <td class="text-end">--}}
-                                    {{--                                    <a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"--}}
-                                    {{--                                        data-id="{{$transaction->id}}">--}}
-                                    {{--                                        <i class="ki-duotone ki-pencil fs-2">--}}
-                                    {{--                                            <span class="path1"></span>--}}
-                                    {{--                                            <span class="path2"></span>--}}
-                                    {{--                                        </i>--}}
-                                    {{--                                    </a>--}}
-                                    {{--                                </td>--}}
-                                </tr>
-                            @endforeach
+                                                @if ($transaction->status == 'PAID')
+                                                    <span class="badge badge-rounded badge-success">Sukses</span>
+                                                @elseif($transaction->status == 'PENDING')
+                                                    <span class="badge badge-rounded badge-warning">Pending</span>
+                                                @else
+                                                    <span class="badge badge-rounded badge-danger">Gagal</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        {{--                                <td class="text-end"> --}}
+                                        {{--                                    <a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit" --}}
+                                        {{--                                        data-id="{{$transaction->id}}"> --}}
+                                        {{--                                        <i class="ki-duotone ki-pencil fs-2"> --}}
+                                        {{--                                            <span class="path1"></span> --}}
+                                        {{--                                            <span class="path2"></span> --}}
+                                        {{--                                        </i> --}}
+                                        {{--                                    </a> --}}
+                                        {{--                                </td> --}}
+                                    </tr>
+                                @endforeach
                             </tbody>
                             <!--end::Table body-->
                         </table>
-{{--                        {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}--}}
+                        {{--                        {{$transactions->appends(request()->input())->links('vendor.pagination.bootstrap-5')}} --}}
                         <!--end::Table-->
                     </div>
                     <!--end::Table container-->
@@ -217,7 +241,7 @@
 @endsection
 @push('add-script')
     <script>
-        $(document).ready( function () {
+        $(document).ready(function() {
             $('.table').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
@@ -225,8 +249,7 @@
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
-                "dom":
-                    "<'row'" +
+                "dom": "<'row'" +
                     "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
@@ -238,7 +261,6 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
-        } );
+        });
     </script>
 @endpush
-

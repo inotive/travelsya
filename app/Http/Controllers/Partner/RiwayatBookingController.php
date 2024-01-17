@@ -49,12 +49,18 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $hotelbookdates = DetailTransactionHotel::with('hotelRoom', 'hotel')
+        $hotelbookdates = DetailTransactionHotel::with('hotelRoom', 'hotel','transaction')
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
+            })
         ->whereHas('hotel', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         });
 
-    $hostelbookdates = DetailTransactionHostel::with('hostelRoom', 'hostel')
+    $hostelbookdates = DetailTransactionHostel::with('hostelRoom', 'hostel','transaction')
+        ->whereHas('transaction', function ($q) {
+            $q->where('status', 'PAID');
+        })
         ->whereHas('hostel', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         });
@@ -88,6 +94,8 @@ class RiwayatBookingController extends Controller
     public function detailhotelbookdate($id)
     {
         $hotelbookdates = DetailTransactionHotel::with('transaction')->findOrFail($id);
+
+        //dd($hotelbookdates);
 
         return view('ekstranet.booking.detail-book-hotel', compact('hotelbookdates'));
     }

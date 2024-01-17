@@ -138,7 +138,7 @@ class TopUpController extends Controller
                 [
                     'name' => $product->name,
                     'quantity' => 1,
-                    'price' => $grandTotal,
+                    'price' => $product->price,
                     'url' => "someurl"
                 ]
             ],
@@ -181,13 +181,25 @@ class TopUpController extends Controller
                 'nomor_telfon'   => $data['no_hp'],
                 'total_tagihan'  => $grandTotal,
                 'fee_travelsya'  => 2500,
-                'fee_mili'       => 2500,
+                'fee_mili'       => 0,
                 'message'        => 'Top UP sedang diproses',
                 'status'         => "PROCESS",
                 "kode_unik"      => $data['kode_unik'],
                 "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
             // Jika user menggunakan point untuk transaksi
+
+            if ($request->point == 1) {
+                $point = new Point;
+                $point->deductPoint($request->user()->id, $saldoPointCustomer, $transaction->id);
+
+//                // history point masuk dan keluar customer
+//                $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+//                // point masuk - point keluar
+//                $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+            }
+
+
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         // }
     }

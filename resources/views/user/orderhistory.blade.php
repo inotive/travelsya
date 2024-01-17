@@ -65,16 +65,15 @@
                                         {{-- Card Pertama Revisi --}}
                                         @foreach ($all_transactions as $all)
                                             @php
-                                                if ($all->service_id == 8 ) {
+                                                if ($all->service_id == 8) {
                                                     $route = route('profile.order-detail.hotel', $all->id);
-                                                } elseif ( $all->service_id == 7){
+                                                } elseif ($all->service_id == 7) {
                                                     $route = route('profile.order-detail.hostel', $all->id);
-                                                } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11) {
+                                                } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11 || $all->service_id == 2) {
+                                                    // top up
                                                     $route = route('profile.order-detail.listrik-voucher', $all->id);
-                                                } elseif($all->service_id == 2 ) {
-                                                    $route = route('profile.order-detail.listrik', $all->id);
                                                 } else {
-                                                    $route = route('profile.order-detail.listrik-voucher', $all->id);
+                                                    $route = route('profile.order-detail.listrik', $all->id);
                                                 }
                                             @endphp
                                             <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer"
@@ -284,13 +283,16 @@
                                     </div> --}}
                                         @foreach ($pending_transactions as $pending)
                                             @php
-                                                if ($pending->service_id == 7 || $pending->service_id == 8) {
+                                                if ($pending->service_id == 8) {
                                                     $routePending = route('profile.order-detail.hotel', $pending->id);
-                                                } elseif ($pending->service_id == 12 || $pending->service_id == 1 || $pending->service_id == 11) {
+                                                } elseif ($pending->service_id == 7) {
+                                                    $routePending = route('profile.order-detail.hostel', $pending->id);
+                                                } elseif ($pending->service_id == 12 || $pending->service_id == 1 || $pending->service_id == 11 || $pending->service_id == 2) {
                                                     $routePending = route('profile.order-detail.listrik-voucher', $pending->id);
                                                 } else {
                                                     $routePending = route('profile.order-detail.listrik', $pending->id);
                                                 }
+
                                             @endphp
                                             <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer"
                                                 style="" onclick="window.location.href = '{{ $routePending }}';">
@@ -298,8 +300,29 @@
                                                     <div class="text-gray-400 fw-bold">
                                                         {{ Str::ucfirst($pending->service) }}
                                                     </div>
-                                                    <div class="badge badge-warning fw-bold">
-                                                        Menunggu Pembayaran
+                                                    @php
+                                                        if ($pending->status == 'PENDING') {
+                                                            $text_color = 'badge badge-warning';
+                                                            $text = 'Menunggu Pembayaran';
+                                                        }
+
+                                                        if ($pending->status == 'PAID') {
+                                                            $text_color = 'badge badge-success';
+                                                            $text = 'Lunas';
+                                                        }
+
+                                                        if ($pending->status == 'Transaksi Gagal') {
+                                                            $text_color = 'badge badge-danger';
+                                                            $text = 'Transaksi Gagal';
+                                                        }
+
+                                                        if ($pending->status == 'EXPIRED') {
+                                                            $text_color = 'badge badge-danger';
+                                                            $text = 'Transaksi Kadaluarsa';
+                                                        }
+                                                    @endphp
+                                                    <div class="{{ $text_color }} fw-bold">
+                                                        {{ Str::ucfirst($text) }}
                                                     </div>
                                                 </div>
                                                 <div class="separator border border-1"
@@ -307,11 +330,37 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center m-5">
                                                     <div class="kiri d-flex">
-                                                        <div class="symbol symbol-40px">
-                                                            <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame1.svg') }}"
-                                                                alt="frame5">
-                                                        </div>
-
+                                                        @if ($pending->service_id == 8)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-hotel.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif($pending->service_id == 7)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-hostel.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif($pending->service_id == 3)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-pln.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif ($pending->service_id == 1 || $pending->service_id == 2)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-pulsa.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif ($pending->service_id == 11)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-wallet.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @else
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-bpjs.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @endif
                                                         <div class="d-flex flex-column" style=" margin-left: 16px">
                                                             <a href="#"
                                                                 class="text-gray-900 text-hover-primary fs-6 fw-bold"
@@ -341,7 +390,7 @@
                                                     </div>
                                                 </div>
                                                 @php
-                                                    $originalDate = $pending->created_at;
+                                                    $originalDate = $all->created_at;
                                                     $date = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $originalDate);
                                                     $formattedDate = $date->format('l, d M Y H:i') . ' WITA';
                                                 @endphp
@@ -396,23 +445,49 @@
                                         </div>
                                     </div> --}}
                                         @foreach ($history_transactions as $history)
-                                            @php
-                                                if ($history->service_id == 7 || $history->service_id == 8) {
-                                                    $routeHistory = route('profile.order-detail.hotel', $history->id);
-                                                } elseif ($history->service_id == 12 || $history->service_id == 1 || $history->service_id == 11) {
-                                                    $routeHistory = route('profile.order-detail.listrik-voucher', $history->id);
-                                                } else {
-                                                    $routeHistory = route('profile.order-detail.listrik', $history->id);
-                                                }
-                                            @endphp
+                                        @php
+                                        if ($history->service_id == 8) {
+                                            $routeHistory = route('profile.order-detail.hotel', $history->id);
+                                        } elseif ($history->service_id == 7) {
+                                            $routeHistory = route('profile.order-detail.hostel', $history->id);
+                                        } elseif ($history->service_id == 12 || $history->service_id == 1 || $history->service_id == 11 || $history->service_id == 2) {
+                                            $routeHistory = route('profile.order-detail.listrik-voucher', $history->id);
+                                        } else {
+                                            $routeHistory = route('profile.order-detail.listrik', $history->id);
+                                        }
+
+                                    @endphp
                                             <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer"
-                                                onclick="window.location.href = '{{ $routeHistory }}';" style="">
+                                                style="" onclick="window.location.href = '{{ $routeHistory }}';">
                                                 <div class="d-flex justify-content-between m-5">
                                                     <div class="text-gray-400 fw-bold">
                                                         {{ Str::ucfirst($history->service) }}
                                                     </div>
-                                                    <div class="text-success fw-bold">
-                                                        Berhasil
+                                                    @php
+
+                                                        if ($history->status == 'PENDING') {
+                                                            $text_color = 'badge badge-warning';
+                                                            $text = 'Menunggu Pembayaran';
+                                                        }
+
+                                                        if ($history->status == 'PAID') {
+                                                            $text_color = 'badge badge-success';
+                                                            $text = 'Lunas';
+                                                        }
+
+                                                        if ($history->status == 'Transaksi Gagal') {
+                                                            $text_color = 'badge badge-danger';
+                                                            $text = 'Transaksi Gagal';
+                                                        }
+
+                                                        if ($history->status == 'EXPIRED') {
+                                                            $text_color = 'badge badge-danger';
+                                                            $text = 'Transaksi Kadaluarsa';
+                                                        }
+
+                                                    @endphp
+                                                    <div class="{{ $text_color }} fw-bold">
+                                                        {{ Str::ucfirst($text) }}
                                                     </div>
                                                 </div>
                                                 <div class="separator border border-1"
@@ -420,10 +495,37 @@
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center m-5">
                                                     <div class="kiri d-flex">
-                                                        <div class="symbol symbol-40px">
-                                                            <img src="{{ asset('assets/media/svg/profile-account/order-history/Frame1.svg') }}"
-                                                                alt="frame5">
-                                                        </div>
+                                                        @if ($history->service_id == 8)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-hotel.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif($history->service_id == 7)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-hostel.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif($history->service_id == 3)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-pln.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif ($history->service_id == 1 || $history->service_id == 2)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-pulsa.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @elseif ($history->service_id == 11)
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-whistoryet.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @else
+                                                            <div class="symbol symbol-40px">
+                                                                <img src="{{ asset('assets/media/products-categories/icon-bpjs.png') }}"
+                                                                    alt="frame5">
+                                                            </div>
+                                                        @endif
                                                         <div class="d-flex flex-column" style=" margin-left: 16px">
                                                             <a href="#"
                                                                 class="text-gray-900 text-hover-primary fs-6 fw-bold"

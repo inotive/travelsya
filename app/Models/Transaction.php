@@ -29,7 +29,7 @@ class Transaction extends Model
 
     public function detailTransactionPPOB()
     {
-        return $this->hasMany(DetailTransactionPPOB::class);
+        return $this->hasMany(DetailTransactionPPOB::class, 'transaction_id', 'id');
     }
     public function detailTransactionTopUp()
     {
@@ -85,6 +85,16 @@ class Transaction extends Model
     public function historyPoint()
     {
         return $this->hasMany(HistoryPoint::class);
+    }
+
+    public function historyPointIN()
+    {
+        return $this->hasMany(HistoryPoint::class)->where('flow','debit');
+    }
+
+    public function historyPointOut()
+    {
+        return $this->hasMany(HistoryPoint::class)->where('flow','credit');
     }
 
     /**

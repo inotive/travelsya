@@ -31,4 +31,5 @@ class DetailTransactionHostel extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+
 }

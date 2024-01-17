@@ -15,11 +15,16 @@ class Setting
         $total = 0;
 
         $admin = $fees[0]['value'];
-        if (count($fees) == 2) {
-            $point = $fees[1]['value'];
+        $kodeunik = $fees[1]['value'];
+
+        if (isset($fees[2]['value'])) {
+            $point = $fees[2]['value'];
         }
-        $total = $total + ($price * $qty * $room);
-        $grandTotal = $total + $admin + (isset($point) ? $point : 0);
+        else{
+            $point = 0;
+        }
+        $total = $price * $qty * $room;
+        $grandTotal = $total + $admin + $kodeunik +  $point;
         return $grandTotal;
     }
 
@@ -35,11 +40,12 @@ class Setting
         $fees = [];
 
         array_push($fees, [
-            'type' => 'admin',
+            'type' => 'Fee Admin',
             'value' => $feeValue,
-        ]);
+            ],
+        );
 
-        if ($point == 1) {
+        if (isset($point) && $point != 0) {
             // cek point
             $user = User::find($userid);
             // if ($user && $user->point <= 0) {

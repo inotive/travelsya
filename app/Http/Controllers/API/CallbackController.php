@@ -42,6 +42,30 @@ class CallbackController extends Controller
         fclose($fp);
     }
 
+    public function testCheckVoucher(Request $request)
+    {
+        $data = [
+            'reqid' => $request->inv,
+            'no_hp' => str($request->kode_pembayaran),
+            'nom' => str($request->nomor_telfon),
+        ];
+
+        // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
+        sleep(3);
+        $transaction = $this->mymili->status($data);
+        //process retrieve voucher code
+        $responseMessage = explode(' ', $transaction['MESSAGE']);
+        $responseMessageSN = explode('SN=', $responseMessage[4]);
+        $responseMessageSNCode = explode('/', $responseMessageSN[1]);
+        $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+
+        return response()->json([
+            '$responseMessage' => $responseMessage,
+            '$responseMessageSN' => $responseMessageSN,
+            '$responseMessageSNCode' => $responseMessageSNCode,
+            '$responseMessageSNCodeFinal' => $responseMessageSNCodeFinal
+        ]);
+    }
     public function xendit(Request $request)
     {
         $point = new Point();
@@ -64,7 +88,9 @@ class CallbackController extends Controller
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
             print_r($responseXendit);
-            $transaction = Transaction::where('no_inv', $responseXendit['external_id'])->first();
+            $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
+                ->first();
+            $settingPoint = new Point();
 
             if ($transaction) {
                 //CEK STATUS PENDING
@@ -85,7 +111,7 @@ class CallbackController extends Controller
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
-                                ->select('top.id', 'top.id', 'p.kode as kode_pembayaran', 'top.nomor_telfon')
+                                ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon', 'top.total_tagihan')
                                 ->first();
                             $responseMili = $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
@@ -93,8 +119,8 @@ class CallbackController extends Controller
                             if ($transaction->service == 'listrik-token') {
                                 $data = [
                                     'reqid' => $transaction->no_inv,
-                                    'no_hp' => str($detailTransactionTopUP->kode_pembayaran),
-                                    'nom' => str($detailTransactionTopUP->nomor_telfon),
+                                    'no_hp' => str($detailTransactionTopUP->nomor_telfon),
+                                    'nom' => str($detailTransactionTopUP->kode_pembayaran),
                                 ];
 
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
@@ -108,14 +134,29 @@ class CallbackController extends Controller
                             }
 
                             if ($responseMili['RESPONSECODE'] == 00) {
-                                $status = 'Berhasil';
-                                $message = 'Pembayaran ' . strtoupper($transaction->service) . ' Berhasil';
+                                $status = "Berhasil";
+                                $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
+
+                                $pointDiterima = $settingPoint->calculatePoint($detailTransactionTopUP->total_tagihan, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = 'Pending';
                                 $message = 'Pembayaran Sedang Di Proses';
                             } else {
-                                $status = 'Transaksi Gagal';
-                                $message = 'Nomor telfon atau nomor pelanggan tidak dikenali';
+                                $status = "Transaksi Gagal";
+                                $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
+
                                 HistoryPoint::where('transaction_id', $transaction->id)
                                     ->where('flow', 'credit')
                                     ->delete();
@@ -133,19 +174,34 @@ class CallbackController extends Controller
                                     'kode_voucher' => $responseMessageSNCodeFinal,
                                     'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                                 ]);
-                        } elseif ($transaction->service == 'pln' || $transaction->service == 'pdam' || $transaction->service == 'bpjs') {
+                        }
+                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs" || $transaction->service == "tv-internet"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
-                                ->select('ppob.id', 'p.kode as kode_pembayaran', 'ppob.nomor_pelanggan')
+                                ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan', 'ppob.total_tagihan')
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
-
-                            $responseMili = $this->mymili->paymentPPOB($transaction->no_inv, $detailTransactionPPOB->kode_pembayaran, $detailTransactionPPOB->nomor_pelanggan);
+                            $kode = $detailTransactionPPOB->kode_pembayaran == "CEKTELKOM" ? "PAYTELKOM" : $detailTransactionPPOB->kode_pembayaran;
+                            $responseMili =  $this->mymili->paymentPPOB($transaction->no_inv, $kode, $detailTransactionPPOB->nomor_pelanggan);
 
                             // return $responseMili;
                             if ($responseMili['RESPONSECODE'] == 00) {
-                                $status = 'Berhasil';
-                                $message = 'Pembayaran ' . $transaction->service . ' Berhasil';
+                                $status = "Berhasil";
+                                $message = "Pembayaran " . $transaction->service . ' Berhasil';
+
+                                $pointDiterima = $settingPoint->calculatePoint($detailTransactionPPOB->total_tagihan, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
                             } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = 'Pending';
                                 $message = 'Pembayaran Sedang Di Proses';
@@ -165,23 +221,82 @@ class CallbackController extends Controller
                                 'message' => $message,
                                 'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                             ]);
-                        } else {
-                            if ($transaction->service == 'hotel' || $transaction->service == 'HOTEL') {
-                                $status = 'Berhasil';
-                                $message = 'Pemesanan Hotel Berhasil';
+                        }
+                        else{
+
+                            if ($transaction->service == "hotel" || $transaction->service == "HOTEL")
+                            {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hotel Berhasil";
+
+
+//                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
+//
                                 DetailTransactionHotel::where('transaction_id', $transaction->id)->update([
-                                    'updated_at' => Carbon::now(),
+                                      'updated_at' => Carbon::now()
+                                  ]);
+//
+//                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
+//                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
+//                                $startdates = $startdate->Format('d F Y');
+//                                $enddates = $enddate->Format('d F Y');
+//                                $diffInDays = $startdate->diffInDays($enddate);
+//
+//
+//                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
+//
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
                                 ]);
-                            } else {
-                                $status = 'Berhasil';
-                                $message = 'Pemesanan Hostel Berhasil';
+                            }
+                            else{
+                                $status = "Berhasil";
+                                $message = "Pemesanan Hostel Berhasil";
+
+//                                $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
+
+
                                 DetailTransactionHostel::where('transaction_id', $transaction->id)->update([
-                                    'updated_at' => Carbon::now(),
+                                    'updated_at' => Carbon::now()
+                                ]);
+//                                $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
+//                                $enddate = \Carbon\Carbon::parse($detailHostel->reservation_end);
+//                                $startdates = $startdate->Format('d F Y');
+//                                $enddates = $enddate->Format('d F Y');
+//                                $diffInDays = $startdate->diffInDays($enddate);
+//
+//
+//                                $grandtotal = $diffInDays * $detailHostel->first()->rent_price * $detailHostel->first()->room;
+////
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
                                 ]);
                             }
                         }
 
-                        if ($status == 'Berhasil' || $status == 'Pending') {
+
+
+                        if($status == "Berhasil" || $status == "Pending")
+                        {
+
                             return ResponseFormatter::success($status, $message);
                         } else {
                             return ResponseFormatter::error($status, $message);

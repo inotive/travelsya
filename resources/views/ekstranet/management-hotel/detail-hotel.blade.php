@@ -338,7 +338,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td class="text-center">
-                                                    <img src="{{ asset('storage/media/hotel/' . $image->image) }}"
+                                                    <img src="{{ asset('storage/' . $image->image) }}"
                                                         class="rounded" style="width: 150px">
                                                 </td>
                                                 <td class="text-center">
@@ -457,9 +457,8 @@
 
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                            <a href="javascript:void(0)"
-                                                                class="menu-link px-3 text-warning" id=""
-                                                                data-id="" data-bs-toggle="modal">
+                                                            <a href="{{ route('partner.riwayat-booking.detailhotel', $booking->id) }}"
+                                                                class="menu-link px-3 text-warning" id="" data-id="">
                                                                 Detail Booking
                                                             </a>
                                                         </div>

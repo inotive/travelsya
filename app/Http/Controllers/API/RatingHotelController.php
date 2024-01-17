@@ -15,6 +15,7 @@ class RatingHotelController extends Controller
         $validator = Validator::make($request->all(), [
             "hotel_id"      => "required",
             "hotel_room_id" => "required",
+            "transaction_id" => "required",
             "review"        => "required",
             "bintang"       => "required",
         ]);
@@ -26,6 +27,7 @@ class RatingHotelController extends Controller
         HotelRating::create([
             'hotel_id'      => $request->hotel_id,
             'hotel_room_id' => $request->hotel_room_id,
+            'transaction_id' => $request->transaction_id,
             'users_id'      => auth()->id(),
             'rate'          => $request->bintang,
             'comment'       => $request->review,
