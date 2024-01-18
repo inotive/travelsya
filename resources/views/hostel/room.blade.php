@@ -258,16 +258,16 @@
                     <!--begin::Image-->
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/media/hostel/' . $hostelImage->image) }}')">
-                                </div>
-                                <!--end::Image-->
+                                    </div>
+                                    <!--end::Image-->
 
-                                <!--begin::Action-->
-                                <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                    <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                </div>
-                                <!--end::Action-->
-                            </a>
-                        </div>
+                                    <!--begin::Action-->
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                    </div>
+                                    <!--end::Action-->
+                                </a>
+                            </div>
      @endforeach
                     </div>
 
@@ -500,7 +500,8 @@
                 </p>
                 <div class="d-flex align-items-center gap-2">
                 @foreach ($room->hostelFacilities->groupBy('facility.name') as $facility)
-                <img src="{{ asset($facility->first()->facility->icon) }}" alt="Fasilitas" width="30" class="me-1">
+                <img src="{{ asset($facility->first()->facility->icon) }}" alt="Fasilitas" width="30"
+                class="me-1">
                 @endforeach
 
                 </div>
@@ -524,7 +525,7 @@
 
                 @auth
                     <a
-                    href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}"
+                    href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}&guest={{ $params['guest'] }}"
                     class="btn btn-danger px-4 py-2">Pesan
                     Kamar</a>
                 @endauth

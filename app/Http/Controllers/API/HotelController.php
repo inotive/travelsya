@@ -99,13 +99,18 @@ class HotelController extends Controller
 
             if ($request->has('check_in') && $request->has('check_out')) {
                 $hotels->whereRaw('(
-                    SELECT SUM(totalroom) FROM hotel_rooms hr WHERE hr.hotel_id = hotels.id
-                ) - (
-                    SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel WHERE hotel_id = hotels.id
-                    AND ? <= guest
-                    AND ? >= reservation_start
-                ) > 0', [$request->check_out, $request->check_in]);
+        SELECT COUNT(*) FROM hotel_rooms hr
+        WHERE hr.hotel_id = hotels.id
+        AND hr.totalroom - COALESCE((
+            SELECT SUM(dth.room) FROM detail_transaction_hotel dth
+            WHERE dth.hotel_id = hotels.id
+            AND ? <= dth.reservation_end
+            AND ? >= dth.reservation_start
+        ), 0) > 0
+    ) > 0', [$request->check_out, $request->check_in]);
             }
+
+
 
             $hotelget = $hotels->get();
             $hotelDetails = [];
@@ -303,7 +308,7 @@ class HotelController extends Controller
             $hotel = collect([$hotels])->map(function ($room) {
                 $room_facilities = $room->hotelroomFacility->map(function ($facilities) {
                     return [
-                        'id'   => $facilities->facility_id,
+                        'id' => $facilities->facility_id,
                         'name' => $facilities->facility->name,
                         'icon' => $facilities->facility->icon,
                     ];
@@ -316,11 +321,11 @@ class HotelController extends Controller
                 })->unique('image');
 
                 return [
-                    'room_size'       => $room->roomsize,
-                    'max_guest'       => $room->guest,
-                    'description'     => $room->description,
+                    'room_size' => $room->roomsize,
+                    'max_guest' => $room->guest,
+                    'description' => $room->description,
                     'room_facilities' => $room_facilities,
-                    'room_images'     => $room_images,
+                    'room_images' => $room_images,
                 ];
             });
 
@@ -369,7 +374,7 @@ class HotelController extends Controller
         $fees = [
             [
                 'type' => 'Admin',
-                'value' => $fee->percent == 0 ? $fee->value :   $amount * $fee->value / 100,
+                'value' => $fee->percent == 0 ? $fee->value : $amount * $fee->value / 100,
             ],
             [
                 'type' => 'Kode Unik',
@@ -440,21 +445,21 @@ class HotelController extends Controller
             try {
                 $storeDetailTransaction = DB::table('detail_transaction_hotel')
                     ->insert([
-                        'transaction_id'    => $storeTransaction->id,
-                        'hotel_id'          => $hotel->hotel_id,
-                        'hotel_room_id'     => $data['hotel_room_id'],
-                        'booking_id'        => Str::random(6),
+                        'transaction_id' => $storeTransaction->id,
+                        'hotel_id' => $hotel->hotel_id,
+                        'hotel_room_id' => $data['hotel_room_id'],
+                        'booking_id' => Str::random(6),
                         'reservation_start' => $data['start'],
-                        'reservation_end'   => $data['end'],
-                        'guest'             => $request->total_guest,
-                        'room'              => $request->total_room,
-                        "rent_price"        => $hotel->sellingprice,
-                        "fee_admin"         => $fees[0]['value'],
-                        "kode_unik"         => $data['kode_unik'],
+                        'reservation_end' => $data['end'],
+                        'guest' => $request->total_guest,
+                        'room' => $request->total_room,
+                        "rent_price" => $hotel->sellingprice,
+                        "fee_admin" => $fees[0]['value'],
+                        "kode_unik" => $data['kode_unik'],
                         "guest_name" => $data['guest'][0]['name'],
                         "guest_email" => $data['guest'][0]['email'],
                         "guest_handphone" => $data['guest'][0]['phone'],
-                        "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
+                        "created_at" => Carbon::now()->timezone('Asia/Makassar')
                     ]);
             } catch (\Exception $exception) {
                 return response()->json([
@@ -464,7 +469,7 @@ class HotelController extends Controller
         });
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
-        return ResponseFormatter::success($payoutsXendit,   'Payment successfully created');
+        return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
     }
 
     public function hotelCity()

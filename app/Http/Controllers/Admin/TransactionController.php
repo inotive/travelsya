@@ -49,8 +49,8 @@ class TransactionController extends Controller
                 MAX(detail_transaction_hotel.fee_admin) + MAX(detail_transaction_hotel.kode_unik) as hotel_fee,
                 MAX(detail_transaction_hostel.fee_admin) + MAX(detail_transaction_hostel.kode_unik) as hostel_fee,
                 MAX(detail_transaction_ppob.fee_travelsya) + MAX(detail_transaction_ppob.kode_unik) as ppob_fee,
-                MAX(detail_transaction_top_up.fee_travelsya) + MAX(detail_transaction_top_up.kode_unik) as topup_fee')
-            ->get();
+                MAX(detail_transaction_top_up.fee_travelsya) + MAX(detail_transaction_top_up.kode_unik) as topup_fee');
+            // ->get();
         } else {
             $id = auth()->user()->id;
             $tr = Transaction::with('user')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {

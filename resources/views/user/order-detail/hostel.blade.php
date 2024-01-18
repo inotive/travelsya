@@ -215,14 +215,15 @@
                                                 ->where('transactions.id', '=', $transaction_id)
                                                 ->where('hostel_ratings.users_id', '=', $user)
                                                 ->orderBy('hostel_ratings.created_at', 'desc')
-                                                ->select('transactions.*', 'detail_transaction_hostel.*', 'hostel_ratings.*')
+                                                ->select('transactions.*', 'detail_transaction_hostel.*', 'hostel_ratings.*', 'hostel_ratings.created_at as comment_time')
                                                 ->first();
 
                                             use Carbon\Carbon;
                                             Carbon::setLocale('id');
                                             $formatted_created_at = null;
                                             if ($rating_data) {
-                                                $formatted_created_at = \Carbon\Carbon::parse($rating_data->created_at)->diffForHumans();
+                                                $commentTime = Carbon::parse($rating_data->comment_time);
+$formatted_created_at = $commentTime->diffForHumans();
                                             }
                                         @endphp
                                         <div class="card border border-1 mb-5">

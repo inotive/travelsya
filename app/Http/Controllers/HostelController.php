@@ -32,21 +32,27 @@ class HostelController extends Controller
 
     public function index(Request $request)
     {
-        $hostels = Hostel::where('hostels.is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')->where('city', 'like', '%' . $request->location . '%')->withCount(["rating as rating_avg" => function ($q) {
+        $hostels = Hostel::where('hostels.is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')->where('city', 'like', '%' . $request->location . '%')->withCount([
+            "rating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("rating as rating_count");
+            }
+        ])->withCount("rating as rating_count");
 
         if ($request->has('category')) {
             if ($request->category == 'monthly') {
-                $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
-                }]);
+                $hostels->withCount([
+                    "hostelRoom as price_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
+                    }
+                ]);
             }
 
             if ($request->category == 'yearly') {
-                $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(sellingrentprice_yearly),0)'));
-                }]);
+                $hostels->withCount([
+                    "hostelRoom as price_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(sellingrentprice_yearly),0)'));
+                    }
+                ]);
             }
         }
 
@@ -64,6 +70,20 @@ class HostelController extends Controller
                 });
             }
         }
+        if ($request->has('guest')) {
+            if ($request->guest != '' && $request->guest != 'max') {
+                $guest = $request->guest;
+                $hostels->withWhereHas('hostelRoom', function ($q) use ($guest) {
+                    $q->where('max_guest', '>=', $guest);
+                });
+            }
+            if ($request->guest == 'max') {
+                $guest = $request->guest;
+                $hostels->withWhereHas('hostelRoom', function ($q) use ($guest) {
+                    $q->where('max_guest', '>', 10);
+                });
+            }
+        }
 
         if ($request->has('furnish')) {
             if ($request->furnish != '') {
@@ -77,10 +97,10 @@ class HostelController extends Controller
         if ($request->has('start')) {
             $checkin = Carbon::parse($request->start);
             $duration = $request->duration;
-        
+
             // Hitung tanggal checkout
             $checkout = $checkin->copy()->addMonths($duration);
-        
+
             $hostels->whereRaw('(
                 SELECT COUNT(*) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
             ) - (
@@ -106,8 +126,8 @@ class HostelController extends Controller
         //     ) > 0', [$checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
 
         // }
-        
-        
+
+
 
         if ($request->has('harga')) {
             $orderDirection = $request->harga === 'tertinggi' ? 'desc' : 'asc';
@@ -185,21 +205,28 @@ class HostelController extends Controller
 
         if ($request->has('category')) {
             if ($request->category == 'monthly') {
-                $hostel->withCount(["hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
-                }]);
+                $hostel->withCount([
+                    "hostelRoom as price_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(sellingrentprice_monthly),0)'));
+                    }
+                ]);
             }
 
             if ($request->category == 'yearly') {
-                $hostel->withCount(["hostelRoom as price_avg" => function ($q) {
-                    $q->select(DB::raw('coalesce(avg(sellingrentprice_yearly),0)'));
-                }]);
+                $hostel->withCount([
+                    "hostelRoom as price_avg" => function ($q) {
+                        $q->select(DB::raw('coalesce(avg(sellingrentprice_yearly),0)'));
+                    }
+                ]);
             }
         }
 
-        $data['hostelget'] = $hostel->withCount(["rating as rating_avg" => function ($query) {
-            $query->select(DB::raw('coalesce(avg(rate),0)'));
-        }])->withCount("rating as rating_count")->addSelect(['availability_count' => DB::raw('COALESCE(
+        $data['hostelget'] = $hostel->withCount([
+            "rating as rating_avg" => function ($query) {
+                $query->select(DB::raw('coalesce(avg(rate),0)'));
+            }
+        ])->withCount("rating as rating_count")->addSelect([
+                    'availability_count' => DB::raw('COALESCE(
                     (SELECT COUNT(*) FROM hostel_rooms AS hr
                         WHERE hr.hostel_id = hostels.id
                         AND NOT EXISTS (
@@ -209,7 +236,8 @@ class HostelController extends Controller
                                 (dt.reservation_start <= ? AND dt.reservation_end >= ?)
                                 OR (dt.reservation_start <= ? AND dt.reservation_end >= ?)
                             )
-                        )), 0)')])->setBindings([$startDate, $startDate, $endDate, $endDate])->find($id);
+                        )), 0)')
+                ])->setBindings([$startDate, $startDate, $endDate, $endDate])->find($id);
 
         // dd($data['hostelget']);
 
@@ -292,7 +320,8 @@ class HostelController extends Controller
         $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();
         $fee = Fee::where('service_id', 7)->first();
         $fees = [['type' => 'Fee Admin', 'value' => $fee->value,], ['type' => 'Kode Unik', 'value' => $request->uniqueCode,],];
-
+        
+        $saldoPointCustomer = 0;
         if ($request->inputPoint == "on") {
             $saldoPointCustomer = Auth::user()->point;
             array_push($fees, ['type' => 'Point', 'value' => -$saldoPointCustomer,]);
@@ -300,7 +329,8 @@ class HostelController extends Controller
 
         // $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
         $qty = $data['duration'];
-        if ($qty < 0) return 'Date must be forward';
+        if ($qty < 0)
+            return 'Date must be forward';
 
 
         $setting = new Setting();
@@ -313,15 +343,41 @@ class HostelController extends Controller
         $uniqueCode = $request->uniqueCode;
         DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hostel, $sellingprice, $uniqueCode, $saldoPointCustomer) {
 
-            $storeTransaction = Transaction::create(['no_inv' => $invoice, 'req_id' => 'HTL-' . time(), 'service' => 'hostel', 'service_id' => 7, // 'payment' => $payoutsXendit['payment'],
-                'payment' => 'xendit', 'user_id' => $request->user()->id, 'status' => $payoutsXendit['status'], 'link' => $payoutsXendit['invoice_url'], 'total' => $amount, "created_at" => Carbon::now(),]);
+            $storeTransaction = Transaction::create([
+                'no_inv' => $invoice,
+                'req_id' => 'HTL-' . time(),
+                'service' => 'hostel',
+                'service_id' => 7, // 'payment' => $payoutsXendit['payment'],
+                'payment' => 'xendit',
+                'user_id' => $request->user()->id,
+                'status' => $payoutsXendit['status'],
+                'link' => $payoutsXendit['invoice_url'],
+                'total' => $amount,
+                "created_at" => Carbon::now(),
+            ]);
 
             $helper = new General();
             // true buat detail
 
-            $storeDetailTransaction = DetailTransactionHostel::create(['transaction_id' => $storeTransaction->id, 'hostel_id' => $hostel->hostel_id, 'hostel_room_id' => $data['hostel_room_id'], 'type_rent' => $data['category'], "booking_id" => $helper->generateRandomString(6), "reservation_start" => Carbon::parse($data['start'])->format('Y-m-d'), "reservation_end" => Carbon::parse($data['end'])->format('Y-m-d'), // "guest"             => $data['total_guest'],
+            $storeDetailTransaction = DetailTransactionHostel::create([
+                'transaction_id' => $storeTransaction->id,
+                'hostel_id' => $hostel->hostel_id,
+                'hostel_room_id' => $data['hostel_room_id'],
+                'type_rent' => $data['category'],
+                "booking_id" => $helper->generateRandomString(6),
+                "reservation_start" => Carbon::parse($data['start'])->format('Y-m-d'),
+                "reservation_end" => Carbon::parse($data['end'])->format('Y-m-d'), // "guest"             => $data['total_guest'],
                 // "room"              => $data['room'],
-                "guest_name" => $data['nama_lengkap'], "guest_email" => $data['email'], "guest_handphone" => $data['no_telfon'], "guest" => 1, "room" => 1, "rent_price" => $sellingprice, "fee_admin" => $fees[0]['value'], "kode_unik" => $uniqueCode, "created_at" => Carbon::now(),]);
+                "guest_name" => $data['nama_lengkap'],
+                "guest_email" => $data['email'],
+                "guest_handphone" => $data['no_telfon'],
+                "guest" => $data['guest'],
+                "room" => 1,
+                "rent_price" => $sellingprice,
+                "fee_admin" => $fees[0]['value'],
+                "kode_unik" => $uniqueCode,
+                "created_at" => Carbon::now(),
+            ]);
 
             if ($request->inputPoint == "on") {
                 //deductpoint
@@ -337,13 +393,17 @@ class HostelController extends Controller
     {
         try {
             $hostels = Hostel::where('is_active', 1)->with('hostelRoom', 'hostelImage', 'rating');
-            if ($request->name) $hostels->where('name', 'like', '%' . $request->name . '%');
+            if ($request->name)
+                $hostels->where('name', 'like', '%' . $request->name . '%');
 
-            if ($request->city) $hostels->where('city', $request->city);
+            if ($request->city)
+                $hostels->where('city', $request->city);
 
-            if ($request->category) $hostels->where('category', 'like', '%' . $request->category . '%');
+            if ($request->category)
+                $hostels->where('category', 'like', '%' . $request->category . '%');
 
-            if ($request->property) $hostels->where('property', $request->property);
+            if ($request->property)
+                $hostels->where('property', $request->property);
 
             if ($request->furnish) {
                 $furnish = $request->furnish;
@@ -358,18 +418,25 @@ class HostelController extends Controller
                     $q->where('roomtype', $roomtype);
                 });
             }
-            $hostelsget = $hostels->withCount(["hostelRoom as price_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-            }])->withCount(["rating as rating_avg" => function ($q) {
-                $q->select(DB::raw('coalesce(avg(rate),0)'));
-            }])->withCount("rating as rating_count")->get();
+            $hostelsget = $hostels->withCount([
+                "hostelRoom as price_avg" => function ($q) {
+                    $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
+                }
+            ])->withCount([
+                        "rating as rating_avg" => function ($q) {
+                            $q->select(DB::raw('coalesce(avg(rate),0)'));
+                        }
+                    ])->withCount("rating as rating_count")->get();
 
             $hostelsCollect = collect($hostelsget);
-            if ($request->optionsort == 'highestprice') $hotstelFIlter = $hostelsCollect->sortBy([['price_avg', 'desc']])->values();
+            if ($request->optionsort == 'highestprice')
+                $hotstelFIlter = $hostelsCollect->sortBy([['price_avg', 'desc']])->values();
 
-            if ($request->optionsort == 'lowestprice') $hotstelFIlter = $hostelsCollect->sortBy([['price_avg', 'asc']])->values();
+            if ($request->optionsort == 'lowestprice')
+                $hotstelFIlter = $hostelsCollect->sortBy([['price_avg', 'asc']])->values();
 
-            if ($request->optionsort == 'review') $hotstelFIlter = $hostelsCollect->sortBy([['rating_avg', 'desc']])->values();
+            if ($request->optionsort == 'review')
+                $hotstelFIlter = $hostelsCollect->sortBy([['rating_avg', 'desc']])->values();
 
             if ($request->optionrate != null) {
                 for ($i = 1; $i < 6; $i++) {
