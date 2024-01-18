@@ -18,14 +18,11 @@
                             <label class="fs-5 fw-semibold mb-2">
                                 <span class="required">No Bpjs</span>
                             </label>
-
                             <!--begin::Input-->
                             <input type="text" id="notelp" class="form-control form-control-lg form-control-solid"
                                 name="notelp" placeholder="" value="" />
                             <!--end::Input-->
                         </div>
-
-
                     </div>
                     <div class="row" id="row-pricelist">
 

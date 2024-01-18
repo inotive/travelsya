@@ -55,17 +55,27 @@ class EwalletController extends Controller
         $product = Product::with('service')->find($data['produk_ewallet']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
-        $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
-        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
         $fees[] = [
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
+        $pointDigunakan = '';
+        if ($request->point !== null) {
+            $pointTerpakai = $point->pointTerpakai($product->price, $fees[0]['value'], $fees[1]['value']);
+            $pointUser = $request->point;
+    
+            if ($pointUser >= $pointTerpakai) {
+                $pointDigunakan = $request->point;
+            } else {
+                $pointDigunakan = $pointTerpakai;
+            }
+            
+        }
+        $sellingPrice = $request->point !== null ? $product->price - $pointDigunakan : $product->price;
+        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
-        // dd($sellingPriceFinal);
-
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [

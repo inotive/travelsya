@@ -74,4 +74,8 @@ class Point
 
         return round(($amount / $point->multiple) * $point->value);
     }
+
+    public function pointTerpakai($total, $fee, $kodeUnik){
+        return ($total + $fee + $kodeUnik) * 0.1;
+    }
 }

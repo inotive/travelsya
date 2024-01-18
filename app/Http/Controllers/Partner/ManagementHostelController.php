@@ -179,6 +179,15 @@ class ManagementHostelController extends Controller
     public function storePhotoHostel($id, Request $request)
     {
 
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|file|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            toast("File Melebihi 2MB", 'error');
+            return redirect()->back();
+        }
+
         $file = $request->file('image');
         $fileName = $file->hashName();
         $file->storeAs('media/hostel', $fileName);
@@ -193,7 +202,6 @@ class ManagementHostelController extends Controller
     {
         $validator = Validator::make($request->all(), ['hostel_id' => 'required',]);
 
-        //check if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
@@ -247,7 +255,16 @@ class ManagementHostelController extends Controller
 
         $facilities = Facility::all();
 
-        $validator = Validator::make($request->all(), ['name' => 'required', 'rentprice_monthly' => 'required', 'roomsize' => 'required', 'max_guest' => 'required', 'image' => 'image|mimes:jpeg,jpg,png|max:2048', 'totalroom' => 'required', 'sellingrentprice_monthly' => 'required',]);
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'rentprice_monthly' => 'required',
+            'roomsize' => 'required',
+            'max_guest' => 'required',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2048',
+            'hostel_room_images' => 'image|mimes:jpeg,jpg,png|max:2048',
+            'totalroom' => 'required',
+            'sellingrentprice_monthly' => 'required',
+        ]);
 
 
         if ($validator->fails()) {
