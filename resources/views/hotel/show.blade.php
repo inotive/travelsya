@@ -404,7 +404,7 @@
                                     @endif
                                 </div>
                                 <div class="fs-8 fw-light-grey-500">
-                                    Dari {{$rating->count()}} Review
+                                    Dari {{ $rating->count() }} Review
                                 </div>
                             </div>
                         </div>
@@ -492,12 +492,12 @@
                     href="{{ asset('storage/' . $hotelImage->image) }}">
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/' . $hotelImage->image) }}')">
+                                                            </div>
+                                                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                                            </div>
+                                                        </a>
                                                     </div>
-                                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
-                                                    </div>
-                                                </a>
-                                            </div>
      @endforeach
                     </div>
 
@@ -604,8 +604,7 @@
                     $roomCount = DB::table('detail_transaction_hotel')
                         ->where('hotel_room_id', $room->id)
                         ->where(function ($query) use ($startDate, $endDate) {
-                            $query->whereBetween('reservation_start', [$startDate, $endDate])
-                            ->orWhereBetween('reservation_end', [$startDate, $endDate]);
+                            $query->whereBetween('reservation_start', [$startDate, $endDate])->orWhereBetween('reservation_end', [$startDate, $endDate]);
                         })
                         ->count();
 

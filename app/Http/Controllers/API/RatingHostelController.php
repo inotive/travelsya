@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\HostelRating;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,6 +32,7 @@ class RatingHostelController extends Controller
             'users_id'      => auth()->id(),
             'rate'          => $request->bintang,
             'comment'       => $request->review,
+            'created_at' => Carbon::now()
         ]);
 
         return ResponseFormatter::success([], 'Review Hostel Telah Berhasil Dikirim');

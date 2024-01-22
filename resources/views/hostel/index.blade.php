@@ -415,7 +415,7 @@
                                             </div>
                                             <!--end::Radio group-->
                                         </div>
-                                        <div class="col-9">
+                                        <div class="col-6">
                                             <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
                                             <select name="location" id="location" class="form-select select"
                                                 data-control="select2" data-placeholder="Pilih Lokasi" autocomplete="on">
@@ -424,6 +424,22 @@
                                                         {{ $params['location'] == $city->city ? 'selected' : '' }}>
                                                         {{ $city->city }}</option>
                                                 @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="col-3">
+                                            <label class="form-label fw-bold fs-6">Jumlah Tamu</label>
+                                            <select name="guest" id="guest" class="form-select">
+                                                <option value="1"{{ $params['guest'] == 1 ? 'selected' : '' }}>1</option>
+                                                <option value="2"{{ $params['guest'] == 2 ? 'selected' : '' }}>2</option>
+                                                <option value="3"{{ $params['guest'] == 3 ? 'selected' : '' }}>3</option>
+                                                <option value="4"{{ $params['guest'] == 4 ? 'selected' : '' }}>4</option>
+                                                <option value="5"{{ $params['guest'] == 5 ? 'selected' : '' }}>5</option>
+                                                <option value="6"{{ $params['guest'] == 6 ? 'selected' : '' }}>6</option>
+                                                <option value="7"{{ $params['guest'] == 7 ? 'selected' : '' }}>7</option>
+                                                <option value="8"{{ $params['guest'] == 8 ? 'selected' : '' }}>8</option>
+                                                <option value="9"{{ $params['guest'] == 9 ? 'selected' : '' }}>9</option>
+                                                <option value="10"{{ $params['guest'] == 10 ? 'selected' : '' }}>10</option>
+                                                <option value="max"{{ $params['guest'] == "max" ? 'selected' : '' }}>>10</option>
                                             </select>
                                         </div>
                                         <div class="col-3">
@@ -662,7 +678,7 @@
                                                     @endforeach
                                                 </ul>
 
-                                                <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $_GET['location'] . '&start=' . $_GET['start'] . '&duration=' . $_GET['duration'] . '&property=' . $_GET['property'] . '&category=' . $_GET['category'] . '&roomtype=' . $_GET['roomtype'] . '&furnish=' . $_GET['furnish'] }}"
+                                                <a href="{{ route('hostel.room', $hostel->id) . '?location=' . $_GET['location'] . '&start=' . $_GET['start'] . '&duration=' . $_GET['duration'] . '&property=' . $_GET['property'] . '&category=' . $_GET['category'] . '&roomtype=' . $_GET['roomtype'] . '&furnish=' . $_GET['furnish'] . '&guest=' . $_GET['guest'] }} "
                                                     class="btn btn-danger d-block mt-10 text-white">
                                                     Lihat
                                                 </a>

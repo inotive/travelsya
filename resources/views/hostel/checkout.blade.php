@@ -156,6 +156,7 @@
                                         value="{{ $duration * $sellingprice + $feeAdmin + $uniqueCode - auth()->user()->point }}">
                                     <input type="hidden" name="point" value="{{ $point }}">
                                     <input type="hidden" name="category" value="{{ $params['category'] }}">
+                                    <input type="hidden" name="guest" value="{{ $params['guest'] }}">
                                     <input type="hidden" name="uniqueCode" value="{{ $uniqueCode }}">
                                     <button type="submit" class="btn btn-danger flex-fill">
                                         Lanjut ke pembayaran

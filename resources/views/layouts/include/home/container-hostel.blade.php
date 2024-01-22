@@ -152,7 +152,7 @@
         {{-- </template> --}}
         {{-- </select> --}}
         {{-- </div> --}}
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label class="form-label fw-bold fs-6">Tipe Properti</label>
             <select name="property" id="property" class="form-select">
                 <option value="">Semua</option>
@@ -162,7 +162,7 @@
                 <option value="rumah">Rumah</option>
             </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label class="form-label fw-bold fs-6">Tipe Kamar</label>
             <select name="roomtype" id="roomtype" class="form-select">
                 <option value="">Semua</option>
@@ -171,13 +171,29 @@
                 <option value="3BR+">3BR+</option>
             </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <label class="form-label fw-bold fs-6">Tipe Furnish</label>
             <select name="furnish" id="furnish" class="form-select">
                 <option value="">Semua</option>
                 <option value="fullfurnished">Full Furnished</option>
                 <option value="unfurnished">Unfurnished</option>
                 <option value="semifurnished">Semi Furnished</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label fw-bold fs-6">Jumlah Tamu</label>
+            <select name="guest" id="guest" class="form-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="max">>10</option>
             </select>
         </div>
         <div class="col-md-12  text-end">

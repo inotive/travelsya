@@ -65,25 +65,9 @@ class ProductController extends Controller
                 'value' => $uniqueCode,
             ],
         ];
-
-        $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
-
-        // $pointDigunakan = 0;
-        // if ($request->point !== null) {
-        //     $pointTerpakai = $point->pointTerpakai($product->price, $fees[0]['value'], $fees[1]['value']);
-        //     $pointUser = $request->point;
-
-        //     if ($pointUser >= $pointTerpakai) {
-        //         $pointDigunakan = $request->point;
-        //     } else {
-        //         $pointDigunakan = $pointTerpakai;
-        //     }
-
-        // }
-
-
-        // $sellingPrice = $request->point !== null ? $product->price - $pointDigunakan : $product->price;
+        $sellingPrice = $request->point !== null ?  $product->price - $request->point :  $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -174,7 +158,6 @@ class ProductController extends Controller
             if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
                 $status = 'Nomor Tagihan Tidak Dikenali';
             }
-
             if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
                 $status = 'Nomor Tagihan Tidak Dikenali';
             }
@@ -182,11 +165,11 @@ class ProductController extends Controller
             if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
                 $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
-                $status = 'IP pada sistem ini belum terdaftar pada mili';
+            if (str_contains($requestMymili['status'], " GAGAL!")) {
+                $status = "Nomor BPJS Tidak Di Temukan";
             }
 
-            return ResponseFormatter::error('Tidak ada', 'Inquiry failed');
+            return ResponseFormatter::error('IDPEL SUDAH LUNAS', 'Inquiry failed');
         }
 
         // return [
@@ -222,21 +205,9 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-        $pointDigunakan = 0;
-        if ($request->point !== null) {
-            $pointTerpakai = $point->pointTerpakai($data['totalTagihan'], $fees[0]['value'], $fees[1]['value']);
-            $pointUser = $request->point;
-
-            if ($pointUser >= $pointTerpakai) {
-                $pointDigunakan = $request->point;
-            } else {
-                $pointDigunakan = $pointTerpakai;
-            }
-
-        }
-
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $pointDigunakan : $data['totalTagihan'];
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
         $payoutsXendit = $this->xendit->create([
@@ -322,7 +293,7 @@ class ProductController extends Controller
         // ];
 
         $status = '';
-        if (str_contains($requestMymili['status'], 'SUKSES!')) {
+        if (str_contains($requestMymili['status'], 'SUKSES!') || str_contains($requestMymili['status'], "SUKSES")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
@@ -461,7 +432,7 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], 'SUKSES!')) {
+        if (str_contains($requestMymili['status'], 'SUKSES!') || str_contains($requestMymili['status'], "SUKSES")) {
             $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
@@ -519,7 +490,6 @@ class ProductController extends Controller
     public function paymentPln(Request $request)
     {
         $data = $request->all();
-        // dd($data);
         $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
 
@@ -676,7 +646,7 @@ class ProductController extends Controller
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['productTV']);
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service?->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
