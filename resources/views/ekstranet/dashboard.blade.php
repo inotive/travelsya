@@ -92,10 +92,11 @@
                 <div class="row mb-2">
                         <div class="col-4">
                             <input class="form-control" placeholder="Tanggal Mulai" name="start_date" id="kt_datepicker_1" value="{{ old('start_date', $start_date) }}"/>
+                        
                         </div>
-                        {{-- <div class="col-4">
-                            <input class="form-control" placeholder="Tanggal Akhir" name="end_date" id="kt_datepicker_2"/>
-                        </div> --}}
+                        <div class="col-4">
+                            <input class="form-control" placeholder="Tanggal Akhir" name="end_date" id="kt_datepicker_2" value="{{ old('end_date', $end_date) }}"/>
+                        </div>
                         <div class="col-4">
                             <button type="submit" class="btn btn-primary">Cari</button>
                         </div>

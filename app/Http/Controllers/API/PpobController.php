@@ -32,7 +32,9 @@ class PpobController extends Controller
 
     public function getService($id)
     {
-        $ppob = Product::where('id', $id)->where('is_active', 1)->get();
+        $ppob = Product::where('id', $id)
+            ->where('is_active', 1)
+            ->get();
 
         if (count($ppob)) {
             return ResponseFormatter::success($ppob, 'Data successfully loaded');
@@ -81,14 +83,20 @@ class PpobController extends Controller
         $data = $request->all();
 
         // handle validation
-        $validator = Validator::make($request->all(), ['product_id' => 'required', 'nomor_tagihan' => 'required', 'nominal_tagihan' => 'required', 'point' => 'required', 'kode_unik' => 'required']);
+        $validator = Validator::make($request->all(), [
+            'product_id' => 'required',
+            'nomor_tagihan' => 'required',
+            'nominal_tagihan' => 'required',
+            'point' => 'required',
+            'kode_unik' => 'required',
+        ]);
 
         if ($validator->fails()) {
-            return ResponseFormatter::error(['response' => $validator->errors(),], 'Transaction failed', 500);
+            return ResponseFormatter::error(['response' => $validator->errors()], 'Transaction failed', 500);
         }
         //get data
         $product = Product::with('service')->find($request->product_id);
-        $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
+        $data['no_inv'] = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
 
         $fees = Fee::where('service_id', $product->service_id)->first();
         $priceWithAdmin = $request->nominal_tagihan + $fees->value;
@@ -96,7 +104,7 @@ class PpobController extends Controller
         $requestSaldoMyMili = $this->mymili->saldo();
         $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
 
-        if ($saldoMyMili < ($priceWithAdmin)) {
+        if ($saldoMyMili < $priceWithAdmin) {
             return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
         }
 
@@ -106,38 +114,75 @@ class PpobController extends Controller
             // history point masuk dan keluar customer
             $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
             // point masuk - point keluar
-            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
-        }
+            $saldo = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+             $saldoPointCustomer = $saldo * 10 /100;
+            }
 
-//        // total pembayaran termasuk dikurangi point
-//        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
+        //        // total pembayaran termasuk dikurangi point
+        //        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
 
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
+        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - abs($saldoPointCustomer);
 
         // request xendit
-        $payoutsXendit = $this->xendit->create(['external_id' => $data['no_inv'], 'items' => [['name' => $product->name . ' (' . $request->nomor_tagihan. ')', 'quantity' => 1, 'price' => $grandTotal, 'url' => "someurl"]], 'amount' => $grandTotal, 'success_redirect_url' => route('redirect.succes'), 'failure_redirect_url' => route('redirect.fail'), 'invoice_duration ' => 72000, 'should_send_email' => true, 'customer' => ['given_names' => 'Gusti Bagus', 'email' => 'gustibagus34@gmail.com', 'mobile_number' => "081253290605",],]);
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $data['no_inv'], 
+            'items' => [
+                ['name' => $product->name . ' (' . $request->nomor_tagihan . ')', 
+                'quantity' => 1, 
+                'price' => $grandTotal, 
+                'url' => 'someurl']
+            ], 
+            'amount' => $grandTotal, 
+            'success_redirect_url' => route('redirect.succes'),
+            'failure_redirect_url' => route('redirect.fail'), 
+            'invoice_duration ' => 72000, 
+            'should_send_email' => true, 
+            'customer' => [
+                'given_names' => 'Gusti Bagus',
+                 'email' => 'gustibagus34@gmail.com',
+                  'mobile_number' => '081253290605'
+                  ]]);
 
         if (isset($payoutsXendit['status'])) {
-
             $data['status'] = $payoutsXendit['status'];
             $data['link'] = $payoutsXendit['invoice_url'];
 
-            $transaction = Transaction::create(['no_inv' => $data['no_inv'], 'service' => $product->service->name, 'service_id' => $product->service_id, 'payment' => 'xendit', 'user_id' => 3, 'status' => $payoutsXendit['status'], 'link' => $payoutsXendit['invoice_url'], 'total' => $grandTotal]);
+            $transaction = Transaction::create([
+                'no_inv' => $data['no_inv'], 
+                'service' => $product->service->name, 
+                'service_id' => $product->service_id, 
+                'payment' => 'xendit', 
+                'user_id' => 3, 
+                'status' => $payoutsXendit['status'], 
+                'link' => $payoutsXendit['invoice_url'], 
+                'total' => $grandTotal
+            ]);
 
             // create detail transaction
             $data['detail'] = $request->input('detail');
 
-            DB::table('detail_transaction_ppob')->insert(['transaction_id' => $transaction->id, 'product_id' => $product->id, 'nomor_pelanggan' => $request->nomor_tagihan, 'total_tagihan' => $grandTotal, 'fee_travelsya' => 2500, 'fee_mili' => 100, 'message' => 'Sedang menunggu pembayaran', 'status' => "PROCESS", "kode_unik" => $data['kode_unik'], "created_at" => Carbon::now()->timezone('Asia/Makassar')]);
+            DB::table('detail_transaction_ppob')->insert([
+                'transaction_id' => $transaction->id, 
+                'product_id' => $product->id, 
+                'nomor_pelanggan' => $request->nomor_tagihan, 
+                'total_tagihan' => $grandTotal, 
+                'fee_travelsya' => 2500, 
+                'fee_mili' => 100, 
+                'message' => 'Sedang menunggu pembayaran', 
+                'status' => 'PROCESS', 
+                'kode_unik' => $data['kode_unik'], 
+                'created_at' => Carbon::now()->timezone('Asia/Makassar')
+            ]);
 
             if ($request->point == 1) {
-                $point = new Point;
+                $point = new Point();
                 $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
 
-//                // history point masuk dan keluar customer
-//                $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-//                // point masuk - point keluar
-//                $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+                //                // history point masuk dan keluar customer
+                //                $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+                //                // point masuk - point keluar
+                //                $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
             }
 
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
@@ -149,42 +194,44 @@ class PpobController extends Controller
         try {
             $data = $request->all();
 
-            $validator = Validator::make($request->all(), ['no_pelanggan' => 'required', 'nom' => 'required',]);
+            $validator = Validator::make($request->all(), [
+                'no_pelanggan' => 'required', 
+                'nom' => 'required'
+            ]);
 
             if ($validator->fails()) {
-                return ResponseFormatter::error(['response' => $validator->errors(),], 'Transaction failed', 500);
+                return ResponseFormatter::error(['response' => $validator->errors()], 'Transaction failed', 500);
             }
 
-            $requestMymili = $this->mymili->inquiry(['no_hp' => $data['no_pelanggan'], 'nom' => $data['nom'],]);
+            $requestMymili = $this->mymili->inquiry(['no_hp' => $data['no_pelanggan'], 'nom' => $data['nom']]);
 
-            $fee_admin = Product::with('service')->find(362) // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
-            ->price;
+            $fee_admin = Product::with('service')->find(362)->price; // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
 
-            if (str_contains($requestMymili['status'], "SUKSES!")) {
+            if (str_contains($requestMymili['status'], 'SUKSES!')) {
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
-                if (str_contains($requestMymili['status'], "SUDAH LUNAS")) {
-                    $status = "Tagihan Sudah Terbayar";
+                if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                    $status = 'Tagihan Sudah Terbayar';
                 }
 
-                if (str_contains($requestMymili['status'], "Bills already paid")) {
-                    $status = "Tagihan Sudah Terbayar";
+                if (str_contains($requestMymili['status'], 'Bills already paid')) {
+                    $status = 'Tagihan Sudah Terbayar';
                 }
 
-                if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
-                    $status = "Nomor Tagihan Tidak Dikenali";
+                if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
+                    $status = 'Nomor Tagihan Tidak Dikenali';
                 }
 
-                if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
-                    $status = "Nomor Tagihan Tidak Dikenali";
+                if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
+                    $status = 'Nomor Tagihan Tidak Dikenali';
                 }
 
-                if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
-                    $status = "Nomor Tagihan Tidak Dikenali";
+                if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
+                    $status = 'Nomor Tagihan Tidak Dikenali';
                 }
 
-                if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
-                    $status = "IP pada sistem ini belum terdaftar pada mili";
+                if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
+                    $status = 'IP pada sistem ini belum terdaftar pada mili';
                 }
 
                 return ResponseFormatter::error($status, 'Inquiry failed');

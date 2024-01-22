@@ -469,22 +469,22 @@ class HostelController extends Controller
 
     public function hostelPopuler()
     {
-        $hostelPopuler = Hostel::where('is_active', 1)->with('hostelImage', 'rating')->has("hostelRoom")
+        $hostelPopuler = Hostel::where('is_active', 1)->with('hostelImage', 'rating', 'hostelRating')->has("hostelRoom")
             ->withCount([
                 "hostelRoom as price_avg" => function ($q) {
                     $q->select(DB::raw('coalesce(avg(price),0)'));
                 }
             ])->withCount([
-                    "rating as rating_avg" => function ($q) {
+                    "hostelRating as rating_avg" => function ($q) {
                         $q->select(DB::raw('coalesce(avg(rate),0)'));
                     }
-                ])->withCount("rating as rating_count")->orderBy('price_avg', "asc")->orderBy('rating_count', 'DESC')->orderBy('rating_avg', 'DESC')->get();
+                ])->withCount("hostelRating as rating_count")->orderBy('price_avg', "asc")->orderBy('rating_count', 'DESC')->orderBy('rating_avg', 'DESC')->get();
         $hostelFormatJSON = [];
         foreach ($hostelPopuler as $hostel) {
             $minPrice = $hostel->hostelRoom->min('price');
             $maxPrice = $hostel->hostelRoom->min('sellingprice');
-            $jumlahTransaksi = $hostel->rating->count();
-            $totalRating = $hostel->rating->sum('rate');
+            $jumlahTransaksi = $hostel->hostelRating->count();
+            $totalRating = $hostel->hostelRating->sum('rate');
 
             // Rating 5
             if ($jumlahTransaksi > 0) {
@@ -498,11 +498,28 @@ class HostelController extends Controller
                 $imageUrl = $hostel->hostelImage[0]->image;
             }
 
-            $hotelDetails[$hostel->id] = ['avg_rating' => $avgRating, 'rating_count' => $jumlahTransaksi, 'price' => $minPrice, 'sellingprice' => $maxPrice,];
+            $hotelDetails[$hostel->id] = [
+                'avg_rating' => $avgRating,
+                 'rating_count' => $jumlahTransaksi,
+                  'price' => $minPrice, 
+                  'sellingprice' => $maxPrice,
+                ];
 
             $hostelRoom = $hostel->hostelRoom->where('hostel_id', $hostel->id)->first();
 
-            $hostelFormatJSON[] = ['id' => $hostel->id, 'name' => $hostel->name, 'image' => asset($imageUrl), 'location' => $hostel->city, 'rating_avg' => $hotelDetails[$hostel->id]['avg_rating'], 'rating_count' => $hotelDetails[$hostel->id]['rating_count'], 'sellingprice' => $hotelDetails[$hostel->id]['sellingprice'], 'property_type' => $hostel->property, 'rent_category' => $hostel->category, 'room_type' => $hostelRoom->roomtype, 'furnish_type' => $hostelRoom->furnish];
+            $hostelFormatJSON[] = [
+                'id' => $hostel->id, 
+                'name' => $hostel->name, 
+                'image' => asset($imageUrl), 
+                'location' => $hostel->city, 
+                'rating_avg' =>  sprintf("%.1f", $hotelDetails[$hostel->id]['avg_rating'] ), 
+                'rating_count' => $hotelDetails[$hostel->id]['rating_count'], 
+                'sellingprice' => $hotelDetails[$hostel->id]['sellingprice'], 
+                'property_type' => $hostel->property, 
+                'rent_category' => $hostel->category, 
+                'room_type' => $hostelRoom->roomtype, 
+                'furnish_type' => $hostelRoom->furnish
+            ];
 
             usort($hostelFormatJSON, function ($a, $b) {
                 // Mengurutkan berdasarkan avg_rating secara menurun (dari tertinggi ke terendah)
@@ -516,8 +533,7 @@ class HostelController extends Controller
                 return $avgRatingComparison;
             });
         }
-        if (!$hostelPopuler)
-            return ResponseFormatter::error(null, 'Data not found');
+        if (!$hostelPopuler) return ResponseFormatter::error(null, 'Data not found');
 
 
         return ResponseFormatter::success($hostelFormatJSON, 'Data successfully loaded');

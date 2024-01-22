@@ -65,7 +65,13 @@ class ProductController extends Controller
                 'value' => $uniqueCode,
             ],
         ];
-        $sellingPrice = $request->point !== null ?  $product->price - $request->point :  $product->price;
+
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
+        }
+
+        $sellingPrice = $request->point !== null ?  $product->price - abs($poitnDigunakan) :  $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
 
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
@@ -205,7 +211,12 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
+        }
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - abs($poitnDigunakan) : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
 
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
@@ -350,20 +361,12 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-        $pointDigunakan = 0;
-        if ($request->point !== null) {
-            $pointTerpakai = $point->pointTerpakai($data['totalTagihan'], $fees[0]['value'], $fees[1]['value']);
-            $pointUser = $request->point;
-    
-            if ($pointUser >= $pointTerpakai) {
-                $pointDigunakan = $request->point;
-            } else {
-                $pointDigunakan = $pointTerpakai;
-            }
-            
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
         }
 
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $pointDigunakan : $data['totalTagihan'];
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - abs($poitnDigunakan) : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
@@ -507,7 +510,12 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-        $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
+        }
+
+        $sellingPrice = $request->point !== null ? $product->price - abs($poitnDigunakan) : $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
         $payoutsXendit = $this->xendit->create([
@@ -655,7 +663,12 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
+        }
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] -  abs($poitnDigunakan) : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
@@ -786,7 +799,13 @@ class ProductController extends Controller
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
-        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - $request->point : $data['totalTagihan'];
+
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
+        }
+
+        $sellingPrice = $request->point !== null ? $data['totalTagihan'] - abs($poitnDigunakan) : $data['totalTagihan'];
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 

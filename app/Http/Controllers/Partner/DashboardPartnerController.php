@@ -54,7 +54,9 @@ class DashboardPartnerController extends Controller
             : Carbon::now()
                 // ->subWeek()
                 ->format('Y-m-d');
-
+            $endWeek = $request->has('enda_date')
+                ? Carbon::parse($request->end_date)->endOfWeek()->format('Y-m-d')
+                : Carbon::now()->endOfWeek()->format('Y-m-d');
         $dateNow = Carbon::now()->timezone('Asia/Makassar');
 
         /**
@@ -64,14 +66,14 @@ class DashboardPartnerController extends Controller
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hostels as h', 'dh.hostel_id', '=', 'h.id')
             ->where('h.user_id', $id)
-            ->whereBetween('dh.created_at', [$startWeek, $dateNow])
+            ->whereBetween('dh.created_at', [$startWeek, $endWeek])
             ->where('t.status', '=', 'PAID');
 
         $transaction_hotel = DB::table('detail_transaction_hotel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
             ->where('h.user_id', $id)
-            ->whereBetween('dh.created_at', [$startWeek, $dateNow])
+            ->whereBetween('dh.created_at', [$startWeek, $endWeek])
             ->where('t.status', '=', 'PAID');
         // dd($transaction_hotel);
 
@@ -152,8 +154,10 @@ class DashboardPartnerController extends Controller
         $data['transaction_hotels'] = $transaction_hotel->get();
         $data['transaction_hostels'] = $transaction_hostel->get();
         $data['start_date'] = $startWeek;
+        $data['end_date'] = $endWeek;
+        
 
-        /**
+        /**$data['end_date'] = $startWeek;
          * RETURN VIEW ======================================
          */
         return view('ekstranet.dashboard', $data);
