@@ -83,6 +83,8 @@
                                         <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
                                             <td>Rp. <span id="totalTagihanPLN"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
                                             <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
                                             <td>Rp. <span id="biayaAdminPLN"></span></td>
                                         </tr>

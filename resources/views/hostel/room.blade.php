@@ -500,7 +500,7 @@
                 </p>
                 <div class="d-flex align-items-center gap-2">
                 @foreach ($room->hostelFacilities->groupBy('facility.name') as $facility)
-                <img src="{{ asset($facility->first()->facility->icon) }}" alt="Fasilitas" width="30"
+                <img src="{{ asset('/storage/'. $facility->first()->facility->icon) }}" alt="Fasilitas" width="30"
                 class="me-1">
                 @endforeach
 

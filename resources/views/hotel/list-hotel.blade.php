@@ -323,7 +323,7 @@
                                             </div>
                                             <div class="col-12">
                                                 <span class="badge badge-danger">
-                                                    {{ $hotelDetails[$hotel->id]['result_rating'] }}
+                                                    {{ number_format($hotelDetails[$hotel->id]['result_rating'],2) }}
                                                 </span>
                                                 <span class="badge badge-danger">({{
                                                     $hotelDetails[$hotel->id]['total_rating'] }}

@@ -186,14 +186,14 @@
                                         </div>
                                     @endif
                                 </div>
-                                @if ($transactionPPOB->status != 'PAID')
-                                    <div class="col-12 mt-4">
-                                        <div class="row">
-                                            <button class="btn btn-danger btn-block" onclick="reloadPage()">Refresh
-                                                Pesanan</button>
-                                        </div>
-                                    </div>
-                                @endif
+{{--                                @if ($transactionPPOB->status != 'PAID')--}}
+{{--                                    <div class="col-12 mt-4">--}}
+{{--                                        <div class="row">--}}
+{{--                                            <button class="btn btn-danger btn-block" onclick="reloadPage()">Refresh--}}
+{{--                                                Pesanan</button>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                @endif--}}
 
                             </div>
                         </div>

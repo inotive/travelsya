@@ -595,32 +595,29 @@ class ProductController extends Controller
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
-
-            if (str_contains($requestMymili['status'], 'INVALID! Produk sementara tidak tersedia!')) {
-                $status = 'Tagihan Sudah Terbayar';
+            else if (str_contains($requestMymili['status'], "INVALID! Produk sementara tidak tersedia!")) {
+                $status = "Tagihan Sudah Terbayar";
             }
-
-            if (str_contains($requestMymili['status'], 'Bills already paid')) {
-                $status = 'Tagihan Sudah Terbayar';
+            else if (str_contains($requestMymili['status'], "Bills already paid")) {
+                $status = "Tagihan Sudah Terbayar";
             }
-
-            if (str_contains($requestMymili['status'], 'ERROR 88 TRANSAKSI DITOLAK')) {
-                $status = 'Tagihan Sudah Terbayar';
+            else if (str_contains($requestMymili['status'], "ERROR 88 TRANSAKSI DITOLAK")) {
+                $status = "Tagihan Sudah Terbayar";
             }
-
-            if (str_contains($requestMymili['status'], 'IDPEL SALAH')) {
-                $status = 'Nomor Tagihan Tidak Dikenali';
+            else if (str_contains($requestMymili['status'], "IDPEL SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
             }
-
-            if (str_contains($requestMymili['status'], 'NOMOR PELANGGAN SALAH')) {
-                $status = 'Nomor Tagihan Tidak Dikenali';
+            else if (str_contains($requestMymili['status'], "NOMOR PELANGGAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
             }
-
-            if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
-                $status = 'Nomor Tagihan Tidak Dikenali';
+            else if (str_contains($requestMymili['status'], "NOMOR YANG ANDA MASUKAN SALAH")) {
+                $status = "Nomor Tagihan Tidak Dikenali";
             }
-            if (str_contains($requestMymili['status'], ' IP belum terdaftar')) {
-                $status = 'IP pada sistem ini belum terdaftar pada mili';
+            else if (str_contains($requestMymili['status'], " IP belum terdaftar")) {
+                $status = "IP pada sistem ini belum terdaftar pada mili";
+            }
+            else{
+                $status = "Gagal melakukan pengecekan tagihan";
             }
 
             return ResponseFormatter::error($status, 'Inquiry failed');
