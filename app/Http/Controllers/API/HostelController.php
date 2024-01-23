@@ -84,7 +84,7 @@ class HostelController extends Controller
                     AND hr.totalroom - COALESCE((
                         SELECT SUM(dth.room) FROM detail_transaction_hostel dth
                         WHERE dth.hostel_id = hostels.id
-                        AND ? <= dth.reservation_end
+                        AND ? < dth.reservation_end -- Include reservations ending on the current day
                         AND ? >= dth.reservation_start
                     ), 0) > 0
                 ) > 0', [$request->rent_end, $request->rent_start]);

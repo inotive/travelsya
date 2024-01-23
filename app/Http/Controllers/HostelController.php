@@ -32,11 +32,11 @@ class HostelController extends Controller
 
     public function index(Request $request)
     {
-        $hostels = Hostel::where('hostels.is_active', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')->where('city', 'like', '%' . $request->location . '%')->withCount([
-            "rating as rating_avg" => function ($q) {
+        $hostels = Hostel::where('hostels.is_active', 1)->with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelFacilities')->where('city', 'like', '%' . $request->location . '%')->withCount([
+            "hostelRating as rating_avg" => function ($q) {
                 $q->select(DB::raw('coalesce(avg(rate),0)'));
             }
-        ])->withCount("rating as rating_count");
+        ])->withCount("hostelRating as rating_count");
 
         if ($request->has('category')) {
             if ($request->category == 'monthly') {
@@ -93,21 +93,19 @@ class HostelController extends Controller
                 });
             }
         }
-
         if ($request->has('start')) {
             $checkin = Carbon::parse($request->start);
             $duration = $request->duration;
-
-            // Hitung tanggal checkout
             $checkout = $checkin->copy()->addMonths($duration);
 
             $hostels->whereRaw('(
                 SELECT COUNT(*) FROM hostel_rooms hr WHERE hr.hostel_id = hostels.id
             ) - (
                 SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hostel dth WHERE dth.hostel_id = hostels.id
-                AND (? <= dth.reservation_end OR ? = dth.reservation_end)  -- Include reservations ending on the current day
+                AND (? < dth.reservation_end OR ? = dth.reservation_end)  -- Include reservations ending on the current day
                 AND ? >= dth.reservation_start
             ) > 0', [$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+
         }
 
         // if ($request->has('start')) {
@@ -152,7 +150,7 @@ class HostelController extends Controller
             });
         }
 
-
+        // dd($hostels->get());
         $data['hostels'] = $hostels->get();
         $data['params'] = $request->all();
         $data['cities'] = Hostel::distinct()->select('city')->get();

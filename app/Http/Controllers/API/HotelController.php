@@ -98,19 +98,20 @@ class HotelController extends Controller
             }
 
             if ($request->has('check_in') && $request->has('check_out')) {
-                $hotels->whereRaw('(
-        SELECT COUNT(*) FROM hotel_rooms hr
-        WHERE hr.hotel_id = hotels.id
-        AND hr.totalroom - COALESCE((
-            SELECT SUM(dth.room) FROM detail_transaction_hotel dth
-            WHERE dth.hotel_id = hotels.id
-            AND ? <= dth.reservation_end
-            AND ? >= dth.reservation_start
-        ), 0) > 0
-    ) > 0', [$request->check_out, $request->check_in]);
-            }
-
-
+               $hotels->whereRaw(
+                    '(
+                        SELECT COUNT(*) FROM hotel_rooms hr
+                        WHERE hr.hotel_id = hotels.id
+                        AND hr.totalroom - COALESCE((
+                            SELECT SUM(dth.room) FROM detail_transaction_hotel dth
+                            WHERE dth.hotel_id = hotels.id
+                            AND ? < dth.reservation_end -- Include reservations ending on the current day
+                            AND ? >= dth.reservation_start
+                        ), 0) > 0
+                    ) > 0',
+                    [$request->check_out, $request->check_in]
+                );
+            }            
 
             $hotelget = $hotels->get();
             $hotelDetails = [];
@@ -162,10 +163,7 @@ class HotelController extends Controller
                 return ResponseFormatter::success([], 'Data successfully loaded');
             }
         } catch (Exception $th) {
-            return ResponseFormatter::error([
-                $th->getMessage(),
-                'message' => 'Something wrong',
-            ], 'Hotel process failed', 500);
+            return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong'], 'Hotel process failed', 500);
         }
     }
 
@@ -205,7 +203,8 @@ class HotelController extends Controller
             //     // return $filter;
             // }
 
-            $hotel = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility', 'hotelRule')
+            $hotel = Hotel::where('is_active', 1)
+                ->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility', 'hotelRule')
                 ->find($id);
 
             $jumlahTransaksi = $hotel->hotelRating->count();
@@ -219,7 +218,6 @@ class HotelController extends Controller
             }
 
             $hotelGet = collect([$hotel])->map(function ($hotel) use ($avgRating, $totalRating) {
-
                 $hotel_room = $hotel->hotelRoom->map(function ($room) {
                     return [
                         'id' => $room->id,
@@ -232,7 +230,7 @@ class HotelController extends Controller
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
                         'guest' => $room->guest,
-                        'hotel_room_image' => $room->hotelRoomImage
+                        'hotel_room_image' => $room->hotelRoomImage,
                     ];
                 });
 
@@ -251,16 +249,18 @@ class HotelController extends Controller
 
                 $hotel_ratings = $hotel->hotelRating->map(function ($hr) {
                     return [
-                        "id" => $hr->id,
-                        "transaction_id" => $hr->transaction_id,
-                        "user_id" => $hr->users_id,
-                        "user_name" => User::where('id', $hr->users_id)->pluck('name')->first(),
-                        "hotel_id" => $hr->hotel_id,
-                        "rate" => $hr->rate,
-                        "comment" => $hr->comment,
-                        "deleted_at" => $hr->deleted_at,
-                        "created_at" => $hr->created_at,
-                        "updated_at" => $hr->updated_at,
+                        'id' => $hr->id,
+                        'transaction_id' => $hr->transaction_id,
+                        'user_id' => $hr->users_id,
+                        'user_name' => User::where('id', $hr->users_id)
+                            ->pluck('name')
+                            ->first(),
+                        'hotel_id' => $hr->hotel_id,
+                        'rate' => $hr->rate,
+                        'comment' => $hr->comment,
+                        'deleted_at' => $hr->deleted_at,
+                        'created_at' => $hr->created_at,
+                        'updated_at' => $hr->updated_at,
                     ];
                 });
                 return [
@@ -289,10 +289,7 @@ class HotelController extends Controller
                 return ResponseFormatter::error(null, 'Data not found');
             }
         } catch (Exception $th) {
-            return ResponseFormatter::error([
-                $th,
-                'message' => 'Something wrong',
-            ], 'Hostel process failed', 500);
+            return ResponseFormatter::error([$th, 'message' => 'Something wrong'], 'Hostel process failed', 500);
         }
     }
 
@@ -306,19 +303,23 @@ class HotelController extends Controller
             }
 
             $hotel = collect([$hotels])->map(function ($room) {
-                $room_facilities = $room->hotelroomFacility->map(function ($facilities) {
-                    return [
-                        'id' => $facilities->facility_id,
-                        'name' => $facilities->facility->name,
-                        'icon' => $facilities->facility->icon,
-                    ];
-                })->unique('facility_id');
+                $room_facilities = $room->hotelroomFacility
+                    ->map(function ($facilities) {
+                        return [
+                            'id' => $facilities->facility_id,
+                            'name' => $facilities->facility->name,
+                            'icon' => $facilities->facility->icon,
+                        ];
+                    })
+                    ->unique('facility_id');
 
-                $room_images = $room->hotelroomImage->map(function ($facilities) {
-                    return [
-                        'image' => $facilities->image,
-                    ];
-                })->unique('image');
+                $room_images = $room->hotelroomImage
+                    ->map(function ($facilities) {
+                        return [
+                            'image' => $facilities->image,
+                        ];
+                    })
+                    ->unique('image');
 
                 return [
                     'room_size' => $room->roomsize,
@@ -331,7 +332,7 @@ class HotelController extends Controller
 
             return ResponseFormatter::success($hotel, 'Data successfully loaded');
         } catch (Exception $th) {
-            return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong',], 'Hostel process failed', 500);
+            return ResponseFormatter::error([$th->getMessage(), 'message' => 'Something wrong'], 'Hostel process failed', 500);
         }
     }
 
@@ -339,22 +340,26 @@ class HotelController extends Controller
     {
         // handle validation
         $validator = Validator::make($request->all(), [
-            "service" => "required|string",
-            "payment" => "required|string",
-            "point" => "required",
-            "hotel_room_id" => "required",
-            "guest" => "required",
-            "start" => "required",
-            "end" => "required",
-            "total_room" => "required",
-            "total_guest" => "required",
-            "kode_unik" => "required",
+            'service' => 'required|string',
+            'payment' => 'required|string',
+            'point' => 'required',
+            'hotel_room_id' => 'required',
+            'guest' => 'required',
+            'start' => 'required',
+            'end' => 'required',
+            'total_room' => 'required',
+            'total_guest' => 'required',
+            'kode_unik' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return ResponseFormatter::error([
-                'response' => $validator->errors(),
-            ], 'Hostel process failed', 500);
+            return ResponseFormatter::error(
+                [
+                    'response' => $validator->errors(),
+                ],
+                'Hostel process failed',
+                500,
+            );
         }
 
         $data = $request->all();
@@ -364,17 +369,17 @@ class HotelController extends Controller
         $totalDay = $start->diffInDays($end);
 
         $hotel = HotelRoom::with('hotel.service')->find($data['hotel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper('hotel') . "-" . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('hotel') . '-' . time();
         $setting = new Setting();
         $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotel->sellingprice);
 
-        $amount = ($hotel->sellingprice * $totalDay) * $request->total_room;
+        $amount = $hotel->sellingprice * $totalDay * $request->total_room;
 
         $fee = Fee::where('service_id', 8)->first();
         $fees = [
             [
                 'type' => 'Admin',
-                'value' => $fee->percent == 0 ? $fee->value : $amount * $fee->value / 100,
+                'value' => $fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100,
             ],
             [
                 'type' => 'Kode Unik',
@@ -385,17 +390,16 @@ class HotelController extends Controller
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-
             // history point masuk dan keluar customer
-//            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
             // point masuk - point keluar
-//            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
             $saldoPointCustomer = Auth::user()->point;
             $fees = [
                 [
                     'type' => 'Point',
                     'value' => $saldoPointCustomer,
-                ]
+                ],
             ];
         }
 
@@ -404,11 +408,11 @@ class HotelController extends Controller
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $data['hotel_room_id'],
-                    "name" => $hotel['name'],
-                    "price" => $amount, // tanpa pajak
-                    "quantity" => 1,
-                ]
+                    'product_id' => $data['hotel_room_id'],
+                    'name' => $hotel['name'],
+                    'price' => $amount, // tanpa pajak
+                    'quantity' => 1,
+                ],
             ],
             'amount' => $amount + $fees[0]['value'] + $data['kode_unik'], // include pajak
             'success_redirect_url' => route('redirect.succes'),
@@ -418,9 +422,9 @@ class HotelController extends Controller
             'customer' => [
                 'given_names' => $data['guest'][0]['name'],
                 'email' => $data['guest'][0]['email'],
-                'mobile_number' => $data['guest'][0]['phone'] ?? "somenumber",
+                'mobile_number' => $data['guest'][0]['phone'] ?? 'somenumber',
             ],
-            'fees' => $fees
+            'fees' => $fees,
         ]);
 
         // true buat trans
@@ -431,39 +435,38 @@ class HotelController extends Controller
                 'service' => 'hotel',
                 'service_id' => 8,
                 'payment' => $data['payment'],
-                'user_id' => \Auth::user()->id,
+                'user_id' => Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount + $fees[0]['value'] + $data['kode_unik']
+                'total' => $amount + $fees[0]['value'] + $data['kode_unik'],
             ]);
             // Pengurangan Point
             if ($request->point == 1) {
-                $point = new Point;
+                $point = new Point();
                 $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
             }
 
             try {
-                $storeDetailTransaction = DB::table('detail_transaction_hotel')
-                    ->insert([
-                        'transaction_id' => $storeTransaction->id,
-                        'hotel_id' => $hotel->hotel_id,
-                        'hotel_room_id' => $data['hotel_room_id'],
-                        'booking_id' => Str::random(6),
-                        'reservation_start' => $data['start'],
-                        'reservation_end' => $data['end'],
-                        'guest' => $request->total_guest,
-                        'room' => $request->total_room,
-                        "rent_price" => $hotel->sellingprice,
-                        "fee_admin" => $fees[0]['value'],
-                        "kode_unik" => $data['kode_unik'],
-                        "guest_name" => $data['guest'][0]['name'],
-                        "guest_email" => $data['guest'][0]['email'],
-                        "guest_handphone" => $data['guest'][0]['phone'],
-                        "created_at" => Carbon::now()->timezone('Asia/Makassar')
-                    ]);
+                $storeDetailTransaction = DB::table('detail_transaction_hotel')->insert([
+                    'transaction_id' => $storeTransaction->id,
+                    'hotel_id' => $hotel->hotel_id,
+                    'hotel_room_id' => $data['hotel_room_id'],
+                    'booking_id' => Str::random(6),
+                    'reservation_start' => $data['start'],
+                    'reservation_end' => $data['end'],
+                    'guest' => $request->total_guest,
+                    'room' => $request->total_room,
+                    'rent_price' => $hotel->sellingprice,
+                    'fee_admin' => $fees[0]['value'],
+                    'kode_unik' => $data['kode_unik'],
+                    'guest_name' => $data['guest'][0]['name'],
+                    'guest_email' => $data['guest'][0]['email'],
+                    'guest_handphone' => $data['guest'][0]['phone'],
+                    'created_at' => Carbon::now()->timezone('Asia/Makassar'),
+                ]);
             } catch (\Exception $exception) {
                 return response()->json([
-                    'message' => 'Error Store Data Transaction'
+                    'message' => 'Error Store Data Transaction',
                 ]);
             }
         });
@@ -476,8 +479,9 @@ class HotelController extends Controller
     {
         $hotelCity = Hotel::distinct()->pluck('city');
 
-        if (!$hotelCity)
+        if (!$hotelCity) {
             return ResponseFormatter::error(null, 'Data not found');
+        }
 
         return ResponseFormatter::success($hotelCity, 'Data successfully loaded');
     }
@@ -500,7 +504,6 @@ class HotelController extends Controller
         //     ->orderBy('rating_avg', 'DESC')
         //     ->orderBy('price_avg', "desc")
         //     ->get();
-
 
         $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating');
 
@@ -531,12 +534,11 @@ class HotelController extends Controller
                 'sellingprice' => $maxPrice,
             ];
 
-            $imageUrl = "-";
+            $imageUrl = '-';
             //retrieve image url
             if (!$hotel->hotelImage->isEmpty()) {
                 $imageUrl = $hotel->hotelImage[0]->image;
             }
-
 
             $hotelFormatJSON[] = [
                 'id' => $hotel->id,
