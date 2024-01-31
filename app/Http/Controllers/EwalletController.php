@@ -60,8 +60,14 @@ class EwalletController extends Controller
             'type' => 'Kode Unik',
             'value' => $uniqueCode,
         ];
+
+        
+        $poitnDigunakan = 0;
+        if ( $request->point !== null) {
+            $poitnDigunakan = $request->point * 10 / 100;
+        }
      
-        $sellingPrice = $request->point !== null ? $product->price - $request->point : $product->price;
+        $sellingPrice = $request->point !== null ? $product->price - abs($poitnDigunakan) : $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
         
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);

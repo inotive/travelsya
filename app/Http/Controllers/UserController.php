@@ -69,13 +69,14 @@ class UserController extends Controller
 
         if ($request->hasFile('image')) {
 
-            $image = $request->file('image');
-            $image->storeAs('users', $image->hashName());
+            $image = $request->file('image')->store('public/users');
+            // $image->storeAs('users', $image->hashName());
+            $fileName = basename($image);
 
             Storage::delete('users/'.$user->image);
 
             $user->update([
-                'image' => $image->hashName(),
+                'image' => $fileName,
                 'name' => $request->name,
                 'email'    => $request->email,
                 'phone'    => $request->phone,

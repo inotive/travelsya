@@ -104,10 +104,10 @@
                 <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     <div class="symbol symbol-30px">
                         <div class="symbol-label fs-2 fw-bold bg-white text-danger">
-                            {{ substr( Auth::user()->name, 0,1 ) }}
+                            {{-- {{ substr( Auth::user()->name, 0,1 ) }} --}}
+                            <img class="h-30px w-30px rounded" src="{{ auth()->user()->image != null ? asset('storage/users/' . auth()->user()->image) : asset('assets/img/default-company.png') }}" alt="" />
                         </div>
                     </div>
-{{--                    <img class="h-30px w-30px rounded" src="{{asset('assets/media/avatars/300-2.jpg')}}" alt="" />--}}
                 </div>
 
                 <!--begin::User account menu-->
