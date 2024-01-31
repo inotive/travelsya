@@ -105,7 +105,7 @@
                     <div class="symbol symbol-30px">
                         <div class="symbol-label fs-2 fw-bold bg-white text-danger">
                             {{-- {{ substr( Auth::user()->name, 0,1 ) }} --}}
-                            <img class="h-30px w-30px rounded" src="{{ auth()->user()->image != null ? asset('storage/users/' . auth()->user()->image) : asset('assets/img/default-company.png') }}" alt="" />
+                            <img class="h-30px w-30px rounded" src="{{ auth()->user()->image != null ? asset('storage/public/users/' . auth()->user()->image) : asset('assets/img/default-company.png') }}" alt="" />
                         </div>
                     </div>
                 </div>

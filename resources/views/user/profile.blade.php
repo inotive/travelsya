@@ -44,7 +44,7 @@
                                 <!--begin::Image input-->
                                 <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                     <!--begin::Image preview wrapper-->
-                                    <div class="image-input-wrapper w-125px h-125px" id="img" style="background-image: url('{{ asset("storage/users/" . Auth::user()->image) }}')">
+                                    <div class="image-input-wrapper w-125px h-125px" id="img" style="background-image: url('{{ asset("storage/public/users/" . Auth::user()->image) }}')">
                                     </div>
                                     <!--end::Image preview wrapper-->
                                     <!--begin::Edit button-->

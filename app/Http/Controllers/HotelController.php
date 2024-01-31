@@ -37,13 +37,15 @@ class HotelController extends Controller
 
     public function index(Request $request)
     {
-        $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
+        $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility','detailTransactionHotel')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where(
                     'totalroom',
                     '>=',
                     $request->room,
                 );
+            })
+            ->whereHas('detailTransactionHotel', function ($query) use ($request){
             })
             ->where(function ($query) use ($request) {
                 $query->where('hotels.city', 'like', '%' . $request->location . '%')
@@ -76,7 +78,7 @@ class HotelController extends Controller
                 ->orderBy('min_price', $orderDirection);
         }
 
-
+//        dd($hotels->get());
         $hotels = $hotels->paginate(10)->appends(request()->query());
         $hotelDetails = [];
 
