@@ -108,6 +108,8 @@ class HostelController extends Controller
 
         }
 
+        
+
         // if ($request->has('start')) {
         //     $checkin = Carbon::parse($request->start);
         //     $duration = $request->duration;

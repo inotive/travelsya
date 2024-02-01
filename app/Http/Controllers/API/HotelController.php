@@ -98,18 +98,20 @@ class HotelController extends Controller
             }
 
             if ($request->has('check_in') && $request->has('check_out')) {
-               $hotels->whereRaw(
+                $checkin = Carbon::parse($request->check_in);
+                $checkout = Carbon::parse($request->check_out);
+                $hotels->whereRaw(
                     '(
                         SELECT COUNT(*) FROM hotel_rooms hr
                         WHERE hr.hotel_id = hotels.id
                         AND hr.totalroom - COALESCE((
                             SELECT SUM(dth.room) FROM detail_transaction_hotel dth
                             WHERE dth.hotel_id = hotels.id
-                            AND ? < dth.reservation_end -- Include reservations ending on the current day
+                            AND (? < dth.reservation_end OR ? = dth.reservation_end)
                             AND ? >= dth.reservation_start
                         ), 0) > 0
                     ) > 0',
-                    [$request->check_out, $request->check_in]
+                    [$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]
                 );
             }            
 

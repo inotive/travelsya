@@ -148,11 +148,11 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        $status = '';
         if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
+            $status = 'Tagihan Sudah Lunas';
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
@@ -175,7 +175,7 @@ class ProductController extends Controller
                 $status = "Nomor BPJS Tidak Di Temukan";
             }
 
-            return ResponseFormatter::error('IDPEL SUDAH LUNAS', 'Inquiry failed');
+            return ResponseFormatter::error($status, 'Inquiry failed');
         }
 
         // return [
@@ -303,11 +303,12 @@ class ProductController extends Controller
         //     ]
         // ];
 
-        $status = '';
+       
         if (str_contains($requestMymili['status'], 'SUKSES!') || str_contains($requestMymili['status'], "SUKSES")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
+            $status = '';
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
@@ -439,6 +440,7 @@ class ProductController extends Controller
             $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
+            $status = '';
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
@@ -596,10 +598,12 @@ class ProductController extends Controller
             'no_hp' => $data['no_pelanggan'],
             'nom' => $data['nom'],
         ]);
+
         if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(10, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
+            $status = '';
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
@@ -742,6 +746,7 @@ class ProductController extends Controller
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
+            $status = '';
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
