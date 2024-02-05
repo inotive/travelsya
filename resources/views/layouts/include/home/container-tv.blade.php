@@ -177,7 +177,7 @@
                         $('#inputTotalBayarTV').val(simulateTotalTV);
 
                         $('#btnPeriksaTV').removeAttr('disabled');
-                        $('#btnPeriksaTV').html('Pembayaran');
+                        // $('#btnPeriksaTV').html('Pembayaran');
 
                         $('#btnSubmiTV').removeAttr('disabled');
 

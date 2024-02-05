@@ -207,14 +207,10 @@
                                             <th>Customer</th>
                                             <th>Nama Ruangan</th>
                                             <th>Jumlah Ruangan</th>
-                                            <th>jumlah Malam</th>
-                                            {{-- <th>Fee Admin (15% + Layanan + Kode Unik)</th>
-                                            <th>Total Client Terima</th>
-                                            <th>Grand Total</th> --}}
+                                            <th>Jumlah Malam/Bulan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {{-- @foreach ($transactions as $key => $transaction) --}}
                                         @foreach ($transaksiHotel as $hotel)
                                             <tr>
                                                 <td>{{ $hotel['created_at'] }}</td>
@@ -229,55 +225,41 @@
                                                     <td>{{ $itemHotel->hotelRoom->name ?? '-' }}</td>
                                                     <td>{{ $itemHotel->room ?? '-' }}</td>
                                                     @php
-                                                          
-                                                          $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_start);
+                                                        $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_start);
                                                         $reservasi_end = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_end);
-
+                                    
                                                         $durationInDays = $reservasi_start->diffInDays($reservasi_end);
                                                     @endphp
                                                     <td>{{ $durationInDays }} Hari</td>
                                                 @endforeach
-                                                {{-- <td class="text-success text-center">
-                                                    Rp.
-                                                    {{ number_format(($hotel['transaction_price'] * 15) / 100 + $hotel['fee'], 0, ',', '.') }}
-                                                </td>
-                                                <td class=" text-center">@currency($hotel['transaction_price'] - ($hotel['transaction_price'] * 15) / 100)</td>
-                                                <td class=" text-center">@currency($hotel['transaction_price'])</td> --}}
                                             </tr>
                                         @endforeach
-
+                                    
                                         @foreach ($transaksiHostel as $hostel)
                                             <tr>
                                                 <td>{{ $hostel['created_at'] }}</td>
                                                 <td>{{ $hostel['no_inv'] }}</td>
                                                 <td>
                                                     <span class="badge badge-rounded badge-primary">
-                                                        {{ strtoupper($hotel->services->name ?? '-') }}
+                                                        {{ strtoupper($hostel->services->name ?? '-') }}
                                                     </span>
                                                 </td>
-
                                                 <td>{{ $hostel->user->name ?? '-' }}</td>
                                                 @foreach ($hostel->detailTransactionHostel as $itemHostel)
                                                     <td>{{ $itemHostel->hostelRoom->name ?? '-' }}</td>
                                                     <td>{{ $itemHostel->room ?? '-' }}</td>
                                                     @php
-                                                      
                                                         $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHostel->reservation_start);
                                                         $reservasi_end = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHostel->reservation_end);
-
-                                                        $durationInDays = $reservasi_start->diffInMonths($reservasi_end);
+                                    
+                                                        $durationInMonths = $reservasi_start->diffInMonths($reservasi_end);
                                                     @endphp
-                                                    <td>{{ $durationInDays }} Bulan</td>
+                                                    <td>{{ $durationInMonths }} Bulan</td>
                                                 @endforeach
-
-                                                {{-- <td class="text-success text-center">
-                                                    Rp.
-                                                    {{ number_format(($hostel['transaction_price'] * 15) / 100 + $hostel['fee'], 0, ',', '.') }}
-                                                </td>
-                                                <td class=" text-center">@currency($hostel['transaction_price'] - ($hostel['transaction_price'] * 15) / 100)</td>
-                                                <td class=" text-center">@currency($hostel['transaction_price'])</td> --}}
+                                            </tr>
                                         @endforeach
                                     </tbody>
+                                    
                                 </table>
                             </div>
                         </div>
@@ -406,83 +388,7 @@
                     [1, 'desc']
                 ],
             });
-            // $('.display').DataTable({
-            //     "scrollY": "500px",
-            //     "scrollCollapse": true,
-            //     order: [[0, 'desc']],
-            //     // "language": {
-            //     //     "lengthMenu": "Show _MENU_",
-            //     // },
-            //     "dom":
-            //         "<'row'" +
-            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-            //         ">" +
-            //
-            //         "<'table-responsive'tr>" +
-            //
-            //         "<'row'" +
-            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-            //         ">"
-            // });
-            // $('#kt_datatable_penginapan').DataTable({
-            //     "scrollY": "500px",
-            //     "scrollCollapse": true,
-            //     "language": {
-            //         "lengthMenu": "Show _MENU_",
-            //     },
-            //     "dom":
-            //         "<'row'" +
-            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-            //         ">" +
-            //
-            //         "<'table-responsive'tr>" +
-            //
-            //         "<'row'" +
-            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-            //         ">"
-            // });
-            // $('#kt_datatable_ppob').DataTable({
-            //     "scrollY": "500px",
-            //     "scrollCollapse": true,
-            //     "language": {
-            //         "lengthMenu": "Show _MENU_",
-            //     },
-            //     "dom":
-            //         "<'row'" +
-            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-            //         ">" +
-            //
-            //         "<'table-responsive'tr>" +
-            //
-            //         "<'row'" +
-            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-            //         ">"
-            // });
-            // $('#kt_tab_pane_pulsa').DataTable({
-            //     "scrollY": "500px",
-            //     "scrollCollapse": true,
-            //     "language": {
-            //         "lengthMenu": "Show _MENU_",
-            //     },
-            //     "dom":
-            //         "<'row'" +
-            //         "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-            //         "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-            //         ">" +
-            //
-            //         "<'table-responsive'tr>" +
-            //
-            //         "<'row'" +
-            //         "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-            //         "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-            //         ">"
-            // });
+           
         });
     </script>
 @endpush
