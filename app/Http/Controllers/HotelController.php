@@ -37,7 +37,12 @@ class HotelController extends Controller
 
     public function index(Request $request)
     {
-        $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility','detailTransactionHotel')
+
+        $checkin = Carbon::parse($request->start);
+        $duration = $request->duration;
+        $checkout = $checkin->copy()->addDay($duration);
+
+        $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
                 $query->where(
                     'totalroom',
@@ -52,12 +57,14 @@ class HotelController extends Controller
                     ->orWhere('hotels.name', 'like', '%' . $request->location . '%');
             })
             ->whereRaw('(
-                SELECT SUM(totalroom) FROM hotel_rooms hr WHERE hr.hotel_id = hotels.id
+                SELECT COUNT(*) FROM hotel_rooms hr WHERE hr.hotel_id = hotels.id
             ) - (
-                SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel WHERE hotel_id = hotels.id
-                AND ? <= guest
-                AND ? >= reservation_start
-            ) > 0', [$request->end_date, $request->start]);
+                SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel dth WHERE dth.hotel_id = hotels.id
+                AND (? < dth.reservation_end OR ? = dth.reservation_end)  -- Include reservations ending on the current day
+                AND ? >= dth.reservation_start
+            ) > 0',[$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+
+
 
         if ($request->has('facility')) {
             $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {

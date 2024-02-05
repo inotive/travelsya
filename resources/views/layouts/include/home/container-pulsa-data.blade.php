@@ -14,7 +14,7 @@
                 <div class="row mb-5 gy-4">
                     <div class="col-12">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span>Produk</span>
+                            <span>Jenis Produk</span>
                         </label>
 
                         <select name="category" id="category" class="form-control form-control-lg"
@@ -39,9 +39,8 @@
 
                     <div class="col-6">
                         <label class="fs-5 fw-semibold mb-2">
-                            <span>Nominal</span>
+                            <span>Produk</span>
                         </label>
-
                         <select name="product" id="product" class="form-control form-control-lg"></select>
                     </div>
                     @auth
@@ -118,6 +117,16 @@
 
 @push('add-script')
     <script>
+         function resetValues() {
+            $("#no_telp").val("");
+            $("#product").val(""); 
+            $('#logo_provider').attr('src', 'https://image.gambarpng.id/pngs/gambar-transparent-pin-code_60985.png');
+        }
+
+        $("#category").change(function () {
+            resetValues();
+        });
+
         function checkOperator() {
             var category = $('#category').val();
             var nomerHP = $('#no_telp').val();

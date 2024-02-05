@@ -84,10 +84,10 @@ class HostelController extends Controller
                     AND hr.totalroom - COALESCE((
                         SELECT SUM(dth.room) FROM detail_transaction_hostel dth
                         WHERE dth.hostel_id = hostels.id
-                        AND ? < dth.reservation_end -- Include reservations ending on the current day
+                        AND (? < dth.reservation_end OR ? = dth.reservation_end)
                         AND ? >= dth.reservation_start
                     ), 0) > 0
-                ) > 0', [$request->rent_end, $request->rent_start]);
+                ) > 0', [$request->rent_end->format('Y-m-d'), $request->rent_end->format('Y-m-d'), $request->rent_start->format('Y-m-d')]);
             }
 
 
@@ -510,7 +510,7 @@ class HostelController extends Controller
             $hostelFormatJSON[] = [
                 'id' => $hostel->id, 
                 'name' => $hostel->name, 
-                'image' => asset($imageUrl), 
+                'image' => asset('media/hostel/'.$imageUrl), 
                 'location' => $hostel->city, 
                 'rating_avg' =>  sprintf("%.1f", $hotelDetails[$hostel->id]['avg_rating'] ), 
                 'rating_count' => $hotelDetails[$hostel->id]['rating_count'], 
