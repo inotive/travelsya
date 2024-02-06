@@ -95,6 +95,11 @@
             bottom: 0;
             width: 100%;
         } */
+
+        a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
     </style>
 <style>
   .item-menubar {
