@@ -214,6 +214,7 @@ class HostelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
+                        'room_lab' => rand(0,1),
                         'guest' => $room->guest,
                         'hostel_room_image' => $hostel_room_image
                     ];
@@ -510,7 +511,7 @@ class HostelController extends Controller
             $hostelFormatJSON[] = [
                 'id' => $hostel->id, 
                 'name' => $hostel->name, 
-                'image' => asset('media/hostel/'.$imageUrl), 
+                'image' => asset('storage/media/hostel/'.$imageUrl), 
                 'location' => $hostel->city, 
                 'rating_avg' =>  sprintf("%.1f", $hotelDetails[$hostel->id]['avg_rating'] ), 
                 'rating_count' => $hotelDetails[$hostel->id]['rating_count'], 

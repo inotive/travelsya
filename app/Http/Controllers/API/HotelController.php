@@ -231,6 +231,7 @@ class HotelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
+                        'room_lab' => rand(0,1),
                         'guest' => $room->guest,
                         'hotel_room_image' => $room->hotelRoomImage,
                     ];

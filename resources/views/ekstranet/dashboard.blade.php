@@ -136,7 +136,7 @@
                                 </td>
                                 <td>{{$hotel->no_inv ?? ''}}</td>
                                 <td>{{$hotel->req_id ?? ''}}</td>
-                                <td>{{$hotel->transaction->user->name  ?? ''}}</td>
+                                <td>{{$hotel->name  ?? ''}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
                                 {{-- <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td> --}}
@@ -154,14 +154,14 @@
                                 <td>{{\Carbon\Carbon::parse($hostel->created_at)->addDay()->format('d M Y')}}</td>
                                 <td>{{$hostel->no_inv}}</td>
                                 <td>{{$hostel->req_id}}</td>
-                                <td>{{$hostel->transaction->user->name ?? ''}}</td>
+                                <td>{{$hostel->name ?? ''}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_end))}}</td>
                                 {{-- <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td> --}}
                                 <td>{{ General::rp($hostel->rent_price ) }}</td>
                                 <td>
-                                    <span class="badge {{$hostel->status == "SUCCESS" ? "badge-success"
-                                        : "badge-warning" }}">{{$hostel->status == "SUCCESS" ? "Sukses"
+                                    <span class="badge {{$hostel->status == "PAID" ? "badge-success"
+                                        : "badge-warning" }}">{{$hostel->status == "PAID" ? "Sukses"
                                         : "Menunggu Pembayaran" }}</span>
                                 </td>
                             </tr>

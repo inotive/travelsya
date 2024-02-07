@@ -132,17 +132,46 @@ class DashboardController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
-        $transaksiHostel = Transaction::with('detailTransactionHostel','user','services','historyPointOut')
-            ->where('service_id',7)
-            ->where('status', 'PAID')
-            ->orderByDesc('created_at')
-            ->get();
+        // $transaksiHostel = Transaction::with('detailTransactionHostel','user','services','historyPointOut')
+        //     ->where('service_id',7)
+        //     ->where('status', 'PAID')
+        //     ->orderByDesc('created_at')
+        //     ->get();
 
-        $transaksiHotel = Transaction::with('detailTransactionHotel','user','services','historyPointOut')
-            ->where('service_id',8)
-            ->where('status', 'PAID')
-            ->orderByDesc('created_at')
-            ->get();
+        // $transaksiHotel = Transaction::with('detailTransactionHotel','user','services','historyPointOut')
+        //     ->where('service_id',8)
+        //     ->where('status', 'PAID')
+        //     ->orderByDesc('created_at')
+        //     ->get();
+
+        $transaksiHostel = Transaction::with([
+            'detailTransactionHostel' => function ($query) {
+                $query->whereNotNull('hostel_room_id');
+            },
+            'user',
+            'services',
+            'historyPointOut'
+        ])
+        ->where('service_id', 7)
+        ->where('status', 'PAID')
+        ->has('detailTransactionHostel')
+        ->orderByDesc('created_at')
+        ->get();
+    
+    $transaksiHotel = Transaction::with([
+            'detailTransactionHotel' => function ($query) {
+                $query->whereNotNull('hotel_room_id');
+            },
+            'user',
+            'services',
+            'historyPointOut'
+        ])
+        ->where('service_id', 8)
+        ->where('status', 'PAID')
+        ->has('detailTransactionHotel')
+        ->orderByDesc('created_at')
+        ->get();
+    
 
         $transaksiPPOB = Transaction::with('detailTransactionPPOB','user','services')
             ->whereIn('service_id', [3,4,5,6,9,10])

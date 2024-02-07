@@ -258,16 +258,16 @@
                     <!--begin::Image-->
                     <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-150px"
                         style="background-image:url('{{ asset('storage/media/hostel/' . $hostelImage->image) }}')">
-                                    </div>
-                                    <!--end::Image-->
+                                            </div>
+                                            <!--end::Image-->
 
-                                    <!--begin::Action-->
-                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
-                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                            <!--begin::Action-->
+                                            <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                                <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                            </div>
+                                            <!--end::Action-->
+                                        </a>
                                     </div>
-                                    <!--end::Action-->
-                                </a>
-                            </div>
      @endforeach
                     </div>
 
@@ -495,7 +495,7 @@
                 Orang</p>
                 <p class="card-text mt-1 text-gray-500">
                 <b class="text-danger">
-                Tersisa {{ $room->totalroom - $transactionCount }} Unit
+                {{ $room->totalroom - $transactionCount == 0 ? 'Kamar Penuh' : 'Tersisa ' . $room->totalroom - $transactionCount . ' Unit' }}
                 </b>
                 </p>
                 <div class="d-flex align-items-center gap-2">
@@ -526,8 +526,8 @@
                 @auth
                     <a
                     href="{{ route('hostel.checkout', ['idroom' => $room->id]) }}?start={{ $params['start'] }}&duration={{ $params['duration'] }}&category={{ $params['category'] }}&guest={{ $params['guest'] }}"
-                    class="btn btn-danger px-4 py-2">Pesan
-                    Kamar</a>
+                    class="btn btn-danger px-4 py-2 {{ $room->totalroom - $transactionCount == 0 ? 'disabled' : '' }}">{{$room->totalroom - $transactionCount != 0 ? 'Pesan
+                    Kamar' : ' Kamar Penuh'}}</a>
                 @endauth
                 </div>
                 </div>

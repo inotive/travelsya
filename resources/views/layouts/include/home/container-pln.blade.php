@@ -58,13 +58,7 @@
                     @endauth
                     <div class="col-12">
                         <button type="button" class="btn btn-danger mx-4 w-100" id="btnPeriksaPLN">Periksa</button>
-                        @auth
-                            <button type="submit" class="btn btn-danger mt-4 w-100 d-none" id="btnBayar">Bayar</button>
-                        @endauth
-                        @guest
-                            <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100 d-none" id="btnLogin">Login
-                                Dulu</a>
-                        @endguest
+
                     </div>
 
                     <div class="row mt-4" id="detailPLN">
@@ -97,6 +91,16 @@
                             </div>
 
                         </div>
+                        <div class="col-12">
+                            @auth
+                                <button type="submit" class="btn btn-danger mt-4 w-100 d-none"
+                                    id="btnBayar">Bayar</button>
+                            @endauth
+                            @guest
+                                <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100 d-none" id="btnLogin">Login
+                                    Dulu</a>
+                            @endguest
+                        </div>
                     </div>
 
                     <div class="row mt-5">
@@ -105,7 +109,8 @@
                         </div>
                         <div class="col-12">
                             @auth
-                                <button type="submit" class="btn btn-danger mt-8 w-100 d-none" id="btnBayar">Bayar</button>
+                                <button type="submit" class="btn btn-danger mt-8 w-100 d-none"
+                                    id="btnBayar">Bayar</button>
                             @endauth
                         </div>
                     </div>
@@ -164,9 +169,9 @@
                     // $('#btnPeriksaPLN').text('Periksa');
                     $('#nominal').addClass('d-none');
                     $('#btnPeriksaPLN').removeClass('d-none');
-                    $('#plnPointItem').addClass('d-none');
-                    $('#btnBayar').addClass('d-none');
-                    $('#btnLogin').addClass('d-none');
+                    $('#plnPointItem').removeClass('d-none');
+                    $('#btnBayar').removeClass('d-none');
+                    $('#btnLogin').removeClass('d-none');
                 }
             });
 
