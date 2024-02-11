@@ -163,42 +163,8 @@ class HostelController extends Controller
 
     public function room($id, Request $request)
     {
-        // $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
-        // $params['location'] = ($request->location) ?: '';
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = strtotime($request->end);
-        // $params['room'] = ($request->room) ?: '';
-        // $params['guest'] = ($request->guest) ?: '';
-        // $params['property'] = ($request->property) ?: '';
-        // $params['roomtype'] = ($request->roomtype) ?: '';
-        // $params['furnish'] = ($request->furnish) ?: '';
-        // $params['name'] = ($request->name) ?: '';
-        // $cities = Hostel::distinct()->pluck('city');
-
-        // $hostelget = $hostel->withCount(["hostelRoom as price_avg" => function ($query) {
-        //     $query->select(DB::raw('coalesce(avg(sellingprice),0)'));
-        // }])
-        //     ->withCount(["rating as rating_avg" => function ($query) {
-        //         $query->select(DB::raw('coalesce(avg(rate),0)'));
-        //     }])
-        //     ->withCount("rating as rating_count")
-        //     ->find($id);
-
-
-        // $params['location'] = ($request->location) ?: '';
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = strtotime($request->end);
-        // $params['duration'] = ($request->duration) ?: '';
-        // $params['room'] = ($request->room) ?: '';
-        // $params['guest'] = ($request->guest) ?: '';
-        // $params['property'] = ($request->property) ?: '';
-        // $params['roomtype'] = ($request->roomtype) ?: '';
-        // $params['furnish'] = ($request->furnish) ?: '';
-        // $params['name'] = ($request->name) ?: '';
-
-        // return view('hostel.room', compact('hostelget', 'params', 'cities'));
-
-        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities');
+        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelFacilities');
+        $hostelItem = Hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelFacilities')->where('id', $id)->first();
 
         $startDate = date("Y-m-d", strtotime($request->start));
         $endDate = date("Y-m-d", strtotime("+" . $request->duration . " month", strtotime($startDate)));
@@ -266,9 +232,23 @@ class HostelController extends Controller
             // $data['formatted_created_at'] = Carbon::parse($rating->created_at)->diffForHumans();
         }
 
+
+        $jumlahTransaksi = $hostelItem->hostelRating->count();
+        $totalRating = $hostelItem->hostelRating->sum('rate');
+        $resultRating = 0;
+        // Rating 5
+        if ($jumlahTransaksi > 0) {
+            $avgRating = $totalRating / $jumlahTransaksi;
+            $resultRating = ($avgRating / 10) * 5;
+        } else {
+            $avgRating = 0;
+            $resultRating = 0;
+        }
+
         $data['avg_rate'] = $ratings->avg('rate');
 
         $data['rating'] = $ratings;
+        $data['result_rating'] = $resultRating;
 
         $data['params'] = $request->all();
 

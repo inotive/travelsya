@@ -230,6 +230,9 @@
                                                 </div>
                                             </div>
                                             <div class="separator"></div>
+                                             <span class="badge badge-danger mt-4 mb-2">
+                                               {{ number_format($result_rating, 2) }}
+                                            </span>
                                             <span class="badge badge-danger mt-4">
                                                 ({{ floor($hostelget->rating_avg) }} Rating)
                                             </span>
