@@ -89,7 +89,7 @@ class AuthController extends Controller
                 "name"=> $user->name,
                 "email"=> $user->email,
                 "email_verified_at" => null,
-                "image"=> env('app_url') . $user->image,
+                "image"=> env('APP_URL') . '/storage/public/users/' . $user->image,
                 "phone"=> $user->phone,
                 "point"=> $user->point,
                 "role"=> $user->role,
@@ -97,7 +97,7 @@ class AuthController extends Controller
                 "created_at"=> $user->created_at,
                 "updated_at"=> $user->updated_at
             ];
-            
+
             return ResponseFormatter::success([
                 'user' => $user,
                 'access_token' => $token,
