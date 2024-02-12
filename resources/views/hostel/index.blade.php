@@ -643,11 +643,11 @@
                                                         <h3>{{ $hostel->name }}</h3>
                                                     </div>
                                                     <div class="col-12">
-                                                        {{-- <span class="badge badge-danger">
-                                                    {{ $hostelDetails[$hostel->id]['result_rating'] }}
-                                                </span> --}}
+                                                         <span class="badge badge-danger">
+                                                    {{ number_format($hostel->hostelRating->avg('rate'),2,'.','')  }}
+                                                </span>
                                                         <span class="badge badge-danger">
-                                                            ({{ floor($hostel->rating_avg) }} Rating)
+                                                            ({{$hostel->hostelRating->count()}} Rating)
                                                         </span>
                                                     </div>
                                                     <div class="col-12">
@@ -835,7 +835,7 @@
                             value: i * 12,
                             text: i + ' Tahun'
                         }));
-                    }   
+                    }
                 }
                 durationSelect.trigger('change');
             });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
+use App\Helpers\UploadFile;
 use App\Http\Controllers\Controller;
 use App\Mail\SendTokenResetPassword;
 use App\Models\PasswordReset;
@@ -13,11 +14,13 @@ use Exception;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
+    use UploadFile;
     public function register(Request $request)
     {
         try {
@@ -146,6 +149,38 @@ class AuthController extends Controller
         }
     }
 
+    public function updatePhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image'  => 'image|required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()
+                ->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = User::findOrFail(auth()->id());
+
+
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete('profile/' . $user->image);
+            $image = $this->storeFile($request->file('image'), 'profile');
+        }
+
+        $user->image = $image;
+        $user->save();
+
+        return response()->json([
+            "meta" => [
+                "status"     => "success",
+                "statusCode" => 200
+            ],
+            "data" => [
+                'message' => 'Photo Anda telah berhasil diperbarui'
+            ]
+        ], 200);
+    }
     public function sendTokenPassword(Request $request)
     {
         $data = $request->all();

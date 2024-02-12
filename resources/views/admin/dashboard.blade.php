@@ -208,6 +208,7 @@
                                             <th>Nama Ruangan</th>
                                             <th>Jumlah Ruangan</th>
                                             <th>Jumlah Malam/Bulan</th>
+                                            <th>Grand Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -227,14 +228,15 @@
                                                     @php
                                                         $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_start);
                                                         $reservasi_end = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_end);
-                                    
+
                                                         $durationInDays = $reservasi_start->diffInDays($reservasi_end);
                                                     @endphp
                                                     <td>{{ $durationInDays }} Hari</td>
                                                 @endforeach
+                                                <td>Rp. {{number_format($hotel->total,2,',','.')}}</td>
                                             </tr>
                                         @endforeach
-                                    
+
                                         @foreach ($transaksiHostel as $hostel)
                                             <tr>
                                                 <td>{{ $hostel['created_at'] }}</td>
@@ -251,15 +253,16 @@
                                                     @php
                                                         $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHostel->reservation_start);
                                                         $reservasi_end = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHostel->reservation_end);
-                                    
+
                                                         $durationInMonths = $reservasi_start->diffInMonths($reservasi_end);
                                                     @endphp
                                                     <td>{{ $durationInMonths }} Bulan</td>
                                                 @endforeach
+                                                <td>Rp. {{number_format($hostel->total,2,',','.')}}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
-                                    
+
                                 </table>
                             </div>
                         </div>
@@ -384,11 +387,24 @@
     <script>
         $(document).ready(function() {
             new DataTable('table.display', {
-                order: [
-                    [1, 'desc']
-                ],
+                "sScrollXInner": "100%",
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
             });
-           
+
         });
     </script>
 @endpush

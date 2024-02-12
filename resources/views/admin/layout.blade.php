@@ -35,7 +35,54 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script type="text/JavaScript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.20/lodash.min.js"></script>
     @stack('add-style')
+    <style>
+        .menu-item.menu-accordion:hover {
+            background-color: #C02425;
+            color: white !important;
+            border-radius: 4px;
+        }
 
+        .menu-item:hover .menu-icon i,
+        .menu-item:hover .menu-title,
+        .menu-item:hover .menu-arrow {
+            color: white !important; /* Ganti dengan warna putih yang diinginkan */
+        }
+
+
+        .menu-item.menu-accordion.hover .show{
+            background-color: #C02425;
+            color: white !important;
+            border-radius: 4px;
+        }
+
+        .menu-sub.menu-accordion:hover{
+            background-color: #C02425;
+            border-radius: 4px;
+        }
+
+
+
+        .menu-item.here {
+            background-color: #C02425;
+            color: white; /* Warna teks ketika aktif */
+            border-radius: 4px;
+        }
+
+        .menu-item.here .menu-icon i,
+        .menu-item.here .menu-title,
+        .menu-item.here .menu-arrow {
+            color: white !important; /* Ganti dengan warna putih yang diinginkan */
+        }
+
+
+        .menu-item:active .menu-icon i,
+        .menu-item:active .menu-title,
+        .menu-item:active .menu-arrow {
+            color: white !important; /* Ganti dengan warna putih yang diinginkan */
+        }
+
+
+    </style>
     <script>
         @media only screen and(max - width: 768 px) {
             .app - sidebar - logo -
@@ -46,13 +93,14 @@
                     display: block;
                 }
         }
+
     </script>
 
 </head>
 <!--end::Head-->
 <!--begin::Body-->
 
-<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true"
+<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="true"
     data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true"
     data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true"
     data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">

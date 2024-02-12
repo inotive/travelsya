@@ -42,7 +42,7 @@ class TransactionController extends Controller
         //     ->orderBy('id', 'desc')
         //     ->get();
         // $transaction = Transaction::where('status', 'PAID')
-        $transaction = Transaction::where('user_id', $user_id)->where('status', 'PAID')
+        $transaction = Transaction::where('user_id', $user_id)
             ->orderByDesc('created_at')
             ->get();
 
@@ -57,7 +57,7 @@ class TransactionController extends Controller
                 'payment' => $transaction->payment,
                 'payment_method' => $transaction->payment_method,
                 'payment_channel' => $transaction->payment_channel,
-                'status' => $transaction->status,
+                'status' => $transaction->status != "Transaksi Gagal" ? $transaction->status : 'Failed' ,
                 'total' => $transaction->total,
                 'created_at' => $transaction->created_at,
                 'detail_transactions' => $detailTransaction ? $detailTransaction : null,
@@ -357,12 +357,12 @@ class TransactionController extends Controller
                         'used_point' => $usedPoint,
                         'review' => $review,
                         'created_at' => $detailTransaction->created_at,
-        
+
                     ]);
             }
 
 
-           
+
         return ResponseFormatter::success($responseTransaction, 'Data successfully loaded');
     }
     public function xenditCallback()

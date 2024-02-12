@@ -301,9 +301,9 @@
                                             </div>
                                             <div class="separator"></div>
                                             <span class="badge badge-danger mt-4 mb-2">
-                                               {{ number_format($result_rating, 2) }}
+                                                {{  number_format($result_rating,2,'.','') }}
                                             </span>
-                                            <span class="badge badge-danger">({{ $total_rating }} Rating)</span>
+                                            <span class="badge badge-danger">({{$total_rating}} Rating)</span>
                                             <p>{{ $detailHotel->description ?? '' }}</p>
                                         </div>
                                     </div>

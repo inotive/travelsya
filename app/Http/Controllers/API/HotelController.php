@@ -113,7 +113,7 @@ class HotelController extends Controller
                     ) > 0',
                     [$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]
                 );
-            }            
+            }
 
             $hotelget = $hotels->get();
             $hotelDetails = [];
@@ -231,7 +231,7 @@ class HotelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
-                        'room_lab' => rand(0,1),
+                        'room_left' => rand(0,1),
                         'guest' => $room->guest,
                         'hotel_room_image' => $room->hotelRoomImage,
                     ];

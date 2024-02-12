@@ -108,7 +108,7 @@ class HostelController extends Controller
 
         }
 
-        
+
 
         // if ($request->has('start')) {
         //     $checkin = Carbon::parse($request->start);
@@ -163,8 +163,43 @@ class HostelController extends Controller
 
     public function room($id, Request $request)
     {
-        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelFacilities');
-        $hostelItem = Hostel::with('hostelRoom', 'hostelImage', 'hostelRating', 'hostelFacilities')->where('id', $id)->first();
+
+        // $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating');
+        // $params['location'] = ($request->location) ?: '';
+        // $params['start_date'] = strtotime($request->start);
+        // $params['end_date'] = strtotime($request->end);
+        // $params['room'] = ($request->room) ?: '';
+        // $params['guest'] = ($request->guest) ?: '';
+        // $params['property'] = ($request->property) ?: '';
+        // $params['roomtype'] = ($request->roomtype) ?: '';
+        // $params['furnish'] = ($request->furnish) ?: '';
+        // $params['name'] = ($request->name) ?: '';
+        // $cities = Hostel::distinct()->pluck('city');
+
+        // $hostelget = $hostel->withCount(["hostelRoom as price_avg" => function ($query) {
+        //     $query->select(DB::raw('coalesce(avg(sellingprice),0)'));
+        // }])
+        //     ->withCount(["rating as rating_avg" => function ($query) {
+        //         $query->select(DB::raw('coalesce(avg(rate),0)'));
+        //     }])
+        //     ->withCount("rating as rating_count")
+        //     ->find($id);
+
+
+        // $params['location'] = ($request->location) ?: '';
+        // $params['start_date'] = strtotime($request->start);
+        // $params['end_date'] = strtotime($request->end);
+        // $params['duration'] = ($request->duration) ?: '';
+        // $params['room'] = ($request->room) ?: '';
+        // $params['guest'] = ($request->guest) ?: '';
+        // $params['property'] = ($request->property) ?: '';
+        // $params['roomtype'] = ($request->roomtype) ?: '';
+        // $params['furnish'] = ($request->furnish) ?: '';
+        // $params['name'] = ($request->name) ?: '';
+
+        // return view('hostel.room', compact('hostelget', 'params', 'cities'));
+
+        $hostel = Hostel::with('hostelRoom', 'hostelImage', 'rating', 'hostelRating', 'hostelFacilities');
 
         $startDate = date("Y-m-d", strtotime($request->start));
         $endDate = date("Y-m-d", strtotime("+" . $request->duration . " month", strtotime($startDate)));
@@ -204,7 +239,6 @@ class HostelController extends Controller
                             )
                         )), 0)')
                 ])->setBindings([$startDate, $startDate, $endDate, $endDate])->find($id);
-
         // dd($data['hostelget']);
 
         // foreach ($data['hostelget']->hostelRoom as $room) {
@@ -300,7 +334,7 @@ class HostelController extends Controller
         $invoice = "INV-" . date('Ymd') . "-HOSTEL-" . time();
         $fee = Fee::where('service_id', 7)->first();
         $fees = [['type' => 'Fee Admin', 'value' => $fee->value,], ['type' => 'Kode Unik', 'value' => $request->uniqueCode,],];
-        
+
         $saldoPointCustomer = 0;
         if ($request->inputPoint == "on") {
             $saldoPointCustomer = Auth::user()->point;

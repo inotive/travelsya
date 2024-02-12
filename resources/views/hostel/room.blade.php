@@ -234,7 +234,10 @@
                                                {{ number_format($result_rating, 2) }}
                                             </span>
                                             <span class="badge badge-danger mt-4">
-                                                ({{ floor($hostelget->rating_avg) }} Rating)
+                                                {{ number_format($hostelget->hostelRating->avg('rate'),2,'.','')  }}
+                                            </span>
+                                            <span class="badge badge-danger mt-4">
+                                                ({{ $hostelget->hostelRating->count()  }} Rating)
                                             </span>
                                         </div>
                                     </div>

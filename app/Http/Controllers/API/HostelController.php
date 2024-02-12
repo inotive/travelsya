@@ -214,7 +214,7 @@ class HostelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
-                        'room_lab' => rand(0,1),
+                        'room_left' => rand(0,1),
                         'guest' => $room->guest,
                         'hostel_room_image' => $hostel_room_image
                     ];
@@ -502,23 +502,23 @@ class HostelController extends Controller
             $hotelDetails[$hostel->id] = [
                 'avg_rating' => $avgRating,
                  'rating_count' => $jumlahTransaksi,
-                  'price' => $minPrice, 
+                  'price' => $minPrice,
                   'sellingprice' => $maxPrice,
                 ];
 
             $hostelRoom = $hostel->hostelRoom->where('hostel_id', $hostel->id)->first();
 
             $hostelFormatJSON[] = [
-                'id' => $hostel->id, 
-                'name' => $hostel->name, 
-                'image' => asset('storage/media/hostel/'.$imageUrl), 
-                'location' => $hostel->city, 
-                'rating_avg' =>  sprintf("%.1f", $hotelDetails[$hostel->id]['avg_rating'] ), 
-                'rating_count' => $hotelDetails[$hostel->id]['rating_count'], 
-                'sellingprice' => $hotelDetails[$hostel->id]['sellingprice'], 
-                'property_type' => $hostel->property, 
-                'rent_category' => $hostel->category, 
-                'room_type' => $hostelRoom->roomtype, 
+                'id' => $hostel->id,
+                'name' => $hostel->name,
+                'image' => asset('storage/media/hostel/'.$imageUrl),
+                'location' => $hostel->city,
+                'rating_avg' =>  sprintf("%.1f", $hotelDetails[$hostel->id]['avg_rating'] ),
+                'rating_count' => $hotelDetails[$hostel->id]['rating_count'],
+                'sellingprice' => $hotelDetails[$hostel->id]['sellingprice'],
+                'property_type' => $hostel->property,
+                'rent_category' => $hostel->category,
+                'room_type' => $hostelRoom->roomtype,
                 'furnish_type' => $hostelRoom->furnish
             ];
 
