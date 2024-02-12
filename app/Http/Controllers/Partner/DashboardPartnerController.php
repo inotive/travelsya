@@ -163,8 +163,8 @@ class DashboardPartnerController extends Controller
          */
         $data['transaction_hotels'] = $transaction_hotel->get();
         $data['transaction_hostels'] = $transaction_hostel->get();
-        $data['start_date'] = $startWeek;
-        $data['end_date'] = $endWeek;
+        $data['start_date'] = $request->start_date;
+        $data['end_date'] = $request->end_date;
         
 
         /**$data['end_date'] = $startWeek;
