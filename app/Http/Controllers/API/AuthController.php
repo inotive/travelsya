@@ -81,8 +81,23 @@ class AuthController extends Controller
 
             $user = User::where('email', $request['email'])->firstOrFail();
 
+
             $token = $user->createToken('auth_token')->plainTextToken;
 
+            $user = [
+                "id" => $user->id,
+                "name"=> $user->name,
+                "email"=> $user->email,
+                "email_verified_at" => null,
+                "image"=> env('app_url') . $user->image,
+                "phone"=> $user->phone,
+                "point"=> $user->point,
+                "role"=> $user->role,
+                "is_active"=> $user->is_active,
+                "created_at"=> $user->created_at,
+                "updated_at"=> $user->updated_at
+            ];
+            
             return ResponseFormatter::success([
                 'user' => $user,
                 'access_token' => $token,
@@ -165,7 +180,7 @@ class AuthController extends Controller
 
         if ($request->hasFile('image')) {
             Storage::disk('public')->delete('profile/' . $user->image);
-            $image = $this->storeFile($request->file('image'), 'profile');
+            $image = $this->storeFile($request->file('image'), 'public/users');
         }
 
         $user->image = $image;
