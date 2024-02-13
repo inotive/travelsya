@@ -4,7 +4,7 @@
     }
 
     .initial {
-        background-color: white;
+        /* background-color: white; */
         color: gray;
         color: black;
         margin-right: 1rem;  
@@ -20,10 +20,14 @@
     }
 
     .main-accordion {
-        color: white;
+        color: green;
         display: block;
         background-color: #C02425;
         height: 3rem;
+    }
+
+    .menu-accordion:hover {
+        background-color: green;
     }
 
     .menu-item.menu-accordion.hover .show {
@@ -154,9 +158,10 @@
                     <!--end:Menu link-->
                 </a>
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}"
+                    style="background: white;">
                         <!--begin:Menu link-->
-                        <span class="menu-link">
+                        <span class="menu-link {{(Request::segment(2)=="transaction") ? 'main-accordion' : ''}}" >
                         <span class="menu-icon">
                             <i class="fas fa-clipboard-list fs-2">
                                 <span class="path1"></span>
