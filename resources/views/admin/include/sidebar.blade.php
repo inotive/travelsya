@@ -1,11 +1,11 @@
 <style>
     .text-white {
-        color: gray;
+        color: white;
     }
 
     .initial {
         /* background-color: white; */
-        color: gray;
+        color: white;
         color: black;
         margin-right: 1rem;  
     }
@@ -15,19 +15,12 @@
         margin-right: -0.15rem;
         border-radius: 0.35rem;
 
-
-        color: gray !important;
     }
 
     .main-accordion {
-        color: green;
         display: block;
         background-color: #C02425;
         height: 3rem;
-    }
-
-    .menu-accordion:hover {
-        background-color: green;
     }
 
     .menu-item.menu-accordion.hover .show {
@@ -38,12 +31,29 @@
     .active-sub-link {
         background-color: #C02425;
         margin-right: -1rem;
-        color: white;
+        color: white !important;
     }
 
     .menu-item.here .menu-icon i, .menu-item.here .menu-title, .menu-item.here .menu-arrow {
-        color: gray !important;
+        color: white !important;
     } 
+
+    [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link .menu-title.custom {
+        color: white !important;
+     }
+
+     [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link .menu-title .active-link-tr.custom  {
+        color: white !important;
+     }
+    
+     [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-link.menu-tr.active-link-tr.custom {
+        color: white !important;
+     }
+
+     /* [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link .menu-title.custom {
+        color: white !important;
+     } */
+
 
     .active-link-tr {
         background: #C02425;
@@ -171,7 +181,7 @@
                                 <span class="path5"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Laporan</span>
+                        <span class="menu-title custom">Laporan</span>
                         <span class="menu-arrow"></span>
                     </span>
                         <!--end:Menu link-->
@@ -180,7 +190,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr' : ''}}" href="{{route('admin.transaction')}}" >
+                                <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr custom' : ''}}" href="{{route('admin.transaction')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
