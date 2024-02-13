@@ -219,8 +219,15 @@ class HotelController extends Controller
                 $avgRating = 0;
             }
 
-            $hotelGet = collect([$hotel])->map(function ($hotel) use ($avgRating, $totalRating) {
-                $hotel_room = $hotel->hotelRoom->map(function ($room) {
+            $hotelGet = collect([$hotel])->map(function ($hotel) use ($avgRating, $totalRating, $request) {
+                $hotel_room = $hotel->hotelRoom->map(function ($room) use ( $request){
+                    $startDate = date('Y-m-d', strtotime($request->start_date));
+                    $endDate = date('Y-m-d', strtotime('+' . $request->end_date . ' month', strtotime($startDate)));
+                    $transactionCount = DB::table('detail_transaction_hotel')
+                        ->where('hotel_room_id', $room->id)
+                        ->where('reservation_start', '<=', $startDate)
+                        ->where('reservation_end', '>=', $endDate)
+                        ->sum('room');
                     return [
                         'id' => $room->id,
                         'name' => $room->name,
@@ -231,7 +238,7 @@ class HotelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
-                        'room_left' => rand(0,1),
+                        'room_left' => $room->totalroom - $transactionCount,
                         'guest' => $room->guest,
                         'hotel_room_image' => $room->hotelRoomImage,
                     ];

@@ -78,6 +78,8 @@ class HostelController extends Controller
                 }
             }
             if ($request->has('rent_start') && $request->has('rent_end')) {
+                $checkin = Carbon::parse($request->rent_start);
+                $checkout = Carbon::parse($request->rent_end);
                 $hostels->whereRaw('(
                     SELECT COUNT(*) FROM hostel_rooms hr
                     WHERE hr.hostel_id = hostels.id
@@ -87,7 +89,7 @@ class HostelController extends Controller
                         AND (? < dth.reservation_end OR ? = dth.reservation_end)
                         AND ? >= dth.reservation_start
                     ), 0) > 0
-                ) > 0', [$request->rent_end->format('Y-m-d'), $request->rent_end->format('Y-m-d'), $request->rent_start->format('Y-m-d')]);
+                ) > 0', [$checkin->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
             }
 
 
@@ -123,7 +125,7 @@ class HostelController extends Controller
                     'name' => $hostelsget->name,
                     'image' => $hostelImage ? asset('storage/media/hostel/' . $hostelImage->image) : null,
                     'location' => $hostelsget->city,
-                    'avg_rating' => $avg_rating,
+                    'avg_rating' => number_format($avg_rating, 2),
                     'rating_count' => $hostelsget->hostelRating->count(),
                     'sellingprice' => $sellingPrice,
                     'property_type' => $hostelsget->property,
@@ -186,12 +188,15 @@ class HostelController extends Controller
             //     // return $filter;
             // }
             // $hostelGet = $hostel->get();
-            $hostelGet = collect([$hostel])->map(function ($hostel) use ($duration_type) {
-                $duration_type2 = $duration_type;
-                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type) {
+            $hostelGet = collect([$hostel])->map(function ($hostel) use ($duration_type, $request) {
+                $hostel_room = $hostel->hostelRoom->map(function ($room) use ($duration_type, $request) {
 
                     $hostel_room_image = $room->hostelRoomImage->map(function ($room_images) {
-                        return ['id' => $room_images->id, 'hostel_room_id' => $room_images->hostel_room_id, 'hostel_room_name' => $room_images->hostelRoom->name, 'image' => 'storage/' . $room_images->image,];
+                        return [
+                            'id' => $room_images->id,
+                            'hostel_room_id' => $room_images->hostel_room_id,
+                            'hostel_room_name' => $room_images->hostelRoom->name,
+                            'image' => 'storage/' . $room_images->image,];
                     });
 
                     $sellingPrice = 0;
@@ -204,6 +209,16 @@ class HostelController extends Controller
                             ->orderBy('sellingrentprice_yearly', 'asc')
                             ->pluck('sellingrentprice_yearly')->first();
                     }
+
+                    $startDate = date('Y-m-d', strtotime($request->start_date));
+                    $endDate = date('Y-m-d', strtotime('+' . $request->end_date . ' month', strtotime($startDate)));
+                    $transactionCount = DB::table('detail_transaction_hostel')
+                        ->where('hostel_room_id', $room->id)
+                        ->where('reservation_start', '<=', $startDate)
+                        ->where('reservation_end', '>=', $endDate)
+                        ->sum('room');
+
+
                     return [
                         'id' => $room->id,
                         'name' => $room->name,
@@ -214,7 +229,7 @@ class HostelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
-                        'room_left' => rand(0,1),
+                        'room_left' => $room->totalroom -  $transactionCount ,
                         'guest' => $room->guest,
                         'hostel_room_image' => $hostel_room_image
                     ];
