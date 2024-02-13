@@ -1,3 +1,59 @@
+<style>
+    .text-white {
+        color: gray;
+    }
+
+    .initial {
+        background-color: white;
+        color: gray;
+        color: black;
+        margin-right: 1rem;  
+    }
+
+    .menu-hover:hover {
+        background-color: #C02425;
+        margin-right: -0.15rem;
+        border-radius: 0.35rem;
+
+
+        color: gray !important;
+    }
+
+    .main-accordion {
+        color: white;
+        display: block;
+        background-color: #C02425;
+        height: 3rem;
+    }
+
+    .menu-item.menu-accordion.hover .show {
+        background-color: white;
+    }
+
+
+    .active-sub-link {
+        background-color: #C02425;
+        margin-right: -1rem;
+        color: white;
+    }
+
+    .menu-item.here .menu-icon i, .menu-item.here .menu-title, .menu-item.here .menu-arrow {
+        color: gray !important;
+    } 
+
+    .active-link-tr {
+        background: #C02425;
+        color: white !important;
+    }
+
+    .menu-tr:hover {
+        background-color: #C02425;
+    }
+
+ 
+
+</style>
+
 <!--begin::Sidebar-->
 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
     <!--begin::Logo-->
@@ -119,7 +175,7 @@
                             <!--begin:Menu item-->
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{(Request::segment(2)=="transaction") ? 'active' : ''}}" href="{{route('admin.transaction')}}" >
+                                <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr' : ''}}" href="{{route('admin.transaction')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -162,37 +218,40 @@
                 </a>
                 <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} ">
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} " style="background-color: white;">
                         <!--begin:Menu link-->
-                        <span class="menu-link">
-                        <span class="menu-icon">
-                             <i class="fas fa-users fs-3">
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                            </i>
-                        </span>
-                        <span class="menu-title">Mitra</span>
-                        <span class="menu-arrow"></span>
+
+                       
+                            <span class="menu-link {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}">
+                            <span class="menu-icon {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}">
+                                 <i class="fas fa-users fs-3">
+                                    <span class="path1"></span>
+                                    <span class="path2"></span>
+                                </i>
+                            </span>
+                            <span class="menu-title {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}">Mitra</span>
+                            <span class="menu-arrow {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}"></span>
+                        
                     </span>
                         <!--end:Menu link-->
                         <!--begin:Menu sub-->
                         <div class="menu-sub menu-sub-accordion">
                             <!--begin:Menu item-->
-                            <div class="menu-item">
+                            <div class="menu-item initial menu-hover">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{Route::currentRouteName()=='admin.mitra' ? 'active' : ''}}" href="{{route('admin.mitra')}}" >
+                                <a class="menu-link {{Route::currentRouteName()=='admin.mitra' ? 'active-sub-link' : ''}}" href="{{route('admin.mitra')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
-                                    <span class="menu-title">Semua Mitra</span>
+                                    <span class="menu-title"">Semua Mitra</span>
                                 </a>
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
-                            <div class="menu-item">
+                            <div class="menu-item initial menu-hover">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{Route::currentRouteName()=='admin.hotel.index' ? 'active' : ''}}" href="{{route('admin.hotel.index')}}" >
+                                <a class="menu-link {{Route::currentRouteName()=='admin.hotel.index' ? 'active-sub-link' : ''}}" href="{{route('admin.hotel.index')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -202,9 +261,9 @@
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
-                            <div class="menu-item">
+                            <div class="menu-item initial menu-hover">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{Route::currentRouteName()=='admin.hostel.index' ? 'active' : ''}}" href="{{route('admin.hostel.index')}}" >
+                                <a class="menu-link {{Route::currentRouteName()=='admin.hostel.index' ? 'active-sub-link' : ''}}" href="{{route('admin.hostel.index')}}" >
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
