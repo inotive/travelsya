@@ -1,61 +1,15 @@
 <style>
-    .text-white {
-        color: gray;
-    }
-
-    .initial {
-        /* background-color: white; */
-        color: gray;
-        color: black;
-        margin-right: 1rem;  
-    }
-
-    .menu-hover:hover {
-        background-color: #C02425;
-        margin-right: -0.15rem;
-        border-radius: 0.35rem;
-
-
-        color: gray !important;
-    }
 
     .main-accordion {
-        color: green;
         display: block;
         background-color: #C02425;
         height: 3rem;
     }
 
-    .menu-accordion:hover {
-        background-color: green;
-    }
-
-    .menu-item.menu-accordion.hover .show {
-        background-color: white;
-    }
-
-
-    .active-sub-link {
-        background-color: #C02425;
-        margin-right: -1rem;
-        color: white;
-    }
-
-    .menu-item.here .menu-icon i, .menu-item.here .menu-title, .menu-item.here .menu-arrow {
+    .menu-item.here .menu-title.custom, .menu-item.here .menu-arrow {
         color: gray !important;
-    } 
-
-    .active-link-tr {
-        background: #C02425;
-        color: white !important;
-    }
-
-    .menu-tr:hover {
-        background-color: #C02425;
-    }
-
- 
-
+     } 
+     
 </style>
 
 <!--begin::Sidebar-->
@@ -158,10 +112,21 @@
                     <!--end:Menu link-->
                 </a>
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}"
-                    style="background: white;">
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
                         <!--begin:Menu link-->
                         <span class="menu-link {{(Request::segment(2)=="transaction") ? 'main-accordion' : ''}}" >
+                         @if (Request::segment(2)=="transaction")
+                        <span class="menu-icon">
+                            <i class="fas fa-clipboard-list fs-2" style="color: white;">
+                                <span class="path1"></span>
+                                <span class="path2"></span>
+                                <span class="path3"></span>
+                                <span class="path4"></span>
+                                <span class="path5"></span>
+                            </i>
+                        </span>
+                        <span class="menu-title custom" style="color: white;">Laporan</span>
+                        @else
                         <span class="menu-icon">
                             <i class="fas fa-clipboard-list fs-2">
                                 <span class="path1"></span>
@@ -171,23 +136,44 @@
                                 <span class="path5"></span>
                             </i>
                         </span>
-                        <span class="menu-title">Laporan</span>
+                        <span class="menu-title custom">Laporan</span>
+                        @endif
                         <span class="menu-arrow"></span>
                     </span>
                         <!--end:Menu link-->
                         <!--begin:Menu sub-->
                         <div class="menu-sub menu-sub-accordion">
                             <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr' : ''}}" href="{{route('admin.transaction')}}" >
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                    <span class="menu-title">Riwayat Transaksi</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
+
+                            @if (Request::segment(2)=="transaction")
+                                <div class="menu-item" style="background-color: #C02425; margin-top: 0.2rem; border-radius: 0.5rem;">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr custom' : ''}}" href="{{route('admin.transaction')}}" >
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot" style="background-color: white;"></span>
+                                    </span>
+
+                                    <span class="menu-title" style="color: white;">Riwayat Transaksi</span>
+     
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @else
+                                <div class="menu-item" style="">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link menu-tr" href="{{route('admin.transaction')}}" >
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    
+                                    <span class="menu-title custom">Riwayat Transaksi</span>
+                                    
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+
+                           
                             <!--end:Menu item-->
                         </div>
                         <!--end:Menu sub-->
@@ -223,7 +209,12 @@
                 </a>
                 <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} " style="background-color: white;">
+                    @if (Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index')
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} "  style="background-color: white;">
+                    @else
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} ">
+                    @endif
+                    
                         <!--begin:Menu link-->
 
                        
@@ -234,7 +225,15 @@
                                     <span class="path2"></span>
                                 </i>
                             </span>
-                            <span class="menu-title {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}">Mitra</span>
+
+                            @if (Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index')
+                                <span class="menu-title main-accordion" style="color: white !important;">Mitra</span>
+                            @else
+                                <span class="menu-title custom">Mitra</span>
+                            @endif
+
+
+                          
                             <span class="menu-arrow {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}"></span>
                         
                     </span>
@@ -244,36 +243,72 @@
                             <!--begin:Menu item-->
                             <div class="menu-item initial menu-hover">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{Route::currentRouteName()=='admin.mitra' ? 'active-sub-link' : ''}}" href="{{route('admin.mitra')}}" >
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                    <span class="menu-title"">Semua Mitra</span>
-                                </a>
+                                @if (Route::currentRouteName()=='admin.mitra')
+                                    <a class="menu-link" href="{{route('admin.mitra')}}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                            <span class="menu-title" style="color: white !important;">Semua Mitra</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{route('admin.mitra')}}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                            <span class="menu-title custom">Semua Mitra</span>
+                                    </a>
+                                @endif
+                               
+                               
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
                             <div class="menu-item initial menu-hover">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{Route::currentRouteName()=='admin.hotel.index' ? 'active-sub-link' : ''}}" href="{{route('admin.hotel.index')}}" >
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                    <span class="menu-title">Hotel</span>
-                                </a>
+
+                                @if (Route::currentRouteName()=='admin.hotel.index')
+                                    <a class="menu-link" href="{{route('admin.hotel.index')}}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                            <span class="menu-title" style="color: white !important;">Hotel</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{route('admin.hotel.index')}}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                            <span class="menu-title custom">Hotel</span>
+                                    </a>
+                                @endif
+
+                          
+                                
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
                             <!--begin:Menu item-->
                             <div class="menu-item initial menu-hover">
                                 <!--begin:Menu link-->
-                                <a class="menu-link {{Route::currentRouteName()=='admin.hostel.index' ? 'active-sub-link' : ''}}" href="{{route('admin.hostel.index')}}" >
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                    <span class="menu-title">Hostel</span>
-                                </a>
+
+                                @if (Route::currentRouteName()=='admin.hostel.index')
+                                    <a class="menu-link" href="{{route('admin.hostel.index')}}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"  style="background-color: white !important;"></span>
+                                        </span>
+                                            <span class="menu-title" style="color: white !important;">Hostel</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{route('admin.hostel.index')}}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                            <span class="menu-title custom">Hostel</span>
+                                    </a>
+                                @endif
+
+                               
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
