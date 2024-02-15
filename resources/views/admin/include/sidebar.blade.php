@@ -1,22 +1,13 @@
 <style>
-    .text-white {
-        color: white;
-    }
 
-    .initial {
-        /* background-color: white; */
-        color: white;
-        color: black;
-        margin-right: 1rem;  
-    }
 
-    .menu-hover:hover {
+    /* .menu-hover:hover {
         background-color: #C02425;
         margin-right: -0.15rem;
         border-radius: 0.35rem;
 
-    }
-
+    } */
+/* 
     .main-accordion {
         display: block;
         background-color: #C02425;
@@ -41,28 +32,19 @@
     [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link .menu-title.custom {
         color: white !important;
      }
-
-     [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link .menu-title .active-link-tr.custom  {
-        color: white !important;
-     }
-    
      [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-link.menu-tr.active-link-tr.custom {
         color: white !important;
      }
 
-     /* [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link .menu-title.custom {
-        color: white !important;
-     } */
-
 
     .active-link-tr {
         background: #C02425;
-        color: white !important;
+       
     }
 
     .menu-tr:hover {
         background-color: #C02425;
-    }
+    } */
 
  
 
@@ -168,8 +150,7 @@
                     <!--end:Menu link-->
                 </a>
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}"
-                    style="background: white;">
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion{{(Request::segment(2)=="transaction") ? 'here show' : ''}}">
                         <!--begin:Menu link-->
                         <span class="menu-link {{(Request::segment(2)=="transaction") ? 'main-accordion' : ''}}" >
                         <span class="menu-icon">
@@ -188,16 +169,36 @@
                         <!--begin:Menu sub-->
                         <div class="menu-sub menu-sub-accordion">
                             <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr custom' : ''}}" href="{{route('admin.transaction')}}" >
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
+
+                            @if (Request::segment(2)=="transaction")
+                                <div class="menu-item" style="background-color: #C02425; ">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr custom' : ''}}" href="{{route('admin.transaction')}}" >
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+
+                                    <span class="menu-title" style="color: white;">Riwayat Transaksi</span>
+     
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @else
+                                <div class="menu-item" style="background-color: #C02425; ">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link menu-tr {{(Request::segment(2)=="transaction") ? 'active-link-tr custom' : ''}}" href="{{route('admin.transaction')}}" >
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    
                                     <span class="menu-title">Riwayat Transaksi</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
+                                    
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                            @endif
+
+                           
                             <!--end:Menu item-->
                         </div>
                         <!--end:Menu sub-->
@@ -233,7 +234,7 @@
                 </a>
                 <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} " style="background-color: white;">
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} " style="background-color: white; color: gray;">
                         <!--begin:Menu link-->
 
                        
