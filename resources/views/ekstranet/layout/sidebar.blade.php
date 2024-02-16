@@ -1,3 +1,33 @@
+<style>
+    .menu-item {
+       margin: 0.2rem 0; 
+    }
+
+    /* .menu-item.menu-accordion.hover .show {
+        background-color: white;
+    } */
+
+   
+
+    .active-link {
+        color: white;
+    }
+
+    .main-accordion {
+        display: block;
+        background-color: #C02425;
+        height: 3rem;
+    }
+
+    .menu-item.here .menu-title.custom, .menu-item.here .menu-arrow {
+        color: gray !important;
+     } 
+     
+
+</style>
+
+
+
 <!--begin::Sidebar-->
 <div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar"
     data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px"
@@ -70,6 +100,10 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
+
+               
+
+
                 <!--end:Menu item-->
                 <a href="{{ route('partner.riwayat-booking') }}"
                     class="menu-item {{ Request::segment(2) == 'riwayat-booking' ? 'here' : '' }} menu-accordion">
@@ -101,7 +135,7 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
-                <a href="{{ route('partner.review') }}" class="menu-item menu-accordion">
+                <a href="{{ route('partner.review') }}" class="menu-item {{ Request::segment(2) == 'review' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -117,7 +151,7 @@
                 <!--begin:Menu item-->
                 <!--begin:Menu item-->
                 <a href="{{ route('partner.laporan.semua') }}"
-                    class="menu-item {{ Request::segment(2) == 'riwayat-booking' ? 'here' : '' }} menu-accordion">
+                    class="menu-item {{ Request::segment(2) == 'laporan' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
@@ -135,106 +169,158 @@
                     </div>
                     <!--end:Menu content-->
                 </div>
-                @if (count($hotel) > 0)
-                    <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click"
-                        class="menu-item menu-accordion{{ Request::segment(2) == 'transaction' ? 'here show' : '' }}">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fa-solid fa-hotel fs-3"></i>
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                </i>
-                            </span>
-                            <span class="menu-title">Hotel ({{ count($hotel) }})</span>
-                            <span class="menu-arrow"></span>
-                        </span>
-                        <!--end:Menu link-->
-                        <!--begin:Menu sub-->
-                        <div class="menu-sub menu-sub-accordion">
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link {{ Request::segment(2) == 'transaction' ? 'active' : '' }}"
-                                    href="{{ route('partner.management.hotel') }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Semua Hotel</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link {{ Request::segment(2) == 'hotel' ? 'active' : '' }}"
-                                    href="{{ route('partner.management.room', ['category' => 'hotel']) }}">
+               
 
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Daftar Kamar Hotel</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                        </div>
-                        <!--end:Menu sub-->
-                    </div>
-                    <!--end:Menu item-->
+                @if (count($hotel) > 0) 
+                     @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion here show"  style="background-color: white;">
+                    @else
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                    @endif
+              
+                
+                     <span class="menu-link {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel' ? 'main-accordion' : '' }}">
+                     <span class="menu-icon {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel'  ? 'main-accordion' : '' }}">
+                        <i class="fa-solid fa-hotel fs-3">
+                             <span class="path1"></span>
+                             <span class="path2"></span>
+                        </i>
+                     </span>
+
+                     @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')
+                         <span class="menu-title main-accordion" style="color: white !important;">Hotel ({{ count($hotel) }})</span>
+                     @else
+                         <span class="menu-title custom">Hotel ({{ count($hotel) }})</span>
+                     @endif
+
+
+                   
+                     <span class="menu-arrow {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel'  ? 'main-accordion' : '' }}"></span>
+                 
+                    </span>
+                 
+                 <div class="menu-sub menu-sub-accordion">
+                     <!--begin:Menu item-->
+                     <div class="menu-item initial menu-hover">
+                         <!--begin:Menu link-->
+                         @if (Request::segment(2) === 'management-hotel')
+                             <a class="menu-link" href="{{route('partner.management.hotel')}}" style="background-color: #C02425;">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                 </span>
+                                     <span class="menu-title" style="color: white !important;">Semua Hotel</span>
+                             </a>
+                         @else
+                             <a class="menu-link" href="{{route('partner.management.hotel')}}">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot"></span>
+                                 </span>
+                                     <span class="menu-title custom">Semua Hotel</span>
+                             </a>
+                         @endif
+                     </div>
+
+                     <div class="menu-item initial menu-hover">
+                         <!--begin:Menu link-->
+                         @if (request()->query('category') === 'hotel')
+                             <a class="menu-link" href="{{ route('partner.management.room', ['category' => 'hotel']) }}" style="background-color: #C02425;">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                 </span>
+                                     <span class="menu-title" style="color: white !important;">Daftar Kamar Hotel</span>
+                             </a>
+                         @else
+                             <a class="menu-link" href="{{ route('partner.management.room', ['category' => 'hotel']) }}">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot"></span>
+                                 </span>
+                                     <span class="menu-title custom">Daftar Kamar Hotel</span>
+                             </a>
+                         @endif
+                     </div>
+                    
+                 </div>
+               
+                </div>    
                 @endif
 
                 @if (count($hostel) > 0)
-                    <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="click"
-                        class="menu-item menu-accordion{{ Request::segment(2) == 'transaction' ? 'here show' : '' }}">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fa-solid fa-hotel fs-3"></i>
-                                <span class="path1"></span>
-                                <span class="path2"></span>
-                                </i>
-                            </span>
-                            <span class="menu-title">Hostel ({{ count($hostel) }})</span>
-                            <span class="menu-arrow"></span>
-                        </span>
-                        <!--end:Menu link-->
-                        <!--begin:Menu sub-->
-                        <div class="menu-sub menu-sub-accordion">
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link {{ Request::segment(2) == 'transaction' ? 'active' : '' }}"
-                                    href="{{ route('partner.management.hostel') }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Semua Hostel</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link {{ Request::segment(2) == 'hostel' ? 'active' : '' }}"
-                                    href="{{ route('partner.management.room', ['category' => 'hostel']) }}">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Daftar Kamar Hostel</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                        </div>
-                        <!--end:Menu sub-->
-                    </div>
-                    <!--end:Menu item-->
+                     @if (Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel')
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion here show"  style="background-color: white;">
+                    @else
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                    @endif
+              
+                
+                     <span class="menu-link {{ Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel' ? 'main-accordion' : '' }}">
+                     <span class="menu-icon {{ Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel'  ? 'main-accordion' : '' }}">
+                        <i class="fa-solid fa-hotel fs-3">
+                             <span class="path1"></span>
+                             <span class="path2"></span>
+                        </i>
+                     </span>
+
+                     @if (Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel')
+                         <span class="menu-title main-accordion" style="color: white !important;">Hostel ({{ count($hostel) }})</span>
+                     @else
+                         <span class="menu-title custom">Hostel ({{ count($hostel) }})</span>
+                     @endif
+
+
+                   
+                     <span class="menu-arrow {{ Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel'  ? 'main-accordion' : '' }}"></span>
+                 
+                    </span>
+                 
+                 <div class="menu-sub menu-sub-accordion">
+                     <!--begin:Menu item-->
+                     <div class="menu-item initial menu-hover">
+                         <!--begin:Menu link-->
+                         @if (Request::segment(2) === 'management-hostel')
+                             <a class="menu-link" href="{{route('partner.management.hostel')}}" style="background-color: #C02425;">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                 </span>
+                                     <span class="menu-title" style="color: white !important;">Semua Hostel</span>
+                             </a>
+                         @else
+                             <a class="menu-link" href="{{route('partner.management.hostel')}}">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot"></span>
+                                 </span>
+                                     <span class="menu-title custom">Semua Hostel</span>
+                             </a>
+                         @endif
+                     </div>
+
+                   
+
+                     <div class="menu-item initial menu-hover">
+                         <!--begin:Menu link-->
+                         @if (request()->query('category') === 'hostel')
+                             <a class="menu-link" href="{{ route('partner.management.room', ['category' => 'hostel']) }}" style="background-color: #C02425;">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                 </span>
+                                     <span class="menu-title" style="color: white !important;">Daftar Kamar Hostel</span>
+                             </a>
+                         @else
+                             <a class="menu-link" href="{{ route('partner.management.room', ['category' => 'hostel']) }}">
+                                 <span class="menu-bullet">
+                                     <span class="bullet bullet-dot"></span>
+                                 </span>
+                                     <span class="menu-title custom">Daftar Kamar Hostel</span>
+                                   
+                             </a>
+                         @endif
+                     </div>
+                    
+                 </div>
+               
+                </div>    
                 @endif
+
+              
 
             </div>
             <!--end::Menu-->
