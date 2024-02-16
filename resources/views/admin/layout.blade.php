@@ -42,23 +42,42 @@
             border-radius: 4px;
         }
 
+        .menu-item.initial.menu-hover:hover {
+            background-color: #C02425;
+            color: white !important;
+            border-radius: 4px;
+        }
+
         .menu-item:hover .menu-icon i,
         .menu-item:hover .menu-title,
         .menu-item:hover .menu-arrow {
             color: white !important; /* Ganti dengan warna putih yang diinginkan */
         }
 
-
-        .menu-item.menu-accordion.hover .show{
-            background-color: #C02425;
+        .menu-item.initial.menu-hover:hover .menu-title.custom {
             color: white !important;
-            border-radius: 4px;
         }
 
-        .menu-sub.menu-accordion:hover{
-            background-color: #C02425;
-            border-radius: 4px;
+        .menu-item.initial.menu-hover:hover .bullet-dot{
+            background-color: white !important;
         }
+
+        .menu-sub.menu-sub-accordion.show:hover {
+            background-color: #C02425;
+        }
+
+
+
+        /*.menu-item.menu-accordion.hover .show{*/
+        /*    background-color: #C02425;*/
+        /*    color: white !important;*/
+        /*    border-radius: 4px;*/
+        /*}*/
+
+        /*.menu-sub.menu-accordion:hover{*/
+        /*    background-color: #C02425;*/
+        /*    border-radius: 4px;*/
+        /*}*/
 
 
 
