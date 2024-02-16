@@ -228,7 +228,8 @@
                         $('#btnPeriksaPLN').text('Periksa');
 
                         $('#btnSubmitPLN').removeAttr('disabled');
-
+                        $('#btnBayar').removeClass('d-none');
+                        $('#btnLogin').removeClass('d-none');
                         $('#detailPLN').show();
                     },
                     error: function(xhr, status, error) {

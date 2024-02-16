@@ -228,6 +228,8 @@ class HotelController extends Controller
                         ->where('reservation_start', '<=', $startDate)
                         ->where('reservation_end', '>=', $endDate)
                         ->sum('room');
+
+                    $roomLeft = $room->totalroom - $transactionCount;
                     return [
                         'id' => $room->id,
                         'name' => $room->name,
@@ -238,7 +240,7 @@ class HotelController extends Controller
                         'roomsize' => $room->roomsize,
                         'maxextrabed' => $room->maxextrabed,
                         'totalroom' => $room->totalroom,
-                        'room_left' => $room->totalroom - $transactionCount,
+                        'room_left' => $roomLeft < 0 ? 0 : $roomLeft,
                         'guest' => $room->guest,
                         'hotel_room_image' => $room->hotelRoomImage,
                     ];
