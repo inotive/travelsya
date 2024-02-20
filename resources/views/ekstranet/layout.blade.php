@@ -38,6 +38,67 @@
             }
 
         </style>
+
+<style>
+	.menu-item.menu-accordion:hover {
+			background-color: #C02425;
+			color: white !important;
+			border-radius: 4px;
+	}
+
+	.menu-item:hover .menu-icon i,
+	.menu-item:hover .menu-title,
+	.menu-item:hover .menu-arrow {
+			color: white !important; /* Ganti dengan warna putih yang diinginkan */
+	}
+
+
+	.menu-item.menu-accordion.hover .show{
+			background-color: #C02425;
+			color: white !important;
+			border-radius: 4px;
+	}
+
+	.menu-sub.menu-accordion:hover{
+			background-color: #C02425;
+			border-radius: 4px;
+	}
+
+
+
+	.menu-item.here {
+			background-color: #C02425;
+			color: white; /* Warna teks ketika aktif */
+			border-radius: 4px;
+	}
+
+	.menu-item.here .menu-icon i,
+	.menu-item.here .menu-title,
+	.menu-item.here .menu-arrow {
+			color: white !important; /* Ganti dengan warna putih yang diinginkan */
+	}
+
+
+	.menu-item:active .menu-icon i,
+	.menu-item:active .menu-title,
+	.menu-item:active .menu-arrow {
+			color: white !important; /* Ganti dengan warna putih yang diinginkan */
+	}
+
+
+</style>
+<script>
+	@media only screen and(max - width: 768 px) {
+			.app - sidebar - logo -
+					default {
+							display: none;
+					}
+					.app - sidebar - logo - minimize {
+							display: block;
+					}
+	}
+
+</script>
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
