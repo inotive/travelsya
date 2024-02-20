@@ -92,7 +92,7 @@
                 <div class="row mb-2">
                         <div class="col-4">
                             <input class="form-control" placeholder="Tanggal Mulai" name="start_date" id="kt_datepicker_1" value="{{ old('start_date', $start_date) }}"/>
-                        
+
                         </div>
                         <div class="col-4">
                             <input class="form-control" placeholder="Tanggal Akhir" name="end_date" id="kt_datepicker_2" value="{{ old('end_date', $end_date) }}"/>
@@ -140,7 +140,7 @@
                                 <td>{{date('d M Y',strtotime($hotel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hotel->reservation_end))}}</td>
                                 {{-- <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td> --}}
-                                <td>{{ General::rp($hotel->rent_price * $diffInDays ) }}</td>
+                                <td>{{ General::rp($hotel->total -  $hotel->fee_admin - $hotel->kode_unik) }}</td>
                                 <td>
                                     <span class="badge {{$hotel->status == "PAID" ? "badge-success"
                                         : "badge-warning" }}">{{$hotel->status == "PAID" ? "Sukses"
@@ -158,7 +158,7 @@
                                 <td>{{date('d M Y',strtotime($hostel->reservation_start))}}</td>
                                 <td>{{date('d M Y',strtotime($hostel->reservation_end))}}</td>
                                 {{-- <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td> --}}
-                                <td>{{ General::rp($hostel->rent_price ) }}</td>
+                                <td>{{ General::rp($hostel->total -  $hostel->fee_admin - $hostel->kode_unik) }}</td>
                                 <td>
                                     <span class="badge {{$hostel->status == "PAID" ? "badge-success"
                                         : "badge-warning" }}">{{$hostel->status == "PAID" ? "Sukses"

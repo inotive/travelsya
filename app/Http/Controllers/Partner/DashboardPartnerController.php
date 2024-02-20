@@ -48,16 +48,16 @@ class DashboardPartnerController extends Controller
          */
         $id = auth()->user()->id;
         $dateNow = $request->end_date == null ? Carbon::now()->timezone('Asia/Makassar') : Carbon::parse($request->end_date)->timezone('Asia/Makassar') ;
-        
+
         // Weekly transactions
         $startWeek = $request->has('start_date')
             ? Carbon::parse($request->start_date)->startOfWeek()->format('Y-m-d')
             : $dateNow->copy()->startOfWeek()->format('Y-m-d');
-        
+
         $endWeek = $request->has('end_date')
             ? Carbon::parse($request->end_date)->endOfWeek()->format('Y-m-d')
             : $dateNow->copy()->endOfWeek()->format('Y-m-d');
-        
+
         $transaction_hostel = DB::table('detail_transaction_hostel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('users as u', 't.user_id', '=', 'u.id')
@@ -65,7 +65,6 @@ class DashboardPartnerController extends Controller
             ->where('h.user_id', $id)
             ->whereBetween('dh.created_at', [$startWeek, $endWeek])
             ->where('t.status', 'PAID');
-        
         $transaction_hotel = DB::table('detail_transaction_hotel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
@@ -73,10 +72,11 @@ class DashboardPartnerController extends Controller
             ->where('h.user_id', $id)
             ->whereBetween('dh.created_at', [$startWeek, $endWeek])
             ->where('t.status', 'PAID');
-        
+//        dd($transaction_hostel->get());
+
         // Monthly transactions
         $startMonth = Carbon::now()->timezone('Asia/Makassar')->subMonth()->startOfMonth()->format('Y-m-d H:i:s');
-        
+
         $trans_hotel_month = DB::table('detail_transaction_hotel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hotels as h', 'dh.hotel_id', '=', 'h.id')
@@ -84,7 +84,7 @@ class DashboardPartnerController extends Controller
             ->whereBetween('dh.updated_at', [$startMonth, $dateNow])
             ->where('t.status', 'PAID')
             ->sum('t.total');
-        
+
         $trans_hostel_month = DB::table('detail_transaction_hostel as dh')
             ->join('transactions as t', 'dh.transaction_id', '=', 't.id')
             ->join('hostels as h', 'dh.hostel_id', '=', 'h.id')
@@ -92,9 +92,9 @@ class DashboardPartnerController extends Controller
             ->whereBetween('dh.updated_at', [$startMonth, $dateNow])
             ->where('t.status', 'PAID')
             ->sum('t.total');
-        
 
-    
+
+
 
         $data['revenueWeek'] = $transaction_hotel->sum('t.total') + $transaction_hostel->sum('t.total');
 
@@ -165,7 +165,7 @@ class DashboardPartnerController extends Controller
         $data['transaction_hostels'] = $transaction_hostel->get();
         $data['start_date'] = $request->start_date;
         $data['end_date'] = $request->end_date;
-        
+
 
         /**$data['end_date'] = $startWeek;
          * RETURN VIEW ======================================
