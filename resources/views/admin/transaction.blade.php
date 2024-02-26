@@ -170,25 +170,25 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <div class="text-dark   mb-1 fs-6">
+                                            <div class="text-dark mb-1 fs-6">
                                                 {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M y h:m') }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="text-dark   mb-1 fs-6">{{ $transaction->no_inv }}</div>
+                                            <div class="text-dark mb-1 fs-6">{{ $transaction->no_inv }}</div>
                                         </td>
                                         <td>
                                             <span class="badge badge-rounded badge-primary">
-                                                {{ strtoupper($transaction->service) }}
+                                                {{ strtoupper($transaction->service) ?? '-' }}
                                             </span>
                                         </td>
                                         <td>
-                                            <div class="text-dark   d-block mb-1 fs-6">
+                                            <div class="text-dark d-block mb-1 fs-6">
                                                 {{ $transaction->payment_method ?? '-' }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="text-dark   d-block mb-1 fs-6">
+                                            <div class="text-dark d-block mb-1 fs-6">
                                                 {{ $transaction->payment_channel ?? '-' }}
                                             </div>
                                         </td>
@@ -199,7 +199,7 @@
                                             Rp. {{ number_format($transaction->total, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <div class="text-dark   d-block mb-1 fs-6">
+                                            <div class="text-dark d-block mb-1 fs-6">
 
                                                 @if ($transaction->status == 'PAID')
                                                     <span class="badge badge-rounded badge-success">Sukses</span>
@@ -210,15 +210,7 @@
                                                 @endif
                                             </div>
                                         </td>
-                                        {{--                                <td class="text-end"> --}}
-                                        {{--                                    <a href="{{route('admin.transaction.detail',$transaction->id)}}" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit" --}}
-                                        {{--                                        data-id="{{$transaction->id}}"> --}}
-                                        {{--                                        <i class="ki-duotone ki-pencil fs-2"> --}}
-                                        {{--                                            <span class="path1"></span> --}}
-                                        {{--                                            <span class="path2"></span> --}}
-                                        {{--                                        </i> --}}
-                                        {{--                                    </a> --}}
-                                        {{--                                </td> --}}
+                                       
                                     </tr>
                                 @endforeach
                             </tbody>
