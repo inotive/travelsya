@@ -155,7 +155,7 @@
 
                             $('#productPLN').removeAttr('disabled');
                             // $('#btnPeriksaPLN').attr('type', 'submit');
-                            $('#btnPeriksaPLN').addClass('d-none');
+                            $('#btnPeriksaPLN').removeClass('d-none');
                             $('#btnBayar').removeClass('d-none');
                             $('#btnLogin').removeClass('d-none');
                         }

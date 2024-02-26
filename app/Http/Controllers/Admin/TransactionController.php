@@ -61,8 +61,19 @@ class TransactionController extends Controller
         if ($request->service != null)
             $tr = $tr->where('service_id', $request->service);
 
-        if ($request->start != null) {
-            $tr = $tr->whereDate('created_at', '>=', $request->start );
+        // if ($request->start != null) {
+        //     $tr = $tr->whereDate('transactions.created_at', '>=', $request->start );
+        // }
+        // if ($request->end != null) {
+        //     $tr = $tr->whereDate('transactions.created_at', '>=', $request->end );
+        // }
+
+        if ($request->start != null && $request->end != null) {
+            $tr = $tr->whereBetween('transactions.created_at', [$request->start, $request->end]);
+        } elseif ($request->start != null) {
+            $tr = $tr->whereDate('transactions.created_at', '>=', $request->start);
+        } elseif ($request->end != null) {
+            $tr = $tr->whereDate('transactions.created_at', '<=', $request->end);
         }
 
         $transactions = $tr->orderBy('no_inv', 'desc')->get();

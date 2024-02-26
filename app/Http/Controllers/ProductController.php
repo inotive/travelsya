@@ -152,9 +152,9 @@ class ProductController extends Controller
             $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
-            $status = 'Tagihan Sudah Lunas';
+            $status = '';
             if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
-                $status = 'Tagihan Sudah Terbayar';
+                $status = 'Tagihan Sudah Lunas';
             }
 
             if (str_contains($requestMymili['status'], 'Bills already paid')) {
@@ -172,7 +172,7 @@ class ProductController extends Controller
                 $status = 'Nomor Tagihan Tidak Dikenali';
             }
             if (str_contains($requestMymili['status'], " GAGAL!")) {
-                $status = "Nomor BPJS Tidak Di Temukan";
+                $status = "Sistem gagal melakukan pengecekan tagihan";
             }
 
             return ResponseFormatter::error($status, 'Inquiry failed');
