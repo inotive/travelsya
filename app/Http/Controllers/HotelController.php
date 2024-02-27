@@ -50,8 +50,6 @@ class HotelController extends Controller
                     $request->room,
                 );
             })
-            ->whereHas('detailTransactionHotel', function ($query) use ($request){
-            })
             ->where(function ($query) use ($request) {
                 $query->where('hotels.city', 'like', '%' . $request->location . '%')
                     ->orWhere('hotels.name', 'like', '%' . $request->location . '%');
@@ -63,7 +61,6 @@ class HotelController extends Controller
                 AND (? < dth.reservation_end OR ? = dth.reservation_end)  -- Include reservations ending on the current day
                 AND ? >= dth.reservation_start
             ) > 0',[$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
-
 
 
         if ($request->has('facility')) {
@@ -275,7 +272,7 @@ class HotelController extends Controller
             'items' => [
                 [
                     "product_id" => $request->hostel_room_id,
-                    "name" => $request->name,
+                    "name" => $hotel->name,
                     "price" =>   $sellingPrice * $qty * $request->room,
                     "quantity" => 1,
                 ]

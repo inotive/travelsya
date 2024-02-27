@@ -318,7 +318,7 @@
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Hotel</div>
                                                     <div class="fs-8 fw-bold">
-                                                        {{ number_format($transactionHotel->transaction->total + $biayaPenanganan, 0, ',', '.') }}</div>
+                                                        {{ number_format($biayaHotel, 0, ',', '.') }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Penanganan</div>
@@ -328,25 +328,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- Kolom Kanan --}}
-                                    {{--                        <div class="col-12 col-lg-3 col-md-3"> --}}
-                                    {{--                            <div class="card border border-1"> --}}
-                                    {{--                                <div class="text-center" style="margin-top: 24px; margin-bottom: 24px;"> --}}
-                                    {{--                                    <div class="pembungkus mx-sm-10" style="margin-bottom: 24px;"> --}}
-                                    {{--                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame-1.svg') }}" style="width: 48px; height:48px; margin-bottom: 8px;"/> --}}
-                                    {{--                                        <div class="text fs-8">E-tiket</div> --}}
-                                    {{--                                    </div> --}}
-                                    {{--                                    <div class="pembungkus mx-sm-10" style="margin-bottom: 24px;"> --}}
-                                    {{--                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame-2.svg') }}" style="width: 48px; height:48px; margin-bottom: 8px;"/> --}}
-                                    {{--                                        <div class="text fs-8">Bukti Pembayaran</div> --}}
-                                    {{--                                    </div> --}}
-                                    {{--                                    <div class="pembungkus mx-sm-10"> --}}
-                                    {{--                                        <img src="{{ asset('assets/media/svg/profile-account/order-history/frame-3.svg') }}" style="width: 48px; height:48px; margin-bottom: 8px;"/> --}}
-                                    {{--                                        <div class="text fs-8">Hapus Riwayat</div> --}}
-                                    {{--                                    </div> --}}
-                                    {{--                                </div> --}}
-                                    {{--                            </div> --}}
-                                    {{--                        </div> --}}
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
@@ -360,7 +341,7 @@
                                                     @php
                                                         $totalBiayaHotel = $biayaHotel + $biayaPenanganan;
                                                     @endphp
-                                                    RP {{ number_format($transactionHotel->transaction->total, 0, ',', '.') }}
+                                                    RP {{ number_format($totalBiayaHotel, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>
