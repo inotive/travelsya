@@ -54,6 +54,17 @@ class PpobController extends Controller
         }
     }
 
+    public function productTax()
+    {
+        $data = Product::where('is_active', '1')
+            ->where(function ($q) {
+                $q->where('name', 'SAMSAT')->orWhere('name','PBB');
+            })
+            ->get();
+
+        return response()->json($data);
+    }
+
     public function transaction(Request $request)
     {
         $data = $request->all();
@@ -126,18 +137,18 @@ class PpobController extends Controller
 
         // request xendit
         $payoutsXendit = $this->xendit->create([
-            'external_id' => $data['no_inv'], 
+            'external_id' => $data['no_inv'],
             'items' => [
-                ['name' => $product->name . ' (' . $request->nomor_tagihan . ')', 
-                'quantity' => 1, 
-                'price' => $grandTotal, 
+                ['name' => $product->name . ' (' . $request->nomor_tagihan . ')',
+                'quantity' => 1,
+                'price' => $grandTotal,
                 'url' => 'someurl']
-            ], 
-            'amount' => $grandTotal, 
+            ],
+            'amount' => $grandTotal,
             'success_redirect_url' => route('redirect.succes'),
-            'failure_redirect_url' => route('redirect.fail'), 
-            'invoice_duration ' => 72000, 
-            'should_send_email' => true, 
+            'failure_redirect_url' => route('redirect.fail'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
             'customer' => [
                 'given_names' => 'Gusti Bagus',
                  'email' => 'gustibagus34@gmail.com',
@@ -149,13 +160,13 @@ class PpobController extends Controller
             $data['link'] = $payoutsXendit['invoice_url'];
 
             $transaction = Transaction::create([
-                'no_inv' => $data['no_inv'], 
-                'service' => $product->service->name, 
-                'service_id' => $product->service_id, 
-                'payment' => 'xendit', 
-                'user_id' => 3, 
-                'status' => $payoutsXendit['status'], 
-                'link' => $payoutsXendit['invoice_url'], 
+                'no_inv' => $data['no_inv'],
+                'service' => $product->service->name,
+                'service_id' => $product->service_id,
+                'payment' => 'xendit',
+                'user_id' => 3,
+                'status' => $payoutsXendit['status'],
+                'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
             ]);
 
@@ -163,15 +174,15 @@ class PpobController extends Controller
             $data['detail'] = $request->input('detail');
 
             DB::table('detail_transaction_ppob')->insert([
-                'transaction_id' => $transaction->id, 
-                'product_id' => $product->id, 
-                'nomor_pelanggan' => $request->nomor_tagihan, 
-                'total_tagihan' => $grandTotal, 
-                'fee_travelsya' => 2500, 
-                'fee_mili' => 100, 
-                'message' => 'Sedang menunggu pembayaran', 
-                'status' => 'PROCESS', 
-                'kode_unik' => $data['kode_unik'], 
+                'transaction_id' => $transaction->id,
+                'product_id' => $product->id,
+                'nomor_pelanggan' => $request->nomor_tagihan,
+                'total_tagihan' => $grandTotal,
+                'fee_travelsya' => 2500,
+                'fee_mili' => 100,
+                'message' => 'Sedang menunggu pembayaran',
+                'status' => 'PROCESS',
+                'kode_unik' => $data['kode_unik'],
                 'created_at' => Carbon::now()->timezone('Asia/Makassar')
             ]);
 
@@ -195,7 +206,7 @@ class PpobController extends Controller
             $data = $request->all();
 
             $validator = Validator::make($request->all(), [
-                'no_pelanggan' => 'required', 
+                'no_pelanggan' => 'required',
                 'nom' => 'required'
             ]);
 

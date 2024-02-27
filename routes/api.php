@@ -83,6 +83,7 @@ route::get('/ppob/{id}', [PpobController::class, 'getService']);
 route::post('/ppob/transaction', [PpobController::class, 'transaction']);
 route::post('/ppob/status', [PpobController::class, 'status']);
 
+Route::get('tax', [PpobController::class,'productTax']);
 // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 
 //setting
