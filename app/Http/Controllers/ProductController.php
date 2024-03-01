@@ -148,7 +148,7 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], 'SUKSES!')) {
+        if (str_contains($requestMymili['status'], 'SUKSES')) {
             $requestMymili['fee'] = $this->getAdminFee(5, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
@@ -185,7 +185,7 @@ class ProductController extends Controller
         //         "message" => "Inquiry loaded"
         //     ],
         //     "data" => [
-        //         "status" => "SUKSES!",
+        //         "status" => "SUKSES",
         //         "nama_pelanggan" => "GUSTI BAGUS WAHYU SAPUTRA",
         //         "tagihan" => "152500"
         //     ]
@@ -297,14 +297,14 @@ class ProductController extends Controller
         //         "message" => "Inquiry loaded"
         //     ],
         //     "data" => [
-        //         "status" => "SUKSES!",
+        //         "status" => "SUKSES",
         //         "nama_pelanggan" => "ERIKH",
         //         "tagihan" => "346034"
         //     ]
         // ];
 
 
-        if (str_contains($requestMymili['status'], 'SUKSES!') || str_contains($requestMymili['status'], "SUKSES")) {
+        if (str_contains($requestMymili['status'], 'SUKSES') || str_contains($requestMymili['status'], "SUKSES")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
@@ -449,7 +449,7 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], 'SUKSES!')) {
+        if (str_contains($requestMymili['status'], 'SUKSES')) {
             $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
@@ -487,7 +487,7 @@ class ProductController extends Controller
         //         "message" => "Inquiry loaded"
         //     ],
         //     "data" => [
-        //         "status" => "TRX CEKPLN 232010890459 SUKSES! SN=0000",
+        //         "status" => "TRX CEKPLN 232010890459 SUKSES SN=0000",
         //         "tagihan" => "82636",
         //         "no_pelanggan" => "232010890459",
         //         "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
@@ -612,7 +612,7 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], 'SUKSES!')) {
+        if (str_contains($requestMymili['status'], 'SUKSES')) {
             $requestMymili['fee'] = $this->getAdminFee(10, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
@@ -752,7 +752,7 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], 'SUKSES!')) {
+        if (str_contains($requestMymili['status'], 'SUKSES')) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
