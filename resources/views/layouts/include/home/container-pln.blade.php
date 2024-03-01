@@ -99,13 +99,13 @@
                             </div>
 
                         </div>
-                        <div class="col-12">
-                            @auth
-                                <button type="submit" class="btn btn-danger mt-4 w-100 d-none"
-                                    id="btnBayar">Bayar</button>
-                            @endauth
+{{--                        <div class="col-12">--}}
+{{--                            @auth--}}
+{{--                                <button type="submit" class="btn btn-danger mt-4 w-100 d-none"--}}
+{{--                                    id="btnBayar">Bayar</button>--}}
+{{--                            @endauth--}}
 
-                        </div>
+{{--                        </div>--}}
                     </div>
 
                     <div class="row mt-5">
@@ -115,7 +115,7 @@
                         <div class="col-12">
                             @auth
                                 <button type="submit" class="btn btn-danger mt-8 w-100 d-none"
-                                    id="btnBayar">Bayar</button>
+                                    id="btnBayar2">Bayar</button>
                             @endauth
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                             $('#product').removeClass('col-12');
                             $('#product').addClass('col-6');
 
-                            
+
                             $('#btnPeriksaPLN').addClass('d-none');
                             $('#btnBayar').removeClass('d-none');
                             $('#btnLogin').removeClass('d-none');
@@ -211,7 +211,7 @@
                 $('#btnPeriksaPLN').html(
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
                 );
-
+                $('#btnBayar2').addClass('d-none');
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pln') }}",
@@ -242,14 +242,14 @@
 
 
                         $('#plnPointItem').removeClass('d-none');
-                        $('#btnBayar').removeClass('d-none');
+                        $('#btnBayar').addClass('d-none');
                         // $('#btnPeriksaPLN').addClass('d-none');
-                        $('#btnPeriksaPLN').removeAttr('disabled');
+                        // $('#btnPeriksaPLN').removeAttr('disabled');
                         $('#btnPeriksaPLN').text('Periksa');
 
                         $('#btnSubmitPLN').removeAttr('disabled');
-                        $('#btnBayar').removeClass('d-none');
-                        $('#btnLogin').removeClass('d-none');
+                        $('#btnBayar2').removeClass('d-none');
+                        // $('#btnLogin').removeClass('d-none');
                         $('#detailPLN').show();
                     },
                     error: function(xhr, status, error) {
