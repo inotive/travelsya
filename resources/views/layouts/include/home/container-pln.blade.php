@@ -11,7 +11,7 @@
                 <h2 class="fw-bold mb-5">PLN</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-6">
+                    <div class="col-6" id="product">
                         <label class="fs-5 fw-semibold mb-2">
                             <span>Produk</span>
                         </label>
@@ -28,7 +28,7 @@
 
                         <select name="productPLN" id="productPLN" class="form-select form-select-lg" disabled></select>
                     </div>
-                    <div class="col-xl-6">
+                    <div class="col-6" id="nomor-pelanggan">
                         <label class="fs-5 fw-semibold mb-2">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
@@ -57,8 +57,16 @@
                         <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="plnPoint" disabled>
                     @endauth
                     <div class="col-12">
-                        <button type="button" class="btn btn-danger mx-4 w-100" id="btnPeriksaPLN">Periksa</button>
-
+                        <button type="button" class="btn btn-danger w-100" id="btnPeriksaPLN">Periksa</button>
+                        @auth
+                            <button type="submit" class="btn btn-danger mt-4 w-100 d-none"
+                                    id="btnBayar">Bayar</button>
+                        @endauth
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100 d-none" id="btnLogin">Login
+                                Dulu</a>
+                        @endguest
+{{--                        <button type="button" class="btn btn-danger mx-4 w-100" id="btnPeriksaPLN">Periksa</button>--}}
                     </div>
 
                     <div class="row mt-4" id="detailPLN">
@@ -96,10 +104,7 @@
                                 <button type="submit" class="btn btn-danger mt-4 w-100 d-none"
                                     id="btnBayar">Bayar</button>
                             @endauth
-                            @guest
-                                <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100 d-none" id="btnLogin">Login
-                                    Dulu</a>
-                            @endguest
+
                         </div>
                     </div>
 
@@ -134,7 +139,7 @@
             $('#noPelangganPLN').on('keyup', function() {
                 $('#textAlert').hide();
             });
-
+            var userLogin = {{isset(Auth::user()->name) ? "true" : "false"}}
             $('#categoryPLN').on('change', function() {
                 if ($(this).val() == 'token') {
                     $('#plnPointItem').removeClass('d-none');
@@ -155,7 +160,14 @@
 
                             $('#productPLN').removeAttr('disabled');
                             // $('#btnPeriksaPLN').attr('type', 'submit');
-                            $('#btnPeriksaPLN').removeClass('d-none');
+
+                            $('#nomor-pelanggan').removeClass('col-6');
+                            $('#nomor-pelanggan').addClass('col-12');
+                            $('#product').removeClass('col-12');
+                            $('#product').addClass('col-6');
+
+                            
+                            $('#btnPeriksaPLN').addClass('d-none');
                             $('#btnBayar').removeClass('d-none');
                             $('#btnLogin').removeClass('d-none');
                         }
@@ -164,14 +176,22 @@
                 }
 
                 if ($(this).val() == 'pembayaran') {
+
                     $('#productPLN').empty();
                     $('#productPLN').attr('disabled', true);
                     // $('#btnPeriksaPLN').text('Periksa');
                     $('#nominal').addClass('d-none');
-                    $('#btnPeriksaPLN').removeClass('d-none');
+
                     $('#plnPointItem').removeClass('d-none');
-                    $('#btnBayar').removeClass('d-none');
-                    $('#btnLogin').removeClass('d-none');
+                    $('#nomor-pelanggan').removeClass('col-6');
+                    $('#nomor-pelanggan').addClass('col-12');
+                    $('#product').removeClass('col-6');
+                    $('#product').addClass('col-12');
+
+                    $('#btnPeriksaPLN').removeClass('d-none');
+                    $('#btnBayar').addClass('d-none');
+                    $('#btnLogin').addClass('d-none');
+
                 }
             });
 
