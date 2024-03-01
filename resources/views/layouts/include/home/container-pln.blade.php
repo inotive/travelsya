@@ -69,7 +69,7 @@
 {{--                        <button type="button" class="btn btn-danger mx-4 w-100" id="btnPeriksaPLN">Periksa</button>--}}
                     </div>
 
-                    <div class="row mt-4" id="detailPLN">
+                    <div class="row" id="detailPLN">
                         <div class="col-12">
                             <label class="fs-5 fw-semibold my-3">
                                 <span>Detail Pelanggan</span>
@@ -108,7 +108,7 @@
 {{--                        </div>--}}
                     </div>
 
-                    <div class="row mt-5">
+                    <div class="row">
                         <div class="col-xl-12">
                             <div id="alertPLN"></div>
                         </div>
@@ -141,6 +141,9 @@
             });
             var userLogin = {{isset(Auth::user()->name) ? "true" : "false"}}
             $('#categoryPLN').on('change', function() {
+                $('#alertPLN').empty()
+                $('#detailPLN').hide();
+                $('#btnBayar2').addClass('d-none');
                 if ($(this).val() == 'token') {
                     $('#plnPointItem').removeClass('d-none');
                     $.ajax({
@@ -244,7 +247,7 @@
                         $('#plnPointItem').removeClass('d-none');
                         $('#btnBayar').addClass('d-none');
                         // $('#btnPeriksaPLN').addClass('d-none');
-                        // $('#btnPeriksaPLN').removeAttr('disabled');
+                        $('#btnPeriksaPLN').removeAttr('disabled');
                         $('#btnPeriksaPLN').text('Periksa');
 
                         $('#btnSubmitPLN').removeAttr('disabled');
