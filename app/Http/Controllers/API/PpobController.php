@@ -218,7 +218,7 @@ class PpobController extends Controller
 
 //            $fee_admin = Product::with('service')->find(362)->price; // 442 untuk kode PAYPLN, 362 untuk kode PAYBPJS
 
-            if (str_contains($requestMymili['status'], 'SUKSES!')) {
+            if (str_contains($requestMymili['status'], 'SUKSES')) {
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
                 if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
