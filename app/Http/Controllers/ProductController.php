@@ -303,7 +303,7 @@ class ProductController extends Controller
         //     ]
         // ];
 
-       
+
         if (str_contains($requestMymili['status'], 'SUKSES!') || str_contains($requestMymili['status'], "SUKSES")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
@@ -449,7 +449,7 @@ class ProductController extends Controller
             'nom' => $data['nom'],
         ]);
 
-        if (str_contains($requestMymili['status'], 'SUKSES!') || str_contains($requestMymili['status'], "SUKSES")) {
+        if (str_contains($requestMymili['status'], 'SUKSES!')) {
             $requestMymili['fee'] = $this->getAdminFee(3, $requestMymili['tagihan']);
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
