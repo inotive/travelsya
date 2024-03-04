@@ -794,9 +794,10 @@ class ProductController extends Controller
 
     public function productTax()
     {
-        $data = Product::where('name', 'PBB')
-            ->where('is_active', 1)
-            ->distinct()
+        $data = Product::where('is_active', '1')
+            ->where(function ($q) {
+                $q->where('name', 'SAMSAT')->orWhere('name','PBB');
+            })
             ->get();
 
         return response()->json($data);
