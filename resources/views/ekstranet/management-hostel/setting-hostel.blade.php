@@ -106,7 +106,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Long Latitude (Google Maps)</label>
                             <input type="text" name="long_ltd" id="email" class="form-control form-control-solid"
-                                   placeholder="Masukan long latitude" value="{{$hostel->lon}}">
+                                   placeholder="Masukan long latitude" value="{{$hostel->lon}}" >
                             @error('email')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{$message}}</strong>

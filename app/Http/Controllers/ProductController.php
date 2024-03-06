@@ -443,7 +443,6 @@ class ProductController extends Controller
     {
         // return view('product.pln');
         $data = $request->all();
-
         $requestMymili = $this->mymili->inquiry([
             'no_hp' => $data['no_pelanggan'],
             'nom' => $data['nom'],
@@ -510,13 +509,11 @@ class ProductController extends Controller
         $data = $request->all();
         $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
-
         $product = Product::with('service')
             ->where('id', $request->productPLN)
             ->first();
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
-
         $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
         $uniqueCode = rand(111, 999);
 
@@ -568,7 +565,7 @@ class ProductController extends Controller
             'total' => $amount,
         ]);
 
-        if ($product->service->name == 'listrik-token') {
+        if ($request->categoryPLN == 'token') {
             DB::table('detail_transaction_top_up')->insert([
                 'transaction_id' => $storeTransaction->id,
                 'product_id' => $product->id,
@@ -582,18 +579,21 @@ class ProductController extends Controller
                 'created_at' => Carbon::now(),
             ]);
         }
-        DB::table('detail_transaction_ppob')->insert([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $product->id,
-            'nomor_pelanggan' => $request->noPelangganPLN,
-            'total_tagihan' => $amount,
-            'fee_travelsya' => $fees[0]['value'],
-            'fee_mili' => 0,
-            'message' => 'Sedang menunggu pembayaran',
-            'status' => 'PROCESS',
-            'kode_unik' => $uniqueCode,
-            'created_at' => Carbon::now(),
-        ]);
+        else{
+            DB::table('detail_transaction_ppob')->insert([
+                'transaction_id' => $storeTransaction->id,
+                'product_id' => $product->id,
+                'nomor_pelanggan' => $request->noPelangganPLN,
+                'total_tagihan' => $amount,
+                'fee_travelsya' => $fees[0]['value'],
+                'fee_mili' => 0,
+                'message' => 'Sedang menunggu pembayaran',
+                'status' => 'PROCESS',
+                'kode_unik' => $uniqueCode,
+                'created_at' => Carbon::now(),
+            ]);
+        }
+
         //deductpoint
         $point = new Point();
         $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);

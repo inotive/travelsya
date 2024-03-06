@@ -117,6 +117,10 @@
                                 <button type="submit" class="btn btn-danger mt-8 w-100 d-none"
                                     id="btnBayar2">Bayar</button>
                             @endauth
+                                @guest
+                                    <a href="{{ route('login') }}" class="btn btn-danger mt-4 w-100 d-none" id="btnLogin2">Login
+                                        Dulu</a>
+                                @endguest
                         </div>
                     </div>
                 </div>
@@ -251,9 +255,17 @@
                         $('#btnPeriksaPLN').text('Periksa');
 
                         $('#btnSubmitPLN').removeAttr('disabled');
-                        $('#btnBayar2').removeClass('d-none');
-                        // $('#btnLogin').removeClass('d-none');
                         $('#detailPLN').show();
+                        if(userLogin == "true")
+                        {
+                            $('#btnBayar2').removeClass('d-none');
+
+                        }
+                        else{
+                            $('#btnLogin2').removeClass('d-none');
+                        }
+                        // $('#btnLogin').removeClass('d-none');
+
                     },
                     error: function(xhr, status, error) {
                         if (xhr.status === 400 || xhr.status === 500) {
