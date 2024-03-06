@@ -96,7 +96,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Latitude (Google Maps)</label>
                             <input type="text" name="ltd" id="email" class="form-control form-control-solid"
-                                   placeholder="Masukan latitude" value="{{$hostel->lat}}" readonly>
+                                   placeholder="Masukan latitude" value="{{$hostel->lat}}" >
                             @error('email')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{$message}}</strong>
@@ -106,7 +106,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Long Latitude (Google Maps)</label>
                             <input type="text" name="long_ltd" id="email" class="form-control form-control-solid"
-                                   placeholder="Masukan long latitude" value="{{$hostel->lon}}" readonly>
+                                   placeholder="Masukan long latitude" value="{{$hostel->lon}}">
                             @error('email')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{$message}}</strong>
@@ -163,7 +163,7 @@
                             </div> --}}
                             <label class="d-flex align-items-center fs-5 fw-semibold mb-5">
                                 <span class="required">Tipe Properti</span>
-                        
+
                                 <span class="m2-1" data-bs-toggle="tooltip" title="Silahkan Dipilih Tipe Properti">
                                     <i class="ki-duotone ki-information fs-7"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
                                 </span>
@@ -188,7 +188,7 @@
                                             Rumah
                                         </label>
                                     </div>
-                                
+
                                 @error('property')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -196,7 +196,7 @@
                                 @enderror
                             </div>
 
-                            
+
                         <!--end::Input group-->
                         <!--begin::Input group-->
                         {{-- <div class="row g-9 mb-8">

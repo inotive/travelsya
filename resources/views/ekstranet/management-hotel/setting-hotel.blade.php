@@ -83,7 +83,7 @@
                             <div class="col-md-6 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Latitude (Google Maps)</label>
                                 <input type="text" name="ltd" id="email" class="form-control form-control-lg"
-                                       placeholder="Masukan latitude" value="{{$hotel->lat}}" readonly>
+                                       placeholder="Masukan latitude" value="{{$hotel->lat}}">
                                 @error('email')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
@@ -93,7 +93,7 @@
                             <div class="col-md-6 fv-row">
                                 <label class="required fs-6 fw-semibold mb-2">Long Latitude (Google Maps)</label>
                                 <input type="text" name="long_ltd" id="email" class="form-control form-control-lg"
-                                       placeholder="Masukan long latitude" value="{{$hotel->lon}}" readonly>
+                                       placeholder="Masukan long latitude" value="{{$hotel->lon}}">
                                 @error('email')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{$message}}</strong>
