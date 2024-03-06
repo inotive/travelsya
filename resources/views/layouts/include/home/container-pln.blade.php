@@ -148,6 +148,7 @@
                 $('#alertPLN').empty()
                 $('#detailPLN').hide();
                 $('#btnBayar2').addClass('d-none');
+                $('#btnLogin2').addClass('d-none');
                 if ($(this).val() == 'token') {
                     $('#plnPointItem').removeClass('d-none');
                     $.ajax({
