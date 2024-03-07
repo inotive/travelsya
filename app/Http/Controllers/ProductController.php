@@ -282,27 +282,6 @@ class ProductController extends Controller
             'no_hp' => $request->no_pelanggan,
             'nom' => $request->nom,
         ]);
-        // dd($requestMymili);
-
-        // if (str_contains($requestMymili['status'], "SUKSES")) {
-        //     return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
-        // } else {
-        //     return ResponseFormatter::error($requestMymili, 'Inquiry failed');
-        // }
-
-        // return [
-        //     "meta" => [
-        //         "code" => 200,
-        //         "status" => "success",
-        //         "message" => "Inquiry loaded"
-        //     ],
-        //     "data" => [
-        //         "status" => "SUKSES",
-        //         "nama_pelanggan" => "ERIKH",
-        //         "tagihan" => "346034"
-        //     ]
-        // ];
-
 
         if (str_contains($requestMymili['status'], 'SUKSES') || str_contains($requestMymili['status'], "SUKSES")) {
             $requestMymili['fee'] = $this->getAdminFee(6, $requestMymili['tagihan']);

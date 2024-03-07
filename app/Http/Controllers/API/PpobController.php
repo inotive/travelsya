@@ -92,7 +92,6 @@ class PpobController extends Controller
     public function requestTransaction(Request $request)
     {
         $data = $request->all();
-
         // handle validation
         $validator = Validator::make($request->all(), [
             'product_id' => 'required',
@@ -154,7 +153,6 @@ class PpobController extends Controller
                  'email' => 'gustibagus34@gmail.com',
                   'mobile_number' => '081253290605'
                   ]]);
-
         if (isset($payoutsXendit['status'])) {
             $data['status'] = $payoutsXendit['status'];
             $data['link'] = $payoutsXendit['invoice_url'];
@@ -164,7 +162,7 @@ class PpobController extends Controller
                 'service' => $product->service->name,
                 'service_id' => $product->service_id,
                 'payment' => 'xendit',
-                'user_id' => 3,
+                'user_id' => auth()->user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
