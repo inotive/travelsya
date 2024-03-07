@@ -72,7 +72,7 @@ class CallbackController extends Controller
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
         // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
-        $xenditXCallbackToken = 'c1dda41e2b9371bf8260fe93855a342964a31a0796b16d483702668a49068ce8';
+        $xenditXCallbackToken = env('TOKEN_CALLBACK_XENDIT_DEV');
 
         // Bagian ini untuk mendapatkan Token callback dari permintaan header,
         // yang kemudian akan dibandingkan dengan token verifikasi callback Xendit

@@ -506,7 +506,7 @@ class ProductController extends Controller
             ],
             'fees' => $fees,
         ]);
-
+        dd($)
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
             'req_id' => 'PLN-' . time(),
