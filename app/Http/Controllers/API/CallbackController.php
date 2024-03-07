@@ -87,7 +87,6 @@ class CallbackController extends Controller
             $rawRequestInput = file_get_contents('php://input');
             // Baris ini melakukan format input mentah menjadi array asosiatif
             $responseXendit = json_decode($rawRequestInput, true);
-            print_r($responseXendit);
             $transaction = Transaction::where('no_inv', $responseXendit['external_id'])
                 ->first();
             $settingPoint = new Point();
@@ -124,13 +123,23 @@ class CallbackController extends Controller
                                 ];
 
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
-                                sleep(3);
+                                sleep(5);
                                 $transaction = $this->mymili->status($data);
+
+                                print_r($transaction);
                                 //process retrieve voucher code
                                 $responseMessage = explode(' ', $transaction['MESSAGE']);
                                 $responseMessageSN = explode('SN=', $responseMessage[4]);
                                 $responseMessageSNCode = explode('/', $responseMessageSN[1]);
                                 $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+
+                                $response = [
+                                    '$responseMessage' => $responseMessage,
+                                    '$responseMessageSN' => $responseMessageSN,
+                                    '$responseMessageSNCode' => $responseMessageSNCode,
+                                    '$responseMessageSNCodeFinal' => $responseMessageSNCodeFinal
+                                ];
+                                print_r($response);
                             }
 
                             if ($responseMili['RESPONSECODE'] == 00) {
