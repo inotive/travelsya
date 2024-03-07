@@ -114,23 +114,41 @@ class TopUpController extends Controller
             'kode_pembayaran' => 'required',
             'kode_unik' => 'required',
         ]);
+
+        if ($validator->fails()) {
+            return ResponseFormatter::error(['response' => $validator->errors()], 'Transaction failed', 500);
+        }
+
         $product = Product::with('service')->find($data['product_id']);
+
         $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
-        $countTransaksiUser = DB::table('transactions')->where('user_id', \Auth::user()->id)->count() + 1;
+
+        // Create invoice
         $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
 
+//        $countTransaksiUser = DB::table('transactions')
+//                ->where('user_id', \Auth::user()->id)->count() + 1;
+
+        // Get Fee
         $fees = Fee::where('service_id', $product->service_id)->first();
 
         $saldoPointCustomer = 0;
-        // Jika user menggunakan point untuk transaksi
+        // if user have using point for transaction, then get total point from user
         if ($request->point == 1) {
             // history point masuk dan keluar customer
             $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->first();
             // point masuk - point keluar
             $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
         }
+
         // total pembayaran termasuk dikurangi point
         $grandTotal = $product->price + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
+        $requestSaldoMyMili = $this->mymili->saldo();
+        $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
+
+        if ($saldoMyMili < $grandTotal) {
+            return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
+        }
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
@@ -154,10 +172,8 @@ class TopUpController extends Controller
             ],
         ]);
 
-        // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
 
-        // if (isset($payoutsXendit['status'])) {
-
+         if (isset($payoutsXendit['status'])) {
             $data['status'] = $payoutsXendit['status'];
             $data['link'] = $payoutsXendit['invoice_url'];
             $data['detail'] = $request->input('detail');
@@ -168,7 +184,7 @@ class TopUpController extends Controller
                 'service' => $product->service->name,
                 'service_id' => $product->service_id,
                 'payment' => 'xendit',
-                'user_id' => 3,
+                'user_id' => \Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
@@ -180,27 +196,21 @@ class TopUpController extends Controller
                 'product_id'     => $product->id,
                 'nomor_telfon'   => $data['no_hp'],
                 'total_tagihan'  => $grandTotal,
-                'fee_travelsya'  => 2500,
+                'fee_travelsya'  => $fees->value,
                 'fee_mili'       => 0,
                 'message'        => 'Top UP sedang diproses',
                 'status'         => "PROCESS",
                 "kode_unik"      => $data['kode_unik'],
                 "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
-            // Jika user menggunakan point untuk transaksi
 
+
+            // Jika user menggunakan point untuk transaksi dan xendit berhasil terbuat maka kurangin point customer
             if ($request->point == 1) {
                 $point = new Point;
-                $point->deductPoint($request->user()->id, $saldoPointCustomer, $transaction->id);
-
-//                // history point masuk dan keluar customer
-//                $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-//                // point masuk - point keluar
-//                $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+                $point->deductPoint(\Auth::user()->id, $saldoPointCustomer, $transaction->id);
             }
-
-
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
-        // }
+         }
     }
 }

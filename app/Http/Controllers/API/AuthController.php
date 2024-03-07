@@ -91,7 +91,7 @@ class AuthController extends Controller
                 "email_verified_at" => null,
                 "image"=> env('APP_URL') . '/storage/public/users/' . $user->image,
                 "phone"=> $user->phone,
-                "point"=> $user->point,
+                "point"=> $user->point * 10 / 100,
                 "role"=> $user->role,
                 "is_active"=> $user->is_active,
                 "created_at"=> $user->created_at,

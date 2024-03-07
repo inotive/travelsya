@@ -177,19 +177,6 @@ class ProductController extends Controller
 
             return ResponseFormatter::error($status, 'Inquiry failed');
         }
-
-        // return [
-        //     "meta" => [
-        //         "code" => 200,
-        //         "status" => "success",
-        //         "message" => "Inquiry loaded"
-        //     ],
-        //     "data" => [
-        //         "status" => "SUKSES",
-        //         "nama_pelanggan" => "GUSTI BAGUS WAHYU SAPUTRA",
-        //         "tagihan" => "152500"
-        //     ]
-        // ];
     }
 
     public function paymentBpjs(Request $request)
@@ -341,19 +328,7 @@ class ProductController extends Controller
             'value' => $uniqueCode,
         ];
 
-//<<<<<<< HEAD
-//        $pointDigunakan = 0;
-//        if ($request->point !== null) {
-//            $pointTerpakai = $point->pointTerpakai($data['totalTagihan'], $fees[0]['value'], $fees[1]['value']);
-//            $pointUser = $request->point;
-//
-//            if ($pointUser >= $pointTerpakai) {
-//                $pointDigunakan = $request->point;
-//            } else {
-//                $pointDigunakan = $pointTerpakai;
-//            }
-//
-//=======
+
         $poitnDigunakan = 0;
         if ( $request->point !== null) {
             $poitnDigunakan = $request->point * 10 / 100;
