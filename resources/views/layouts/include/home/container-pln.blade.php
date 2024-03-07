@@ -58,6 +58,7 @@
                     @endauth
                     <div class="col-12">
                         <button type="button" class="btn btn-danger w-100" id="btnPeriksaPLN">Periksa</button>
+                        <input type="hidden" id="user-login" value="{{isset(Auth::user()->name) ? 1 : 0}}">
                         @auth
                             <button type="submit" class="btn btn-danger mt-4 w-100 d-none"
                                     id="btnBayar">Bayar</button>
@@ -143,7 +144,7 @@
             $('#noPelangganPLN').on('keyup', function() {
                 $('#textAlert').hide();
             });
-            var userLogin = {{isset(Auth::user()->name) ? "true" : "false"}}
+            var userLogin =  $('#user-login').val();
             $('#categoryPLN').on('change', function() {
                 $('#alertPLN').empty()
                 $('#detailPLN').hide();
@@ -207,7 +208,6 @@
 
             $('#btnPeriksaPLN').on('click', function() {
                 var noPelangganPLN = $('#noPelangganPLN').val();
-
                 if (noPelangganPLN == '') {
                     $('#textAlert').show();
                     return false;
@@ -257,7 +257,7 @@
 
                         $('#btnSubmitPLN').removeAttr('disabled');
                         $('#detailPLN').show();
-                        if(userLogin == "true")
+                        if(userLogin == 1)
                         {
                             $('#btnBayar2').removeClass('d-none');
 
