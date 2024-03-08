@@ -148,7 +148,7 @@ class TopUpController extends Controller
         $saldoPointCustomer = 0;
         if ($request->point == 1) {
             // history point masuk dan keluar customer
-            $pointCustomer = User::where('user_id', \Auth::user()->id)->pluck('point')->first();
+            $pointCustomer = auth()->user()->point;
 
             $pointDigunakan = $pointCustomer * 10 / 100;
 
