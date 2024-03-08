@@ -144,7 +144,7 @@ class PpobController extends Controller
         ];
 
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - abs($saldoPointCustomer);
+        $grandTotal = $request->nominal_tagihan + $fees[0]->value + $data['kode_unik'] - abs($saldoPointCustomer);
 
         // request xendit
         $payoutsXendit = $this->xendit->create([
