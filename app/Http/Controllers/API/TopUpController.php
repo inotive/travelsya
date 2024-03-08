@@ -10,6 +10,7 @@ use App\Models\Fee;
 use App\Models\HistoryPoint;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use App\Services\Mymili as ServicesMymili;
 use App\Services\Point;
 use App\Services\Setting;
@@ -147,7 +148,7 @@ class TopUpController extends Controller
         $saldoPointCustomer = 0;
         if ($request->point == 1) {
             // history point masuk dan keluar customer
-            $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->pluck('point')->first();
+            $pointCustomer = User::where('user_id', \Auth::user()->id)->pluck('point')->first();
 
             $pointDigunakan = $pointCustomer * 10 / 100;
 
@@ -165,7 +166,7 @@ class TopUpController extends Controller
         if ($saldoMyMili < $grandTotal) {
             return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
         }
-        
+
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
             'items' => [

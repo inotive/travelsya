@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fee;
 use App\Models\HistoryPoint;
 use App\Models\Product;
+use App\Models\User;
 use App\Services\Mymili as ServicesMymili;
 use App\Services\Xendit;
 use Auth;
@@ -127,7 +128,7 @@ class PpobController extends Controller
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-            $pointCustomer = HistoryPoint::where('user_id', auth()->user()->point)
+            $pointCustomer = User::where('user_id', auth()->user()->point)
                 ->pluck('point')->first();
             $saldoPointCustomer = $pointCustomer * 10 /100;
         }
