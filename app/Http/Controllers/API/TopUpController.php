@@ -123,7 +123,7 @@ class TopUpController extends Controller
         //Get Product
         $product = Product::with('service')->find($data['product_id']);
 
-        // Generate Invoice
+        // Check Service
         $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
         // Create invoice
         $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
@@ -131,13 +131,30 @@ class TopUpController extends Controller
         // Get Fee by Product Service
         $fees = Fee::where('service_id', $product->service_id)->first();
 
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
+            ],
+            [
+                'type' => 'Kode Unique',
+                'value' => $data['kode_unik'],
+            ],
+        ];
+
+
         // Compare mili balance with total bill
         $saldoPointCustomer = 0;
         if ($request->point == 1) {
             // history point masuk dan keluar customer
-            $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->first();
-            // point masuk - point keluar
-            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+            $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->pluck('point')->first();
+
+            $pointDigunakan = $pointCustomer * 10 / 100;
+
+            array_push($fees, [
+                'type' => 'point',
+                'value' => 0 - $pointDigunakan,
+            ]);
         }
 
         // total pembayaran termasuk dikurangi point
@@ -155,16 +172,6 @@ class TopUpController extends Controller
                 ->pluck('point')->first();
             $saldoPointCustomer = $pointCustomer * 10 /100;
         }
-        $fees = [
-            [
-                'type' => 'admin',
-                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
-            ],
-            [
-                'type' => 'Kode Unique',
-                'value' => $data['kode_unik'],
-            ],
-        ];
 
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
@@ -225,7 +232,7 @@ class TopUpController extends Controller
             // Jika user menggunakan point untuk transaksi dan xendit berhasil terbuat maka kurangin point customer
             if ($request->point == 1) {
                 $point = new Point;
-                $point->deductPoint(\Auth::user()->id, $saldoPointCustomer, $transaction->id);
+                $point->deductPoint(\Auth::user()->id, $pointDigunakan, $transaction->id);
             }
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
          }

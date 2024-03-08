@@ -117,13 +117,13 @@ class CallbackController extends Controller
                             $responseMessageSNCodeFinal = '';
                             if ($transaction->service == 'listrik-token') {
                                 $data = [
-                                    'reqid' => $transaction->no_inv,
+                                    'reqid' => str($transaction->no_inv),
                                     'no_hp' => str($detailTransactionTopUP->nomor_telfon),
                                     'nom' => str($detailTransactionTopUP->kode_pembayaran),
                                 ];
                                 print_r($data);
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
-                                sleep(10);
+                                sleep(3);
                                 $transaction = $this->mymili->status($data);
 
                                 print_r($transaction);

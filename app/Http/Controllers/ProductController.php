@@ -479,7 +479,12 @@ class ProductController extends Controller
         $product = Product::with('service')
             ->where('id', $request->productPLN)
             ->first();
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
+
+        // Generate Invoice
+        $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
+        // Check Service
+        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
+
         $setting = new Setting();
 
         // Get Fee by Product Service
