@@ -159,16 +159,18 @@ class CallbackController extends Controller
                                     'flow' => "debit"
                                 ]);
 
-                            } elseif ($responseMili['RESPONSECODE'] == 68) {
+                            }
+                            elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = 'Pending';
                                 $message = 'Pembayaran Sedang Di Proses';
-                            } else {
+                            }
+                            else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
-
-                                HistoryPoint::where('transaction_id', $transaction->id)
-                                    ->where('flow', 'credit')
-                                    ->delete();
+//
+//                                HistoryPoint::where('transaction_id', $transaction->id)
+//                                    ->where('flow', 'credit')
+//                                    ->delete();
                                 $transaction->update([
                                     'status' => 'Transaksi Gagal',
                                     'payment_channel' => $responseXendit['payment_channel'],

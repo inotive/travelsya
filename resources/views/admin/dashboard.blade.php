@@ -363,7 +363,7 @@
                                                 <td>{{ $transaction->payment_method . ' - ' . $transaction->payment_channel }}
                                                 </td>
                                                 <td class="text-danger fw-bold">
-                                                    @currency($hotel->historyPointOut->first()->point ?? 0)
+                                                    @currency($all->historyPointOut->first()->point ?? 0)
                                                 </td>
                                                 <td>
                                                     @currency(($all->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
