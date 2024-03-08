@@ -147,16 +147,17 @@
                     <!--begin::Table container-->
                     <div class="table-responsive">
                         <!--begin::Table-->
-                        <table class="table table-bordered gs-0 gy-4 text-center">
+                        <table class="table table-bordered gs-0 gy-4 text-center" style="font-size: 11px;">
                             <!--begin::Table head-->
                             <thead>
-                                <tr class="fw-bold fs-6 text-gray-800">
-                                    <th style="width:15%">Created</th>
-                                    <th style="width:20%">No Invoice</th>
+                                <tr class="fw-bold text-center text-gray-800">
+                                    <th style="width:15%">Waktu</th>
+                                    <th style="width:15%">Invoice</th>
                                     <th style="width:10%">Service</th>
-                                    <th style="width:15%">Metode Pembayaran</th>
-                                    <th style="width:15%">Channel Pembayaran</th>
-                                    <th style="width:15%">Biaya Admin</th>
+                                    <th style="width:10%">Metode Pembayaran</th>
+                                    <th style="width:15%">Harga</th>
+                                    <th style="width:15%">Biaya Layanan</th>
+                                    <th style="width:15%">Potongan Point</th>
                                     <th style="width:15%">Grand Total</th>
                                     <th style="width:10%">Status</th>
                                 </tr>
@@ -170,12 +171,12 @@
                                     @endphp
                                     <tr>
                                         <td>
-                                            <div class="text-dark mb-1 fs-6">
+                                            <div class="text-dark mb-1 ">
                                                 {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M y h:m') }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="text-dark mb-1 fs-6">{{ $transaction->no_inv }}</div>
+                                            <div class="text-dark mb-1 ">{{ $transaction->no_inv }}</div>
                                         </td>
                                         <td>
                                             <span class="badge badge-rounded badge-primary">
@@ -183,23 +184,40 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <div class="text-dark d-block mb-1 fs-6">
-                                                {{ $transaction->payment_method ?? '-' }}
+                                            <div class="text-dark d-block mb-1 ">
+                                                {{ $transaction->payment_method ." - ". $transaction->payment_channel?? '-' }}
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="text-dark d-block mb-1 fs-6">
-                                                {{ $transaction->payment_channel ?? '-' }}
-                                            </div>
+                                            @if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10]))
+                                                @currency($transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0) )
+                                            @elseif(in_array($transaction->service_id, [1, 2, 11, 12]))
+                                                @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                            @elseif($transaction->service_id == 8)
+                                                @currency($transaction->total - ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHotel->first()->kode_unik ?? 0))
+                                            @elseif($transaction->service_id == 7)
+                                                @currency($transaction->total - ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHostel->first()->kode_unik ?? 0))
+                                            @endif
                                         </td>
-                                        <td>
-                                            Rp. {{ number_format($biayaAdmin, 0, ',', '.') }}
+                                        <td class="text-success fw-bold">
+                                            @if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10]))
+                                                @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                            @elseif(in_array($transaction->service_id, [1, 2, 11, 12]))
+                                                @currency(($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                            @elseif($transaction->service_id == 8)
+                                                @currency(($transaction->detailTransactionHotel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHotel->first()->kode_unik ?? 0))
+                                            @elseif($transaction->service_id == 7)
+                                                @currency(($transaction->detailTransactionHostel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHostel->first()->kode_unik ?? 0))
+                                            @endif
+                                        </td>
+                                        <td class="text-danger fw-bold">
+                                            Rp. {{ number_format($transaction->historyPoint->first()->point ?? 0, 0, ',', '.') }}
                                         </td>
                                         <td>
                                             Rp. {{ number_format($transaction->total, 0, ',', '.') }}
                                         </td>
                                         <td>
-                                            <div class="text-dark d-block mb-1 fs-6">
+                                            <div class="text-dark d-block mb-1 ">
 
                                                 @if ($transaction->status == 'PAID')
                                                     <span class="badge badge-rounded badge-success">Sukses</span>
@@ -210,7 +228,7 @@
                                                 @endif
                                             </div>
                                         </td>
-                                       
+
                                     </tr>
                                 @endforeach
                             </tbody>

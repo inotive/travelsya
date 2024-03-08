@@ -126,9 +126,12 @@ class ProductController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        //deductpoint
-        $point = new Point();
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+        if ( $request->point !== null) {
+            //deductpoint
+            $point = new Point();
+            $point->deductPoint($request->user()->id, $poitnDigunakan, $storeTransaction->id);
+        }
+
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -506,7 +509,6 @@ class ProductController extends Controller
             ],
             'fees' => $fees,
         ]);
-        dd($)
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
             'req_id' => 'PLN-' . time(),

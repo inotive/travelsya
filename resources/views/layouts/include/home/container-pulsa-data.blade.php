@@ -41,7 +41,7 @@
                         <label class="fs-5 fw-semibold mb-2">
                             <span>Produk</span>
                         </label>
-                        <select name="product" id="product" class="form-control form-control-lg"></select>
+                        <select name="product" id="product-pulsa" class="form-control form-control-lg"></select>
                     </div>
                     @auth
                         <div class="col-12 d-flex justify-content-between">
@@ -119,7 +119,7 @@
     <script>
          function resetValues() {
             $("#no_telp").val("");
-            $("#product").val(""); 
+            $("#product").val("");
             $('#logo_provider').attr('src', 'https://image.gambarpng.id/pngs/gambar-transparent-pin-code_60985.png');
         }
 
@@ -187,12 +187,10 @@
                         url: "/product/" + category + "/" + provider,
                         success: function(response) {
                             // console.log(response)
-
-                            $('#product').empty();
-
+                            $('#product-pulsa').empty();
                             // Menambahkan pilihan berdasarkan respons
                             $.each(response, function(key, value) {
-                                $('#product').append($('<option>', {
+                                $('#product-pulsa').append($('<option>', {
                                     value: value.id,
                                     text: value.description + ' - Rp. ' + value.price
                                 }));
@@ -203,63 +201,57 @@
             }
         }
 
-        $(document).ready(function() {
+        {{--$(document).ready(function() {--}}
 
-            const {
-                getOperator
-            } = window.NoTelp;
+        {{--    const {--}}
+        {{--        getOperator--}}
+        {{--    } = window.NoTelp;--}}
 
-            $('#no_telp').on('keyup', function(e) {
-                var notelp = e.target.value;
-                var operatorTelp1 = getOperator(notelp);
+        {{--    $('#no_telp').on('keyup', function(e) {--}}
+        {{--        var notelp = e.target.value;--}}
+        {{--        var operatorTelp1 = getOperator(notelp);--}}
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+        {{--        $.ajaxSetup({--}}
+        {{--            headers: {--}}
+        {{--                'X-CSRF-TOKEN': jQuery('meta[name="csrf-token"]').attr('content')--}}
+        {{--            }--}}
+        {{--        });--}}
 
-                if (operatorTelp1.valid) {
-                    $.ajax({
-                        url: "{{ url('/ajax/ppob') }}",
-                        type: "POST",
-                        dataType: 'json',
-                        data: {
-                            operator: operatorTelp1.operator,
-                            category: 'pulsa'
-                        },
-                        success: function(response) {
-                            $('#row-pricelist').html('');
+        {{--        if (operatorTelp1.valid) {--}}
+        {{--            $.ajax({--}}
+        {{--                url: "{{ url('/ajax/ppob') }}",--}}
+        {{--                type: "POST",--}}
+        {{--                dataType: 'json',--}}
+        {{--                data: {--}}
+        {{--                    operator: operatorTelp1.operator,--}}
+        {{--                    category: 'pulsa'--}}
+        {{--                },--}}
+        {{--                success: function(response) {--}}
+        {{--                    $('#product').html('');--}}
 
-                            if (response.message != 'Unauthorized') {
-                                $.each(response, function(key, val) {
-                                    $('#row-pricelist').append(
-                                        `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.description}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.price}</span></div></div></div></div>`
-                                    )
-                                });
-                            } else {
-                                $('#row-pricelist').append(
-                                    '<div class="col-md-12"><a href="{{ route('login') }}">Login first</a></div>'
-                                )
-                            }
-                        }
-                    }).done(function() {
-                        $('.pricelist').on('click', function(e) {
-                            const id = $(this).data('product');
-                            const notelp = $('#notelp').val();
+        {{--                    $.each(response, function(key, val) {--}}
+        {{--                        $('#product').append(--}}
+        {{--                            `<div style="cursor:pointer" data-product="${val.id}" class="col-xl-2 col-sm-6 card border border-warning pricelist me-xl-2 mb-xl-3"><div class="card"><div class="card-header pt-5"><div class="card-title d-flex flex-column"><div class="d-flex align-items-center"><span class="fw-bold text-dark me-2">${val.description}</span></div><span class="text-gray-400 pt-1 fw-semibold fs-6">${val.price}</span></div></div></div></div>`--}}
+        {{--                        )--}}
+        {{--                    });--}}
+        {{--                }--}}
+        {{--            }).done(function() {--}}
+        {{--                $('.pricelist').on('click', function(e) {--}}
+        {{--                    const id = $(this).data('product');--}}
+        {{--                    const notelp = $('#notelp').val();--}}
 
-                            $('#row-pricelist').append(
-                                `<form id="form_id" method="post" action="{{ route('cart') }}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `
-                            ).click(function() {
-                                $('#form_id').submit();
-                            });
+        {{--                    $('#product').appsend(--}}
+        {{--                        `<form id="form_id" method="post" action="{{ route('cart') }}"  hidden>@csrf<input type="text" value="${id}" name="id" /><input type="text" value="${notelp}" name="notelp" /><button type="submit" class="btn-submit"></button></form> `--}}
+        {{--                    ).click(function() {--}}
+        {{--                        $('#form_id').submit();--}}
+        {{--                    });--}}
 
-                        })
-                    });
-                }
-            })
+        {{--                })--}}
+        {{--            });--}}
+        {{--        }--}}
+        {{--    })--}}
 
-        });
+        {{--});--}}
         $(document).ready(function() {
             // Handle the change event of the checkbox
             $("#flexSwitchChecked").change(function() {

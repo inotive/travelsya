@@ -92,7 +92,7 @@
             <div class="card">
 
                 <div class="card-body">
-                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-5 fs-6 fw-bold text-dark">
+                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-3 fs-6  text-danger">
                         <li class="nav-item">
                             <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi
                                 ({{ count($semuaTransaksi) }})</a>
@@ -102,7 +102,7 @@
                                 ({{ count($transaksiHotel) + count($transaksiHostel) }})</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">PPOB Tagihan
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">Tagihan
                                 ({{ count($transaksiPPOB) }})</a>
                         </li>
                         <li class="nav-item">
@@ -118,17 +118,18 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_all" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table-row-dashed display fs-6 gy-5 table-bordered table align-middle"
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
                                     id="kt_datatable_zero_configuration">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
+                                        <tr class="fw-bold text-gray-800">
                                             <th>Tanggal</th>
                                             <th>Invoice</th>
                                             <th>Produk</th>
                                             <th>Customer</th>
                                             <th>Deskripsi</th>
                                             <th>Metode Pembayaran</th>
-                                            <th>Fee Admin</th>
+                                            <th>Harga</th>
+                                            <th>Biaya layanan</th>
                                             <th>Potongan Point</th>
                                             <th>Grand Total</th>
 
@@ -138,7 +139,7 @@
                                         {{-- @foreach ($transactions as $key => $transaction) --}}
                                         @foreach ($semuaTransaksi as $all)
                                             <tr>
-                                                <td>{{ $all->created_at }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($all->created_at)->format('d M Y h:i') }}</td>
                                                 <td>{{ $all->no_inv }}</td>
                                                 <td>
                                                     <span class="badge badge-rounded badge-primary">
@@ -172,6 +173,17 @@
                                                     @endif
                                                 </td>
                                                 <td>{!! $all->payment_method ? str_replace('_', ' ', $all->payment_method) : '-' !!}</td>
+                                                <td>
+                                                    @if (in_array($all->service_id, [3, 4, 5, 6, 9, 10]))
+                                                        @currency($all->total - ($all->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($all->detailTransactionPPOB->first()->kode_unik ?? 0) )
+                                                    @elseif(in_array($all->service_id, [1, 2, 11, 12]))
+                                                        @currency($all->total - ($all->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                    @elseif($all->service_id == 8)
+                                                        @currency($all->total - ($all->detailTransactionHotel->first()->fee_admin ?? 0) - ($all->detailTransactionHotel->first()->kode_unik ?? 0))
+                                                    @elseif($all->service_id == 7)
+                                                        @currency($all->total - ($all->detailTransactionHostel->first()->fee_admin ?? 0) - ($all->detailTransactionHostel->first()->kode_unik ?? 0))
+                                                    @endif
+                                                </td>
                                                 <td class="text-success fw-bold">
                                                     @if (in_array($all->service_id, [3, 4, 5, 6, 9, 10]))
                                                         @currency(($all->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($all->detailTransactionPPOB->first()->kode_unik ?? 0))
@@ -197,17 +209,17 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade" id="kt_tab_pane_penginapan" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table-row-dashed display fs-6 gy-5 table-bordered table align-middle"
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
                                     id="kt_datatable_zero_configuration">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
+                                        <tr class="fw-bold text-gray-800" >
                                             <th>Tanggal</th>
                                             <th>Invoice</th>
                                             <th>Produk</th>
                                             <th>Customer</th>
                                             <th>Nama Ruangan</th>
                                             <th>Jumlah Ruangan</th>
-                                            <th>Jumlah Malam/Bulan</th>
+                                            <th>Waktu Sewa</th>
                                             <th>Grand Total</th>
                                         </tr>
                                     </thead>
@@ -270,18 +282,19 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade" id="kt_tab_pane_ppob" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table-row-dashed display fs-6 gy-5 table-bordered table align-middle"
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
                                     id="kt_datatable_zero_configuration">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
+                                        <tr class="fw-bold text-gray-800">
                                             <th>Transaksi Dibuat</th>
                                             <th>Invoice</th>
                                             <th>Produk</th>
                                             <th>Customer</th>
                                             <th>Deskripsi</th>
                                             <th>Metode Pembayaran</th>
-                                            <th>Point Digunakan Customer</th>
-                                            <th>Fee Admin</th>
+                                            <th>Harga</th>
+                                            <th>Biaya Layanan</th>
+                                            <th>Potongan Point</th>
                                             <th>Grand Total</th>
                                         </tr>
                                     </thead>
@@ -307,11 +320,14 @@
 
                                                 <td>{{ $transaction->payment_method . ' - ' . $transaction->payment_channel }}
                                                 </td>
+                                                <td>
+                                                    @currency( $transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                                </td>
                                                 <td class="text-danger fw-bold">
                                                     @currency($transaction->historyPointOut->first()->point ?? 0)
-                                                </td>
-                                                <td>
-                                                    @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
                                                 </td>
                                                 <td>@currency($transaction->total)</td>
                                         @endforeach
@@ -325,18 +341,19 @@
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade" id="kt_tab_pane_top_up" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table-row-dashed display fs-6 gy-5 table-bordered table align-middle"
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
                                     id="kt_datatable_zero_configuration">
                                     <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
+                                        <tr class="fw-bold  text-gray-800">
                                             <th>Tanggal</th>
                                             <th>Invoice</th>
                                             <th>Produk</th>
                                             <th>Customer</th>
                                             <th>Deskripsi</th>
                                             <th>Metode Pembayaran</th>
-                                            <th>Point Digunakan Customer</th>
-                                            <th>Fee Admin</th>
+                                            <th>Harga</th>
+                                            <th>Biaya Layanan</th>
+                                            <th>Potongan Point</th>
                                             <th>Grand Total</th>
                                         </tr>
                                     </thead>
@@ -362,11 +379,14 @@
                                                     {{ $transaction['transaction_desc'] }}</td>
                                                 <td>{{ $transaction->payment_method . ' - ' . $transaction->payment_channel }}
                                                 </td>
-                                                <td class="text-danger fw-bold">
-                                                    @currency($all->historyPointOut->first()->point ?? 0)
-                                                </td>
                                                 <td>
-                                                    @currency(($all->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                    @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    @currency(($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-danger fw-bold">
+                                                    @currency($transaction->historyPointOut->first()->point ?? 0)
                                                 </td>
                                                 <td>@currency($transaction->total)</td>
                                         @endforeach

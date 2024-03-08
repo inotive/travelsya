@@ -131,7 +131,6 @@ class DashboardController extends Controller
             ->where('status', 'PAID')
             ->orderByDesc('created_at')
             ->get();
-
         // $transaksiHostel = Transaction::with('detailTransactionHostel','user','services','historyPointOut')
         //     ->where('service_id',7)
         //     ->where('status', 'PAID')
@@ -157,7 +156,7 @@ class DashboardController extends Controller
         ->has('detailTransactionHostel')
         ->orderByDesc('created_at')
         ->get();
-    
+
     $transaksiHotel = Transaction::with([
             'detailTransactionHotel' => function ($query) {
                 $query->whereNotNull('hotel_room_id');
@@ -171,7 +170,7 @@ class DashboardController extends Controller
         ->has('detailTransactionHotel')
         ->orderByDesc('created_at')
         ->get();
-    
+
 
         $transaksiPPOB = Transaction::with('detailTransactionPPOB','user','services')
             ->whereIn('service_id', [3,4,5,6,9,10])

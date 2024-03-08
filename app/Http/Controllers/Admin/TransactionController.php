@@ -55,7 +55,7 @@ class TransactionController extends Controller
             $id = auth()->user()->id;
             $tr = Transaction::with('user')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
                 $q->where('user_id', $id);
-            })->where('service', 'hostel');
+            });
         }
 
         if ($request->service != null)
@@ -69,7 +69,8 @@ class TransactionController extends Controller
         // }
 
         if ($request->start != null && $request->end != null) {
-            $tr = $tr->whereBetween('transactions.created_at', [$request->start, $request->end]);
+            $tr = $tr->whereDate('transactions.created_at','>= ', $request->start)
+            ->whereDate('transactions.created_at', '<=', $request->end) ;
         } elseif ($request->start != null) {
             $tr = $tr->whereDate('transactions.created_at', '>=', $request->start);
         } elseif ($request->end != null) {

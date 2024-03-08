@@ -61,15 +61,15 @@ class EwalletController extends Controller
             'value' => $uniqueCode,
         ];
 
-        
+
         $poitnDigunakan = 0;
         if ( $request->point !== null) {
             $poitnDigunakan = $request->point * 10 / 100;
         }
-     
+
         $sellingPrice = $request->point !== null ? $product->price - abs($poitnDigunakan) : $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
-        
+
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
@@ -113,8 +113,8 @@ class EwalletController extends Controller
             'product_id'     => $product->id,
             'nomor_telfon'   => $data['notelp'],
             'total_tagihan'  => $amount,
-            'fee_travelsya'  => 0,
-            'fee_mili'       => $fees[0]['value'],
+            'fee_travelsya'  => $fees[0]['value'],
+            'fee_mili'       => 0,
             'message'        => 'Top UP sedang diproses',
             'status'         => "PROCESS",
             "kode_unik"      => $uniqueCode,
