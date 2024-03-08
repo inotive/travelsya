@@ -150,7 +150,7 @@ class TopUpController extends Controller
             // history point masuk dan keluar customer
             $pointCustomer = auth()->user()->point;
 
-            $pointDigunakan = $pointCustomer * 10 / 100;
+            $pointDigunakan = round($pointCustomer * 10 / 100);
 
             array_push($fees, [
                 'type' => 'point',
@@ -221,7 +221,6 @@ class TopUpController extends Controller
                 "kode_unik"      => $data['kode_unik'],
                 "created_at" =>  Carbon::now()->timezone('Asia/Makassar')
             ]);
-
 
             // Jika user menggunakan point untuk transaksi dan xendit berhasil terbuat maka kurangin point customer
             if ($request->point == 1) {

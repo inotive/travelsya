@@ -129,7 +129,7 @@ class PpobController extends Controller
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
             $pointCustomer = auth()->user()->point;
-            $saldoPointCustomer = $pointCustomer * 10 /100;
+            $saldoPointCustomer = round($pointCustomer * 10 / 100);
         }
 
         $fees = [

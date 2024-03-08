@@ -35,13 +35,6 @@ class TransactionController extends Controller
         // $user_id = $request->user()->id;
         $user_id = \Auth::user()->id;
 
-
-
-        // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product')
-        //     ->where('user_id', $user_id)
-        //     ->orderBy('id', 'desc')
-        //     ->get();
-        // $transaction = Transaction::where('status', 'PAID')
         $transaction = Transaction::where('user_id', $user_id)
             ->orderByDesc('created_at')
             ->get();
@@ -227,7 +220,7 @@ class TransactionController extends Controller
                 'payment_method' => $detailTransaction->payment_method,
                 'payment_channel' => $detailTransaction->payment_channel,
                 'kode_voucher' => $detailTransaction->kode_voucher,
-                'status' => $detailTransaction->status,
+                'status' => $detailTransaction->status == 'Berhasil' ? 'PAID' : $detailTransaction->status,
                 'fee_admin' => $detailTransaction->fee_travelsya,
                 'total' => $detailTransaction->total,
                 'point_received' => $receivedPoint,

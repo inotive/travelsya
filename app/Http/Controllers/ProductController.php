@@ -68,7 +68,8 @@ class ProductController extends Controller
         ];
         $pointDigunakan = 0;
         if ( $request->point !== null) {
-            $pointDigunakan = $request->point * 10 / 100;
+            $pointCustomer = auth()->user()->point;
+            $pointDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
                 'type' => 'point',
@@ -216,7 +217,8 @@ class ProductController extends Controller
 
         $poitnDigunakan = 0;
         if ( $request->point !== null) {
-            $poitnDigunakan = $request->point * 10 / 100;
+            $pointCustomer = auth()->user()->point;
+            $poitnDigunakan = round($pointCustomer * 10 / 100) ;
         }
 
         $sellingPrice = $request->point !== null ? $data['totalTagihan'] - abs($poitnDigunakan) : $data['totalTagihan'];
@@ -354,7 +356,8 @@ class ProductController extends Controller
 
         $poitnDigunakan = 0;
         if ( $request->point !== null) {
-            $poitnDigunakan = $request->point * 10 / 100;
+            $pointCustomer = auth()->user()->point;
+            $poitnDigunakan = round($pointCustomer * 10 / 100) ;
             array_push($fees, [
                 'type' => 'point',
                 'value' => 0 - $poitnDigunakan,
@@ -505,7 +508,8 @@ class ProductController extends Controller
 
         $poitnDigunakan = 0;
         if ( $request->point !== null) {
-            $poitnDigunakan = $request->point * 10 / 100;
+            $pointCustomer = auth()->user()->point;
+            $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
                 'type' => 'point',
@@ -666,7 +670,8 @@ class ProductController extends Controller
 
         $poitnDigunakan = 0;
         if ( $request->point !== null) {
-            $poitnDigunakan = $request->point * 10 / 100;
+            $pointCustomer = auth()->user()->point;
+            $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
                 'type' => 'point',
@@ -823,7 +828,8 @@ class ProductController extends Controller
 
         $pointDigunakan = 0;
         if ( $request->point !== null) {
-            $pointDigunakan = $request->point * 10 / 100;
+            $pointCustomer = auth()->user()->point;
+            $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
                 'type' => 'point',
