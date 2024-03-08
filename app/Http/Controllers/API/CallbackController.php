@@ -123,23 +123,27 @@ class CallbackController extends Controller
                                 ];
                                 print_r($data);
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
-                                sleep(5);
+                                sleep(10);
                                 $transaction = $this->mymili->status($data);
 
                                 print_r($transaction);
-                                //process retrieve voucher code
-                                $responseMessage = explode(' ', $transaction['MESSAGE']);
-                                $responseMessageSN = explode('SN=', $responseMessage[4]);
-                                $responseMessageSNCode = explode('/', $responseMessageSN[1]);
-                                $responseMessageSNCodeFinal = $responseMessageSNCode[0];
 
-                                $response = [
-                                    '$responseMessage' => $responseMessage,
-                                    '$responseMessageSN' => $responseMessageSN,
-                                    '$responseMessageSNCode' => $responseMessageSNCode,
-                                    '$responseMessageSNCodeFinal' => $responseMessageSNCodeFinal
-                                ];
-                                print_r($response);
+                                if ($transaction['RESPONSECODE'] == 0)
+                                {
+                                    //process retrieve voucher code
+                                    $responseMessage = explode(' ', $transaction['MESSAGE']);
+                                    $responseMessageSN = explode('SN=', $responseMessage[4]);
+                                    $responseMessageSNCode = explode('/', $responseMessageSN[1]);
+                                    $responseMessageSNCodeFinal = $responseMessageSNCode[0];
+
+                                    $response = [
+                                        '$responseMessage' => $responseMessage,
+                                        '$responseMessageSN' => $responseMessageSN,
+                                        '$responseMessageSNCode' => $responseMessageSNCode,
+                                        '$responseMessageSNCodeFinal' => $responseMessageSNCodeFinal
+                                    ];
+                                    print_r($response);
+                                }
                             }
 
                             if ($responseMili['RESPONSECODE'] == 00) {
