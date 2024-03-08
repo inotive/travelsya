@@ -168,7 +168,7 @@ class TopUpController extends Controller
 
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)
+            $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->point)
                 ->pluck('point')->first();
             $saldoPointCustomer = $pointCustomer * 10 /100;
         }
