@@ -135,9 +135,15 @@
                                                         {{ str_replace('_', ' ', $transactionPPOB->payment_method) }}</div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
-                                                    <div class="fs-8">Biaya Admin</div>
+                                                    <div class="fs-8">Harga</div>
                                                     <div class="fs-8 fw-bold">Rp.
-                                                        {{ number_format($transactionPPOB->fee_travelsya, 0, ',', '.') }}
+                                                        {{ number_format($transactionPPOB->total - $transactionPPOB->fee_travelsya - $transactionPPOB->kode_unik, 0, ',', '.') }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex mb-1 justify-content-between">
+                                                    <div class="fs-8">Biaya Layanan</div>
+                                                    <div class="fs-8 fw-bold">Rp.
+                                                        {{ number_format($transactionPPOB->fee_travelsya + $transactionPPOB->kode_unik, 0, ',', '.') }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
@@ -150,12 +156,7 @@
                                                             Point</div>
                                                     @endif
                                                 </div>
-                                                <div class="d-flex mb-1 justify-content-between">
-                                                    <div class="fs-8">Total Bayar</div>
-                                                    <div class="fs-8 fw-bold">Rp.
-                                                        {{ number_format($transactionPPOB->total_after_fee, 0, ',', '.') }}
-                                                    </div>
-                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -169,7 +170,7 @@
                                                     Total Biaya
                                                 </div>
                                                 <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                    Rp. {{ number_format($transactionPPOB->total_after_fee, 0, ',', '.') }}
+                                                    Rp. {{ number_format($transactionPPOB->total, 0, ',', '.') }}
                                                 </div>
                                             </div>
                                         </div>

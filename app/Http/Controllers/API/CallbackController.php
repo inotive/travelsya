@@ -121,12 +121,10 @@ class CallbackController extends Controller
                                     'no_hp' => str($detailTransactionTopUP->nomor_telfon),
                                     'nom' => str($detailTransactionTopUP->kode_pembayaran),
                                 ];
-                                print_r($data);
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
-                                sleep(3);
+                                sleep(2);
                                 $statusToken = $this->mymili->status($data);
 
-                                print_r($statusToken);
 
                                 if ($statusToken['RESPONSECODE'] == 0)
                                 {
@@ -142,7 +140,6 @@ class CallbackController extends Controller
                                         '$responseMessageSNCode' => $responseMessageSNCode,
                                         '$responseMessageSNCodeFinal' => $responseMessageSNCodeFinal
                                     ];
-                                    print_r($response);
                                 }
                             }
 
@@ -151,7 +148,6 @@ class CallbackController extends Controller
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
 
                                 $pointDiterima = $settingPoint->calculatePoint($detailTransactionTopUP->total_tagihan, $transaction->service_id);
-                                print_r($pointDiterima);
                                 $user = User::find($transaction->user_id);
 
                                 $user->update(['point' => $user->point + $pointDiterima]);
@@ -168,12 +164,10 @@ class CallbackController extends Controller
                             elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = 'Pending';
                                 $message = 'Pembayaran Sedang Di Proses';
-                                print_r($status);
                             }
                             else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
-                                print_r($status);
                                 HistoryPoint::where('transaction_id', $transaction->id)
                                     ->where('flow', 'credit')
                                     ->delete();
