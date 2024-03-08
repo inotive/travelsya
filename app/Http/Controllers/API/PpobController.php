@@ -127,7 +127,7 @@ class PpobController extends Controller
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)
+            $pointCustomer = HistoryPoint::where('user_id', auth()->user()->point)
                 ->pluck('point')->first();
             $saldoPointCustomer = $pointCustomer * 10 /100;
         }
@@ -168,7 +168,6 @@ class PpobController extends Controller
             ],
             'fees' => $fees
         ]);
-
 
         if (isset($payoutsXendit['status'])) {
             $data['status'] = $payoutsXendit['status'];
