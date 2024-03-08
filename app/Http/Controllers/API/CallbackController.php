@@ -124,14 +124,14 @@ class CallbackController extends Controller
                                 print_r($data);
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
                                 sleep(3);
-                                $transaction = $this->mymili->status($data);
+                                $statusToken = $this->mymili->status($data);
 
-                                print_r($transaction);
+                                print_r($statusToken);
 
-                                if ($transaction['RESPONSECODE'] == 0)
+                                if ($statusToken['RESPONSECODE'] == 0)
                                 {
                                     //process retrieve voucher code
-                                    $responseMessage = explode(' ', $transaction['MESSAGE']);
+                                    $responseMessage = explode(' ', $statusToken['MESSAGE']);
                                     $responseMessageSN = explode('SN=', $responseMessage[4]);
                                     $responseMessageSNCode = explode('/', $responseMessageSN[1]);
                                     $responseMessageSNCodeFinal = $responseMessageSNCode[0];
