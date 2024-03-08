@@ -121,7 +121,7 @@ class CallbackController extends Controller
                                     'no_hp' => str($detailTransactionTopUP->nomor_telfon),
                                     'nom' => str($detailTransactionTopUP->kode_pembayaran),
                                 ];
-
+                                print_r($data);
                                 // Tunggu 3 detik agar mili bisa proses transaksinya ke PLN
                                 sleep(5);
                                 $transaction = $this->mymili->status($data);
@@ -147,6 +147,7 @@ class CallbackController extends Controller
                                 $message = "Pembayaran " . strtoupper($transaction->service) . ' Berhasil';
 
                                 $pointDiterima = $settingPoint->calculatePoint($detailTransactionTopUP->total_tagihan, $transaction->service_id);
+                                print_r($pointDiterima);
                                 $user = User::find($transaction->user_id);
 
                                 $user->update(['point' => $user->point + $pointDiterima]);
@@ -163,14 +164,15 @@ class CallbackController extends Controller
                             elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = 'Pending';
                                 $message = 'Pembayaran Sedang Di Proses';
+                                print_r($status);
                             }
                             else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
-//
-//                                HistoryPoint::where('transaction_id', $transaction->id)
-//                                    ->where('flow', 'credit')
-//                                    ->delete();
+                                print_r($status);
+                                HistoryPoint::where('transaction_id', $transaction->id)
+                                    ->where('flow', 'credit')
+                                    ->delete();
                                 $transaction->update([
                                     'status' => 'Transaksi Gagal',
                                     'payment_channel' => $responseXendit['payment_channel'],

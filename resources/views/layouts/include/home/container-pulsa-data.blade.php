@@ -45,7 +45,7 @@
                     </div>
                     @auth
                         <div class="col-12 d-flex justify-content-between">
-                            <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai Point
+                            <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ Auth::user()->point }}</b>. Pakai Point
                             </p>
                             <h4>
                                 <div class="form-check form-switch form-check-custom form-check-solid">

@@ -70,7 +70,7 @@ class Point
 
     public function calculatePoint($amount, $categoryid)
     {
-        $point = ModelsPoint::where('service_id', $categoryid)->first();
+        $point = \App\Models\Point::where('service_id', $categoryid)->first();
 
         return round(($amount / $point->multiple) * $point->value);
     }

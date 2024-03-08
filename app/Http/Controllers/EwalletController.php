@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\General;
 use App\Models\DetailTransaction;
 use App\Models\DetailTransactionTopUp;
+use App\Models\Fee;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Services\Point;
@@ -54,20 +55,32 @@ class EwalletController extends Controller
         $product = Product::with('service')->find($data['produk_ewallet']);
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($product->service->name) . "-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+
+        $fee = Fee::where('service_id', $product->service_id)->first();
         $uniqueCode = rand(111, 999);
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $uniqueCode,
+
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fee->percent == 0 ? $fee->value :  $product->price * $fee->value / 100,
+            ],
+            [
+                'type' => 'Kode Unique',
+                'value' => $uniqueCode,
+            ],
         ];
 
-
-        $poitnDigunakan = 0;
+        $pointDigunakan = 0;
         if ( $request->point !== null) {
-            $poitnDigunakan = $request->point * 10 / 100;
+            $pointDigunakan = $request->point * 10 / 100;
+
+            array_push($fees, [
+                'type' => 'point',
+                'value' => 0 - $pointDigunakan,
+            ]);
         }
 
-        $sellingPrice = $request->point !== null ? $product->price - abs($poitnDigunakan) : $product->price;
+        $sellingPrice = $request->point !== null ? $product->price - abs($pointDigunakan) : $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
 
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
@@ -121,10 +134,13 @@ class EwalletController extends Controller
             "created_at" => Carbon::now()
         ]);
 
-//        //deductpoint
-//        $point = new Point;
-//        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
 
+        //deductpoint
+        if ($request->point !== null) {
+            //deductpoint
+            $point = new Point();
+            $point->deductPoint($request->user()->id, abs($pointDigunakan), $storeTransaction->id);
+        }
         return redirect($payoutsXendit['invoice_url']);
     }
 }
