@@ -579,7 +579,7 @@ class ProductController extends Controller
             ]);
         }
 
-        if ($request->point == 1) {
+        if ($request->point !== null) {
             //deductpoint
             $point = new Point();
             $point->deductPoint($request->user()->id, abs($poitnDigunakan), $storeTransaction->id);
@@ -726,7 +726,7 @@ class ProductController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        if ($request->point == 1) {
+        if ($request->point !== null) {
             //deductpoint
             $point = new Point();
             $point->deductPoint($request->user()->id, abs($poitnDigunakan), $storeTransaction->id);
@@ -880,7 +880,7 @@ class ProductController extends Controller
         ]);
 
         //deductpoint
-        if ($request->point == 1) {
+        if ($request->point !== null) {
             //deductpoint
             $point = new Point();
             $point->deductPoint($request->user()->id, abs($pointDigunakan), $storeTransaction->id);
