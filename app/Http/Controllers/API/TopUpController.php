@@ -165,14 +165,7 @@ class TopUpController extends Controller
         if ($saldoMyMili < $grandTotal) {
             return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
         }
-
-        // Jika user menggunakan point untuk transaksi
-        if ($request->point == 1) {
-            $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->point)
-                ->pluck('point')->first();
-            $saldoPointCustomer = $pointCustomer * 10 /100;
-        }
-
+        
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
             'items' => [
