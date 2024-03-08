@@ -133,7 +133,7 @@ class TopUpController extends Controller
 
         $fees = [
             [
-                'type' => 'admin',
+                'type' => 'Fee Admin',
                 'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
             ],
             [
@@ -158,7 +158,7 @@ class TopUpController extends Controller
         }
 
         // total pembayaran termasuk dikurangi point
-        $grandTotal = $product->price + $fees[0]->value + $data['kode_unik'] - $saldoPointCustomer;
+        $grandTotal = $product->price + $fees[0]['value'] + $data['kode_unik'] - $saldoPointCustomer;
         $requestSaldoMyMili = $this->mymili->saldo();
         $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
 
@@ -220,7 +220,7 @@ class TopUpController extends Controller
                 'product_id'     => $product->id,
                 'nomor_telfon'   => $data['no_hp'],
                 'total_tagihan'  => $grandTotal,
-                'fee_travelsya'  => $fees[0]->value,
+                'fee_travelsya'  => $fees[0]['value'],
                 'fee_mili'       => 0,
                 'message'        => 'Top UP sedang diproses',
                 'status'         => "PROCESS",
