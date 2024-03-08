@@ -102,6 +102,8 @@ class TopUpController extends Controller
             ]);
         }
     }
+
+    // Pembayaran Top UP
     public function pembayaranPulsa(Request $request)
     {
         $data = $request->all();
@@ -118,22 +120,19 @@ class TopUpController extends Controller
         if ($validator->fails()) {
             return ResponseFormatter::error(['response' => $validator->errors()], 'Transaction failed', 500);
         }
-
+        //Get Product
         $product = Product::with('service')->find($data['product_id']);
 
+        // Generate Invoice
         $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
-
         // Create invoice
         $data['no_inv'] = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
 
-//        $countTransaksiUser = DB::table('transactions')
-//                ->where('user_id', \Auth::user()->id)->count() + 1;
-
-        // Get Fee
+        // Get Fee by Product Service
         $fees = Fee::where('service_id', $product->service_id)->first();
 
+        // Compare mili balance with total bill
         $saldoPointCustomer = 0;
-        // if user have using point for transaction, then get total point from user
         if ($request->point == 1) {
             // history point masuk dan keluar customer
             $pointCustomer = HistoryPoint::where('user_id', \Auth::user()->id)->first();
@@ -150,11 +149,28 @@ class TopUpController extends Controller
             return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
         }
 
+        // Jika user menggunakan point untuk transaksi
+        if ($request->point == 1) {
+            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)
+                ->pluck('point')->first();
+            $saldoPointCustomer = $pointCustomer * 10 /100;
+        }
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
+            ],
+            [
+                'type' => 'Kode Unique',
+                'value' => $data['kode_unik'],
+            ],
+        ];
+
         $payoutsXendit = $this->xendit->create([
             'external_id' => $data['no_inv'],
             'items' => [
                 [
-                    'name' => $product->name,
+                    'name' => $product->name . ' - ' . $product->description,
                     'quantity' => 1,
                     'price' => $product->price,
                     'url' => "someurl"
@@ -166,10 +182,11 @@ class TopUpController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                'given_names' => 'bagus',
-                'email' => 'gustibagus34@gmail.com',
-                'mobile_number' => '081253290605',
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
             ],
+            'fees' => $fees
         ]);
 
 

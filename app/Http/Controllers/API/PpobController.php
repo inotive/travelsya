@@ -89,6 +89,7 @@ class PpobController extends Controller
         }
     }
 
+    // Pembayaran Tagihan
     public function requestTransaction(Request $request)
     {
         $data = $request->all();
@@ -104,13 +105,17 @@ class PpobController extends Controller
         if ($validator->fails()) {
             return ResponseFormatter::error(['response' => $validator->errors()], 'Transaction failed', 500);
         }
-        //get data
+        //Get Product
         $product = Product::with('service')->find($request->product_id);
+
+        // Generate Invoice
         $data['no_inv'] = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
 
+        // Get Fee by Product Service
         $fees = Fee::where('service_id', $product->service_id)->first();
-        $priceWithAdmin = $request->nominal_tagihan + $fees->value;
 
+        // Compare mili balance with total bill
+        $priceWithAdmin = $request->nominal_tagihan + $fees->value;
         $requestSaldoMyMili = $this->mymili->saldo();
         $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
 
@@ -118,18 +123,25 @@ class PpobController extends Controller
             return ResponseFormatter::error('Terjadi Kesalahan Pada Sistem', 'Inquiry failed');
         }
 
+        // Check User using point or no when he pays
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-            // history point masuk dan keluar customer
-            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-            // point masuk - point keluar
-            $saldo = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
-             $saldoPointCustomer = $saldo * 10 /100;
-            }
+            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)
+                ->pluck('point')->first();
+            $saldoPointCustomer = $pointCustomer * 10 /100;
+        }
 
-        //        // total pembayaran termasuk dikurangi point
-        //        $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - $saldoPointCustomer;
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
+            ],
+            [
+                'type' => 'Kode Unique',
+                'value' => $data['kode_unik'],
+            ],
+        ];
 
         // total pembayaran termasuk dikurangi point
         $grandTotal = $request->nominal_tagihan + $fees->value + $data['kode_unik'] - abs($saldoPointCustomer);
@@ -141,7 +153,8 @@ class PpobController extends Controller
                 ['name' => $product->name . ' (' . $request->nomor_tagihan . ')',
                 'quantity' => 1,
                 'price' => $grandTotal,
-                'url' => 'someurl']
+                'url' => 'someurl'
+                ]
             ],
             'amount' => $grandTotal,
             'success_redirect_url' => route('redirect.succes'),
@@ -149,10 +162,14 @@ class PpobController extends Controller
             'invoice_duration ' => 72000,
             'should_send_email' => true,
             'customer' => [
-                'given_names' => 'Gusti Bagus',
-                 'email' => 'gustibagus34@gmail.com',
-                  'mobile_number' => '081253290605'
-                  ]]);
+                'given_names' => $request->user()->name,
+                'email' => $request->user()->email,
+                'mobile_number' => $request->user()->phone ?: 'somenumber',
+            ],
+            'fees' => $fees
+        ]);
+
+
         if (isset($payoutsXendit['status'])) {
             $data['status'] = $payoutsXendit['status'];
             $data['link'] = $payoutsXendit['invoice_url'];
@@ -168,7 +185,6 @@ class PpobController extends Controller
                 'total' => $grandTotal
             ]);
 
-            // create detail transaction
             $data['detail'] = $request->input('detail');
 
             DB::table('detail_transaction_ppob')->insert([
@@ -176,8 +192,8 @@ class PpobController extends Controller
                 'product_id' => $product->id,
                 'nomor_pelanggan' => $request->nomor_tagihan,
                 'total_tagihan' => $grandTotal,
-                'fee_travelsya' => 2500,
-                'fee_mili' => 100,
+                'fee_travelsya' => $fees[0]['value'],
+                'fee_mili' => 0,
                 'message' => 'Sedang menunggu pembayaran',
                 'status' => 'PROCESS',
                 'kode_unik' => $data['kode_unik'],
@@ -187,11 +203,6 @@ class PpobController extends Controller
             if ($request->point == 1) {
                 $point = new Point();
                 $point->deductPoint($request->user()->id, abs($fees[1]['value']), $transaction->id);
-
-                //                // history point masuk dan keluar customer
-                //                $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-                //                // point masuk - point keluar
-                //                $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
             }
 
             return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');

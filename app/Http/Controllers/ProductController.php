@@ -47,11 +47,12 @@ class ProductController extends Controller
     {
         $data = $request->all();
         $point = new Point();
-        $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['product']);
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
+
+
         $fee = Fee::where('service_id', $product->service_id)->first();
         $uniqueCode = rand(111, 999);
 
@@ -66,12 +67,12 @@ class ProductController extends Controller
             ],
         ];
 
-        $poitnDigunakan = 0;
+        $pointDigunakan = 0;
         if ( $request->point !== null) {
-            $poitnDigunakan = $request->point * 10 / 100;
+            $pointDigunakan = $request->point * 10 / 100;
         }
 
-        $sellingPrice = $request->point !== null ?  $product->price - abs($poitnDigunakan) :  $product->price;
+        $sellingPrice = $request->point !== null ?  $product->price - abs($pointDigunakan) :  $product->price;
         $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
 
         $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
@@ -81,7 +82,7 @@ class ProductController extends Controller
             'items' => [
                 [
                     'product_id' => $product->id,
-                    'name' => $product->description,
+                    'name' => $product->name . ' - ' . $product->description,
                     'price' => $sellingPriceFinal,
                     'quantity' => 1,
                 ],
@@ -99,39 +100,40 @@ class ProductController extends Controller
             'fees' => $fees,
         ]);
 
-        $storeTransaction = Transaction::create([
-            'no_inv' => $invoice,
-            'req_id' => $product->service->name . '-' . time(),
-            'service' => $product->service->name,
-            'service_id' => $product->service->id,
-            'payment' => 'xendit',
-            'user_id' => $request->user()->id,
-            'status' => $payoutsXendit['status'],
-            'link' => $payoutsXendit['invoice_url'],
-            'total' => $amount,
-        ]);
+        if (isset($payoutsXendit['status'])) {
+            $storeTransaction = Transaction::create([
+                'no_inv' => $invoice,
+                'req_id' => $product->service->name . '-' . time(),
+                'service' => $product->service->name,
+                'service_id' => $product->service->id,
+                'payment' => 'xendit',
+                'user_id' => $request->user()->id,
+                'status' => $payoutsXendit['status'],
+                'link' => $payoutsXendit['invoice_url'],
+                'total' => $amount,
+            ]);
 
-        $helper = new General();
+            $helper = new General();
 
-        DetailTransactionTopUp::create([
-            'transaction_id' => $storeTransaction->id,
-            'product_id' => $product->id,
-            'nomor_telfon' => $data['notelp'],
-            'total_tagihan' => $amount,
-            'fee_travelsya' => $fees[0]['value'],
-            'fee_mili' => 0,
-            'message' => 'Top UP sedang diproses',
-            'status' => 'PROCESS',
-            'kode_unik' => $uniqueCode,
-            'created_at' => Carbon::now(),
-        ]);
+            DetailTransactionTopUp::create([
+                'transaction_id' => $storeTransaction->id,
+                'product_id' => $product->id,
+                'nomor_telfon' => $data['notelp'],
+                'total_tagihan' => $amount,
+                'fee_travelsya' => $fees[0]['value'],
+                'fee_mili' => 0,
+                'message' => 'Sedang menunggu pembayaran',
+                'status' => 'PROCESS',
+                'kode_unik' => $uniqueCode,
+                'created_at' => Carbon::now(),
+            ]);
 
-        if ( $request->point !== null) {
-            //deductpoint
-            $point = new Point();
-            $point->deductPoint($request->user()->id, $poitnDigunakan, $storeTransaction->id);
+            if ( $request->point !== null) {
+                //deductpoint
+                $point = new Point();
+                $point->deductPoint($request->user()->id, $pointDigunakan, $storeTransaction->id);
+            }
         }
-
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -187,18 +189,25 @@ class ProductController extends Controller
         $data = $request->all();
 
         $point = new Point();
-        $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['product_id']);
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
+
         $setting = new Setting();
 
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
-
+        // Get Fee by Product Service
+        $fees = Fee::where('service_id', $product->service_id)->first();
         $uniqueCode = rand(111, 999);
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $uniqueCode,
+
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fees->percent == 0 ? $fees->value :  $data['totalTagihan'] * $fees->value / 100,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $uniqueCode,
+            ],
         ];
 
         $poitnDigunakan = 0;
@@ -259,10 +268,10 @@ class ProductController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        //deductpoint
-        $point = new Point();
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
-
+        if ($request->point !== null) {
+            $point = new Point();
+            $point->deductPoint($request->user()->id, $poitnDigunakan, $storeTransaction->id);
+        }
         return redirect($payoutsXendit['invoice_url']);
     }
 
@@ -323,12 +332,19 @@ class ProductController extends Controller
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
 
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+        // Get Fee by Product Service
+        $fees = Fee::where('service_id', $product->service_id)->first();
         $uniqueCode = rand(111, 999);
 
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $uniqueCode,
+        $fees = [
+            [
+                'type' => 'admin',
+                'value' => $fees->percent == 0 ? $fees->value :  $data['totalTagihan'] * $fees->value / 100,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $uniqueCode,
+            ],
         ];
 
 
@@ -389,9 +405,11 @@ class ProductController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        //deductpoint
-        $point = new Point();
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+        if ($request->point == 1) {
+            //deductpoint
+            $point = new Point();
+            $point->deductPoint($request->user()->id, $poitnDigunakan, $storeTransaction->id);
+        }
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -436,22 +454,6 @@ class ProductController extends Controller
             return ResponseFormatter::error($status, 'Inquiry failed');
         }
 
-        // return [
-        //     "meta" => [
-        //         "code" => 200,
-        //         "status" => "success",
-        //         "message" => "Inquiry loaded"
-        //     ],
-        //     "data" => [
-        //         "status" => "TRX CEKPLN 232010890459 SUKSES SN=0000",
-        //         "tagihan" => "82636",
-        //         "no_pelanggan" => "232010890459",
-        //         "ref_id" => "01CC48035A4E4DCAB5C0000000000000",
-        //         "nama_pelanggan" => "ERNA SARI",
-        //         "bulan_tahun_tagihan" => "Jun23",
-        //         "pemakaian" => "39212-3924"
-        //     ],
-        // ];
     }
 
     public function productPln()
@@ -471,12 +473,21 @@ class ProductController extends Controller
             ->first();
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
         $setting = new Setting();
-        $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
+
+        // Get Fee by Product Service
+        $fees = Fee::where('service_id', $product->service_id)->first();
+
         $uniqueCode = rand(111, 999);
 
-        $fees[] = [
-            'type' => 'Kode Unik',
-            'value' => $uniqueCode,
+        $fees = [
+            [
+                'type' => 'Fee Admin',
+                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $uniqueCode,
+            ],
         ];
 
         $poitnDigunakan = 0;
@@ -550,9 +561,11 @@ class ProductController extends Controller
             ]);
         }
 
-        //deductpoint
-        $point = new Point();
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+        if ($request->point == 1) {
+            //deductpoint
+            $point = new Point();
+            $point->deductPoint($request->user()->id, abs($poitnDigunakan), $storeTransaction->id);
+        }
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -690,9 +703,11 @@ class ProductController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        //deductpoint
-        $point = new Point();
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+        if ($request->point == 1) {
+            //deductpoint
+            $point = new Point();
+            $point->deductPoint($request->user()->id, abs($poitnDigunakan), $storeTransaction->id);
+        }
 
         return redirect($payoutsXendit['invoice_url']);
     }
@@ -826,25 +841,17 @@ class ProductController extends Controller
         ]);
 
         //deductpoint
-        $point = new Point();
-        $point->deductPoint($request->user()->id, abs($fees[0]['value']), $storeTransaction->id);
+        if ($request->point == 1) {
+            //deductpoint
+            $point = new Point();
+            $point->deductPoint($request->user()->id, abs($poitnDigunakan), $storeTransaction->id);
+        }
 
         return redirect($payoutsXendit['invoice_url']);
     }
 
     public function getAdminFee($service_id, $price)
     {
-        // $data = $request->all();
-
-        // $point = new Point;
-        // $userPoint = $point->cekPoint(auth()->user()->id);
-
-        // $product = Product::with('service')->find($data['idProduct']);
-        // $setting = new Setting();
-        // $fees = $setting->getFees($userPoint, $product->service->id, $request->user()->id, $product->price);
-
-        // return $fees;
-
         $fee = Fee::where('service_id', $service_id)->first();
 
         if ($fee->percent) {
