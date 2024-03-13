@@ -220,6 +220,7 @@
                     '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
                 );
                 $('#btnBayar2').addClass('d-none');
+                $('#btnLogin2').addClass('d-none');
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pln') }}",

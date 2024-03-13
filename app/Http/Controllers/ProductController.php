@@ -163,7 +163,7 @@ class ProductController extends Controller
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
             $status = '';
-            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+            if (str_contains($requestMymili['status'], 'LUNAS')) {
                 $status = 'Tagihan Sudah Lunas';
             }
 
