@@ -485,7 +485,12 @@ class ProductController extends Controller
             ->first();
 
         // Generate Invoice
-        $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
+        if(isset($product->service->name))
+        {
+            $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
+        }else{
+            $service = 'token';
+        }
         // Check Service
         $invoice = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
 
