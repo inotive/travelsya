@@ -163,7 +163,10 @@ class ProductController extends Controller
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
             $status = '';
-            if (str_contains($requestMymili['status'], 'LUNAS')) {
+            if (str_contains($requestMymili['status'], " GAGAL!")) {
+                $status = "Sistem gagal melakukan pengecekan tagihan";
+            }
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
                 $status = 'Tagihan Sudah Lunas';
             }
 
@@ -181,9 +184,7 @@ class ProductController extends Controller
             if (str_contains($requestMymili['status'], 'NOMOR YANG ANDA MASUKAN SALAH')) {
                 $status = 'Nomor Tagihan Tidak Dikenali';
             }
-            if (str_contains($requestMymili['status'], " GAGAL!")) {
-                $status = "Sistem gagal melakukan pengecekan tagihan";
-            }
+
 
             return ResponseFormatter::error($status, 'Inquiry failed');
         }
