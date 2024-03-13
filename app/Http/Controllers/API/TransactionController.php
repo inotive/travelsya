@@ -194,7 +194,7 @@ class TransactionController extends Controller
                 'payment_method' => $detailTransaction->payment_method,
                 'payment_channel' => $detailTransaction->payment_channel,
                 'status' => $detailTransaction->status == 'Berhasil' ? 'PAID' : $detailTransaction->status,
-                'fee_admin' => $detailTransaction->fee_admin,
+                'fee_admin' => $detailTransaction->fee_travelsya,
                 'total' => $detailTransaction->total,
                 'point_received' => $receivedPoint,
                 'point_used' => $usedPoint,
