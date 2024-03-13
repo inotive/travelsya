@@ -480,74 +480,140 @@ class ProductController extends Controller
         $data = $request->all();
         $point = new Point();
         $userPoint = $point->cekPoint(auth()->user()->id);
-        $product = Product::with('service')
-            ->where('id', $request->productPLN)
-            ->first();
-
         // Generate Invoice
-        if(isset($product->service->name))
+        if($request->categoryPLN == 'token')
         {
-            $service = $product->service->name == 'listrik-token' ? 'token' : $product->service->name;
-        }else{
-            $service = 'token';
+            $product = Product::with('service')
+                ->where('id', $request->productPLN)
+                ->first();
+            $service =  'token';
+
+            // Get Fee by Product Service
+            $fees = Fee::where('service_id', $product->service_id)->first();
+
+            // Check Service
+            $invoice = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
+
+            $setting = new Setting();
+
+
+            $uniqueCode = rand(111, 999);
+
+            $fees = [
+                [
+                    'type' => 'Fee Admin',
+                    'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
+                ],
+                [
+                    'type' => 'Kode Unik',
+                    'value' => $uniqueCode,
+                ],
+            ];
+
+            $poitnDigunakan = 0;
+            if ( $request->point !== null) {
+                $pointCustomer = auth()->user()->point;
+                $poitnDigunakan = round($pointCustomer * 10 / 100) ;
+
+                array_push($fees, [
+                    'type' => 'point',
+                    'value' => 0 - $poitnDigunakan,
+                ]);
+            }
+
+            $sellingPrice = $request->point !== null ? $product->price - abs($poitnDigunakan) : $product->price;
+            $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+            $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
+
+            $payoutsXendit = $this->xendit->create([
+                'external_id' => $invoice,
+                'items' => [
+                    [
+                        'product_id' => $product->id,
+                        'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
+                        'price' => $sellingPriceFinal,
+                        'quantity' => 1,
+                    ],
+                ],
+                'amount' => $amount,
+                'success_redirect_url' => route('user.profile'),
+                'failure_redirect_url' => route('user.profile'),
+                'invoice_duration ' => 72000,
+                'should_send_email' => true,
+                'customer' => [
+                    'given_names' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'mobile_number' => $request->user()->phone ?: 'somenumber',
+                ],
+                'fees' => $fees,
+            ]);
         }
-        // Check Service
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
+        else{
+            $service = 'Tagihan';
+            $product = Product::with('service')
+                ->where('id', 442)
+                ->first();
+            // Get Fee by Product Service
+            $fees = Fee::where('service_id', 3)->first();
 
-        $setting = new Setting();
+            // Check Service
+            $invoice = "INV-" . date('Ymd') . "-" . strtoupper($service) . "-" . time();
 
-        // Get Fee by Product Service
-        $fees = Fee::where('service_id', $product->service_id)->first();
+            $setting = new Setting();
 
-        $uniqueCode = rand(111, 999);
 
-        $fees = [
-            [
-                'type' => 'Fee Admin',
-                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
-            ],
-            [
-                'type' => 'Kode Unik',
-                'value' => $uniqueCode,
-            ],
-        ];
+            $uniqueCode = rand(111, 999);
 
-        $poitnDigunakan = 0;
-        if ( $request->point !== null) {
-            $pointCustomer = auth()->user()->point;
-            $poitnDigunakan = round($pointCustomer * 10 / 100) ;
+            $fees = [
+                [
+                    'type' => 'Fee Admin',
+                    'value' => $fees->percent == 0 ? $fees->value :  $request->inputTotalTagihanPLN * $fees->value / 100,
+                ],
+                [
+                    'type' => 'Kode Unik',
+                    'value' => $uniqueCode,
+                ],
+            ];
 
-            array_push($fees, [
-                'type' => 'point',
-                'value' => 0 - $poitnDigunakan,
+            $poitnDigunakan = 0;
+            if ( $request->point !== null) {
+                $pointCustomer = auth()->user()->point;
+                $poitnDigunakan = round($pointCustomer * 10 / 100) ;
+
+                array_push($fees, [
+                    'type' => 'point',
+                    'value' => 0 - $poitnDigunakan,
+                ]);
+            }
+
+            $sellingPrice = $request->point !== null ? $request->inputTotalTagihanPLN - abs($poitnDigunakan) : $request->inputTotalTagihanPLN;
+            $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
+            $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
+
+            $payoutsXendit = $this->xendit->create([
+                'external_id' => $invoice,
+                'items' => [
+                    [
+                        'product_id' => $product->id,
+                        'name' => strtoupper('PEMBAYARAN TAGIHAN') . ' - ' . strtoupper($data['noPelangganPLN'] ?? $request->inputNamaPelangganPLN),
+                        'price' => $sellingPriceFinal,
+                        'quantity' => 1,
+                    ],
+                ],
+                'amount' => $amount,
+                'success_redirect_url' => route('user.profile'),
+                'failure_redirect_url' => route('user.profile'),
+                'invoice_duration ' => 72000,
+                'should_send_email' => true,
+                'customer' => [
+                    'given_names' => $request->user()->name,
+                    'email' => $request->user()->email,
+                    'mobile_number' => $request->user()->phone ?: 'somenumber',
+                ],
+                'fees' => $fees,
             ]);
         }
 
-        $sellingPrice = $request->point !== null ? $product->price - abs($poitnDigunakan) : $product->price;
-        $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
-        $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
-        $payoutsXendit = $this->xendit->create([
-            'external_id' => $invoice,
-            'items' => [
-                [
-                    'product_id' => $product->id,
-                    'name' => strtoupper($product->description) . ' - ' . strtoupper($data['noPelangganPLN']),
-                    'price' => $sellingPriceFinal,
-                    'quantity' => 1,
-                ],
-            ],
-            'amount' => $amount,
-            'success_redirect_url' => route('user.profile'),
-            'failure_redirect_url' => route('user.profile'),
-            'invoice_duration ' => 72000,
-            'should_send_email' => true,
-            'customer' => [
-                'given_names' => $request->user()->name,
-                'email' => $request->user()->email,
-                'mobile_number' => $request->user()->phone ?: 'somenumber',
-            ],
-            'fees' => $fees,
-        ]);
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
             'req_id' => 'PLN-' . time(),
@@ -578,7 +644,7 @@ class ProductController extends Controller
             DB::table('detail_transaction_ppob')->insert([
                 'transaction_id' => $storeTransaction->id,
                 'product_id' => $product->id,
-                'nomor_pelanggan' => $request->noPelangganPLN,
+                'nomor_pelanggan' => $request->noPelangganPLN ?? $request->inputNamaPelangganPLN,
                 'total_tagihan' => $amount,
                 'fee_travelsya' => $fees[0]['value'],
                 'fee_mili' => 0,
