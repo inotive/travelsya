@@ -567,7 +567,7 @@ class ProductController extends Controller
             $fees = [
                 [
                     'type' => 'Fee Admin',
-                    'value' => $fees->percent == 0 ? $fees->value :  $request->inputTotalTagihanPLN * $fees->value / 100,
+                    'value' => $fees->percent == 0 ? $fees->value :  $request->totalTagihan * $fees->value / 100,
                 ],
                 [
                     'type' => 'Kode Unik',
@@ -586,7 +586,7 @@ class ProductController extends Controller
                 ]);
             }
 
-            $sellingPrice = $request->point !== null ? $request->inputTotalTagihanPLN - abs($poitnDigunakan) : $request->inputTotalTagihanPLN;
+            $sellingPrice = $request->point !== null ? $request->totalTagihan - abs($poitnDigunakan) : $request->totalTagihan;
             $sellingPriceFinal = $sellingPrice <= 0 ? 0 : $sellingPrice;
             $amount = $setting->getAmount($sellingPriceFinal, 1, $fees, 1);
 
