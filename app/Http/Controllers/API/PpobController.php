@@ -157,7 +157,7 @@ class PpobController extends Controller
             'items' => [
                 ['name' => $product->name . ' (' . $request->nomor_tagihan . ')',
                 'quantity' => 1,
-                'price' => $grandTotal,
+                'price' => $request->nominal_tagihan,
                 'url' => 'someurl'
                 ]
             ],
