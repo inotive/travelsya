@@ -395,7 +395,7 @@ class ProductController extends Controller
         $storeTransaction = Transaction::create([
             'no_inv' => $invoice,
             'req_id' => 'PDAM-' . time(),
-            'service' => $product->service->name,
+            'service' => $product->name == "PDAM" ? 'PDAM' : $product->service->name,
             'service_id' => $product->service->id,
             'payment' => 'xendit',
             'user_id' => $request->user()->id,

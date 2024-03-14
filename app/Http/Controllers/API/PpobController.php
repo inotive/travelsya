@@ -114,7 +114,7 @@ class PpobController extends Controller
 
         // Get Fee by Product Service
         $fee = Fee::where('service_id', $product->service_id)->first();
-        $uniqueCode = rand(111, 999);
+        $uniqueCode = $data['kode_unik'];
 
         $fees = [
             [

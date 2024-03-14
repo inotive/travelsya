@@ -186,7 +186,7 @@ class CallbackController extends Controller
                                     'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                                 ]);
                         }
-                        else if($transaction->service == "pln" || $transaction->service == "pdam" || $transaction->service == "bpjs" || $transaction->service == "tv-internet"){
+                        else if($transaction->service == "pln" || $transaction->service == "PDAM" || $transaction->service == "bpjs" || $transaction->service == "tv-internet"){
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
                                 ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan', 'ppob.total_tagihan')
@@ -202,7 +202,6 @@ class CallbackController extends Controller
 
                                 $pointDiterima = $settingPoint->calculatePoint($detailTransactionPPOB->total_tagihan, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
-
 
                                 $user->update(['point' => $user->point + $pointDiterima]);
 
