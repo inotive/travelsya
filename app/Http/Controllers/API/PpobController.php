@@ -128,7 +128,7 @@ class PpobController extends Controller
         ];
 
         // Compare mili balance with total bill
-        $priceWithAdmin = $request->nominal_tagihan + $fees->value;
+        $priceWithAdmin = $request->nominal_tagihan + $fees['0']['value'];
         $requestSaldoMyMili = $this->mymili->saldo();
         $saldoMyMili = $requestSaldoMyMili['MESSAGE'];
 
@@ -148,8 +148,6 @@ class PpobController extends Controller
                 'value' => 0 - $saldoPointCustomer,
             ]);
         }
-
-
         // total pembayaran termasuk dikurangi point
         $grandTotal = $request->nominal_tagihan + $fees[0]['value'] + $data['kode_unik'] - abs($saldoPointCustomer);
 
