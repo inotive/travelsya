@@ -58,7 +58,7 @@ class ProductController extends Controller
 
         $fees = [
             [
-                'type' => 'admin',
+                'type' => 'Biaya Layanan',
                 'value' => $fee->percent == 0 ? $fee->value :  $product->price * $fee->value / 100,
             ],
             [
@@ -72,7 +72,7 @@ class ProductController extends Controller
             $pointDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
-                'type' => 'point',
+                'type' => 'Point',
                 'value' => 0 - $pointDigunakan,
             ]);
         }
@@ -207,7 +207,7 @@ class ProductController extends Controller
 
         $fees = [
             [
-                'type' => 'admin',
+                'type' => 'Biaya Layanan',
                 'value' => $fees->percent == 0 ? $fees->value :  $data['totalTagihan'] * $fees->value / 100,
             ],
             [
@@ -345,7 +345,7 @@ class ProductController extends Controller
 
         $fees = [
             [
-                'type' => 'admin',
+                'type' => 'Biaya Layanan',
                 'value' => $fees->percent == 0 ? $fees->value :  $data['totalTagihan'] * $fees->value / 100,
             ],
             [
@@ -360,7 +360,7 @@ class ProductController extends Controller
             $pointCustomer = auth()->user()->point;
             $poitnDigunakan = round($pointCustomer * 10 / 100) ;
             array_push($fees, [
-                'type' => 'point',
+                'type' => 'Point',
                 'value' => 0 - $poitnDigunakan,
             ]);
         }
@@ -516,7 +516,7 @@ class ProductController extends Controller
                 $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
                 array_push($fees, [
-                    'type' => 'point',
+                    'type' => 'Point',
                     'value' => 0 - $poitnDigunakan,
                 ]);
             }
@@ -581,7 +581,7 @@ class ProductController extends Controller
                 $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
                 array_push($fees, [
-                    'type' => 'point',
+                    'type' => 'Point',
                     'value' => 0 - $poitnDigunakan,
                 ]);
             }
@@ -746,7 +746,7 @@ class ProductController extends Controller
             $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
-                'type' => 'point',
+                'type' => 'Point',
                 'value' => 0 - $poitnDigunakan,
             ]);
         }
@@ -889,7 +889,7 @@ class ProductController extends Controller
 
         $fees = [
             [
-                'type' => 'admin',
+                'type' => 'Biaya Layanan',
                 'value' => $fee->percent == 0 ? $fee->value :  $product->price * $fee->value / 100,
             ],
             [
@@ -904,7 +904,7 @@ class ProductController extends Controller
             $poitnDigunakan = round($pointCustomer * 10 / 100) ;
 
             array_push($fees, [
-                'type' => 'point',
+                'type' => 'Point',
                 'value' => 0 - $pointDigunakan,
             ]);
         }

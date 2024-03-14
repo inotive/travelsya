@@ -113,7 +113,19 @@ class PpobController extends Controller
         $data['no_inv'] = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
 
         // Get Fee by Product Service
-        $fees = Fee::where('service_id', $product->service_id)->first();
+        $fee = Fee::where('service_id', $product->service_id)->first();
+        $uniqueCode = rand(111, 999);
+
+        $fees = [
+            [
+                'type' => 'Biaya Layanan',
+                'value' => $fee->percent == 0 ? $fee->value :  $product->price * $fee->value / 100,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $uniqueCode,
+            ],
+        ];
 
         // Compare mili balance with total bill
         $priceWithAdmin = $request->nominal_tagihan + $fees->value;
@@ -130,18 +142,13 @@ class PpobController extends Controller
         if ($request->point == 1) {
             $pointCustomer = auth()->user()->point;
             $saldoPointCustomer = round($pointCustomer * 10 / 100);
+
+            array_push($fees, [
+                'type' => 'Point',
+                'value' => 0 - $saldoPointCustomer,
+            ]);
         }
 
-        $fees = [
-            [
-                'type' => 'admin',
-                'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
-            ],
-            [
-                'type' => 'Kode Unique',
-                'value' => $data['kode_unik'],
-            ],
-        ];
 
         // total pembayaran termasuk dikurangi point
         $grandTotal = $request->nominal_tagihan + $fees[0]['value'] + $data['kode_unik'] - abs($saldoPointCustomer);

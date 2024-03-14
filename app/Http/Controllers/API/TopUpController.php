@@ -134,11 +134,11 @@ class TopUpController extends Controller
 
         $fees = [
             [
-                'type' => 'Fee Admin',
+                'type' => 'Biaya Layanan',
                 'value' => $fees->percent == 0 ? $fees->value :  $product->price * $fees->value / 100,
             ],
             [
-                'type' => 'Kode Unique',
+                'type' => 'Kode Unik',
                 'value' => $data['kode_unik'],
             ],
         ];
@@ -153,7 +153,7 @@ class TopUpController extends Controller
             $pointDigunakan = round($pointCustomer * 10 / 100);
 
             array_push($fees, [
-                'type' => 'point',
+                'type' => 'Point',
                 'value' => 0 - $pointDigunakan,
             ]);
         }
