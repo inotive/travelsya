@@ -232,7 +232,7 @@ class PpobController extends Controller
             if (str_contains($requestMymili['status'], 'SUKSES')) {
                 return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
             } else {
-                if (str_contains($requestMymili['status'], 'SUDAH LUNAS')) {
+                if (str_contains($requestMymili['status'], 'SUDAH LUNAS' || str_contains($requestMymili['status'], 'TERBAYAR' ))) {
                     $status = 'Tagihan Sudah Terbayar';
                 }
 
