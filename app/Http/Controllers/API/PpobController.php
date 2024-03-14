@@ -180,7 +180,7 @@ class PpobController extends Controller
 
             $transaction = Transaction::create([
                 'no_inv' => $data['no_inv'],
-                'service' => $product->service->name,
+                'service' => $product->name == "PDAM" ? 'PDAM' : $product->service->name,
                 'service_id' => $product->service_id,
                 'payment' => 'xendit',
                 'user_id' => auth()->user()->id,
@@ -188,9 +188,7 @@ class PpobController extends Controller
                 'link' => $payoutsXendit['invoice_url'],
                 'total' => $grandTotal
             ]);
-
             $data['detail'] = $request->input('detail');
-
             DB::table('detail_transaction_ppob')->insert([
                 'transaction_id' => $transaction->id,
                 'product_id' => $product->id,
