@@ -93,7 +93,7 @@ class ProductController extends Controller
                 ],
             ],
             'amount' => $amount,
-            'success_redirect_url' => route('user.profile'),
+            'success_redirect_url' => route('profile.order-detail.listrik-voucher', $invoice),
             'failure_redirect_url' => route('user.profile'),
             'invoice_duration ' => 72000,
             'should_send_email' => true,

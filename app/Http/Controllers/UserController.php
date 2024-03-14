@@ -181,7 +181,10 @@ class UserController extends Controller
         //     )
         //     ->where('detail_transaction_hotel.transaction_id', $id)
         //     ->first();
-        $transactionHotel = DetailTransactionHotel::with('transaction.guest', 'hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom')->where('transaction_id', $id)->first();
+        $transactionHotel = DetailTransactionHotel::with('transaction.guest', 'hotel.hotelImage', 'hotel.hotelRating', 'hotelRoom', 'transaction')
+            ->whereHas('transaction', function ($q) use ($id){
+                $q->where('no_inv' , $id);
+            })->first();
 
         $hotelPict = DB::table('hotel_images')
             ->where('hotel_id', $transactionHotel->hotel_id)
@@ -207,7 +210,10 @@ class UserController extends Controller
 
     {
 
-        $transactionHostel = DetailTransactionHostel::with('transaction.guest', 'hostel.hostelImage', 'hostel.hostelRating', 'hostelRoom')->where('transaction_id', $id)->first();
+        $transactionHostel = DetailTransactionHostel::with('transaction.guest', 'hostel.hostelImage', 'hostel.hostelRating', 'hostelRoom', 'transaction')
+            ->whereHas('transaction', function ($q) use ($id) {
+                $q->where('no_inv', $id);
+                    })->first();
 
         $hostelPict = DB::table('hostel_images')
             ->where('hostel_id', $transactionHostel->hostel_id)
@@ -256,7 +262,7 @@ class UserController extends Controller
             detail_transaction_top_up.fee_travelsya -
             (CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as total_after_fee')
             )
-            ->where('detail_transaction_top_up.transaction_id', $id)
+            ->where('transactions.no_inv', $id)
             ->first();
         // dd($transactionPPOB);
         $pemasukan = DB::table('history_points')
@@ -302,7 +308,7 @@ class UserController extends Controller
             detail_transaction_ppob.fee_travelsya -
             (CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as total_after_fee')
             )
-            ->where('detail_transaction_ppob.transaction_id', $id)
+            ->where('transactions.no_inv', $id)
             ->first();
 
         // dd($transactionPPOB->transaction_id);

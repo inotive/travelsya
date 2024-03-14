@@ -66,14 +66,14 @@
                                         @foreach ($all_transactions as $all)
                                             @php
                                                 if ($all->service_id == 8) {
-                                                    $route = route('profile.order-detail.hotel', $all->id);
+                                                    $route = route('profile.order-detail.hotel', $all->no_inv);
                                                 } elseif ($all->service_id == 7) {
-                                                    $route = route('profile.order-detail.hostel', $all->id);
+                                                    $route = route('profile.order-detail.hostel', $all->no_inv);
                                                 } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11 || $all->service_id == 2) {
                                                     // top up
-                                                    $route = route('profile.order-detail.listrik-voucher', $all->id);
+                                                    $route = route('profile.order-detail.listrik-voucher', $all->no_inv);
                                                 } else {
-                                                    $route = route('profile.order-detail.listrik', $all->id);
+                                                    $route = route('profile.order-detail.listrik', $all->no_inv);
                                                 }
                                             @endphp
                                             <div class="card border border-1 mt-5 bg-gradient-merah cursor-pointer"
