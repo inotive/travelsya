@@ -294,7 +294,7 @@ class ProductController extends Controller
             return ResponseFormatter::success($requestMymili, 'Inquiry loaded');
         } else {
             $status = '';
-            if (str_contains($requestMymili['status'], 'SUDAH LUNAS') || str_contains($requestMymili['status'], 'Terbayar')) {
+            if (str_contains($requestMymili['status'], 'SUDAH LUNAS') || str_contains($requestMymili['status'], 'TERBAYAR') || str_contains($requestMymili['status'], 'GAGAL! TAGIHAN SUDAH TERBAYAR')) {
                 $status = 'Tagihan Sudah Terbayar';
             }
 
@@ -417,7 +417,7 @@ class ProductController extends Controller
             'created_at' => Carbon::now(),
         ]);
 
-        if ($request->point == 1) {
+        if ($request->point !== null) {
             //deductpoint
             $point = new Point();
             $point->deductPoint($request->user()->id, $poitnDigunakan, $storeTransaction->id);

@@ -184,6 +184,7 @@
                         $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
 
                         $('#btnPeriksaPDAM').removeAttr('disabled');
+                        $('#btnSubmitPDAM').removeAttr('disabled');
 
                         $('#detailPDAM').show();
 
