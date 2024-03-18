@@ -73,7 +73,7 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                         </div>
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Total Tagihan</div>
-                                            <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->total_tagihan ?? 0, 0, ',', '.') }}</div>
+                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total - $transactionPPOB->fee_travelsya - $transactionPPOB->kode_unik, 0, ',', '.') }}</div>
                                         </div>
                                     </div>
                             </div>
@@ -111,10 +111,10 @@ background: linear-gradient(270deg, rgba(255,238,241,1) 0%, rgba(255,255,255,1) 
                                             <div class="fs-8">Metode Pembayaran</div>
                                             <div class="fs-8 fw-bold">{{ str_replace('_', ' ', $transactionPPOB->payment_method) }}</div>
                                         </div>
-                                        <div class="d-flex mb-1 justify-content-between">
-                                            <div class="fs-8">Besar Tagihan</div>
-                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total - $transactionPPOB->fee_travelsya - $transactionPPOB->kode_unik, 0, ',', '.') }}</div>
-                                        </div>
+{{--                                        <div class="d-flex mb-1 justify-content-between">--}}
+{{--                                            <div class="fs-8">Besar Tagihan</div>--}}
+{{--                                            <div class="fs-8 fw-bold">Rp. {{ number_format($transactionPPOB->total - $transactionPPOB->fee_travelsya - $transactionPPOB->kode_unik, 0, ',', '.') }}</div>--}}
+{{--                                        </div>--}}
                                         <div class="d-flex mb-1 justify-content-between">
                                             <div class="fs-8">Biaya Layanan</div>
                                             <div class="fs-8 fw-bold">{{ number_format($transactionPPOB->fee_travelsya + $transactionPPOB->kode_unik, 0, ',', '.') }}</div>

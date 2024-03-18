@@ -87,7 +87,7 @@
                                                 @endif
                                                 <div class="row ms-5">
                                                     <div class="fs-7 fw-semibold">
-                                                        {{ \Carbon\Carbon::parse($point->created_at)->format('Y-m-d H:i:s') }}
+                                                        {{ \Carbon\Carbon::parse($point->created_at)->format('d M Y H:i:s') }}
                                                     </div>
                                                     <div class="fs-7 text-gray-500 fw-semibold mt-1 mb-1">
                                                         {{ $point->transaction->no_inv }}
