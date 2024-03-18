@@ -84,7 +84,7 @@ class UserController extends Controller
             ]);
 
         } else {
-                $user->update([
+            $user->update([
                 'name' => $request->name,
                 'email'    => $request->email,
                 'phone'    => $request->phone,
@@ -213,7 +213,7 @@ class UserController extends Controller
         $transactionHostel = DetailTransactionHostel::with('transaction.guest', 'hostel.hostelImage', 'hostel.hostelRating', 'hostelRoom', 'transaction')
             ->whereHas('transaction', function ($q) use ($id) {
                 $q->where('no_inv', $id);
-                    })->first();
+            })->first();
 
         $hostelPict = DB::table('hostel_images')
             ->where('hostel_id', $transactionHostel->hostel_id)
@@ -268,15 +268,14 @@ class UserController extends Controller
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
-            ->where('transaction_id', $id)
+            ->where('transaction_id', $transactionPPOB->transaction_id)
             ->first();
 
         $pengeluaran = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'credit')
-            ->where('transaction_id', $id)
+            ->where('transaction_id', $transactionPPOB->transaction_id)
             ->first();
-
         //dd($transactionPPOB);
 
 
@@ -316,17 +315,17 @@ class UserController extends Controller
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
-            ->where('transaction_id', $id)
+            ->where('transaction_id', $transactionPPOB->transaction_id)
             ->first();
 
         $pengeluaran = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'credit')
-            ->where('transaction_id', $id)
+            ->where('transaction_id', $transactionPPOB->transaction_id)
             ->first();
 
-        //dd($transactionPPOB);
-
+//        dd($transactionPPOB->inv_num);
+//
         return view('user.order-detail.listrik', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
     }
 

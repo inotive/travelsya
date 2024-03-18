@@ -420,7 +420,7 @@ class ProductController extends Controller
         if ($request->point !== null) {
             //deductpoint
             $point = new Point();
-            $point->deductPoint($request->user()->id, $poitnDigunakan, $storeTransaction->id);
+            $point->deductPoint($request->user()->id, abs($poitnDigunakan), $storeTransaction->id);
         }
 
         return redirect($payoutsXendit['invoice_url']);

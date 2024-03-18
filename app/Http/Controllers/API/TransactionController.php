@@ -159,20 +159,14 @@ class TransactionController extends Controller
             ], 'Fetch data failed', 500);
         }
 
-        // $transaction = Transaction::with('detailTransaction.hostelRoom', 'detailTransaction.product', 'historyPoint', 'rating', 'guest', 'bookDate')
-        //     ->where('no_inv', $no_inv)
-        //     ->where('user_id', $user_id)
-        //     ->get();
-
         $no_inv = $request->input('no_inv');
         $user_id = $request->user()->id;
-        // $user_id = 5;
 
         $transaction = Transaction::where('no_inv', $no_inv);
         // dd($transaction->first());
         $historyPoint = collect(HistoryPoint::where('transaction_id', $transaction->first()->id)->get());
         $receivedPoint = $historyPoint->where('flow', 'debit')->pluck('point')->first();
-        $usedPoint = $historyPoint->where('flow', 'kredit')->pluck('point')->first();
+        $usedPoint = $historyPoint->where('flow', 'credit')->pluck('point')->first();
         $responseTransaction = null;
         // UNTUK PPOB
         if (in_array($transaction->first()->service_id, [6, 3, 5, 9, 10])) {
