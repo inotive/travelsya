@@ -110,7 +110,7 @@ class PpobController extends Controller
         $product = Product::with('service')->find($request->product_id);
 
         // Generate Invoice
-        $data['no_inv'] = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
+        $data['no_inv'] = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name == 'PDAM' ? 'PDAM' : $product->service->name) . '-' . time();
 
         // Get Fee by Product Service
         $fee = Fee::where('service_id', $product->service_id)->first();

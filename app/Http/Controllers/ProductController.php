@@ -336,7 +336,7 @@ class ProductController extends Controller
         $userPoint = $point->cekPoint(auth()->user()->id);
 
         $product = Product::with('service')->find($data['productPDAM']);
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->service->name) . '-' . time();
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($product->name == 'PDAM' ? 'PDAM' : $product->service->name) . '-' . time();
         $setting = new Setting();
 
         // Get Fee by Product Service
