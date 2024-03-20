@@ -284,13 +284,13 @@
                                         @foreach ($pending_transactions as $pending)
                                             @php
                                                 if ($pending->service_id == 8) {
-                                                    $routePending = route('profile.order-detail.hotel', $pending->id);
+                                                    $routePending = route('profile.order-detail.hotel', $pending->no_inv);
                                                 } elseif ($pending->service_id == 7) {
-                                                    $routePending = route('profile.order-detail.hostel', $pending->id);
+                                                    $routePending = route('profile.order-detail.hostel', $pending->no_inv);
                                                 } elseif ($pending->service_id == 12 || $pending->service_id == 1 || $pending->service_id == 11 || $pending->service_id == 2) {
-                                                    $routePending = route('profile.order-detail.listrik-voucher', $pending->id);
+                                                    $routePending = route('profile.order-detail.listrik-voucher', $pending->no_inv);
                                                 } else {
-                                                    $routePending = route('profile.order-detail.listrik', $pending->id);
+                                                    $routePending = route('profile.order-detail.listrik', $pending->no_inv);
                                                 }
 
                                             @endphp
@@ -447,13 +447,13 @@
                                         @foreach ($history_transactions as $history)
                                         @php
                                         if ($history->service_id == 8) {
-                                            $routeHistory = route('profile.order-detail.hotel', $history->id);
+                                            $routeHistory = route('profile.order-detail.hotel', $history->no_inv);
                                         } elseif ($history->service_id == 7) {
-                                            $routeHistory = route('profile.order-detail.hostel', $history->id);
+                                            $routeHistory = route('profile.order-detail.hostel', $history->no_inv);
                                         } elseif ($history->service_id == 12 || $history->service_id == 1 || $history->service_id == 11 || $history->service_id == 2) {
-                                            $routeHistory = route('profile.order-detail.listrik-voucher', $history->id);
+                                            $routeHistory = route('profile.order-detail.listrik-voucher', $history->no_inv);
                                         } else {
-                                            $routeHistory = route('profile.order-detail.listrik', $history->id);
+                                            $routeHistory = route('profile.order-detail.listrik', $history->no_inv);
                                         }
 
                                     @endphp

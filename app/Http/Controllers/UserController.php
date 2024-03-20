@@ -249,6 +249,7 @@ class UserController extends Controller
                 'detail_transaction_top_up.*',
                 'products.name as product_name',
                 'products.category as product_category',
+                'transactions.id',
                 'transactions.no_inv as inv_num',
                 'transactions.service as service',
                 'transactions.created_at as created_transaction',
@@ -264,7 +265,7 @@ class UserController extends Controller
             )
             ->where('transactions.no_inv', $id)
             ->first();
-        // dd($transactionPPOB);
+//         dd($transactionPPOB);
         $pemasukan = DB::table('history_points')
             ->select('transaction_id', 'point as jumlah_point')
             ->where('flow', 'debit')
