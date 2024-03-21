@@ -39,7 +39,8 @@
                             <tr>
                                 <td class="text-center">{{ $loop->iteration }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset('storage/' . $user->image) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ $user->image != null ? asset('storage/profile/' . $user->image) : asset('assets/media/avatars/300-1.jpg') }}"
+                                        class="rounded" style="width: 150px">
                                 </td>
                                 <td>
                                     <p>{{ $user->name }}</p>
@@ -263,7 +264,8 @@
                                 <!--begin::Image input-->
                                 <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                     <!--begin::Image preview wrapper-->
-                                    <div class="image-input-wrapper w-125px h-125px image-preview" style=""></div>
+                                    <div class="image-input-wrapper w-125px h-125px image-preview image-edit"
+                                        style=""></div>
                                     <!--end::Image preview wrapper-->
 
                                     <!--begin::Edit button-->
@@ -406,7 +408,7 @@
 
 @push('add-script')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             // $('.btn-warning').click(function (){
             //
@@ -450,6 +452,7 @@
                 type: "GET",
                 cache: false,
                 success: function(response) {
+                    
                     $('#user_id').val(response.data.id);
                     $('#edit-name').val(response.data.name);
                     $('#edit-email').val(response.data.email);
@@ -465,7 +468,7 @@
 
                     $('#edit-mitra').modal('show');
 
-                    var imageUrl = '{{ asset('storage') }}/' + response.data.image;
+                    var imageUrl = '{{ asset('storage/profile') }}/' + response.data.image;
 
                     // Tambahkan gambar pratinjau ke dalam elemen
                     $('.image-input-wrapper').css('background-image', `url(${imageUrl})`);

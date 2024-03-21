@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\UploadFile;
 use App\Http\Controllers\Controller;
 use App\Models\Hostel;
 use App\Models\HostelRoom;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class MitraController extends Controller
 {
+    use UploadFile;
     public function index()
     {
 
@@ -36,6 +38,12 @@ class MitraController extends Controller
 
     public function updateMitra(Request $request, $id)
     {
+
+        // if ($request->hasFile('image')) {
+        //     $image = $request->file('image')->store('media/users');
+        //     Storage::delete('storage/' . $user->image);
+        // }
+
         $user = User::findorFail($id);
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -46,20 +54,11 @@ class MitraController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        // $hostel = Hostel::find($request->id);
-        // dd($request->user_id, $hostel);
-
+       
         if ($request->hasFile('image')) {
-            //upload new image
-            $image = $request->file('image')->store('media/users');
-            // $image->storeAs('media/ads', $image->hashName(), 'public');
-
-            Storage::delete('storage/' . $user->image);
-            // dd($request->all());
-
-
-            // $hostel->update(['user_id' => $request->user_id, 'is_active' => $request->active]);
-
+            Storage::disk('public')->delete('profile/' . $user->image);
+            $image = $this->storeFile($request->file('image'), 'profile');
+            $imageProfile = $image;
             $user->update([
                 ['email' => $request->email], // Kriteria
 
@@ -69,7 +68,7 @@ class MitraController extends Controller
                 'point' => 0,
                 'role' => 1,
                 'is_active' => $request->is_active,
-                'image' => $image,
+                'image' => $imageProfile,
                 // Nilai
             ]);
         } else {
@@ -103,14 +102,13 @@ class MitraController extends Controller
             return response()->json($validator->errors(), 422);
         }
         if ($request->hasFile('image')) {
-            //upload new image
-            $image = $request->file('image')->store('media/users');
-            // dd($file);
+            $image = $this->storeFile($request->file('image'), 'profile');
+            $imageProfile = $image;
             User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'image' => $image,
+                'image' => $imageProfile,
                 'phone' => $request->nomor_telfon,
                 'point' => 0,
                 'role' => 1,
