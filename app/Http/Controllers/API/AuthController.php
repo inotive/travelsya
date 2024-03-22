@@ -21,6 +21,7 @@ use Illuminate\Validation\Rules\Password;
 class AuthController extends Controller
 {
     use UploadFile;
+
     public function register(Request $request)
     {
         try {
@@ -86,16 +87,16 @@ class AuthController extends Controller
 
             $user = [
                 "id" => $user->id,
-                "name"=> $user->name,
-                "email"=> $user->email,
+                "name" => $user->name,
+                "email" => $user->email,
                 "email_verified_at" => null,
-                "image"=> env('APP_URL') . '/storage/public/users/' . $user->image,
-                "phone"=> $user->phone,
-                "point"=> $user->point * 10 / 100,
-                "role"=> $user->role,
-                "is_active"=> $user->is_active,
-                "created_at"=> $user->created_at,
-                "updated_at"=> $user->updated_at
+                "image" => env('APP_URL') . '/storage/public/users/' . $user->image,
+                "phone" => $user->phone,
+                "point" => $user->point * 10 / 100,
+                "role" => $user->role,
+                "is_active" => $user->is_active,
+                "created_at" => $user->created_at,
+                "updated_at" => $user->updated_at
             ];
 
             return ResponseFormatter::success([
@@ -167,7 +168,7 @@ class AuthController extends Controller
     public function updatePhoto(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'image'  => 'image|required',
+            'image' => 'image|required',
         ]);
 
         if ($validator->fails()) {
@@ -188,7 +189,7 @@ class AuthController extends Controller
 
         return response()->json([
             "meta" => [
-                "status"     => "success",
+                "status" => "success",
                 "statusCode" => 200
             ],
             "data" => [
@@ -196,6 +197,7 @@ class AuthController extends Controller
             ]
         ], 200);
     }
+
     public function sendTokenPassword(Request $request)
     {
         $data = $request->all();
@@ -313,5 +315,14 @@ class AuthController extends Controller
         } else {
             return ResponseFormatter::error(null, "User failed");
         }
+    }
+
+    public function totalPointsAvailable()
+    {
+        $totalPointsAvailable = Auth::user()->point * 10/ 100 ?? 0;
+
+        return response()->json([
+            'totalPointAvailable' => $totalPointsAvailable
+        ]);
     }
 }
