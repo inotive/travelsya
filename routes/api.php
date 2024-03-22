@@ -101,7 +101,7 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/user/update', [AuthController::class, 'update']);
     route::post('/user/update-photo', [AuthController::class, 'updatePhoto']);
     route::post('/user', [AuthController::class, 'profile']);
-    route::post('user/total-point-available', [AuthController::class, 'totalPointsAvailable']);
+    route::get('user/total-point-available', [AuthController::class, 'totalPointsAvailable']);
 
     //transaction
     // route::get('/transaction',[TransactionController::class,'GetServices']);
