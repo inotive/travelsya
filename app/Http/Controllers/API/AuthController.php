@@ -319,10 +319,11 @@ class AuthController extends Controller
 
     public function totalPointsAvailable()
     {
-        $totalPointsAvailable = Auth::user()->point * 10/ 100 ?? 0;
+
 
         return response()->json([
-            'totalPointAvailable' => $totalPointsAvailable
+            'currentPoint' => Auth::user()->point,
+            'totalPointAvailable' => Auth::user()->point * 10/ 100 ?? 0
         ]);
     }
 }
