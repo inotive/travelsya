@@ -246,15 +246,24 @@ class HotelController extends Controller
                     ];
                 });
 
-                $hotel_facilities = $hotel->hotelroomFacility->map(function ($facility) {
+                // $hotel_facilities = $hotel->hotelroomFacility->map(function ($facility) {
+                //     return [
+                //         // 'hotel_id' => $facility->hotel_id,
+                //         // 'hotel_room_id' => $facility->hotel_room_id,
+                //         'id' => $facility->facility_id,
+                //         'name' => $facility->facility->name,
+                //         'image' => 'storage/' . $facility->facility->icon,
+                //     ];
+                // });
+
+                $hotel_facilities = $hotel->hotelroomFacility->groupBy('facility.name')->map(function ($group) {
                     return [
-                        // 'hotel_id' => $facility->hotel_id,
-                        // 'hotel_room_id' => $facility->hotel_room_id,
-                        'id' => $facility->facility_id,
-                        'name' => $facility->facility->name,
-                        'image' => 'storage/' . $facility->facility->icon,
+                        'id' => $group->first()->facility_id,
+                        'name' => $group->first()->facility->name,
+                        'image' => 'storage/' . $group->first()->facility->icon,
                     ];
                 });
+                
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
                 $avg_rating = $hotel->hotelRating->sum('rate') != 0 ? $hotel->hotelRating->sum('rate') / $hotel->hotelRating->count() : 0;

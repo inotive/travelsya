@@ -177,91 +177,76 @@
 
                                 @foreach ($room->hotelroomimage as $image)
                                     <div class="image-input image-input-outline m-5" data-kt-image-input="true">
-                                        <!--begin::Image preview wrapper-->
                                         <div class="image-input-wrapper w-125px h-125px"
                                             style="background-image: url('{{ asset('storage/' . $image->image) }}')">
                                         </div>
-                                        <!--end::Image preview wrapper-->
-
-                                        <!--begin::Edit button-->
                                         <label
                                             class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
                                             data-kt-image-input-action="change" data-bs-toggle="tooltip"
                                             data-bs-dismiss="click" title="Change image">
                                             <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
                                                     class="path2"></span></i>
-
-                                            <!--begin::Inputs-->
                                             <input type="file" name="hotel_room_images[]" accept=".png, .jpg, .jpeg"
                                                 multiple />
                                             <input type="hidden" name="image_remove" />
-                                            <!--end::Inputs-->
                                         </label>
-                                        <!--end::Edit button-->
-
-                                        <!--begin::Cancel button-->
-                                        <span
+                                        {{-- <span
                                             class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
                                             data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
                                             data-bs-dismiss="click" title="Cancel image">
                                             <i class="ki-outline ki-cross fs-3"></i>
-                                        </span>
-                                        <!--end::Cancel button-->
-                                        <!--begin::Remove button-->
+                                        </span> --}}
                                         <span
-                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow remove-image"
                                             data-kt-image-input-action="remove" data-bs-toggle="tooltip"
-                                            data-bs-dismiss="click" title="Remove image">
+                                            data-bs-dismiss="click" title="Remove image"
+                                            data-image-id="{{ $image->id }}">
                                             <i class="ki-outline ki-cross fs-3"></i>
                                         </span>
-                                        <!--end::Remove button-->
                                     </div>
-
                                 @endforeach
                                 @if ($room->hotelroomimage->count() < 5)
+                                    @for ($i = 0; $i < 5 - $room->hotelroomimage->count(); $i++)
+                                        <div class="image-input image-input-outline m-5" data-kt-image-input="true">
+                                            <!--begin::Image preview wrapper-->
+                                            <div class="image-input-wrapper w-125px h-125px"></div>
+                                            <!--end::Image preview wrapper-->
 
-                                @for ($i = 0; $i < 5-$room->hotelroomimage->count(); $i++)
-                                <div class="image-input image-input-outline m-5" data-kt-image-input="true">
-                                    <!--begin::Image preview wrapper-->
-                                    <div class="image-input-wrapper w-125px h-125px"></div>
-                                    <!--end::Image preview wrapper-->
+                                            <!--begin::Edit button-->
+                                            <label
+                                                class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                data-bs-dismiss="click" title="Change image">
+                                                <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
+                                                        class="path2"></span></i>
 
-                                    <!--begin::Edit button-->
-                                    <label
-                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                        data-kt-image-input-action="change" data-bs-toggle="tooltip"
-                                        data-bs-dismiss="click" title="Change image">
-                                        <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
-                                                class="path2"></span></i>
+                                                <!--begin::Inputs-->
+                                                <input type="file" name="hotel_room_images[]"
+                                                    accept=".png, .jpg, .jpeg" multiple />
+                                                <input type="hidden" name="image_remove" />
+                                                <!--end::Inputs-->
+                                            </label>
+                                            <!--end::Edit button-->
 
-                                        <!--begin::Inputs-->
-                                        <input type="file" name="hotel_room_images[]" accept=".png, .jpg, .jpeg"
-                                            multiple  />
-                                        <input type="hidden" name="image_remove" />
-                                        <!--end::Inputs-->
-                                    </label>
-                                    <!--end::Edit button-->
+                                            <!--begin::Cancel button-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                data-bs-dismiss="click" title="Cancel image">
+                                                <i class="ki-outline ki-cross fs-3"></i>
+                                            </span>
+                                            <!--end::Cancel button-->
 
-                                    <!--begin::Cancel button-->
-                                    <span
-                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                        data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
-                                        data-bs-dismiss="click" title="Cancel image">
-                                        <i class="ki-outline ki-cross fs-3"></i>
-                                    </span>
-                                    <!--end::Cancel button-->
-
-                                    <!--begin::Remove button-->
-                                    <span
-                                        class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                        data-kt-image-input-action="remove" data-bs-toggle="tooltip"
-                                        data-bs-dismiss="click" title="Remove image">
-                                        <i class="ki-outline ki-cross fs-3"></i>
-                                    </span>
-                                    <!--end::Remove button-->
-                                </div>
-                            @endfor
-                                    
+                                            <!--begin::Remove button-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                data-bs-dismiss="click" title="Remove image">
+                                                <i class="ki-outline ki-cross fs-3"></i>
+                                            </span>
+                                            <!--end::Remove button-->
+                                        </div>
+                                    @endfor
                                 @endif
                                 {{-- PENAMBAHAN ROOM IMAGE --}}
                                 {{-- <div class="image-input image-input-outline m-5" data-kt-image-input="true">
@@ -337,19 +322,19 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($facility as $item)
-                                        <tr>
-                                            <td>
-                                                <div class="form-check form-check-lg">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        name="facility_id[]" value="{{ $item->id }}"
-                                                        id="facility{{ $item->id }}"
-                                                        {{ in_array($item->id, $room->hotelroomFacility->pluck('facility_id')->toArray()) ? 'checked' : '' }}>
-                                                </div>
-                                            </td>
-                                            <td>{{ $item->name }}</td>
-                                        </tr>
-                                    @endforeach
-                                    
+                                            <tr>
+                                                <td>
+                                                    <div class="form-check form-check-lg">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            name="facility_id[]" value="{{ $item->id }}"
+                                                            id="facility{{ $item->id }}"
+                                                            {{ in_array($item->id, $room->hotelroomFacility->pluck('facility_id')->toArray()) ? 'checked' : '' }}>
+                                                    </div>
+                                                </td>
+                                                <td>{{ $item->name }}</td>
+                                            </tr>
+                                        @endforeach
+
 
                                     </tbody>
                                 </table>
@@ -468,6 +453,35 @@
                     "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('.remove-image').on('click', function() {
+                var imageId = $(this).data('image-id');
+                // var confirmation = confirm('Are you sure you want to delete this image?');
+                // if (confirmation) {
+
+                // }
+                $.ajax({
+                    url: '{{ route('delete-image', ':imageId') }}'.replace(':imageId', imageId),
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 200) {
+                            $(this).closest('.image-input').remove();
+                        } else {
+                            console.error('Failed to delete image');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
             });
         });
     </script>

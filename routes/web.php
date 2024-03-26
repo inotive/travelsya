@@ -412,6 +412,9 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         });
 
+        Route::delete('/delete-image/{imageId}', [ManagementhotelController::class, 'deleteImage'])->name('delete-image');
+        Route::delete('/delete-image-hostel/{imageId}', [ManagementHostelController::class, 'deleteImage'])->name('delete-image-hostel');
+
 
 
         Route::prefix('management-hostel')->group(function () {

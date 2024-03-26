@@ -1,91 +1,92 @@
 @extends('ekstranet.layout', ['title' => 'Setting Hostel - ' . $hostel->name, 'url' => '#'])
 
 @section('content-admin')
-<!--begin::Row-->
-<div class="row gy-5 g-xl-10">
-    <!--begin::Col-->
-    <div class="col-12">
-        <div class="card  mb-xl-8">
-            <!--begin::Body-->
-            <div class="card-body my-3">
-                <div class="row">
-                    <div class="col-12">
-                        <!--begin::Alert-->
-                        <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                            <!--begin::Wrapper-->
-                            <div class="d-flex flex-column pe-0 pe-sm-10">
-                                <!--begin::Title-->
-                                <h4 class="fw-bold">Edit Room Information</h4>
-                                <!--end::Title-->
-                            </div>
-                            <!--end::Wrapper-->
-                        </div>
-                        <!--end::Alert-->
-                    </div>
-                </div>
-                <form id="kt_modal_new_target_form"
-                    action="{{ route('partner.management.hostel.setting.room.update', ['id'=> $hostel->id, 'room_id'=> $room->id]) }}"
-                    method="POST" enctype="multipart/form-data">
-                    @csrf @method('PUT')
-                    <input type="hidden" name="hostel_id" value="{{ $hostel->id }}">
-                    <div class="row gy-5">
-                        <div class="col-12">
-                            <label class="form-label">Nama Properti</label>
-                            <input type="text" name="name" id="name" class="form-control" value="{{ $room->name }}"
-                                required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Tarif Per Bulan</label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="text" name="rentprice_monthly" id="rentprice_monthly" class="form-control"
-                                    value="{{ number_format($room->rentprice_monthly, 0,',','.') }}" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Tarif Per Bulan (Termasuk Pajak)</label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="text" name="sellingrentprice_monthly" id="sellingrentprice_monthly"
-                                    class="form-control"
-                                    value="{{ number_format($room->sellingrentprice_monthly, 0,',','.') }}" readonly>
-                            </div>
-                        </div>
-                        {{-- <input type="hidden" name="sellingrentprice_monthly" id="sellingprice_monthly_hidden"> --}}
-                        <div class="col-6">
-                            <label class="form-label">Tarif Per Tahun</label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="text" name="rentprice_yearly" id="rentprice_yearly" class="form-control"
-                                    value="{{ number_format($room->rentprice_yearly, 0,',','.') }}" required>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Tarif Per Tahun (Termasuk Pajak)</label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="text" name="sellingrentprice_yearly" id="sellingrentprice_yearly"
-                                    class="form-control"
-                                    value="{{ number_format($room->sellingrentprice_yearly, 0,',','.') }}" readonly>
-                            </div>
-                        </div>
-                        {{-- <input type="hidden" name="sellingrentprice_yearly" id="sellingprice_yearly_hidden"> --}}
-
+    <!--begin::Row-->
+    <div class="row gy-5 g-xl-10">
+        <!--begin::Col-->
+        <div class="col-12">
+            <div class="card  mb-xl-8">
+                <!--begin::Body-->
+                <div class="card-body my-3">
+                    <div class="row">
                         <div class="col-12">
                             <!--begin::Alert-->
                             <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
                                 <!--begin::Wrapper-->
                                 <div class="d-flex flex-column pe-0 pe-sm-10">
                                     <!--begin::Title-->
-                                    <h4 class="fw-bold">Spesifikasi Properti</h4>
+                                    <h4 class="fw-bold">Edit Room Information</h4>
                                     <!--end::Title-->
                                 </div>
                                 <!--end::Wrapper-->
                             </div>
                             <!--end::Alert-->
                         </div>
+                    </div>
+                    <form id="kt_modal_new_target_form"
+                        action="{{ route('partner.management.hostel.setting.room.update', ['id' => $hostel->id, 'room_id' => $room->id]) }}"
+                        method="POST" enctype="multipart/form-data">
+                        @csrf @method('PUT')
+                        <input type="hidden" name="hostel_id" value="{{ $hostel->id }}">
+                        <div class="row gy-5">
+                            <div class="col-12">
+                                <label class="form-label">Nama Properti</label>
+                                <input type="text" name="name" id="name" class="form-control"
+                                    value="{{ $room->name }}" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Tarif Per Bulan</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="text" name="rentprice_monthly" id="rentprice_monthly"
+                                        class="form-control"
+                                        value="{{ number_format($room->rentprice_monthly, 0, ',', '.') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Tarif Per Bulan (Termasuk Pajak)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="text" name="sellingrentprice_monthly" id="sellingrentprice_monthly"
+                                        class="form-control"
+                                        value="{{ number_format($room->sellingrentprice_monthly, 0, ',', '.') }}" readonly>
+                                </div>
+                            </div>
+                            {{-- <input type="hidden" name="sellingrentprice_monthly" id="sellingprice_monthly_hidden"> --}}
+                            <div class="col-6">
+                                <label class="form-label">Tarif Per Tahun</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="text" name="rentprice_yearly" id="rentprice_yearly" class="form-control"
+                                        value="{{ number_format($room->rentprice_yearly, 0, ',', '.') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Tarif Per Tahun (Termasuk Pajak)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="text" name="sellingrentprice_yearly" id="sellingrentprice_yearly"
+                                        class="form-control"
+                                        value="{{ number_format($room->sellingrentprice_yearly, 0, ',', '.') }}" readonly>
+                                </div>
+                            </div>
+                            {{-- <input type="hidden" name="sellingrentprice_yearly" id="sellingprice_yearly_hidden"> --}}
 
-                        {{-- <div class="col-12">
+                            <div class="col-12">
+                                <!--begin::Alert-->
+                                <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                                        <!--begin::Title-->
+                                        <h4 class="fw-bold">Spesifikasi Properti</h4>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Alert-->
+                            </div>
+
+                            {{-- <div class="col-12">
                             <!--begin::Alert-->
                             <!--begin::Heading-->
                             <div class="mb-3">
@@ -147,120 +148,121 @@
                             <!--end::Radio group-->
                             <!--end::Alert-->
                         </div> --}}
-                        <div class="col-4">
-                            <label class="form-label">Jumlah Kamar</label>
-                            <div class="input-group">
-                                <input type="number" name="totalroom" id="totalroom" class="form-control"
-                                    value="{{ $room->totalroom }}">
-                                <span class="input-group-text">Kamar</span>
-                            </div>
-
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label">Jumlah Kamar Mandi</label>
-                            <div class="input-group">
-                                <input type="number" name="totalbathroom" id="totalbathroom" class="form-control"
-                                    value="{{ $room->totalbathroom }}">
-                                <span class="input-group-text">Kamar Mandi</span>
-
-                            </div>
-                        </div>
-                        <div class="col-4 mb-6">
-                            <label class="form-label">Luas Properti</label>
-                            <input type="text" name="roomsize" id="roomsize" class="form-control"
-                                value="{{ $room->roomsize }}">
-                        </div>
-                        <div class="col-12">
-                            <!--begin::Alert-->
-                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <!--begin::Title-->
-                                    <h4 class="fw-bold">Room Occupancy Policyze</h4>
-                                    <!--end::Title-->
+                            <div class="col-4">
+                                <label class="form-label">Jumlah Kamar</label>
+                                <div class="input-group">
+                                    <input type="number" name="totalroom" id="totalroom" class="form-control"
+                                        value="{{ $room->totalroom }}">
+                                    <span class="input-group-text">Kamar</span>
                                 </div>
-                                <!--end::Wrapper-->
-                            </div>
-                            <!--end::Alert-->
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Maksimal Penghuni Kamar</label>
-                            <input type="text" name="max_guest" id="guest" class="form-control" value="{{ $room->max_guest }}"
-                                required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Apakah Tersedia Extra Bed pada Kamar Ini?</label>
-                            <!--begin::Radio group-->
-                            <div class="btn-group w-100" data-kt-buttons="true"
-                                data-kt-buttons-target="[data-kt-button]">
-                                <!--begin::Radio-->
-                                <label
-                                    class="btn btn-outline btn-color-muted btn-active-success {{ $room->maxextrabed=='1' ?'active': '' }}"
-                                    data-kt-button="true">
-                                    <!--begin::Input-->
-                                    <input class="btn-check" type="radio" name="maxextrabed" value="1" {{
-                                        $room->maxextrabed=='1' ?'checked': '' }} id="extrabedYaCheckbox" />
-                                    <!--end::Input-->
-                                    Ya, ada
-                                </label>
-                                <!--end::Radio-->
 
-                                <!--begin::Radio-->
-                                <label
-                                    class="btn btn-outline btn-color-muted btn-active-success {{ $room->maxextrabed=='0' ?'active': '' }}"
-                                    data-kt-button="false">
-                                    <!--begin::Input-->
-                                    <input class="btn-check" type="radio" name="maxextrabed" value="0" {{
-                                        $room->maxextrabed=='0' ?'checked': '' }} id="extrabedTidakCheckbox" />
-                                    <!--end::Input--> Tidak Ada
-                                </label>
-                                <!--end::Radio-->
                             </div>
-                        </div>
-                        <div class="col-4 extrabedWidget">
-                            <label class="form-label">Maksimal Extra Bed</label>
-                            <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
-                            value="{{ $room->maxextrabed }}" >
-                        </div>
+                            <div class="col-4">
+                                <label class="form-label">Jumlah Kamar Mandi</label>
+                                <div class="input-group">
+                                    <input type="number" name="totalbathroom" id="totalbathroom" class="form-control"
+                                        value="{{ $room->totalbathroom }}">
+                                    <span class="input-group-text">Kamar Mandi</span>
 
-                        <div class="col-4 extrabedWidget">
-                            <label class="form-label">Biaya Extra Bed</label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="number" name="extrabedprice" id="extrabedprice" class="form-control"
-                                value="{{ $room->extrabedprice }}">
-                            </div>
-                        </div>
-                        <div class="col-4 extrabedWidget">
-                            <label class="form-label">Extra Selling Charge</label>
-                            <div class="input-group">
-                                <span class="input-group-text">Rp.</span>
-                                <input type="number" name="extrabedsellingprice" id="extrabedsellingprice"
-                                    class="form-control" value="{{ $room->extrabed_sellingprice }}" readonly>
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <!--begin::Alert-->
-                            <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                <!--begin::Wrapper-->
-                                <div class="d-flex flex-column pe-0 pe-sm-10">
-                                    <!--begin::Title-->
-                                    <h4 class="fw-bold">Gambar pada ruangan</h4>
-                                    <!--end::Title-->
                                 </div>
-                                <!--end::Wrapper-->
                             </div>
-                            <!--end::Alert-->
-                        </div>
-                        <div class="row-6">
-                            {{-- <label class="form-label">Image</label> --}}
-                            {{-- <input type="file" name="image_1" id="image_1" class="form-control"> --}}
-                            <!--begin::Image input-->
-                            @foreach ($room->hostelroomimage as $image)
+                            <div class="col-4 mb-6">
+                                <label class="form-label">Luas Properti</label>
+                                <input type="text" name="roomsize" id="roomsize" class="form-control"
+                                    value="{{ $room->roomsize }}">
+                            </div>
+                            <div class="col-12">
+                                <!--begin::Alert-->
+                                <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                                        <!--begin::Title-->
+                                        <h4 class="fw-bold">Room Occupancy Policyze</h4>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Alert-->
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Maksimal Penghuni Kamar</label>
+                                <input type="text" name="max_guest" id="guest" class="form-control"
+                                    value="{{ $room->max_guest }}" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label">Apakah Tersedia Extra Bed pada Kamar Ini?</label>
+                                <!--begin::Radio group-->
+                                <div class="btn-group w-100" data-kt-buttons="true"
+                                    data-kt-buttons-target="[data-kt-button]">
+                                    <!--begin::Radio-->
+                                    <label
+                                        class="btn btn-outline btn-color-muted btn-active-success {{ $room->maxextrabed == '1' ? 'active' : '' }}"
+                                        data-kt-button="true">
+                                        <!--begin::Input-->
+                                        <input class="btn-check" type="radio" name="maxextrabed" value="1"
+                                            {{ $room->maxextrabed == '1' ? 'checked' : '' }} id="extrabedYaCheckbox" />
+                                        <!--end::Input-->
+                                        Ya, ada
+                                    </label>
+                                    <!--end::Radio-->
+
+                                    <!--begin::Radio-->
+                                    <label
+                                        class="btn btn-outline btn-color-muted btn-active-success {{ $room->maxextrabed == '0' ? 'active' : '' }}"
+                                        data-kt-button="false">
+                                        <!--begin::Input-->
+                                        <input class="btn-check" type="radio" name="maxextrabed" value="0"
+                                            {{ $room->maxextrabed == '0' ? 'checked' : '' }} id="extrabedTidakCheckbox" />
+                                        <!--end::Input--> Tidak Ada
+                                    </label>
+                                    <!--end::Radio-->
+                                </div>
+                            </div>
+                            <div class="col-4 extrabedWidget">
+                                <label class="form-label">Maksimal Extra Bed</label>
+                                <input type="number" name="maxextrabed" id="maxextrabed" class="form-control"
+                                    value="{{ $room->maxextrabed }}">
+                            </div>
+
+                            <div class="col-4 extrabedWidget">
+                                <label class="form-label">Biaya Extra Bed</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="number" name="extrabedprice" id="extrabedprice" class="form-control"
+                                        value="{{ $room->extrabedprice }}">
+                                </div>
+                            </div>
+                            <div class="col-4 extrabedWidget">
+                                <label class="form-label">Extra Selling Charge</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">Rp.</span>
+                                    <input type="number" name="extrabedsellingprice" id="extrabedsellingprice"
+                                        class="form-control" value="{{ $room->extrabed_sellingprice }}" readonly>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <!--begin::Alert-->
+                                <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
+                                    <!--begin::Wrapper-->
+                                    <div class="d-flex flex-column pe-0 pe-sm-10">
+                                        <!--begin::Title-->
+                                        <h4 class="fw-bold">Gambar pada ruangan</h4>
+                                        <!--end::Title-->
+                                    </div>
+                                    <!--end::Wrapper-->
+                                </div>
+                                <!--end::Alert-->
+                            </div>
+                            <div class="row-6">
+                                {{-- <label class="form-label">Image</label> --}}
+                                {{-- <input type="file" name="image_1" id="image_1" class="form-control"> --}}
+                                <!--begin::Image input-->
+                                @foreach ($room->hostelroomimage as $image)
                                     <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                         <!--begin::Image preview wrapper-->
                                         <div class="image-input-wrapper w-125px h-125px"
-                                            style="background-image: url('{{ asset('storage/' . $image->image) }}')"></div>
+                                            style="background-image: url('{{ asset('storage/' . $image->image) }}')">
+                                        </div>
                                         <!--end::Image preview wrapper-->
 
                                         <!--begin::Edit button-->
@@ -289,29 +291,72 @@
                                         <!--end::Cancel button-->
                                         <!--begin::Remove button-->
                                         <span
-                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                            class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow remove-image"
                                             data-kt-image-input-action="remove" data-bs-toggle="tooltip"
-                                            data-bs-dismiss="click" title="Remove image">
+                                            data-bs-dismiss="click" title="Remove image" data-image-id="{{ $image->id }}">
                                             <i class="ki-outline ki-cross fs-3"></i>
                                         </span>
                                         <!--end::Remove button-->
                                     </div>
                                 @endforeach
+                                @if ($room->hostelroomimage->count() < 5)
+                                    @for ($i = 0; $i < 5 - $room->hostelroomimage->count(); $i++)
+                                        <div class="image-input image-input-outline m-5" data-kt-image-input="true">
+                                            <!--begin::Image preview wrapper-->
+                                            <div class="image-input-wrapper w-125px h-125px"></div>
+                                            <!--end::Image preview wrapper-->
 
-                            <div class="col-12">
-                                <!--begin::Alert-->
-                                <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
-                                    <!--begin::Wrapper-->
-                                    <div class="d-flex flex-column pe-0 pe-sm-10">
-                                        <!--begin::Title-->
-                                        <h4 class="fw-bold">Fasilitas Kamar</h4>
-                                        <!--end::Title-->
+                                            <!--begin::Edit button-->
+                                            <label
+                                                class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                data-bs-dismiss="click" title="Change image">
+                                                <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
+                                                        class="path2"></span></i>
+
+                                                <!--begin::Inputs-->
+                                                <input type="file" name="hostel_room_images[]"
+                                                    accept=".png, .jpg, .jpeg" multiple />
+                                                <input type="hidden" name="image_remove" />
+                                                <!--end::Inputs-->
+                                            </label>
+                                            <!--end::Edit button-->
+
+                                            <!--begin::Cancel button-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                data-bs-dismiss="click" title="Cancel image">
+                                                <i class="ki-outline ki-cross fs-3"></i>
+                                            </span>
+                                            <!--end::Cancel button-->
+
+                                            <!--begin::Remove button-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                data-bs-dismiss="click" title="Remove image">
+                                                <i class="ki-outline ki-cross fs-3"></i>
+                                            </span>
+                                            <!--end::Remove button-->
+                                        </div>
+                                    @endfor
+                                @endif
+
+                                <div class="col-12">
+                                    <!--begin::Alert-->
+                                    <div class="alert bg-light d-flex flex-column flex-sm-row p-3">
+                                        <!--begin::Wrapper-->
+                                        <div class="d-flex flex-column pe-0 pe-sm-10">
+                                            <!--begin::Title-->
+                                            <h4 class="fw-bold">Fasilitas Kamar</h4>
+                                            <!--end::Title-->
+                                        </div>
+                                        <!--end::Wrapper-->
                                     </div>
-                                    <!--end::Wrapper-->
+                                    <!--end::Alert-->
                                 </div>
-                                <!--end::Alert-->
-                            </div>
-                            {{-- <div class="col-6 d-flex justify-content-around">
+                                {{-- <div class="col-6 d-flex justify-content-around">
                                 @foreach ($facility as $item)
                                 <div class="form-check mx-3">
                                     <input class="form-check-input" type="checkbox" name="facility_id[]"
@@ -323,51 +368,50 @@
                                 @endforeach
                             </div> --}}
 
-                            <table class="table table-rounded table-bordered border mt-4 gy-7 gs-7"
-                                id="kt_datatable_zero_configuration_1" style="border: 1px solid rgb(112, 112, 112);">
-                                <thead>
-                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200 ">
-                                        <th class="text-center"></th>
-                                        <th class="text-center">Nama Fasilitas</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($facility as $item)
-                                    <tr>
-                                        <td class="text-center">
-                                            <div class="form-check form-check-lg d-flex justify-content-center">
-                                                <input class="form-check-input " type="checkbox" name="facility_id[]"
-                                                    value="{{ $item->id }}" id="facility{{ $item->id }}" {{
-                                                    (in_array($item->id,
-                                                $room->hostelFacilities->pluck('facility_id')->toArray())) ?
-                                                'checked' : '' }}>
-                                            </div>
-                                        </td>
-                                        <td class="text-center fs-14">{{ $item->name }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                <table class="table table-rounded table-bordered border mt-4 gy-7 gs-7"
+                                    id="kt_datatable_zero_configuration_1" style="border: 1px solid rgb(112, 112, 112);">
+                                    <thead>
+                                        <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200 ">
+                                            <th class="text-center"></th>
+                                            <th class="text-center">Nama Fasilitas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($facility as $item)
+                                            <tr>
+                                                <td class="text-center">
+                                                    <div class="form-check form-check-lg d-flex justify-content-center">
+                                                        <input class="form-check-input " type="checkbox"
+                                                            name="facility_id[]" value="{{ $item->id }}"
+                                                            id="facility{{ $item->id }}"
+                                                            {{ in_array($item->id, $room->hostelFacilities->pluck('facility_id')->toArray()) ? 'checked' : '' }}>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center fs-14">{{ $item->name }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-            </div>
-            <!--end:: Body-->
-            <div class="card-footer d-flex justify-content-between">
-                <button type="submit" class="btn btn-primary me-2 w-50" id="kt_modal_new_target_submit">
-                    Simpan Data
-                </button>
-                 <a href="{{route('partner.management.hostel.setting.room', ['id'=>$hostel->id])}}"
-                    class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
+                </div>
+                <!--end:: Body-->
+                <div class="card-footer d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary me-2 w-50" id="kt_modal_new_target_submit">
+                        Simpan Data
+                    </button>
+                    <a href="{{ route('partner.management.hostel.setting.room', ['id' => $hostel->id]) }}"
+                        class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
 
+                </div>
+                </form>
             </div>
-            </form>
         </div>
     </div>
-</div>
 @endsection
 @push('add-script')
-<script>
-    /* Fungsi formatRupiah */
+    <script>
+        /* Fungsi formatRupiah */
         function formatRupiah(angka, prefix) {
             var number_string = angka.replace(/[^,\d]/g, "").toString(),
                 split = number_string.split(","),
@@ -419,14 +463,14 @@
             $('#sellingrentprice_yearly_hidden').val(sellingprice);
         })
 
-        $("#extrabedprice").keyup(function () {
-                var el = $(this);
-                el.val(formatRupiah(el.val()))
+        $("#extrabedprice").keyup(function() {
+            var el = $(this);
+            el.val(formatRupiah(el.val()))
 
-                var basePrice = parseInt(el.val().split('.').join(""));
-                var sellingPrice = basePrice + (basePrice * 15 / 100);
-                $('#extrabedsellingprice').val(addCommas(sellingPrice));
-            })
+            var basePrice = parseInt(el.val().split('.').join(""));
+            var sellingPrice = basePrice + (basePrice * 15 / 100);
+            $('#extrabedsellingprice').val(addCommas(sellingPrice));
+        })
 
         const extrabedYaCheckbox = document.getElementById('extrabedYaCheckbox');
         const extrabedTidakCheckbox = document.getElementById('extrabedTidakCheckbox');
@@ -465,5 +509,35 @@
                     ">"
             });
         });
+
 </script>
+        <script>
+        $(document).ready(function() {
+            $('.remove-image').on('click', function() {
+                var imageId = $(this).data('image-id');
+                // var confirmation = confirm('Are you sure you want to delete this image?');
+                // if (confirmation) {
+
+                // }
+                $.ajax({
+                    url: '{{ route('delete-image-hostel', ':imageId') }}'.replace(':imageId', imageId),
+                    type: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status === 200) {
+                            $(this).closest('.image-input').remove();
+                        } else {
+                            console.error('Failed to delete image');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+    
 @endpush
