@@ -8,6 +8,7 @@ use App\Models\Facility;
 use App\Models\HostelImage;
 use App\Models\HostelRoom;
 use App\Models\HostelRoomFacility;
+use App\Models\HostelRoomImages;
 use App\Models\HostelRule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -32,13 +33,9 @@ class ManagementHostelController extends Controller
         $hostel = hostel::with('hostelRoom', 'hostelImage', 'Rating', 'hostelRule', 'hostelFacilities')->find($id);
 
         // $avg_rate = DB::table('hostel_ratings')->where('hostel_id', $id)->avg('rate');
-        $avg_rate = DB::table('ratings')
-            ->where('hostel_id', $id)
-            ->avg('rate');
+        $avg_rate = DB::table('ratings')->where('hostel_id', $id)->avg('rate');
 
-        $total_review = DB::table('ratings')
-            ->where('hostel_id', $id)
-            ->count();
+        $total_review = DB::table('ratings')->where('hostel_id', $id)->count();
 
         return view('ekstranet.management-hostel.detail-hostel', compact('hostel', 'avg_rate', 'total_review'));
     }
@@ -95,9 +92,7 @@ class ManagementHostelController extends Controller
         // $facility = Facility::all();
         // $room = HostelRoom::where('hostel_id', $hostel->id)->firstOrFail();
         $hostel = Hostel::find($id); // Mengambil hotel dengan id tertentu
-        $room = hostelRoom::with('hostelFacilities')
-            ->where('id', $room_id)
-            ->first();
+        $room = hostelRoom::with('hostelFacilities')->where('id', $room_id)->first();
         $facility = Facility::all();
 
         return view('ekstranet.management-hostel.setting-room-update', compact('hostel', 'facility', 'room'));
@@ -256,9 +251,7 @@ class ManagementHostelController extends Controller
 
     public function settingRoomShow($hostel_id, $id)
     {
-        $hostelRoom = hostelRoom::where('id', $id)
-            ->where('hostel_id', $hostel_id)
-            ->first();
+        $hostelRoom = hostelRoom::where('id', $id)->where('hostel_id', $hostel_id)->first();
 
         if (!$hostelRoom) {
             return response()->json(['success' => false, 'message' => 'Data Room Tidak Ditemukan', 'data' => null]);
@@ -275,9 +268,7 @@ class ManagementHostelController extends Controller
     public function settingRoomUpdate(Request $request, $id, $room_id)
     {
         // dd($request->all());
-        $hostelRoom = HostelRoom::where('id', $room_id)
-            ->where('hostel_id', $id)
-            ->first();
+        $hostelRoom = HostelRoom::where('id', $room_id)->where('hostel_id', $id)->first();
 
         $facilities = Facility::all();
 
@@ -290,8 +281,8 @@ class ManagementHostelController extends Controller
             'roomsize' => 'required',
             'maxextrabed' => 'nullable',
             'max_guest' => 'required',
-            // 'image' => 'image|max:2048',
-            'hostel_room_images' => 'image|max:2048',
+            'image' => 'image|max:2048',
+            // 'hostel_room_images' => 'image|mimes:jpeg,jpg,png|max:2048',
             'totalroom' => 'required',
             'totalbathroom' => 'required',
             'sellingrentprice_monthly' => 'required',
@@ -305,84 +296,89 @@ class ManagementHostelController extends Controller
 
         $facilityIds = $request->input('facility_id');
 
-        // if ($request->hasFile('hostel_room_images')) {
-        //     $imageFiles = $request->file('hostel_room_images');
-        
-        //     foreach ($hostelRoom->hostelroomimage as $index => $image) {
-        //         if (isset($imageFiles[$index])) {
-        //             Storage::delete('storage/' . $image->image);
-        
-        //             $path = $imageFiles[$index]->store('media/hostel/');
-        //             $filename = basename($path);
-        
-        //             $image->update(['image' => 'media/hostel/' . $filename]);
-        //         }
-        //     }
-        // }
+        if ($request->hostel_room_images != null) {
+            $imageFiles = $request->file('hostel_room_images', []);
 
-        if ($request->hasFile('hostel_room_images')) {
-            foreach ($request->file('hostel_room_images') as $imageFile) {
-                // Simpan gambar baru atau perbarui gambar yang ada
-                $path = $imageFile->store('media/hostel/');
+            foreach ($imageFiles as $index => $imageFile) {
+                $path = $imageFile->store('public/media/hostel/');
                 $filename = basename($path);
-        
-                $existingImage = $hostelRoom->hostelroomimage->where('image', $filename)->first();
-        
-                if ($existingImage) {
-                    // Jika gambar sudah ada, perbarui
-                    Storage::delete('storage/' . $existingImage->image);
-                    $existingImage->update(['image' => 'media/hostel/' . $filename]);
+
+                $imageData = [
+                    'hostel_id' => $id,
+                    'hostel_room_id' => $hostelRoom->id,
+                    'image' => 'media/hostel/' . $filename,
+                ];
+                if (isset($hostelRoom->hostelroomImage[$index])) {
+                    $existingImage = $hostelRoom->hostelroomImage[$index];
+                    Storage::delete('public/' . $existingImage->image);
+                    $existingImage->update($imageData);
                 } else {
-                    // Jika gambar baru, tambahkan
-                    $hostelRoom->hostelroomimage()->create(['image' => 'media/hostel/' . $filename]);
+                    DB::table('hostel_room_images')->insert($imageData);
+                }
+            }
+
+            $hostelRoom->update([
+                'hostel_id' => $request->hostel_id,
+                'name' => $request->name,
+                'rentprice_monthly' => str_replace('.', '', $request->rentprice_monthly),
+                'sellingrentprice_monthly' => $request->sellingrentprice_monthly == null ? 0 : str_replace('.', '', $request->sellingrentprice_monthly),
+                'rentprice_yearly' => str_replace('.', '', $request->rentprice_yearly),
+                'sellingrentprice_yearly' => $request->sellingrentprice_yearly == null ? 0 : str_replace('.', '', $request->sellingrentprice_yearly),
+                'roomsize' => $request->roomsize,
+                'max_guest' => $request->max_guest,
+                'maxextrabed' => $request->maxextrabed,
+                'totalroom' => $request->totalroom,
+                'totalbathroom' => $request->totalbathroom,
+                'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
+                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice),
+            ]);
+
+            DB::table('hostel_room_facilities')
+                ->where('hostel_room_id', $hostelRoom->id)
+                ->delete();
+
+            if ($facilityIds !== null) {
+                foreach ($facilityIds as $facilityId) {
+                    DB::table('hostel_room_facilities')->insert([
+                        'hostel_id' => $request->hostel_id,
+                        'hostel_room_id' => $hostelRoom->id,
+                        'facility_id' => $facilityId,
+                    ]);
+                }
+            }
+        } else {
+            $hostelRoom->update([
+                'hostel_id' => $request->hostel_id,
+                'name' => $request->name,
+                'rentprice_monthly' => str_replace('.', '', $request->rentprice_monthly),
+                'sellingrentprice_monthly' => $request->sellingrentprice_monthly == null ? 0 : str_replace('.', '', $request->sellingrentprice_monthly),
+                'rentprice_yearly' => str_replace('.', '', $request->rentprice_yearly),
+                'sellingrentprice_yearly' => $request->sellingrentprice_yearly == null ? 0 : str_replace('.', '', $request->sellingrentprice_yearly),
+                'roomsize' => $request->roomsize,
+                'max_guest' => $request->max_guest,
+                'maxextrabed' => $request->maxextrabed,
+                'totalroom' => $request->totalroom,
+                'totalbathroom' => $request->totalbathroom,
+                'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice),
+                'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice),
+            ]);
+
+            DB::table('hostel_room_facilities')
+                ->where('hostel_room_id', $hostelRoom->id)
+                ->delete();
+
+            if ($facilityIds !== null) {
+                foreach ($facilityIds as $facilityId) {
+                    DB::table('hostel_room_facilities')->insert([
+                        'hostel_id' => $request->hostel_id,
+                        'hostel_room_id' => $hostelRoom->id,
+                        'facility_id' => $facilityId,
+                    ]);
                 }
             }
         }
-        
-        
-        $hostelRoom->update([
-            'hostel_id' => $request->hostel_id, 
-            'name' => $request->name, 
-            'rentprice_monthly' => str_replace('.', '', $request->rentprice_monthly), 
-            'sellingrentprice_monthly' => $request->sellingrentprice_monthly == null ? 0 : str_replace('.', '', $request->sellingrentprice_monthly), 
-            'rentprice_yearly' => str_replace('.', '', $request->rentprice_yearly), 
-            'sellingrentprice_yearly' => $request->sellingrentprice_yearly == null ? 0 : str_replace('.', '', $request->sellingrentprice_yearly), 
-            'roomsize' => $request->roomsize, 
-            'max_guest' => $request->max_guest, 
-            'maxextrabed' => $request->maxextrabed, 
-            'totalroom' => $request->totalroom, 
-            'totalbathroom' => $request->totalbathroom, 
-            'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice), 
-            'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice)
-        ]);
-        
 
-        DB::table('hostel_room_facilities')
-            ->where('hostel_room_id', $hostelRoom->id)
-            ->delete();
-
-        foreach ($facilityIds as $facilityId) {
-            DB::table('hostel_room_facilities')->insert(['hostel_id' => $request->hostel_id, 'hostel_room_id' => $hostelRoom->id, 'facility_id' => $facilityId]);
-        }
-
-        // if ($facilityIds == null) {
-        //     $hostelRoom->update([
-        //         'hostel_id' => $request->hostel_id, 
-        //         'name' => $request->name,
-        //         'rentprice_monthly' => str_replace('.', '', $request->rentprice_monthly), 
-        //         'sellingrentprice_monthly' => $request->sellingrentprice_monthly == null ? 0 : str_replace('.', '', $request->sellingrentprice_monthly), 
-        //         'rentprice_yearly' => str_replace('.', '', $request->rentprice_yearly), 
-        //         'sellingrentprice_yearly' => $request->sellingrentprice_yearly == null ? 0 : str_replace('.', '', $request->sellingrentprice_yearly), 
-        //         'roomsize' => $request->roomsize, 
-        //         'max_guest' => $request->max_guest, 
-        //         'maxextrabed' => $request->maxextrabed, 
-        //         'totalroom' => $request->totalroom, 
-        //         'totalbathroom' => $request->totalbathroom, 
-        //         'extrabedprice' => $request->extrabedprice == null ? 0 : str_replace('.', '', $request->extrabedprice), 
-        //         'extrabed_sellingprice' => $request->extrabedsellingprice == null ? 0 : str_replace('.', '', $request->extrabedsellingprice)]);
-        // } 
         $updatedData = $hostelRoom->fresh();
-        // Ambil fasilitas yang diperbarui
         $updatedFacilities = DB::table('hostel_room_facilities')
             ->where('hostel_room_id', $updatedData->id)
             ->get();
@@ -393,8 +389,20 @@ class ManagementHostelController extends Controller
             ->with(['success' => true, 'message' => 'Data HostelRoom Berhasil Diupdate!', 'data' => ['updatedData' => $updatedData, 'facilities' => $facilities, 'updatedFacilities' => $updatedFacilities]]);
     }
 
-  
+    public function deleteImage($imageId)
+    {
+        $image = HostelRoomImages::find($imageId);
 
+        if ($image) {
+            Storage::delete('public/' . $image->image);
+
+            $image->delete();
+
+            return response()->json(['message' => 'Image deleted successfully'], 200);
+        }
+
+        return response()->json(['error' => 'Image not found'], 404);
+    }
 
     public function settingRoomDelete(string $id)
     {

@@ -109,7 +109,7 @@ class HotelController extends Controller
                 'star_rating'   => floor($resultRating),
             ];
         }
-
+        
         $data['hotels']       = $hotels;
         $data['hotelDetails'] = $hotelDetails;
         $data['request'] = $request->all();

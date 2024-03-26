@@ -122,7 +122,6 @@ class ManagementHotelController extends Controller
         $hotel = Hotel::with('hotelRoom')->find($id); // Mengambil hotel dengan id tertentu
         $room = hotelRoom::with('hotelroomFacility')->where('id', $room_id)->first();
         $facility = Facility::all();
-        // $room = hotelRoom::where('hotel_id', $id)->first();
         return view('ekstranet.management-hotel.setting-room-update', compact('hotel', 'facility', 'room'));
     }
 
@@ -186,7 +185,6 @@ class ManagementHotelController extends Controller
             ]);
         }
 
-        //Ini untuk pemberitahuan
         toast('HotelRoom berhasil dibuat', 'success');
         return redirect()->route('partner.management.hotel.setting.room', ['id' => $request->hotel_id]);
     }
@@ -200,7 +198,6 @@ class ManagementHotelController extends Controller
     {
 
         $image = $request->file('image')->store('media/hotel');
-        // dd($image);
         HotelImage::create([
             'hotel_id' => $id,
             'image' => $image,
@@ -291,7 +288,7 @@ class ManagementHotelController extends Controller
     //ini aksi untuk update
     public function settingRoomUpdate(Request $request, $hotel_id, $id)
     {
-        // dd($id);
+        // dd($request->all());
         $hotelRoom = HotelRoom::where('id', $id)
             ->where('hotel_id', $hotel_id)
             ->first();
@@ -343,11 +340,11 @@ class ManagementHotelController extends Controller
 
 
 
-        if ($request->hasFile('hotel_room_images')) {
+        if ($request->hotel_room_images != null) {
             $imageFiles = $request->file('hotel_room_images',[]);
 
             foreach ($imageFiles as $index => $imageFile) {
-                $path = $imageFile->store('media/hotel/');
+                $path = $imageFile->store('public/media/hotel/');
                 $filename = basename($path);
     
                 $imageData = [
@@ -355,7 +352,6 @@ class ManagementHotelController extends Controller
                     'hotel_room_id' => $hotelRoom->id,
                     'image' => 'media/hotel/' . $filename,
                 ];
-    
                 if (isset($hotelRoom->hotelroomimage[$index])) {
                     $existingImage = $hotelRoom->hotelroomimage[$index];
                     Storage::delete('public/' . $existingImage->image);
@@ -444,6 +440,18 @@ class ManagementHotelController extends Controller
                 'updatedFacilities' => $updatedFacilities,
             ]
         ]);
+    }
+
+    public function deleteImage($imageId)
+    {
+        $image = HotelRoomImage::find($imageId);
+        if ($image) {
+            Storage::delete('public/' . $image->image);
+            $image->delete();
+            return response()->json(['message' => 'Image deleted successfully'], 200);
+        }
+
+        return response()->json(['error' => 'Image not found'], 404);
     }
 
     public function settingRoomDelete(string $id)

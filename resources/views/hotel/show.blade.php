@@ -243,8 +243,8 @@
                                             </div>
                                             <p style="font-size: 13px">{{ $detailHotel->address }}</p>
 
-                                            <div id="bintang " class="mb-1">
-                                                @for ($j = 0; $j <= $star_rating; $j++)
+                                            <div id="bintang" class="mb-1">
+                                                @for ($i = 1; $i <= $detailHotel->star; $i++)
                                                     <span class="card-text fa fa-star" style="color: orange;"></span>
                                                 @endfor
                                             </div>
