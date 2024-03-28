@@ -20,6 +20,12 @@ class AdController extends Controller
         try {
             $ads = Ad::where('is_active', 1)->get();
 
+//            $ads->transform(function ($ad) {
+//                $ad->image = 'storage' . $ad->image;
+//                return $ad;
+//            });
+
+
             if (count($ads)) {
                 return ResponseFormatter::success($ads, 'Data successfully loaded');
             } else {
