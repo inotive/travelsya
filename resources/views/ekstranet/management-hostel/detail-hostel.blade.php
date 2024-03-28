@@ -69,7 +69,7 @@
                                             <div class="d-flex flex-wrap">
                                                 <!--begin::Stat-->
                                                 <a href="#"
-                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hostel->description }}</a>
+                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hostel->website }}</a>
 
                                                 <!--end::Stat-->
                                             </div>

@@ -93,7 +93,7 @@
                                             <div class="d-flex flex-wrap">
                                                 <!--begin::Stat-->
                                                 <a href="#"
-                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hotel->description }}</a>
+                                                    class="text-gray-900 text-hover-primary fs-5 fw-bold me-1">{{ $hotel->website }}</a>
 
                                                 <!--end::Stat-->
                                             </div>

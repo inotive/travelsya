@@ -256,11 +256,11 @@ class HotelController extends Controller
                 //     ];
                 // });
 
-                $hotel_facilities = $hotel->hotelroomFacility->groupBy('facility.name')->map(function ($group) {
+                $hotel_facilities = $hotel->hotelroomFacility->unique('facility_id')->map(function ($group) {
                     return [
-                        'id' => $group->first()->facility_id,
-                        'name' => $group->first()->facility->name,
-                        'image' => 'storage/' . $group->first()->facility->icon,
+                        'id' => $group->facility_id,
+                        'name' => $group->facility->name,
+                        'image' => 'storage/' . $group->facility->icon,
                     ];
                 });
                 
