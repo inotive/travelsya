@@ -346,9 +346,8 @@
                     <button type="submit" class="btn btn-primary w-50" id="kt_modal_new_target_submit">
                         Simpan Data
                     </button>
-                    {{-- <a href="{{route('partner.management.hotel.setting.room', ['id'=>$hotel->id])}}"
-                    class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
-                --}}
+                    <a href="{{ route('partner.management.hotel.setting.room', ['id' => $hotel->id]) }}"
+                       class="btn btn-outline btn-outline btn-outline-secondary me-3 text-dark btn-active-light-secondary w-50">Back</a>
                 </div>
                 </form>
             </div>
