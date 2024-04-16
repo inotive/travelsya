@@ -34,19 +34,28 @@
                     </thead>
                     <tbody>
                         @foreach ($hostels as $hostel)
-
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td class="text-center">
-                                    <img src="{{asset('storage/'. $hostel->image)}}" alt="" style="width: 25px; height: 25px;">
+                                    <img src="{{ $hostel->image != null ? asset('storage/' . $hostel->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
+                                        style="width: 25px; height: 25px;">
                                     {{ $hostel->user_name }}
 
                                 </td>
                                 <td class="text-center">{{ $hostel->name }}</td>
                                 <td class="text-center">{{ $hostel->city }}</td>
                                 <td class="text-center">{{ $hostel->address }}</td>
-                                <td class="text-center"><a href="{{ $hostel->website }}" target="_blank">LINK WEBSITE</a>
-                                </td>
+                                @if ($hostel->website == '' || $hostel->website == null || $hostel->website == '-' || $hostel->website == '--' || $hostel->website == 'Belum Ada' || $hostel->website == 'belum ada' || $hostel->website == 'Belum ada')
+                                    <td class="text-center">
+                                        <span>Link Website</span>
+
+                                    </td>
+                                @else
+                                    <td class="text-center">
+                                        <a href="{{ $hostel->website }}" target="_blank">Link Website</a>
+                                    </td>
+                                @endif
+                             
                                 <td class="text-center"><span class="badge badge-warning">{{ $hostel->star }} Bintang</span>
                                 </td>
 
@@ -54,9 +63,9 @@
 
                                 <td class="text-center">
                                     @if ($hostel->is_active)
-                                    <span class="badge badge-success">Aktif</span>
+                                        <span class="badge badge-success">Aktif</span>
                                     @else
-                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                        <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
 
@@ -681,7 +690,6 @@
     </div>
 
     @push('add-script')
-
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({

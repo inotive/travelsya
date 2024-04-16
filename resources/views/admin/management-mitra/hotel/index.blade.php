@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Daftar Hotel', 'url' => ''])
+@extends('admin.layout', ['title' => 'Daftar Hotel', 'url' => ''])
 
 @section('content-admin')
     <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
@@ -21,74 +21,85 @@
                 <!--begin::Table-->
 
                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                       id="kt_datatable_zero_configuration">
+                    id="kt_datatable_zero_configuration">
                     <thead>
-                    <tr class="fw-bold fs-6 text-gray-800 ">
-                        <th class="text-center">No.</th>
-                        <th class="text-center">Mitra</th>
-                        <th class="text-center">Hotel</th>
-                        <th class="text-center">Kota</th>
-                        <th class="text-center">Alamat</th>
-                        <th class="text-center">Website</th>
-                        <th class="text-center">Bintang</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
+                        <tr class="fw-bold fs-6 text-gray-800 ">
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Mitra</th>
+                            <th class="text-center">Hotel</th>
+                            <th class="text-center">Kota</th>
+                            <th class="text-center">Alamat</th>
+                            <th class="text-center">Website</th>
+                            <th class="text-center">Bintang</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach ($hotels as $hotel)
-                        <tr id="index_{{ $hotel->id }}">
-                            <td>{{ $loop->iteration }}</td>
-                            <td class="text-center">
-                                <img src="{{asset('storage/'. $hotel->image)}}" alt="" style="width: 25px; height: 25px;">
-                                {{ $hotel->user_name }}
-                            </td>
-                            <td class="text-center">{{ $hotel->name }}</td>
-                            <td class="text-center">{{ $hotel->city }}</td>
-                            <td class="text-center">{{ $hotel->address }}</td>
-                            <td class="text-center"><a href="{{ $hotel->website }}" target="_blank">Link Website</a>
-                            </td>
-                            <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }} Bintang</span>
-                            </td>
-                            <td class="text-center">
+                        @foreach ($hotels as $hotel)
+                            <tr id="index_{{ $hotel->id }}">
+                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">
+                                    <img src="{{ $hotel->image != null ? asset('storage/' . $hotel->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
+                                        style="width: 25px; height: 25px;">
+                                    {{ $hotel->user_name }}
+                                </td>
+                                <td class="text-center">{{ $hotel->name }}</td>
+                                <td class="text-center">{{ $hotel->city }}</td>
+                                <td class="text-center">{{ $hotel->address }}</td>
+                                @if ($hotel->website == '' || $hotel->website == null || $hotel->website == '-'  || $hotel->website == '--')
+                                    <td class="text-center">
+                                        <span>Link Website</span>
 
-                                @if ($hotel->is_active)
-                                    <span class="badge badge-success">Aktif</span>
+                                    </td>
                                 @else
-                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                <td class="text-center">
+                                    <a href="{{ $hotel->website }}" target="_blank">Link Website</a>
+                                </td>
+
                                 @endif
-                            </td>
-                            <td class="text-center">
-                                <div
-                                    class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                    data-kt-menu="true" style="">
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" class="menu-link px-3 text-warning"
-                                           id="tombol-edit" data-id="{{ $hotel->id }}" data-bs-toggle="modal">
-                                            Edit
-                                        </a>
+                                <td class="text-center"><span class="badge badge-warning">{{ $hotel->star }}
+                                        Bintang</span>
+                                </td>
+                                <td class="text-center">
+
+                                    @if ($hotel->is_active)
+                                        <span class="badge badge-success">Aktif</span>
+                                    @else
+                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                    @endif
+                                </td>
+                                <td class="text-center">
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                        data-kt-menu="true" style="">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" class="menu-link px-3 text-warning"
+                                                id="tombol-edit" data-id="{{ $hotel->id }}" data-bs-toggle="modal">
+                                                Edit
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $hotel->id }}"
+                                                data-bs-toggle="modal" class="menu-link px-3 text-danger">
+                                                Delete
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
                                     </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:void(0)" id="tombol-delete" data-id="{{ $hotel->id }}"
-                                           data-bs-toggle="modal" class="menu-link px-3 text-danger">
-                                            Delete
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                                <!--begin::Menu-->
-                                <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                   data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                    Aksi
-                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                </a>
-                                <!--end::Menu-->
-                            </td>
-                        </tr>
-                    @endforeach
+                                    <!--begin::Menu-->
+                                    <a href="#"
+                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                        Aksi
+                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                    </a>
+                                    <!--end::Menu-->
+                                </td>
+                            </tr>
+                        @endforeach
 
 
                     </tbody>
@@ -111,8 +122,7 @@
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
             <!--begin:Form-->
-            <form id="kt_modal_new_target_form" class="form" method="post"
-                  action="{{route('admin.hotel.store')}}">
+            <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('admin.hotel.store') }}">
                 @csrf
                 <!--begin::Modal content-->
                 <div class="modal-content">
@@ -138,25 +148,25 @@
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                 <input class="form-control form-control-lg" id="name" placeholder="Masukan nama hotel"
-                                       name="name" required/>
+                                    name="name" required />
 
                                 @error('name')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                                 <select class="form-control" id="user_id" name="user_id">
-                                    @foreach($users as $user)
-                                        <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('user_id')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                                 <input type="hidden" value="1">
                             </div>
@@ -168,32 +178,32 @@
                                     <option value="Banjarmasin">Banjarmasin</option>
                                 </select>
                                 @error('city')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"
-                                          required></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="website" class="form-label">Website</label>
                                 <input type="text" id="website" name="website" class="form-control"
-                                       placeholder="Masukan website" required>
+                                    placeholder="Masukan website" required>
                             </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Bintang</label>
 
                                 <!--begin::Radio group-->
                                 <div class="btn-group w-100" data-kt-buttons="true"
-                                     data-kt-buttons-target="[data-kt-button]">
+                                    data-kt-buttons-target="[data-kt-button]">
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success"
-                                           data-kt-button="true">
+                                        data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="1" required/>
+                                        <input class="btn-check" type="radio" name="star" id="star"
+                                            value="1" required />
                                         <!--end::Input-->
                                         1
                                     </label>
@@ -201,10 +211,10 @@
 
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success active"
-                                           data-kt-button="true">
+                                        data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" checked="checked"
-                                               value="2"/>
+                                        <input class="btn-check" type="radio" name="star" id="star"
+                                            checked="checked" value="2" />
                                         <!--end::Input-->
                                         2
                                     </label>
@@ -212,9 +222,10 @@
 
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success"
-                                           data-kt-button="true">
+                                        data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="3"/>
+                                        <input class="btn-check" type="radio" name="star" id="star"
+                                            value="3" />
                                         <!--end::Input-->
                                         3
                                     </label>
@@ -222,18 +233,20 @@
 
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success"
-                                           data-kt-button="true">
+                                        data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="4"/>
+                                        <input class="btn-check" type="radio" name="star" id="star"
+                                            value="4" />
                                         <!--end::Input-->
                                         4
                                     </label>
                                     <!--end::Radio-->
                                     <!--begin::Radio-->
                                     <label class="btn btn-outline btn-color-muted btn-active-success"
-                                           data-kt-button="true">
+                                        data-kt-button="true">
                                         <!--begin::Input-->
-                                        <input class="btn-check" type="radio" name="star" id="star" value="5"/>
+                                        <input class="btn-check" type="radio" name="star" id="star"
+                                            value="5" />
                                         <!--end::Input-->
                                         5
                                     </label>
@@ -254,7 +267,7 @@
                             <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
                                 <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
                             </button>
                         </div>
                         <!--end::Actions-->
@@ -267,19 +280,17 @@
         <!--end::Modal dialog-->
     </div>
     <!--end::Modal - New Target-->
-
 @endsection
 @push('add-script')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
-                "dom":
-                    "<'row'" +
+                "dom": "<'row'" +
                     "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
@@ -293,5 +304,4 @@
             });
         });
     </script>
-
 @endpush
