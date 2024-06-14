@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('hostel_room_facilities', function (Blueprint $table) {
-            $table->foreignId('facility_id');
+        Schema::create('car_models', function (Blueprint $table) {
+            $table->id();
+
+            $table->string('name');
+
+            $table->timestamps();
         });
     }
 
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hostel_room_facilities', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('car_models');
     }
 };

@@ -11,14 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hotel_ratings', function (Blueprint $table) {
+        Schema::create('specialists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('hotel_id')->constrained();
-            $table->integer('rate');
-            $table->string('comment')->nullable();
-            $table->softDeletes();
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -28,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hotel_ratings');
+        Schema::dropIfExists('specialist');
     }
 };

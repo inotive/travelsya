@@ -1,3 +1,13 @@
+
+@php
+    
+    function getActiveMitraLink() {
+        return Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  || Route::currentRouteName()=='admin.klinik-kecantikan.index' || Route::currentRouteName()=='admin.rental-mobil.index';
+    }
+
+@endphp
+
+
 <style>
 
     .main-accordion {
@@ -209,24 +219,24 @@
                 </a>
                 <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    @if (Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index')
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} "  style="background-color: white;">
+                    @if (getActiveMitraLink())
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ getActiveMitraLink()  ? 'here show' : '' }} "  style="background-color: white;">
                     @else
-                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'here show' : '' }} ">
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ getActiveMitraLink()  ? 'here show' : '' }} ">
                     @endif
                     
                         <!--begin:Menu link-->
 
                        
-                            <span class="menu-link {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}">
-                            <span class="menu-icon {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}">
+                            <span class="menu-link {{ getActiveMitraLink()  ? 'main-accordion' : '' }}">
+                            <span class="menu-icon {{ getActiveMitraLink()  ? 'main-accordion' : '' }}">
                                  <i class="fas fa-users fs-3">
                                     <span class="path1"></span>
                                     <span class="path2"></span>
                                 </i>
                             </span>
 
-                            @if (Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index')
+                            @if (getActiveMitraLink())
                                 <span class="menu-title main-accordion" style="color: white !important;">Mitra</span>
                             @else
                                 <span class="menu-title custom">Mitra</span>
@@ -234,7 +244,7 @@
 
 
                           
-                            <span class="menu-arrow {{ Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  ? 'main-accordion' : '' }}"></span>
+                            <span class="menu-arrow {{ getActiveMitraLink()  ? 'main-accordion' : '' }}"></span>
                         
                     </span>
                         <!--end:Menu link-->
@@ -312,6 +322,55 @@
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
+
+                            <div class="menu-item initial menu-hover">
+                                <!--begin:Menu link-->
+
+                                @if (Route::currentRouteName()=='admin.klinik-kecantikan.index')
+                                    <a class="menu-link" href="{{route('admin.klinik-kecantikan.index')}}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                            <span class="menu-title" style="color: white !important;">Klinik Kecantikan</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{route('admin.klinik-kecantikan.index')}}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                            <span class="menu-title custom">Klinik Kecantikan</span>
+                                    </a>
+                                @endif
+
+                          
+                                
+                                <!--end:Menu link-->
+                            </div>
+
+                            <div class="menu-item initial menu-hover">
+                                <!--begin:Menu link-->
+
+                                @if (Route::currentRouteName()=='admin.rental-mobil.index')
+                                    <a class="menu-link" href="{{route('admin.rental-mobil.index')}}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                            <span class="menu-title" style="color: white !important;">Rental Mobil</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{route('admin.rental-mobil.index')}}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                            <span class="menu-title custom">Rental Mobil</span>
+                                    </a>
+                                @endif
+
+                          
+                                
+                                <!--end:Menu link-->
+                            </div>
+
                         </div>
                         <!--end:Menu sub-->
                     </div>
