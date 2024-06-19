@@ -21,6 +21,9 @@ class DatabaseSeeder extends Seeder
             // TransactionSeeder::class, 
             SpecialistSeeder::class,
             CategoriesServicesSeeder::class,
+            CategoryRecreationSeeder::class,
+            ProvinceSeeder::class,
+            CitySeeder::class,
         ]);
     }
 }

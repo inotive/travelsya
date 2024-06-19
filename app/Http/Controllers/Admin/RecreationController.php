@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\CarRental;
+use App\Models\Recreation;
+use App\Models\City;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class CarRentalController extends Controller
+class RecreationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,18 +21,20 @@ class CarRentalController extends Controller
         ->where('role', 1)
         ->get();
 
-        $car_rentals = DB::table('car_rentals')
-        ->join('users', 'car_rentals.user_id', '=', 'users.id')
+        $recreations = DB::table('recreations')
+        ->join('users', 'recreations.user_id', '=', 'users.id')
         ->select(
-            'car_rentals.id as car_rental_id', 
-            'car_rentals.*', 
+            'recreations.id as recreation_id', 
+            'recreations.*', 
             'users.id as user_id', 
             'users.*'
         )
         ->get();
 
+        $cities = City::all();
 
-        return view('admin.management-mitra.rental-mobil.index', compact('users', 'car_rentals'));
+
+        return view('admin.management-mitra.rekreasi.index', compact('users', 'recreations', 'cities'));
     }
 
     /**
@@ -59,7 +62,7 @@ class CarRentalController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        DB::table('car_rentals')->insert([
+        DB::table('recreations')->insert([
             'business_name' => ucwords($request->name),
             'user_id' => $request->user_id,
             'city' => $request->city,
@@ -77,13 +80,13 @@ class CarRentalController extends Controller
      */
     public function show(string $id)
     {
-        $car_rental = CarRental::findOrFail($id);
+        $recreation = Recreation::findOrFail($id);
 
 
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Post',
-            'data'    =>  $car_rental
+            'data'    =>  $recreation
         ]);
     }
 
@@ -114,8 +117,8 @@ class CarRentalController extends Controller
         }
 
 
-        $car_rental = CarRental::findOrFail($id);
-        $car_rental->update([
+        $recreation = Recreation::findOrFail($id);
+        $recreation->update([
             'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
             'city' => $request->city,
@@ -129,7 +132,7 @@ class CarRentalController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
-            'data'    => $car_rental
+            'data'    => $recreation
         ]);
     }
 
@@ -138,8 +141,8 @@ class CarRentalController extends Controller
      */
     public function destroy(string $id)
     {
-        $car_rental = CarRental::findOrFail($id);
-        $car_rental->delete();
+        $recreation = Recreation::findOrFail($id);
+        $recreation->delete();
 
         toast('Mitra has been deleted', 'success');
         return redirect()->back();

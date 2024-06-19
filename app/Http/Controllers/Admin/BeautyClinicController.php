@@ -101,6 +101,7 @@ class BeautyClinicController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
@@ -114,17 +115,24 @@ class BeautyClinicController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        DB::table('clinics')->where('id', $id)->update([
-            'clinic_name' => ucwords($request->name),
+
+        $clinic = Clinic::findOrFail($id);
+        $clinic->update([
             'user_id' => $request->user_id,
+            'clinic_name' => ucwords($request->name),
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
-            'is_active' => 1,
+            'is_active' => $request->is_active,
         ]);
 
+    
         toast('Mitra has been updated', 'success');
-        return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diudapte!',
+            'data'    => $clinic
+        ]);
     }
 
     /**

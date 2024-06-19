@@ -53,9 +53,9 @@
                               <td class="text-center">{{ $rental->phone }}</td>
                              
                               <td class="text-center">
-                                  @if ($rental->is_active)
+                                  @if ($rental->is_active === 1)
                                       <span class="badge badge-success">Aktif</span>
-                                  @else
+                                  @elseif ($rental->is_active === 0)
                                       <span class="badge badge-danger">Tidak Aktif</span>
                                   @endif
                               </td>
@@ -66,7 +66,7 @@
                                       <!--begin::Menu item-->
                                       <div class="menu-item px-3">
                                           <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
-                                              class="menu-link px-3 text-warning" id="btn-edit-post"
+                                              class="menu-link px-3 text-warning" id="btn-edit-rental"
                                               data-id="{{ $rental->car_rental_id }}">
                                               Edit
                                           </a>
@@ -121,7 +121,7 @@
                               </div>
                           </div>
                       @endforeach
-                      @include('admin.management-mitra.klinik-kecantikan.edit')
+                      @include('admin.management-mitra.rental-mobil.edit')
 
           
                   </tbody>
@@ -175,7 +175,7 @@
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                 <input class="form-control form-control-lg" id="name"
-                                    placeholder="Masukan nama klinik" name="name" required />
+                                    placeholder="Masukan nama usaha" name="name" required />
 
                                 @error('name')
                                     <span class="text-danger mt-1" role="alert">

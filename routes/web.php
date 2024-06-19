@@ -229,12 +229,8 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::put('/put-hostel', [HostelController::class, 'updateAjax'])->name('hostel.update.ajax');
 
                 Route::resource('klinik-kecantikan', \App\Http\Controllers\Admin\BeautyClinicController::class);
-                Route::get('klinik-kecantikan/{klinik}', [\App\Http\Controllers\Admin\BeautyClinicController::class, 'show'])->name('klinik-kecantikan.show');
-                Route::put('klinik-kecantikan/{klinik}', [\App\Http\Controllers\Admin\BeautyClinicController::class, 'update'])->name('klinik-kecantikan.update');
-
-
                 Route::resource('rental-mobil', \App\Http\Controllers\Admin\CarRentalController::class);
-
+                Route::resource('rekreasi', \App\Http\Controllers\Admin\RecreationController::class);
 
             });
 

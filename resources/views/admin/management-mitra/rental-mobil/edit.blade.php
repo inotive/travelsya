@@ -29,7 +29,7 @@
               <!--end::Heading-->
               <!--begin::Input group-->
               <div class="g-9 mb-8 row">
-                <input type="hidden" id="clinic_id" value="">
+                <input type="hidden" id="rental_id" value="">
                   <div class="col-md-12">
                       <label class="required fs-6 fw-semibold mb-2">Nama</label>
                       <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
@@ -130,16 +130,16 @@
 <script>
 
 $(document).ready(function() {
-    $('body').on('click', '#btn-edit-clinic', function() {
-        let clinic_id = $(this).data('id');
+    $('body').on('click', '#btn-edit-rental', function() {
+        let rental_id = $(this).data('id');
     
         $.ajax({
-            url: `/admin/management-mitra/klinik-kecantikan/${clinic_id}`,
+            url: `/admin/management-mitra/rental-mobil/${rental_id}`,
             type: "GET",
             cache: false,
             success: function(response) {
-                $('#clinic_id').val(response.data.id);
-                $('#name-edit').val(response.data.clinic_name);
+                $('#rental_id').val(response.data.id);
+                $('#name-edit').val(response.data.business_name);
                 $('#user_id-edit').val(response.data.user_id);
                 $('#is_active-edit').val(response.data.is_active);
                 $('#address-edit').val(response.data.address);
@@ -158,7 +158,7 @@ $(document).ready(function() {
 
     
     //define variable
-    let clinic_id = $('#clinic_id').val();
+    let rental_id = $('#rental_id').val();
     let user_id = $('#user_id-edit').val();
     let name = $('#name-edit').val();
     let is_active = $('#is_active-edit').val();
@@ -171,7 +171,7 @@ $(document).ready(function() {
 
     //ajax
     $.ajax({
-        url: `/admin/management-mitra/klinik-kecantikan/${clinic_id}`,
+        url: `/admin/management-mitra/rental-mobil/${rental_id}`,
         type: "PUT",
         cache: false,
         data: {
