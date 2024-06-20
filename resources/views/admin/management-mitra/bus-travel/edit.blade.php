@@ -1,5 +1,5 @@
  <!--begin::Modal - New Target-->
-<div class="modal fade" id="modal-edit" tabindex="-1" aria-hidden="true">
+ <div class="modal fade" id="modal-edit" tabindex="-1" aria-hidden="true">
   <!--begin::Modal dialog-->
   <div class="modal-dialog modal-dialog-centered mw-650px">
       <!--begin::Modal content-->
@@ -29,7 +29,7 @@
               <!--end::Heading-->
               <!--begin::Input group-->
               <div class="g-9 mb-8 row">
-                <input type="hidden" id="recreation_id" value="">
+                <input type="hidden" id="bus_travel_id" value="">
                   <div class="col-md-12">
                       <label class="required fs-6 fw-semibold mb-2">Nama</label>
                       <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
@@ -88,6 +88,7 @@
                         <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                         @endforeach
                     </select>
+
                     @error('city')
                         <span class="text-danger mt-1" role="alert">
                             <strong>{{ $message }}</strong>
@@ -135,14 +136,14 @@
 
 $(document).ready(function() {
     $('body').on('click', '#btn-edit-rental', function() {
-        let recreation_id = $(this).data('id');
+        let bus_travel_id = $(this).data('id');
     
         $.ajax({
-            url: `/admin/management-mitra/rekreasi/${recreation_id}`,
+            url: `/admin/management-mitra/bus-travel/${bus_travel_id}`,
             type: "GET",
             cache: false,
             success: function(response) {
-                $('#recreation_id').val(response.data.id);
+                $('#bus_travel_id').val(response.data.id);
                 $('#name-edit').val(response.data.business_name);
                 $('#user_id-edit').val(response.data.user_id);
                 $('#is_active-edit').val(response.data.is_active);
@@ -165,7 +166,7 @@ $(document).ready(function() {
 
     
     //define variable
-    let recreation_id = $('#recreation_id').val();
+    let bus_travel_id = $('#bus_travel_id').val();
     let user_id = $('#user_id-edit').val();
     let name = $('#name-edit').val();
     let is_active = $('#is_active-edit').val();
@@ -178,7 +179,7 @@ $(document).ready(function() {
 
     //ajax
     $.ajax({
-        url: `/admin/management-mitra/rekreasi/${recreation_id}`,
+        url: `/admin/management-mitra/bus-travel/${bus_travel_id}`,
         type: "PUT",
         cache: false,
         data: {

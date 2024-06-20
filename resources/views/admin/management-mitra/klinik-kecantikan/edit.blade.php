@@ -83,7 +83,11 @@
 
                   <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Kota</label>
-                    <input type="text" class="form-control form-control-lg city-edit" id="city-edit" required />
+                    <select class="js-example-basic-single form-control form-control-lg city-edit" name="city" id="city-edit">
+                        @foreach ($cities as $city)
+                        <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                        @endforeach
+                    </select>
                     @error('city')
                         <span class="text-danger mt-1" role="alert">
                             <strong>{{ $message }}</strong>
@@ -143,7 +147,10 @@ $(document).ready(function() {
                 $('#user_id-edit').val(response.data.user_id);
                 $('#is_active-edit').val(response.data.is_active);
                 $('#address-edit').val(response.data.address);
+
                 $('#city-edit').val(response.data.city);
+                $('#city-edit').trigger('change');
+                
                 $('#phone-edit').val(response.data.phone);
             
                 $('#modal-edit').modal('show');

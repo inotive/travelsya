@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\CarRental;
+use App\Models\BusTravels;
 use App\Models\City;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class CarRentalController extends Controller
+class BusTravelController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,12 +21,13 @@ class CarRentalController extends Controller
         ->where('role', 1)
         ->get();
 
-        $car_rentals = DB::table('car_rentals')
-        ->join('users', 'car_rentals.user_id', '=', 'users.id')
-        ->join('cities', 'car_rentals.city', '=', 'cities.city_id')
+    
+        $bus_travels = DB::table('bus_travels')
+        ->join('users', 'bus_travels.user_id', '=', 'users.id')
+        ->join('cities', 'bus_travels.city', '=', 'cities.city_id')
         ->select(
-            'car_rentals.id as car_rental_id', 
-            'car_rentals.*', 
+            'bus_travels.id as bus_travel_id', 
+            'bus_travels.*', 
             'users.id as user_id', 
             'users.*',
             'cities.city_id as city_id',
@@ -35,11 +36,9 @@ class CarRentalController extends Controller
         )
         ->get();
 
-
         $cities = City::all();
 
-
-        return view('admin.management-mitra.rental-mobil.index', compact('users', 'car_rentals', 'cities'));
+        return view('admin.management-mitra.bus-travel.index', compact('users', 'bus_travels', 'cities'));
     }
 
     /**
@@ -67,7 +66,7 @@ class CarRentalController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        DB::table('car_rentals')->insert([
+        DB::table('bus_travels')->insert([
             'business_name' => ucwords($request->name),
             'user_id' => $request->user_id,
             'city' => $request->city,
@@ -85,13 +84,13 @@ class CarRentalController extends Controller
      */
     public function show(string $id)
     {
-        $car_rental = CarRental::findOrFail($id);
+        $bus_travel = BusTravels::findOrFail($id);
 
 
         return response()->json([
             'success' => true,
             'message' => 'Detail Data Post',
-            'data'    =>  $car_rental
+            'data'    =>  $bus_travel
         ]);
     }
 
@@ -122,8 +121,8 @@ class CarRentalController extends Controller
         }
 
 
-        $car_rental = CarRental::findOrFail($id);
-        $car_rental->update([
+        $bus_travel = BusTravels::findOrFail($id);
+        $bus_travel->update([
             'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
             'city' => $request->city,
@@ -137,7 +136,7 @@ class CarRentalController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Data Berhasil Diudapte!',
-            'data'    => $car_rental
+            'data'    => $bus_travel
         ]);
     }
 
@@ -146,8 +145,8 @@ class CarRentalController extends Controller
      */
     public function destroy(string $id)
     {
-        $car_rental = CarRental::findOrFail($id);
-        $car_rental->delete();
+        $bus_travel = BusTravels::findOrFail($id);
+        $bus_travel->delete();
 
         toast('Mitra has been deleted', 'success');
         return redirect()->back();

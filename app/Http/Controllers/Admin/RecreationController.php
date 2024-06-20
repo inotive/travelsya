@@ -23,11 +23,15 @@ class RecreationController extends Controller
 
         $recreations = DB::table('recreations')
         ->join('users', 'recreations.user_id', '=', 'users.id')
+        ->join('cities', 'recreations.city', '=', 'cities.city_id')
         ->select(
             'recreations.id as recreation_id', 
             'recreations.*', 
             'users.id as user_id', 
-            'users.*'
+            'users.*',
+            'cities.city_id as city_id',
+            'cities.image as city_image', 
+            'cities.*'
         )
         ->get();
 

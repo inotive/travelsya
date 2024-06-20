@@ -37,7 +37,7 @@
                               <td>{{ $loop->iteration }}</td>
                             
                               <td class="text-center">
-                                <img src="{{ $recreation->image != null ? asset('storage/' . $recreation->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
+                                <img src="{{ $recreation->image != null && $recreation->image != "-" ? asset('storage/' . $recreation->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
                                 style="width: 25px; height: 25px;">
                                 {{ $recreation->name }}
                               </td>
@@ -45,7 +45,7 @@
                              
                             
                                 {{ $recreation->business_name }}</td>
-                              <td class="text-center">{{ $recreation->city }}</td>
+                              <td class="text-center">{{ $recreation->city_name }}</td>
                             
                               <td class="text-center">{{ $recreation->address }}</td>
 
@@ -215,14 +215,13 @@
 
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
-                                <input class="form-control form-control-lg" id="city"
-                                    placeholder="Kota..." name="city" required />
-
-                                {{-- <select class="form-control" id="user_id" name="user_id">
+                               
+                                    <select class="js-example-basic-single form-control form-control-lg" name="city" id="city">
                                         @foreach ($cities as $city)
-                                            <option value="{{ $city->id }}">{{ $city->city_name }}</option>
+                                        <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                                         @endforeach
-                                </select> --}}
+                                    </select>
+
 
                                 @error('city')
                                     <span class="text-danger mt-1" role="alert">

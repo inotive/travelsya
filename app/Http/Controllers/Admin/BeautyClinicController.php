@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Clinic;
+use App\Models\City;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -22,16 +23,21 @@ class BeautyClinicController extends Controller
 
         $clinics = DB::table('clinics')
         ->join('users', 'clinics.user_id', '=', 'users.id')
+        ->join('cities', 'clinics.city', '=', 'cities.city_id')
         ->select(
             'clinics.id as clinic_id', 
             'clinics.*', 
             'users.id as user_id', 
-            'users.*'
+            'users.*',
+            'cities.city_id as city_id',
+            'cities.image as city_image', 
+            'cities.*'
         )
         ->get();
 
+        $cities = City::all();
 
-        return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics'));
+        return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics', 'cities'));
     }
 
     /**

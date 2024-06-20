@@ -281,6 +281,19 @@
     <script src="{{ asset('admin/assets/js/custom/utilities/modals/users-search.js') }}"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
+    <script>
+        //   $(document).ready(function() {
+        //         $('.js-example-basic-single').select2();
+        //     });
+
+            $('.js-example-basic-single').each(function () {
+                $(this).select2({
+                    // theme: 'bootstrap-5',
+                    dropdownParent: $(this).parent(),
+                });
+            });
+    </script>
+
     <!--end::Custom Javascript-->
     <!--end::Javascript-->
 

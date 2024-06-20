@@ -1,4 +1,4 @@
-@extends('admin.layout', ['title' => 'Daftar Klinik Kecantikan', 'url' => ''])
+@extends('admin.layout', ['title' => 'Daftar Bus & Travel', 'url' => ''])
 
 @section('content-admin')
     <!--begin::Tables Widget 11-->
@@ -7,7 +7,7 @@
         <div class="card-header pt-5">
             <div class="card-toolbar">
                 <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Klinik Kecantikan</a>
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Data Bus & Travel</a>
             </div>
         </div>
         <!--end::Header-->
@@ -23,41 +23,39 @@
                         <tr class="fw-bold fs-6 text-gray-800 ">
                             <th class="text-center">No.</th>
                             <th class="text-center">Mitra</th>
-                            <th class="text-center">Klinik</th>
+                            <th class="text-center">Nama Travel</th>
                             <th class="text-center">Kota/Kabupaten</th>
-                        
                             <th class="text-center">Alamat</th>
                             <th class="text-center">Nomor Telepon</th>
-
                             <th class="text-center">Status</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                      @foreach ($clinics as $clinic)
+                      @foreach ($bus_travels as $bus_travel)
                           <tr>
                               <td>{{ $loop->iteration }}</td>
                             
                               <td class="text-center">
-                                <img src="{{ $clinic->image != null && $clinic->image != "-" ? asset('storage/' . $clinic->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
+                                <img src="{{ $bus_travel->image != null && $bus_travel->image != "-"  ? asset('storage/' . $bus_travel->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
                                 style="width: 25px; height: 25px;">
-                                {{ $clinic->name }}
+                                {{ $bus_travel->name }}
                               </td>
                               <td class="text-center">
                              
                             
-                              
-                                {{ $clinic->clinic_name }}</td>
-                              <td class="text-center">{{ $clinic->city_name }}</td>
+                                {{ $bus_travel->business_name }}</td>
+                              <td class="text-center">{{ $bus_travel->city_name }}</td>
                             
-                              <td class="text-center">{{ $clinic->address }}</td>
+                              <td class="text-center">{{ $bus_travel->address }}</td>
 
-                              <td class="text-center">{{ $clinic->phone }}</td>
+                              
+                              <td class="text-center">{{ $bus_travel->phone }}</td>
                              
                               <td class="text-center">
-                                  @if ($clinic->is_active === 1)
+                                  @if ($bus_travel->is_active === 1)
                                       <span class="badge badge-success">Aktif</span>
-                                  @elseif ($clinic->is_active === 0)
+                                  @elseif ($bus_travel->is_active === 0)
                                       <span class="badge badge-danger">Tidak Aktif</span>
                                   @endif
                               </td>
@@ -68,8 +66,8 @@
                                       <!--begin::Menu item-->
                                       <div class="menu-item px-3">
                                           <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
-                                              class="menu-link px-3 text-warning" id="btn-edit-clinic"
-                                              data-id="{{ $clinic->clinic_id }}">
+                                              class="menu-link px-3 text-warning" id="btn-edit-rental"
+                                              data-id="{{ $bus_travel->bus_travel_id }}">
                                               Edit
                                           </a>
                                       </div>
@@ -78,7 +76,7 @@
                                       <div class="menu-item px-3">
                                           <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal"
                                               data-kt-customer-table-filter="delete_row"
-                                              data-bs-target="#kt_modal_delete_customer{{ $clinic->clinic_id }}">
+                                              data-bs-target="#kt_modal_delete_customer{{ $bus_travel->bus_travel_id }}">
                                               Delete
                                           </a>
                                       </div>
@@ -94,24 +92,24 @@
                                   <!--end::Menu-->
                               </td>
                           </tr>
-                          <div class="modal fade" id="kt_modal_delete_customer{{ $clinic->clinic_id }}" tabindex="-1"
+                          <div class="modal fade" id="kt_modal_delete_customer{{ $bus_travel->bus_travel_id }}" tabindex="-1"
                               aria-hidden="true">
                               <!-- Konten modal penghapusan -->
                               <div class="modal-dialog modal-dialog-centered mw-650px">
                                   <div class="modal-content">
-                                      <form action="{{ route('admin.klinik-kecantikan.destroy', $clinic->clinic_id) }}" method="POST"
+                                      <form action="{{ route('admin.bus-travel.destroy', $bus_travel->bus_travel_id) }}" method="POST"
                                           id="kt_modal_delete_customer_form">
                                           @csrf
                                           @method('DELETE')
                                           <div class="modal-header">
-                                              <h2 class="fw-bold">DELETE KLINIK</h2>
+                                              <h2 class="fw-bold">DELETE RENTAL MOBIL</h2>
                                               <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
                                                   data-bs-dismiss="modal">
                                                   <i class="ki-duotone ki-cross fs-1"></i>
                                               </button>
                                           </div>
                                           <div class="modal-body py-10 px-lg-17">
-                                              <p>Anda yakin ingin menghapus data klinik dengan nama {{ $clinic->clinic_name }}?
+                                              <p>Anda yakin ingin menghapus data klinik dengan nama {{ $bus_travel->business_name }}?
                                               </p>
                                           </div>
                                           <div class="modal-footer d-flex justify-content-center">
@@ -123,7 +121,7 @@
                               </div>
                           </div>
                       @endforeach
-                      @include('admin.management-mitra.klinik-kecantikan.edit')
+                      @include('admin.management-mitra.bus-travel.edit')
 
           
                   </tbody>
@@ -162,7 +160,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.klinik-kecantikan.store') }}">
+                        action="{{ route('admin.bus-travel.store') }}">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -177,7 +175,7 @@
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                 <input class="form-control form-control-lg" id="name"
-                                    placeholder="Masukan nama klinik" name="name" required />
+                                    placeholder="Masukan nama usaha" name="name" required />
 
                                 @error('name')
                                     <span class="text-danger mt-1" role="alert">
@@ -217,12 +215,12 @@
 
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
+    
                                 <select class="js-example-basic-single form-control form-control-lg" name="city" id="city">
                                     @foreach ($cities as $city)
                                     <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                                     @endforeach
                                 </select>
-
 
                                 @error('city')
                                     <span class="text-danger mt-1" role="alert">
@@ -240,9 +238,6 @@
                           <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
                       </div>
 
-
-                  
-                 
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
@@ -302,6 +297,8 @@
 
 
             });
+
+          
         </script>
     @endpush
 @endsection

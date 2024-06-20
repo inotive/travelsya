@@ -2,7 +2,7 @@
 @php
     
     function getActiveMitraLink() {
-        return Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  || Route::currentRouteName()=='admin.klinik-kecantikan.index' || Route::currentRouteName()=='admin.rental-mobil.index' || Route::currentRouteName()=='admin.rekreasi.index';
+        return Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  || Route::currentRouteName()=='admin.klinik-kecantikan.index' || Route::currentRouteName()=='admin.rental-mobil.index' || Route::currentRouteName()=='admin.rekreasi.index' || Route::currentRouteName()=='admin.bus-travel.index';
     }
 
 @endphp
@@ -387,6 +387,30 @@
                                             <span class="bullet bullet-dot"></span>
                                         </span>
                                             <span class="menu-title custom">Rekreasi</span>
+                                    </a>
+                                @endif
+
+                          
+                                
+                                <!--end:Menu link-->
+                            </div>
+
+                            <div class="menu-item initial menu-hover">
+                                <!--begin:Menu link-->
+
+                                @if (Route::currentRouteName()=='admin.bus-travel.index')
+                                    <a class="menu-link" href="{{route('admin.bus-travel.index')}}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                            <span class="menu-title" style="color: white !important;">Bus & Travel</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{route('admin.bus-travel.index')}}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                            <span class="menu-title custom">Bus & Travel</span>
                                     </a>
                                 @endif
 

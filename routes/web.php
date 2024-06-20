@@ -231,6 +231,7 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::resource('klinik-kecantikan', \App\Http\Controllers\Admin\BeautyClinicController::class);
                 Route::resource('rental-mobil', \App\Http\Controllers\Admin\CarRentalController::class);
                 Route::resource('rekreasi', \App\Http\Controllers\Admin\RecreationController::class);
+                Route::resource('bus-travel', \App\Http\Controllers\Admin\BusTravelController::class);
 
             });
 
