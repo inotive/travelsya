@@ -7,6 +7,7 @@ use App\Models\Hotel;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\Hostel;
+use App\Models\City;
 use App\Services\Travelsya;
 use App\Http\Controllers\Controller;
 
@@ -111,6 +112,8 @@ class HomeController extends Controller
         $data['hotelByCity'] = DB::table('cities')->where('status', 1)
             ->orderBy('city_name', 'asc')
             ->get();
+        
+        $data['cities'] = City::all();
 
         return view('home', $data);
     }

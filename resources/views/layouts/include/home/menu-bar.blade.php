@@ -168,13 +168,14 @@
               </div>
               <div
                   class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
+                   data-bs-toggle="modal" data-bs-target="#modal-rekreasi"
               >
                   <div class="row">
                       <div class="col-md-4 col-sm-12 justify-content-center">
                           <div class="child-item-menubar">
                               <img
                                   src="{{asset('assets/media/products-categories/icon-rekreasi.png')}}"
-                                  style="filter: grayscale(1)"
+                                  style="filter: grayscale(0)"
                                   class="w-40px"
                               />
                           </div>
@@ -631,87 +632,124 @@
             </div>
         </div>
     </div>
-  <div class="modal bg-body" id="modal_action_feature" x-data>
-    <div class="modal-dialog modal-fullscreen">
-      <div class="modal-content shadow-none">
-        <div
-          class="card border-transparent header-image"
-          data-bs-theme="light"
-          x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
-        >
-          <div class="card-body d-flex ps-xl-20">
-            <div class="m-0">
-              <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
-                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
-                  <i class="las la-angle-left"></i>
-                </button>
-                <div>
-                  <span class="me-2" x-html="$store.menubar.selected.label"></span>
-                  <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+
+    <div class="modal bg-body" id="modal-rekreasi">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Rekreasi</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Cari aktivitas dan atraksi menyenangkan!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-recreation')
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-        <div class="modal-body">
-          <div class="container-xl mt-10 mb-30">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <div x-show="$store.menubar.selected.code==='hotel'">
-                  @include('layouts.include.home.container-hotel')
-                </div>
-                <div x-show="$store.menubar.selected.code==='hostel'">
-                  @include('layouts.include.home.container-hostel')
-                </div>
-                <div x-show="$store.menubar.selected.code==='attraction'">
-                  @include('layouts.include.home.container-attraction')
-                </div>
-                <div x-show="$store.menubar.selected.code==='beauty'">
-                  @include('layouts.include.home.container-beauty')
-                </div>
-                <div x-show="$store.menubar.selected.code==='bpjs'">
-                  @include('layouts.include.home.container-bpjs')
-                </div>
-                <div x-show="$store.menubar.selected.code==='pln'">
-                  @include('layouts.include.home.container-pln')
-                </div>
-                <div x-show="$store.menubar.selected.code==='pdam'">
-                  @include('layouts.include.home.container-pdam')
-                </div>
-                <div x-show="$store.menubar.selected.code ==='e-wallet'">
-                  @include('layouts.include.home.container-wallet')
-                </div>
-                <div x-show="$store.menubar.selected.code==='pulsa-data'">
-                  @include('layouts.include.home.container-pulsa-data')
-                </div>
-                <div x-show="$store.menubar.selected.code==='tv'">
-                  @include('layouts.include.home.container-tv')
-                </div>
-                <div x-show="$store.menubar.selected.code==='tax'">
-                  @include('layouts.include.home.container-tax')
-                </div>
-                <div x-show="$store.menubar.selected.code==='plane'">
-                  @include('layouts.include.home.container-plane')
-                </div>
-                <div x-show="$store.menubar.selected.code==='train'">
-                  @include('layouts.include.home.container-train')
-                </div>
-                <div x-show="$store.menubar.selected.code==='bus-travel'">
-                  @include('layouts.include.home.container-bus-travel')
-                </div>
-                <div x-show="$store.menubar.selected.code==='rent-car'">
-                  @include('layouts.include.home.container-rent-car')
-                </div>
-                <div x-show="$store.menubar.selected.code==='bank-transfer'">
-                  @include('layouts.include.home.container-bank-transfer')
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+
+    <div class="modal bg-body" id="modal_action_feature" x-data>
+        <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content shadow-none">
+            <div
+            class="card border-transparent header-image"
+            data-bs-theme="light"
+            x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+            >
+            <div class="card-body d-flex ps-xl-20">
+                <div class="m-0">
+                <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                    <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                    <i class="las la-angle-left"></i>
+                    </button>
+                    <div>
+                    <span class="me-2" x-html="$store.menubar.selected.label"></span>
+                    <br/><span class="fs-3 text-gray-300 me-2">Find the best deals on every Travelsya product you need!</span>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="modal-body">
+            <div class="container-xl mt-10 mb-30">
+                <div class="card shadow-sm">
+                <div class="card-body">
+                    <div x-show="$store.menubar.selected.code==='hotel'">
+                    @include('layouts.include.home.container-hotel')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='hostel'">
+                    @include('layouts.include.home.container-hostel')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='attraction'">
+                    @include('layouts.include.home.container-attraction')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='beauty'">
+                    @include('layouts.include.home.container-beauty')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='bpjs'">
+                    @include('layouts.include.home.container-bpjs')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='pln'">
+                    @include('layouts.include.home.container-pln')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='pdam'">
+                    @include('layouts.include.home.container-pdam')
+                    </div>
+                    <div x-show="$store.menubar.selected.code ==='e-wallet'">
+                    @include('layouts.include.home.container-wallet')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='pulsa-data'">
+                    @include('layouts.include.home.container-pulsa-data')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='tv'">
+                    @include('layouts.include.home.container-tv')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='tax'">
+                    @include('layouts.include.home.container-tax')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='plane'">
+                    @include('layouts.include.home.container-plane')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='train'">
+                    @include('layouts.include.home.container-train')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='bus-travel'">
+                    @include('layouts.include.home.container-bus-travel')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='rent-car'">
+                    @include('layouts.include.home.container-rent-car')
+                    </div>
+                    <div x-show="$store.menubar.selected.code==='bank-transfer'">
+                    @include('layouts.include.home.container-bank-transfer')
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
 
 @push('add-style')

@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\HostelController;
+use App\Http\Controllers\RecreationController;
 use App\Http\Controllers\EwalletController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdController;
@@ -206,6 +207,13 @@ Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->gr
     Route::post('/{idroom}/request', 'request')->name('.request');
     Route::get('/ajax/city', 'ajaxCity')->name('.ajax.city');
     Route::post('/ajax', 'ajaxHostel');
+});
+
+// Recreation Front Page
+Route::controller(RecreationController::class)->name('recreations')->prefix('recreations')->group(function() {
+    Route::get('/', 'index')->name('.index');
+    Route::get('/{id}/rekreasi/', 'show')->name('.rekreasi');
+    Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
 
 
