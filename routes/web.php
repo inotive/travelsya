@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\HostelController;
 use App\Http\Controllers\RecreationController;
+use App\Http\Controllers\BeautyClinicController;
 use App\Http\Controllers\EwalletController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Admin\AdController;
@@ -215,6 +216,13 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/{id}/rekreasi/', 'show')->name('.rekreasi');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
+
+Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function() {
+    Route::get('/', 'index')->name('.index');
+    Route::get('/{id}/klinik/', 'show')->name('.klinik');
+    Route::get('/reservasi', 'reservation')->name('.reservasi');
+});
+
 
 
 //tranas

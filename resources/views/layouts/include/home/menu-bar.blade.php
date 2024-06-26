@@ -186,13 +186,14 @@
               </div>
               <div
                   class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
+                  data-bs-toggle="modal" data-bs-target="#modal-health"
               >
                   <div class="row">
                       <div class="col-md-4 col-sm-12 justify-content-center">
                           <div class="child-item-menubar">
                               <img
                                   src="{{asset('assets/media/products-categories/icon-beauty.png')}}"
-                                  style="filter: grayscale(1)"
+                                  style="filter: grayscale(0)"
                                   class="w-40px"
                               />
                           </div>
@@ -661,6 +662,42 @@
                         <div class="card shadow-sm">
                             <div class="card-body">
                                 @include('layouts.include.home.container-recreation')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal bg-body" id="modal-health">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content shadow-none">
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`"
+                >
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Heath & Beauty</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Cari klinik kecantikan dan kesehatan di lokasimu!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container-xl mt-10 mb-30">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                @include('layouts.include.home.container-clinic')
                             </div>
                         </div>
                     </div>
