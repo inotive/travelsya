@@ -1,13 +1,13 @@
 <style>
     .menu-item {
-       margin: 0.2rem 0; 
+       margin: 0.2rem 0;
     }
 
     /* .menu-item.menu-accordion.hover .show {
         background-color: white;
     } */
 
-   
+
 
     .active-link {
         color: white;
@@ -21,8 +21,8 @@
 
     .menu-item.here .menu-title.custom, .menu-item.here .menu-arrow {
         color: gray !important;
-     } 
-     
+     }
+
 
 </style>
 
@@ -101,7 +101,7 @@
                     <!--end:Menu link-->
                 </a>
 
-               
+
 
 
                 <!--end:Menu item-->
@@ -167,18 +167,31 @@
                     <div class="menu-content">
                         <span class="menu-heading fw-bold text-uppercase fs-7">Konfigurasi</span>
                     </div>
+
+                    {{-- Daftar Rekreasi --}}
+                    <a href="{{ route('partner.daftar-rekreasi') }}"
+                    class="menu-item {{ Request::segment(2) == 'daftar-rekreasi' ? 'here' : '' }} menu-accordion">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-receipt fs-3"></i>
+                        </span>
+                        <span class="menu-title">Daftar Rekreasi</span>
+                    </span>
+                    <!--end:Menu link-->
+                </a>
                     <!--end:Menu content-->
                 </div>
-               
 
-                @if (count($hotel) > 0) 
+
+                @if (count($hotel) > 0)
                      @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion here show"  style="background-color: white;">
                     @else
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                     @endif
-              
-                
+
+
                      <span class="menu-link {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel' ? 'main-accordion' : '' }}">
                      <span class="menu-icon {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel'  ? 'main-accordion' : '' }}">
                         <i class="fa-solid fa-hotel fs-3">
@@ -194,11 +207,11 @@
                      @endif
 
 
-                   
+
                      <span class="menu-arrow {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel'  ? 'main-accordion' : '' }}"></span>
-                 
+
                     </span>
-                 
+
                  <div class="menu-sub menu-sub-accordion">
                      <!--begin:Menu item-->
                      <div class="menu-item initial menu-hover">
@@ -238,10 +251,10 @@
                              </a>
                          @endif
                      </div>
-                    
+
                  </div>
-               
-                </div>    
+
+                </div>
                 @endif
 
                 @if (count($hostel) > 0)
@@ -250,8 +263,8 @@
                     @else
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
                     @endif
-              
-                
+
+
                      <span class="menu-link {{ Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel' ? 'main-accordion' : '' }}">
                      <span class="menu-icon {{ Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel'  ? 'main-accordion' : '' }}">
                         <i class="fa-solid fa-hotel fs-3">
@@ -267,11 +280,11 @@
                      @endif
 
 
-                   
+
                      <span class="menu-arrow {{ Request::segment(2) === 'management-hostel' || request()->query('category') === 'hostel'  ? 'main-accordion' : '' }}"></span>
-                 
+
                     </span>
-                 
+
                  <div class="menu-sub menu-sub-accordion">
                      <!--begin:Menu item-->
                      <div class="menu-item initial menu-hover">
@@ -293,7 +306,7 @@
                          @endif
                      </div>
 
-                   
+
 
                      <div class="menu-item initial menu-hover">
                          <!--begin:Menu link-->
@@ -310,17 +323,17 @@
                                      <span class="bullet bullet-dot"></span>
                                  </span>
                                      <span class="menu-title custom">Daftar Kamar Hostel</span>
-                                   
+
                              </a>
                          @endif
                      </div>
-                    
+
                  </div>
-               
-                </div>    
+
+                </div>
                 @endif
 
-              
+
 
             </div>
             <!--end::Menu-->
