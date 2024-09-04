@@ -113,6 +113,7 @@
                             <i class="far fa-calendar fs-3"></i>
                         </span>
                         @php
+                            $clinic = \App\Models\Clinic::where('user_id', Auth::id())->get();
                             $hotel = \App\Models\Hotel::where('user_id', Auth::id())->get();
                             $hostel = \App\Models\Hostel::where('user_id', Auth::id())->get();
                             $bookingHotel = \App\Models\DetailTransactionHotel::with('transaction')
@@ -169,6 +170,18 @@
                     </div>
                     <!--end:Menu content-->
                 </div>
+
+                <a href="{{ route('list.klinik') }}"
+                    class="menu-item {{ Request::segment(2) == 'clinics' ? 'here' : '' }} menu-accordion">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-receipt fs-3"></i>
+                        </span>
+                        <span class="menu-title">Health & Beauty</span>
+                    </span>
+                    <!--end:Menu link-->
+                </a>
                
 
                 @if (count($hotel) > 0) 
@@ -319,8 +332,7 @@
                
                 </div>    
                 @endif
-
-              
+           
 
             </div>
             <!--end::Menu-->

@@ -217,11 +217,14 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
 
+// Health & Beauty
 Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function() {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/klinik/', 'show')->name('.klinik');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
+
+
 
 
 
@@ -374,8 +377,12 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::delete('daftar-room/delete/{type}/{id}', [ManagementRoomController::class, 'deleteroom'])->name('partner.management.room.deleteroom');
         Route::get('daftar-room/delete/hotel/{id}', [ManagementRoomController::class, 'HotelRoomDelete'])->name('partner.management.room.deleteroomhotel');
         Route::get('daftar-room/delete/hostel/{id}', [ManagementRoomController::class, 'HostelRoomDelete'])->name('partner.management.room.deleteroomhotel');
+            
 
-
+        // health & beauty
+        Route::get('clinics', [\App\Http\Controllers\BeautyClinicController::class, 'list'])->name('list.klinik');    
+        
+        
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
         Route::post('daftar-room/detailroom/hotel/storeimage/', [ManagementRoomController::class, 'storehotelroomImage'])->name('partner.management.room.storehotelroomImage');
@@ -479,6 +486,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         });
     });
+
 });
 
 Auth::routes();

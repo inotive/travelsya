@@ -124,6 +124,31 @@
         <div class="row gy-4">
           <div class="col-12">
               <div class="card">
+                     
+                    <!--begin::Radio group-->
+                    <div class="btn-group w-60 " data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]" style="margin-right: 30px; margin-left: 30px; margin-top: 15px">
+
+                        <!--begin::Radio-->
+                        <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                            <!--begin::Input-->
+                            <input class="btn-check" type="radio" name="category" value="health" required />
+                            <!--end::Input-->
+                            Health
+                        </label>
+                        <!--end::Radio-->
+
+                        <!--begin::Radio-->
+                        <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                            <!--begin::Input-->
+                            <input class="btn-check" type="radio" name="category" value="beauty" required />
+                            <!--end::Input-->
+                            Beauty
+                        </label>
+                        <!--end::Radio-->
+
+                    </div>
+                    <!--end::Radio group-->
+
                   <div class="card-body h-100">
                       <form method="GET" action="{{ route('recreations.index') }}" class="row g-4">
                           <div class="col-4">
@@ -134,24 +159,21 @@
                               </select>
 
                           </div>
+                          
                           <div class="col-4">
                             <label class="fs-5 fw-semibold mb-2">
-                              <span class="required">Jenis Tindakan</span>
-                          </label>
-                          <select name="type" id="type" class="form-select form-select-lg">
-                        
-                            <option value="beauty">Klinik Kecantikan</option>
-                            <option value="teeth">Klinik Gigi</option>
-                            <option value="general">Klinik Umum</option>
-                        </select>
-                          </div>
+                                <span>Tanggal Pemesanan</span>
+                            </label>
+                            <input type="date" id="" class="form-control form-control-lg"
+                                name="keyword" placeholder="Tanggal" value="" />
+                        </div>
 
                           <div class="col-4">
                             <label class="fs-5 fw-semibold mb-2">
-                              <span class="required">Cari Klinik</span>
+                              <span class="">Cari Klinik</span>
                           </label>
                           <input type="text" id="keyword" class="form-control form-control-lg"
-                              name="keyword" placeholder="Masukan kata kunci" value="" />
+                              name="keyword" placeholder="Nama klinik" value="" />
                           </div>
                           
 
@@ -293,6 +315,266 @@
 
         {{-- BATAS DATA REKREASI --}}
 
+        
+        {{-- DATA REKREASI 2 --}}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body h-100">
+                        <div class="row my-4">
+                            <div class="col-4">
+                               
+                                <a class="d-block overlay" data-fslightbox="lightbox-basic-1"
+                                    href="https://images.unsplash.com/photo-1593702288056-7927b442d0fa?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                        style="background-image:url('https://images.unsplash.com/photo-1593702288056-7927b442d0fa?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                    </div>
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                    </div>
+                                </a>
+                                <div class="row mt-4">
+  
+                                  {{-- GAMBAR DARI REKREASI --}}
+  
+                                    <div class="col-4">
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic-1"
+                                           href="https://images.unsplash.com/photo-1593702288056-7927b442d0fa?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                            <!--begin::Image-->
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                 style="background-image:url('https://images.unsplash.com/photo-1593702288056-7927b442d0fa?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                            </div>
+                                            <!--end::Image-->
+  
+                                        <!--begin::Action-->
+                                        <div
+                                            class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                            <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                        </div>
+                                        <!--end::Action-->
+                                      </a>
+                                    </div>
+  
+                                    <div class="col-4">
+                                      <a class="d-block overlay" data-fslightbox="lightbox-basic-2"
+                                         href="https://images.unsplash.com/photo-1704072650662-76df3af134a7?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                          <!--begin::Image-->
+                                          <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                               style="background-image:url('https://images.unsplash.com/photo-1704072650662-76df3af134a7?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                          </div>
+                                          <!--end::Image-->
+  
+                                      <!--begin::Action-->
+                                      <div
+                                          class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                          <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                      </div>
+                                      <!--end::Action-->
+                                    </a>
+                                    </div>
+  
+                                    <div class="col-4">
+                                      <a class="d-block overlay" data-fslightbox="lightbox-basic-3"
+                                         href="https://images.unsplash.com/photo-1675034741473-afed58a142e8?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                          <!--begin::Image-->
+                                          <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                               style="background-image:url('https://images.unsplash.com/photo-1675034741473-afed58a142e8?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                          </div>
+                                          <!--end::Image-->
+  
+                                      <!--begin::Action-->
+                                      <div
+                                          class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                          <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                      </div>
+                                      <!--end::Action-->
+                                    </a>
+                                    </div>
+                                    {{-- BATAS GAMBAR DARI REKREASI --}}
+  
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="row gy-4">
+                                    <div class="col-12">
+                                        <h3>Barbershop Ivan</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <span class="badge badge-danger">
+                                            {{ number_format(5,2) }}
+                                        </span>
+                                        <span class="badge badge-danger">({{ "100" }}
+                                            Rating)</span>
+                                    </div>
+                                    <div class="col-12">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            @endfor
+                                    </div>
+                                    <div class="col-12">
+                                        <p>{{ "Komplek Balikpapan Super Blok, Ruko Blok C No. 19-25, Jl. Jendral Sudirman, Damai, Kec. Balikpapan Kota, Kota Balikpapan, Kalimantan Timur 76114" }}</p>
+                                    </div>
+                                    <div class="col-12">
+                                        <h2 class="card-title text-danger">
+                                            Rp
+                                            {{ number_format(125000, 0, ',',
+                                            '.') }}
+                                            - Rp
+                                            {{ number_format(500000, 0, ',',
+                                            '.') }}
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <h3 class="mb-4">Fasilitas</h3>
+                                <ul>
+                                    <li>Potong Rambut  Pria</li>
+                                    <li>Potong Rambut  Wanita</li>
+                                    <li>Potong Rambut  Anak-anak</li>
+                                </ul>
+  
+                                <a href="{{ route('clinics.klinik', ['id' => 1]) }}"
+                                    class="btn btn-danger d-block mt-10 text-white">Lihat Klinik</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+  
+          {{-- BATAS DATA REKREASI --}}
+
+
+          
+        {{-- DATA REKREASI 3--}}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body h-100">
+                        <div class="row my-4">
+                            <div class="col-4">
+                               
+                                <a class="d-block overlay" data-fslightbox="lightbox-basic-1"
+                                    href="https://images.unsplash.com/photo-1658075264825-2a86ebf9eb37?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                    <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
+                                        style="background-image:url('https://images.unsplash.com/photo-1658075264825-2a86ebf9eb37?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                    </div>
+                                    <div class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                        <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                    </div>
+                                </a>
+                                <div class="row mt-4">
+  
+                                  {{-- GAMBAR DARI REKREASI --}}
+  
+                                    <div class="col-4">
+                                        <a class="d-block overlay" data-fslightbox="lightbox-basic-1"
+                                           href="https://images.unsplash.com/photo-1658075264825-2a86ebf9eb37?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                            <!--begin::Image-->
+                                            <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                                 style="background-image:url('https://images.unsplash.com/photo-1658075264825-2a86ebf9eb37?q=80&w=1475&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                            </div>
+                                            <!--end::Image-->
+  
+                                        <!--begin::Action-->
+                                        <div
+                                            class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                            <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                        </div>
+                                        <!--end::Action-->
+                                      </a>
+                                    </div>
+  
+                                    <div class="col-4">
+                                      <a class="d-block overlay" data-fslightbox="lightbox-basic-2"
+                                         href="https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                          <!--begin::Image-->
+                                          <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                               style="background-image:url('https://images.unsplash.com/photo-1604654894610-df63bc536371?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                          </div>
+                                          <!--end::Image-->
+  
+                                      <!--begin::Action-->
+                                      <div
+                                          class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                          <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                      </div>
+                                      <!--end::Action-->
+                                    </a>
+                                    </div>
+  
+                                    <div class="col-4">
+                                      <a class="d-block overlay" data-fslightbox="lightbox-basic-3"
+                                         href="https://images.unsplash.com/photo-1613457492120-4fcfbb7c3a5b?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D">
+                                          <!--begin::Image-->
+                                          <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-75px"
+                                               style="background-image:url('https://images.unsplash.com/photo-1613457492120-4fcfbb7c3a5b?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')">
+                                          </div>
+                                          <!--end::Image-->
+  
+                                      <!--begin::Action-->
+                                      <div
+                                          class="overlay-layer card-rounded bg-dark bg-opacity-25 shadow">
+                                          <i class="bi bi-eye-fill text-white fs-3x"></i>
+                                      </div>
+                                      <!--end::Action-->
+                                    </a>
+                                    </div>
+                                    {{-- BATAS GAMBAR DARI REKREASI --}}
+  
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="row gy-4">
+                                    <div class="col-12">
+                                        <h3>Klinik Medicure Dr. Kania</h3>
+                                    </div>
+                                    <div class="col-12">
+                                        <span class="badge badge-danger">
+                                            {{ number_format(5,2) }}
+                                        </span>
+                                        <span class="badge badge-danger">({{ "100" }}
+                                            Rating)</span>
+                                    </div>
+                                    <div class="col-12">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <span class="card-text fa fa-star" style="color: orange;"></span>
+                                            @endfor
+                                    </div>
+                                    <div class="col-12">
+                                        <p>{{ "Komplek Balikpapan Super Blok, Ruko Blok C No. 19-25, Jl. Jendral Sudirman, Damai, Kec. Balikpapan Kota, Kota Balikpapan, Kalimantan Timur 76114" }}</p>
+                                    </div>
+                                    <div class="col-12">
+                                        <h2 class="card-title text-danger">
+                                            Rp
+                                            {{ number_format(125000, 0, ',',
+                                            '.') }}
+                                            - Rp
+                                            {{ number_format(400000, 0, ',',
+                                            '.') }}
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <h3 class="mb-4">Fasilitas</h3>
+                                <ul>
+                                    <li>Medicure  A</li>
+                                    <li>Medicure  B</li>
+                                    <li>Medicure  C</li>
+                                </ul>
+  
+                                <a href="{{ route('clinics.klinik', ['id' => 1]) }}"
+                                    class="btn btn-danger d-block mt-10 text-white">Lihat Klinik</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+  
+          {{-- BATAS DATA REKREASI --}}
 
       </div>
 
