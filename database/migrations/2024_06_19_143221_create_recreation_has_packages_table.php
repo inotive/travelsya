@@ -30,6 +30,7 @@ return new class extends Migration
             $table->date('expiry_date');
             $table->string("unit_price");
             $table->double('price');
+            $table->boolean('is_active');
 
             $table->timestamps();
         });

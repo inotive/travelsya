@@ -174,7 +174,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">
-                            <i class="fas fa-receipt fs-3"></i>
+                            <i class="fa-solid fa-umbrella-beach"></i>
                         </span>
                         <span class="menu-title">Daftar Rekreasi</span>
                     </span>
