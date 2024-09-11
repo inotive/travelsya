@@ -24,7 +24,7 @@
     <div class="card-body d-flex ps-xl-20">
         <div class="m-0">
             <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
-                <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+                <button class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5" onclick="history.back();">
                     <i class="las la-angle-left"></i>
                 </button>
                 <div>
@@ -56,7 +56,7 @@
                 <h5 class="mt-10">Menampilkan {{ $recreation_list->count() }} Atraksi</h5>
 
                 <div id="results" class="mt-4">
-                    <div class="row row-cols-1 row-cols-md-5 g-4">
+                    <div class="row row-cols-1 row-cols-md-4 g-4">
                         @foreach ($recreation_list as $list)
                         <div class="col">
                             <a href="#">
