@@ -25,8 +25,8 @@ return new class extends Migration
             $table->text("rules");
             $table->text("description");
             $table->string("duration");
-            $table->double("lat");
-            $table->double("ltd");
+            $table->double("lat") ->nullable();
+            $table->double("ltd") ->nullable();
             $table->date('expiry_date');
             $table->string("unit_price");
             $table->double('price');

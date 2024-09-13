@@ -23,7 +23,7 @@ class RecreationController extends Controller
         $data = DB::table('recreation_has_packages')
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
-            ->get();
+            ->paginate(10);
 
         return view('ekstranet.rekreasi.daftar-rekreasi', [
             'data' => $data,
@@ -46,27 +46,53 @@ class RecreationController extends Controller
         }
     }
 
+    public function create() {
+        $category = DB::table('category_recreations')->get();
+        $data = DB::table('recreation_has_packages')
+            ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
+            ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
+            ->get();
+
+        return view('ekstranet.rekreasi.create', [
+            'data' => $data,
+            'category' => $category
+        ]);
+    }
+
 
     public function store(Request $request)
     {
-        // Validate the request data
+        // dd($request->all());
         $request->validate([
             'category_recreation_id' => 'required|exists:category_recreations,id',
             'name' => 'required|string|max:255',
             'rules' => 'required|string',
             'description' => 'required|string',
             'duration' => 'required|string|max:255',
-            'lat' => 'required|numeric',
-            'ltd' => 'required|numeric',
-            'expiry_date' => 'required|date',
+            'lat' => 'nullable|numeric',
+            'ltd' => 'nullable|numeric',
+            'expiry' => 'required|numeric',
+            'expiryType' => 'required|string|in:Hari,Jam',
             'unit_price' => 'required|string',
             'price' => 'required|numeric',
             'is_active' => 'required|boolean',
         ]);
 
-        // Insert the new recreation package using query builder
+        $expiry = $request->expiry;
+        $expiryType = $request->expiryType;
+
+        $daysToAdd = 0;
+
+        if ($expiryType === 'Hari') {
+            $daysToAdd = $expiry;
+        } elseif ($expiryType === 'Jam') {
+            $daysToAdd = intdiv($expiry, 24);
+        }
+
+        $expiryDate = Carbon::now()->addDays($daysToAdd)->toDateString();
+
         DB::table('recreation_has_packages')->insert([
-            'recreaction_id' => 1,  // Assuming you will replace this with actual recreation ID
+            'recreaction_id' => 2,
             'category_recreation_id' => $request->category_recreation_id,
             'name' => $request->name,
             'rules' => $request->rules,
@@ -74,7 +100,7 @@ class RecreationController extends Controller
             'duration' => $request->duration,
             'lat' => $request->lat,
             'ltd' => $request->ltd,
-            'expiry_date' => $request->expiry_date,
+            'expiry_date' => $expiryDate,
             'unit_price' => $request->unit_price,
             'price' => $request->price,
             'is_active' => $request->is_active,
@@ -82,13 +108,13 @@ class RecreationController extends Controller
             'updated_at' => Carbon::now(),
         ]);
 
-        // Redirect with success message
-        return redirect()->back()->with('success', 'Recreation package created successfully.');
+        return redirect()->route('partner.daftar-rekreasi')
+        ->with('success', 'Data berhasil ditambahkan!');
     }
+
 
     public function update(Request $request, $id)
     {
-        // Validasi input data
         $request->validate([
             'name' => 'required',
             'category_recreation_id' => 'required',
@@ -97,7 +123,6 @@ class RecreationController extends Controller
             'is_active' => 'required|boolean',
         ]);
 
-        // Update data recreation
         $recreation = DB::table('recreation_has_packages')->where('id', $id)->update([
             'name' => $request->name,
             'category_recreation_id' => $request->category_recreation_id,
@@ -118,11 +143,9 @@ class RecreationController extends Controller
     // delete
 
     public function destroy($id) {
-        // Cari data berdasarkan ID
         $recreation = DB::table('recreation_has_packages')->where('id', $id)->first();
 
         if ($recreation) {
-            // Hapus data jika ditemukan
             DB::table('recreation_has_packages')->where('id', $id)->delete();
             return response()->json(['success' => 'Recreation package deleted successfully']);
         } else {

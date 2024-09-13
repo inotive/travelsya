@@ -1,12 +1,11 @@
 @extends('ekstranet.layout', ['title' => 'Daftar Rekreasi', 'url' => '#'])
 
 @section('content-admin')
-
 <div class="card mb-5 mb-xl-8">
     <!--begin::Header-->
     <div class="card-header pt-5">
         <div class="card-toolbar">
-            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
+            <a class="btn btn-sm btn-light-primary" href="{{ route('recreation.create') }}">
                 <i class="ki-duotone ki-plus fs-2"></i>Tambah Data Rekreasi</a>
         </div>
     </div>
@@ -17,7 +16,7 @@
         <div class="table-responsive">
             <!--begin::Table-->
 
-            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
+            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle">
                 <thead>
                     <tr class="fw-bold fs-6 text-gray-800 ">
                         <th class="text-center">No.</th>
@@ -36,7 +35,7 @@
                     <td>{{ $item->category_name }}</td>
                     <td>{{ $item->name }}</td>
                     <td>{{ $item->duration }}</td>
-                    <td>{{ $item->price }}</td>
+                    <td>{{ 'Rp '.number_format($item->price) ?? '' }}</td>
                     <td>
                         @if ($item->is_active === 1)
                         <span class="badge badge-success">Aktif</span>
@@ -62,187 +61,13 @@
                 </tbody>
                 @endforeach
             </table>
+            {{ $data->appends(request()->input())->links('vendor.pagination.bootstrap-5') }}
 
         </div>
         <!--end::Table container-->
     </div>
 
     <!--begin::Body-->
-</div>
-
-
-{{-- Modal Create --}}
-<div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content rounded">
-            <!--begin::Modal header-->
-            <div class="modal-header pb-0 border-0 justify-content-end">
-                <!--begin::Close-->
-                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                </div>
-                <!--end::Close-->
-            </div>
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('addrecreation.store') }}">
-                    @csrf
-                    <!--begin::Heading-->
-                    <div class="mb-13 text-center">
-                        <h1 class="mb-3">Tambah Rekreasi</h1>
-                    </div>
-                    <!--end::Heading-->
-
-                    <div class="row g-9 mb-8">
-
-                        <div class="col-md-12">
-                            <label class="required fs-6 fw-semibold mb-2">Nama Paket</label>
-                            <input type="text" class="form-control form-control-lg" placeholder="Nama Paket" name="name" required>
-                            @error('name')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                            <select name="category_recreation_id" class="form-select" aria-label="Default select example" required>
-                                @foreach ($category as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('category_recreation_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                            <input class="form-control form-control-lg" type="text" placeholder="Menit" name="duration" required />
-                            @error('duration')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Latitude</label>
-                            <input class="form-control form-control-lg" type="number" step="any" name="lat" required />
-                            @error('lat')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Longitude</label>
-                            <input class="form-control form-control-lg" type="number" step="any" name="ltd" required />
-                            @error('ltd')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Tanggal Kadaluarsa</label>
-                            <input class="form-control form-control-lg" type="date" name="expiry_date" required />
-                            @error('expiry_date')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Unit Price</label>
-                            <input class="form-control form-control-lg" type="text" name="unit_price" required />
-                            @error('unit_price')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="required fs-6 fw-semibold mb-2">Aturan</label>
-                            <textarea class="form-control form-control-lg" name="rules" required></textarea>
-                            @error('rules')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-12">
-                            <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                            <textarea class="form-control form-control-lg" name="description" required></textarea>
-                            @error('description')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                            <input class="form-control form-control-lg" type="number" placeholder="Rp." name="price" required />
-                            @error('price')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Status</label>
-                            <select name="is_active" class="form-select" required>
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
-                            @error('is_active')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <!--begin::Actions-->
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col-6">
-                                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
-                            </div>
-                            <div class="col-6">
-                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                                    <span class="indicator-label">Simpan</span>
-                                    <span class="indicator-progress">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end::Actions-->
-                </form>
-                <!--end:Form-->
-            </div>
-            <!--end::Modal body-->
-        </div>
-        <!--end::Modal content-->
-    </div>
-    <!--end::Modal dialog-->
 </div>
 
 {{-- Modal Detail --}}
@@ -259,6 +84,7 @@
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <h5 class="text-center">Detail Paket Rekreasi</h5>
                 <div id="package-details">
+
                 </div>
             </div>
         </div>
@@ -290,7 +116,7 @@
                         <label for="editCategory">Kategori</label>
                         <select class="form-control" id="editCategory" name="category_recreation_id">
                             @foreach($category as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -307,10 +133,10 @@
 
                     <div class="form-group mt-3">
                         <label for="editStatus">Status</label>
-                            <select id="editStatus" name="is_active" class="form-select">
-                                <option value="1">Active</option>
-                                <option value="0">Inactive</option>
-                            </select>
+                        <select id="editStatus" name="is_active" class="form-select">
+                            <option value="1">Active</option>
+                            <option value="0">Inactive</option>
+                        </select>
                     </div>
 
 
@@ -323,8 +149,21 @@
         </div>
     </div>
 </div>
+<!-- SweetAlert -->
+@if (session('success'))
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    Swal.fire({
+        position: 'top-end'
+        , icon: 'success'
+        , title: 'Data berhasil ditambahkan.'
+        , toast: true
+        , showConfirmButton: false
+        , timer: 2000
+    })
 
-
+</script>
+@endif
 @push('add-script')
 <script>
     $(document).ready(function() {
@@ -346,6 +185,7 @@
         });
     });
 
+    // detail
     function showDetail(id) {
         $.ajax({
             url: 'recreation/' + id
@@ -368,21 +208,39 @@
         });
     }
 
+    // add
+
+    document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
+        var durationInput = document.getElementById('duration').value;
+        var durationType = document.getElementById('durationType').value;
+
+        var combinedDuration = durationInput + ' ' + durationType;
+
+        document.getElementById('combinedDuration').value = combinedDuration;
+    });
+
+    document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
+        var expiryInput = document.getElementById('expiry').value;
+        var expiryType = document.getElementById('expiryType').value;
+
+        var combinedExpiry = expiryInput + ' ' + expiryType;
+
+        document.getElementById('combinedExpiry').value = combinedExpiry;
+    });
+
+
     // edit
     function editRecreation(id) {
         $.ajax({
             url: 'recreation/' + id
             , type: 'GET'
             , success: function(response) {
-                // Isi data form dalam modal dengan data yang diambil
                 $('#editRecreationId').val(response.id);
                 $('#editName').val(response.name);
                 $('#editCategory').val(response.category_recreation_id);
                 $('#editDuration').val(response.duration);
                 $('#editPrice').val(response.price);
                 $('#editStatus').val(response.is_active);
-
-                // Tampilkan modal
                 $('#editRecreationModal').modal('show');
             }
             , error: function(xhr) {
@@ -401,7 +259,7 @@
             , duration: $('#editDuration').val()
             , price: $('#editPrice').val()
             , is_active: $('#editStatus').val()
-            , _token: '{{ csrf_token() }}' // CSRF token
+            , _token: '{{ csrf_token() }}'
         };
 
         $.ajax({
@@ -415,7 +273,7 @@
                     , title: 'Success'
                     , text: 'Data berhasil diupdate!'
                 , }).then(() => {
-                    location.reload(); // Reload halaman untuk menampilkan data terbaru
+                    location.reload();
                 });
             }
             , error: function(xhr) {
@@ -444,12 +302,12 @@
             , text: "Anda tidak akan dapat mengembalikan ini!"
             , icon: "warning"
             , showCancelButton: true
-            , confirmButtonText: "Hapus!"
+            , confirmButtonText: "Ya, Hapus!"
             , cancelButtonText: "Tidak jadi!"
             , reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // AJAX request to delete the item
+
                 $.ajax({
                     url: 'recreation/' + id
                     , type: 'DELETE'
@@ -462,7 +320,7 @@
                             , 'Data ini berhasil dihapus.'
                             , 'success'
                         ).then(() => {
-                            location.reload(); // Reload page after deletion
+                            location.reload();
                         });
                     }
                     , error: function(response) {
