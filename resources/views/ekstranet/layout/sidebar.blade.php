@@ -171,7 +171,7 @@
                     <!--end:Menu content-->
                 </div>
 
-                <a href="{{ route('list.klinik') }}"
+                <a href="{{ route('clinics.index') }}"
                     class="menu-item {{ Request::segment(2) == 'clinics' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">

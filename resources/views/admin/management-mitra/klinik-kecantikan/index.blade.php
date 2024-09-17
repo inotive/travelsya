@@ -39,8 +39,8 @@
                               <td>{{ $loop->iteration }}</td>
                             
                               <td class="text-center">
-                                <img src="{{ $clinic->image != null && $clinic->image != "-" ? asset('storage/' . $clinic->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
-                                style="width: 25px; height: 25px;">
+                                <img src="{{ $clinic->image != null && $clinic->image != "-" ? asset('storage/' . $clinic->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""style="width: 25px; height: 25px;">
+                                
                                 {{ $clinic->name }}
                               </td>
                               <td class="text-center">
