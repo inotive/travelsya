@@ -48,12 +48,12 @@
                             <i class="fa fa-info-circle" aria-hidden="true"></i>
                         </button>
 
-                        <!-- Edit Button -->
-                        <button class="btn btn-sm btn-light-warning btn-icon" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editRecreation({{ $item->id }})">
-                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        <button class="btn btn-sm btn-light-warning btn-icon">
+                            <a href="{{ route('recreation.edit', $item->id) }}">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
                         </button>
 
-                        <!-- Delete Button (optional) -->
                         <button class="btn btn-sm btn-light-danger btn-icon" onclick="deleteRecreation({{ $item->id }})">
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
@@ -91,7 +91,7 @@
     </div>
 </div>
 
-{{-- Edit Modal --}}
+{{-- Edit Modal
 <div class="modal fade" id="editRecreationModal" tabindex="-1" role="dialog" aria-labelledby="editRecreationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -148,7 +148,8 @@
             </form>
         </div>
     </div>
-</div>
+</div> --}}
+
 <!-- SweetAlert -->
 @if (session('success'))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -161,7 +162,18 @@
         , showConfirmButton: false
         , timer: 2000
     })
-
+</script>
+@elseif(session('success_update'))
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    Swal.fire({
+        position: 'top-end'
+        , icon: 'success'
+        , title: 'Data berhasil Diubah.'
+        , toast: true
+        , showConfirmButton: false
+        , timer: 2000
+    })
 </script>
 @endif
 @push('add-script')
@@ -228,65 +240,6 @@
         document.getElementById('combinedExpiry').value = combinedExpiry;
     });
 
-
-    // edit
-    function editRecreation(id) {
-        $.ajax({
-            url: 'recreation/' + id
-            , type: 'GET'
-            , success: function(response) {
-                $('#editRecreationId').val(response.id);
-                $('#editName').val(response.name);
-                $('#editCategory').val(response.category_recreation_id);
-                $('#editDuration').val(response.duration);
-                $('#editPrice').val(response.price);
-                $('#editStatus').val(response.is_active);
-                $('#editRecreationModal').modal('show');
-            }
-            , error: function(xhr) {
-                console.log(xhr.responseText);
-            }
-        });
-    }
-
-    $('#editRecreationForm').on('submit', function(e) {
-        e.preventDefault();
-
-        const id = $('#editRecreationId').val();
-        const formData = {
-            name: $('#editName').val()
-            , category_recreation_id: $('#editCategory').val()
-            , duration: $('#editDuration').val()
-            , price: $('#editPrice').val()
-            , is_active: $('#editStatus').val()
-            , _token: '{{ csrf_token() }}'
-        };
-
-        $.ajax({
-            url: 'recreation/' + id
-            , type: 'PUT'
-            , data: formData
-            , success: function(response) {
-                $('#editRecreationModal').modal('hide');
-                Swal.fire({
-                    icon: 'success'
-                    , title: 'Success'
-                    , text: 'Data berhasil diupdate!'
-                , }).then(() => {
-                    location.reload();
-                });
-            }
-            , error: function(xhr) {
-                Swal.fire({
-                    icon: 'error'
-                    , title: 'Error'
-                    , text: 'Gagal mengupdate data!'
-                , });
-                console.log(xhr.responseText);
-            }
-        });
-    });
-
     // delete
     function deleteRecreation(id) {
         const swalWithBootstrapButtons = Swal.mixin({
@@ -298,8 +251,7 @@
         });
 
         swalWithBootstrapButtons.fire({
-            title: "Apakah kamu yakin?"
-            , text: "Anda tidak akan dapat mengembalikan ini!"
+            title: "Apakah kamu yakin ingin menghapus data ini?"
             , icon: "warning"
             , showCancelButton: true
             , confirmButtonText: "Ya, Hapus!"

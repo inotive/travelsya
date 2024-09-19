@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Recreation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -112,28 +111,59 @@ class RecreationController extends Controller
         ->with('success', 'Data berhasil ditambahkan!');
     }
 
+    public function edit($id) {
+        $recreation = DB::table('recreation_has_packages')->where('id', $id)->first();
+
+        if (!$recreation) {
+            return redirect()->route('rekreasi.index')->with('error', 'Rekreasi tidak ditemukan.');
+        }
+
+        $category = DB::table('category_recreations')->get();
+        return view('ekstranet.rekreasi.edit', compact('recreation', 'category'));
+    }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required',
-            'category_recreation_id' => 'required',
-            'duration' => 'required',
+            'category_recreation_id' => 'required|exists:category_recreations,id',
+            'name' => 'required|string|max:255',
+            'rules' => 'required|string',
+            'description' => 'required|string',
+            'duration' => 'required|string|max:255',
+            'lat' => 'nullable|numeric',
+            'ltd' => 'nullable|numeric',
+            'expiry' => 'required|numeric',
+            'expiryType' => 'required|string|in:Hari,Jam',
+            'unit_price' => 'required|string',
             'price' => 'required|numeric',
             'is_active' => 'required|boolean',
         ]);
+        $expiry = $request->expiry;
+        $expiryType = $request->expiryType;
 
-        $recreation = DB::table('recreation_has_packages')->where('id', $id)->update([
-            'name' => $request->name,
+        $daysToAdd = $expiryType === 'Hari' ? $expiry : intdiv($expiry, 24);
+
+        $expiryDate = Carbon::now()->addDays($daysToAdd)->toDateString();
+
+        DB::table('recreation_has_packages')->where('id', $id)->update([
             'category_recreation_id' => $request->category_recreation_id,
+            'name' => $request->name,
+            'rules' => $request->rules,
+            'description' => $request->description,
             'duration' => $request->duration,
+            'lat' => $request->lat,
+            'ltd' => $request->ltd,
+            'expiry_date' => $expiryDate,
+            'unit_price' => $request->unit_price,
             'price' => $request->price,
             'is_active' => $request->is_active,
-            'updated_at' => now(),
+            'updated_at' => Carbon::now(),
         ]);
 
-        return response()->json(['success' => 'Recreation updated successfully']);
+        return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
     }
+
+
 
     public function reservation(Request $request) {
 

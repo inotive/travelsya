@@ -369,11 +369,10 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
-        Route::get('/filter', [\App\Http\Controllers\RecreationController::class, 'filter']);
+        Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
+        Route::put('update-rekreasi/{id}', [\App\Http\Controllers\RecreationController::class, 'update'])->name('data-rekreasi.update');
         Route::post('/addrecreation/store', [\App\Http\Controllers\RecreationController::class, 'store'])->name('addrecreation.store');
         Route::get('recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'show'])->name('recreation.show');
-        Route::get('/recreation/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit'); // Edit route
-        Route::put('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'update']);
         Route::delete('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'destroy'])->name('recreation.destroy');
 
 
