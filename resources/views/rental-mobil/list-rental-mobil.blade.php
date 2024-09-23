@@ -3,6 +3,8 @@
 <head>
 
     <title>Rental Mobil | Travelsya</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 
 <body>
@@ -37,10 +39,12 @@
                         <div class="car-info">
                             <h3>Toyota Agya</h3>
                             <div class="car-details">
-                                <span class="fa-solid fa-user">{{ $item->number_seats }} kursi</span>
-                                <span>{{ $item->category }}</span>
+                                {{-- <i class="fa-regular fa-user"></i> --}}
+                                <span class="kursi fa-solid fa-user">{{ $item->number_seats }} kursi</span>
+                                <span class="fa-solid fa-user">{{ $item->category }}</span>
                             </div>
-                            <p class="car-price">Mulai dari IDR {{ number_format($item->rental_price_per_day, 0, ',', '.') }}/hari</p>
+                            <p class="car-price">Mulai dari</p>
+                            <p class="car-price"><span class="harga">IDR {{ number_format($item->rental_price_per_day, 0, ',', '.') }}</span> /hari</p>
                         </div>
                     </div>
                 </div>
@@ -66,12 +70,12 @@
 
     #cars-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(391px, 0fr));
         overflow: hidden;
     }
 
     .car-list {
-        width: 900px;
+        width: 1000px;
     }
 
     #cars-container h2 {
@@ -98,6 +102,10 @@
         object-fit: contain;
     }
 
+    .kursi{
+        margin-right: 6px;
+    }
+
     .car-info {
         padding: 20px;
         flex-grow: 1;
@@ -108,23 +116,29 @@
 
     .car-info h3 {
         margin-top: 0;
-        margin-bottom: 10px;
-        text-align: center;
+        margin-bottom: 3px;
+        margin-top: 8px;
     }
 
     .car-details {
         font-size: 14px;
         color: #666;
-        text-align: center;
         margin-bottom: 10px;
     }
 
     .car-price {
-        font-size: 18px;
+        font-size: 11px;
         font-weight: bold;
-        color: #333;
-        text-align: center;
-        margin-top: auto;
+        color: #777777;
+        align-items: center;
+        margin-bottom: -7px;
+    }
+
+    .harga {
+        font-size: 20px;
+        font-weight: bold;
+        color: #c51919;
+        margin: 0 px;
     }
 
     @media (max-width: 1200px) {
