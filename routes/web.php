@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\CarRentalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -223,6 +224,15 @@ Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clini
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
 
+// rental mobil
+Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function() {
+    Route::get('/', 'index')->name('.index');
+    Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
+    Route::get('/{id}/mobil/', 'show')->name('.mobil');
+    Route::get('/reservasi', 'reservation')->name('.reservasi');
+    });
+// Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
+
 
 
 //tranas
@@ -367,6 +377,14 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
+
+        Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
+        Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
+        Route::get('halaman-update', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanUpdate'])->name('partner.halaman.update');
+        Route::post('kendaraan-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'store'])->name('partner.kendaraan.create');
+        Route::delete('kendaraan-delete/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'destroy'])->name('partner.kendaraan.delete');
+        Route::get('daftar-kendaraan/show/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'show'])->name('partner.show.kendaraan');
+        Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
 
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}', [ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');

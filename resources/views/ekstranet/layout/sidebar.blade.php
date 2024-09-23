@@ -169,6 +169,19 @@
                     </div>
                     <!--end:Menu content-->
                 </div>
+
+
+                <a href="{{ route('partner.daftar.kendaraan') }}"
+                    class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-car-side fs-3"></i>
+                        </span>
+                        <span class="menu-title">Daftar kendaraan</span>
+                    </span>
+                    <!--end:Menu link-->
+                </a>
                
 
                 @if (count($hotel) > 0) 

@@ -6,7 +6,7 @@
 
       <div class="content flex-row-fluid mb-10" id="kt_content">
 
-        <div class="row card w-75 me-auto ms-auto mt-10" id="card-filter">
+        <div class="content flex-row-fluid mb-10" id="kt_content">
           <form action="{{ route('recreations.index') }}" method="get">
               <div class="row gy-4">
                   <div class="col-12">
