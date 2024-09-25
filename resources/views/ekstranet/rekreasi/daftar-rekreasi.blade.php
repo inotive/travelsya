@@ -34,7 +34,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->category_name }}</td>
                     <td>{{ $item->name }}</td>
-                    <td>{{ $item->duration }}</td>
+                    <td>{{ $item->duration }} {{ $item->unit_price }}</td>
                     <td>{{ 'Rp '.number_format($item->price) ?? '' }}</td>
                     <td>
                         @if ($item->is_active === 1)
@@ -91,65 +91,6 @@
     </div>
 </div>
 
-{{-- Edit Modal
-<div class="modal fade" id="editRecreationModal" tabindex="-1" role="dialog" aria-labelledby="editRecreationModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <form id="editRecreationForm">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editRecreationModalLabel">Edit Recreation</h5>
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span><span class="path2"></span>
-                        </i>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="editRecreationId">
-
-                    <div class="form-group">
-                        <label for="editName">Nama Paket</label>
-                        <input type="text" class="form-control" id="editName" name="name">
-                    </div>
-
-                    <div class="form-group mt-3">
-                        <label for="editCategory">Kategori</label>
-                        <select class="form-control" id="editCategory" name="category_recreation_id">
-                            @foreach($category as $cat)
-                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group mt-3">
-                        <label for="editDuration">Durasi</label>
-                        <input type="text" class="form-control" id="editDuration" name="duration">
-                    </div>
-
-                    <div class="form-group mt-3">
-                        <label for="editPrice">Harga</label>
-                        <input type="number" class="form-control" id="editPrice" name="price">
-                    </div>
-
-                    <div class="form-group mt-3">
-                        <label for="editStatus">Status</label>
-                        <select id="editStatus" name="is_active" class="form-select">
-                            <option value="1">Active</option>
-                            <option value="0">Inactive</option>
-                        </select>
-                    </div>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div> --}}
-
 <!-- SweetAlert -->
 @if (session('success'))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -162,6 +103,7 @@
         , showConfirmButton: false
         , timer: 2000
     })
+
 </script>
 @elseif(session('success_update'))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -174,6 +116,7 @@
         , showConfirmButton: false
         , timer: 2000
     })
+
 </script>
 @endif
 @push('add-script')
@@ -206,11 +149,13 @@
                 $('#package-details').html(`
                 <p><strong>Nama Paket:</strong> ${response.name}</p>
                 <p><strong>Kategori:</strong> ${response.category_name}</p>
-                <p><strong>Durasi:</strong> ${response.duration}</p>
-                <p><strong>Latitude:</strong> ${response.lat}</p>
-                <p><strong>Longitude:</strong> ${response.ltd}</p>
+                <p><strong>Durasi:</strong> ${response.duration} ${response.unit_price}</p>
+                <p><strong>Lat:</strong> ${response.lat}</p>
+                <p><strong>Ltd:</strong> ${response.ltd}</p>
                 <p><strong>Tanggal Kadaluarsa:</strong> ${response.expiry_date}</p>
                 <p><strong>Harga:</strong> Rp ${response.price}</p>
+                <p><strong>Deskripsi:</strong> ${response.description}</p>
+                <p><strong>Peraturan:</strong> ${response.rules}</p>
                 <p><strong>Status:</strong> ${(response.is_active == 1 ? 'Aktif' : 'Tidak Aktif')}</p>
             `);
             }
@@ -219,26 +164,6 @@
             }
         });
     }
-
-    // add
-
-    document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
-        var durationInput = document.getElementById('duration').value;
-        var durationType = document.getElementById('durationType').value;
-
-        var combinedDuration = durationInput + ' ' + durationType;
-
-        document.getElementById('combinedDuration').value = combinedDuration;
-    });
-
-    document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
-        var expiryInput = document.getElementById('expiry').value;
-        var expiryType = document.getElementById('expiryType').value;
-
-        var combinedExpiry = expiryInput + ' ' + expiryType;
-
-        document.getElementById('combinedExpiry').value = combinedExpiry;
-    });
 
     // delete
     function deleteRecreation(id) {
@@ -254,8 +179,8 @@
             title: "Apakah kamu yakin ingin menghapus data ini?"
             , icon: "warning"
             , showCancelButton: true
-            , confirmButtonText: "Ya, Hapus!"
-            , cancelButtonText: "Tidak jadi!"
+            , confirmButtonText: "Ya, Hapus"
+            , cancelButtonText: "Tidak jadi"
             , reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
@@ -278,17 +203,11 @@
                     , error: function(response) {
                         swalWithBootstrapButtons.fire(
                             'Error!'
-                            , 'There was a problem deleting the file.'
+                            , 'Terjadi error saat menghapus data.'
                             , 'error'
                         );
                     }
                 });
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swalWithBootstrapButtons.fire(
-                    'Dibatalkan'
-                    , 'Data tidak jadi dihapus.'
-                    , 'error'
-                );
             }
         });
     }

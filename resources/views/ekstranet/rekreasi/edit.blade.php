@@ -43,7 +43,7 @@
 
                 <div class="col-md-3">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                    <input class="form-control form-control-lg" type="number" id="duration" name="duration_input" required/>
+                    <input class="form-control form-control-lg" value="{{ $recreation->duration }}" type="number" name="duration" required />
                     @error('duration')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -53,7 +53,7 @@
 
                 <div class="col-md-3">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
-                    <select id="durationType" class="form-select" aria-label="Default select example" required>
+                    <select class="form-select" name="unit_price" aria-label="Default select example" required>
                         <option value="Menit">Menit</option>
                         <option value="Jam">Jam</option>
                     </select>
@@ -63,8 +63,6 @@
                     </span>
                     @enderror
                 </div>
-
-                <input type="hidden" id="combinedDuration" name="duration" />
 
                 <div class="col-md-6">
                     <label class="fs-6 fw-semibold mb-2">Latitude (Opsional).</label>
@@ -86,26 +84,28 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
                     <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" required />
+                    @error('expiry')
+                    <span class="text-danger mt-1" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
-                    <select id="expiryType" class="form-select" name="expiryType" aria-label="Default select example" required>
+                    <select class="form-select" name="expiryType" aria-label="Default select example" required>
                         <option value="Hari">Hari</option>
                         <option value="Jam">Jam</option>
                     </select>
                 </div>
 
-                <input type="hidden" id="combinedExpiry" name="combinedExpiry" />
-
-
-                <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Unit Price</label>
-                    <input class="form-control form-control-lg" type="number" value="{{ $recreation->unit_price }}" name="unit_price" required />
-                    @error('unit_price')
+                <div class="col-md-12">
+                    <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
+                    <textarea class="form-control form-control-lg" name="description" required>{{ $recreation->description }}</textarea>
+                    @error('description')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -116,16 +116,6 @@
                     <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
                     <textarea class="form-control form-control-lg" name="rules" required>{{ $recreation->rules }}</textarea>
                     @error('rules')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-
-                <div class="col-md-12">
-                    <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                    <textarea class="form-control form-control-lg" name="description" required>{{ $recreation->description }}</textarea>
-                    @error('description')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -144,16 +134,23 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Status</label>
-                    <select name="is_active" class="form-select" required>
-                        <option value="1" {{ $recreation->is_active == 1 ? 'selected' : '' }}>Active</option>
-                        <option value="0" {{ $recreation->is_active == 0 ? 'selected' : '' }}>Inactive</option>
-                    </select>
-                    @error('is_active')
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="radio" name="is_active" id="active" value="1" {{ $recreation->is_active == 1 ? 'checked' : '' }} required>
+                            <label class="form-check-label fw-bold" for="active">Active</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="is_active" id="inactive" value="0" {{ $recreation->is_active == 0 ? 'checked' : '' }} required>
+                            <label class="form-check-label fw-bold" for="inactive">Inactive</label>
+                        </div>
+                    </div>
+                    @error('status')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                     @enderror
                 </div>
+
             </div>
 
             <!--begin::Actions-->
@@ -180,24 +177,15 @@
 
         Swal.fire({
             title: "Apa kamu yakin ingin menyimpan perubahan?"
-            , showDenyButton: true
-            , showCancelButton: false
+            , icon: "question"
+            , showCancelButton: true
+            , cancelButtonText: `Tidak jadi`
+            , cancelButtonColor: '#d33'
             , confirmButtonText: "Ya"
-            , denyButtonText: `Tidak jadi`
+            , confirmButtonColor: '#3085d6'
+            , reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                var durationInput = document.getElementById('duration').value;
-                var durationType = document.getElementById('durationType').value;
-
-                var combinedDuration = durationInput + ' ' + durationType;
-                document.getElementById('combinedDuration').value = combinedDuration;
-
-                var expiryInput = document.getElementById('expiry').value;
-                var expiryType = document.getElementById('expiryType').value;
-
-                var combinedExpiry = expiryInput + ' ' + expiryType;
-                document.getElementById('combinedExpiry').value = combinedExpiry;
-
                 document.getElementById('kt_modal_new_target_form').submit();
             }
         });
