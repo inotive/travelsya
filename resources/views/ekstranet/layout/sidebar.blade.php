@@ -23,7 +23,6 @@
     .menu-item.here .menu-arrow {
         color: gray !important;
     }
-
 </style>
 
 
@@ -162,8 +161,49 @@
                             <i class="fa-solid fa-umbrella-beach"></i>
                         </span>
                         <span class="menu-title">Daftar Rekreasi</span>
-                    </span>
-                    <!--end:Menu link-->
+
+
+                        <a href="{{ route('partner.daftar.kendaraan') }}"
+                            class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">
+                            <!--begin:Menu link-->
+                            <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="fas fa-car-side fs-3"></i>
+                                </span>
+                                <span class="menu-title">Daftar kendaraan</span>
+                            </span>
+                            <!--end:Menu link-->
+                        </a>
+
+
+                        @if (count($hotel) > 0)
+                        @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion here show" style="background-color: white;">
+                            @else
+                            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                                @endif
+
+
+                                <span class="menu-link {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel' ? 'main-accordion' : '' }}">
+                                    <span class="menu-icon {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel'  ? 'main-accordion' : '' }}">
+                                        <i class="fa-solid fa-hotel fs-3">
+                                            <span class="path1"></span>
+                                            <span class="path2"></span>
+                                        </i>
+                                    </span>
+
+                                    @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')
+                                    <span class="menu-title main-accordion" style="color: white !important;">Hotel ({{ count($hotel) }})</span>
+                                    @else
+                                    <span class="menu-title custom">Hotel ({{ count($hotel) }})</span>
+                                    @endif
+
+
+
+                                    <span class="menu-arrow {{ Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel'  ? 'main-accordion' : '' }}"></span>
+
+                                </span>
+                                <!--end:Menu link-->
                 </a>
                 <!--end:Menu content-->
 
