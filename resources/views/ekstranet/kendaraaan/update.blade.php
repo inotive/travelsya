@@ -109,12 +109,12 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Polisi ID</label>
-                        <select class="form-control" id="policy_id" name="policy_id">
-                            @foreach ($policies as $policy)
-                                <option value="{{ $policy->id }}"
-                                    {{ $policy->id == $car->policy_id ? 'selected' : '' }}>{{ $policy->name }}</option>
-                            @endforeach
+                        <label class="required fs-6 fw-semibold mb-2">Tahun Kendaraan</label>
+                        <select class="form-control" id="years" name="years">
+                            <?php
+                                for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
+                                    <option value="<?=$years;?>" <?= $car->years == $years ? 'selected' : '' ?>><?=$years;?></option>
+                            <?php endfor; ?>
                         </select>
                         @error('policy_id')
                             <span class="text-danger mt-1" role="alert">

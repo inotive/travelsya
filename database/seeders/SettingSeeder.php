@@ -21,9 +21,9 @@ class SettingSeeder extends Seeder
             'created_at'=>'2023-05-28 14:45:07',
             'updated_at'=>'2023-05-28 14:45:07'
             ] );
-            
-            
-                        
+
+
+
             Setting::create( [
             'id'=>2,
             'category'=>'fee',
@@ -33,9 +33,9 @@ class SettingSeeder extends Seeder
             'created_at'=>'2023-05-28 14:45:21',
             'updated_at'=>'2023-05-29 07:09:58'
             ] );
-            
-            
-                        
+
+
+
             Setting::create( [
             'id'=>3,
             'category'=>'fee',
@@ -45,7 +45,29 @@ class SettingSeeder extends Seeder
             'created_at'=>'2023-05-28 14:45:39',
             'updated_at'=>'2023-05-28 14:45:39'
             ] );
+
+
+
+            Setting::create( [
+            'id'=>4,
+            'category'=>'fee',
+            'name'=>'hostel2',
+            'value'=>10.00,
+            'is_percent'=>0,
+            'created_at'=>'2023-05-28 14:45:39',
+            'updated_at'=>'2023-05-28 14:45:39'
+            ] );
+
+
             
-            
+            Setting::create( [
+            'id'=>5,
+            'category'=>'fee',
+            'name'=>'ppob-pulsa2',
+            'value'=>5000.00,
+            'is_percent'=>0,
+            'created_at'=>'2023-05-28 14:45:39',
+            'updated_at'=>'2023-05-28 14:45:39'
+            ] );
     }
 }
