@@ -146,16 +146,17 @@
             url: 'recreation/' + id
             , type: 'GET'
             , success: function(response) {
+                // Menggunakan operator ternary untuk memeriksa null atau kosong
                 $('#package-details').html(`
-                <p><strong>Nama Paket:</strong> ${response.name}</p>
-                <p><strong>Kategori:</strong> ${response.category_name}</p>
-                <p><strong>Durasi:</strong> ${response.duration} ${response.unit_price}</p>
-                <p><strong>Lat:</strong> ${response.lat}</p>
-                <p><strong>Ltd:</strong> ${response.ltd}</p>
-                <p><strong>Tanggal Kadaluarsa:</strong> ${response.expiry_date}</p>
-                <p><strong>Harga:</strong> Rp ${response.price}</p>
-                <p><strong>Deskripsi:</strong> ${response.description}</p>
-                <p><strong>Peraturan:</strong> ${response.rules}</p>
+                <p><strong>Nama Paket:</strong> ${response.name ? response.name : '-'}</p>
+                <p><strong>Kategori:</strong> ${response.category_name ? response.category_name : '-'}</p>
+                <p><strong>Durasi:</strong> ${response.duration ? response.duration : '-'} ${response.unit_price ? response.unit_price : '-'}</p>
+                <p><strong>Lat:</strong> ${response.lat ? response.lat : '-'}</p>
+                <p><strong>Ltd:</strong> ${response.ltd ? response.ltd : '-'}</p>
+                <p><strong>Tanggal Kadaluarsa:</strong> ${response.expiry_date ? response.expiry_date : '-'}</p>
+                <p><strong>Harga:</strong> Rp ${response.price ? response.price : '-'}</p>
+                <p><strong>Deskripsi:</strong> ${response.description ? response.description : '-'}</p>
+                <p><strong>Peraturan:</strong> ${response.rules ? response.rules : '-'}</p>
                 <p><strong>Status:</strong> ${(response.is_active == 1 ? 'Aktif' : 'Tidak Aktif')}</p>
             `);
             }
@@ -164,6 +165,7 @@
             }
         });
     }
+
 
     // delete
     function deleteRecreation(id) {

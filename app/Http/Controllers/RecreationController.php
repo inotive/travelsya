@@ -70,6 +70,7 @@ class RecreationController extends Controller
     public function store(Request $request)
     {
         $request->merge(['is_active' => $request->input('is_active', 1)]);
+
         $request->validate([
             'category_recreation_id' => 'required|exists:category_recreations,id',
             'name' => 'required|string|max:255',
@@ -85,11 +86,11 @@ class RecreationController extends Controller
             'is_active' => 'required|boolean',
         ]);
 
-        $expiry = $request->expiry;
-        $expiryType = $request->expiryType;
-
-        $daysToAdd = $expiryType === 'Hari' ? $expiry : intdiv($expiry, 24);
-        $expiryDate = Carbon::now()->addDays($daysToAdd)->toDateString();
+        if ($request->expiryType === 'Hari') {
+            $expiryDate = Carbon::now()->addDays($request->expiry)->toDateString();
+        } else {
+            $expiryDate = Carbon::now()->addHours($request->expiry)->toDateTimeString();
+        }
 
         $recreation = DB::table('recreations')
             ->where('user_id', Auth::id())
@@ -118,7 +119,6 @@ class RecreationController extends Controller
 
         return redirect()->route('partner.daftar-rekreasi')->with('success', 'Data berhasil ditambahkan!');
     }
-
 
 
     public function edit($id) {
