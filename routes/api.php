@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\CarRentalController;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CallbackController;
+use App\Http\Controllers\Api\CarRentalController as ApiCarRentalController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
@@ -93,6 +95,9 @@ route::get('/service', [SettingController::class, 'getService']);
 route::post('/callback/xendit', [CallbackController::class, 'xendit']);
 route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 route::post('/callback/ppob/test-voucher', [CallbackController::class, 'testCheckVoucher']);
+
+// carrental
+Route::get('/car-rentals', [ApiCarRentalController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
