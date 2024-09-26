@@ -20,9 +20,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>2,
             'name'=>'data',
@@ -30,9 +30,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>3,
             'name'=>'pln',
@@ -40,9 +40,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>4,
             'name'=>'telkom',
@@ -50,9 +50,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>5,
             'name'=>'bpjs',
@@ -60,9 +60,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>6,
             'name'=>'negara',
@@ -70,9 +70,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>7,
             'name'=>'hostel',
@@ -80,9 +80,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>8,
             'name'=>'hotel',
@@ -90,9 +90,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>9,
             'name'=>'finance',
@@ -100,9 +100,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>10,
             'name'=>'tv-internet',
@@ -110,9 +110,9 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Service::create( [
             'id'=>11,
             'name'=>'ewallet',
@@ -120,7 +120,17 @@ class ServiceSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
+
+
+
+            Service::create( [
+            'id'=>12,
+            'name'=>'listrik-token',
+            'deleted_at'=>NULL,
+            'created_at'=>'2023-10-02 00:37:37',
+            'updated_at'=>'2023-10-02 00:37:38'
+            ] );
+
+
     }
 }

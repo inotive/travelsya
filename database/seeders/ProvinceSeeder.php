@@ -23,7 +23,7 @@ class ProvinceSeeder extends Seeder
                 ['prov_id' => $provinceData['id']],
                 [
                     'prov_name' => $provinceData['name'],
-                    'locationid' => 1, 
+                    'locationid' => 1,
                     'status' => '1'
                 ]
             );
