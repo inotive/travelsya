@@ -6,7 +6,7 @@
   <!--begin::Col-->
   <div class="col-xl-12">
 
-      <!--begin::Tiles Widget 2-->
+      <!--begin::Tiles Widget 2 -->
       <form action="{{ route('clinics.index') }}" method="GET"
           class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
           <!--begin::Body-->
@@ -14,16 +14,35 @@
               <!--begin::Title-->
               <h2 class="fw-bold mb-5">Health & Beauty</h2>
               <!--end::Title-->
-              <div class="row mb-5 gy-4">
-                  <div class="col-xl-4">
-                      <label class="fs-5 fw-semibold mb-2">
-                          <span class="required">Cari Klinik</span>
-                      </label>
-                      <input type="text" id="keyword" class="form-control form-control-lg"
-                          name="keyword" placeholder="Masukan kata kunci" value="" />
-                  </div>
 
-                  <div class="col-xl-4">
+              <!--begin::Radio group-->
+            <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+
+                <!--begin::Radio-->
+                <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                    <!--begin::Input-->
+                    <input class="btn-check" type="radio" name="category" value="health" required />
+                    <!--end::Input-->
+                    Health
+                </label>
+                <!--end::Radio-->
+
+                <!--begin::Radio-->
+                <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                    <!--begin::Input-->
+                    <input class="btn-check" type="radio" name="category" value="beauty" required />
+                    <!--end::Input-->
+                    Beauty
+                </label>
+                <!--end::Radio-->
+
+            </div>
+            <!--end::Radio group-->
+            <br>
+
+              <div class="row mb-3 gy-4">
+                  
+                  <div class="class=col-md-6 col-6 mb-5">
 
                     <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
                     <select name="location" id="location" class="form-select form-select-lg">
@@ -33,7 +52,14 @@
                     
                 </div>
 
-
+                <div class="class=col-md-6 col-6 mb-5">
+                    <label class="fs-5 fw-semibold mb-2">
+                        <span>Tanggal Pemesanan</span>
+                    </label>
+                    <input type="date" id="" class="form-control form-control-lg"
+                        name="keyword" placeholder="Tanggal" value="" />
+                </div>
+                    {{-- 
                   <div class="col-xl-4">
                     <label class="fs-5 fw-semibold mb-2">
                         <span class="required">Jenis Tindakan</span>
@@ -45,9 +71,9 @@
                         <option value="general">Klinik Umum</option>
                     </select>
                 </div>
-                
+                        --}}           
                   <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari Klinik</button>
+                      <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari Sekarang</button>
                   </div>
 
 
@@ -57,6 +83,67 @@
       </form>
       <!--end::Tiles Widget 2-->
 
+      
+      <div class="col-xl-12 d-flex flex-column justify-content-between">
+       <li class="nav-item">
+        <h3>Menampilkan 120 Tempat Kesehatan</h3>  
+        </li>
+        <li class="nav-item">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>   
+        </li>
+        <div class="col-xl-12">
+        <div class="row row-cols-4">
+
+         <!-- card -->
+         <div class="card shadow col-6" style="width: 18rem;">
+            <img src="https://plus.unsplash.com/premium_photo-1658506671316-0b293df7c72b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+          <!-- end card -->
+
+          
+         <!-- card -->
+        <div class="card shadow col-6" style="width: 18rem;">
+            <img src="https://plus.unsplash.com/premium_photo-1658506671316-0b293df7c72b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+          <!-- end card -->
+
+          
+         <!-- card -->
+        <div class="card shadow col-6" style="width: 18rem;">
+            <img src="https://plus.unsplash.com/premium_photo-1658506671316-0b293df7c72b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+          <!-- end card -->
+
+          
+         <!-- card -->
+        <div class="card shadow col-6" style="width: 18rem;">
+            <img src="https://plus.unsplash.com/premium_photo-1658506671316-0b293df7c72b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+            <div class="card-body">
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+          <!-- end card -->
+
+        </div>
+        
+
+      </div>
+      
+
+
+      
   </div>
   <!--end::Col-->
 </div>

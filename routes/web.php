@@ -218,6 +218,7 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
 
+// Health & Beauty
 Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function() {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/klinik/', 'show')->name('.klinik');
@@ -232,6 +233,8 @@ Route::controller(CarRentalController::class)->name('rental')->prefix('rental')-
     Route::get('/reservasi', 'reservation')->name('.reservasi');
     });
 // Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
+
+
 
 
 
@@ -402,8 +405,20 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::delete('daftar-room/delete/{type}/{id}', [ManagementRoomController::class, 'deleteroom'])->name('partner.management.room.deleteroom');
         Route::get('daftar-room/delete/hotel/{id}', [ManagementRoomController::class, 'HotelRoomDelete'])->name('partner.management.room.deleteroomhotel');
         Route::get('daftar-room/delete/hostel/{id}', [ManagementRoomController::class, 'HostelRoomDelete'])->name('partner.management.room.deleteroomhotel');
+                    
+        // health and beauty mitra
+        Route::get('clinics', [\App\Http\Controllers\ClinicHasPackageController::class, 'index'])->name('clinics.index');
+        
+        Route::get('clinics/create', [\App\Http\Controllers\ClinicHasPackageController::class, 'create'])->name('clinics.create');
 
+        Route::get('/clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
 
+        Route::post('clinics/store', [\App\Http\Controllers\ClinicHasPackageController::class, 'store'])->name('clinics.store');
+        
+        Route::put('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
+
+        route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
+        
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
         Route::post('daftar-room/detailroom/hotel/storeimage/', [ManagementRoomController::class, 'storehotelroomImage'])->name('partner.management.room.storehotelroomImage');
@@ -507,6 +522,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         });
     });
+
 });
 
 Auth::routes();
