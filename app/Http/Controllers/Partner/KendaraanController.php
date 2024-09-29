@@ -47,13 +47,14 @@ class KendaraanController extends Controller
             'rental_price_per_day' => 'required',
             'duration' => 'required',
             'description' => 'required',
-            'policy_id' => 'required',
+            // 'policy_id' => 'nullable',
+            'years' => 'nullable',
             'number_seats' => 'required',
             'status' => 'required',
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $car_rental = CarRental::find(10);
+        $car_rental = CarRental::find(2);
 
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
@@ -74,7 +75,8 @@ class KendaraanController extends Controller
             'rental_price_per_day' => $request->rental_price_per_day,
             'duration' => $request->duration,
             'description' => $request->description,
-            'policy_id' => $request->policy_id,
+            // 'policy_id' => $request->policy_id,
+            'years' => $request->years,
             'number_seats' => $request->number_seats,
             'status' => $request->status,
             'image_url' => $imageName,
@@ -110,7 +112,8 @@ class KendaraanController extends Controller
             'rental_price_per_day' => 'required',
             'duration' => 'required',
             'description' => 'required',
-            'policy_id' => 'required',
+            // 'policy_id' => 'nullable',
+            'years' => 'nullable',
             'number_seats' => 'required',
             'status' => 'required',
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -126,6 +129,8 @@ class KendaraanController extends Controller
             $image = $request->file('image_url');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('cars', $imageName, 'public');
+        } else {
+            $imageName = $car->image_url;
         }
 
         $car->brand_id = $request->brand_id;
@@ -135,7 +140,8 @@ class KendaraanController extends Controller
         $car->rental_price_per_day = $request->rental_price_per_day;
         $car->duration = $request->duration;
         $car->description = $request->description;
-        $car->policy_id = $request->policy_id;
+        // $car->policy_id = $request->policy_id;
+        $car->years = $request->years;
         $car->number_seats = $request->number_seats;
         $car->status = $request->status;
         $car->image_url = $imageName;

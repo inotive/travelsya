@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->unsignedBigInteger('product_id');
             $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->string('nomor_pelanggan');
+            $table->string('nomor_pelanggan')->nullable();
             $table->integer('total_tagihan');
             $table->integer('fee_travelsya');
             $table->integer('fee_mili');

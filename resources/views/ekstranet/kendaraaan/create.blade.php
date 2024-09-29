@@ -102,11 +102,19 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Polisi ID</label>
-                        <select class="form-control" id="policy_id" name="policy_id">
-                            @foreach ($policies as $policy)
-                                <option value="{{ $policy->id }}">{{ $policy->name }}</option>
-                            @endforeach
+                        <label class="required fs-6 fw-semibold mb-2">Tahun</label>
+                        <select class="form-control" id="years" name="years">
+                            <?php
+                                $result_arr_['years'] = "2019";
+                                if($result_arr_['years'] == true){
+                                    $selected_year = "selected";
+                                }else{
+                                    $selected_year = " ";
+                                }
+
+                                for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
+                                    <option value="<?=$years;?>" <?php echo $selected_year;?>><?=$years;?></option>
+                            <?php endfor; ?>
                         </select>
                         @error('policy_id')
                             <span class="text-danger mt-1" role="alert">

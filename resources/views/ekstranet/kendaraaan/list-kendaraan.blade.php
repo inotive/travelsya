@@ -48,7 +48,8 @@
                                                             </td>
                                                             <td>{{ $car->brand->name ?? '' }}</td>
                                                             <td>{{ $car->carModel->name ?? '' }}</td>
-                                                            <td>{{ $car->policy->id }}</td>
+                                                            {{-- <td>{{ $car->policy->id }}</td> --}}
+                                                            <td>{{ $car->years }}</td>
                                                             <td>{{ $car->number_seats }}</td>
                                                             <td>{{ $car->category_rent }}</td>
                                                             <td>{{ $car->rental_price_per_day }}</td>

@@ -25,17 +25,19 @@ return new class extends Migration
             $table->foreign('car_model_id')->references('id')->on('car_models');
 
 
-            $table->unsignedBigInteger('policy_id');
+            $table->unsignedBigInteger('policy_id')->nullable();
             $table->foreign('policy_id')->references('id')->on('policies');
 
             $table->integer("number_seats");
             $table->string('category_rent');
             $table->enum("category", ["manual", "automatic"]);
             $table->float("rental_price_per_day");
+            $table->string('duration');
             $table->string("status");
             $table->text("description");
-            $table->string("image_url");
+            $table->string("image_url")->nullable();
 
+            $table->integer('years')->nullable();
 
             $table->timestamps();
         });
