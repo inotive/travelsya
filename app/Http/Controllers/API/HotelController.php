@@ -263,7 +263,7 @@ class HotelController extends Controller
                         'image' => 'storage/' . $group->facility->icon,
                     ];
                 });
-                
+
 
                 $hotelImage = $hotel->hotelImage->where('main', 1)->first();
                 $avg_rating = $hotel->hotelRating->sum('rate') != 0 ? $hotel->hotelRating->sum('rate') / $hotel->hotelRating->count() : 0;
