@@ -30,7 +30,7 @@
                         <option value="balikpapan">Balikpapan</option>
                         <option value="samarinda">Samarinda</option>
                     </select>
-                    
+
                 </div>
 
 
@@ -39,14 +39,14 @@
                         <span class="required">Jenis Rekreasi</span>
                     </label>
                     <select name="type" id="type" class="form-select form-select-lg">
-                        
+
                         <option value="atraksi">Atraksi</option>
                         <option value="spa-kecantikan">Spa & Kecantikan</option>
                         <option value="event">Event</option>
                         <option value="arena">Arena</option>
                     </select>
                 </div>
-                
+
                   <div class="d-flex justify-content-end">
                       <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari Wisata</button>
                   </div>

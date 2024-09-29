@@ -10,6 +10,7 @@ use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
 use App\Http\Controllers\API\RatingHostelController;
 use App\Http\Controllers\API\RatingHotelController;
+use App\Http\Controllers\Api\RecreationController;
 use App\Http\Controllers\API\TopUpController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
@@ -98,6 +99,9 @@ route::post('/callback/ppob/test-voucher', [CallbackController::class, 'testChec
 
 // carrental
 Route::get('/car-rentals', [ApiCarRentalController::class, 'index']);
+
+// carrental
+Route::get('/recreations', [RecreationController::class, 'index']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
