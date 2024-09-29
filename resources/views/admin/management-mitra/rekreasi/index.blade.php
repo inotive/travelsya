@@ -35,23 +35,23 @@
                       @foreach ($recreations as $recreation)
                           <tr>
                               <td>{{ $loop->iteration }}</td>
-                            
+
                               <td class="text-center">
                                 <img src="{{ $recreation->image != null && $recreation->image != "-" ? asset('storage/' . $recreation->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
                                 style="width: 25px; height: 25px;">
                                 {{ $recreation->name }}
                               </td>
                               <td class="text-center">
-                             
-                            
+
+
                                 {{ $recreation->business_name }}</td>
                               <td class="text-center">{{ $recreation->city_name }}</td>
-                            
+
                               <td class="text-center">{{ $recreation->address }}</td>
 
-                              
+
                               <td class="text-center">{{ $recreation->phone }}</td>
-                             
+
                               <td class="text-center">
                                   @if ($recreation->is_active === 1)
                                       <span class="badge badge-success">Aktif</span>
@@ -123,7 +123,7 @@
                       @endforeach
                       @include('admin.management-mitra.rekreasi.edit')
 
-          
+
                   </tbody>
                 </table>
 
@@ -136,7 +136,7 @@
     <!--end::Tables Widget 11-->
 
 
- 
+
 
     <!--begin::Modal - New Target-->
     <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
@@ -209,13 +209,13 @@
                                 </span>
                             @enderror
                           </div>
-  
-                          
+
+
 
 
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
-                               
+
                                     <select class="js-example-basic-single form-control form-control-lg" name="city" id="city">
                                         @foreach ($cities as $city)
                                         <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
@@ -231,7 +231,7 @@
                             </div>
 
 
-                         
+
 
 
                         <div class="col-12">
@@ -272,7 +272,7 @@
     </div>
     <!--end::Modal - New Target-->
 
-   
+
 
     @push('add-script')
         <script>
