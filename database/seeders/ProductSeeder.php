@@ -26,9 +26,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>3,
             'category'=>'data',
@@ -42,9 +42,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>4,
             'category'=>'data',
@@ -58,9 +58,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>5,
             'category'=>'data',
@@ -74,9 +74,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>6,
             'category'=>'data',
@@ -90,9 +90,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>7,
             'category'=>'data',
@@ -106,9 +106,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>8,
             'category'=>'data',
@@ -122,9 +122,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>9,
             'category'=>'data',
@@ -138,9 +138,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>10,
             'category'=>'data',
@@ -154,9 +154,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>11,
             'category'=>'data',
@@ -170,9 +170,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>12,
             'category'=>'data',
@@ -186,9 +186,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>13,
             'category'=>'data',
@@ -202,9 +202,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>14,
             'category'=>'data',
@@ -218,9 +218,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>15,
             'category'=>'pulsa',
@@ -234,9 +234,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>16,
             'category'=>'pulsa',
@@ -250,9 +250,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>17,
             'category'=>'pulsa',
@@ -266,9 +266,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>18,
             'category'=>'pulsa',
@@ -282,9 +282,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>19,
             'category'=>'pulsa',
@@ -298,9 +298,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>20,
             'category'=>'pulsa',
@@ -314,9 +314,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>21,
             'category'=>'pulsa',
@@ -330,9 +330,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>22,
             'category'=>'data',
@@ -346,9 +346,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>23,
             'category'=>'data',
@@ -362,9 +362,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>24,
             'category'=>'data',
@@ -378,9 +378,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>25,
             'category'=>'data',
@@ -394,9 +394,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>26,
             'category'=>'data',
@@ -410,9 +410,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>27,
             'category'=>'data',
@@ -426,9 +426,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>28,
             'category'=>'data',
@@ -442,9 +442,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>29,
             'category'=>'data',
@@ -458,9 +458,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>30,
             'category'=>'data',
@@ -474,9 +474,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>31,
             'category'=>'data',
@@ -490,9 +490,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>32,
             'category'=>'data',
@@ -506,9 +506,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>33,
             'category'=>'data',
@@ -522,9 +522,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>34,
             'category'=>'data',
@@ -538,9 +538,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>35,
             'category'=>'data',
@@ -554,9 +554,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>36,
             'category'=>'data',
@@ -570,9 +570,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>37,
             'category'=>'data',
@@ -586,9 +586,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>38,
             'category'=>'data',
@@ -602,9 +602,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>39,
             'category'=>'data',
@@ -618,9 +618,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>40,
             'category'=>'data',
@@ -634,9 +634,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>41,
             'category'=>'data',
@@ -650,9 +650,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>42,
             'category'=>'data',
@@ -666,9 +666,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>43,
             'category'=>'data',
@@ -682,9 +682,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>44,
             'category'=>'data',
@@ -698,9 +698,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>45,
             'category'=>'data',
@@ -714,9 +714,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>46,
             'category'=>'data',
@@ -730,9 +730,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>47,
             'category'=>'data',
@@ -746,9 +746,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>48,
             'category'=>'data',
@@ -762,9 +762,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>49,
             'category'=>'data',
@@ -778,9 +778,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>50,
             'category'=>'data',
@@ -794,9 +794,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>51,
             'category'=>'data',
@@ -810,9 +810,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>52,
             'category'=>'data',
@@ -826,9 +826,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>53,
             'category'=>'data',
@@ -842,9 +842,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>54,
             'category'=>'data',
@@ -858,9 +858,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>55,
             'category'=>'data',
@@ -874,9 +874,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>56,
             'category'=>'data',
@@ -890,9 +890,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>57,
             'category'=>'data',
@@ -906,9 +906,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>58,
             'category'=>'data',
@@ -922,9 +922,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>59,
             'category'=>'data',
@@ -938,9 +938,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>60,
             'category'=>'data',
@@ -954,9 +954,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>61,
             'category'=>'data',
@@ -970,9 +970,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>62,
             'category'=>'data',
@@ -986,9 +986,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>63,
             'category'=>'data',
@@ -1002,9 +1002,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>64,
             'category'=>'data',
@@ -1018,9 +1018,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>65,
             'category'=>'data',
@@ -1034,9 +1034,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>66,
             'category'=>'pulsa',
@@ -1050,9 +1050,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>67,
             'category'=>'pulsa',
@@ -1066,9 +1066,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>68,
             'category'=>'pulsa',
@@ -1082,9 +1082,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>69,
             'category'=>'pulsa',
@@ -1098,9 +1098,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>70,
             'category'=>'pulsa',
@@ -1114,9 +1114,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>71,
             'category'=>'pulsa',
@@ -1130,9 +1130,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>72,
             'category'=>'pulsa',
@@ -1146,9 +1146,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>73,
             'category'=>'pulsa',
@@ -1162,9 +1162,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>74,
             'category'=>'pulsa',
@@ -1178,9 +1178,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>75,
             'category'=>'pulsa',
@@ -1194,9 +1194,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>76,
             'category'=>'pulsa',
@@ -1210,9 +1210,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>77,
             'category'=>'pulsa',
@@ -1226,9 +1226,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>78,
             'category'=>'pulsa',
@@ -1242,9 +1242,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>79,
             'category'=>'pulsa',
@@ -1258,9 +1258,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>80,
             'category'=>'pulsa',
@@ -1274,9 +1274,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>81,
             'category'=>'pulsa',
@@ -1290,9 +1290,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>82,
             'category'=>'pulsa',
@@ -1306,9 +1306,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>83,
             'category'=>'pulsa',
@@ -1322,9 +1322,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>84,
             'category'=>'pulsa',
@@ -1338,9 +1338,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>85,
             'category'=>'pulsa',
@@ -1354,9 +1354,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>86,
             'category'=>'pulsa',
@@ -1370,9 +1370,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>87,
             'category'=>'pln',
@@ -1386,9 +1386,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>88,
             'category'=>'pln',
@@ -1402,9 +1402,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>89,
             'category'=>'pln',
@@ -1418,9 +1418,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>90,
             'category'=>'pln',
@@ -1434,9 +1434,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>91,
             'category'=>'pln',
@@ -1450,9 +1450,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>92,
             'category'=>'pln',
@@ -1466,9 +1466,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>93,
             'category'=>'pln',
@@ -1482,9 +1482,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>94,
             'category'=>'pln',
@@ -1498,9 +1498,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>95,
             'category'=>'pln',
@@ -1514,9 +1514,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>96,
             'category'=>'pln',
@@ -1530,9 +1530,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>97,
             'category'=>'pln',
@@ -1546,9 +1546,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>98,
             'category'=>'pln',
@@ -1562,9 +1562,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>99,
             'category'=>'data',
@@ -1578,9 +1578,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>100,
             'category'=>'data',
@@ -1594,9 +1594,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>101,
             'category'=>'data',
@@ -1610,9 +1610,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>102,
             'category'=>'data',
@@ -1626,9 +1626,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>103,
             'category'=>'data',
@@ -1642,9 +1642,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>104,
             'category'=>'data',
@@ -1658,9 +1658,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>105,
             'category'=>'data',
@@ -1674,9 +1674,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>106,
             'category'=>'data',
@@ -1690,9 +1690,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>107,
             'category'=>'data',
@@ -1706,9 +1706,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>108,
             'category'=>'data',
@@ -1722,9 +1722,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>109,
             'category'=>'data',
@@ -1738,9 +1738,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>110,
             'category'=>'data',
@@ -1754,9 +1754,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>111,
             'category'=>'data',
@@ -1770,9 +1770,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>112,
             'category'=>'data',
@@ -1786,9 +1786,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>113,
             'category'=>'data',
@@ -1802,9 +1802,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>114,
             'category'=>'data',
@@ -1818,9 +1818,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>115,
             'category'=>'data',
@@ -1834,9 +1834,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>116,
             'category'=>'data',
@@ -1850,9 +1850,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>117,
             'category'=>'data',
@@ -1866,9 +1866,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>118,
             'category'=>'data',
@@ -1882,9 +1882,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>119,
             'category'=>'data',
@@ -1898,9 +1898,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>120,
             'category'=>'data',
@@ -1914,9 +1914,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>121,
             'category'=>'pulsa',
@@ -1930,9 +1930,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>122,
             'category'=>'pulsa',
@@ -1946,9 +1946,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>123,
             'category'=>'pulsa',
@@ -1962,9 +1962,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>124,
             'category'=>'pulsa',
@@ -1978,9 +1978,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>125,
             'category'=>'pulsa',
@@ -1994,9 +1994,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>126,
             'category'=>'pulsa',
@@ -2010,9 +2010,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>127,
             'category'=>'pulsa',
@@ -2026,9 +2026,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>128,
             'category'=>'pulsa',
@@ -2042,9 +2042,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>129,
             'category'=>'pulsa',
@@ -2058,9 +2058,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>130,
             'category'=>'pulsa',
@@ -2074,9 +2074,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>131,
             'category'=>'pulsa',
@@ -2090,9 +2090,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>132,
             'category'=>'pulsa',
@@ -2106,9 +2106,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>133,
             'category'=>'pulsa',
@@ -2122,9 +2122,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>134,
             'category'=>'pulsa',
@@ -2138,9 +2138,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>135,
             'category'=>'pulsa',
@@ -2154,9 +2154,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>136,
             'category'=>'pulsa',
@@ -2170,9 +2170,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>137,
             'category'=>'pulsa',
@@ -2186,9 +2186,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>138,
             'category'=>'pulsa',
@@ -2202,9 +2202,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>139,
             'category'=>'pulsa',
@@ -2218,9 +2218,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>140,
             'category'=>'pulsa',
@@ -2234,9 +2234,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>141,
             'category'=>'pulsa',
@@ -2250,9 +2250,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>142,
             'category'=>'pulsa',
@@ -2266,9 +2266,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>143,
             'category'=>'pulsa',
@@ -2282,9 +2282,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>144,
             'category'=>'data',
@@ -2298,9 +2298,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>145,
             'category'=>'data',
@@ -2314,9 +2314,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>146,
             'category'=>'data',
@@ -2330,9 +2330,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>147,
             'category'=>'data',
@@ -2346,9 +2346,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>148,
             'category'=>'data',
@@ -2362,9 +2362,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>149,
             'category'=>'data',
@@ -2378,9 +2378,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>150,
             'category'=>'data',
@@ -2394,9 +2394,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>151,
             'category'=>'data',
@@ -2410,9 +2410,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>152,
             'category'=>'data',
@@ -2426,9 +2426,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>153,
             'category'=>'data',
@@ -2442,9 +2442,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>154,
             'category'=>'data',
@@ -2458,9 +2458,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>155,
             'category'=>'data',
@@ -2474,9 +2474,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>156,
             'category'=>'data',
@@ -2490,9 +2490,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>157,
             'category'=>'data',
@@ -2506,9 +2506,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>158,
             'category'=>'data',
@@ -2522,9 +2522,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>159,
             'category'=>'data',
@@ -2538,9 +2538,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>160,
             'category'=>'data',
@@ -2554,9 +2554,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>161,
             'category'=>'data',
@@ -2570,9 +2570,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>162,
             'category'=>'data',
@@ -2586,9 +2586,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>163,
             'category'=>'data',
@@ -2602,9 +2602,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>164,
             'category'=>'data',
@@ -2618,9 +2618,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>165,
             'category'=>'data',
@@ -2634,9 +2634,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>166,
             'category'=>'data',
@@ -2650,9 +2650,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>167,
             'category'=>'data',
@@ -2666,9 +2666,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>168,
             'category'=>'data',
@@ -2682,9 +2682,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>169,
             'category'=>'data',
@@ -2698,9 +2698,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>170,
             'category'=>'data',
@@ -2714,9 +2714,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>171,
             'category'=>'data',
@@ -2730,9 +2730,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>172,
             'category'=>'data',
@@ -2746,9 +2746,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>173,
             'category'=>'data',
@@ -2762,9 +2762,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>174,
             'category'=>'data',
@@ -2778,9 +2778,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>175,
             'category'=>'data',
@@ -2794,9 +2794,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>176,
             'category'=>'data',
@@ -2810,9 +2810,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>177,
             'category'=>'data',
@@ -2826,9 +2826,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>178,
             'category'=>'pulsa',
@@ -2842,9 +2842,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>179,
             'category'=>'pulsa',
@@ -2858,9 +2858,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>180,
             'category'=>'pulsa',
@@ -2874,9 +2874,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>181,
             'category'=>'pulsa',
@@ -2890,9 +2890,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>182,
             'category'=>'pulsa',
@@ -2906,9 +2906,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>183,
             'category'=>'pulsa',
@@ -2922,9 +2922,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>184,
             'category'=>'pulsa',
@@ -2938,9 +2938,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>185,
             'category'=>'pulsa',
@@ -2954,9 +2954,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>186,
             'category'=>'pulsa',
@@ -2970,9 +2970,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>187,
             'category'=>'pulsa',
@@ -2986,9 +2986,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>188,
             'category'=>'pulsa',
@@ -3002,9 +3002,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>189,
             'category'=>'pulsa',
@@ -3018,9 +3018,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>190,
             'category'=>'pulsa',
@@ -3034,9 +3034,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>191,
             'category'=>'pulsa',
@@ -3050,9 +3050,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>192,
             'category'=>'pulsa',
@@ -3066,9 +3066,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>193,
             'category'=>'pulsa',
@@ -3082,9 +3082,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>194,
             'category'=>'pulsa',
@@ -3098,9 +3098,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>195,
             'category'=>'pulsa',
@@ -3114,9 +3114,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>196,
             'category'=>'pulsa',
@@ -3130,9 +3130,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>197,
             'category'=>'pulsa',
@@ -3146,9 +3146,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>198,
             'category'=>'pulsa',
@@ -3162,9 +3162,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>199,
             'category'=>'pulsa',
@@ -3178,9 +3178,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>200,
             'category'=>'pulsa',
@@ -3194,9 +3194,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>201,
             'category'=>'pulsa',
@@ -3210,9 +3210,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>202,
             'category'=>'pulsa',
@@ -3226,9 +3226,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>203,
             'category'=>'pulsa',
@@ -3242,9 +3242,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>204,
             'category'=>'pulsa',
@@ -3258,9 +3258,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>205,
             'category'=>'pulsa',
@@ -3274,9 +3274,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>206,
             'category'=>'pulsa',
@@ -3290,9 +3290,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>207,
             'category'=>'pulsa',
@@ -3306,9 +3306,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>208,
             'category'=>'pulsa',
@@ -3322,9 +3322,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>209,
             'category'=>'pulsa',
@@ -3338,9 +3338,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>210,
             'category'=>'pulsa',
@@ -3354,9 +3354,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>211,
             'category'=>'pulsa',
@@ -3370,9 +3370,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>212,
             'category'=>'pulsa',
@@ -3386,9 +3386,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>213,
             'category'=>'pulsa',
@@ -3402,9 +3402,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>214,
             'category'=>'pulsa',
@@ -3418,9 +3418,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>215,
             'category'=>'pulsa',
@@ -3434,9 +3434,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>216,
             'category'=>'pulsa',
@@ -3450,9 +3450,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>217,
             'category'=>'pulsa',
@@ -3466,9 +3466,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>218,
             'category'=>'pulsa',
@@ -3482,9 +3482,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>219,
             'category'=>'pulsa',
@@ -3498,9 +3498,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>220,
             'category'=>'pulsa',
@@ -3514,9 +3514,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>221,
             'category'=>'pulsa',
@@ -3530,9 +3530,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>222,
             'category'=>'data',
@@ -3546,9 +3546,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>223,
             'category'=>'data',
@@ -3562,9 +3562,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>224,
             'category'=>'data',
@@ -3578,9 +3578,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>225,
             'category'=>'data',
@@ -3594,9 +3594,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>226,
             'category'=>'data',
@@ -3610,9 +3610,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>227,
             'category'=>'data',
@@ -3626,9 +3626,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>228,
             'category'=>'data',
@@ -3642,9 +3642,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>229,
             'category'=>'data',
@@ -3658,9 +3658,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>230,
             'category'=>'data',
@@ -3674,9 +3674,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>231,
             'category'=>'data',
@@ -3690,9 +3690,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>232,
             'category'=>'data',
@@ -3706,9 +3706,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>233,
             'category'=>'data',
@@ -3722,9 +3722,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>234,
             'category'=>'data',
@@ -3738,9 +3738,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>235,
             'category'=>'data',
@@ -3754,9 +3754,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>236,
             'category'=>'data',
@@ -3770,9 +3770,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>237,
             'category'=>'data',
@@ -3786,9 +3786,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>238,
             'category'=>'data',
@@ -3802,9 +3802,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>239,
             'category'=>'data',
@@ -3818,9 +3818,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>240,
             'category'=>'data',
@@ -3834,9 +3834,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>241,
             'category'=>'data',
@@ -3850,9 +3850,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>242,
             'category'=>'data',
@@ -3866,9 +3866,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>243,
             'category'=>'data',
@@ -3882,9 +3882,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>244,
             'category'=>'data',
@@ -3898,9 +3898,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>245,
             'category'=>'data',
@@ -3914,9 +3914,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>246,
             'category'=>'data',
@@ -3930,9 +3930,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>247,
             'category'=>'data',
@@ -3946,9 +3946,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>248,
             'category'=>'data',
@@ -3962,9 +3962,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>249,
             'category'=>'data',
@@ -3978,9 +3978,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>250,
             'category'=>'data',
@@ -3994,9 +3994,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>251,
             'category'=>'data',
@@ -4010,9 +4010,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>252,
             'category'=>'data',
@@ -4026,9 +4026,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>253,
             'category'=>'data',
@@ -4042,9 +4042,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>254,
             'category'=>'data',
@@ -4058,9 +4058,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>255,
             'category'=>'pulsa',
@@ -4074,9 +4074,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>256,
             'category'=>'pulsa',
@@ -4090,9 +4090,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>257,
             'category'=>'pulsa',
@@ -4106,9 +4106,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>258,
             'category'=>'pulsa',
@@ -4122,9 +4122,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>259,
             'category'=>'pulsa',
@@ -4138,9 +4138,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>260,
             'category'=>'pulsa',
@@ -4154,9 +4154,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>261,
             'category'=>'pulsa',
@@ -4170,9 +4170,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>262,
             'category'=>'pulsa',
@@ -4186,9 +4186,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>263,
             'category'=>'pulsa',
@@ -4202,9 +4202,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>264,
             'category'=>'pulsa',
@@ -4218,9 +4218,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>265,
             'category'=>'pulsa',
@@ -4234,9 +4234,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>266,
             'category'=>'pulsa',
@@ -4250,9 +4250,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>267,
             'category'=>'pulsa',
@@ -4266,9 +4266,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>268,
             'category'=>'pulsa',
@@ -4282,9 +4282,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>269,
             'category'=>'pulsa',
@@ -4298,9 +4298,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>270,
             'category'=>'pulsa',
@@ -4314,9 +4314,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>271,
             'category'=>'pulsa',
@@ -4330,9 +4330,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>272,
             'category'=>'pulsa',
@@ -4346,9 +4346,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>273,
             'category'=>'pulsa',
@@ -4362,9 +4362,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>274,
             'category'=>'pulsa',
@@ -4378,9 +4378,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>275,
             'category'=>'pulsa',
@@ -4394,9 +4394,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>276,
             'category'=>'pulsa',
@@ -4410,9 +4410,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>277,
             'category'=>'pulsa',
@@ -4426,9 +4426,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>278,
             'category'=>'pulsa',
@@ -4442,9 +4442,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>279,
             'category'=>'pulsa',
@@ -4458,9 +4458,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>280,
             'category'=>'pulsa',
@@ -4474,9 +4474,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>281,
             'category'=>'pulsa',
@@ -4490,9 +4490,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>282,
             'category'=>'pulsa',
@@ -4506,9 +4506,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>283,
             'category'=>'pulsa',
@@ -4522,9 +4522,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>284,
             'category'=>'pulsa',
@@ -4538,9 +4538,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>285,
             'category'=>'pulsa',
@@ -4554,9 +4554,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>286,
             'category'=>'pulsa',
@@ -4570,9 +4570,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>287,
             'category'=>'pulsa',
@@ -4586,9 +4586,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>288,
             'category'=>'pulsa',
@@ -4602,9 +4602,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>289,
             'category'=>'pulsa',
@@ -4618,9 +4618,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>290,
             'category'=>'pulsa',
@@ -4634,9 +4634,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>291,
             'category'=>'pulsa',
@@ -4650,9 +4650,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>292,
             'category'=>'pulsa',
@@ -4666,9 +4666,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>293,
             'category'=>'pulsa',
@@ -4682,9 +4682,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>294,
             'category'=>'pulsa',
@@ -4698,9 +4698,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>295,
             'category'=>'pulsa',
@@ -4714,9 +4714,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>296,
             'category'=>'pulsa',
@@ -4730,9 +4730,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>297,
             'category'=>'pulsa',
@@ -4746,9 +4746,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>298,
             'category'=>'pulsa',
@@ -4762,9 +4762,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>299,
             'category'=>'pulsa',
@@ -4778,9 +4778,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>300,
             'category'=>'pulsa',
@@ -4794,9 +4794,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>301,
             'category'=>'pulsa',
@@ -4810,9 +4810,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>302,
             'category'=>'pulsa',
@@ -4826,9 +4826,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>303,
             'category'=>'pulsa',
@@ -4842,9 +4842,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>304,
             'category'=>'pulsa',
@@ -4858,9 +4858,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>305,
             'category'=>'pulsa',
@@ -4874,9 +4874,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>306,
             'category'=>'data',
@@ -4890,9 +4890,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>307,
             'category'=>'data',
@@ -4906,9 +4906,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>308,
             'category'=>'data',
@@ -4922,9 +4922,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>309,
             'category'=>'data',
@@ -4938,9 +4938,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>310,
             'category'=>'data',
@@ -4954,9 +4954,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>311,
             'category'=>'data',
@@ -4970,9 +4970,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>312,
             'category'=>'data',
@@ -4986,9 +4986,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>313,
             'category'=>'data',
@@ -5002,9 +5002,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>314,
             'category'=>'data',
@@ -5018,9 +5018,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>315,
             'category'=>'data',
@@ -5034,9 +5034,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>316,
             'category'=>'data',
@@ -5050,9 +5050,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>317,
             'category'=>'data',
@@ -5066,9 +5066,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>318,
             'category'=>'data',
@@ -5082,9 +5082,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>319,
             'category'=>'data',
@@ -5098,9 +5098,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>320,
             'category'=>'data',
@@ -5114,9 +5114,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>321,
             'category'=>'data',
@@ -5130,9 +5130,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>322,
             'category'=>'data',
@@ -5146,9 +5146,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>323,
             'category'=>'data',
@@ -5162,9 +5162,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>324,
             'category'=>'data',
@@ -5178,9 +5178,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>325,
             'category'=>'data',
@@ -5194,9 +5194,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>326,
             'category'=>'data',
@@ -5210,9 +5210,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>327,
             'category'=>'data',
@@ -5226,9 +5226,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>328,
             'category'=>'data',
@@ -5242,9 +5242,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>329,
             'category'=>'data',
@@ -5258,9 +5258,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>330,
             'category'=>'data',
@@ -5274,9 +5274,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>331,
             'category'=>'data',
@@ -5290,9 +5290,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>332,
             'category'=>'data',
@@ -5306,9 +5306,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>333,
             'category'=>'data',
@@ -5322,9 +5322,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>334,
             'category'=>'data',
@@ -5338,9 +5338,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>335,
             'category'=>'data',
@@ -5354,9 +5354,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>336,
             'category'=>'data',
@@ -5370,9 +5370,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>337,
             'category'=>'data',
@@ -5386,9 +5386,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>338,
             'category'=>'data',
@@ -5402,9 +5402,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>339,
             'category'=>'data',
@@ -5418,9 +5418,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>340,
             'category'=>'data',
@@ -5434,9 +5434,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>341,
             'category'=>'data',
@@ -5450,9 +5450,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>342,
             'category'=>'data',
@@ -5466,9 +5466,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>343,
             'category'=>'data',
@@ -5482,9 +5482,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>344,
             'category'=>'data',
@@ -5498,9 +5498,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>345,
             'category'=>'data',
@@ -5514,9 +5514,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>346,
             'category'=>'data',
@@ -5530,9 +5530,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>347,
             'category'=>'data',
@@ -5546,9 +5546,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>348,
             'category'=>'data',
@@ -5562,9 +5562,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>349,
             'category'=>'data',
@@ -5578,9 +5578,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>350,
             'category'=>'data',
@@ -5594,9 +5594,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>351,
             'category'=>'data',
@@ -5610,9 +5610,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>352,
             'category'=>'data',
@@ -5626,9 +5626,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>353,
             'category'=>'data',
@@ -5642,9 +5642,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>354,
             'category'=>'pulsa',
@@ -5658,9 +5658,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>355,
             'category'=>'pulsa',
@@ -5674,9 +5674,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>356,
             'category'=>'pulsa',
@@ -5690,9 +5690,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>357,
             'category'=>'pulsa',
@@ -5706,9 +5706,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>358,
             'category'=>'pulsa',
@@ -5722,9 +5722,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>359,
             'category'=>'pulsa',
@@ -5738,9 +5738,9 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
+
+
             Product::create( [
             'id'=>360,
             'category'=>'pulsa',
@@ -5754,13 +5754,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>361,
             'category'=>'finance',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYBAF',
             'name'=>'BAF FINANCE',
             'description'=>'BAYAR BAF FINANCE',
@@ -5770,9 +5768,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>362,
             'category'=>'bpjs',
@@ -5786,29 +5782,25 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>363,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYCENTRIN',
             'name'=>'CENTRIN TV',
             'description'=>'BAYAR CENTRIN TV',
             'price'=>500,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>364,
             'category'=>'finance',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYFIF',
             'name'=>'FIF',
             'description'=>'BAYAR FIF',
@@ -5818,13 +5810,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>365,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYINDO',
             'name'=>'INDOVISION',
             'description'=>'BYR TAG INDOVISION',
@@ -5834,13 +5824,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>366,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYHALO',
             'name'=>'KARTU HALO',
             'description'=>'BYR TAG KARTUHALO',
@@ -5850,13 +5838,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>367,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYMATRIX',
             'name'=>'MATRIX',
             'description'=>'BAYAR MATRIX',
@@ -5866,13 +5852,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>368,
             'category'=>'finance',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYMAF',
             'name'=>'MEGA AUTO FINANCE',
             'description'=>'BAYAR MEGA AUTO FINANCE',
@@ -5882,29 +5866,25 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>369,
             'category'=>'finance',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYMCF',
             'name'=>'MEGA CENTRAL FINANCE',
             'description'=>'BAYAR MEGA CENTRAL FINANCE',
             'price'=>400,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>370,
             'category'=>'finance',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYMEGAF',
             'name'=>'MEGA FINANCE',
             'description'=>'BAYAR MEGA FINANCE',
@@ -5914,41 +5894,35 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>371,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYOKE',
             'name'=>'OKE VISION',
             'description'=>'BAYAR TAG OKE VISION',
             'price'=>500,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>372,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYOTV',
             'name'=>'OTV POSTPAID',
             'description'=>'BAYAR ORANGE TV',
             'price'=>500,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>373,
             'category'=>'negara',
@@ -5962,9 +5936,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>374,
             'category'=>'negara',
@@ -5978,9 +5950,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>375,
             'category'=>'negara',
@@ -5994,9 +5964,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>376,
             'category'=>'negara',
@@ -6010,9 +5978,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>377,
             'category'=>'negara',
@@ -6026,9 +5992,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>378,
             'category'=>'negara',
@@ -6042,9 +6006,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>379,
             'category'=>'negara',
@@ -6058,9 +6020,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>380,
             'category'=>'negara',
@@ -6074,9 +6034,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>381,
             'category'=>'negara',
@@ -6090,9 +6048,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>382,
             'category'=>'negara',
@@ -6106,9 +6062,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>383,
             'category'=>'negara',
@@ -6122,9 +6076,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>384,
             'category'=>'negara',
@@ -6138,9 +6090,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>385,
             'category'=>'negara',
@@ -6154,9 +6104,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>386,
             'category'=>'negara',
@@ -6170,9 +6118,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>387,
             'category'=>'negara',
@@ -6186,9 +6132,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>388,
             'category'=>'negara',
@@ -6202,9 +6146,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>389,
             'category'=>'negara',
@@ -6218,9 +6160,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>390,
             'category'=>'negara',
@@ -6234,9 +6174,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>391,
             'category'=>'negara',
@@ -6250,9 +6188,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>392,
             'category'=>'negara',
@@ -6266,9 +6202,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>393,
             'category'=>'negara',
@@ -6282,9 +6216,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>394,
             'category'=>'negara',
@@ -6298,9 +6230,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>395,
             'category'=>'negara',
@@ -6314,9 +6244,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>396,
             'category'=>'negara',
@@ -6330,9 +6258,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>397,
             'category'=>'negara',
@@ -6346,9 +6272,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>398,
             'category'=>'negara',
@@ -6362,9 +6286,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>399,
             'category'=>'negara',
@@ -6378,9 +6300,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>400,
             'category'=>'negara',
@@ -6394,9 +6314,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>401,
             'category'=>'negara',
@@ -6410,9 +6328,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>402,
             'category'=>'negara',
@@ -6426,9 +6342,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>403,
             'category'=>'negara',
@@ -6442,9 +6356,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>404,
             'category'=>'negara',
@@ -6458,9 +6370,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>405,
             'category'=>'negara',
@@ -6474,9 +6384,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>406,
             'category'=>'negara',
@@ -6490,9 +6398,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>407,
             'category'=>'negara',
@@ -6506,9 +6412,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>408,
             'category'=>'negara',
@@ -6522,9 +6426,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>409,
             'category'=>'negara',
@@ -6538,9 +6440,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>410,
             'category'=>'negara',
@@ -6554,9 +6454,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>411,
             'category'=>'negara',
@@ -6570,9 +6468,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>412,
             'category'=>'negara',
@@ -6586,9 +6482,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>413,
             'category'=>'negara',
@@ -6602,9 +6496,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>414,
             'category'=>'negara',
@@ -6618,9 +6510,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>415,
             'category'=>'negara',
@@ -6634,9 +6524,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>416,
             'category'=>'negara',
@@ -6650,9 +6538,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>417,
             'category'=>'negara',
@@ -6666,9 +6552,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>418,
             'category'=>'negara',
@@ -6682,9 +6566,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>419,
             'category'=>'negara',
@@ -6698,9 +6580,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>420,
             'category'=>'negara',
@@ -6714,9 +6594,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>421,
             'category'=>'negara',
@@ -6730,9 +6608,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>422,
             'category'=>'negara',
@@ -6746,9 +6622,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>423,
             'category'=>'negara',
@@ -6762,9 +6636,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>424,
             'category'=>'negara',
@@ -6778,9 +6650,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>425,
             'category'=>'negara',
@@ -6794,9 +6664,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>426,
             'category'=>'negara',
@@ -6810,9 +6678,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>427,
             'category'=>'negara',
@@ -6826,9 +6692,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>428,
             'category'=>'negara',
@@ -6842,9 +6706,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>429,
             'category'=>'negara',
@@ -6858,9 +6720,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>430,
             'category'=>'negara',
@@ -6874,9 +6734,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>431,
             'category'=>'negara',
@@ -6890,9 +6748,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>432,
             'category'=>'negara',
@@ -6906,9 +6762,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>433,
             'category'=>'negara',
@@ -6922,9 +6776,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>434,
             'category'=>'negara',
@@ -6938,9 +6790,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>435,
             'category'=>'negara',
@@ -6954,9 +6804,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>436,
             'category'=>'negara',
@@ -6970,9 +6818,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>437,
             'category'=>'negara',
@@ -6986,9 +6832,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>438,
             'category'=>'negara',
@@ -7002,9 +6846,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>439,
             'category'=>'negara',
@@ -7018,9 +6860,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>440,
             'category'=>'negara',
@@ -7034,9 +6874,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>441,
             'category'=>'negara',
@@ -7050,13 +6888,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>442,
-            'category'=>'negara',
-            'service_id'=>6,
+            'category'=>'pln',
+            'service_id'=>3,
             'kode'=>'PAYPLN',
             'name'=>'PLN PASCA',
             'description'=>'BYR PLN',
@@ -7066,9 +6902,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>443,
             'category'=>'negara',
@@ -7082,9 +6916,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>444,
             'category'=>'negara',
@@ -7098,9 +6930,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>445,
             'category'=>'negara',
@@ -7114,9 +6944,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>446,
             'category'=>'negara',
@@ -7130,9 +6958,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>447,
             'category'=>'negara',
@@ -7146,9 +6972,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>448,
             'category'=>'negara',
@@ -7162,9 +6986,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>449,
             'category'=>'negara',
@@ -7178,9 +7000,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>450,
             'category'=>'negara',
@@ -7194,9 +7014,7 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>451,
             'category'=>'negara',
@@ -7210,13 +7028,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>452,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYSPEEDY',
             'name'=>'SPEEDY',
             'description'=>'BYR TAG SPEEDY',
@@ -7226,13 +7042,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>453,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYTELKOM',
             'name'=>'TELKOM',
             'description'=>'BYR TAG TELKOM',
@@ -7242,13 +7056,11 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>454,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYTVISION',
             'name'=>'TELKOM VISION',
             'description'=>'BYR TAG TELKOM VISION',
@@ -7258,45 +7070,39 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>455,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYTOP',
             'name'=>'TOP TV',
             'description'=>'BAYAR TAG TOP TV',
             'price'=>500,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>456,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYTOPAS',
             'name'=>'TOPAS TV',
             'description'=>'BAYAR TOPAS TV',
             'price'=>500,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>457,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYTRANS',
             'name'=>'TRANSVISION',
             'description'=>'BAYAR TRANSVISION',
@@ -7306,25 +7112,21 @@ class ProductSeeder extends Seeder
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>458,
             'category'=>'tv-internet',
-            'service_id'=>0,
+            'service_id'=>10,
             'kode'=>'PAYYES',
             'name'=>'YES TV',
             'description'=>'BAYAR YES TV',
             'price'=>500,
-            'is_active'=>1,
+            'is_active'=>0,
             'deleted_at'=>NULL,
             'created_at'=>NULL,
             'updated_at'=>NULL
             ] );
-            
-            
-                        
+
             Product::create( [
             'id'=>459,
             'category'=>'PLN',
@@ -7333,6 +7135,1588 @@ class ProductSeeder extends Seeder
             'name'=>'CEK PLN',
             'description'=>'cek pln inquiry',
             'price'=>2000,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>460,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA30',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 30K',
+            'price'=>30100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>461,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA35',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 35k',
+            'price'=>35100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>462,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA40',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 40k',
+            'price'=>40100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>463,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA45',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 45K',
+            'price'=>45100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>464,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA55',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 55K',
+            'price'=>55100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>465,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA60',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 60K',
+            'price'=>60100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>466,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA70',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA  70K',
+            'price'=>70100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>467,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA75',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 75K',
+            'price'=>75100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>468,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA85',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 85K',
+            'price'=>85100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>469,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA95',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 95K',
+            'price'=>95100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>470,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA400',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 400K',
+            'price'=>400100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>471,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA20',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 20K',
+            'price'=>20100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>472,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA25',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 25K',
+            'price'=>25100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>473,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA50',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 50K',
+            'price'=>50100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>474,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA100',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 100K',
+            'price'=>100100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>475,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA150',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 150K',
+            'price'=>150100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>476,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA200',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 200K',
+            'price'=>200100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>477,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA250',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 250K',
+            'price'=>250100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>478,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA300',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 300K',
+            'price'=>300100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>479,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA500',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 500K',
+            'price'=>500100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>480,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA600',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 600K',
+            'price'=>600100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>481,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA700',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 700K',
+            'price'=>700100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>482,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA800',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 800K',
+            'price'=>800100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>483,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA900',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 900K',
+            'price'=>900100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>484,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'DNA1000',
+            'name'=>'DANA',
+            'description'=>'SALDO DANA 1JT',
+            'price'=>1000100,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>485,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO15',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 15K',
+            'price'=>15010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>486,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO30',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 30K',
+            'price'=>30010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>487,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO35',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO  35K',
+            'price'=>35010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>488,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO40',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 40K',
+            'price'=>40010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>489,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO45',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 45K',
+            'price'=>45010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>490,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO55',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 55K',
+            'price'=>55010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>491,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO60',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 60K',
+            'price'=>60010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>492,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO65',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 65K',
+            'price'=>65010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>493,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO70',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 70K',
+            'price'=>70010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>494,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO75',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 75K',
+            'price'=>75010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>495,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO85',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 85K',
+            'price'=>85010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>496,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO95',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 95K',
+            'price'=>95010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>497,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO20',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 20K',
+            'price'=>20010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>498,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO25',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 25K',
+            'price'=>25010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>499,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO50',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 50K',
+            'price'=>50010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>500,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO100',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 100K',
+            'price'=>100010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>501,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO150',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 150K',
+            'price'=>150010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>502,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO200',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 200K',
+            'price'=>200010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>503,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO250',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 250K',
+            'price'=>250010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>504,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO300',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 300K',
+            'price'=>300010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>505,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO400',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 400K',
+            'price'=>400010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>506,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO500',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 500K',
+            'price'=>500010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>507,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO600',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 600K',
+            'price'=>600010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>508,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO700',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 700K',
+            'price'=>700010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>509,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO800',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 800K',
+            'price'=>800010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>510,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO900',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 900K',
+            'price'=>900010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>511,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'OVO1000',
+            'name'=>'OVO',
+            'description'=>'SALDO OVO 1JT',
+            'price'=>1000010,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>512,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO10',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 10K',
+            'price'=>10580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>513,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO20',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 20K',
+            'price'=>20580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>514,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO30',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 30K',
+            'price'=>30580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>515,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO40',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 40K',
+            'price'=>40580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>516,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO50',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 50K',
+            'price'=>50580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>517,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO75',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 75K',
+            'price'=>75580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>518,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO100',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 100K',
+            'price'=>100580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>519,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO150',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 150K',
+            'price'=>150580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>520,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO200',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 200K',
+            'price'=>200580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>521,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO250',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 250K',
+            'price'=>250580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>522,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO500',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 500K',
+            'price'=>500580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>523,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO600',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 600K',
+            'price'=>600580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>524,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO700',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 700K',
+            'price'=>700580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>525,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO800',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 800K',
+            'price'=>800580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>526,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO900',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 900K',
+            'price'=>900580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>527,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SGO1000',
+            'name'=>'GO-PAY',
+            'description'=>'SALDO GO-PAY 1JT',
+            'price'=>1000580,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>528,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI10',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 10.000',
+            'price'=>12310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>529,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI20',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 20.000',
+            'price'=>22310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>530,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI50',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 50.000',
+            'price'=>52310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>531,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI100',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 100.000',
+            'price'=>102310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>532,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI250',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 250.000',
+            'price'=>252310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>533,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI300',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 300.000',
+            'price'=>302310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>534,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBNI500',
+            'name'=>'E-TOL BNI',
+            'description'=>'E-TOL BNI 500.000',
+            'price'=>502310,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>535,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI20',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 20.000',
+            'price'=>21510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>536,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI25',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 25.000',
+            'price'=>26510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>537,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI50',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 50.000',
+            'price'=>51510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>538,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI100',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 100.000',
+            'price'=>101510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>539,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI150',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 150.000',
+            'price'=>151510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>540,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI200',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 200.000',
+            'price'=>201510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>541,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI250',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 250.000',
+            'price'=>251510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>542,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI300',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 300.000',
+            'price'=>301510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>543,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETBRI500',
+            'name'=>'E-TOL BRI',
+            'description'=>'E-TOL BRIZZI BRI 500.000',
+            'price'=>501510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>544,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETMDR25',
+            'name'=>'E-TOL MANDIRI',
+            'description'=>'E-TOL MANDIRI 25.000',
+            'price'=>26510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>545,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETMDR50',
+            'name'=>'E-TOL MANDIRI',
+            'description'=>'E-TOL MANDIRI 50.000',
+            'price'=>51510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>546,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETMDR100',
+            'name'=>'E-TOL MANDIRI',
+            'description'=>'E-TOL MANDIRI 100.000',
+            'price'=>101510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>547,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETMDR200',
+            'name'=>'E-TOL MANDIRI',
+            'description'=>'E-TOL MANDIRI 200.000',
+            'price'=>201510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>548,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETMDR300',
+            'name'=>'E-TOL MANDIRI',
+            'description'=>'E-TOL MANDIRI 300.000',
+            'price'=>301510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>549,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'ETMDR500',
+            'name'=>'E-TOL MANDIRI',
+            'description'=>'E-TOL MANDIRI 500.000',
+            'price'=>501510,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>550,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY10',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 10.000',
+            'price'=>9770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>551,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY20',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 20.000',
+            'price'=>19770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>552,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY25',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 25.000',
+            'price'=>24770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>553,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY30',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 30.000',
+            'price'=>29770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>554,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY40',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 40.000',
+            'price'=>39770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>555,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY50',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 50.000',
+            'price'=>49770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>556,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY60',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 60.000',
+            'price'=>59770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>557,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY70',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 70.000',
+            'price'=>69770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>558,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY75',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 75.000',
+            'price'=>74770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>559,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY80',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 80.000',
+            'price'=>79770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>560,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY90',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 90.000',
+            'price'=>89770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>561,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY100',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 100.000',
+            'price'=>99770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>562,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY150',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 150.000',
+            'price'=>149770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>563,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY200',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 200.000',
+            'price'=>199770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>564,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY250',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 250.000',
+            'price'=>249770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>565,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY300',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 300.000',
+            'price'=>299770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>566,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY400',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 400.000',
+            'price'=>399770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>567,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY500',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 500.000',
+            'price'=>499770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>568,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY600',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 600.000',
+            'price'=>599770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>569,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY700',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 700.000',
+            'price'=>699770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>570,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY800',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 800.000',
+            'price'=>799770,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>571,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY900',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 900.000',
+            'price'=>899779,
+            'is_active'=>1,
+            'deleted_at'=>NULL,
+            'created_at'=>NULL,
+            'updated_at'=>NULL
+            ] );
+
+            Product::create( [
+            'id'=>572,
+            'category'=>'ewallet',
+            'service_id'=>11,
+            'kode'=>'SPY1000',
+            'name'=>'SHOPEE PAY',
+            'description'=>'SHOPEE PAY 1.000.000',
+            'price'=>999770,
             'is_active'=>1,
             'deleted_at'=>NULL,
             'created_at'=>NULL,

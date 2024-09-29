@@ -10,7 +10,11 @@ class Specialist extends Model
     use HasFactory;
 
 
-    protected $fillable = [
-        'name',
-    ];
+    protected $table = 'specialists'; // Pastikan nama tabel sesuai dengan database
+
+    // Relasi ke model ClinicHasPackages jika diperlukan
+    public function clinicHasPackages()
+    {
+        return $this->hasMany(ClinicHasPackages::class, 'specialist_id');
+    }
 }

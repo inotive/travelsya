@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\CarRentalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -217,11 +218,23 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
 
+// Health & Beauty
 Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function() {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/klinik/', 'show')->name('.klinik');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
+
+// rental mobil
+Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function() {
+    Route::get('/', 'index')->name('.index');
+    Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
+    Route::get('/{id}/mobil/', 'show')->name('.mobil');
+    Route::get('/reservasi', 'reservation')->name('.reservasi');
+    });
+// Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
+
+
 
 
 
@@ -378,14 +391,34 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
+        Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
+        Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
+        Route::get('halaman-update', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanUpdate'])->name('partner.halaman.update');
+        Route::post('kendaraan-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'store'])->name('partner.kendaraan.create');
+        Route::delete('kendaraan-delete/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'destroy'])->name('partner.kendaraan.delete');
+        Route::get('daftar-kendaraan/show/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'show'])->name('partner.show.kendaraan');
+        Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
+
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}', [ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
         Route::get('daftar-room/detailroom/hostel/{id}', [ManagementRoomController::class, 'detailroomhostel'])->name('partner.management.room.detailroomhostel');
         Route::delete('daftar-room/delete/{type}/{id}', [ManagementRoomController::class, 'deleteroom'])->name('partner.management.room.deleteroom');
         Route::get('daftar-room/delete/hotel/{id}', [ManagementRoomController::class, 'HotelRoomDelete'])->name('partner.management.room.deleteroomhotel');
         Route::get('daftar-room/delete/hostel/{id}', [ManagementRoomController::class, 'HostelRoomDelete'])->name('partner.management.room.deleteroomhotel');
+                    
+        // health and beauty mitra
+        Route::get('clinics', [\App\Http\Controllers\ClinicHasPackageController::class, 'index'])->name('clinics.index');
+        
+        Route::get('clinics/create', [\App\Http\Controllers\ClinicHasPackageController::class, 'create'])->name('clinics.create');
 
+        Route::get('/clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
 
+        Route::post('clinics/store', [\App\Http\Controllers\ClinicHasPackageController::class, 'store'])->name('clinics.store');
+        
+        Route::put('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
+
+        route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
+        
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
         Route::post('daftar-room/detailroom/hotel/storeimage/', [ManagementRoomController::class, 'storehotelroomImage'])->name('partner.management.room.storehotelroomImage');
@@ -489,6 +522,7 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         });
     });
+
 });
 
 Auth::routes();

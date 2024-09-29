@@ -32,11 +32,11 @@ class TransactionSeeder extends Seeder
             'deleted_at'=>NULL,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
-            
+
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>2,
             'no_inv'=>'INV-20230329-PPOB-1680130158',
@@ -54,9 +54,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>3,
             'no_inv'=>'INV-20230401-PPOB-1680320167',
@@ -74,9 +74,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>4,
             'no_inv'=>'INV-20230401-PPOB-1680338793',
@@ -94,9 +94,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>5,
             'no_inv'=>'INV-20230401-PPOB-1680368019',
@@ -114,9 +114,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>6,
             'no_inv'=>'INV-20230402-PPOB-1680453043',
@@ -134,9 +134,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>7,
             'no_inv'=>'INV-20230404-PPOB-1680572449',
@@ -154,9 +154,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>8,
             'no_inv'=>'INV-20230404-PPOB-1680574418',
@@ -174,9 +174,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>9,
             'no_inv'=>'INV-20230404-HOSTEL-1680634305',
@@ -194,9 +194,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>10,
             'no_inv'=>'INV-20230404-HOSTEL-1680634393',
@@ -214,9 +214,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>11,
             'no_inv'=>'INV-20230404-PPOB-1680634430',
@@ -234,9 +234,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>12,
             'no_inv'=>'INV-20230404-PPOB-1680634881',
@@ -254,9 +254,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>13,
             'no_inv'=>'INV-20230404-HOSTEL-1680635030',
@@ -274,9 +274,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>14,
             'no_inv'=>'INV-20230404-PPOB-1680642564',
@@ -294,9 +294,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>15,
             'no_inv'=>'INV-20230404-HOSTEL-1680642782',
@@ -314,9 +314,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>16,
             'no_inv'=>'INV-20230406-HOSTEL-1680764063',
@@ -334,9 +334,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>17,
             'no_inv'=>'INV-20230413-HOSTEL-1681390428',
@@ -354,9 +354,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>18,
             'no_inv'=>'INV-20230413-PPOB-1681410146',
@@ -374,9 +374,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>19,
             'no_inv'=>'INV-20230413-PPOB-1681413572',
@@ -394,9 +394,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>20,
             'no_inv'=>'INV-20230420-PPOB-1682005212',
@@ -414,9 +414,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>21,
             'no_inv'=>'INV-20230420-PPOB-1682009561',
@@ -434,9 +434,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>22,
             'no_inv'=>'INV-20230420-PPOB-1682014194',
@@ -454,9 +454,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>23,
             'no_inv'=>'INV-20230420-PPOB-1682014221',
@@ -474,9 +474,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>24,
             'no_inv'=>'INV-20230420-PPOB-1682014776',
@@ -494,9 +494,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>25,
             'no_inv'=>'INV-20230426-PPOB-1682496948',
@@ -514,9 +514,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>26,
             'no_inv'=>'INV-20230427-PPOB-1682575485',
@@ -534,9 +534,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>27,
             'no_inv'=>'INV-20230510-PPOB-1683685806',
@@ -554,9 +554,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>28,
             'no_inv'=>'INV-20230510-PPOB-1683700317',
@@ -574,9 +574,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>29,
             'no_inv'=>'INV-20230511-PPOB-1683764801',
@@ -594,9 +594,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>30,
             'no_inv'=>'INV-20230511-PPOB-1683765778',
@@ -614,9 +614,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>31,
             'no_inv'=>'INV-20230511-PPOB-1683784458',
@@ -634,9 +634,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>32,
             'no_inv'=>'INV-20230511-PPOB-1683784529',
@@ -654,9 +654,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>33,
             'no_inv'=>'INV-20230511-PPOB-1683784630',
@@ -674,9 +674,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>34,
             'no_inv'=>'INV-20230511-PPOB-1683785083',
@@ -694,9 +694,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>35,
             'no_inv'=>'INV-20230512-PPOB-1683854137',
@@ -714,9 +714,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>36,
             'no_inv'=>'INV-20230512-PPOB-1683855692',
@@ -734,9 +734,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>37,
             'no_inv'=>'INV-20230512-PPOB-1683855926',
@@ -754,9 +754,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>38,
             'no_inv'=>'INV-20230512-PPOB-1683856881',
@@ -774,9 +774,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>39,
             'no_inv'=>'INV-20230512-PPOB-1683859325',
@@ -794,9 +794,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>40,
             'no_inv'=>'INV-20230512-PPOB-1683859355',
@@ -814,9 +814,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>41,
             'no_inv'=>'INV-20230512-PPOB-1683859807',
@@ -834,9 +834,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>42,
             'no_inv'=>'INV-20230514-PPOB-1684086739',
@@ -854,9 +854,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>43,
             'no_inv'=>'INV-20230514-DATA-1684090347',
@@ -874,9 +874,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>44,
             'no_inv'=>'INV-20230518-PPOB-1684438754',
@@ -894,9 +894,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>45,
             'no_inv'=>'INV-20230519-PPOB-1684481727',
@@ -914,9 +914,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>46,
             'no_inv'=>'INV-20230521-PPOB-1684644226',
@@ -934,16 +934,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>47,
             'no_inv'=>'INV-20230521-PLN-1684646320',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469a9b3d43b2bc533e6e201',
             'service'=>'pln',
-            'service_id'=>0,
+            'service_id'=>3,
             'payment'=>'xendit',
             'payment_method'=>NULL,
             'payment_channel'=>NULL,
@@ -954,16 +954,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>48,
             'no_inv'=>'INV-20230521-PLN-1684646374',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469a9e9d9bd96137e5bddc4',
             'service'=>'pln',
-            'service_id'=>0,
+            'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>NULL,
             'payment_channel'=>NULL,
@@ -974,16 +974,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>49,
             'no_inv'=>'INV-20230521-PLN-1684646536',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469aa8ad9bd9622545bde5b',
             'service'=>'ppob-pln',
-            'service_id'=>0,
+            'service_id'=>2,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
             'payment_channel'=>NULL,
@@ -994,16 +994,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>50,
             'no_inv'=>'INV-20230521-PLN-1684646662',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469ab0ad9bd9632ef5bdeb9',
             'service'=>'ppob-pln',
-            'service_id'=>0,
+            'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
             'payment_channel'=>NULL,
@@ -1014,16 +1014,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>51,
             'no_inv'=>'INV-20230521-PPOB-PLN-1684648590',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469b292bbbb2465c4cfe78e',
             'service'=>'ppob-pln',
-            'service_id'=>0,
+            'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
             'payment_channel'=>NULL,
@@ -1034,16 +1034,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>52,
             'no_inv'=>'INV-20230521-PPOB-PLN-1684655720',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469ce6bbbbb24294fd001d3',
             'service'=>'ppob-pln',
-            'service_id'=>0,
+            'service_id'=>1,
             'payment'=>'xendit',
             'payment_method'=>NULL,
             'payment_channel'=>NULL,
@@ -1054,9 +1054,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>53,
             'no_inv'=>'INV-20230521-HOSTEL-1684655815',
@@ -1074,9 +1074,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>54,
             'no_inv'=>'INV-20230521-HOSTEL-1684656290',
@@ -1094,9 +1094,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>55,
             'no_inv'=>'INV-20230521-HOSTEL-1684656382',
@@ -1114,9 +1114,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>56,
             'no_inv'=>'INV-20230521-HOSTEL-1684656671',
@@ -1134,16 +1134,16 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>57,
             'no_inv'=>'INV-20230521-PPOB-PLN-1684657116',
             'req_id'=>NULL,
             'link'=>'https://checkout-staging.xendit.co/web/6469d3dfbbbb24d154d006b2',
             'service'=>'ppob-pln',
-            'service_id'=>0,
+            'service_id'=>3,
             'payment'=>'xendit',
             'payment_method'=>'BANK_TRANSFER',
             'payment_channel'=>NULL,
@@ -1154,9 +1154,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>58,
             'no_inv'=>'INV-20230521-PPOB-PULSA-1684657595',
@@ -1174,9 +1174,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>59,
             'no_inv'=>'INV-20230521-PPOB-PULSA-1684657621',
@@ -1194,9 +1194,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>60,
             'no_inv'=>'INV-20230521-HOSTEL-1684658443',
@@ -1214,9 +1214,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>61,
             'no_inv'=>'INV-20230603-PPOB-PULSA-1685764511',
@@ -1234,9 +1234,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>62,
             'no_inv'=>'INV-20230604-HOSTEL-1685912872',
@@ -1254,9 +1254,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>63,
             'no_inv'=>'INV-20230604-PULSA-1685913208',
@@ -1274,9 +1274,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>64,
             'no_inv'=>'INV-20230604-PULSA-1685913291',
@@ -1294,9 +1294,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>65,
             'no_inv'=>'INV-20230605-PULSA-1685944496',
@@ -1314,9 +1314,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>66,
             'no_inv'=>'INV-20230605-NEGARA-1685944616',
@@ -1334,9 +1334,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>67,
             'no_inv'=>'INV-20230605-PLN-1685944656',
@@ -1354,9 +1354,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>68,
             'no_inv'=>'INV-20230606-NEGARA-1686019842',
@@ -1374,9 +1374,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>69,
             'no_inv'=>'INV-20230606-NEGARA-1686020084',
@@ -1394,9 +1394,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>70,
             'no_inv'=>'INV-20230606-PULSA-1686041891',
@@ -1414,9 +1414,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>71,
             'no_inv'=>'INV-20230606-PULSA-1686042026',
@@ -1434,9 +1434,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>72,
             'no_inv'=>'INV-20230606-PULSA-1686042120',
@@ -1454,9 +1454,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>73,
             'no_inv'=>'INV-20230606-PULSA-1686042784',
@@ -1474,9 +1474,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>74,
             'no_inv'=>'INV-20230606-NEGARA-1686042921',
@@ -1494,9 +1494,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>75,
             'no_inv'=>'INV-20230606-NEGARA-1686043012',
@@ -1514,9 +1514,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>76,
             'no_inv'=>'INV-20230607-PULSA-1686100300',
@@ -1534,9 +1534,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>77,
             'no_inv'=>'INV-20230607-PULSA-1686107665',
@@ -1554,9 +1554,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>78,
             'no_inv'=>'INV-20230607-NEGARA-1686110451',
@@ -1574,9 +1574,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>79,
             'no_inv'=>'INV-20230607-PULSA-1686116797',
@@ -1594,9 +1594,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>80,
             'no_inv'=>'INV-20230607-PULSA-1686121181',
@@ -1614,9 +1614,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>81,
             'no_inv'=>'INV-20230607-PLN-1686122269',
@@ -1634,9 +1634,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>82,
             'no_inv'=>'INV-20230608-PULSA-1686186417',
@@ -1654,9 +1654,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>83,
             'no_inv'=>'INV-20230608-PULSA-1686186497',
@@ -1674,9 +1674,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>84,
             'no_inv'=>'INV-20230608-PULSA-1686186756',
@@ -1694,9 +1694,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>85,
             'no_inv'=>'INV-20230610-PULSA-1686382876',
@@ -1714,9 +1714,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>86,
             'no_inv'=>'INV-20230610-PULSA-1686391562',
@@ -1734,9 +1734,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>87,
             'no_inv'=>'INV-20230610-PULSA-1686391617',
@@ -1754,9 +1754,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>88,
             'no_inv'=>'INV-20230612-HOSTEL-1686536098',
@@ -1774,9 +1774,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>89,
             'no_inv'=>'INV-20230612-PULSA-1686553020',
@@ -1794,9 +1794,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>90,
             'no_inv'=>'INV-20230613-PULSA-1686639291',
@@ -1814,9 +1814,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>91,
             'no_inv'=>'INV-20230613-NEGARA-1686642207',
@@ -1834,9 +1834,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>92,
             'no_inv'=>'INV-20230613-PULSA-1686656616',
@@ -1854,9 +1854,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>93,
             'no_inv'=>'INV-20230615-PULSA-1686812151',
@@ -1874,9 +1874,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>94,
             'no_inv'=>'INV-20230615-PULSA-1686854934',
@@ -1894,9 +1894,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>99,
             'no_inv'=>'INV-20230621-HOTEL-1687341937',
@@ -1914,9 +1914,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>106,
             'no_inv'=>'INV-20230622-HOSTEL-1687463160',
@@ -1934,9 +1934,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>107,
             'no_inv'=>'INV-20230622-HOSTEL-1687463168',
@@ -1954,9 +1954,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>108,
             'no_inv'=>'INV-20230622-HOSTEL-1687463388',
@@ -1974,9 +1974,9 @@ class TransactionSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
             ] );
-            
-            
-                        
+
+
+
             Transaction::create( [
             'id'=>109,
             'no_inv'=>'INV-20230622-HOSTEL-1687467039',

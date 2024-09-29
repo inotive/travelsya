@@ -12,4 +12,10 @@ class CategoriesServices extends Model
     protected $fillable = [
         'name',
     ];
+
+    // Relasi ke tabel clinic_has_packages
+    public function clinicHasPackages()
+    {
+        return $this->hasMany(ClinicHasPackages::class, 'categories_services_id');
+    }
 }
