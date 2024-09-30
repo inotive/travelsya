@@ -18,13 +18,74 @@ class ClinicHasPackagesSeeder extends Seeder
             'clinic_id'=>1,
             'categories_services_id'=>'1',
             'specialist_id'=>'1',
-            'name'=>'klinik dr.steven',
-            'rules'=>'peraturan',
-            'description'=>'klinik kecantikan yang menawarkan perawatan kulit wajah',
-            'duration'=>'90 menit',
-            'expiry_date'=>'2024-9-10',
-            'unit_price'=>'Rp',
-            'price'=>'500.000',
+            'name'=>'Jasa Potong Rambut',
+            'rules'=>'peraturan 123',
+            'description'=>'barbershop tommy di regency',
+            'duration'=>'30',
+            'expiry_date'=>'30',
+            'unit_price'=>'Menit',
+            'price'=>'250000',
+            'image' => 'image',
+           
+        ]);
+
+        ClinicHasPackages::create([
+            'clinic_id'=>2,
+            'categories_services_id'=>'3',
+            'specialist_id'=>'1',
+            'name'=>'Jasa Manikur',
+            'rules'=>'123 peraturan',
+            'description'=>'klinik kecantikan manikur di balikpapan',
+            'duration'=>'40',
+            'expiry_date'=>'14',
+            'unit_price'=>'Menit',
+            'price'=>'550000',
+            'image' => 'image',
+           
+        ]);
+
+        ClinicHasPackages::create([
+            'clinic_id'=>2,
+            'categories_services_id'=>'2',
+            'specialist_id'=>'1',
+            'name'=>'Jasa Potong Rambut',
+            'rules'=>'peraturan 123',
+            'description'=>'Salon kecantikan rara',
+            'duration'=>'40',
+            'expiry_date'=>'2',
+            'unit_price'=>'Menit',
+            'price'=>'300000',
+            'image' => 'image',
+           
+        ]);
+        
+        ClinicHasPackages::create([
+            'clinic_id'=>2,
+            'categories_services_id'=>'2',
+            'specialist_id'=>'1',
+            'name'=>'Klinik manikur',
+            'rules'=>'peraturan 123',
+            'description'=>'klinik manikur asal jepang hadir di balikpapan',
+            'duration'=>'60',
+            'expiry_date'=>'10',
+            'unit_price'=>'Menit',
+            'price'=>'400000',
+            'image' => 'image',
+           
+        ]);
+
+        ClinicHasPackages::create([
+            'clinic_id'=>2,
+            'categories_services_id'=>'3',
+            'specialist_id'=>'1',
+            'name'=>'Jasa Potong Rambut',
+            'rules'=>'peraturan 123',
+            'description'=>'Barbershop Billy ',
+            'duration'=>'30',
+            'expiry_date'=>'12',
+            'unit_price'=>'Menit',
+            'price'=>'350000',
+            'image' => 'image',
            
         ]);
     }

@@ -19,5 +19,8 @@ class Clinic extends Model
         'address',
     ];
 
-
+    public function clinicPackages()
+    {
+        return $this->hasMany(ClinicHasPackages::class, 'clinic_id', 'id');
+    }
 }
