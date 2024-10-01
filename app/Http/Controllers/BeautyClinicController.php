@@ -14,7 +14,7 @@ class BeautyClinicController extends Controller
         
         $clinics = Clinic::with('clinicPackages')->get();
 
-        return view('clinic.index', compact('clinics',));
+        return view('clinic.list', compact('clinics',));
     }
 
 
