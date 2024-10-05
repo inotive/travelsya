@@ -32,4 +32,10 @@ class ClinicHasPackages extends Model
     {
         return $this->belongsTo(Specialist::class, 'specialist_id');
     }
+
+    // Relasi many-to-one ke model Clinic
+    public function clinic()
+    {
+        return $this->belongsTo(Clinic::class, 'clinic_id', 'id');
+    }
 }

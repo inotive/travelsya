@@ -1,57 +1,30 @@
 @extends('layouts.web')
 
-@section('content-web')
+
+                <div
+                    class="card border-transparent header-image"
+                    data-bs-theme="light"
+                    style=""
+                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`">
+                    <div class="card-body d-flex ps-xl-20">
+                        <div class="m-0">
+                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
+                                <button class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5 "onclick="history.back();">
+                                    <i class="las la-angle-left"></i>
+                                </button>
+                                <div>
+                                    <span class="me-2">Heath & Beauty</span>
+                                    <br/><span class="fs-3 text-gray-300 me-2">Cari klinik kecantikan dan kesehatan di lokasimu!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
     <!--begin::Container-->
     <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
 
       <div class="content flex-row-fluid mb-10" id="kt_content">
-
-        <div class="row card w-75 me-auto ms-auto mt-10" id="card-filter">
-          <div class="row gy-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body h-100">
-                        <form method="GET" action="{{ route('clinics.index') }}" class="row g-4">
-                            <div class="col-4">
-                                <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
-                                <select name="location" id="location" class="form-select form-select-lg">
-                                    <option value="balikpapan">Balikpapan</option>
-                                    <option value="samarinda">Samarinda</option>
-                                </select>
-  
-                            </div>
-                            <div class="col-4">
-                              <label class="fs-5 fw-semibold mb-2">
-                                <span class="required">Jenis Tindakan</span>
-                            </label>
-                            <select name="type" id="type" class="form-select form-select-lg">
-                          
-                              <option value="beauty">Klinik Kecantikan</option>
-                              <option value="teeth">Klinik Gigi</option>
-                              <option value="general">Klinik Umum</option>
-                          </select>
-                            </div>
-  
-                            <div class="col-4">
-                              <label class="fs-5 fw-semibold mb-2">
-                                <span class="required">Cari Klinik</span>
-                            </label>
-                            <input type="text" id="keyword" class="form-control form-control-lg"
-                                name="keyword" placeholder="Masukan kata kunci" value="" />
-                            </div>
-                            
-  
-                            <div class="col-12">
-                                <button type="submit" class="w-100 btn-danger btn">Cari Data</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-          </div>
-  
-        </div>
-
 
         <div class="row card w-75 me-auto ms-auto mt-10">
           <div class="col-md-12">
@@ -502,7 +475,7 @@
 
 
 
-@endsection
+
 
 @push('add-style')
                 <style>
