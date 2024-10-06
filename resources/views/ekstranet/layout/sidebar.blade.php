@@ -177,8 +177,8 @@
                         </span>
                         <span class="menu-title">Daftar Rekreasi</span>
 
-                <a href="{{ route('clinics.index') }}"
-                   class="menu-item {{ Request::segment(2) == 'clinics' ? 'here' : '' }} menu-accordion">
+                <a href="{{ route('clinics.list') }}"
+                    class="menu-item {{ Request::segment(2) == 'clinics' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
                     <span class="menu-link">
                         <span class="menu-icon">

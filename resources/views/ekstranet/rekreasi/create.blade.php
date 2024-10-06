@@ -18,7 +18,7 @@
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Nama Paket / Pelayanan</label>
                     <input type="text" class="form-control form-control-lg" placeholder="Nama Paket" name="name" required>
-                    @error('name')
+                    @error('Nama')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -32,17 +32,12 @@
                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                         @endforeach
                     </select>
-                    @error('category_recreation_id')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
                 </div>
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Biaya</label>
                     <input class="form-control form-control-lg" type="number" placeholder="Rp." name="price" required />
-                    @error('price')
+                    @error('Biaya')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -52,7 +47,7 @@
                 <div class="col-md-3">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
                     <input class="form-control form-control-lg" type="number" id="duration" name="duration" required />
-                    @error('duration')
+                    @error('Durasi')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -65,17 +60,12 @@
                         <option value="Menit">Menit</option>
                         <option value="Jam">Jam</option>
                     </select>
-                    @error('duration')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
                 </div>
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
                     <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" required />
-                    @error('expiry')
+                    @error('Masa Berlaku')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -93,7 +83,7 @@
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
                     <textarea class="form-control form-control-lg" name="description" required></textarea>
-                    @error('description')
+                    @error('Deskripsi')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -103,7 +93,7 @@
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
                     <textarea class="form-control form-control-lg" name="rules" required></textarea>
-                    @error('rules')
+                    @error('Peraturan')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

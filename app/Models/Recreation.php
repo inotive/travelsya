@@ -11,6 +11,7 @@ class Recreation extends Model
 
     protected $fillable = [
         'business_name',
+        'category_recreation_id',
         'user_id',
         'is_active',
         'city',

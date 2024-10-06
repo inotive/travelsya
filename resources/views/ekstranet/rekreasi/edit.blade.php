@@ -34,7 +34,7 @@
                             {{ $item->name }}</option>
                         @endforeach
                     </select>
-                    @error('category_recreation_id')
+                    @error('category')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

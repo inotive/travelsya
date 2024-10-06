@@ -406,18 +406,17 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('daftar-room/delete/hotel/{id}', [ManagementRoomController::class, 'HotelRoomDelete'])->name('partner.management.room.deleteroomhotel');
         Route::get('daftar-room/delete/hostel/{id}', [ManagementRoomController::class, 'HostelRoomDelete'])->name('partner.management.room.deleteroomhotel');
 
-        // health and beauty mitra
-        Route::get('clinics', [\App\Http\Controllers\ClinicHasPackageController::class, 'index'])->name('clinics.index');
+//health and beauty mitra
 
-        Route::get('clinics/create', [\App\Http\Controllers\ClinicHasPackageController::class, 'create'])->name('clinics.create');
+        Route::middleware(['auth'])->group(function () {
+            Route::get('clinics', [\App\Http\Controllers\ClinicHasPackageController::class, 'index'])->name('clinics.list');
+            Route::get('clinics/create', [\App\Http\Controllers\ClinicHasPackageController::class, 'create'])->name('clinics.create');
+            Route::post('clinics/store', [\App\Http\Controllers\ClinicHasPackageController::class, 'store'])->name('clinics.store');
+            Route::get('clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
+            Route::put('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
+            Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
+        });
 
-        Route::get('/clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
-
-        Route::post('clinics/store', [\App\Http\Controllers\ClinicHasPackageController::class, 'store'])->name('clinics.store');
-
-        Route::put('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
-
-        route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
 
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
