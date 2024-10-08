@@ -15,10 +15,10 @@
 
             <div class="row g-9 mb-8">
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Nama Paket / Pelayanan</label>
                     <input type="text" class="form-control form-control-lg" placeholder="Nama Paket" name="name" required>
-                    @error('Nama')
+                    @error('name')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -26,18 +26,9 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Kategori Jasa</label>
-                    <select name="category_recreation_id" class="form-select" aria-label="Default select example" required>
-                        @foreach ($category as $item)
-                        <option value="{{ $item->id }}">{{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Biaya</label>
+                    <label class="required fs-6 fw-semibold mb-2">Harga</label>
                     <input class="form-control form-control-lg" type="number" placeholder="Rp." name="price" required />
-                    @error('Biaya')
+                    @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -46,8 +37,8 @@
 
                 <div class="col-md-3">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                    <input class="form-control form-control-lg" type="number" id="duration" name="duration" required />
-                    @error('Durasi')
+                    <input class="form-control form-control-lg" type="number" id="duration" name="duration" placeholder="-" required />
+                    @error('duration')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -64,8 +55,8 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
-                    <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" required />
-                    @error('Masa Berlaku')
+                    <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" placeholder="-" required />
+                    @error('expiry')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -82,8 +73,8 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                    <textarea class="form-control form-control-lg" name="description" required></textarea>
-                    @error('Deskripsi')
+                    <textarea class="form-control form-control-lg" name="description" placeholder="-" required></textarea>
+                    @error('description')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -92,8 +83,8 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
-                    <textarea class="form-control form-control-lg" name="rules" required></textarea>
-                    @error('Peraturan')
+                    <textarea class="form-control form-control-lg" placeholder="-" name="rules" required></textarea>
+                    @error('rules')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

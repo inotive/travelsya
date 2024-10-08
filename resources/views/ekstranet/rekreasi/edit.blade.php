@@ -27,14 +27,9 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                    <select name="category_recreation_id" class="form-select" aria-label="Default select example" required>
-                        @foreach ($category as $item)
-                        <option value="{{ $item->id }}" {{ $recreation->category_recreation_id == $item->id ? 'selected' : '' }}>
-                            {{ $item->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('category')
+                    <label class="required fs-6 fw-semibold mb-2">Harga</label>
+                    <input class="form-control form-control-lg" value="{{ $recreation->price }}" type="number" placeholder="Rp." name="price" required />
+                    @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -57,31 +52,6 @@
                         <option value="Menit">Menit</option>
                         <option value="Jam">Jam</option>
                     </select>
-                    @error('duration')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-
-                <div class="col-md-6">
-                    <label class="fs-6 fw-semibold mb-2">Latitude (Opsional).</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation->lat }}" type="number" step="any" name="lat" />
-                    @error('lat')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
-
-                <div class="col-md-6">
-                    <label class="fs-6 fw-semibold mb-2">Longitude (Opsional).</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation->ltd }}" type="number" step="any" name="ltd" />
-                    @error('ltd')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
                 </div>
 
                 <div class="col-md-6">
@@ -122,15 +92,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation->price }}" type="number" placeholder="Rp." name="price" required />
-                    @error('price')
-                    <span class="text-danger mt-1" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                    @enderror
-                </div>
+
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Status</label>

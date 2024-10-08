@@ -23,7 +23,7 @@ class RecreationController extends Controller
         $category = DB::table('category_recreations')->get();
 
         $data = DB::table('recreation_has_packages')
-            ->join('recreations', 'recreation_has_packages.recreaction_id', '=', 'recreations.id')  // Join ke tabel recreations
+            ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')  // Join ke tabel recreations
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->where('recreations.user_id', Auth::id())
             ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
@@ -38,7 +38,7 @@ class RecreationController extends Controller
 
     public function show($id) {
         $recreation = DB::table('recreation_has_packages')
-            ->join('recreations', 'recreation_has_packages.recreaction_id', '=', 'recreations.id')
+            ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->where('recreation_has_packages.id', $id)
             ->where('recreations.user_id', Auth::id())
@@ -72,13 +72,10 @@ class RecreationController extends Controller
         $request->merge(['is_active' => $request->input('is_active', 1)]);
 
         $request->validate([
-            'category_recreation_id' => 'required|exists:category_recreations,id',
             'name' => 'required|string|max:255',
             'rules' => 'required|string',
             'description' => 'required|string',
             'duration' => 'required|string|max:255',
-            'lat' => 'nullable|numeric',
-            'ltd' => 'nullable|numeric',
             'unit_price' => 'required|string|max:255',
             'expiry' => 'required|numeric',
             'expiryType' => 'required|string|in:Hari,Jam',
@@ -89,7 +86,7 @@ class RecreationController extends Controller
         if ($request->expiryType === 'Hari') {
             $expiryDate = Carbon::now()->addDays($request->expiry)->toDateString();
         } else {
-            $expiryDate = Carbon::now()->addHours($request->expiry)->toDateTimeString();
+            $expiryDate = Carbon::now()->addHours($request->expiry)->toDateString();
         }
 
         $recreation = DB::table('recreations')
@@ -100,15 +97,17 @@ class RecreationController extends Controller
             return redirect()->back()->with('error', 'Recreation tidak ditemukan untuk user ini.');
         }
 
+        $categoryRecreation = DB::table('category_recreations')
+        ->where('id', $recreation->category_recreation_id)
+        ->first();
+
         DB::table('recreation_has_packages')->insert([
-            'recreaction_id' => $recreation->id,
-            'category_recreation_id' => $request->category_recreation_id,
+            'recreation_id' => $recreation->id,
+            'category_recreation_id' => $categoryRecreation->id,
             'name' => $request->name,
             'rules' => $request->rules,
             'description' => $request->description,
             'duration' => $request->duration,
-            'lat' => $request->lat,
-            'ltd' => $request->ltd,
             'expiry_date' => $expiryDate,
             'unit_price' => $request->unit_price,
             'price' => $request->price,
@@ -135,13 +134,10 @@ class RecreationController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'category_recreation_id' => 'required|exists:category_recreations,id',
             'name' => 'required|string|max:255',
             'rules' => 'required|string',
             'description' => 'required|string',
             'duration' => 'required|string|max:255',
-            'lat' => 'nullable|numeric',
-            'ltd' => 'nullable|numeric',
             'expiry' => 'required|numeric',
             'expiryType' => 'required|string|in:Hari,Jam',
             'unit_price' => 'required|string',
@@ -156,13 +152,10 @@ class RecreationController extends Controller
         $expiryDate = Carbon::now()->addDays($daysToAdd)->toDateString();
 
         DB::table('recreation_has_packages')->where('id', $id)->update([
-            'category_recreation_id' => $request->category_recreation_id,
             'name' => $request->name,
             'rules' => $request->rules,
             'description' => $request->description,
             'duration' => $request->duration,
-            'lat' => $request->lat,
-            'ltd' => $request->ltd,
             'expiry_date' => $expiryDate,
             'unit_price' => $request->unit_price,
             'price' => $request->price,

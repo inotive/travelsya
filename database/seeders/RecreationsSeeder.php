@@ -17,6 +17,8 @@ class RecreationsSeeder extends Seeder
                 'city' => '3171',
                 'address' => 'Jl. Raya Jakarta',
                 'is_active' => true,
+                'lat' => -1.213,
+                'ltd' => 1.213,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now()
         ]);

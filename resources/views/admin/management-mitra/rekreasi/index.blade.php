@@ -206,6 +206,26 @@
                             @enderror
                         </div>
 
+                <div class="col-md-6">
+                    <label class="fs-6 fw-semibold mb-2">Latitude.</label>
+                    <input class="form-control form-control-lg" placeholder="lat" type="number" step="any" name="lat" />
+                    @error('lat')
+                    <span class="text-danger mt-1" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label class="fs-6 fw-semibold mb-2">Longitude.</label>
+                    <input class="form-control form-control-lg" placeholder="ltd" type="number" step="any" name="ltd" />
+                    @error('ltd')
+                    <span class="text-danger mt-1" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
+
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
 
