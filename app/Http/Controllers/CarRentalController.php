@@ -14,7 +14,7 @@ class CarRentalController extends Controller
         $durasiRental = $request->input('durasi-rental');
         $ambilRental = $request->input('ambil-rental');
         $jamRental = $request->input('jam-rental');
-        
+
         $query = CarRentalHasCars::query();
 
         // Filter berdasarkan kategori
@@ -22,10 +22,11 @@ class CarRentalController extends Controller
             $query->where('category', $request->input('category'));
         }
 
-        $cars = $query->get();
+        $cars = $query->with(['brand', 'carRental'])->get();
+        $carRental = CarRental::all();
         $categories = CarRentalHasCars::select('category')->distinct()->get();
 
-        return view('rental-mobil.list-rental-mobil', compact('tanggalRental', 'durasiRental', 'ambilRental', 'jamRental', 'cars', 'categories'));
+        return view('rental-mobil.list-rental-mobil', compact('tanggalRental', 'durasiRental', 'ambilRental', 'jamRental', 'cars', 'categories', 'carRental'));
     }
 
 }

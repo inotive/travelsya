@@ -54,6 +54,9 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/habety', function () {
+    return view('health-and-beauty-remake.healthAndBeauty');
+})->name('habety.landing');
 
 
 // Searching Page
