@@ -15,10 +15,9 @@
         <!--begin::Table container-->
         <div class="table-responsive">
             <!--begin::Table-->
-
-            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle">
+            <table id="kt_datatable" class="table-row-dashed fs-6 gy-5 table-bordered table align-middle">
                 <thead>
-                    <tr class="fw-bold fs-6 text-gray-800 ">
+                    <tr class="fw-bold fs-6 text-gray-800">
                         <th class="text-center">No.</th>
                         <th class="text-center">Kategori</th>
                         <th class="text-center">Paket</th>
@@ -28,45 +27,41 @@
                         <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
-                @foreach ($data as $item)
                 <tbody class="fw-semibold text-gray-600 text-center">
-
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->category_name }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td>{{ $item->duration }} {{ $item->unit_price }}</td>
-                    <td>{{ 'Rp '.number_format($item->price) ?? '' }}</td>
-                    <td>
-                        @if ($item->is_active === 1)
-                        <span class="badge badge-success">Aktif</span>
-                        @elseif ($item->is_active === 0)
-                        <span class="badge badge-danger">Tidak Aktif</span>
-                        @endif
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-light-primary btn-icon" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="showDetail({{ $item->id }})">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                        </button>
-
-                        <button class="btn btn-sm btn-light-warning btn-icon">
-                            <a href="{{ route('recreation.edit', $item->id) }}">
-                                <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </a>
-                        </button>
-
-                        <button class="btn btn-sm btn-light-danger btn-icon" onclick="deleteRecreation({{ $item->id }})">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
-                    </td>
+                    @foreach ($data as $item)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->category_name }}</td>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->duration }} {{ $item->unit_price }}</td>
+                        <td>{{ 'Rp '.number_format($item->price) ?? '' }}</td>
+                        <td>
+                            @if ($item->is_active === 1)
+                                <span class="badge badge-success">Aktif</span>
+                            @else
+                                <span class="badge badge-danger">Tidak Aktif</span>
+                            @endif
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-light-primary btn-icon" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="showDetail({{ $item->id }})">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            </button>
+                            <button class="btn btn-sm btn-light-warning btn-icon">
+                                <a href="{{ route('recreation.edit', $item->id) }}">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                            </button>
+                            <button class="btn btn-sm btn-light-danger btn-icon" onclick="deleteRecreation({{ $item->id }})">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
-                @endforeach
             </table>
-            {{ $data->appends(request()->input())->links('vendor.pagination.bootstrap-5') }}
-
         </div>
         <!--end::Table container-->
     </div>
-
     <!--begin::Body-->
 </div>
 
@@ -83,9 +78,7 @@
             </div>
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <h5 class="text-center">Detail Paket Rekreasi</h5>
-                <div id="package-details">
-
-                </div>
+                <div id="package-details"></div>
             </div>
         </div>
     </div>
@@ -96,39 +89,38 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     Swal.fire({
-        position: 'top-end'
-        , icon: 'success'
-        , title: 'Data berhasil ditambahkan.'
-        , toast: true
-        , showConfirmButton: false
-        , timer: 2000
-    })
-
+        position: 'top-end',
+        icon: 'success',
+        title: 'Data berhasil ditambahkan.',
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000
+    });
 </script>
 @elseif(session('success_update'))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     Swal.fire({
-        position: 'top-end'
-        , icon: 'success'
-        , title: 'Data berhasil Diubah.'
-        , toast: true
-        , showConfirmButton: false
-        , timer: 2000
-    })
-
+        position: 'top-end',
+        icon: 'success',
+        title: 'Data berhasil Diubah.',
+        toast: true,
+        showConfirmButton: false,
+        timer: 2000
+    });
 </script>
 @endif
+
 @push('add-script')
 <script>
     $(document).ready(function() {
-        $('#kt_datatable_zero_configuration').DataTable({
-            "scrollY": "500px"
-            , "scrollCollapse": true
-            , "language": {
-                "lengthMenu": "Show _MENU_"
-            }
-            , "dom": "<'row'" +
+        $('#kt_datatable').DataTable({
+            "scrollY": "500px",
+            "scrollCollapse": true,
+            "language": {
+                "lengthMenu": "_MENU_",
+            },
+            "dom": "<'row'" +
                 "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +
                 "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                 ">" +
@@ -143,75 +135,71 @@
     // detail
     function showDetail(id) {
         $.ajax({
-            url: 'recreation/' + id
-            , type: 'GET'
-            , success: function(response) {
-                // Menggunakan operator ternary untuk memeriksa null atau kosong
+            url: 'recreation/' + id,
+            type: 'GET',
+            success: function(response) {
                 $('#package-details').html(`
-                <p><strong>Nama Paket:</strong> ${response.name ? response.name : '-'}</p>
-                <p><strong>Kategori:</strong> ${response.category_name ? response.category_name : '-'}</p>
-                <p><strong>Durasi:</strong> ${response.duration ? response.duration : '-'} ${response.unit_price ? response.unit_price : '-'}</p>
-                <p><strong>Tanggal Kadaluarsa:</strong> ${response.expiry_date ? response.expiry_date : '-'}</p>
-                <p><strong>Harga:</strong> Rp ${response.price ? response.price : '-'}</p>
-                <p><strong>Deskripsi:</strong> ${response.description ? response.description : '-'}</p>
-                <p><strong>Peraturan:</strong> ${response.rules ? response.rules : '-'}</p>
-                <p><strong>Status:</strong> ${(response.is_active == 1 ? 'Aktif' : 'Tidak Aktif')}</p>
-            `);
-            }
-            , error: function() {
+                    <p><strong>Nama Paket:</strong> ${response.name || '-'}</p>
+                    <p><strong>Kategori:</strong> ${response.category_name || '-'}</p>
+                    <p><strong>Durasi:</strong> ${response.duration || '-'} ${response.unit_price || '-'}</p>
+                    <p><strong>Tanggal Kadaluarsa:</strong> ${response.expiry_date || '-'}</p>
+                    <p><strong>Harga:</strong> Rp ${response.price || '-'}</p>
+                    <p><strong>Deskripsi:</strong> ${response.description || '-'}</p>
+                    <p><strong>Peraturan:</strong> ${response.rules || '-'}</p>
+                    <p><strong>Status:</strong> ${(response.is_active == 1 ? 'Aktif' : 'Tidak Aktif')}</p>
+                `);
+            },
+            error: function() {
                 alert('Gagal mengambil data!');
             }
         });
     }
 
-
     // delete
     function deleteRecreation(id) {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
-                confirmButton: "btn btn-success"
-                , cancelButton: "btn btn-danger"
-            }
-            , buttonsStyling: false
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
         });
 
         swalWithBootstrapButtons.fire({
-            title: "Apakah kamu yakin ingin menghapus data ini?"
-            , icon: "warning"
-            , showCancelButton: true
-            , confirmButtonText: "Ya, Hapus"
-            , cancelButtonText: "Tidak jadi"
-            , reverseButtons: true
+            title: "Apakah kamu yakin ingin menghapus data ini?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Hapus",
+            cancelButtonText: "Tidak jadi",
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-
                 $.ajax({
-                    url: 'recreation/' + id
-                    , type: 'DELETE'
-                    , headers: {
+                    url: 'recreation/' + id,
+                    type: 'DELETE',
+                    headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                    , success: function(response) {
+                    },
+                    success: function(response) {
                         swalWithBootstrapButtons.fire(
-                            'Terhapus!'
-                            , 'Data ini berhasil dihapus.'
-                            , 'success'
+                            'Terhapus!',
+                            'Data ini berhasil dihapus.',
+                            'success'
                         ).then(() => {
                             location.reload();
                         });
-                    }
-                    , error: function(response) {
+                    },
+                    error: function(response) {
                         swalWithBootstrapButtons.fire(
-                            'Error!'
-                            , 'Terjadi error saat menghapus data.'
-                            , 'error'
+                            'Error!',
+                            'Terjadi error saat menghapus data.',
+                            'error'
                         );
                     }
                 });
             }
         });
     }
-
 </script>
 @endpush
 @endsection

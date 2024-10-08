@@ -27,7 +27,7 @@ class RecreationController extends Controller
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->where('recreations.user_id', Auth::id())
             ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
-            ->paginate(10);
+            ->get();
 
         return view('ekstranet.rekreasi.daftar-rekreasi', [
             'data' => $data,
