@@ -24,6 +24,9 @@ class BeautyClinicController extends Controller
         $clinics = DB::table('clinics')
         ->join('users', 'clinics.user_id', '=', 'users.id')
         ->join('cities', 'clinics.city', '=', 'cities.city_id')
+       
+        
+        
         ->select(
             'clinics.id as clinic_id', 
             'clinics.*', 
@@ -32,12 +35,18 @@ class BeautyClinicController extends Controller
             'cities.city_id as city_id',
             'cities.image as city_image', 
             'cities.*'
+
         )
         ->get();
 
         $cities = City::all();
 
-        return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics', 'cities'));
+        $packages = DB::table('clinic_has_packages')
+        ->join('categories_services', 'clinic_has_packages.categories_services_id', '=', 'categories_services.id')
+        ->select('categories_services.name as category_name')
+        ->get();
+
+        return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics', 'cities', 'packages'));
     }
 
     /**
@@ -72,6 +81,7 @@ class BeautyClinicController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'is_active' => 1,
+            'category' => $request->category,   
         ]);
 
         toast('Mitra has been created', 'success');
@@ -107,6 +117,7 @@ class BeautyClinicController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -114,7 +125,9 @@ class BeautyClinicController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
-            'is_active' => 'required'
+            'is_active' => 'required',
+            'category' => 'required|in:kesehatan,kecantikan',
+
         ]);
 
         if ($validator->fails()) {
@@ -130,6 +143,7 @@ class BeautyClinicController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'is_active' => $request->is_active,
+            'category' => $request->category,
         ]);
 
     
