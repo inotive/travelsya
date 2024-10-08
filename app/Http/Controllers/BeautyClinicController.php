@@ -18,12 +18,13 @@ class BeautyClinicController extends Controller
     }
 
 
-    public function show(string $id) {
+        public function show(string $id)
+    {
+        // Mengambil clinic berdasarkan ID dan eager loading clinicPackages
+        $clinic = Clinic::with('clinicPackages')->findOrFail($id);
 
-        
-        $clinics = Clinic::with('clinicPackages')->get();
-
-        return view('clinic.detail', compact('clinics',));
+        // Mengirimkan clinic ke view
+        return view('clinic.detail', compact('clinic'));
     }
 
 
