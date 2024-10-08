@@ -106,36 +106,32 @@
         {{-- recreation count --}}
  
         <h5 class="mt-10">Menampilkan {{ $clinics->count() }} Klinik Kesehatan</h5>
- 
- <div id="results" class="mt-4">
-    <div class="row row-cols-1 row-cols-md-4 g-4">
-        @foreach ($clinics as $clinic)
-    @if ($clinic->clinicPackages->isNotEmpty())
-    <div class="col">
-        <a href="{{ route('clinics.klinik', ['id' => $clinic->id]) }}">
-            <div class="card shadow h-100">
-                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
-                <div class="card-body d-flex flex-column">
-                    
-                    <!-- Akses data paket klinik pertama -->
-                    @php
-                        $package = $clinic->clinicPackages->first();
-                    @endphp
-                    <h4 class="card-title">{{ $package->name }}</h4>
-                    <p class="card-text flex-grow-1">{{ $package->description }}</p>
-                    <div class="d-flex justify-content-between align-items-center mt-auto">
-                        <h4 style="color: rgb(255, 0, 0);">{{ 'Rp '.number_format($package->price) }}</h4>
-                        <span class="card-text" style="color: rgb(255, 0, 0);">
-                            <i class="fa fa-star"></i>&nbsp;(5)
-                        </span>
-                    </div>
-
-                </div>
+        <div id="results" class="mt-4">
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                @foreach ($clinics as $clinic)
+                    @foreach ($clinic->clinicPackages as $package)
+                        <div class="col">
+                            <a href="{{ route('clinics.klinik', ['id' => $package->id]) }}">
+                                <div class="card shadow h-100">
+                                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+                                    <div class="card-body d-flex flex-column">
+                                        <h4 class="card-title">{{ $package->name }}</h4>
+                                        <p class="card-text flex-grow-1">{{ $package->description }}</p>
+                                        <div class="d-flex justify-content-between align-items-center mt-auto">
+                                            <h4 style="color: rgb(255, 0, 0);">{{ 'Rp '.number_format($package->price) }}</h4>
+                                            <span class="card-text" style="color: rgb(255, 0, 0);">
+                                                <i class="fa fa-star"></i>&nbsp;(5)
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+                @endforeach
             </div>
-        </a>
-    </div>
-    @endif
-@endforeach
+        </div>
+        
 
     </div>
 </div>

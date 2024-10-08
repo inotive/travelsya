@@ -48,19 +48,13 @@
                           <div class="col-8 d-flex flex-column">
                             
                               <div class="row">
-
                                 @php
-                                    // Assuming $clinics is a collection of Clinic models
-                                    $clinic = $clinics->where('id')->first(); // Replace $desiredClinicId with the actual ID
+                                $package = $clinic->clinicPackages->first();
 
-                                    // Check if the clinic is found
-                                    if ($clinic) {
-                                        $package = $clinic->clinicPackages; // Access the related clinic packages
-                                    }
                                 @endphp
                                   <div class="col-12">
                                       <div class="d-flex justify-content-between">
-                                          <h1 class="fw-bold">{{ $clinic->clinic_name }}</h1>
+                                          <h1 class="fw-bold">{{ $package->name }}</h1>
                                           <div class="badge badge-primary">{{ $clinic->city }}</div>
                                       </div>
                                       <p style="font-size: 13px">{{ $clinic->address }}</p>
@@ -122,7 +116,7 @@
                                           {{  number_format(5,2,'.','') }}
                                       </span>
                                       <span class="badge badge-danger">({{100}} Rating)</span>
-                                      <p>{{ "Klinik Kecantikan Aurem Derm adalah tempat yang sempurna untuk relaksasi dan pemulihan diri. Dengan layanan pijat profesional, aromaterapi, dan fasilitas sauna, Anda akan merasakan ketenangan maksimal. Nikmati suasana yang damai, perawatan tubuh menyeluruh, dan lingkungan yang indah untuk menyegarkan pikiran dan tubuh Anda." ?? '' }}</p>
+                                      <p>{{ $package->description }}</p>
                                   </div>
                               </div>
                               <div class="row mt-auto">
@@ -407,10 +401,10 @@
 
                 <div class="col">
                   <div class="row mt-5 px-2">
-                      <h4 class="card-title text-gray-900">Treatment Wajah Laser A</h4>
+                      <h4 class="card-title text-gray-900">{{ $package->categories_services_id }}</h4>
                       
                       <p class=" text-gray-500" style="margin-top: 1rem; max-width: 250px;">
-                        Pada pake ini kamu akan mendapatkan treatment A, treatment B dan treatment C.
+                        {{ $package->description }}
                       </p>
                     
 
@@ -435,14 +429,14 @@
                   </div>
                   <div class="card-footer d-flex justify-content-between">
                   <p class="fw-semibold d-block fs-2 text-danger">Rp.
-                  {{ number_format(850000, 0, ',', '.') }}</p>
+                  {{ number_format($package->price, 0, ',', '.') }}</p>
                   {{-- @guest
                       <a href="{{ route('login') }}" class="btn btn-danger px-4 py-2">Login Dulu</a>
                   @endguest --}}
                 
                       <a
                       href="{{ route("clinics.reservasi") }}"
-                      class="btn btn-danger px-4">Pesan Treatment</a>
+                      class="btn btn-danger px-4">Pesan</a>
                   </div>
                   </div>
                   </div>

@@ -21,7 +21,7 @@
                 <!--begin::Radio-->
                 <label class="btn btn-outline btn-danger active" data-kt-button="true">
                     <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" value="health" required />
+                    <input class="btn-check" type="radio" name="category" value="health" checked required />
                     <!--end::Input-->
                     Health
                 </label>
@@ -310,4 +310,5 @@
 
       })
 </script> --}}
+
 @endpush
