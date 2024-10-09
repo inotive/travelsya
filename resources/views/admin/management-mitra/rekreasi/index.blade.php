@@ -171,8 +171,8 @@
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-12">
-                            <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                            <input class="form-control form-control-lg" id="name" placeholder="Masukan nama usaha" name="name" required />
+                            <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
+                            <input class="form-control form-control-lg" id="name" placeholder="Masukan nama bisnis" name="name" required />
 
                             @error('name')
                             <span class="text-danger mt-1" role="alert">

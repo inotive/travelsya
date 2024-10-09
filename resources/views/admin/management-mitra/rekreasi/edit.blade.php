@@ -30,7 +30,7 @@
                 <div class="g-9 mb-8 row">
                     <input type="hidden" id="recreation_id" value="">
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Nama</label>
+                        <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
 
