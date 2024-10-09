@@ -67,13 +67,13 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Active</label>
-                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit" id="is_active-edit">
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
+                        <label class="required fs-6 fw-semibold mb-2">Kota</label>
+                        <select class="js-example-basic-single form-control form-control-lg city-edit" name="city" id="city-edit">
+                            @foreach ($cities as $city)
+                            <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                            @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                        @error('is_active')
+                        @error('city')
                         <span class="text-danger mt-1" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -117,14 +117,14 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Kota</label>
-                        <select class="js-example-basic-single form-control form-control-lg city-edit" name="city" id="city-edit">
-                            @foreach ($cities as $city)
-                            <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
-                            @endforeach
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Active</label>
+                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit" id="is_active-edit">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
                         </select>
-                        @error('city')
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
+                        @error('is_active')
                         <span class="text-danger mt-1" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
