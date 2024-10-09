@@ -5,40 +5,42 @@ use App\Models\CategoriesServices;
 use App\Models\Clinic;
 use App\Models\City;
 use App\Models\ClinicHasPackages;
-use App\Models\Specialist; // Pastikan ada model Specialist
+use App\Models\Specialist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class ClinicHasPackageController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Mendapatkan user_id dari request atau session (sesuaikan sesuai logika aplikasi Anda)
+        $userId = $request->input('user_id') ?? auth()->user()->id;
+
+        // Ambil semua user dengan role 1 (misalnya untuk admin atau dokter klinik)
         $users = DB::table('users')
             ->select('users.*')
             ->where('role', 1)
             ->get();
 
+        // Ambil semua data kota
         $cities = City::all();
 
-        $clinics = DB::table('clinic_has_packages')
-            ->select('clinic_id', 'categories_services_id', 'name', 'duration', 'price', 'description', 'is_active', 'specialist_id')
+        // Ambil data klinik beserta paket layanan, kategori, dan spesialis berdasarkan user_id
+        // Menggunakan eager loading untuk relasi dengan categoriesService dan specialist
+        $clinics = ClinicHasPackages::with(['categoriesService', 'specialist'])
+            ->whereHas('clinic', function($query) use ($userId) {
+                $query->where('user_id', $userId);  // Filter berdasarkan user_id
+            })
             ->paginate(10);
 
-        $data = ClinicHasPackages::select('clinic_id', 'categories_services_id', 'name', 'duration', 'price', 'description')
-            ->get();
-        
+        // Ambil data kategori layanan
         $categories = CategoriesServices::all();
 
-        $spesialis = Specialist::all(); 
+        // Ambil data spesialis
+        $spesialis = Specialist::all();
 
-        $clinics = ClinicHasPackages::with(['specialist', 'Specialist'])->get();
-
-
-        // Debugging (opsional untuk memastikan data diambil dengan benar):
-        //dd($clinics);
-
-        return view('ekstranet.klinik.list-klinik', compact('spesialis', 'users', 'clinics', 'cities','categories'));
-
+        // Return data ke view 'list-klinik'
+        return view('ekstranet.jasaklinik.list-klinik', compact('spesialis', 'users', 'clinics', 'cities', 'categories'));
     }
 
     public function create(){
@@ -49,7 +51,7 @@ class ClinicHasPackageController extends Controller
 
         $clinics = Clinic::all();
 
-        return view('ekstranet.klinik.create-klinik', compact('spesialis','categories','clinics'));
+        return view('ekstranet.jasaklinik.create-klinik', compact('spesialis','categories','clinics'));
     }
 
         
@@ -159,7 +161,7 @@ class ClinicHasPackageController extends Controller
                 return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
         
-            return view('ekstranet.klinik.edit-klinik', compact('clinic', 'spesialis', 'categories'));
+            return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories'));
         }
         
 
@@ -173,5 +175,4 @@ class ClinicHasPackageController extends Controller
     {
         return $this->belongsTo(CategoriesServices::class, 'categories_services_id');
     }
-
 }

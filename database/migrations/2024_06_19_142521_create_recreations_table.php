@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            $table->unsignedBigInteger('category_recreation_id');
+            $table->foreign('category_recreation_id')->references('id')->on('category_recreations')->onDelete('cascade');
+            
             $table->string('business_name');
             $table->string('phone');
             $table->string('city');

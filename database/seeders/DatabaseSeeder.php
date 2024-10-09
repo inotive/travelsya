@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CategoryRecreationSeeder::class,
             ProvinceSeeder::class,
             CitySeeder::class,
+            RecreationsSeeder::class,
             RecreationHasPackagesSeeder::class,
         ]);
     }

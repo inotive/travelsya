@@ -11,12 +11,20 @@ use Illuminate\Support\Facades\DB;
 class BeautyClinicController extends Controller
 {
     public function index(Request $request) {
-        return view('clinic.list-clinic');
+        
+        $clinics = Clinic::with('clinicPackages')->get();
+
+        return view('clinic.list', compact('clinics',));
     }
 
 
-    public function show(string $id) {
-        return view('clinic.show');
+        public function show(string $id)
+    {
+        // Mengambil clinic berdasarkan ID dan eager loading clinicPackages
+        $clinic = Clinic::with('clinicPackages')->findOrFail($id);
+
+        // Mengirimkan clinic ke view
+        return view('clinic.detail', compact('clinic'));
     }
 
 

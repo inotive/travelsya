@@ -21,16 +21,22 @@ class RecreationController extends Controller
         ->where('role', 1)
         ->get();
 
+        $category = DB::table('category_recreations')->get();
+
         $recreations = DB::table('recreations')
         ->join('users', 'recreations.user_id', '=', 'users.id')
         ->join('cities', 'recreations.city', '=', 'cities.city_id')
+        ->join('category_recreations', 'recreations.category_recreation_id', '=', 'category_recreations.id')
         ->select(
-            'recreations.id as recreation_id', 
-            'recreations.*', 
-            'users.id as user_id', 
+            'recreations.id as recreation_id',
+            'recreations.*',
+            'recreations.phone as recreation_phone',
+            'recreations.is_active as recreation_status',
+            'category_recreations.name as category_name',
+            'users.id as user_id',
             'users.*',
             'cities.city_id as city_id',
-            'cities.image as city_image', 
+            'cities.image as city_image',
             'cities.*'
         )
         ->get();
@@ -38,7 +44,7 @@ class RecreationController extends Controller
         $cities = City::all();
 
 
-        return view('admin.management-mitra.rekreasi.index', compact('users', 'recreations', 'cities'));
+        return view('admin.management-mitra.rekreasi.index', compact('users', 'recreations', 'cities', 'category'));
     }
 
     /**
@@ -59,6 +65,7 @@ class RecreationController extends Controller
             'user_id' => 'required',
             'phone' => 'required',
             'city' => 'required',
+            'category_recreation_id' => 'required',
             'address' => 'required',
         ]);
 
@@ -68,6 +75,7 @@ class RecreationController extends Controller
 
         DB::table('recreations')->insert([
             'business_name' => ucwords($request->name),
+            'category_recreation_id' => $request->category_recreation_id,
             'user_id' => $request->user_id,
             'city' => $request->city,
             'phone' => $request->phone,
@@ -113,7 +121,8 @@ class RecreationController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
-            'is_active' => 'required'
+            'is_active' => 'required',
+            'category_recreation_id' => 'required|exists:category_recreations,id',
         ]);
 
         if ($validator->fails()) {
@@ -125,13 +134,14 @@ class RecreationController extends Controller
         $recreation->update([
             'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
+            'category_recreation_id' => $request->category_recreation_id,
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
             'is_active' => $request->is_active,
         ]);
 
-    
+
         toast('Mitra has been updated', 'success');
         return response()->json([
             'success' => true,

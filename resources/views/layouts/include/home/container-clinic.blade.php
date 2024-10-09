@@ -19,16 +19,16 @@
             <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
 
                 <!--begin::Radio-->
-                <label class="btn btn-outline btn-color-muted btn-active-success active" data-kt-button="true">
+                <label class="btn btn-outline btn-danger active" data-kt-button="true">
                     <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" value="health" required />
+                    <input class="btn-check" type="radio" name="category" value="health" checked required />
                     <!--end::Input-->
                     Health
                 </label>
                 <!--end::Radio-->
 
                 <!--begin::Radio-->
-                <label class="btn btn-outline btn-color-muted btn-active-success" data-kt-button="true">
+                <label class="btn btn-outline btn-danger" data-kt-button="true">
                     <!--begin::Input-->
                     <input class="btn-check" type="radio" name="category" value="beauty" required />
                     <!--end::Input-->
@@ -83,7 +83,7 @@
       </form>
       <!--end::Tiles Widget 2-->
 
-      
+      {{-- 
       <div class="col-xl-12 d-flex flex-column justify-content-between">
        <li class="nav-item">
         <h3>Menampilkan 120 Tempat Kesehatan</h3>  
@@ -144,7 +144,8 @@
 
 
       
-  </div>
+  </div> --}}
+      
   <!--end::Col-->
 </div>
 
@@ -309,4 +310,5 @@
 
       })
 </script> --}}
+
 @endpush
