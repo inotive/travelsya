@@ -37,7 +37,7 @@
 
                 <div class="col-md-3">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                    <input class="form-control form-control-lg" type="number" id="duration" name="duration" placeholder="-" required />
+                    <input class="form-control form-control-lg" type="number" id="duration" name="duration" placeholder="Durasi" required />
                     @error('duration')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -55,7 +55,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
-                    <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" placeholder="-" required />
+                    <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" placeholder="Masa Berlaku" required />
                     @error('expiry')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -65,15 +65,16 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
-                    <select class="form-select" name="expiryType" aria-label="Default select example" required>
-                        <option value="Hari">Hari</option>
-                        <option value="Jam">Jam</option>
+                    <select class="form-select" name="expiry_type" aria-label="Default select example" required>
+                        @foreach ($expiryTypes as $type)
+                            <option value="{{ $type }}">{{ $type }}</option>
+                        @endforeach
                     </select>
                 </div>
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                    <textarea class="form-control form-control-lg" name="description" placeholder="-" required></textarea>
+                    <textarea class="form-control form-control-lg" name="description" placeholder="Deskripsi" required></textarea>
                     @error('description')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -83,7 +84,7 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
-                    <textarea class="form-control form-control-lg" placeholder="-" name="rules" required></textarea>
+                    <textarea class="form-control form-control-lg" placeholder="Peraturan" name="rules" required></textarea>
                     @error('rules')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>

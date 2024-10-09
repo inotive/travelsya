@@ -113,6 +113,37 @@
 
 @push('add-script')
 <script>
+    // Countdown
+    function startCountdown(expiryDate) {
+        let countdownElement = document.getElementById('countdown');
+
+        setInterval(function() {
+            let now = Math.floor(Date.now() / 1000);
+            let remainingSeconds = expiryDate - now;
+
+            if (remainingSeconds < 0) {
+                countdownElement.innerHTML = 'Waktu habis';
+                clearInterval(this);
+                return;
+            }
+
+            let days = Math.floor(remainingSeconds / 86400);
+            remainingSeconds %= 86400;
+            let hours = Math.floor(remainingSeconds / 3600);
+            remainingSeconds %= 3600;
+            let minutes = Math.floor(remainingSeconds / 60);
+            let seconds = remainingSeconds % 60;
+
+            countdownElement.innerHTML = `${days} Hari, ${hours} Jam, ${minutes} Menit, ${seconds} Detik`;
+        }, 1000);
+    }
+
+    // Memanggil fungsi dengan waktu kedaluwarsa
+    document.addEventListener("DOMContentLoaded", function() {
+        startCountdown({{ $item->expiry_date }});
+    });
+
+    // DataTable
     $(document).ready(function() {
         $('#kt_datatable').DataTable({
             "scrollY": "500px",
@@ -142,7 +173,7 @@
                     <p><strong>Nama Paket:</strong> ${response.name || '-'}</p>
                     <p><strong>Kategori:</strong> ${response.category_name || '-'}</p>
                     <p><strong>Durasi:</strong> ${response.duration || '-'} ${response.unit_price || '-'}</p>
-                    <p><strong>Tanggal Kadaluarsa:</strong> ${response.expiry_date || '-'}</p>
+                    <p><strong>Kadaluarsa Dalam:</strong> ${response.expiry_date || '-'} ${response.expiry_type || '-'}</p>
                     <p><strong>Harga:</strong> Rp ${response.price || '-'}</p>
                     <p><strong>Deskripsi:</strong> ${response.description || '-'}</p>
                     <p><strong>Peraturan:</strong> ${response.rules || '-'}</p>

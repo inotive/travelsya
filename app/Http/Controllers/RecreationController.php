@@ -60,9 +60,15 @@ class RecreationController extends Controller
             ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
             ->get();
 
+        $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
+
+        preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
+        $expiryTypes = explode("','", $matches[1]);
+
         return view('ekstranet.rekreasi.create', [
             'data' => $data,
-            'category' => $category
+            'category' => $category,
+            'expiryTypes' => $expiryTypes
         ]);
     }
 
@@ -78,16 +84,10 @@ class RecreationController extends Controller
             'duration' => 'required|string|max:255',
             'unit_price' => 'required|string|max:255',
             'expiry' => 'required|numeric',
-            'expiryType' => 'required|string|in:Hari,Jam',
+            'expiry_type' => 'required|string|in:Hari,Jam',
             'price' => 'required|numeric',
             'is_active' => 'required|boolean',
         ]);
-
-        if ($request->expiryType === 'Hari') {
-            $expiryDate = Carbon::now()->addDays($request->expiry)->toDateString();
-        } else {
-            $expiryDate = Carbon::now()->addHours($request->expiry)->toDateString();
-        }
 
         $recreation = DB::table('recreations')
             ->where('user_id', Auth::id())
@@ -108,7 +108,8 @@ class RecreationController extends Controller
             'rules' => $request->rules,
             'description' => $request->description,
             'duration' => $request->duration,
-            'expiry_date' => $expiryDate,
+            'expiry_date' => $request->expiry,
+            'expiry_type' => $request->expiry_type,
             'unit_price' => $request->unit_price,
             'price' => $request->price,
             'is_active' => $request->is_active,
@@ -127,8 +128,14 @@ class RecreationController extends Controller
             return redirect()->route('rekreasi.index')->with('error', 'Rekreasi tidak ditemukan.');
         }
 
+        $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
+
+        preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
+        $expiryTypes = explode("','", $matches[1]);
+
         $category = DB::table('category_recreations')->get();
-        return view('ekstranet.rekreasi.edit', compact('recreation', 'category'));
+
+        return view('ekstranet.rekreasi.edit', compact('recreation', 'category', 'expiryTypes'));
     }
 
     public function update(Request $request, $id)
@@ -139,24 +146,19 @@ class RecreationController extends Controller
             'description' => 'required|string',
             'duration' => 'required|string|max:255',
             'expiry' => 'required|numeric',
-            'expiryType' => 'required|string|in:Hari,Jam',
+            'expiry_type' => 'required|string|in:Hari,Jam',
             'unit_price' => 'required|string',
             'price' => 'required|numeric',
             'is_active' => 'required|boolean',
         ]);
-        $expiry = $request->expiry;
-        $expiryType = $request->expiryType;
-
-        $daysToAdd = $expiryType === 'Hari' ? $expiry : intdiv($expiry, 24);
-
-        $expiryDate = Carbon::now()->addDays($daysToAdd)->toDateString();
 
         DB::table('recreation_has_packages')->where('id', $id)->update([
             'name' => $request->name,
             'rules' => $request->rules,
             'description' => $request->description,
             'duration' => $request->duration,
-            'expiry_date' => $expiryDate,
+            'expiry_date' => $request->expiry,
+            'expiry_type' => $request->expiry_type,
             'unit_price' => $request->unit_price,
             'price' => $request->price,
             'is_active' => $request->is_active,

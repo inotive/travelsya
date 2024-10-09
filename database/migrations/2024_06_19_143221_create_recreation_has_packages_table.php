@@ -25,10 +25,11 @@ return new class extends Migration
             $table->text("rules");
             $table->text("description");
             $table->string("duration");
-            $table->date('expiry_date');
+            $table->integer("expiry_date");
+            $table->enum("expiry_type", ["Hari", "Jam"]);
             $table->string("unit_price");
-            $table->double('price');
-            $table->boolean('is_active');
+            $table->double("price");
+            $table->boolean("is_active");
 
             $table->timestamps();
         });
