@@ -25,6 +25,13 @@ class CarModelSeeder extends Seeder
             'name' => 'Hyundai'
         ]);
 
+        CarModel::create([
+            'name' => 'Honda'
+        ]);
+
+        CarModel::create([
+            'name' => 'Mitsubishi'
+        ]);
 
     }
 }

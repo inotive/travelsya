@@ -36,7 +36,7 @@ class DetailTransactionHotelSeeder extends Seeder
         DetailTransactionHotel::create([
             'id' => 7,
             'transaction_id' => 27,
-            'hotel_id' => 3,
+            'hotel_id' => 7,
             'hotel_room_id' => 10,
             'booking_id' => '8XxQ7t',
             'reservation_start' => '2023-10-16',

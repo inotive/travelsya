@@ -17,40 +17,53 @@ class CarRentalHasCarsSeeder extends Seeder
      */
     public function run(): void
     {
-         // Buat data car_rentals terlebih dahulu
-         $carRental = CarRental::create([
-            'business_name' => 'Mitra 1',
-            'user_id' => 1,
-            'is_active' => true,
-            'city' => 'Surabaya',
-            'phone' => '089980776155',
-            'address' => 'alamat',
+        CarRentalHasCars::create([
+            'car_rental_id' => 5,
+            'brand_id' => 5,
+            'car_model_id' => 2,
+            'policy_id' => 1,
+            'number_seats' => 4,
+            'category_rent' => 'Dengan Driver',
+            'Category' => 'manual',
+            'rental_price_per_day' => 500000,
+            'duration' => '2 Hari',
+            'status' => '1',
+            'description' => 'Jangan menyakiti',
+            'image_url' => null,
+            'years' => '2017',
         ]);
 
-        $policyId = DB::table('policies')->insertGetId([
-            'car_rental_id' => $carRental->id,
-            'name' => 'Policy 1',
-            'description' => 'Deskripsi Policy 1',
+        CarRentalHasCars::create([
+            'car_rental_id' => 3,
+            'brand_id' => 2,
+            'car_model_id' => 3,
+            'policy_id' => 1,
+            'number_seats' => 4,
+            'category_rent' => 'Dengan Driver',
+            'Category' => 'automatic',
+            'rental_price_per_day' => 500000,
+            'duration' => '2 Hari',
+            'status' => '1',
+            'description' => 'Jangan menyakiti',
+            'image_url' => null,
+            'years' => '2018',
         ]);
 
-        $data = [
-            [
-                'car_rental_id' => $carRental->id,
-                'brand_id' => Brand::where('id', 1)->first()->id,
-                'car_model_id' => CarModel::where('id', 1)->first()->id,
-                'policy_id' =>  $policyId,
-                'number_seats' => 4,
-                'category_rent' => 'Dengan Driver',
-                'category' => 'automatic',
-                'rental_price_per_day' => 500000,
-                'status' => 'Tidak Aktif',
-                'description' => 'Mobil sedan dengan 4 kursi',
-                'image_url' => 'gambar',
-            ],
-        ];
+        CarRentalHasCars::create([
+            'car_rental_id' => 1,
+            'brand_id' => 1,
+            'car_model_id' => 5,
+            'policy_id' => 1,
+            'number_seats' => 4,
+            'category_rent' => 'Tidak Dengan Driver',
+            'Category' => 'manual',
+            'rental_price_per_day' => 300000,
+            'duration' => '1 Hari',
+            'status' => '1',
+            'description' => 'Jangan menyakiti',
+            'image_url' => null,
+            'years' => '2019',
+        ]);
 
-        foreach ($data as $item) {
-            CarRentalHasCars::create($item);
-        }
     }
 }
