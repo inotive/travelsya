@@ -5,7 +5,7 @@
 <div class="card ">
     <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
         <!--begin:Form-->
-        <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('data-rekreasi.update', $recreation->id) }}">
+        <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('data-rekreasi.update', $recreation_has_packages->id) }}">
             @csrf
             @method('PUT')
             <!--begin::Heading-->
@@ -18,7 +18,7 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Nama Paket</label>
-                    <input type="text" class="form-control form-control-lg" value="{{ $recreation->name }}" placeholder="Nama Paket" name="name" required>
+                    <input type="text" class="form-control form-control-lg" value="{{ $recreation_has_packages->name }}" placeholder="Nama Paket" name="name" required>
                     @error('name')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -28,7 +28,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation->price }}" type="number" placeholder="Rp." name="price" required />
+                    <input class="form-control form-control-lg" value="{{ $recreation_has_packages->price }}" type="number" placeholder="Rp." name="price" required />
                     @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -36,9 +36,22 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
+                    <label for="recreation_id" class="required fs-6 fw-semibold mb-2">Pilih Bisnis</label>
+                    <select name="recreation_id" id="recreation_id" class="form-control form-control-lg" required>
+                        <option value="">Pilih Bisnis</option>
+                        @foreach($recreations as $recreation)
+                            <option value="{{ $recreation->id }}"
+                                @if($recreation_has_packages->recreation_id == $recreation->id) selected @endif>
+                                {{ $recreation->business_name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation->duration }}" type="number" name="duration" required />
+                    <input class="form-control form-control-lg" value="{{ $recreation_has_packages->duration }}" type="number" name="duration" required />
                     @error('duration')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -46,7 +59,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                     <select class="form-select" name="unit_price" aria-label="Default select example" required>
                         <option value="Menit">Menit</option>
@@ -56,7 +69,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
-                    <input class="form-control form-control-lg" id="expiry" type="number" value="{{ $recreation->expiry_date }}" name="expiry" required />
+                    <input class="form-control form-control-lg" id="expiry" type="number" value="{{ $recreation_has_packages->expiry_date }}" name="expiry" required />
                     @error('expiry')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -75,7 +88,7 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                    <textarea class="form-control form-control-lg" name="description" required>{{ $recreation->description }}</textarea>
+                    <textarea class="form-control form-control-lg" name="description" required>{{ $recreation_has_packages->description }}</textarea>
                     @error('description')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -85,7 +98,7 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
-                    <textarea class="form-control form-control-lg" name="rules" required>{{ $recreation->rules }}</textarea>
+                    <textarea class="form-control form-control-lg" name="rules" required>{{ $recreation_has_packages->rules }}</textarea>
                     @error('rules')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -99,11 +112,11 @@
                     <label class="required fs-6 fw-semibold mb-2">Status</label>
                     <div class="d-flex align-items-center mt-4">
                         <div class="form-check me-3">
-                            <input class="form-check-input" type="radio" name="is_active" id="active" value="1" {{ $recreation->is_active == 1 ? 'checked' : '' }} required>
+                            <input class="form-check-input" type="radio" name="is_active" id="active" value="1" {{ $recreation_has_packages->is_active == 1 ? 'checked' : '' }} required>
                             <label class="form-check-label fw-bold" for="active">Active</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="is_active" id="inactive" value="0" {{ $recreation->is_active == 0 ? 'checked' : '' }} required>
+                            <input class="form-check-input" type="radio" name="is_active" id="inactive" value="0" {{ $recreation_has_packages->is_active == 0 ? 'checked' : '' }} required>
                             <label class="form-check-label fw-bold" for="inactive">Inactive</label>
                         </div>
                     </div>

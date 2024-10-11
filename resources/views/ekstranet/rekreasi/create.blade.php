@@ -35,7 +35,17 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
+                    <label for="recreation_id" class="required fs-6 fw-semibold mb-2">Pilih Bisnis</label>
+                    <select name="recreation_id" id="recreation_id" class="form-control form-control-lg" required>
+                        <option value="">Pilih Bisnis</option>
+                        @foreach($recreations as $recreation)
+                            <option value="{{ $recreation->id }}">{{ $recreation->business_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
                     <input class="form-control form-control-lg" type="number" id="duration" name="duration" placeholder="Durasi" required />
                     @error('duration')
@@ -45,7 +55,7 @@
                     @enderror
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                     <select class="form-select" aria-label="Default select example" name="unit_price" required>
                         <option value="Menit">Menit</option>

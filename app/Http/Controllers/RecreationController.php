@@ -42,7 +42,7 @@ class RecreationController extends Controller
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->where('recreation_has_packages.id', $id)
             ->where('recreations.user_id', Auth::id())
-            ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
+            ->select('recreation_has_packages.*', 'category_recreations.name as category_name', 'recreations.business_name as recreation_name')
             ->first();
 
         if ($recreation) {
@@ -52,9 +52,13 @@ class RecreationController extends Controller
         }
     }
 
-
     public function create() {
         $category = DB::table('category_recreations')->get();
+
+        $recreations = DB::table('recreations')
+            ->where('user_id', Auth::id())
+            ->get();
+
         $data = DB::table('recreation_has_packages')
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
@@ -68,16 +72,17 @@ class RecreationController extends Controller
         return view('ekstranet.rekreasi.create', [
             'data' => $data,
             'category' => $category,
-            'expiryTypes' => $expiryTypes
+            'expiryTypes' => $expiryTypes,
+            'recreations' => $recreations
         ]);
     }
-
 
     public function store(Request $request)
     {
         $request->merge(['is_active' => $request->input('is_active', 1)]);
 
         $request->validate([
+            'recreation_id' => 'required|exists:recreations,id',
             'name' => 'required|string|max:255',
             'rules' => 'required|string',
             'description' => 'required|string',
@@ -89,20 +94,14 @@ class RecreationController extends Controller
             'is_active' => 'required|boolean',
         ]);
 
-        $recreation = DB::table('recreations')
-            ->where('user_id', Auth::id())
-            ->first();
-
-        if (!$recreation) {
-            return redirect()->back()->with('error', 'Recreation tidak ditemukan untuk user ini.');
-        }
+        $recreationId = $request->input('recreation_id');
 
         $categoryRecreation = DB::table('category_recreations')
-        ->where('id', $recreation->category_recreation_id)
+        ->where('id', $recreationId)
         ->first();
 
         DB::table('recreation_has_packages')->insert([
-            'recreation_id' => $recreation->id,
+            'recreation_id' => $recreationId,
             'category_recreation_id' => $categoryRecreation->id,
             'name' => $request->name,
             'rules' => $request->rules,
@@ -122,21 +121,25 @@ class RecreationController extends Controller
 
 
     public function edit($id) {
-        $recreation = DB::table('recreation_has_packages')->where('id', $id)->first();
+        $recreation_has_packages = DB::table('recreation_has_packages')->where('id', $id)->first();
 
-        if (!$recreation) {
+        if (!$recreation_has_packages) {
             return redirect()->route('rekreasi.index')->with('error', 'Rekreasi tidak ditemukan.');
         }
 
         $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
-
         preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
         $expiryTypes = explode("','", $matches[1]);
 
         $category = DB::table('category_recreations')->get();
 
-        return view('ekstranet.rekreasi.edit', compact('recreation', 'category', 'expiryTypes'));
+        $recreations = DB::table('recreations')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        return view('ekstranet.rekreasi.edit', compact('recreation_has_packages', 'category', 'expiryTypes', 'recreations'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -150,9 +153,18 @@ class RecreationController extends Controller
             'unit_price' => 'required|string',
             'price' => 'required|numeric',
             'is_active' => 'required|boolean',
+            'recreation_id' => 'required|exists:recreations,id',
         ]);
 
+        $recreation = DB::table('recreations')->where('id', $request->recreation_id)->first();
+
+        if (!$recreation) {
+            return redirect()->route('partner.daftar-rekreasi')->with('error', 'Rekreasi tidak valid.');
+        }
+
         DB::table('recreation_has_packages')->where('id', $id)->update([
+            'recreation_id' => $request->recreation_id,
+            'category_recreation_id' => $recreation->category_recreation_id,
             'name' => $request->name,
             'rules' => $request->rules,
             'description' => $request->description,
@@ -167,8 +179,6 @@ class RecreationController extends Controller
 
         return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
     }
-
-
 
     public function reservation(Request $request) {
 
