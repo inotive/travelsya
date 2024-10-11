@@ -390,6 +390,7 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
             Route::put('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
             Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
+            Route::get('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'show'])->name('clinics.show');
         });
         
 

@@ -8,6 +8,7 @@ use App\Models\ClinicHasPackages;
 use App\Models\Specialist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ClinicHasPackageController extends Controller
 {
@@ -98,7 +99,8 @@ class ClinicHasPackageController extends Controller
         $clinic->duration_type = $request->input('duration_type');
         $clinic->save();
 
-        return redirect()->route('clinics.list')->with('success', 'Clinic service added successfully.');
+        toast('Jasa Kecantikan berhasil ditambahkan', 'success');
+        return redirect()->route('clinics.list');
 
     }
 
@@ -106,12 +108,11 @@ class ClinicHasPackageController extends Controller
         // Mengupdate data klinik
         public function update(Request $request, $id) {
             $clinic = ClinicHasPackages::find($id); // Ambil data klinik berdasarkan ID
-        //dd($request->all());
 
             if (!$clinic) {
                 return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
-        
+
             // Validasi input
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
@@ -120,66 +121,84 @@ class ClinicHasPackageController extends Controller
                 'clinic_id' => 'required|integer',
                 'rules' => 'required|string',
                 'duration' => 'required|string',
-                'unit_price' => 'nullable|string',
-                'expiry_date' => 'required|date',
+                'unit_price' => 'required|string',
+                'expiry_date' => 'required|integer',
                 'description' => 'required|string',
                 'price' => 'required|numeric',
                 'is_active' => 'required|boolean',
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-                'duration_type' => 'required|enum',
+                'duration_type' => 'required|string',
             ]);
-        
+
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                // Delete old image
+                if ($clinic->image) {
+                    Storage::delete('public/clinichaspackages/' . $clinic->image);
+                }
+
+                $image = $request->file('image');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('public/clinichaspackages', $imageName);
+                $validatedData['image'] = $imageName;
+            } else {
+                // If no new image is uploaded, keep the old image
+                $validatedData['image'] = $clinic->image;
+            }
+
             // Update data klinik
-            $clinic->update([
-                'name' => $request->name,
-                'specialist_id' => $request->specialist_id,
-                'categories_services_id' => $request->categories_services_id,
-                'clinic_id' => $request->clinic_id,
-                'rules' => $request->rules,
-                'duration' => $request->duration,
-                'unit_price' => $request->unit_price,
-                'expiry_date' => $request->expiry_date,
-                'description' => $request->description,
-                'price' => $request->price,
-                'is_active' => $request->is_active,
-                'image' => $request->image,
-                'duration_type' => $request->duration_type,
-            ]);
-        
-            return redirect()->route('clinics.list')->with('success', 'Klinik berhasil diperbarui.');
+            $clinic->update($validatedData);
+            toast('Jasa Kecantikan berhasil diperbarui', 'success');
+            return redirect()->route('clinics.list');
         }
         
 
         // Menghapus data klinik
-                public function destroy($id)
+        public function destroy($id)
         {
             $clinic = ClinicHasPackages::find($id); 
 
             if ($clinic) {
                 $clinic->delete(); 
-                return redirect()->route('clinics.list')->with('success', 'Klinik berhasil dihapus.');
+                toast('Jasa Kecantikan berhasil dihapus', 'success');
+                return redirect()->route('clinics.list');
             } else {
+                toast('Jasa Kecantikan tidak ditemukan', 'error');
                 return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
         }
 
 
         public function edit($id) {
-            $clinic = ClinicHasPackages::find($id); // Ambil data klinik berdasarkan ID
+            $clinic = ClinicHasPackages::find($id); // Ambil data klinik berdasarkan ID tanpa join table clinic
             $categories = CategoriesServices::all();
             $spesialis = Specialist::all(); 
+            $clinics = Clinic::all(); // Ambil semua data klinik untuk dropdown pilihan klinik
         
-
             if (!$clinic) {
                 return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
-        
-            return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories'));
+            
+            return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories', 'clinics'));
         }
         
+        public function show($id) {
+            $clinic = DB::table('clinic_has_packages')
+                ->join('clinics', 'clinic_has_packages.clinic_id', '=', 'clinics.id')
+                ->join('categories_services', 'clinic_has_packages.categories_services_id', '=', 'categories_services.id')
+                ->where('clinic_has_packages.id', $id)
+                ->select('clinic_has_packages.*', 'categories_services.name as category_name', 'clinics.clinic_name as clinic_name')
+                ->first();
+    
+            if ($clinic) {
+                return response()->json($clinic);
+            } else {
+                return response()->json(['message' => 'Data tidak ditemukan atau Anda tidak memiliki akses.'], 404);
+            }
+        }
 
 
-                public function specialist()
+        public function specialist()
         {
             return $this->belongsTo(Specialist::class, 'specialist_id');
         }

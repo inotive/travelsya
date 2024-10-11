@@ -41,10 +41,24 @@
                             </span>
                         @enderror
                     </div>
-    
-                
-                    
-                    <input type="hidden" name="clinid_id" value="1">
+                    @if(count($clinics) > 1)
+                    <div class="col-md-12">
+                        <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
+                        <select class="form-control" name="clinic_id" required>
+                            @foreach ($clinics as $clinic)
+                                <option value="{{ $clinic->id }}">{{ $clinic->clinic_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('clinic_id')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    @else
+                    <input type="hidden" name="clinic_id" value="{{ $clinics->first()->id }}">
+                    @endif
+                   
 
                     
                     <div class="col-md-6">
@@ -115,8 +129,6 @@
 
 
                     <input type="hidden" name="is_active" value="1">
-
-                    <input type="hidden" name="clinic_id" value="1">
                     
                     <input type="hidden" name="unit_price" value="unit_price">
                 </div>
@@ -141,6 +153,7 @@
         </div>
     </div>
 </div>
+
 
         
 @endsection
