@@ -30,7 +30,7 @@
                 <div class="g-9 mb-8 row">
                     <input type="hidden" id="recreation_id" value="">
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Nama</label>
+                        <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
 
@@ -67,13 +67,13 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Active</label>
-                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit" id="is_active-edit">
-                            <option value="1">Yes</option>
-                            <option value="0">No</option>
+                        <label class="required fs-6 fw-semibold mb-2">Kota</label>
+                        <select class="js-example-basic-single form-control form-control-lg city-edit" name="city" id="city-edit">
+                            @foreach ($cities as $city)
+                            <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                            @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                        @error('is_active')
+                        @error('city')
                         <span class="text-danger mt-1" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -97,14 +97,34 @@
                         @enderror
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Kota</label>
-                        <select class="js-example-basic-single form-control form-control-lg city-edit" name="city" id="city-edit">
-                            @foreach ($cities as $city)
-                            <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
-                            @endforeach
+                    <div class="col-md-6">
+                        <label class="fs-6 fw-semibold mb-2">Latitude</label>
+                        <input class="form-control form-control-lg" id="lat-edit" type="number" step="any" name="lat" />
+                        @error('lat')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="fs-6 fw-semibold mb-2">Longitude</label>
+                        <input class="form-control form-control-lg" id="ltd-edit" type="number" step="any" name="ltd" />
+                        @error('ltd')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Active</label>
+                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit" id="is_active-edit">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
                         </select>
-                        @error('city')
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
+                        @error('is_active')
                         <span class="text-danger mt-1" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -148,10 +168,10 @@
             let recreation_id = $(this).data('id');
 
             $.ajax({
-                url: `/admin/management-mitra/rekreasi/${recreation_id}`,
-                type: "GET",
-                cache: false,
-                success: function(response) {
+                url: `/admin/management-mitra/rekreasi/${recreation_id}`
+                , type: "GET"
+                , cache: false
+                , success: function(response) {
                     $('#recreation_id').val(response.data.id);
                     $('#name-edit').val(response.data.business_name);
                     $('#user_id-edit').val(response.data.user_id);
@@ -160,7 +180,9 @@
                     $('#city-edit').val(response.data.city);
                     $('#city-edit').trigger('change');
                     $('#phone-edit').val(response.data.phone);
-                    $('#category-edit').val(response.data.category_recreation_id); // Set kategori
+                    $('#lat-edit').val(response.data.lat);
+                    $('#ltd-edit').val(response.data.ltd);
+                    $('#category-edit').val(response.data.category_recreation_id);
 
                     $('#modal-edit').modal('show');
                 }
@@ -178,32 +200,37 @@
             let address = $('#address-edit').val();
             let city = $('#city-edit').val();
             let phone = $('#phone-edit').val();
-            let category_recreation_id = $('#category-edit').val(); // Ambil kategori
+            let lat = $('#lat-edit').val();
+            let ltd = $('#ltd-edit').val();
+            let category_recreation_id = $('#category-edit').val();
             let token = $("meta[name='csrf-token']").attr("content");
 
             // AJAX
             $.ajax({
-                url: `/admin/management-mitra/rekreasi/${recreation_id}`,
-                type: "PUT",
-                cache: false,
-                data: {
-                    "name": name,
-                    "user_id": user_id,
-                    "is_active": is_active,
-                    "address": address,
-                    "city": city,
-                    "phone": phone,
-                    "category_recreation_id": category_recreation_id, // Kirim kategori
-                    "_token": token
-                },
-                success: function(response) {
+                url: `/admin/management-mitra/rekreasi/${recreation_id}`
+                , type: "PUT"
+                , cache: false
+                , data: {
+                    "name": name
+                    , "user_id": user_id
+                    , "is_active": is_active
+                    , "address": address
+                    , "city": city
+                    , "lat": lat
+                    , "ltd": ltd
+                    , "phone": phone
+                    , "category_recreation_id": category_recreation_id
+                    , "_token": token
+                }
+                , success: function(response) {
                     $('#modal-edit').modal('hide');
                     location.reload();
-                },
-                error: function(error) {
+                }
+                , error: function(error) {
                     console.log(`berikut errornya`, error);
                 }
             });
         });
     });
+
 </script>

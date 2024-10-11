@@ -19,11 +19,13 @@ return new class extends Migration
 
             $table->unsignedBigInteger('category_recreation_id');
             $table->foreign('category_recreation_id')->references('id')->on('category_recreations')->onDelete('cascade');
-            
+
             $table->string('business_name');
             $table->string('phone');
             $table->string('city');
             $table->string('address');
+            $table->double("lat") ->nullable();
+            $table->double("ltd") ->nullable();
             $table->boolean('is_active');
 
 
