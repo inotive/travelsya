@@ -11,6 +11,10 @@
 
 <body>
 
+    <a href="javascript:window.history.back()" type="button" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
+        <i style="font-size: 2rem; padding-right: 3px" class="fa fa-angle-left"></i>
+    </a>
+
     <div class="container mt-5">
         <h1 class="mb-4">Hasil Pencarian Rental Mobil</h1>
 
@@ -36,11 +40,10 @@
 
             @foreach ($cars as $item)
                 <div class="car-list">
-                    <div class="car-item" id="surabaya" data-lokasi="Surabaya" data-jenis="Sedan"
-                        data-id="{{ $item->id }}">
+                    <div class="car-item" data-id="{{ $item->id }}">
                         <img src="{{ asset('storage/cars/' . $item->image_url) }}">
                         <div class="car-info">
-                            <h3>Toyota Agya</h3>
+                            <h3>{{ $item->brand->name ?? '' }}</h3>
                             <div class="car-details">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                 <span class="kursi">{{ $item->number_seats }} kursi</span>
@@ -48,8 +51,7 @@
                                 <span>{{ $item->category }}</span>
                             </div>
                             <p class="car-price">Mulai dari</p>
-                            <p class="car-price"><span class="harga">IDR
-                                    {{ number_format($item->rental_price_per_day, 0, ',', '.') }}</span> /hari</p>
+                            <p class="car-price"><span class="harga">IDR{{ number_format($item->rental_price_per_day, 0, ',', '.') }}</span> /hari</p>
                         </div>
                     </div>
                 </div>
@@ -77,15 +79,19 @@
                     <p class="car-price"><span class="harga" id="modal-harga"></span> /hari</p>
                 </div>
             </div>
-            <h4 style="position: absolute; top: 40px; right: 470px;">Pilih Vendor</h4>
-            <div class="container belakang">
-                <ul class="vendor-list" style="position: absolute; top: 70px; right: 360px;">
-                    <li class="vendor-item">
-                        <span class="vendor-name">SIGMA RENT CAR</span>
-                        <span class="vendor-price" style="position: relative; left: 320px;">IDR 218,999 /hari</span>
-                    </li>
-                </ul>
-            </div>
+
+            @foreach ($carRental as $item)
+                <h4 style="position: absolute; top: 40px; right: 460px;">Pilih Vendor</h4>
+                <div class="container belakang">
+                    <ul class="vendor-list" style="position: absolute; top: 70px; right: 380px;">
+                        <li class="vendor-item">
+                            <span class="vendor-name">{{ $item->business_name }}</span>
+                            <p class="car-price" style="position: relative; left: 320px; top: 12px;"><span class="vendor-price"></span>/hari</p>
+                            {{-- <p class="car-price" style="position: relative; left: 320px;"><span class="vendor-price"></span> /hari</p> --}}
+                        </li>
+                    </ul>
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -131,22 +137,33 @@
             document.getElementById('modal-category').textContent = category;
             document.getElementById('modal-harga').textContent = harga;
 
+            document.querySelectorAll('.vendor-price').forEach((vendorPrice) => {
+                vendorPrice.textContent = harga;
+            });
+
             document.getElementById('modal').style.display = 'block';
         });
     });
 </script>
 
 <style>
-    /* .belakang {
-        height: 50px;
-        width: 519px;
-        background-color: #c51919;
-        border: 1px solid rgba(30, 28, 28, 0.73);
-        border-radius: 9999px;
-        font-size: 14px;
-        color: white;
 
-    } */
+    .btn-icon.btn-rounded {
+        border-radius: 99px;
+        padding: 0.6rem;
+        margin: 115px;
+        margin-top: -70px;
+        position: absolute;
+        width: 45px;
+        height: 45px;
+        color: #c31e1e;
+        background-color: #c51919;
+        border: 1px solid rgba(216, 207, 207, 0.73);
+    }
+
+    .hari{
+        color: thistle;
+    }
 
     .vendor-list {
         list-style-type: none;
@@ -182,16 +199,24 @@
     .vendor-price {
         color: #e44d26;
         font-weight: bold;
+        padding: 12px;
+        font-size: 14px;
+        padding-left: 70px;
+        padding-top: 10px;
+    }
+
+    .container h1{
+        margin-top: 100px;
     }
 
     #cars-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(391px, 0fr));
+        grid-template-columns: repeat(auto-fill, minmax(370px, 0fr));
         overflow: hidden;
     }
 
     .car-list {
-        width: 1000px;
+        width: 980px;
     }
 
     #cars-container h2 {
