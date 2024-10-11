@@ -20,7 +20,8 @@ class ClinicHasPackages extends Model
         'unit_price',
         'price',
         'is_active',
-        
+        'image',
+        'duration_type',
     ];
 
     public function categoriesService()

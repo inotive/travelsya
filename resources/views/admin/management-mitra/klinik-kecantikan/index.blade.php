@@ -50,8 +50,9 @@
                             </td>
 
                               <td class="text-center">
-                              
-                                {{ $clinic->clinic_name }}</td>
+                                
+                                {{ $clinic->clinic_name }}
+                            </td>
                               <td class="text-center">{{ $clinic->city_name }}</td>
                             
                               <td class="text-center">{{ $clinic->address }}</td>
@@ -166,7 +167,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.klinik-kecantikan.store') }}">
+                        action="{{ route('admin.klinik-kecantikan.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -254,16 +255,18 @@
                                 </div>
                                 <!--end::Radio group-->
 
-                            
-
-                        <div class="col-12">
-                          <label for="" class="form-label">Alamat</label>
-                          <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
-                      </div>
+                                <div class="col-md-12">
+                                    <label class=" fs-6 fw-semibold mb-2">Gambar</label>
+                                    <input class="form-control form-control-lg" id="image" name="image" type="file" />
+                                </div>
 
 
-                  
-                 
+
+                                <div class="col-12">
+                                    <label for="" class="form-label">Alamat</label>
+                                    <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                                </div>
+
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->

@@ -68,23 +68,22 @@
                 </div>
                 
                 <div class="card-grid">
-                    @foreach ($clinics as $clinic)
-                    @foreach ($clinic->clinicPackages as $package)
                     <!-- Repeat this card 5 times -->
+                    @for ($i = 0; $i < 4; $i++)
                     
-                    <div class="card" >
-                        <div class="discount-tag-container" >
+                    <div class="card">
+                        <div class="discount-tag-container">
                             <span class="discount-tag">Big Deals</span>
                         </div>
-                        <img class="gambar-treat" style="filter: brightness(0.7);" src="{{ asset('storage/clinichaspackages/' . $package->image) }}" alt="{{ $package->name }}">
+                        <img class="gambar-treat" style="filter: brightness(0.7);" src="{{ asset('storage/images/treatment.png') }}" alt="Massage treatment">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
                                 <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
-                                <span>{{ $clinic->city }}</span>
+                                <span>Balikpapan</span>
                             </div>
 
-                            <h3 class="mt-3 text-dark">{{ $package->name }}</h3>
+                            <h3 class="mt-3 text-dark">Bersih Sehat Balikpapan</h3>
 
                             <div class="rating d-flex align-items-center">
                                 <span class="bintang fa fa-star checked me-2"></span>
@@ -92,15 +91,13 @@
                             </div>
 
                             <div class="price mt-7">
-                                <span class="coret text-decoration-line-through">{{ 'Rp '.number_format($package->price) }}</span>
-                                <span>{{ 'Rp '.number_format($package->price) }}</span>
+                                <span class="coret text-decoration-line-through">IDR 200.000</span>
+                                <span>IDR 150.000</span>
                             </div>
                         </div>
                     </div>
-                    
+                    @endfor
                     <!-- Repeat 4 more times -->
-                    @endforeach
-                    @endforeach
                 </div>
             </section>
 
@@ -154,19 +151,78 @@
                         <span class="chevron fa-solid fa-chevron-right"></span>
                     </button>
                 </div>
+                
                 <div class="partner-grid d-flex flex-row flex-nowrap overflow-auto">
-                    @foreach ($clinics as $clinic)
-                        <div class="card me-5">
-                            <img class="gambar-treat" src="{{ asset('storage/clinic/' . $clinic->image) }}" alt="{{ $clinic->name }}">   
-                            <div class="partner-card">
-                                <div class="d-flex align-items-center">
-                                    <span style="position: absolute; right: 10px;" class="fa-regular fa-bookmark"></span>
-                                    <span>{{ $clinic->category }}</span>
-                                </div>
-                                <h3 class="mt-3 text-dark">{{ $clinic->clinic_name }}</h3>
+                    <!-- Repeat this 5 times -->
+                    <div class="card me-5">
+                        <img class="gambar-treat" src="{{ asset('storage/images/neevegreen.png') }}" alt="Massage treatment">
+                        <div class="partner-card">
+                            <div class="d-flex align-items-center">
+                                <span style="position: absolute; left: 278px;" class="fa-regular fa-bookmark"></span>
+                                <span>Beauty</span>
                             </div>
-                        </div>    
-                    @endforeach
+
+                            <h3 class="mt-3 text-dark">Naavagreen Indonesia</h3>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 200.000</span>
+                                <span>IDR 150.000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card me-5">
+                        <img class="gambar-treat" src="{{ asset('storage/images/imagegorjes.png') }}" alt="Massage treatment">
+                        <div class="partner-card">
+                            <div class="d-flex align-items-center">
+                                <span style="position: absolute; left: 278px;" class="fa-regular fa-bookmark"></span>
+                                <span>Beauty</span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">Gorjes Salon</h3>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 200.000</span>
+                                <span>IDR 150.000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card me-5">
+                        <img class="gambar-treat" src="{{ asset('storage/images/imagemiracle.png') }}" alt="Massage treatment">
+                        <div class="partner-card">
+                            <div class="d-flex align-items-center">
+                                <span style="position: absolute; left: 278px;" class="fa-regular fa-bookmark"></span>
+                                <span>Beauty</span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">Miracle Clinic</h3>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 200.000</span>
+                                <span>IDR 150.000</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card me-5">
+                        <img class="gambar-treat" src="{{ asset('storage/images/imageanata.png') }}" alt="Massage treatment">
+                        <div class="partner-card">
+                            <div class="d-flex align-items-center">
+                                <span style="position: absolute; left: 278px;" class="fa-regular fa-bookmark"></span>
+                                <span>Beauty</span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">Anata Salon</h3>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 200.000</span>
+                                <span>IDR 150.000</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                 </div>
                 
             </section>

@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class BeautyClinicController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
         $users = DB::table('users')
@@ -25,8 +23,6 @@ class BeautyClinicController extends Controller
         ->join('users', 'clinics.user_id', '=', 'users.id')
         ->join('cities', 'clinics.city', '=', 'cities.city_id')
        
-        
-        
         ->select(
             'clinics.id as clinic_id', 
             'clinics.*', 
@@ -34,8 +30,8 @@ class BeautyClinicController extends Controller
             'users.*',
             'cities.city_id as city_id',
             'cities.image as city_image', 
-            'cities.*'
-
+            'cities.*',
+            
         )
         ->get();
 
@@ -49,18 +45,13 @@ class BeautyClinicController extends Controller
         return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics', 'cities', 'packages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+   
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+       public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -68,29 +59,38 @@ class BeautyClinicController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        DB::table('clinics')->insert([
-            'clinic_name' => ucwords($request->name),
-            'user_id' => $request->user_id,
-            'city' => $request->city,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'is_active' => 1,
-            'category' => $request->category,   
-        ]);
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/clinic', $imageName);
+            
+        }
+
+
+        $clinic = new Clinic();
+        $clinic->clinic_name = $request->input('name');
+        $clinic->user_id = $request->input('user_id');
+        $clinic->city = $request->input('city');
+        $clinic->phone = $request->input('phone');
+        $clinic->address = $request->input('address');
+        $clinic->is_active = 1; // Assuming new clinics are active by default
+        $clinic->category = $request->input('category');
+        $clinic->image = $imageName;
+        $clinic->save();
+
 
         toast('Mitra has been created', 'success');
         return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
 
@@ -104,17 +104,11 @@ class BeautyClinicController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         
@@ -127,6 +121,7 @@ class BeautyClinicController extends Controller
             'address' => 'required',
             'is_active' => 'required',
             'category' => 'required|in:kesehatan,kecantikan',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
 
@@ -136,6 +131,16 @@ class BeautyClinicController extends Controller
 
 
         $clinic = Clinic::findOrFail($id);
+        
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/clinic', $imageName);
+            $imageName = 'clinic/' . $imageName; // Ubah ini
+        } else {
+            $imageName = $clinic->image;
+        }
+
         $clinic->update([
             'user_id' => $request->user_id,
             'clinic_name' => ucwords($request->name),
@@ -144,20 +149,18 @@ class BeautyClinicController extends Controller
             'address' => $request->address,
             'is_active' => $request->is_active,
             'category' => $request->category,
+            'image' => $imageName,
         ]);
 
     
         toast('Mitra has been updated', 'success');
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Diudapte!',
+            'message' => 'Data Berhasil Diupdate!',
             'data'    => $clinic
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $clinic = Clinic::findOrFail($id);

@@ -18,10 +18,12 @@ class Clinic extends Model
         'phone',
         'address',
         'category',
+        'image',
     ];
 
     public function clinicPackages()
     {
         return $this->hasMany(ClinicHasPackages::class, 'clinic_id', 'id');
     }
+
 }

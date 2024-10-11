@@ -1,10 +1,10 @@
-@extends('ekstranet.layout', ['title' => 'Daftar Klinik Kecantikan', 'url' => ''])
+@extends('ekstranet.layout', ['title' => 'Daftar Jasa Kecantikan', 'url' => ''])
 
 @section('content-admin')
     <!--begin::Tables Widget 11-->
 
     <a class="btn btn-sm btn-primary mb-3" href="{{ route('clinics.create') }}">
-        <i class="ki-duotone ki-plus fs-2"></i> Tambah Klinik Kecantikan
+        <i class="ki-duotone ki-plus fs-2"></i> Tambah Jasa Kecantikan
     </a>
     
 
