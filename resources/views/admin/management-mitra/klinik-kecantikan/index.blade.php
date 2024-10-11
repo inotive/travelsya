@@ -23,7 +23,8 @@
                         <tr class="fw-bold fs-6 text-gray-800 ">
                             <th class="text-center">No.</th>
                             <th class="text-center">Mitra</th>
-                            <th class="text-center">Klinik</th>
+                            <th class="text-center">Kategori</th>
+                            <th class="text-center">Nama Usaha</th>
                             <th class="text-center">Kota/Kabupaten</th>
                         
                             <th class="text-center">Alamat</th>
@@ -43,9 +44,12 @@
                                 
                                 {{ $clinic->name }}
                               </td>
+
                               <td class="text-center">
-                             
-                            
+                               {{ $clinic->category }}
+                            </td>
+
+                              <td class="text-center">
                               
                                 {{ $clinic->clinic_name }}</td>
                               <td class="text-center">{{ $clinic->city_name }}</td>
@@ -230,10 +234,27 @@
                                     </span>
                                 @enderror
                             </div>
+                            
+                                <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                                <!--begin::Radio group-->
+                                <div class="btn-group w-60" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+                                    <!--begin::Radio-->
+                                    <label class="btn btn-outline btn-danger active" data-kt-button="true">
+                                        <input class="btn-check" type="radio" name="category" value="kesehatan" required />
+                                        Kesehatan
+                                    </label>
+                                    <!--end::Radio-->
 
+                                    <!--begin::Radio-->
+                                    <label class="btn btn-outline btn-danger" data-kt-button="true">
+                                        <input class="btn-check" type="radio" name="category" value="kecantikan" required />
+                                        Kecantikan
+                                    </label>
+                                    <!--end::Radio-->
+                                </div>
+                                <!--end::Radio group-->
 
-                         
-
+                            
 
                         <div class="col-12">
                           <label for="" class="form-label">Alamat</label>

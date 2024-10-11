@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('address');
             $table->boolean('is_active');
 
+            $table->enum('category', ['kesehatan', 'kecantikan']);
+
             $table->timestamps();
         });
     }

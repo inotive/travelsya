@@ -17,6 +17,7 @@ class Clinic extends Model
         'city',
         'phone',
         'address',
+        'category',
     ];
 
     public function clinicPackages()
