@@ -394,7 +394,6 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'show'])->name('recreation.show');
         Route::delete('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'destroy'])->name('recreation.destroy');
 
-
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');

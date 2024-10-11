@@ -26,7 +26,7 @@ class RecreationController extends Controller
             ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')  // Join ke tabel recreations
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
             ->where('recreations.user_id', Auth::id())
-            ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
+            ->select('recreation_has_packages.*', 'category_recreations.name as category_name', 'recreations.business_name')
             ->get();
 
         return view('ekstranet.rekreasi.daftar-rekreasi', [

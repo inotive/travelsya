@@ -16,7 +16,7 @@ class RecreationSeeder extends Seeder
         DB::table('recreations')->insert([
             'id' => 1,
             'user_id' => 2,
-            // 'category_recreation_id' => 1,
+             'category_recreation_id' => 1,
             'business_name' => 'Rekreasi Alam',
             'phone' => '08123456789',
             'city' => 'Jakarta',

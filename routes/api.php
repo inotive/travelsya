@@ -104,7 +104,6 @@ Route::get('/car-rentals', [ApiCarRentalController::class, 'index']);
 Route::get('/recreations', [RecreationController::class, 'index']);
 Route::get('/recreations/{id}', [RecreationController::class, 'show']);
 
-
 Route::middleware('auth:sanctum')->group(function () {
     //auth
     route::post('/logout', [AuthController::class, 'logout']);

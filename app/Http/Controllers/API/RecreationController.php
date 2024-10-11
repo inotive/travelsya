@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -17,7 +17,7 @@ class RecreationController extends Controller
             $category = $request->input('category');
 
             $recreations = DB::table('recreations')
-                ->join('recreation_has_packages', 'recreations.id', '=', 'recreation_has_packages.recreaction_id')
+                ->join('recreation_has_packages', 'recreations.id', '=', 'recreation_has_packages.recreation_id')
                 ->leftJoin(DB::raw('(SELECT recreation_id, AVG(rate) as average_rating, COUNT(id) as total_ratings FROM recreation_ratings GROUP BY recreation_id) as ratings'), 'recreations.id', '=', 'ratings.recreation_id')
                 ->select(
                     'recreations.id',
@@ -60,15 +60,13 @@ class RecreationController extends Controller
     {
         try {
             $recreation = DB::table('recreations')
-                ->join('recreation_has_packages', 'recreations.id', '=', 'recreation_has_packages.recreaction_id')
+                ->join('recreation_has_packages', 'recreations.id', '=', 'recreation_has_packages.recreation_id')
                 ->leftJoin(DB::raw('(SELECT recreation_id, AVG(rate) as average_rating, COUNT(id) as total_ratings FROM recreation_ratings GROUP BY recreation_id) as ratings'), 'recreations.id', '=', 'ratings.recreation_id')
                 ->select(
                     'recreations.id',
                     'recreations.business_name as name',
                     'recreations.city as city',
                     'recreations.address',
-                    'recreation_has_packages.lat',
-                    'recreation_has_packages.ltd',
                     DB::raw('MIN(recreation_has_packages.price) as min_price'),
                     DB::raw('IFNULL(ratings.average_rating, 0) as average_rating'),
                     DB::raw('IFNULL(ratings.total_ratings, 0) as total_ratings')
@@ -80,8 +78,6 @@ class RecreationController extends Controller
                     'recreations.business_name',
                     'recreations.city',
                     'recreations.address',
-                    'recreation_has_packages.lat',
-                    'recreation_has_packages.ltd',
                     'ratings.average_rating',
                     'ratings.total_ratings'
                 )
@@ -93,7 +89,7 @@ class RecreationController extends Controller
 
             $packages = DB::table('recreation_has_packages')
                 ->select('id','name', 'price',)
-                ->where('recreaction_id', $id)
+                ->where('recreation_id', $id)
                 ->get();
 
             $reviews = DB::table('recreation_ratings')
@@ -113,8 +109,6 @@ class RecreationController extends Controller
                 'name' => $recreation->name,
                 'city' => $recreation->city,
                 'address' => $recreation->address,
-                'lat' => $recreation->lat,
-                'ltd' => $recreation->ltd,
                 'min_price' => $recreation->min_price,
                 'average_rating' => $recreation->average_rating,
                 'total_ratings' => $recreation->total_ratings,

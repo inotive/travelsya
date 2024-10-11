@@ -115,7 +115,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form action="{{ route('partner.kendaraan.delete', $car->id) }}" method="POST" id="form-delete">
+                    <form action="{{ route('partner.kendaraan.delete', 1) }}" method="POST" id="form-delete">
                         @method('delete')
                         @csrf
                         <button type="submit" class="btn btn-danger">Hapus</button>

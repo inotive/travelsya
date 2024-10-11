@@ -19,6 +19,7 @@
                 <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
                         <th class="text-center">No.</th>
+                        <th class="text-center">Binis</th>
                         <th class="text-center">Kategori</th>
                         <th class="text-center">Paket</th>
                         <th class="text-center">Durasi</th>
@@ -31,6 +32,7 @@
                     @foreach ($data as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
+                        <td>{{ $item->business_name }}</td>
                         <td>{{ $item->category_name }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->duration }} {{ $item->unit_price }}</td>
