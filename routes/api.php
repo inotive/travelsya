@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\CarRentalController;
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CallbackController;
-use App\Http\Controllers\Api\CarRentalController as ApiCarRentalController;
+use App\Http\Controllers\API\CarRentalController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
@@ -98,7 +97,7 @@ route::post('/callback/ppob/test', [CallbackController::class, 'callBackPPOB']);
 route::post('/callback/ppob/test-voucher', [CallbackController::class, 'testCheckVoucher']);
 
 // carrental
-Route::get('/car-rentals', [ApiCarRentalController::class, 'index']);
+Route::get('/car-rentals', [CarRentalController::class, 'index']);
 
 // carrental
 Route::get('/recreations', [RecreationController::class, 'index']);
