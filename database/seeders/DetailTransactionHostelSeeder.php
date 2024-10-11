@@ -37,7 +37,7 @@ class DetailTransactionHostelSeeder extends Seeder
         DetailTransactionHostel::create([
             'id' => 2,
             'transaction_id' => 53,
-            'hostel_id' => 3,
+            'hostel_id' => 4,
             'hostel_room_id' => 8,
             'type_rent' => 'bulanan',
             'booking_id' => 'adas2',
@@ -58,7 +58,7 @@ class DetailTransactionHostelSeeder extends Seeder
         DetailTransactionHostel::create([
             'id' => 3,
             'transaction_id' => 54,
-            'hostel_id' => 3,
+            'hostel_id' => 5,
             'hostel_room_id' => 8,
             'type_rent' => 'bulanan',
             'booking_id' => 'adas3',
@@ -79,7 +79,7 @@ class DetailTransactionHostelSeeder extends Seeder
         DetailTransactionHostel::create([
             'id' => 4,
             'transaction_id' => 55,
-            'hostel_id' => 3,
+            'hostel_id' => 2,
             'hostel_room_id' => 8,
             'type_rent' => 'bulanan',
             'booking_id' => 'adas4',
@@ -100,7 +100,7 @@ class DetailTransactionHostelSeeder extends Seeder
         DetailTransactionHostel::create([
             'id' => 5,
             'transaction_id' => 56,
-            'hostel_id' => 3,
+            'hostel_id' => 6,
             'hostel_room_id' => 8,
             'type_rent' => 'bulanan',
             'booking_id' => 'adas5',

@@ -27,9 +27,11 @@ return new class extends Migration
             $table->string("duration");
             $table->double("lat");
             $table->double("ltd");
-            $table->date('expiry_date');
+            $table->integer('expiry_date');
+            $table->enum("expiry_type", ["Hari", "jam"]);
             $table->string("unit_price");
             $table->double('price');
+            $table->boolean('is_active');
 
             $table->timestamps();
         });
