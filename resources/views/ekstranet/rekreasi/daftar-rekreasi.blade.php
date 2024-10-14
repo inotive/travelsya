@@ -39,9 +39,9 @@
                         <td>{{ 'Rp '.number_format($item->price) ?? '' }}</td>
                         <td>
                             @if ($item->is_active === 1)
-                                <span class="badge badge-success">Aktif</span>
+                            <span class="badge badge-success">Aktif</span>
                             @else
-                                <span class="badge badge-danger">Tidak Aktif</span>
+                            <span class="badge badge-danger">Tidak Aktif</span>
                             @endif
                         </td>
                         <td>
@@ -91,69 +91,41 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Data berhasil ditambahkan.',
-        toast: true,
-        showConfirmButton: false,
-        timer: 2000
+        position: 'top-end'
+        , icon: 'success'
+        , title: 'Data berhasil ditambahkan.'
+        , toast: true
+        , showConfirmButton: false
+        , timer: 2000
     });
+
 </script>
 @elseif(session('success_update'))
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: 'Data berhasil Diubah.',
-        toast: true,
-        showConfirmButton: false,
-        timer: 2000
+        position: 'top-end'
+        , icon: 'success'
+        , title: 'Data berhasil Diubah.'
+        , toast: true
+        , showConfirmButton: false
+        , timer: 2000
     });
+
 </script>
 @endif
 
 @push('add-script')
 <script>
-    // Countdown
-    function startCountdown(expiryDate) {
-        let countdownElement = document.getElementById('countdown');
-
-        setInterval(function() {
-            let now = Math.floor(Date.now() / 1000);
-            let remainingSeconds = expiryDate - now;
-
-            if (remainingSeconds < 0) {
-                countdownElement.innerHTML = 'Waktu habis';
-                clearInterval(this);
-                return;
-            }
-
-            let days = Math.floor(remainingSeconds / 86400);
-            remainingSeconds %= 86400;
-            let hours = Math.floor(remainingSeconds / 3600);
-            remainingSeconds %= 3600;
-            let minutes = Math.floor(remainingSeconds / 60);
-            let seconds = remainingSeconds % 60;
-
-            countdownElement.innerHTML = `${days} Hari, ${hours} Jam, ${minutes} Menit, ${seconds} Detik`;
-        }, 1000);
-    }
-
-    // Memanggil fungsi dengan waktu kedaluwarsa
-    document.addEventListener("DOMContentLoaded", function() {
-        startCountdown({{ $item->expiry_date }});
-    });
-
     // DataTable
     $(document).ready(function() {
         $('#kt_datatable').DataTable({
-            "scrollY": "500px",
-            "scrollCollapse": true,
-            "language": {
-                "lengthMenu": "_MENU_",
-            },
-            "dom": "<'row'" +
+            "scrollY": "500px"
+            , "scrollCollapse": true
+            , "language": {
+                "lengthMenu": "_MENU_"
+            , }
+            , "dom": "<'row'" +
                 "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +
                 "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                 ">" +
@@ -168,10 +140,11 @@
     // detail
     function showDetail(id) {
         $.ajax({
-            url: 'recreation/' + id,
-            type: 'GET',
-            success: function(response) {
+            url: 'recreation/' + id
+            , type: 'GET'
+            , success: function(response) {
                 $('#package-details').html(`
+                    <p><strong>Nama Bisnis:</strong> ${response.recreation_name || '-'}</p>
                     <p><strong>Nama Paket:</strong> ${response.name || '-'}</p>
                     <p><strong>Kategori:</strong> ${response.category_name || '-'}</p>
                     <p><strong>Durasi:</strong> ${response.duration || '-'} ${response.unit_price || '-'}</p>
@@ -181,8 +154,8 @@
                     <p><strong>Peraturan:</strong> ${response.rules || '-'}</p>
                     <p><strong>Status:</strong> ${(response.is_active == 1 ? 'Aktif' : 'Tidak Aktif')}</p>
                 `);
-            },
-            error: function() {
+            }
+            , error: function() {
                 alert('Gagal mengambil data!');
             }
         });
@@ -192,47 +165,48 @@
     function deleteRecreation(id) {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
+                confirmButton: "btn btn-success"
+                , cancelButton: "btn btn-danger"
+            }
+            , buttonsStyling: false
         });
 
         swalWithBootstrapButtons.fire({
-            title: "Apakah kamu yakin ingin menghapus data ini?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Ya, Hapus",
-            cancelButtonText: "Tidak jadi",
-            reverseButtons: true
+            title: "Apakah kamu yakin ingin menghapus data ini?"
+            , icon: "warning"
+            , showCancelButton: true
+            , confirmButtonText: "Ya, Hapus"
+            , cancelButtonText: "Tidak jadi"
+            , reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'recreation/' + id,
-                    type: 'DELETE',
-                    headers: {
+                    url: 'recreation/' + id
+                    , type: 'DELETE'
+                    , headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    success: function(response) {
+                    }
+                    , success: function(response) {
                         swalWithBootstrapButtons.fire(
-                            'Terhapus!',
-                            'Data ini berhasil dihapus.',
-                            'success'
+                            'Terhapus!'
+                            , 'Data ini berhasil dihapus.'
+                            , 'success'
                         ).then(() => {
                             location.reload();
                         });
-                    },
-                    error: function(response) {
+                    }
+                    , error: function(response) {
                         swalWithBootstrapButtons.fire(
-                            'Error!',
-                            'Terjadi error saat menghapus data.',
-                            'error'
+                            'Error!'
+                            , 'Terjadi error saat menghapus data.'
+                            , 'error'
                         );
                     }
                 });
             }
         });
     }
+
 </script>
 @endpush
 @endsection
