@@ -229,8 +229,6 @@ Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clini
 
 
 
-
-
 //tranas
 Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');
@@ -391,6 +389,9 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::put('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
             Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
             Route::get('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'show'])->name('clinics.show');
+
+            Route::get('/get-categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get-categories-by-clinic');
+
         });
         
 

@@ -10,9 +10,7 @@
                 @csrf
                 <!--begin::Heading-->
                 <div class="mb-13 text-center">
-                    <!--begin::Title-->
-                    <h1 class="mb-3">Create Jasa Kecantikan</h1>
-                    <!--end::Title-->
+                    <h1 class="mb-3">Create Jasa Klinik</h1>
                 </div>
                 <!--end::Heading-->
                 <!--begin::Input group-->
@@ -28,6 +26,7 @@
                     </div>
 
                     
+
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                         <select class="form-control" name="categories_services_id" required>
@@ -41,12 +40,15 @@
                             </span>
                         @enderror
                     </div>
+
                     @if(count($clinics) > 1)
+
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
-                        <select class="form-control" name="clinic_id" required>
+                        <select class="form-control" name="clinic_id" id="clinic_id" required>
+                            <option value="">Pilih Bisnis</option>
                             @foreach ($clinics as $clinic)
-                                <option value="{{ $clinic->id }}">{{ $clinic->clinic_name }}</option>
+                                <option value="{{ $clinic->id }}" data-category="{{ $clinic->category }}">{{ $clinic->clinic_name }}</option>
                             @endforeach
                         </select>
                         @error('clinic_id')
@@ -58,7 +60,6 @@
                     @else
                     <input type="hidden" name="clinic_id" value="{{ $clinics->first()->id }}">
                     @endif
-                   
 
                     
                     <div class="col-md-6">
@@ -92,8 +93,7 @@
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                    </div>
-                    
+                    </div>             
 
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Masa Berlaku (hari)</label>
@@ -155,5 +155,4 @@
 </div>
 
 
-        
 @endsection

@@ -9,6 +9,9 @@ use App\Models\Specialist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Category;
+use Illuminate\Support\Facades\Log;
+use App\Models\CategoryService;
 
 class ClinicHasPackageController extends Controller
 {
@@ -44,15 +47,18 @@ class ClinicHasPackageController extends Controller
         return view('ekstranet.jasaklinik.list-klinik', compact('spesialis', 'users', 'clinics', 'cities', 'categories'));
     }
 
-    public function create(){
-
-        
+    public function create()
+    {
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all(); 
-
         $clinics = Clinic::all();
 
-        return view('ekstranet.jasaklinik.create-klinik', compact('spesialis','categories','clinics'));
+        // Memastikan bahwa ada setidaknya satu klinik
+        if ($clinics->isEmpty()) {
+            return redirect()->back()->with('error', 'Tidak ada klinik yang tersedia.');
+        }
+
+        return view('ekstranet.jasaklinik.create-klinik', compact('spesialis', 'categories', 'clinics'));
     }
 
         
