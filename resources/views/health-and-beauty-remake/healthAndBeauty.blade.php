@@ -11,7 +11,7 @@
                 </div>
             </form>
         </div>
-    
+
 
     <main>
         <section class="hero">
@@ -66,11 +66,11 @@
                         <span class="chevron fa-solid fa-chevron-right"></span>
                     </button>
                 </div>
-                
+
                 <div class="card-grid">
                     <!-- Repeat this card 5 times -->
                     @for ($i = 0; $i < 4; $i++)
-                    
+
                     <div class="card">
                         <div class="discount-tag-container">
                             <span class="discount-tag">Big Deals</span>
@@ -115,7 +115,7 @@
                         <span class="chevron fa-solid fa-chevron-right"></span>
                     </button>
                 </div>
-                
+
                 <div class="category-grid">
                     <div class="category-card">
                         <img src="{{ asset('storage/images/treatment.png') }}" alt="Perawatan Kulit">
@@ -151,7 +151,7 @@
                         <span class="chevron fa-solid fa-chevron-right"></span>
                     </button>
                 </div>
-                
+
                 <div class="partner-grid d-flex flex-row flex-nowrap overflow-auto">
                     <!-- Repeat this 5 times -->
                     <div class="card me-5">
@@ -221,13 +221,14 @@
                             </div>
                         </div>
                     </div>
-                    
-                    
+
+
                 </div>
-                
+
             </section>
         </div>
     </main>
 
     @include('layouts.include.home.script-health-and-beauty-remake')
 @endsection
+

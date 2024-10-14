@@ -44,7 +44,7 @@
     
                 
                     
-                    <input type="hidden" name="clinid_id" value="0">
+                    <input type="hidden" name="clinid_id" value="1">
 
                     
                     <div class="col-md-6">
@@ -69,11 +69,11 @@
 
                     <div class="col-md-3">
                         <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
-                        <select class="form-control form-control-lg" name="unit_price" required>
+                        <select class="form-control form-control-lg" name="duration_type" required>
                             <option value="menit">Menit</option>
                             <option value="jam">Jam</option>
                         </select>
-                        @error('unit_price')
+                        @error('duration_type')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -96,8 +96,8 @@
 
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Gambar</label>
-                        <input type="file" class="form-control form-control-lg" name="image" required />
+                        <label class=" fs-6 fw-semibold mb-2">Gambar</label>
+                        <input type="file" class="form-control form-control-lg" name="image" />
                     </div>
 
 
@@ -113,10 +113,12 @@
                     </div>
 
 
+
                     <input type="hidden" name="is_active" value="1">
 
                     <input type="hidden" name="clinic_id" value="1">
                     
+                    <input type="hidden" name="unit_price" value="unit_price">
                 </div>
                 <!--end::Input group-->
                 <!--begin::Actions-->

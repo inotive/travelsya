@@ -27,12 +27,13 @@ return new class extends Migration
             $table->text('rules');
             $table->text('description');
             $table->integer('duration');
+            $table->enum('duration_type', ['menit', 'jam']);
             $table->integer('expiry_date');
             $table->string("unit_price");
             $table->double('price');
             $table->boolean('is_active')->default(1); // 1 berarti aktif, 0 berarti tidak aktif
 
-            $table->string('image');
+            $table->string('image')->nullable();
 
             $table->timestamps();
         });

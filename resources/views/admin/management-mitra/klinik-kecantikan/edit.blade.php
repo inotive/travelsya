@@ -85,6 +85,13 @@
                       @enderror
                   </div>
   
+
+                  <div class="col-md-12">
+                    <label for="image-edit" class="form-label">Gambar</label>
+                    <input type="file" class="form-control" id="image-edit" name="image">
+                </div>
+
+
                   <div class="col-md-12">
                       <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                       <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
@@ -157,7 +164,7 @@
                     $('#city-edit').trigger('change');
                     $('#phone-edit').val(response.data.phone);
                     $(`input[name="category"][value="${response.data.category}"]`).prop('checked', true);
-    
+                    $('#image-edit').val(response.data.image);
                     // Show the modal
                     $('#modal-edit').modal('show');
                 },
@@ -181,7 +188,7 @@
             let phone = $('#phone-edit').val();
             let token = $("meta[name='csrf-token']").attr("content");
             let category = $('input[name="category"]:checked').val();
-    
+            let image = $('#image-edit').val();
             // Clear previous alerts
             $('.alert').addClass('d-none').html('');
     
@@ -202,7 +209,8 @@
                     "city": city,
                     "phone": phone,
                     "_token": token,
-                    "category": category
+                    "category": category,
+                    "image": image
                 },
                 success: function(response) {
                     console.log('Update successful:', response);
@@ -231,6 +239,9 @@
                         }
                         if (error.responseJSON.category) {
                             $('#alert-category-edit').removeClass('d-none').html(error.responseJSON.category[0]);
+                        }
+                        if (error.responseJSON.image) {
+                            $('#alert-image-edit').removeClass('d-none').html(error.responseJSON.image[0]);
                         }
                     }
                 }

@@ -1,201 +1,177 @@
-@extends('layouts.web')
+@extends('layouts.web-remake', ['title' => 'Health & Beauty'])
 
-@section('title', 'Daftar Klinik Kecantikan & Kesehatan')
+@section('content-web')
 
+        <div class="container d-flex justify-content-between align-items-center position-relative" style="top: -15px;">
+            <a href="{{ url()->previous() }}" class="btn btn-outline-dark mb-3"><i class="bi bi-arrow-left"></i> Kembali</a>
+            <form action="{{ url()->current() }}" method="GET" class="d-flex">
+                <div class="input-group">
+                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
+                    <input style="width: 310px; " type="search" name="search" value="{{ request()->query('search') }}" placeholder="Cari klinik kesehatan dan kecantikan disini" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+            </form>
+        </div>
+    
 
-                <div
-                    class="card border-transparent header-image"
-                    data-bs-theme="light"
-                    style=""
-                    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center center`">
-                    <div class="card-body d-flex ps-xl-20">
-                        <div class="m-0">
-                            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
-                                <button class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5 "onclick="history.back();">
-                                    <i class="las la-angle-left"></i>
-                                </button>
-                                <div>
-                                    <span class="me-2">Heath & Beauty</span>
-                                    <br/><span class="fs-3 text-gray-300 me-2">Cari klinik kecantikan dan kesehatan di lokasimu!</span>
-                                </div>
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h2 class="hawa text-white">Health and Beauty</h2>
+                <h1 class="text-white">Cantik Sehat, Hidup Lebih Bahagia</h1>
+            </div>
+
+            <div class="search-box">
+                <div class="button-group">
+                    <button class="toggle-button active">Health</button>
+                    <button class="toggle-button">Beauty</button>
+                </div>
+
+                <div class="search-container">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" placeholder="Mau treatment dimana?">
+                </div>
+
+                <div class="date-container">
+                    <input type="text" placeholder="Pilihan tanggal">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                </div>
+
+                <button class="search-button">Cari Sekarang</button>
+            </div>
+        </section>
+
+        <div class="container">
+            <section class="special-deals">
+                <div class="section-header">
+                    <div style="display: flex; align-items: center;">
+                        <span style="font-size: 28px; margin-right: 10px; color: red;" class="fa-solid fa-tags"></span>
+                        <h2 class="text-dark" style="position: relative; top: 3px;">Special Deals</h2>
+                    </div>
+                    <p class="mt-4">Jelajahi kategori-kategori kami untuk kebahagiaan maksimal</p>
+                </div>
+
+                <div style="display: flex; gap: 10px; padding: 5px; border-radius: 10px;" class="mb-3">
+                    <button class="panah btn btn-outline-primary" onclick="document.querySelector('.card-grid').scrollLeft -= 300;">
+                        <span class="chevron fa-solid fa-chevron-left"></span>
+                    </button>
+                    <button class="panah btn btn-outline-primary" onclick="document.querySelector('.card-grid').scrollLeft += 300;">
+                        <span class="chevron fa-solid fa-chevron-right"></span>
+                    </button>
+                </div>
+                
+                <div class="card-grid">
+                    @foreach ($clinics as $clinic)
+                    @foreach ($clinic->clinicPackages as $package)
+                    <!-- Repeat this card 5 times -->
+                    
+                    <div class="card" >
+                        <div class="discount-tag-container" >
+                            <span class="discount-tag">Big Deals</span>
+                        </div>
+                        <img class="gambar-treat" style="filter: brightness(0.7);" src="{{ asset('storage/clinichaspackages/' . $package->image) }}" alt="{{ $package->name }}">
+                        <div class="card-content">
+                            <div class="lokasi d-flex align-items-center">
+                                <span class="fa-solid fa-location-dot me-2"></span>
+                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
+                                <span>{{ $clinic->city }}</span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">{{ $package->name }}</h3>
+
+                            <div class="rating d-flex align-items-center">
+                                <span class="bintang fa fa-star checked me-2"></span>
+                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb ulasan)</span>
+                            </div>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">{{ 'Rp '.number_format($package->price) }}</span>
+                                <span>{{ 'Rp '.number_format($package->price) }}</span>
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Repeat 4 more times -->
+                    @endforeach
+                    @endforeach
+                </div>
+            </section>
+
+            <section class="categories">
+                <div class="section-header">
+                    <h2>Kebutuhan Kesehatan dan Kecantikan</h2>
+                    <p>Jelajahi kategori-kategori kami untuk kebahagiaan maksimal</p>
                 </div>
 
-<div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
-  <div class="content flex-row-fluid mb-20" id="kt_content">
-    
-    <div class="row">
-
-      
-        <div class="card border-1 border-light">
-            <form class="card-body h-100" method="GET" action="" id="searchForm">
-                <input type="hidden" name="location" value="">
-                <input type="hidden" name="start" value="">
-                <input type="hidden" name="duration" value="">
-                <input type="hidden" name="room" value="">
-                <input type="hidden" name="guest" value="">
+                <div style="display: flex; gap: 10px; padding: 5px; border-radius: 10px;" class="mb-3">
+                    <button class="panah btn btn-outline-primary" onclick="document.querySelector('.category-grid').scrollLeft -= 200;">
+                        <span class="chevron fa-solid fa-chevron-left"></span>
+                    </button>
+                    <button class="panah btn btn-outline-primary" onclick="document.querySelector('.category-grid').scrollLeft += 200;">
+                        <span class="chevron fa-solid fa-chevron-right"></span>
+                    </button>
+                </div>
                 
-               
-            </form>
-        </div>
-      
-
-      <div class="col-12">
-        <div class="row gy-4">
-          <div class="col-12">
-              <div class="card">
-                     
-                    <!--begin::Radio group-->
-                    <div class="btn-group w-60 " data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]" style="margin-right: 30px; margin-left: 30px; margin-top: 15px">
-
-                        <!--begin::Radio-->
-                        <label class="btn btn-outline btn-danger active" data-kt-button="true">
-                            <!--begin::Input-->
-                            <input class="btn-check" type="radio" name="category" value="health" required />
-                            <!--end::Input-->
-                            Health
-                        </label>
-                        <!--end::Radio-->
-
-                        <!--begin::Radio-->
-                        <label class="btn btn-outline btn-danger" data-kt-button="true">
-                            <!--begin::Input-->
-                            <input class="btn-check" type="radio" name="category" value="beauty" required />
-                            <!--end::Input-->
-                            Beauty
-                        </label>
-                        <!--end::Radio-->
-
+                <div class="category-grid">
+                    <div class="category-card">
+                        <img src="{{ asset('storage/images/treatment.png') }}" alt="Perawatan Kulit">
+                        <h3 class="">Perawatan Kulit</h3>
                     </div>
-                    <!--end::Radio group-->
+                    <div class="category-card">
+                        <img src="{{ asset('storage/images/treatment.png') }}" alt="Perawatan Kulit">
+                        <h3 class="">Make Up</h3>
+                    </div>
+                    <div class="category-card">
+                        <img src="{{ asset('storage/images/treatment.png') }}" alt="Perawatan Kulit">
+                        <h3 class="">Perawatan Rambut</h3>
+                    </div>
+                    <div class="category-card">
+                        <img src="{{ asset('storage/images/treatment.png') }}" alt="Perawatan Kulit">
+                        <h3 class="">Health Care</h3>
+                    </div>
+                </div>
 
-                  <div class="card-body h-100">
-                      <form method="GET" action="" class="row g-4">
-                          <div class="col-6">
-                              <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
-                              <select name="location" id="location" class="form-select form-select-lg">
-                                  <option value="balikpapan">Balikpapan</option>
-                                  <option value="samarinda">Samarinda</option>
-                              </select>
+            </section>
 
-                          </div>
-                          
-                          <div class="col-6">
-                            <label class="fs-5 fw-semibold mb-2">
-                                <span>Tanggal Pemesanan</span>
-                            </label>
-                            <input type="date" id="" class="form-control form-control-lg"
-                                name="keyword" placeholder="Tanggal" value="" />
-                        </div>
+            <section class="partners">
+                <div class="section-header">
+                    <h2>Kesehatan dan Kecantikan Terbaik!</h2>
+                    <p>Saatnya segarkan penampilan kamu dengan mitra-mitra terbaik kami</p>
+                </div>
 
-                          
-
-                          <div class="col-12">
-                              <button type="submit" class="w-100 btn-danger btn">Cari Sekarang</button>
-                          </div>
-                      </form>
-                  </div>
-              </div>
-          </div>
-        </div>
-
-
-
-        {{-- recreation count --}}
- 
-        <h5 class="mt-10">Menampilkan {{ $clinics->count() }} Klinik Kesehatan</h5>
-        <div id="results" class="mt-4">
-            <div class="row row-cols-1 row-cols-md-4 g-4">
-                @foreach ($clinics as $clinic)
-                    @foreach ($clinic->clinicPackages as $package)
-                        <div class="col">
-                            <a href="{{ route('clinics.klinik', ['id' => $package->id]) }}">
-                                <div class="card shadow h-100">
-                                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
-                                    <div class="card-body d-flex flex-column">
-                                        <h4 class="card-title">{{ $package->name }}</h4>
-                                        <p class="card-text flex-grow-1">{{ $package->description }}</p>
-                                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                                            <h4 style="color: rgb(255, 0, 0);">{{ 'Rp '.number_format($package->price) }}</h4>
-                                            <span class="card-text" style="color: rgb(255, 0, 0);">
-                                                <i class="fa fa-star"></i>&nbsp;(5)
-                                            </span>
-                                        </div>
-                                    </div>
+                <div style="display: flex; gap: 10px; padding: 5px; border-radius: 10px;" class="mb-3">
+                    <button class="panah btn btn-outline-primary" onclick="document.querySelector('.partner-grid').scrollLeft -= 200;">
+                        <span class="chevron fa-solid fa-chevron-left"></span>
+                    </button>
+                    <button class="panah btn btn-outline-primary" onclick="document.querySelector('.partner-grid').scrollLeft += 200;">
+                        <span class="chevron fa-solid fa-chevron-right"></span>
+                    </button>
+                </div>
+                <div class="partner-grid d-flex flex-row flex-nowrap overflow-auto">
+                    @foreach ($clinics as $clinic)
+                        <div class="card me-5">
+                            <img class="gambar-treat" src="{{ asset('storage/clinic/' . $clinic->image) }}" alt="{{ $clinic->name }}">   
+                            <div class="partner-card">
+                                <div class="d-flex align-items-center">
+                                    <span style="position: absolute; right: 10px;" class="fa-regular fa-bookmark"></span>
+                                    <span>{{ $clinic->category }}</span>
                                 </div>
-                            </a>
-                        </div>
+                                <h3 class="mt-3 text-dark">{{ $clinic->clinic_name }}</h3>
+                            </div>
+                        </div>    
                     @endforeach
-                @endforeach
-            </div>
+                </div>
+                
+            </section>
         </div>
-        
+    </main>
 
-    </div>
-</div>
-
-
-
-
-
-      </div>
-
-    </div>
-
-
-  </div>
-
-</div>
-
-
-
-<!--end::Container-->
-
-@push('add-style')
-<style>
-    body {
-        background-size: 100% 80px !important;
-    }
-
-    .card-hostel:hover {
-        border: 1px solid #D9214E;
-        cursor: pointer;
-    }
-</style>
-@endpush
-@push('add-script')
-<script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
-<script>
-    $(document).ready(function() {
-        $("#card-filter").hide();
-        $("#button-refilter").click(function() {
-            $("#card-filter").toggle();
-        })
-
-        var today = new Date();
-
-        new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hotel"), {
-            display: {
-                viewMode: "calendar",
-                components: {
-                    date: true,
-                    hours: false,
-                    minutes: false,
-                    seconds: false
-                }
-            },
-            localization: {
-                locale: "id",
-                format: "dd-MM-yyyy",
-            },
-            restrictions: {
-                minDate: today,
-            },
-        });
-    })
-
-</script>
-
-@endpush
+    @include('layouts.include.home.script-health-and-beauty-remake')
+@endsection

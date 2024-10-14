@@ -57,7 +57,7 @@ class ClinicHasPackageController extends Controller
         
     public function store(Request $request)
     {
-        // dd($request->all());
+        //dd($request->all());
 
         // $request->validate([
         //     'clinic_id' => 'required|integer',
@@ -71,8 +71,15 @@ class ClinicHasPackageController extends Controller
         //     'expiry_date' => 'required|date', 
         //     'price' => 'required|numeric',
         //     'is_active' => 'required|boolean',
-        // ]);
+        //    'duration_type' => 'required|enum',
 
+        //]);
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/clinichaspackages', $imageName);
+        }
 
         $clinic = new ClinicHasPackages();
         $clinic->clinic_id = $request->input('clinic_id');
@@ -87,9 +94,11 @@ class ClinicHasPackageController extends Controller
         $clinic->unit_price = $request->input('unit_price');
         $clinic->expiry_date = $request->input('expiry_date');
         $clinic->is_active = $request->input('is_active');
+        $clinic->image = $imageName;
+        $clinic->duration_type = $request->input('duration_type');
         $clinic->save();
 
-        return redirect()->route('clinics.index')->with('success', 'Clinic service added successfully.');
+        return redirect()->route('clinics.list')->with('success', 'Clinic service added successfully.');
 
     }
 
@@ -111,11 +120,13 @@ class ClinicHasPackageController extends Controller
                 'clinic_id' => 'required|integer',
                 'rules' => 'required|string',
                 'duration' => 'required|string',
-                'unit_price' => 'required|string',
+                'unit_price' => 'nullable|string',
                 'expiry_date' => 'required|date',
                 'description' => 'required|string',
                 'price' => 'required|numeric',
                 'is_active' => 'required|boolean',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'duration_type' => 'required|enum',
             ]);
         
             // Update data klinik
@@ -131,9 +142,11 @@ class ClinicHasPackageController extends Controller
                 'description' => $request->description,
                 'price' => $request->price,
                 'is_active' => $request->is_active,
+                'image' => $request->image,
+                'duration_type' => $request->duration_type,
             ]);
         
-            return redirect()->route('clinics.index')->with('success', 'Klinik berhasil diperbarui.');
+            return redirect()->route('clinics.list')->with('success', 'Klinik berhasil diperbarui.');
         }
         
 
@@ -144,7 +157,7 @@ class ClinicHasPackageController extends Controller
 
             if ($clinic) {
                 $clinic->delete(); 
-                return redirect()->route('clinics.index')->with('success', 'Klinik berhasil dihapus.');
+                return redirect()->route('clinics.list')->with('success', 'Klinik berhasil dihapus.');
             } else {
                 return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
@@ -166,13 +179,13 @@ class ClinicHasPackageController extends Controller
         
 
 
-            public function specialist()
-    {
-        return $this->belongsTo(Specialist::class, 'specialist_id');
-    }
+                public function specialist()
+        {
+            return $this->belongsTo(Specialist::class, 'specialist_id');
+        }
 
-    public function categoriesService()
-    {
-        return $this->belongsTo(CategoriesServices::class, 'categories_services_id');
-    }
+        public function categoriesService()
+        {
+            return $this->belongsTo(CategoriesServices::class, 'categories_services_id');
+        }
 }

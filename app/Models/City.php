@@ -17,4 +17,5 @@ class City extends Model
         'image',
         'status'
     ];
+
 }

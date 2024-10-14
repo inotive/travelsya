@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('clinic_name');
             $table->string('phone');
             $table->string('city');
+            $table->string('image')->nullable();
             $table->string('address');
             $table->boolean('is_active');
 

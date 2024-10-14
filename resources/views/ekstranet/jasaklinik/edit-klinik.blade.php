@@ -50,8 +50,8 @@
                     </div>
 
                     <div class="col-md-3">
-                        <label for="unit_price" class="form-label">Tipe Durasi</label>
-                        <input type="text" class="form-control" id="unit_price" name="unit_price" value="{{ old('unit_price', $clinic->unit_price) }}" required>
+                        <label for="duration_type" class="form-label">Tipe Durasi</label>
+                        <input type="text" class="form-control" id="duration_type" name="duration_type" value="{{ old('duration_type', $clinic->duration_type) }}" required>
                     </div>
 
                     
@@ -91,6 +91,8 @@
                 </div>
 
                 <input type="hidden" name="specialist_id" value="1">
+
+                <input type="hidden" name="unit_price" value="unit_price">
 
                 <div class="text-center">
                     <div class="row">
