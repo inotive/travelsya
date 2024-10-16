@@ -204,6 +204,8 @@ class ClinicHasPackageController extends Controller
         }
 
 
+                
+
         public function specialist()
         {
             return $this->belongsTo(Specialist::class, 'specialist_id');
@@ -213,4 +215,30 @@ class ClinicHasPackageController extends Controller
         {
             return $this->belongsTo(CategoriesServices::class, 'categories_services_id');
         }
+
+   
+       // Di dalam controller (ClinicHasPackageController)
+       public function getCategoriesByClinic(Request $request)
+       {
+           $clinicId = $request->query('clinic_id');
+           
+           // Mencari klinik berdasarkan ID
+           $clinic = Clinic::find($clinicId);
+       
+           // Jika klinik tidak ditemukan, kirim respons 404
+           if (!$clinic) {
+               return response()->json([], 404);
+           }
+       
+           // Ambil kategori berdasarkan tipe klinik
+           $categories = CategoriesServices::where('type', $clinic->category)->get();
+           
+           return response()->json($categories);
+       }
+       
+       
+       
+
+            
+
 }

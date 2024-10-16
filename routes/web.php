@@ -389,11 +389,11 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::put('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
             Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
             Route::get('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'show'])->name('clinics.show');
-
-            Route::get('/get-categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get-categories-by-clinic');
+          
+            Route::get('/get-categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get.categories.by.clinic');
 
         });
-        
+
 
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');

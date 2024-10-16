@@ -24,43 +24,40 @@
                             </span>
                         @enderror
                     </div>
-
                     
-
-                    <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                        <select class="form-control" name="categories_services_id" required>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('categories_services_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    @if(count($clinics) > 1)
-
-                    <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
-                        <select class="form-control" name="clinic_id" id="clinic_id" required>
-                            <option value="">Pilih Bisnis</option>
-                            @foreach ($clinics as $clinic)
-                                <option value="{{ $clinic->id }}" data-category="{{ $clinic->category }}">{{ $clinic->clinic_name }}</option>
-                            @endforeach
-                        </select>
-                        @error('clinic_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                    @else
-                    <input type="hidden" name="clinic_id" value="{{ $clinics->first()->id }}">
-                    @endif
-
+                        @if(count($clinics) > 1)
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
+                            <select class="form-control" name="clinic_id" id="clinic_id" required>
+                                <option value="">Pilih Bisnis</option>
+                                @foreach ($clinics as $clinic)
+                                    <option value="{{ $clinic->id }}">{{ $clinic->clinic_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('clinic_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                        @else
+                        <input type="hidden" name="clinic_id" value="{{ $clinics->first()->id }}">
+                        @endif
+                    
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                            <select class="form-control" name="categories_services_id" id="categories_services_id" required>
+                                <option value="">Pilih Kategori</option>
+                                <!-- Opsi kategori akan dimuat secara dinamis -->
+                            </select>
+                            @error('categories_services_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+                    
+                    
                     
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Biaya</label>
@@ -109,7 +106,7 @@
                     <input type="hidden" name="specialist_id" value="1">
 
 
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label class=" fs-6 fw-semibold mb-2">Gambar</label>
                         <input type="file" class="form-control form-control-lg" name="image" />
                     </div>
@@ -156,3 +153,43 @@
 
 
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#clinic_id').change(function() {
+        var clinicId = $(this).val();
+        
+        // Jika clinicId tidak kosong
+        if (clinicId) {
+            $.ajax({
+                url: '{{ route('get.categories.by.clinic') }}', // Ganti dengan route yang sesuai
+                type: 'GET',
+                data: { clinic_id: clinicId },
+                success: function(data) {
+                    // Clear existing options
+                    $('#categories_services_id').empty();
+
+                    // Cek apakah ada kategori yang diterima
+                    if (data.length > 0) {
+                        $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+                        $.each(data, function(key, category) {
+                            $('#categories_services_id').append('<option value="' + category.id + '">' + category.name + '</option>');
+                        });
+                    } else {
+                        $('#categories_services_id').append('<option value="">Tidak ada kategori tersedia</option>');
+                    }
+                },
+                error: function() {
+                    $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
+                }
+            });
+        } else {
+            // Jika tidak ada clinicId yang dipilih, kosongkan opsi kategori
+            $('#categories_services_id').empty().append('<option value="">Pilih Kategori</option>');
+        }
+    });
+});
+</script>
+
+
