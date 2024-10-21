@@ -255,7 +255,7 @@
               </div>
               <div
                   class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
-                  data-bs-toggle="modal" data-bs-target="#modal-rental"
+                  onclick="window.location.href='{{ route('rental.landing.rental') }}'"
               >
                   <div class="row">
                       <div class="col-md-4 col-sm-12 justify-content-center">
@@ -268,7 +268,7 @@
                           </div>
                       </div>
                       <span
-                          class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600 text-gray-300">Rental Mobil</span>
+                          class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600">Rental Mobil</span>
                   </div>
               </div>
               <div

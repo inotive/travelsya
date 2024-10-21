@@ -228,13 +228,20 @@ Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clini
 });
 
 // rental mobil
+// Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function() {
+//     Route::get('/', 'index')->name('.index');
+//     Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
+//     Route::get('/{id}/mobil/', 'show')->name('.mobil');
+//     Route::get('/reservasi', 'reservation')->name('.reservasi');
+//     });
+// Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
+
 Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function() {
-    Route::get('/', 'index')->name('.index');
+    Route::get('/', 'index')->name('.landing.rental');
     Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
     Route::get('/{id}/mobil/', 'show')->name('.mobil');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
-    });
-// Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
+});
 
 
 
