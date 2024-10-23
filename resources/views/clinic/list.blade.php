@@ -71,7 +71,7 @@
                 <div class="card-grid">
                     @forelse ($clinics as $clinic)
                         @forelse ($clinic->clinicPackages as $package)
-                        <div class="card" data-category="{{ strtolower($clinic->category) }}">
+                        <div class="card" data-category="{{ strtolower($clinic->category) }}" onclick="window.location.href='{{ route('clinics.detail', $package->id) }}'" >
                             <div class="discount-tag-container">
                                 <span class="discount-tag">Big Deals</span>
                             </div>
@@ -157,7 +157,7 @@
                 </div>
                 <div class="partner-grid d-flex flex-row flex-nowrap overflow-auto">
                     @foreach ($clinics as $clinic)
-                        <div class="card me-5" data-category="{{ strtolower($clinic->category) }}">
+                        <div class="card me-5" data-category="{{ strtolower($clinic->category) }}" onclick="window.location.href='{{ route('clinics.detail', $clinic->id) }}'">
                             <img class="gambar-treat" src="{{ asset('storage/clinic/' . $clinic->image) }}" alt="{{ $clinic->name }}">   
                             <div class="partner-card">
                                 <div class="d-flex align-items-center">

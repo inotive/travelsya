@@ -18,14 +18,14 @@ class BeautyClinicController extends Controller
     }
 
 
-        public function show(string $id)
-    {
-        // Mengambil clinic berdasarkan ID dan eager loading clinicPackages
-        $clinic = Clinic::with('clinicPackages')->findOrFail($id);
-
-        // Mengirimkan clinic ke view
-        return view('clinic.detail', compact('clinic'));
-    }
+    public function show(string $id)
+{
+    // Ensure 'package' is defined or remove it if not needed
+    $clinic = Clinic::with('clinicPackages')->findOrFail($id);
+    
+    // Correct the compact statement
+    return view('clinic.detail', compact('clinic'));
+}
 
 
     public function reservation(Request $request) {
@@ -77,7 +77,7 @@ class BeautyClinicController extends Controller
         $clinic->price = $request->input('price');
         $clinic->save();
 
-        return redirect()->route('clinics.list')->with('success', 'Clinic service added successfully.');
+        return redirect()->route('clinic.list')->with('success', 'Clinic service added successfully.');
     }
 
 
@@ -86,6 +86,5 @@ class BeautyClinicController extends Controller
         //
     }
 
-    
     
 }

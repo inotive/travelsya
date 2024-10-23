@@ -186,7 +186,7 @@
               </div>
               <div
                   class="item-menubar col-4 col-md-3 col-lg-2 align-items-center"
-                  data-bs-toggle="modal" data-bs-target="#modal-health"
+                  data-bs-toggle="modal" onclick="window.location.href='{{ route('clinics.index') }}'"
               >
                   <div class="row">
                       <div class="col-md-4 col-sm-12 justify-content-center">
@@ -685,7 +685,7 @@
                                 <button data-bs-dismiss="modal" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
                                     <i class="las la-angle-left"></i>
                                 </button>
-                                <div>
+                                <div> 
                                     <span class="me-2">Heath & Beauty</span>
                                     <br/><span class="fs-3 text-gray-300 me-2">Cari klinik kecantikan dan kesehatan di lokasimu!</span>
                                 </div>
@@ -697,7 +697,7 @@
                     <div class="container-xl mt-10 mb-30">
                         <div class="card shadow-sm">
                             <div class="card-body">
-                                @include('layouts.include.home.container-clinic')
+                                {{-- @include('layouts.include.home.container-clinic') --}}
                             </div>
                         </div>
                     </div>

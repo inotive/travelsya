@@ -303,6 +303,8 @@
 
             document.documentElement.setAttribute("data-bs-theme", themeMode);
         }
+
+        
     </script>
     <!--end::Theme mode setup on page load-->
 
