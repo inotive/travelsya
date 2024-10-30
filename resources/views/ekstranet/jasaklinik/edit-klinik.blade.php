@@ -4,7 +4,7 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <form id="clinic-form" action="{{ route('clinics.update', $clinic->id) }}" method="POST">
+            <form id="clinic-form" action="{{ route('clinics.update', $clinic->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Tambahkan metode PUT untuk update -->
                 
@@ -34,7 +34,18 @@
                             @endforeach
                         </select>
                     </div>
-
+                   
+                    <!-- edit clinic_id -->
+                    <div class="col-md-6">
+                        <label for="clinic_id" class="form-label">Nama Bisnis</label>
+                        <select name="clinic_id" class="form-control" required>
+                            @foreach ($clinics as $clinicItem)
+                                <option value="{{ $clinicItem->id }}" {{ $clinic->clinic_id == $clinicItem->id ? 'selected' : '' }}>
+                                    {{ $clinicItem->clinic_name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                    
 
                     <!-- Harga -->
@@ -63,9 +74,12 @@
 
 
                     
-                    <div class="col-md-6">
-                        <label for="expiry_date" class="form-label">Gambar</label>
-                        <input type="file" class="form-control" id="image" name="image" value="{{ old('image', $clinic->image) }}" required>
+                    <div class="col-md-12">
+                        <label for="image" class="form-label">Gambar</label>
+                        <input type="file" class="form-control" id="image" name="image">
+                        @if($clinic->image)
+                            <img src="{{ asset('storage/clinichaspackages/'.$clinic->image) }}" alt="Current Image" style="max-width: 200px; margin-top: 10px;">
+                        @endif
                     </div>
 
                     <!-- Deskripsi -->
@@ -81,7 +95,7 @@
                     </div>
 
                     <!-- Status Aktif -->
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label for="is_active" class="form-label">Status Aktif</label>
                         <select name="is_active" class="form-control" required>
                             <option value="1" {{ $clinic->is_active == 1 ? 'selected' : '' }}>Aktif</option>
@@ -97,7 +111,7 @@
                 <div class="text-center">
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">Cancel</a>
+                            <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">Batal</a>
                         </div>
                         <div class="col-6">
                             <button type="submit" class="btn btn-primary">
@@ -112,4 +126,5 @@
         </div>
     </div>
 </div>
+
 @endsection

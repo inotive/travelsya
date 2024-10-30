@@ -26,4 +26,19 @@ class Clinic extends Model
         return $this->hasMany(ClinicHasPackages::class, 'clinic_id', 'id');
     }
 
+    public function categoriesServices()
+{
+    return $this->hasManyThrough(
+        CategoriesServices::class, // Model tujuan
+        ClinicHasPackages::class,  // Model perantara
+        'clinic_id',               // Foreign key di ClinicHasPackages (tabel perantara)
+        'id',                      // Foreign key di CategoriesServices
+        'id',                      // Local key di Clinics
+        'categories_services_id'    // Foreign key di ClinicHasPackages yang merujuk ke CategoriesServices
+    );
+}
+
+    
+
+    
 }

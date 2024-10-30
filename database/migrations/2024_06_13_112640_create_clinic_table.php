@@ -25,7 +25,7 @@ return new class extends Migration
 
             $table->enum('category', ['kesehatan', 'kecantikan']);
 
-            $table->timestamps();
+            $table->timestamps(); 
         });
     }
 

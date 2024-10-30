@@ -22,8 +22,9 @@
 
             <div class="search-box">
                 <div class="button-group">
-                    <button class="toggle-button active">Health</button>
-                    <button class="toggle-button">Beauty</button>
+                    <button class="toggle-button active" data-category="all">Semua</button>
+                    <button class="toggle-button" data-category="kesehatan">Kesehatan</button>
+                    <button class="toggle-button" data-category="kecantikan">Kecantikan</button>
                 </div>
 
                 <div class="search-container">
@@ -68,39 +69,39 @@
                 </div>
                 
                 <div class="card-grid">
-                    @foreach ($clinics as $clinic)
-                    @foreach ($clinic->clinicPackages as $package)
-                    <!-- Repeat this card 5 times -->
-                    
-                    <div class="card" >
-                        <div class="discount-tag-container" >
-                            <span class="discount-tag">Big Deals</span>
+                    @forelse ($clinics as $clinic)
+                        @forelse ($clinic->clinicPackages as $package)
+                        <div class="card" data-category="{{ strtolower($clinic->category) }}">
+                            <div class="discount-tag-container">
+                                <span class="discount-tag">Big Deals</span>
+                            </div>
+                            <img class="gambar-treat" style="filter: brightness(0.7);" src="{{ asset('storage/clinichaspackages/' . $package->image) }}" alt="{{ $package->name }}">
+                            <div class="card-content">
+                                <div class="lokasi d-flex align-items-center">
+                                    <span class="fa-solid fa-location-dot me-2"></span>
+                                    <span>{{ $clinic->city }}</span>
+                                    <span style="margin-left: auto;" class="fa-regular fa-bookmark"></span>
+                                </div>
+
+                                <h3 class="mt-3 text-dark">{{ $package->name }}</h3>
+
+                                <div class="rating d-flex align-items-center">
+                                    <span class="bintang fa fa-star checked me-2"></span>
+                                    <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb ulasan)</span>
+                                </div>
+
+                                <div class="price mt-3">
+                                    <span class="coret text-decoration-line-through">{{ 'Rp '.number_format($package->price) }}</span>
+                                    <span>{{ 'Rp '.number_format($package->price) }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <img class="gambar-treat" style="filter: brightness(0.7);" src="{{ asset('storage/clinichaspackages/' . $package->image) }}" alt="{{ $package->name }}">
-                        <div class="card-content">
-                            <div class="lokasi d-flex align-items-center">
-                                <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
-                                <span>{{ $clinic->city }}</span>
-                            </div>
-
-                            <h3 class="mt-3 text-dark">{{ $package->name }}</h3>
-
-                            <div class="rating d-flex align-items-center">
-                                <span class="bintang fa fa-star checked me-2"></span>
-                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb ulasan)</span>
-                            </div>
-
-                            <div class="price mt-7">
-                                <span class="coret text-decoration-line-through">{{ 'Rp '.number_format($package->price) }}</span>
-                                <span>{{ 'Rp '.number_format($package->price) }}</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Repeat 4 more times -->
-                    @endforeach
-                    @endforeach
+                        @empty
+                            <p>Tidak ada paket tersedia untuk klinik ini.</p>
+                        @endforelse
+                    @empty
+                        <p>Tidak ada klinik yang ditemukan.</p>
+                    @endforelse
                 </div>
             </section>
 
@@ -156,12 +157,13 @@
                 </div>
                 <div class="partner-grid d-flex flex-row flex-nowrap overflow-auto">
                     @foreach ($clinics as $clinic)
-                        <div class="card me-5">
+                        <div class="card me-5" data-category="{{ strtolower($clinic->category) }}">
                             <img class="gambar-treat" src="{{ asset('storage/clinic/' . $clinic->image) }}" alt="{{ $clinic->name }}">   
                             <div class="partner-card">
                                 <div class="d-flex align-items-center">
-                                    <span style="position: absolute; right: 10px;" class="fa-regular fa-bookmark"></span>
                                     <span>{{ $clinic->category }}</span>
+                                    <span style="margin-left: auto;" class="fa-regular fa-bookmark"></span>
+                                    
                                 </div>
                                 <h3 class="mt-3 text-dark">{{ $clinic->clinic_name }}</h3>
                             </div>
@@ -172,6 +174,46 @@
             </section>
         </div>
     </main>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.toggle-button');
+            const cards = document.querySelectorAll('.card');
+            const partnerCards = document.querySelectorAll('.partner-grid .card');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Remove 'active' class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add 'active' class to clicked button
+                    this.classList.add('active');
+
+                    // Filter cards in card-grid
+                    cards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Filter cards in partner-grid
+                    partnerCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+
 
     @include('layouts.include.home.script-health-and-beauty-remake')
 @endsection
