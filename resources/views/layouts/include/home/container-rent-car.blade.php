@@ -15,7 +15,7 @@
         <div class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
 
             <!--begin::Body-->
-            <form action="{{ route('rental.index') }}" method="GET" class="card-body d-flex flex-column justify-content-between">
+            {{-- <form action="{{ route('rental.index') }}" method="GET" class="card-body d-flex flex-column justify-content-between"> --}}
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
                     <div class="col-6">
