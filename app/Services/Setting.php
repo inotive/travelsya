@@ -15,17 +15,23 @@ class Setting
         $total = 0;
 
         $admin = $fees[0]['value'];
-        if (count($fees) == 2) {
-            $point = $fees[1]['value'];
+        $kodeunik = $fees[1]['value'];
+
+        if (isset($fees[2]['value'])) {
+            $point = $fees[2]['value'];
         }
-        $total = $total + ($price * $qty * $room);
-        $grandTotal = $total + $admin + (isset($point) ? $point : 0);
+        else{
+            $point = 0;
+        }
+        $total = $price * $qty * $room;
+        $grandTotal = $total + $admin + $kodeunik +  $point;
         return $grandTotal;
     }
 
     public function getFees($point, $service, $userid, $price)
     {
         $fee = Fee::where('service_id', $service)->first();
+
         if ($fee->percent) {
             $feeValue = $price * ($fee->value / 100);
         } else {
@@ -34,21 +40,23 @@ class Setting
         $fees = [];
 
         array_push($fees, [
-            'type' => 'admin',
+            'type' => 'Fee Admin',
             'value' => $feeValue,
-        ]);
+            ],
+        );
 
-        if ($point == 1) {
+        if (isset($point) && $point != 0) {
             // cek point
             $user = User::find($userid);
-            if ($user && $user->point <= 0) {
-                return false;
-            }
+            // if ($user && $user->point <= 0) {
+            //     return false;
+            // }
             array_push($fees, [
                 'type' => 'point',
                 'value' => 0 - $user->point,
             ]);
         }
+
         return $fees;
     }
 }

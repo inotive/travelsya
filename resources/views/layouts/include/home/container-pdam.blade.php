@@ -3,22 +3,29 @@
     <div class="col-xl-12">
 
         <!--begin::Tiles Widget 2-->
-        <form action="{{ route('product.payment.pdam') }}" method="GET" class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+        <form action="{{ route('product.payment.pdam') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
             <!--begin::Body-->
             <div class="card-body d-flex flex-column justify-content-between">
                 <!--begin::Title-->
                 <h2 class="fw-bold mb-5">PDAM</h2>
                 <!--end::Title-->
                 <div class="row mb-5 gy-4">
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
+                            <span class="required">Wilayah Pelanggan</span>
+                        </label>
+                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    </div>
+                    <div class="col-xl-6">
+                        <label class="fs-5 fw-semibold mb-4">
                             <span class="required">Nomor Pelanggan</span>
                         </label>
 
                         <!--begin::Input-->
                         <input type="text" id="noPelangganPDAM" class="form-control form-control-lg"
-                               name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value=""/>
-                        <small class="text-danger textAlert" style="display: none">No. Pelanggan harus terisi</small>
+                            name="noPelangganPDAM" placeholder="Masukan nomor pelanggan" value="" />
+                        <small class="text-danger textAlert">No. Pelanggan harus terisi</small>
                         <!--end::Input-->
 
                         <input type="hidden" name="namaPelanggan" id="inputNamaPelangganPDAM">
@@ -26,43 +33,73 @@
                         <input type="hidden" name="biayaAdmin" id="inputBiayaAdminPDAM">
                         <input type="hidden" name="totalBayar" id="inputTotalBayarPDAM">
                     </div>
-                    <div class="col-xl-4">
-                        <label class="fs-5 fw-semibold mb-2">
-                            <span class="required">Wilayah Pelanggan</span>
-                        </label>
-                        <select name="productPDAM" id="productPDAM" class="form-select form-select-lg"></select>
+                    <div class="col-xl-12">
+                        <button type="button" class="btn btn-lg btn-danger mt-8 w-100"
+                            id="btnPeriksaPDAM">Periksa</button>
                     </div>
-                    <div class="col-xl-4">
-                        <button type="button" class="btn btn-danger mt-8 w-100" id="btnPeriksaPDAM">Periksa</button>
-                    </div>
-                    <div class="col-12">
-                        <label class="fs-5 fw-semibold my-3">
-                            <span>Detail Pelanggan</span>
-                        </label>
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
-                                        <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
-                                        <td>Rp. <span id="totalTagihanPDAM"></span></td>
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
-                                        <td>Rp. <span id="biayaAdminPDAM"></span></td>
-                                    </tr>
-                                    <tr class="py-5">
-                                        <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
-                                        <td colspan="2">Rp. <span id="totalBayarPDAM"></span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="row mt-4" id="detailPDAM">
+                        <div class="col-12">
+                            <label class="fs-5 fw-semibold my-3">
+                                <span>Detail Pelanggan</span>
+                            </label>
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Nama Pelanggan</td>
+                                            <td class="text-right" colspan="3"><span id="namaPelangganPDAM"></span>
+                                            </td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Tagihan</td>
+                                            <td>Rp. <span id="totalTagihanPDAM"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Biaya Admin</td>
+                                            <td>Rp. <span id="biayaAdminPDAM"></span></td>
+                                        </tr>
+                                        <tr class="py-5">
+                                            <td class="bg-light fw-bold fs-6 text-gray-800">Total Bayar</td>
+                                            <td colspan="2">Rp. <span id="totalBayarPDAM"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
 
+                        </div>
+                        @auth
+                            <div class="col-12 d-flex justify-content-between">
+                                <p class="fw-light-grey-900">Anda Memiliki Point <b>{{ auth()->user()->point }}</b>. Pakai
+                                    Point
+                                </p>
+                                <h4>
+                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input pakai-point" type="checkbox" name=""
+                                            {{ auth()->user()->point == 0 ? 'disabled' : '' }} id="pdam" />
+                                    </div>
+                                </h4>
+                            </div>
+                            <input type="hidden" name="point" value="{{ auth()->user()->point }}" id="pdamPoint"
+                                disabled>
+                        @endauth
+                        <div class="col-12">
+                            @auth
+                                <button type="submit" class="btn btn-danger w-100" id="btnSubmitPDAM"
+                                    disabled>Pembayaran</button>
+                            @endauth
+
+                            @guest
+                                <a href="{{ route('login') }}" class="btn btn-danger w-100">
+                                    Login Terlebih Dahulu
+                                </a>
+                            @endguest
+                        </div>
                     </div>
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-danger w-100">Pembayaran</button>
+
+                    <div class="row mt-5">
+                        <div class="col-xl-12">
+                            <div id="alertContainer"></div>
+                        </div>
                     </div>
 
                 </div>
@@ -82,13 +119,13 @@
 
 @push('add-script')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
             $.ajax({
                 type: "GET",
                 url: "{{ route('product.product.pdam') }}",
-                success: function (response) {
-                    $.each(response, function (key, value) {
+                success: function(response) {
+                    $.each(response, function(key, value) {
                         $('#productPDAM').append($('<option>', {
                             value: value.id,
                             text: value.description
@@ -97,51 +134,99 @@
                 }
             });
 
-            $('#noPelangganPDAM').on('keyup', function () {
+            $('#noPelangganPDAM').on('keyup', function() {
                 $('.textAlert').hide();
             });
 
-            $('#btnPeriksaPDAM').on('click', function () {
-                var noPelangganPDAM = $('#noPelangganPDAM').val();
+            $('#detailPDAM').hide();
 
-                if(noPelangganPDAM == '') {
+            $('#btnPeriksaPDAM').on('click', function() {
+                var noPelangganPDAM = $('#noPelangganPDAM').val();
+                console.log(noPelangganPDAM);
+
+                if (noPelangganPDAM == '') {
                     $('.textAlert').show();
                     return false;
                 }
+
+                $('#alertContainer').empty()
+                $('#detailPDAM').hide();
+                $('#btnPeriksaPDAM').attr('disabled', true);
+                $('#btnPeriksaPDAM').html(
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                );
 
                 $.ajax({
                     type: "POST",
                     url: "{{ route('product.pdam') }}",
                     data: {
                         'no_pelanggan': noPelangganPDAM,
-                        'nom': 'CEKPLN',
+                        'nom': 'CEKPDAMBLP',
                     },
-                    success: function (response) {
-                        // console.log(response)
+                    success: function(responseTagihan) {
+                        console.log(responseTagihan);
+                        var simulateFeePDAM = parseInt(responseTagihan.data.fee);
 
-                        // SIMULASI!!!
-                        var simulateAmountPDAM = Math.floor(Math.random() * (300000 - 150000 + 1)) + 150000;
-                        var simulateFeePDAM = Math.floor(Math.random() * (3000 - 1500 + 1)) + 1500;
+                        var simulateAmountPDAM = parseInt(responseTagihan.data.tagihan);
                         var simulateTotalPDAM = simulateAmountPDAM + simulateFeePDAM;
 
-                        $('#namaPelangganPDAM').text('Joko Susilo');
-                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(simulateAmountPDAM));
-                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(simulateFeePDAM));
-                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(simulateTotalPDAM));
+                        $('#namaPelangganPDAM').text(responseTagihan.data.nama_pelanggan);
+                        $('#totalTagihanPDAM').text(new Intl.NumberFormat('id-ID').format(
+                            simulateAmountPDAM));
+                        $('#biayaAdminPDAM').text(new Intl.NumberFormat('id-ID').format(
+                            simulateFeePDAM));
+                        $('#totalBayarPDAM').text(new Intl.NumberFormat('id-ID').format(
+                            simulateTotalPDAM));
 
-                        $('#inputNamaPelangganPDAM').val('Joko Susilo');
+                        $('#inputNamaPelangganPDAM').val(responseTagihan.data.nama_pelanggan);
                         $('#inputTotalTagihanPDAM').val(simulateAmountPDAM);
                         $('#inputBiayaAdminPDAM').val(simulateFeePDAM);
                         $('#inputTotalBayarPDAM').val(simulateTotalPDAM);
 
+                        $('#btnPeriksaPDAM').removeAttr('disabled');
+                        $('#btnSubmitPDAM').removeAttr('disabled');
+
+                        $('#detailPDAM').show();
+
+                        $('#btnPeriksaPDAM').text('Periksa');
+                    },
+                    error: function(xhr, status, error) {
+                        if (xhr.status === 400) {
+                            // Buat elemen div dengan kelas 'alert' dan 'alert-danger'
+                            var alertDiv = $(
+                                `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
+                            );
+
+                            // Tambahkan elemen alert ke dalam elemen yang ingin Anda tampilkan
+                            $('#alertContainer').empty().append(alertDiv);
+                        }
+
+                        // Hapus spinner dan aktifkan tombol
+                        $('#btnPeriksaPDAM').removeAttr('disabled');
+                        $('#btnPeriksaPDAM').html('Periksa');
                     }
                 });
+            });
+        });
+
+        $(document).ready(function() {
+            // Handle the change event of the checkbox
+            $("#pdam").change(function() {
+                // Check if the checkbox is checked
+                if ($(this).is(":checked")) {
+                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                    $("#pdamPoint").prop("disabled", false);
+                } else {
+                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                    $("#pdamPoint").prop("disabled", true);
+                    $("#pdamPoint").remove();
+                }
             });
         });
     </script>
 
     {{-- <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
             $('#notelp').on('keyup', function (e) {
 
                 $.ajaxSetup({
@@ -188,5 +273,5 @@
             })
 
         })
-    </script> --}}
+</script> --}}
 @endpush

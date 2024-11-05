@@ -17,9 +17,20 @@ class FeeController extends Controller
         return view('admin.management-fee.index', compact('fees', 'services'));
     }
 
-    public function updateFee(Request $request)
+    public function show($id)
     {
-        $setting = Fee::find($request->id);
+        $fee = Fee::findorFail($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Detail Data Post',
+            'data'    => $fee
+        ]);
+    }
+
+    public function updateFee(Request $request, $id)
+    {
+        $setting = Fee::find($id);
         $setting->update($request->all());
         toast('Fee admin has been updated', 'success');
         return redirect()->back();

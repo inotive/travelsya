@@ -18,9 +18,9 @@ class Admin
     {
         $user = Auth::user();
 
-        if ($user->role != 0) {
-            abort(403);
+        if ($user->role === 0) {
+            return $next($request);
         }
-        return $next($request);
+        abort(403);
     }
 }

@@ -41,7 +41,7 @@
                         @enderror
                     </div>
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
+                        <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                         <select class="form-select form-select-solid user_id-edit" id="user_id-edit">
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>

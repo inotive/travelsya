@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('hostel_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hostel_id')->constrained();
+            $table->unsignedBigInteger('hostel_id');
+            $table->foreign('hostel_id')->references('id')->on('hostels')->onDelete('cascade');
+
             $table->string('image');
             $table->boolean('main');
             $table->softDeletes();

@@ -22,7 +22,7 @@
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800 ">
                             <th class="text-center">No.</th>
-                            <th class="text-center">Vendor</th>
+                            <th class="text-center">Mitra</th>
                             <th class="text-center">Hostel</th>
                             <th class="text-center">Kota</th>
                             <th class="text-center">Alamat</th>
@@ -35,45 +35,43 @@
                     <tbody>
                         @foreach ($hostels as $hostel)
                             <tr>
-                                <td>{{ $hostel->id }}</td>
-                                <td class="text-center">{{ $hostel->user_name }}</td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td class="text-center">
+                                    <img src="{{ $hostel->image != null ? asset('storage/' . $hostel->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
+                                        style="width: 25px; height: 25px;">
+                                    {{ $hostel->user_name }}
+
+                                </td>
                                 <td class="text-center">{{ $hostel->name }}</td>
                                 <td class="text-center">{{ $hostel->city }}</td>
                                 <td class="text-center">{{ $hostel->address }}</td>
-                                <td class="text-center"><a href="{{ $hostel->website }}" target="_blank">LINK WEBSITE</a>
-                                </td>
+                                @if ($hostel->website == '' || $hostel->website == null || $hostel->website == '-' || $hostel->website == '--' || $hostel->website == 'Belum Ada' || $hostel->website == 'belum ada' || $hostel->website == 'Belum ada')
+                                    <td class="text-center">
+                                        <span>Link Website</span>
+
+                                    </td>
+                                @else
+                                    <td class="text-center">
+                                        <a href="{{ $hostel->website }}" target="_blank">Link Website</a>
+                                    </td>
+                                @endif
+                             
                                 <td class="text-center"><span class="badge badge-warning">{{ $hostel->star }} Bintang</span>
                                 </td>
 
-                                
+
 
                                 <td class="text-center">
                                     @if ($hostel->is_active)
-                                    <span class="badge badge-success">Aktif</span>
+                                        <span class="badge badge-success">Aktif</span>
                                     @else
-                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                        <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
 
                                 <td class="text-center">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="/metronic8/demo1/../demo1/apps/customers/view.html"
-                                                class="menu-link px-3">
-                                                Daftar Room
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3"
-                                                data-kt-customer-table-filter="delete_row">
-                                                Detail Hostel
-                                            </a>
-                                        </div>
-                                        <!--end::Menu item-->
                                         <!--begin::Menu item-->
                                         <div class="menu-item px-3">
                                             <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
@@ -97,7 +95,7 @@
                                     <a href="#"
                                         class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        Actions
+                                        Aksi
                                         <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                     </a>
                                     <!--end::Menu-->
@@ -134,6 +132,7 @@
                             </div>
                         @endforeach
                         @include('admin.management-mitra.hostel.edit')
+
                         {{--                    @foreach ($vendors as $vendor) --}}
                         {{--                        <tr> --}}
                         {{--                            <td class="text-center">{{$loop->iteration}}</td> --}}
@@ -285,7 +284,7 @@
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
+                                <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                                 <select class="form-select form-select-solid" id="user_id" name="user_id">
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -355,7 +354,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.mitra.store') }}">
+                        action="{{ route('admin.hostel.store') }}">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -379,7 +378,7 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
+                                <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                                 <select class="form-control" id="user_id" name="user_id">
                                     @foreach ($users as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -407,7 +406,7 @@
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="alamat" id="" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Website</label>
@@ -564,7 +563,7 @@
                             @enderror
                         </div>
                         <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
+                            <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                             <select class="form-control edit-user-id" id="edit-user-id" name="user-id">
                                 @foreach ($users as $user)
                                     <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -691,7 +690,6 @@
     </div>
 
     @push('add-script')
-        
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({

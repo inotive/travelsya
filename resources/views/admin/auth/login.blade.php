@@ -4,32 +4,16 @@
 <!--begin::Body-->
 <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
     <!--begin::Wrapper-->
-    <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10">
+    <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-500px p-10">
         <!--begin::Content-->
-        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-475px">
+        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
             <!--begin::Wrapper-->
             <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
-                @if($errors->all())
-                <div class="font-medium text-red-600">
-                    Whoops! Something went wrong.
-                </div>
-                @endif
-                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                    @if($message)
-                    <li>{{ $message }}</li>
-                    @endif
-                    @if(isset($_GET['message']))
-                    <li>{{ $_GET['message'] }}</li>
-                    @endif
-                </ul>
                 <!--begin::Form-->
                 <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('admin.login.post')}}">
                     <!--begin::Heading-->
                     @csrf
-                    <div class="text-center mb-11">
+                    <div class="mb-11">
                         <!--begin::Title-->
                         <h1 class="text-dark fw-bolder mb-3">
                             Ekstranet Travelsya
@@ -46,10 +30,15 @@
 
                     <!--begin::Input group--->
                     <div class="fv-row mb-8">
-                        <label for="email" class="form-label">Eamil</label>
+                        <label for="email" class="form-label">Email</label>
                         <!--begin::Email-->
-                        <input type="text" placeholder="Masukan email anda" name="email" autocomplete="off" class="form-control form-control-lg p-5 " />
+                        <input type="text" placeholder="Masukan email anda" name="email" autocomplete="off" class="form-control form-control-lg p-5 bg-transparent @error('email') is-invalid @enderror" />
                         <!--end::Email-->
+                        @error('email')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
                     </div>
 
                     <!--end::Input group--->
@@ -57,8 +46,14 @@
                         <label for="email" class="form-label">Password</label>
                         <!--begin::Password-->
 
-                        <input type="password" placeholder="Masukan password" name="password" autocomplete="off" class="form-control form-control-lg p-5 " />
+                        <input type="password" placeholder="Masukan password" name="password" autocomplete="off" class="form-control  form-control-lg p-5 @error('password') is-invalid @enderror" />
                         <!--end::Password-->
+
+                        @error('password')
+                        <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                        @enderror
                     </div>
                     <!--end::Input group--->
 
@@ -75,7 +70,7 @@
                     <!--end::Wrapper-->
 
                     <!--begin::Submit button-->
-                    <div class="d-grid mb-10">
+                    <div class="d-grid mb-5">
                         <button type="submit" id="kt_sign_in_submit" class="btn btn-primary py-5">
 
                             <!--begin::Indicator label-->
@@ -92,17 +87,10 @@
                     <!--end::Submit button-->
 
                 </form>
-                    <a href="" type="role" id="kt_sign_in_submit" class="btn btn-success w-100 py-5">
+                <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary btn-lg w-100 mb-10">
+                    Kembali Ke Home
+                </a>
 
-                        <!--begin::Indicator label-->
-                        <span class="indicator-label">Pendaftaran Mitra</span>
-                        <!--end::Indicator label-->
-
-                        <!--begin::Indicator progress-->
-                        <span class="indicator-progress">
-                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                            </span>
-                        <!--end::Indicator progress--> </a>
                 <!--end::Form-->
 
             </div>

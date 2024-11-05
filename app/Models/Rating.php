@@ -31,4 +31,9 @@ class Rating extends Model
     {
         return $query->avg('rate');
     }
+
+    public function ratingfoto()
+    {
+        return $this->hasMany(RatingFoto::class);
+    }
 }

@@ -4,41 +4,41 @@
 <!--begin::Body-->
 <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
     <!--begin::Wrapper-->
-    <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-600px p-10">
+    <div class="bg-body d-flex flex-column flex-center rounded-4 w-md-500px p-10">
         <!--begin::Content-->
-        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-475px">
+        <div class="d-flex flex-center flex-column align-items-stretch h-lg-100 w-md-400px">
             <!--begin::Wrapper-->
             <div class="d-flex flex-center flex-column flex-column-fluid pb-15 pb-lg-20">
-                @if($errors->all())
-                <div class="font-medium text-red-600">
-                    Whoops! Something went wrong.
-                </div>
-                @endif
-                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
+{{--                @if($errors->all())--}}
+{{--                <div class="font-medium text-red-600">--}}
+{{--                    Whoops! Something went wrong.--}}
+{{--                </div>--}}
+{{--                @endif--}}
+{{--                <ul class="mt-3 list-disc list-inside text-sm text-red-600">--}}
+{{--                    @foreach ($errors->all() as $error)--}}
+{{--                    <li>{{ $error }}</li>--}}
+{{--                    @endforeach--}}
 {{--                    @if($message)--}}
 {{--                    <li>{{ $message }}</li>--}}
 {{--                    @endif--}}
-                    @if(isset($_GET['message']))
-                    <li>{{ $_GET['message'] }}</li>
-                    @endif
-                </ul>
-                <!--begin::Form-->
-                <form class="form w-100" method="POST" action="{{'login'}}" novalidate="novalidate" id="kt_sign_in_form"  >
+{{--                    @if(isset($_GET['message']))--}}
+{{--                    <li>{{ $_GET['message'] }}</li>--}}
+{{--                    @endif--}}
+{{--                </ul>--}}
+{{--                <!--begin::Form-->--}}
+                <form class="form w-100" method="POST" action="{{route('login')}}" novalidate="novalidate" id="kt_sign_in_form"  >
                     <!--begin::Heading-->
                     @csrf
-                    <div class="text-center mb-11">
+                    <div class="mb-7">
                         <!--begin::Title-->
                         <h1 class="text-dark  fw-bolder mb-3">
-                            Login
+                            Masuk
                         </h1>
                         <!--end::Title-->
 
                         <!--begin::Subtitle-->
                         <div class="text-gray-500 fw-semibold fs-6">
-                            Your Account
+                            Login dengan email dan password
                         </div>
                         <!--end::Subtitle--->
                     </div>
@@ -115,16 +115,16 @@
                             <!--end::Indicator progress--> </button>
                     </div>
                     <!--end::Submit button-->
-                    <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-light btn-outline-light btn-lg w-100 mt-5 mb-10">
+                    <a href="/" type="button" id="kt_sign_in_submit" class="btn btn-outline p-4 btn-outline btn-outline-secondary text-dark btn-active-light-secondary btn-lg w-100 mt-5 mb-10">
                         Kembali Ke Home
                     </a>
 
                     <!--begin::Sign up-->
                     <div class="text-gray-500 text-center fw-semibold fs-6">
-                        Not a Member yet?
+                        Belum memiliki akun ?
 
                         <a href="{{route('register')}}" class="link-primary">
-                            Sign up
+                            Registrasi
                         </a>
                     </div>
                     <!--end::Sign up-->
