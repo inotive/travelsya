@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
@@ -44,6 +45,17 @@ class Transaction extends Model
     public function detailTransactionHostel()
     {
         return $this->hasMany(DetailTransactionHostel::class);
+    }
+
+
+    /**
+     * Get the detailTransactionRecreation that owns the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function detailTransactionRecreation(): BelongsTo
+    {
+        return $this->belongsTo(detailTransactionRecreation::class, 'id', 'transaction_id');
     }
 
 
@@ -89,12 +101,12 @@ class Transaction extends Model
 
     public function historyPointIN()
     {
-        return $this->hasMany(HistoryPoint::class)->where('flow','debit');
+        return $this->hasMany(HistoryPoint::class)->where('flow', 'debit');
     }
 
     public function historyPointOut()
     {
-        return $this->hasMany(HistoryPoint::class)->where('flow','credit');
+        return $this->hasMany(HistoryPoint::class)->where('flow', 'credit');
     }
 
     /**
@@ -107,7 +119,8 @@ class Transaction extends Model
         return $this->belongsTo(Service::class, 'service_id', 'id');
     }
 
-    public function hostelRating(){
+    public function hostelRating()
+    {
         return $this->hasMany(HostelRating::class);
     }
 }

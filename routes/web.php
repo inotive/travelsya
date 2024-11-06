@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\CarRentalController;
+use App\Http\Controllers\NewRecreationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,7 +129,7 @@ Route::get('profile/photo-profile', [UserController::class, 'photoProfile']);
 
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
 Route::get('/profile/order-detail/hostel/{id}', [UserController::class, 'orderDetailHostel'])->name('profile.order-detail.hostel')->middleware('auth');
-Route::post('/profile/order-detail/hotel/rating', [UserController::class, 'createRatingDetailHotel' ])->name('profile.order-detail.hotel.rating')->middleware('auth');
+Route::post('/profile/order-detail/hotel/rating', [UserController::class, 'createRatingDetailHotel'])->name('profile.order-detail.hotel.rating')->middleware('auth');
 Route::post('/profile/order-detail/hostel/rating', [UserController::class, 'createRatingDetailHostel'])->name('profile.order-detail.hostel.rating')->middleware('auth');
 Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher')->middleware('auth');
 Route::get('/profile/order-detail/ppob/{id}', [UserController::class, 'orderDetailListrik'])->name('profile.order-detail.listrik')->middleware('auth');
@@ -215,37 +216,36 @@ Route::controller(HostelController::class)->name('hostel')->prefix('hostel')->gr
 });
 
 // Recreation Front Page
-Route::controller(RecreationController::class)->name('recreations')->prefix('recreations')->group(function() {
+Route::controller(RecreationController::class)->name('recreations')->prefix('recreations')->group(function () {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/rekreasi/', 'show')->name('.rekreasi');
+    Route::get('/detail/{id}', 'detail')->name('.details');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
+    Route::get('/filter', 'filter_recreation')->name('.filter_recreation');
+});
+
+Route::group(['prefix' => 'rekreasi'], function () {
+    Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
 });
 
 // Health & Beauty
-Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function() {
+Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function () {
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/klinik/', 'show')->name('.klinik');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
     Route::put('/admin/management-mitra/klinik-kecantikan/{id}', [BeautyClinicController::class, 'update']);
-
-
 });
 
 // rental mobil
-// Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function() {
-//     Route::get('/', 'index')->name('.index');
-//     Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
-//     Route::get('/{id}/mobil/', 'show')->name('.mobil');
-//     Route::get('/reservasi', 'reservation')->name('.reservasi');
-//     });
-// Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
-
-Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function() {
-    Route::get('/', 'index')->name('.landing.rental');
+Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function () {
+    Route::get('/', 'index')->name('.index');
     Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
     Route::get('/{id}/mobil/', 'show')->name('.mobil');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
+// Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
+
+
 
 
 
@@ -272,7 +272,6 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::resource('rental-mobil', \App\Http\Controllers\Admin\CarRentalController::class);
                 Route::resource('rekreasi', \App\Http\Controllers\Admin\RecreationController::class);
                 Route::resource('bus-travel', \App\Http\Controllers\Admin\BusTravelController::class);
-
             });
 
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
@@ -416,7 +415,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('daftar-room/delete/hotel/{id}', [ManagementRoomController::class, 'HotelRoomDelete'])->name('partner.management.room.deleteroomhotel');
         Route::get('daftar-room/delete/hostel/{id}', [ManagementRoomController::class, 'HostelRoomDelete'])->name('partner.management.room.deleteroomhotel');
 
-//health and beauty mitra
+        //health and beauty mitra
 
         Route::middleware(['auth'])->group(function () {
             Route::get('clinics', [\App\Http\Controllers\ClinicHasPackageController::class, 'index'])->name('clinics.list');
@@ -425,10 +424,6 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
             Route::put('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
             Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
-            Route::get('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'show'])->name('clinics.show');
-          
-            Route::get('/get-categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get.categories.by.clinic');
-
         });
 
 
@@ -535,7 +530,6 @@ Route::middleware(['auth', 'role'])->group(function () {
 
         });
     });
-
 });
 
 Auth::routes();

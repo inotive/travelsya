@@ -18,15 +18,14 @@ use Illuminate\Support\Facades\Validator;
 
 class KendaraanController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
         $car_rental = CarRental::all();
 
-        $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')->paginate(10);
-
+        $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')->get();
         return view('ekstranet.kendaraaan.list-kendaraan', compact('cars', 'brands', 'car_models', 'policies', 'car_rental'));
     }
 

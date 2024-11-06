@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories_services', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('recreations', function (Blueprint $table) {
+            $table->text('description')->nullable();
+            $table->time('open')->nullable();
+            $table->time('close')->nullable();
         });
     }
 
@@ -23,6 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories_services');
+        Schema::table('recreations', function (Blueprint $table) {
+            //
+        });
     }
 };

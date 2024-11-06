@@ -23,6 +23,11 @@ use App\Models\DetailTransactionPPOB;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionTopUp;
 use App\Models\DetailTransactionHostel;
+use App\Models\detailTransactionRecreation;
+use App\Models\Recreation;
+use App\Models\RecreationPackages;
+use App\Models\RecreationRatings;
+use App\Models\Service;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends Controller
@@ -33,7 +38,7 @@ class TransactionController extends Controller
     public function getTransactionUser(Request $request)
     {
         // $user_id = $request->user()->id;
-        $user_id = \Auth::user()->id;
+        $user_id = Auth::user()->id;
 
         $transaction = Transaction::where('user_id', $user_id)
             ->orderByDesc('created_at')
@@ -50,7 +55,7 @@ class TransactionController extends Controller
                 'payment' => $transaction->payment,
                 'payment_method' => $transaction->payment_method,
                 'payment_channel' => $transaction->payment_channel,
-                'status' => $transaction->status != "Transaksi Gagal" ? $transaction->status : 'Failed' ,
+                'status' => $transaction->status != "Transaksi Gagal" ? $transaction->status : 'Failed',
                 'total' => $transaction->total,
                 'created_at' => $transaction->created_at,
                 'detail_transactions' => $detailTransaction ? $detailTransaction : null,
@@ -73,6 +78,7 @@ class TransactionController extends Controller
 
     protected function getDetailTransaction($transaction_id, $service_id)
     {
+        $service = Service::find($service_id);
         if ($service_id == 7) {
             $data = DetailTransactionHostel::where('transaction_id', $transaction_id)->first();
 
@@ -86,6 +92,17 @@ class TransactionController extends Controller
                     'hostel_name' => $hostelData->name,
                     'room_type' => $hostelRoom,
                     'reservation_duration' => $daysDiff,
+                ];
+            }
+        } elseif ($service['name'] == 'recreation') {
+            $data = detailTransactionRecreation::where('transaction_id', $transaction_id)->first();
+
+            if ($data != null) {
+                $recreationPackage = RecreationPackages::find($data->recreationPackage_id);
+                return  [
+                    'recreation_name' => $data->recreation->business_name ?? 'Invalid recreation data',
+                    'package' => $recreationPackage->name,
+                    'expire_on' => Carbon::parse($data['expire_on'])->format('d M Y H:i'),
                 ];
             }
         } else if ($service_id == 8) {
@@ -163,6 +180,9 @@ class TransactionController extends Controller
         $user_id = $request->user()->id;
 
         $transaction = Transaction::where('no_inv', $no_inv);
+
+        $service = Service::find($transaction->first()->service_id);
+
         // dd($transaction->first());
         $historyPoint = collect(HistoryPoint::where('transaction_id', $transaction->first()->id)->get());
         $receivedPoint = $historyPoint->where('flow', 'debit')->pluck('point')->first();
@@ -257,8 +277,8 @@ class TransactionController extends Controller
                 'booking_id' => $detailTransaction->booking_id,
                 'guest_identity' => array([
                     'name' => $detailTransaction->guest_name,
-                    'handphone' => $detailTransaction->guest_email,
-                    'email' => $detailTransaction->guest_handphone,
+                    'handphone' => $detailTransaction->guest_handphone,
+                    'email' => $detailTransaction->guest_email,
                 ]),
                 'reservation_start' => $detailTransaction->reservation_start,
                 'reservation_end' => $detailTransaction->reservation_end,
@@ -285,68 +305,112 @@ class TransactionController extends Controller
             //                });
         }
 
-            // UNTUK HOSTEL
-            if (in_array($transaction->first()->service_id, [7])) {
-                $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
-                    ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
-                    ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id')
-                    ->where('detail_transaction_hostel.transaction_id', $transaction->first()->id)
-                    ->select(
-                        'detail_transaction_hostel.*',
-                        'hostels.id  as hostel_id',
-                        'hostel_rooms.id  as hostel_room_id',
-                        'hostels.name  as hostel_name',
-                        'hostel_rooms.name  as hostel_room_name',
-                        'transactions.id  as transaksi_id',
-                        'transactions.total  as grand_total',
-                        'transactions.*',
-                    )
-                    ->first();
+        if ($service->name == 'recreation') {
+            $recreation = $transaction->with('detailTransactionRecreation')->first();
+            $detailTransaction = $recreation->detailTransactionRecreation;
 
-                    $allRatings = HostelRating::where('transaction_id', $transaction->first()->id)->get();
 
-                    $review = $allRatings->map(function ($item){
-                        return [
-                            'rate' => $item->rate,
-                            'comment' => $item->comment
-                        ];
+            $allRatings = RecreationRatings::where('transaction_id', $recreation->id)->get();
 
-                    });
+            $review = $allRatings->map(function ($item) {
+                return [
+                    'rate' => $item->rate,
+                    'comment' => $item->comment
+                ];
+            });
 
-                    $responseTransaction = array([
-                        'id' => $detailTransaction->id,
-                        'no_inv' => $detailTransaction->no_inv,
-                        'hostel_id' => $detailTransaction->hostel_id,
-                        'hostel_room_id' => $detailTransaction->hostel_room_id,
-                        'hostel_name' => $detailTransaction->hostel_name,
-                        'hotel_room_name' => $detailTransaction->hostel_room_name,
-                        'booking_id' => $detailTransaction->booking_id,
-                        'guest_identity' => array([
-                            'name' => $detailTransaction->guest_name,
-                            'handphone' => $detailTransaction->guest_email,
-                            'email' => $detailTransaction->guest_handphone,
-                        ]),
-                        'reservation_start' => $detailTransaction->reservation_start,
-                        'reservation_end' => $detailTransaction->reservation_end,
-                        'guest' => $detailTransaction->guest,
-                        'room' => $detailTransaction->room,
-                        'type_rent' => $detailTransaction->type_rent,
-                        'req_id' => $detailTransaction->req_id,
-                        'link' => $detailTransaction->link,
-                        'service' => $detailTransaction->service,
-                        'payment' => $detailTransaction->payment,
-                        'payment_method' => $detailTransaction->payment_method,
-                        'payment_channel' => $detailTransaction->payment_channel,
-                        'status' => $detailTransaction->status == 'Berhasil' ? 'PAID' : $detailTransaction->status,
-                        'fee_admin' => $detailTransaction->fee_admin,
-                        'total' => $detailTransaction->grand_total,
-                        'received_point' => $receivedPoint,
-                        'used_point' => $usedPoint,
-                        'review' => $review,
-                        'created_at' => $detailTransaction->created_at,
+            $responseTransaction = array([
+                'id' => $detailTransaction->transaction_id,
+                'no_inv' => $recreation->no_inv,
+                'recreation_id' => $detailTransaction->recreation_id,
+                'package_id' => $detailTransaction->recreationPackage_id,
+                'recreation_name' => $detailTransaction->recreation->business_name,
+                'package_name' => $detailTransaction->package->name,
+                'booking_id' => $recreation->booking_id,
+                'guest_identity' => array([
+                    'name' => $recreation->user->name,
+                    'handphone' => $recreation->user->phone,
+                    'email' => $recreation->user->email,
+                ]),
+                'expire_on' => Carbon::parse($detailTransaction->expire_on)->format('d M Y H:i'),
+                'req_id' => $detailTransaction->req_id,
+                'link' => $detailTransaction->link,
+                'service' => $recreation->service,
+                'payment' => $recreation->payment,
+                'payment_method' => $recreation->payment_method,
+                'payment_channel' => $recreation->payment_channel,
+                'status' => $recreation->status == 'Berhasil' ? 'PAID' : $recreation->status,
+                'fee_admin' => $recreation->fee_admin,
+                'total' => $recreation->grand_total,
+                'received_point' => $receivedPoint,
+                'used_point' => $usedPoint,
+                'review' => $review,
+                'created_at' => $detailTransaction->created_at,
 
-                    ]);
-            }
+            ]);
+        }
+
+        // UNTUK HOSTEL
+        if (in_array($transaction->first()->service_id, [7])) {
+            $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
+                ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
+                ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id')
+                ->where('detail_transaction_hostel.transaction_id', $transaction->first()->id)
+                ->select(
+                    'detail_transaction_hostel.*',
+                    'hostels.id  as hostel_id',
+                    'hostel_rooms.id  as hostel_room_id',
+                    'hostels.name  as hostel_name',
+                    'hostel_rooms.name  as hostel_room_name',
+                    'transactions.id  as transaksi_id',
+                    'transactions.total  as grand_total',
+                    'transactions.*',
+                )
+                ->first();
+
+            $allRatings = HostelRating::where('transaction_id', $transaction->first()->id)->get();
+
+            $review = $allRatings->map(function ($item) {
+                return [
+                    'rate' => $item->rate,
+                    'comment' => $item->comment
+                ];
+            });
+
+            $responseTransaction = array([
+                'id' => $detailTransaction->id,
+                'no_inv' => $detailTransaction->no_inv,
+                'hostel_id' => $detailTransaction->hostel_id,
+                'hostel_room_id' => $detailTransaction->hostel_room_id,
+                'hostel_name' => $detailTransaction->hostel_name,
+                'hotel_room_name' => $detailTransaction->hostel_room_name,
+                'booking_id' => $detailTransaction->booking_id,
+                'guest_identity' => array([
+                    'name' => $detailTransaction->guest_name,
+                    'handphone' => $detailTransaction->guest_email,
+                    'email' => $detailTransaction->guest_handphone,
+                ]),
+                'reservation_start' => $detailTransaction->reservation_start,
+                'reservation_end' => $detailTransaction->reservation_end,
+                'guest' => $detailTransaction->guest,
+                'room' => $detailTransaction->room,
+                'type_rent' => $detailTransaction->type_rent,
+                'req_id' => $detailTransaction->req_id,
+                'link' => $detailTransaction->link,
+                'service' => $detailTransaction->service,
+                'payment' => $detailTransaction->payment,
+                'payment_method' => $detailTransaction->payment_method,
+                'payment_channel' => $detailTransaction->payment_channel,
+                'status' => $detailTransaction->status == 'Berhasil' ? 'PAID' : $detailTransaction->status,
+                'fee_admin' => $detailTransaction->fee_admin,
+                'total' => $detailTransaction->grand_total,
+                'received_point' => $receivedPoint,
+                'used_point' => $usedPoint,
+                'review' => $review,
+                'created_at' => $detailTransaction->created_at,
+
+            ]);
+        }
 
 
 

@@ -2,24 +2,101 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryRecreation;
+use App\Models\Recreation;
+use App\Models\RecreationPackages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Response;
 
 use function Laravel\Prompts\table;
 
 class RecreationController extends Controller
 {
+    public function index(Request $request)
+    {
+        $location = $request->location;
+        $keyword = $request->keyword;
+        $type = $request->type;
 
-    public function index(Request $request) {
-        $recreation_list = DB::table('recreation_has_packages')->get();
-        return view('recreation.list-recreation', ['recreation_list' => $recreation_list]);
+        $recreation_list = Recreation::with('recreationPackages')->when($keyword, function ($l) use ($keyword) {
+            $l->where('business_name', 'like', '%' . $keyword . '%');
+        })
+            ->when($location, function ($l) use ($location) {
+                $l->where('city', $location);
+            })
+            ->when($type, function ($l) use ($type) {
+                $l->whereHas('category', function ($q) use ($type) {
+                    $q->where('name', $type);
+                });
+            })
+            ->get();
+
+        $data['recreation_list'] = $recreation_list;
+        $data['type'] = $type;
+        $data['type_list'] = CategoryRecreation::get()->pluck('name');
+
+        return view('recreation.list-recreation', $data);
     }
 
-    public function list(Request $request) {
+    public function filter_recreation(Request $request)
+    {
+        $filter = $request->filter;
+        $keyword = $request->keyword;
+
+        $filtered = Recreation::when($filter, function ($q) use ($filter) {
+            $q->whereHas('category', function ($cat) use ($filter) {
+                $cat->where('name', 'like', '%' . $filter . '%');
+            });
+        })
+            ->when($keyword, function ($k) use ($keyword) {
+                $k->where('business_name', 'like', '%' . $keyword . '%');
+            })
+            ->get();
+
+        $items = '';
+
+        foreach ($filtered as $key => $fil) {
+            if (count($fil['recreationPackages']) > 0) {
+                $untill_price = '';
+                if (count($fil['recreationPackages']) > 1) {
+                    $untill_price = ' - ' . number_format($fil['recreationPackages'][count($fil['recreationPackages']) - 1]->price ?? 0);
+                }
+                $item = '<div class="col">
+                                <a href="' . route('recreations.details', [$fil['id']]) . '">
+                                    <div class="card shadow h-100">
+                                        <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                            class="card-img-top" alt="...">
+                                        <div class="card-body d-flex flex-column">
+                                            <h4 class="card-title text-capitalize">' . $fil['business_name'] . '</h4>
+                                            <p class="card-text flex-grow-1 text-capitalize">' . ($fil['kota']['city_name'] ?? 'Deleted city') . '</p>
+                                            <div class="d-flex justify-content-between align-items-center mt-auto">
+                                                <h4 style="color: rgb(255, 0, 0);">Rp. ' . number_format($fil['recreationPackages'][0]['price']) . $untill_price .
+                    '</h4>
+                                                <span class="card-text" style="color: rgb(255, 0, 0);">
+                                                    <i class="fa fa-star"></i>&nbsp;(5)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                        </div>';
+                $items = $items . $item;
+            }
+        }
+
+
+        $data = '<h5 class="mt-10">Menampilkan ' . $filtered->count() . ' hasil pencarian ' . $filter . '</h5>
+        <div class="row row-cols-1 row-cols-md-4 g-4">' . $items . '</div>';
+
+        return $data;
+    }
+
+    public function list(Request $request)
+    {
         $category = DB::table('category_recreations')->get();
 
         $data = DB::table('recreation_has_packages')
@@ -36,7 +113,8 @@ class RecreationController extends Controller
     }
 
 
-    public function show($id) {
+    public function show($id)
+    {
         $recreation = DB::table('recreation_has_packages')
             ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')
             ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
@@ -52,7 +130,15 @@ class RecreationController extends Controller
         }
     }
 
-    public function create() {
+    public function detail(Request $request, $id)
+    {
+        $recreation = Recreation::with('recreationPackages')->find($id);
+        dd($recreation);
+        return view('recreation.show');
+    }
+
+    public function create()
+    {
         $category = DB::table('category_recreations')->get();
 
         $recreations = DB::table('recreations')
@@ -97,8 +183,8 @@ class RecreationController extends Controller
         $recreationId = $request->input('recreation_id');
 
         $categoryRecreation = DB::table('category_recreations')
-        ->where('id', $recreationId)
-        ->first();
+            ->where('id', $recreationId)
+            ->first();
 
         DB::table('recreation_has_packages')->insert([
             'recreation_id' => $recreationId,
@@ -120,7 +206,8 @@ class RecreationController extends Controller
     }
 
 
-    public function edit($id) {
+    public function edit($id)
+    {
         $recreation_has_packages = DB::table('recreation_has_packages')->where('id', $id)->first();
 
         if (!$recreation_has_packages) {
@@ -180,12 +267,14 @@ class RecreationController extends Controller
         return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
     }
 
-    public function reservation(Request $request) {
+    public function reservation(Request $request)
+    {
 
         return view('recreation.reservation');
     }
 
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $recreation = DB::table('recreation_has_packages')->where('id', $id)->first();
 
         if ($recreation) {
@@ -196,5 +285,3 @@ class RecreationController extends Controller
         }
     }
 }
-
-

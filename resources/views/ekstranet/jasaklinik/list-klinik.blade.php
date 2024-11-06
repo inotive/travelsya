@@ -19,7 +19,6 @@
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th class="text-center">No.</th>
-                            <th class="text-center">Nama Bisnis</th>
                             <th class="text-center">Nama Jasa</th>
                             <th class="text-center">Kategori</th>
                             <th class="text-center">Durasi</th>
@@ -32,7 +31,6 @@
                       @foreach ($clinics as $clinic)
                           <tr>
                               <td>{{ $loop->iteration }}</td>
-                              <td class="text-center">{{ $clinic->clinic->clinic_name ?? 'Nama Bisnis tidak ditemukan' }}</td>
                               <td class="text-center">{{ $clinic->name }}</td>
                               <td class="text-center">{{ $clinic->categoriesService->name ?? 'Kategori tidak ditemukan' }}</td>
                               <td class="text-center">{{ $clinic->duration }}</td>
@@ -44,19 +42,29 @@
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                 @endif
                               </td>
-                              <td>
-                                <button class="btn btn-sm btn-light-primary btn-icon" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="showDetail({{ $clinic->id }})">
-                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                </button>
-                                <button class="btn btn-sm btn-light-warning btn-icon">
-                                    <a href="{{ route('clinics.edit', $clinic->id) }}">
-                                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    </a>
-                                </button>
-                                <button class="btn btn-sm btn-light-danger btn-icon" onclick="deleteClinic({{ $clinic->id }})">
-                                    <i class="fa fa-trash" aria-hidden="true"></i>
-                                </button>
-                            </td>
+                              <td class="text-center">
+                                  <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                      data-kt-menu="true">
+                                      <div class="menu-item px-3">
+                                        <a href="{{ route('clinics.edit', $clinic->id) }}" class="menu-link px-3 text-warning">
+                                            Edit
+                                        </a>
+                                      </div>
+                                      <div class="menu-item px-3">
+                                          <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal"
+                                              data-kt-customer-table-filter="delete_row"
+                                              data-bs-target="#kt_modal_delete_customer{{ $clinic->id }}">
+                                              Delete
+                                          </a>
+                                      </div>
+                                  </div>
+                                  <a href="#"
+                                      class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                      data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                      Aksi
+                                      <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                  </a>
+                              </td>
                           </tr>
                           <div class="modal fade" id="kt_modal_delete_customer{{ $clinic->id }}" tabindex="-1" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered mw-650px">
@@ -93,116 +101,32 @@
         <!--end::Body-->
     </div>
     <!--end::Tables Widget 11-->
-
-        {{-- Modal Detail --}}
-    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered mw-650px">
-            <div class="modal-content rounded">
-                <div class="modal-header pb-0 border-0 justify-content-end">
-                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                        <i class="ki-duotone ki-cross fs-1">
-                            <span class="path1"></span><span class="path2"></span>
-                        </i>
-                    </div>
-                </div>
-                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                    <h5 class="text-center" id="modal-title">Detail Jasa Kecantikan</h5>
-                    <div id="package-details">Loading...</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-
     @push('add-script')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-
     <script>
-        // DataTable
-    $(document).ready(function() {
-        $('#clinicTable').DataTable({
-            "scrollY": "500px",
-            "scrollCollapse": true,
-            "language": {
-                "lengthMenu": "MENU",
-            },
-            "dom": "<'row'" +
-                "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +
-                "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                ">" +
-                "<'table-responsive'tr>" +
-                "<'row'" +
-                "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                ">"
+        $(document).ready(function() {
+            var table = $('#clinicTable').DataTable({
+                paging: false,
+                searching: true,
+                info: false,
+                ordering: false,
+                columnDefs: [
+                    { orderable: false, targets: -1 }
+                ],
+                dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-end'f>>" + // Memindahkan search bar ke kanan
+                    "<'table-responsive'tr>",          // Menampilkan hanya tabel di body
+                language: {
+                    search: "Cari: ", // Label untuk search bar
+                    zeroRecords: "Data tidak ditemukan"
+                }
             });
 
-        // Attach event listener to modal
-        $('#detailModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var clinicId = button.data('clinic-id');
-            showDetail(clinicId);
+            $('#clinicTable thead tr:eq(1) th input').on('keyup change', function() {
+                table.column($(this).parent().index()).search(this.value).draw();
+            });
         });
-    });
 
-    function showDetail(id) {
-        console.log('Fetching details for clinic ID:', id);
-        $.ajax({
-            url: 'clinics/' + id,
-            type: 'GET',
-            success: function(response) {
-                console.log('Received response:', response);
-                if(response && response.name) {
-                    $('#modal-title').text('Detail Jasa Kecantikan: ' + response.name);
-                    $('#package-details').html(`
-                        <p><strong>Bisnis:</strong> ${response.clinic_name || 'Tidak tersedia'}</p>
-                        <p><strong>Nama Jasa:</strong> ${response.name || 'Tidak tersedia'}</p>
-                        <p><strong>Kategori:</strong> ${response.category_name || 'Tidak tersedia'}</p>
-                        <p><strong>Durasi:</strong> ${response.duration || 'Tidak tersedia'} ${response.duration_type || ''}</p>
-                        <p><strong>Kadaluarsa Dalam (Hari):</strong> ${response.expiry_date || 'Tidak tersedia'}</p>
-                        <p><strong>Harga:</strong> ${response.price ? 'Rp ' + number_format(response.price) : 'Tidak tersedia'}</p>
-                        <p><strong>Deskripsi:</strong> ${response.description || 'Tidak tersedia'}</p>
-                        <p><strong>Peraturan:</strong> ${response.rules || 'Tidak tersedia'}</p>
-                        <p><strong>Status:</strong> ${response.is_active == 1 ? 'Aktif' : 'Tidak Aktif'}</p>
-                    `);
-                } else {
-                    $('#package-details').html('<p>Data tidak ditemukan atau tidak lengkap.</p>');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching data:', error);
-                $('#package-details').html('<p>Loading..</p>');
-            }
-        });
-    }
-
-    function number_format(number) {
-        return new Intl.NumberFormat('id-ID').format(number);
-    }
-
-    // Update the onclick handler in the table
-    function updateDetailButtons() {
-        $('button[data-bs-target="#detailModal"]').each(function() {
-            var clinicId = $(this).closest('tr').find('td:first').text();
-            $(this).attr('data-clinic-id', clinicId);
-        });
-    }
-
-    // Call this function after the table is initialized or updated
-    updateDetailButtons();
     </script>
     @endpush
     
-    @push('add-script')
-    <script>
-        console.log('Session success message:', "{{ session('success') }}");
-        @if(session('success'))
-            console.log('Success message exists in session');
-        @else
-            console.log('No success message in session');
-        @endif
-    </script>
-    @endpush
-    
+
 @endsection

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class City extends Model
 {
@@ -18,4 +19,13 @@ class City extends Model
         'status'
     ];
 
+    /**
+     * Get all of the recreations for the City
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function recreations(): HasMany
+    {
+        return $this->hasMany(Recreation::class, 'city', 'city_id');
+    }
 }

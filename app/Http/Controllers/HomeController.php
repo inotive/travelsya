@@ -10,7 +10,8 @@ use App\Models\Hostel;
 use App\Models\City;
 use App\Services\Travelsya;
 use App\Http\Controllers\Controller;
-
+use App\Models\CategoryRecreation;
+use App\Models\Recreation;
 
 class HomeController extends Controller
 {
@@ -112,8 +113,11 @@ class HomeController extends Controller
         $data['hotelByCity'] = DB::table('cities')->where('status', 1)
             ->orderBy('city_name', 'asc')
             ->get();
-        
+
         $data['cities'] = City::all();
+
+        $data['recreation_city'] = City::whereHas('recreations')->get();
+        $data['category_recreation'] = CategoryRecreation::get();
 
         return view('home', $data);
     }

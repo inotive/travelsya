@@ -42,6 +42,7 @@ class AuthController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => 2,
+                'is_active' => 1,
                 'point' => 0,
             ]);
 
@@ -76,7 +77,7 @@ class AuthController extends Controller
 
             if (!Auth::attempt($request->only('email', 'password'))) {
                 return ResponseFormatter::error([
-                    'message' => 'Unauthorized'
+                    'message' => 'Email atau Password Salah'
                 ], 'Authentication Failed', 401);
             }
 
@@ -323,7 +324,7 @@ class AuthController extends Controller
 
         return response()->json([
             'currentPoint' => Auth::user()->point,
-            'totalPointAvailable' => Auth::user()->point * 10/ 100 ?? 0
+            'totalPointAvailable' => Auth::user()->point * 10 / 100 ?? 0
         ]);
     }
 }

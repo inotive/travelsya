@@ -90,13 +90,6 @@
                                                 </tbody>
 
                                             </table>
-                                            <div class="d-flex justify-content-between">
-                                                {{-- <p>Menampilkan {{ $cars->count() }} dari {{ $cars->total() }} data</p> --}}
-                                                <div>
-                                                    <a href="{{ $cars->previousPageUrl() }}" class="btn btn-sm btn-primary">Sebelumnya</a>
-                                                    <a href="{{ $cars->nextPageUrl() }}" class="btn btn-sm btn-primary">Selanjutnya</a>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

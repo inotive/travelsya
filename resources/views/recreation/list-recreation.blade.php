@@ -16,15 +16,21 @@
 
 </style>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+</script>
 
 
-<div class="card border-transparent header-image" data-bs-theme="light" style="" x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center`">
+<div class="card border-transparent header-image" data-bs-theme="light" style=""
+    x-bind:style="`background:linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)), url(${$store.menubar.selected.imageHeader}) no-repeat center`">
     <div class="card-body d-flex ps-xl-20">
         <div class="m-0">
             <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2">
-                <button class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5" onclick="history.back();">
+                <button
+                    class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5"
+                    onclick="history.back();">
                     <i class="las la-angle-left"></i>
                 </button>
                 <div>
@@ -43,30 +49,38 @@
 
                 <h2>Apa yang ingin anda lakukan?</h2>
                 <div class="d-flex gap-3 flex-wrap mt-4 align-items-center">
-                    <div class="filter-btn active" data-filter="atraksi">Atraksi</div>
-                    <div class="filter-btn" data-filter="spa-kecantikan">Spa & Kecantikan</div>
-                    <div class="filter-btn" data-filter="event">Event</div>
-                    <div class="filter-btn" data-filter="arena-bermain">Arena Bermain</div>
-                    <input type="text" id="keyword" class="form-control form-control-lg ms-auto" name="keyword" placeholder="Cari Tempat" value="" style="max-width: 300px;" />
+                    @foreach ($type_list as $tl)
+                    <div class="filter-btn {{ $tl == $type ? 'active' : '' }}" data-filter="{{ $tl }}">{{ $tl }}</div>
+                    @endforeach
+                    <input type="text" id="keyword" class="form-control form-control-lg ms-auto" name="keyword"
+                        placeholder="Cari Tempat" value="" style="max-width: 300px;" />
                 </div>
 
-
-                {{-- recreation count --}}
-
-                <h5 class="mt-10">Menampilkan {{ $recreation_list->count() }} Atraksi</h5>
-
                 <div id="results" class="mt-4">
+                    <h5 class="mt-10">Menampilkan {{ $recreation_list->count() }} hasil pencarian {{ $type }}</h5>
                     <div class="row row-cols-1 row-cols-md-4 g-4">
                         @foreach ($recreation_list as $list)
+                        @if (count($list->recreationPackages) > 0)
                         <div class="col">
-                            <a href="#">
+                            <a href="{{ route('recreations.details', [$list['id']]) }}">
                                 <div class="card shadow h-100">
-                                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="card-img-top" alt="...">
+                                    <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        class="card-img-top" alt="...">
                                     <div class="card-body d-flex flex-column">
-                                        <h4 class="card-title">{{ $list->name }}</h4>
-                                        <p class="card-text flex-grow-1">{{ $list->description }}</p>
+                                        <h4 class="card-title text-capitalize">{{ $list->business_name }}</h4>
+                                        <p class="card-text flex-grow-1 text-capitalize">{{ $list->kota->city_name ??
+                                            'Deleted city' }}
+                                        </p>
                                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                                            <h4 style="color: rgb(255, 0, 0);">{{ 'Rp '.number_format($list->price) ?? '' }}</h4>
+                                            <h4 style="color: rgb(255, 0, 0);">Rp.{{
+                                                number_format($list['recreationPackages'][0]->price ?? 0)}}
+
+                                                @if (count($list['recreationPackages']) > 1)
+                                                - {{
+                                                number_format($list['recreationPackages'][count($list['recreationPackages'])
+                                                - 1]->price ?? 0)}}
+                                                @endif
+                                            </h4>
                                             <span class="card-text" style="color: rgb(255, 0, 0);">
                                                 <i class="fa fa-star"></i>&nbsp;(5)
                                             </span>
@@ -74,8 +88,8 @@
                                     </div>
                                 </div>
                             </a>
-
                         </div>
+                        @endif
                         @endforeach
                     </div>
                 </div>
@@ -156,25 +170,6 @@
         })
 
         var today = new Date();
-
-        new tempusDominus.TempusDominus(document.getElementById("js_datepicker_list_hotel"), {
-            display: {
-                viewMode: "calendar"
-                , components: {
-                    date: true
-                    , hours: false
-                    , minutes: false
-                    , seconds: false
-                }
-            }
-            , localization: {
-                locale: "id"
-                , format: "dd-MM-yyyy"
-            , }
-            , restrictions: {
-                minDate: today
-            , }
-        , });
     })
 
     // filter
@@ -194,16 +189,18 @@
             let keyword = $('#keyword').val();
 
             $.ajax({
-                url: '/filter', // Pastikan URL ini benar
-                method: 'GET'
-                , data: {
-                    filter: filter
-                    , keyword: keyword
-                }
-                , success: function(response) {
+                url: '/recreations/filter', // Pastikan URL ini benar
+                method: 'GET',
+                data: {
+                    filter: filter,
+                    keyword: keyword
+                },
+                success: function(response) {
+                    console.log('respon', response);
+
                     $('#results').html(response); // Pastikan elemen dengan ID 'results' ada di halaman
-                }
-                , error: function(xhr) {
+                },
+                error: function(xhr) {
                     console.error('Error:', xhr.responseText);
                 }
             });

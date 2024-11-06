@@ -9,6 +9,10 @@ class Service extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name'
+    ];
+
     /**
      * Get all of the product for the Category
      *

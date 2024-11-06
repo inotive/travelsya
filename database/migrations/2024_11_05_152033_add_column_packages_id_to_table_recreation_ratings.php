@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories_services', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('recreation_ratings', function (Blueprint $table) {
+            $table->string('recreation_packages_id')->nullable();
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories_services');
+        Schema::table('recreation_ratings', function (Blueprint $table) {
+            //
+        });
     }
 };

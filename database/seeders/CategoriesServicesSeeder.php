@@ -13,25 +13,16 @@ class CategoriesServicesSeeder extends Seeder
      */
     public function run(): void
     {
-        
         CategoriesServices::create([
-            'name' => 'Laser',
-            'type' => 'kecantikan'
+            'name' => 'Threadlift'
         ]);
 
         CategoriesServices::create([
-            'name' => 'Pijat',
-            'type' => 'kesehatan'
+            'name' => 'Peeling'
         ]);
 
         CategoriesServices::create([
-            'name' => 'Beauty',
-            'type' => 'kecantikan'
-        ]);
-
-        CategoriesServices::create([
-            'name' => 'Health',
-            'type' => 'kesehatan'
+            'name' => 'Injection'
         ]);
 
     }

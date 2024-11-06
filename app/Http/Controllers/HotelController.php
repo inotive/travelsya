@@ -60,7 +60,7 @@ class HotelController extends Controller
                 SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel dth WHERE dth.hotel_id = hotels.id
                 AND (? < dth.reservation_end OR ? = dth.reservation_end)  -- Include reservations ending on the current day
                 AND ? >= dth.reservation_start
-            ) > 0',[$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+            ) > 0', [$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
 
 
         if ($request->has('facility')) {
@@ -82,7 +82,7 @@ class HotelController extends Controller
                 ->orderBy('min_price', $orderDirection);
         }
 
-//        dd($hotels->get());
+        //        dd($hotels->get());
         $hotels = $hotels->paginate(10)->appends(request()->query());
         $hotelDetails = [];
 
@@ -109,7 +109,7 @@ class HotelController extends Controller
                 'star_rating'   => floor($resultRating),
             ];
         }
-        
+
         $data['hotels']       = $hotels;
         $data['hotelDetails'] = $hotelDetails;
         $data['request'] = $request->all();
@@ -171,14 +171,14 @@ class HotelController extends Controller
 
         $ratings  = DB::table('hotel_ratings')->join('users', 'hotel_ratings.users_id', '=', 'users.id')
             ->where('hotel_id', $id_hotel)
-            ->select('hotel_ratings.*', 'hotel_ratings.created_at as created' , 'users.*')
+            ->select('hotel_ratings.*', 'hotel_ratings.created_at as created', 'users.*')
             ->limit(30)
             ->get();
 
         Carbon::setLocale('id');
         // $formatted_created_at = null;
 
-        if ($ratings ->isNotEmpty()) {
+        if ($ratings->isNotEmpty()) {
             // Menggunakan first() untuk mendapatkan satu baris hasil
             $rating = $ratings->first();
             // $data['formatted_created_at'] = Carbon::parse($rating->created_at)->diffForHumans();
@@ -259,8 +259,8 @@ class HotelController extends Controller
         if ($request->inputPoint == "on") {
             $saldoPointCustomer = Auth::user()->point;
             array_push($fees, [
-                    'type' => 'Point',
-                    'value' => -$saldoPointCustomer,
+                'type' => 'Point',
+                'value' => -$saldoPointCustomer,
             ]);
         }
         $qty = (date_diff(date_create($request->start), date_create($request->end))->days);

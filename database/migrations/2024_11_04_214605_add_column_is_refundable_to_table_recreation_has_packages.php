@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories_services', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('recreation_has_packages', function (Blueprint $table) {
+            $table->boolean('is_refundable')->default(0);
+            $table->boolean('is_reschedule')->default(0);
         });
     }
 
@@ -23,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories_services');
+        Schema::table('recreation_has_packages', function (Blueprint $table) {
+            //
+        });
     }
 };

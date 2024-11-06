@@ -12,7 +12,7 @@
 <body>
 
     <a href="javascript:window.history.back()" type="button" class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold mb-5">
-        <i style="font-size: 1.5rem; padding-right: 3px; @media (max-width: 576px) { font-size: 1.25rem; }" class="fa fa-angle-left"></i>
+        <i style="font-size: 2rem; padding-right: 3px" class="fa fa-angle-left"></i>
     </a>
 
     <div class="container mt-5">
@@ -62,31 +62,31 @@
     {{-- MODAL --}}
     <div id="modal" class="modal">
         <div class="modal-content" style="top: -100px;">
-            <span class="close" style="position: absolute; top: -2px; right: 20px;"
+            <span class="close" style="position: absolute; top: -8px; right: 10px;"
                 onclick="document.getElementById('modal').style.display='none'">&times;</span>
-            <div class="car-item" style="width: 30%; height: 100%; object-fit: contain;">
-                <img id="modal-image" src="" style="width: 100%; height: 220px; object-fit: contain;">
+            <div class="car-item" style="width: 450px; height: 100%; object-fit: contain;">
+                <img id="modal-image" src="" style="width: 420px; height: 220px; object-fit: contain;">
 
                 <div class="car-info">
-                    <h3 id="modal-title" style="font-size: 1.5rem; @media (min-width: 768px) { font-size: 1.25rem; }"></h3>
+                    <h3 id="modal-title"></h3>
                     <div class="car-details">
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        <span class="kursi" id="modal-kursi" style="font-size: 1rem; @media (min-width: 768px) { font-size: 0.875rem; }"></span>
+                        <span class="kursi" id="modal-kursi"></span>
                         <i class="fa fa-user" aria-hidden="true"></i>
-                        <span id="modal-category" style="font-size: 1rem; @media (min-width: 768px) { font-size: 0.875rem; }"></span>
+                        <span id="modal-category"></span>
                     </div>
                     <p class="car-price">Mulai dari</p>
-                    <p class="car-price"><span class="harga" id="modal-harga" style="font-size: 1.5rem; @media (min-width: 768px) { font-size: 1.25rem; }"></span> /hari</p>
+                    <p class="car-price"><span class="harga" id="modal-harga"></span> /hari</p>
                 </div>
             </div>
 
             @foreach ($carRental as $item)
+                <h4 style="position: absolute; top: 40px; right: 460px;">Pilih Vendor</h4>
                 <div class="container belakang">
-                    <h4 style="position: absolute; top: 40px; right: 58%; font-size: 1.25rem; @media (min-width: 768px) { right: 460px; }">Pilih Vendor</h4>
-                    <ul class="vendor-list" style="position: absolute; top: 70px; right: 53%; @media (min-width: 768px) { right: 460px; };">
+                    <ul class="vendor-list" style="position: absolute; top: 70px; right: 380px;">
                         <li class="vendor-item">
                             <span class="vendor-name">{{ $item->business_name }}</span>
-                            <p class="car-price" style="position: relative; left: 320px; top: 12px; @media (max-width: 768px) { left: 0; top: 0; }"><span class="vendor-price"></span>/hari</p>
+                            <p class="car-price" style="position: relative; left: 320px; top: 12px;"><span class="vendor-price"></span>/hari</p>
                             {{-- <p class="car-price" style="position: relative; left: 320px;"><span class="vendor-price"></span> /hari</p> --}}
                         </li>
                     </ul>
@@ -149,8 +149,8 @@
 <style>
 
     .btn-icon.btn-rounded {
-        border-radius: 50%;
-        padding: 0.5rem;
+        border-radius: 99px;
+        padding: 0.6rem;
         margin: 115px;
         margin-top: -70px;
         position: absolute;
@@ -171,24 +171,12 @@
         margin: 0;
     }
 
-    @media only screen and (max-width: 768px) {
-        .vendor-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .vendor-item {
-            width: 100%;
-            text-align: center;
-        }
-    }
-
-    /* .vendor-item {
+    .vendor-item {
         display: flex;
         justify-content: space-between;
         padding: 10px 0;
         border-bottom: 1px solid #e0e0e0;
-    } */
+    }
 
     .vendor-item:last-child {
         border-bottom: none;
@@ -337,11 +325,11 @@
     }
 
     .search-result {
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: center;
         height: 50px;
-        width: 100%;
+        width: 1119px;
         margin-bottom: 20px;
         background-color: #c51919;
         border: 1px solid rgba(30, 28, 28, 0.73);

@@ -13,6 +13,7 @@ use App\Http\Controllers\API\TopUpController;
 use App\Http\Controllers\API\SettingController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\RecreationController;
+use App\Models\Recreation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,12 @@ route::get('/hotel/populer', [HotelController::class, 'hotelPopuler']);
 route::get('/hotel/{id}', [HotelController::class, 'show']);
 route::get('/hotel/room/{id}', [HotelController::class, 'room']);
 
+// Recreation
+route::get('/recreation', [RecreationController::class, 'list2']);
+route::get('/recreation_by_category/{id}', [RecreationController::class, 'recreation_by_category']);
+route::get('/recreation_detail/{id}', [RecreationController::class, 'detail_recreations']);
+route::get('/recreation_search', [RecreationController::class, 'search']);
+
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
 route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
@@ -84,7 +91,7 @@ route::get('/ppob/{id}', [PpobController::class, 'getService']);
 route::post('/ppob/transaction', [PpobController::class, 'transaction']);
 route::post('/ppob/status', [PpobController::class, 'status']);
 
-Route::get('tax', [PpobController::class,'productTax']);
+Route::get('tax', [PpobController::class, 'productTax']);
 // route::post('/ppob/inquiry/request', [PpobController::class, 'requestInquiry']);
 
 //setting
@@ -129,6 +136,10 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/hotel/rating', [RatingHotelController::class, 'submit']);
     route::post('/hostel/rating', [RatingHostelController::class, 'submit']);
 
+    // recreation order
+    route::post('recreation/transaction/request', [RecreationController::class, 'requestTransaction']);
+    route::post('recreation/rating', [RecreationController::class, 'postRating']);
+
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);
         route::post('/ads/update', [AdController::class, 'update']);
@@ -141,5 +152,3 @@ Route::middleware('auth:sanctum')->group(function () {
         route::post('/hostel/{id}/destroy', [HostelController::class, 'destroy']);
     });
 });
-
-

@@ -3,73 +3,75 @@
 </div> --}}
 
 <div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
-  <!--begin::Col-->
-  <div class="col-xl-12">
+    <!--begin::Col-->
+    <div class="col-xl-12">
 
-      <!--begin::Tiles Widget 2-->
-      <form action="{{ route('recreations.index') }}" method="GET"
-          class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
-          <!--begin::Body-->
-          <div class="card-body d-flex flex-column justify-content-between">
-              <!--begin::Title-->
-              <h2 class="fw-bold mb-5">Rekreasi</h2>
-              <!--end::Title-->
-              <div class="row mb-5 gy-4">
-                  <div class="col-xl-4">
-                      <label class="fs-5 fw-semibold mb-2">
-                          <span class="required">Cari Aktivitas</span>
-                      </label>
-                      <input type="text" id="keyword" class="form-control form-control-lg"
-                          name="keyword" placeholder="Masukan kata kunci" value="" />
-                  </div>
+        <!--begin::Tiles Widget 2-->
+        <form action="{{ route('recreations.index') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+            <!--begin::Body-->
+            <div class="card-body d-flex flex-column justify-content-between">
+                <!--begin::Title-->
+                <h2 class="fw-bold mb-5">Rekreasi</h2>
+                <!--end::Title-->
+                <div class="row mb-5 gy-4">
+                    <div class="col-xl-4">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Kata Kunci</span>
+                        </label>
+                        <input type="text" id="keyword" class="form-control form-control-lg" name="keyword"
+                            placeholder="Masukan kata kunci" value="" />
+                    </div>
 
-                  <div class="col-xl-4">
+                    <div class="col-xl-4">
+                        <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
+                        <select name="location" id="location" class="form-select form-select-lg" data-control="select2"
+                            data-placeholder="Pilih lokasi" autocomplete="on">
+                            <option value="">-- Pilih Lokasi --</option>
+                            @foreach ($recreation_city as $c)
+                            <option value="{{ $c['city_id'] }}">{{ $c['city_name'] }}</option>
+                            @endforeach
+                        </select>
 
-                    <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
-                    <select name="location" id="location" class="form-select form-select-lg">
-                        <option value="balikpapan">Balikpapan</option>
-                        <option value="samarinda">Samarinda</option>
-                    </select>
+                    </div>
+
+
+                    <div class="col-xl-4">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span class="required">Jenis Rekreasi</span>
+                        </label>
+                        <select name="type" id="type" class="form-select form-select-lg">
+                            <option value="">-- Pilih Jenis Rekreasi --</option>
+                            @foreach ($category_recreation as $cat)
+                            <option value="{{ $cat['name'] }}">{{ $cat['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari
+                            Wisata</button>
+                    </div>
+
 
                 </div>
+            </div>
+            <!--end::Body-->
+        </form>
+        <!--end::Tiles Widget 2-->
 
-
-                  <div class="col-xl-4">
-                    <label class="fs-5 fw-semibold mb-2">
-                        <span class="required">Jenis Rekreasi</span>
-                    </label>
-                    <select name="type" id="type" class="form-select form-select-lg">
-
-                        <option value="atraksi">Atraksi</option>
-                        <option value="spa-kecantikan">Spa & Kecantikan</option>
-                        <option value="event">Event</option>
-                        <option value="arena">Arena</option>
-                    </select>
-                </div>
-
-                  <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari Wisata</button>
-                  </div>
-
-
-              </div>
-          </div>
-          <!--end::Body-->
-      </form>
-      <!--end::Tiles Widget 2-->
-
-  </div>
-  <!--end::Col-->
+    </div>
+    <!--end::Col-->
 </div>
 
 
 @push('add-style')
-  <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 @endpush
 
 @push('add-script')
-  <script>
-      $(document).ready(function() {
+<script>
+    $(document).ready(function() {
 
           $.ajax({
               type: "GET",
@@ -172,10 +174,10 @@
               }
           });
       });
-  </script>
+</script>
 
-  {{-- <script>
-  $(document).ready(function () {
+{{-- <script>
+    $(document).ready(function () {
           $('#notelp').on('keyup', function (e) {
 
               $.ajaxSetup({
