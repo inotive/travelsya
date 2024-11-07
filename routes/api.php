@@ -74,7 +74,11 @@ route::get('/recreation_search', [RecreationController::class, 'search']);
 route::get('/health_beauty', [HealthBeautyController::class, 'list']);
 route::get('/health_home', [HealthBeautyController::class, 'healthHome']);
 route::get('/health_search', [HealthBeautyController::class, 'search']);
-route::get('/health_detail/{id}', [HealthBeautyController::class, 'detail']);
+
+route::get('/beauty_home', [HealthBeautyController::class, 'beautyHome']);
+route::get('/beauty_search', [HealthBeautyController::class, 'beauty_search']);
+
+route::get('/clinic_detail/{id}', [HealthBeautyController::class, 'detail']);
 
 // Car Rental
 route::get('/find_car', [CarRentalController::class, 'search']);

@@ -309,10 +309,91 @@ class HealthBeautyController extends Controller
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }
 
+    public function beautyHome(Request $request)
+    {
+        $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
+            ->whereHas('packages', function ($p) {
+                $p->whereColumn('unit_price', '>', 'price');
+            })
+            // ->when($city, function ($c, $cit) {
+            //     $c->whereHas('kota', function ($k) use ($cit) {
+            //         $k->where('city_name', 'like', $cit);
+            //     });
+            // })
+            ->limit(10)
+            ->get();
+
+        $cantik = [];
+
+        foreach ($special as $key => $rec) {
+            if (count($rec['packages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'name' => $rec['clinic_name'],
+                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'category' => $rec['category'],
+                    'unit_price' => (int)$rec['packages'][0]['unit_price'],
+                    'price' => $rec['packages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                    'avg_rating' => $rec->avgRating(),
+                ];
+
+                array_push($cantik, $item);
+            }
+        }
+
+        $category = CategoriesServices::select('id', 'name')->get();
+
+        $data['categories'] = $category;
+        $data['special_deals'] = $cantik;
+
+        return ResponseFormatter::success($data, 'Data successfully loaded');
+    }
+
     public function search(Request $request)
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
+            ->whereHas('packages', function ($p) {
+                $p->whereColumn('unit_price', '>', 'price');
+            })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
+            ->get();
+
+        $cantik = [];
+
+        foreach ($special as $key => $rec) {
+            if (count($rec['packages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'name' => $rec['clinic_name'],
+                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'category' => $rec['category'],
+                    'unit_price' => $rec['packages'][0]['unit_price'],
+                    'price' => $rec['packages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                    'avg_rating' => $rec->avgRating(),
+                ];
+
+                array_push($cantik, $item);
+            }
+        }
+
+        $data['clinic'] = $cantik;
+
+        return ResponseFormatter::success($data, 'Data successfully loaded');
+    }
+
+    public function beauty_search(Request $request)
+    {
+        $city = '%' . $request->location . '%';
+        $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
             ->whereHas('packages', function ($p) {
                 $p->whereColumn('unit_price', '>', 'price');
             })
