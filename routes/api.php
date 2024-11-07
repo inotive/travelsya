@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\CarRentalController;
+use App\Http\Controllers\API\HealthBeautyController;
 use App\Http\Controllers\API\HostelController;
 use App\Http\Controllers\API\HotelController;
 use App\Http\Controllers\API\PpobController;
@@ -69,6 +70,15 @@ route::get('/recreation_by_category/{id}', [RecreationController::class, 'recrea
 route::get('/recreation_detail/{id}', [RecreationController::class, 'detail_recreations']);
 route::get('/recreation_search', [RecreationController::class, 'search']);
 
+// Health Beauty
+route::get('/health_beauty', [HealthBeautyController::class, 'list']);
+route::get('/health_home', [HealthBeautyController::class, 'healthHome']);
+route::get('/health_search', [HealthBeautyController::class, 'search']);
+route::get('/health_detail/{id}', [HealthBeautyController::class, 'detail']);
+
+// Car Rental
+route::get('/find_car', [CarRentalController::class, 'search']);
+
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
 route::post('/pulsa/topup/test', [TopUpController::class, 'testTopUP']);
@@ -106,7 +116,7 @@ route::post('/callback/ppob/test-voucher', [CallbackController::class, 'testChec
 // carrental
 Route::get('/car-rentals', [CarRentalController::class, 'index']);
 
-// carrental
+// recreation old
 Route::get('/recreations', [RecreationController::class, 'index']);
 Route::get('/recreations/{id}', [RecreationController::class, 'show']);
 
@@ -139,6 +149,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // recreation order
     route::post('recreation/transaction/request', [RecreationController::class, 'requestTransaction']);
     route::post('recreation/rating', [RecreationController::class, 'postRating']);
+
+    // clinic order
+    route::post('clinic/transaction/request', [HealthBeautyController::class, 'requestTransaction']);
+    route::post('clinic/rating', [HealthBeautyController::class, 'postRating']);
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);

@@ -18,6 +18,8 @@ use App\Models\HostelRating;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\ClinicHasPackages;
+use App\Models\DetailTransactionHealthBeauty;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DetailTransactionPPOB;
 use App\Models\DetailTransactionHotel;
@@ -102,6 +104,17 @@ class TransactionController extends Controller
                 return  [
                     'recreation_name' => $data->recreation->business_name ?? 'Invalid recreation data',
                     'package' => $recreationPackage->name,
+                    'expire_on' => Carbon::parse($data['expire_on'])->format('d M Y H:i'),
+                ];
+            }
+        } elseif ($service['name'] == 'health-beauty') {
+            $data = DetailTransactionHealthBeauty::where('transaction_id', $transaction_id)->first();
+
+            if ($data != null) {
+                $clinicPackages = ClinicHasPackages::find($data->clinic_package_id);
+                return  [
+                    'clinic_name' => $data->clinic->clinic_name ?? 'Invalid clinic data',
+                    'package' => $clinicPackages->name,
                     'expire_on' => Carbon::parse($data['expire_on'])->format('d M Y H:i'),
                 ];
             }
@@ -416,7 +429,12 @@ class TransactionController extends Controller
 
         return ResponseFormatter::success($responseTransaction, 'Data successfully loaded');
     }
-    public function xenditCallback()
+    public function xenditCallback2(Request $request)
+    {
+        return $request;
+    }
+
+    public function xenditCallback(Request $request)
     {
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
@@ -426,6 +444,7 @@ class TransactionController extends Controller
         // yang kemudian akan dibandingkan dengan token verifikasi callback Xendit
         $reqHeaders = getallheaders();
         $xIncomingCallbackTokenHeader = isset($reqHeaders['X-Callback-Token']) ? $reqHeaders['X-Callback-Token'] : "haloo";
+        return $xIncomingCallbackTokenHeader;
         // Untuk memastikan permintaan datang dari Xendit
         // Anda harus membandingkan token yang masuk sama dengan token verifikasi callback Anda
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.

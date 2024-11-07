@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -19,7 +20,7 @@ class RecreationHasPackagesSeeder extends Seeder
                 'duration' => '30',
                 'expiry_date' => '30',
                 'expiry_type' => 'Hari',
-                'unit_price' => 'Menit',
+                'unit_price' => '300000',
                 'price' => 100000,
                 'is_active' => true,
                 'created_at' => Carbon::now(),
@@ -34,7 +35,7 @@ class RecreationHasPackagesSeeder extends Seeder
                 'duration' => '2',
                 'expiry_date' => '30',
                 'expiry_type' => 'Hari',
-                'unit_price' => 'Jam',
+                'unit_price' => '500000',
                 'price' => 200000,
                 'is_active' => true,
                 'created_at' => Carbon::now(),
@@ -49,7 +50,7 @@ class RecreationHasPackagesSeeder extends Seeder
                 'duration' => '3',
                 'expiry_date' => '30',
                 'expiry_type' => 'Hari',
-                'unit_price' => 'Jam',
+                'unit_price' => '500000',
                 'price' => 300000,
                 'is_active' => true,
                 'created_at' => Carbon::now(),
@@ -64,7 +65,7 @@ class RecreationHasPackagesSeeder extends Seeder
                 'duration' => '30',
                 'expiry_date' => '30',
                 'expiry_type' => 'Hari',
-                'unit_price' => 'Menit',
+                'unit_price' => '300000',
                 'price' => 400000,
                 'is_active' => true,
                 'created_at' => Carbon::now(),
@@ -79,7 +80,7 @@ class RecreationHasPackagesSeeder extends Seeder
                 'duration' => '5',
                 'expiry_date' => '30',
                 'expiry_type' => 'Hari',
-                'unit_price' => 'Jam',
+                'unit_price' => '500000',
                 'price' => 500000,
                 'is_active' => true,
                 'created_at' => Carbon::now(),

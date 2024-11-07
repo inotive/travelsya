@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('hotels', function (Blueprint $table) {
-            $table->foreignId('user_id')->nullable()->constrained();
+        Schema::table('clinics', function (Blueprint $table) {
+            $table->string('image')->nullable();
         });
     }
 
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hotels', function (Blueprint $table) {
+        Schema::table('clinics', function (Blueprint $table) {
             //
         });
     }

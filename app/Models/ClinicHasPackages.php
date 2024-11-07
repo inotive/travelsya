@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ClinicHasPackages extends Model
 {
@@ -22,6 +24,8 @@ class ClinicHasPackages extends Model
         'is_active',
         'image',
         'duration_type',
+        'discount_type',
+        'discount',
     ];
 
     public function categoriesService()
@@ -38,5 +42,25 @@ class ClinicHasPackages extends Model
     public function clinic()
     {
         return $this->belongsTo(Clinic::class, 'clinic_id', 'id');
+    }
+
+    /**
+     * Get all of the images for the ClinicHasPackages
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(ClinicPackageImages::class, 'clinic_package_id', 'id');
+    }
+
+    public function facilities(): HasMany
+    {
+        return $this->hasMany(clinicPackageFacilities::class, 'clinic_package_id', 'id');
+    }
+
+    public function image(): HasOne
+    {
+        return $this->hasOne(ClinicPackageImages::class, 'clinic_package_id', 'id')->where('main', 1);
     }
 }

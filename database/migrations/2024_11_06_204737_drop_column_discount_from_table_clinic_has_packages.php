@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('services')) {
-            Schema::create('services', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->softDeletes();
-                $table->timestamps();
-            });
-        }
+        Schema::table('clinic_has_packages', function (Blueprint $table) {
+            $table->dropColumn('discount_type');
+            $table->dropColumn('discount');
+        });
     }
 
     /**
@@ -26,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::table('clinic_has_packages', function (Blueprint $table) {
+            //
+        });
     }
 };

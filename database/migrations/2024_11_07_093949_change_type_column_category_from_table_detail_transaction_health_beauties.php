@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('services')) {
-            Schema::create('services', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->softDeletes();
-                $table->timestamps();
-            });
-        }
+        Schema::table('detail_transaction_health_beauties', function (Blueprint $table) {
+            $table->string('category')->nullable()->change();
+            $table->bigInteger('total_ticket')->default(1);
+        });
     }
 
     /**
@@ -26,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');
+        Schema::table('detail_transaction_health_beauties', function (Blueprint $table) {
+            //
+        });
     }
 };
