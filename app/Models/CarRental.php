@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CarRental extends Model
 {
@@ -17,4 +18,14 @@ class CarRental extends Model
         'phone',
         'address',
     ];
+
+    /**
+     * Get the kota that owns the CarRental
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function kota(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city', 'city_id');
+    }
 }

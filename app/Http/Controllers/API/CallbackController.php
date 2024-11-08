@@ -5,6 +5,8 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\CarBookDate;
+use App\Models\DetailTransactionCarRental;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
@@ -313,6 +315,37 @@ class CallbackController extends Controller
                                 //
                                 //                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
                                 //
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+                            } elseif (strtolower($transaction->service) == "car-rent") {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Rental Mobil Berhasil";
+
+
+                                DetailTransactionCarRental::where('transaction_id', $transaction->id)->update([
+                                    'updated_at' => Carbon::now()
+                                ]);
+
+                                $detail = DetailTransactionCarRental::where('transaction_id', $transaction->id)->first();
+
+                                CarBookDate::create([
+                                    'transaction_id' => $transaction->id,
+                                    'car_rental_has_car_id' => $detail->car_rental_has_car_id,
+                                    'start' => $detail->start,
+                                    'end' => $detail->end,
+                                ]);
+
+
                                 $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
 

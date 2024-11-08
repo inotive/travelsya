@@ -18,7 +18,9 @@ use App\Models\HostelRating;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\CarRentalHasCars;
 use App\Models\ClinicHasPackages;
+use App\Models\DetailTransactionCarRental;
 use App\Models\DetailTransactionHealthBeauty;
 use Illuminate\Support\Facades\Auth;
 use App\Models\DetailTransactionPPOB;
@@ -105,6 +107,28 @@ class TransactionController extends Controller
                     'recreation_name' => $data->recreation->business_name ?? 'Invalid recreation data',
                     'package' => $recreationPackage->name,
                     'expire_on' => Carbon::parse($data['expire_on'])->format('d M Y H:i'),
+                ];
+            }
+        } elseif ($service['name'] == 'car-rent') {
+            $data = DetailTransactionCarRental::where('transaction_id', $transaction_id)->first();
+
+            if ($data != null) {
+                $recreationPackage = CarRentalHasCars::find($data->car_rental_has_car_id);
+
+                $model = $recreationPackage['carModel']['name'] ?? 'Deleted model';
+                $brand = $recreationPackage['brand']['name'] ?? 'Deleted brand';
+
+                $car = $model . ' - ' . $brand;
+
+                return  [
+                    'business_name' => $data->carRental->business_name ?? 'Invalid car rental data',
+                    'car' => $car,
+                    'start' => Carbon::parse($data['start'])->format('d M Y H:i'),
+                    'over' => Carbon::parse($data['end'])->format('d M Y H:i'),
+                    'duration' => $data['duration'] . ' Hari',
+                    'customer_name' => $data['customer_name'],
+                    'customer_phone' => $data['customer_phone'],
+                    'customer_email' => $data['customer_email'],
                 ];
             }
         } elseif ($service['name'] == 'health-beauty') {

@@ -13,7 +13,7 @@ class ClinicRating extends Model
         'transaction_id',
         'clinic_id',
         'clinic_package_id',
-        'user-id',
+        'user_id',
         'rate',
         'comment',
     ];

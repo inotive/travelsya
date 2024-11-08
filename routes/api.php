@@ -81,7 +81,9 @@ route::get('/beauty_search', [HealthBeautyController::class, 'beauty_search']);
 route::get('/clinic_detail/{id}', [HealthBeautyController::class, 'detail']);
 
 // Car Rental
-route::get('/find_car', [CarRentalController::class, 'search']);
+// route::get('/find_car', [CarRentalController::class, 'search']);
+route::post('/find_car', [CarRentalController::class, 'cari']);
+route::get('/detail_car/{id}', [CarRentalController::class, 'detail_car']);
 
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
@@ -157,6 +159,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // clinic order
     route::post('clinic/transaction/request', [HealthBeautyController::class, 'requestTransaction']);
     route::post('clinic/rating', [HealthBeautyController::class, 'postRating']);
+
+    // rent car order
+    route::post('car_rent/transaction/request', [CarRentalController::class, 'requestTransaction']);
+    route::post('car_rent/rating', [CarRentalController::class, 'postRating']);
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);

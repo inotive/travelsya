@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CategoriesServices;
 use App\Models\Clinic;
 use App\Models\ClinicHasPackages;
+use App\Models\ClinicRating;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\Fee;
 use App\Models\Service;
@@ -99,6 +100,37 @@ class HealthBeautyController extends Controller
         }
     }
 
+    public function postRating(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'clinic_id' => 'required',
+            'package_id' => 'required',
+            'bintang' => 'required',
+            'transaction_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseFormatter::error(
+                [
+                    'response' => $validator->errors(),
+                ],
+                'Review Clinic process failed',
+                500,
+            );
+        }
+
+        ClinicRating::create([
+            'clinic_id'      => $request->clinic_id,
+            'transaction_id' => $request->transaction_id,
+            'clinic_package_id' => $request->package_id,
+            'user_id'      => auth()->id(),
+            'rate'          => $request->bintang,
+            'comment'       => $request->review,
+        ]);
+
+        return ResponseFormatter::success([], 'Review Rekreasi Telah Berhasil Dikirim');
+    }
+
     public function requestTransaction(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -114,7 +146,7 @@ class HealthBeautyController extends Controller
                 [
                     'response' => $validator->errors(),
                 ],
-                'Recreation process failed',
+                'Clinic process failed',
                 500,
             );
         }

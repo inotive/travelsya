@@ -58,6 +58,16 @@ class Transaction extends Model
         return $this->belongsTo(detailTransactionRecreation::class, 'id', 'transaction_id');
     }
 
+    public function detailTransactionClinic(): BelongsTo
+    {
+        return $this->belongsTo(DetailTransactionHealthBeauty::class, 'id', 'transaction_id');
+    }
+
+    public function detailTransactionCarRent(): BelongsTo
+    {
+        return $this->belongsTo(DetailTransactionCarRental::class, 'id', 'transaction_id');
+    }
+
 
     /**
      * Get all of the product for the Transaction
