@@ -5,26 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class detailTransactionRecreation extends Model
+class DetailTransactionHealthBeauty extends Model
 {
     use HasFactory;
 
-    use SoftDeletes;
-
-    protected $table = 'detail_transaction_recreations';
-
     protected $fillable = [
         "transaction_id",
-        "recreation_id",
-        "recreationPackage_id",
+        "clinic_id",
+        "clinic_package_id",
+        "category",
         "booking_id",
         "expire_on",
         "rent_price",
         "fee_admin",
         "kode_unik",
         "is_used",
+        "total_ticket",
     ];
 
     /**
@@ -36,12 +33,12 @@ class detailTransactionRecreation extends Model
     {
         return $this->belongsTo(Transaction::class, 'transaction_id', 'id');
     }
-    public function recreation(): BelongsTo
+    public function clinic(): BelongsTo
     {
-        return $this->belongsTo(Recreation::class, 'recreation_id', 'id');
+        return $this->belongsTo(Clinic::class, 'clinic_id', 'id');
     }
     public function package(): BelongsTo
     {
-        return $this->belongsTo(RecreationPackages::class, 'recreationPackage_id', 'id');
+        return $this->belongsTo(ClinicHasPackages::class, 'clinic_package_id', 'id');
     }
 }

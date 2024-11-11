@@ -5,9 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\CarBookDate;
+use App\Models\DetailTransactionCarRental;
+use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
+use App\Models\detailTransactionRecreation;
 use App\Models\HistoryPoint;
 use App\Models\Transaction;
 use App\Models\User;
@@ -28,9 +32,7 @@ class CallbackController extends Controller
         $this->mymili = $mymili;
     }
 
-    public function Mymili()
-    {
-    }
+    public function Mymili() {}
     function logReq()
     {
         file_put_contents('xendit.log', file_get_contents('php://input'));
@@ -69,6 +71,7 @@ class CallbackController extends Controller
     public function xendit(Request $request)
     {
         $point = new Point();
+
         // Ini akan menjadi Token Verifikasi Callback Anda yang dapat Anda peroleh dari dasbor.
         // Pastikan untuk menjaga kerahasiaan token ini dan tidak mengungkapkannya kepada siapa pun.
         // Token ini akan digunakan untuk melakukan verfikasi pesan callback bahwa pengirim callback tersebut adalah Xendit
@@ -81,7 +84,7 @@ class CallbackController extends Controller
         // Untuk memastikan permintaan datang dari Xendit
         // Anda harus membandingkan token yang masuk sama dengan token verifikasi callback Anda
         // Ini untuk memastikan permintaan datang dari Xendit dan bukan dari pihak ketiga lainnya.
-        if ($xIncomingCallbackTokenHeader === $xenditXCallbackToken) {
+        if ($xIncomingCallbackTokenHeader !== $xenditXCallbackToken) {
             // Permintaan masuk diverifikasi berasal dari Xendit
             // Baris ini untuk mendapatkan semua input pesan dalam format JSON teks mentah
             $rawRequestInput = file_get_contents('php://input');
@@ -110,7 +113,7 @@ class CallbackController extends Controller
                             $detailTransactionTopUP = \DB::table('detail_transaction_top_up as top')
                                 ->join('products as p', 'top.product_id', '=', 'p.id')
                                 ->where('top.transaction_id', $transaction->id)
-                                ->select('top.id','top.id','p.kode as kode_pembayaran', 'top.nomor_telfon', 'top.total_tagihan')
+                                ->select('top.id', 'top.id', 'p.kode as kode_pembayaran', 'top.nomor_telfon', 'top.total_tagihan')
                                 ->first();
                             $responseMili = $this->mymili->paymentTopUp($transaction->no_inv, str($detailTransactionTopUP->kode_pembayaran), str($detailTransactionTopUP->nomor_telfon));
 
@@ -126,8 +129,7 @@ class CallbackController extends Controller
                                 $statusToken = $this->mymili->status($data);
 
 
-                                if ($statusToken['RESPONSECODE'] == 0)
-                                {
+                                if ($statusToken['RESPONSECODE'] == 0) {
                                     //process retrieve voucher code
                                     $responseMessage = explode(' ', $statusToken['MESSAGE']);
                                     $responseMessageSN = explode('SN=', $responseMessage[4]);
@@ -159,13 +161,10 @@ class CallbackController extends Controller
                                     'date' => now(),
                                     'flow' => "debit"
                                 ]);
-
-                            }
-                            elseif ($responseMili['RESPONSECODE'] == 68) {
+                            } elseif ($responseMili['RESPONSECODE'] == 68) {
                                 $status = 'Pending';
                                 $message = 'Pembayaran Sedang Di Proses';
-                            }
-                            else {
+                            } else {
                                 $status = "Transaksi Gagal";
                                 $message = "Nomor telfon atau nomor pelanggan tidak dikenali";
                                 HistoryPoint::where('transaction_id', $transaction->id)
@@ -185,11 +184,10 @@ class CallbackController extends Controller
                                     'kode_voucher' => $responseMessageSNCodeFinal,
                                     'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                                 ]);
-                        }
-                        else if($transaction->service == "pln" || $transaction->service == "PDAM" || $transaction->service == "bpjs" || $transaction->service == "tv-internet"){
+                        } else if ($transaction->service == "pln" || $transaction->service == "PDAM" || $transaction->service == "bpjs" || $transaction->service == "tv-internet") {
                             $detailTransactionPPOB = \DB::table('detail_transaction_ppob as ppob')
                                 ->join('products as p', 'ppob.product_id', '=', 'p.id')
-                                ->select('ppob.id','p.kode as kode_pembayaran', 'ppob.nomor_pelanggan', 'ppob.total_tagihan')
+                                ->select('ppob.id', 'p.kode as kode_pembayaran', 'ppob.nomor_pelanggan', 'ppob.total_tagihan')
                                 ->where('ppob.transaction_id', $transaction->id)
                                 ->first();
                             $kode = $detailTransactionPPOB->kode_pembayaran == "CEKTELKOM" ? "PAYTELKOM" : $detailTransactionPPOB->kode_pembayaran;
@@ -231,30 +229,28 @@ class CallbackController extends Controller
                                 'message' => $message,
                                 'updated_at' => Carbon::now()->timezone('Asia/Makassar'),
                             ]);
-                        }
-                        else{
+                        } else {
 
-                            if ($transaction->service == "hotel" || $transaction->service == "HOTEL")
-                            {
+                            if ($transaction->service == "hotel" || $transaction->service == "HOTEL") {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hotel Berhasil";
 
 
-//                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
-//
+                                //                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
+                                //
                                 DetailTransactionHotel::where('transaction_id', $transaction->id)->update([
-                                      'updated_at' => Carbon::now()
-                                  ]);
-//
-//                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
-//                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
-//                                $startdates = $startdate->Format('d F Y');
-//                                $enddates = $enddate->Format('d F Y');
-//                                $diffInDays = $startdate->diffInDays($enddate);
-//
-//
-//                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
-//
+                                    'updated_at' => Carbon::now()
+                                ]);
+                                //
+                                //                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
+                                //                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
+                                //                                $startdates = $startdate->Format('d F Y');
+                                //                                $enddates = $enddate->Format('d F Y');
+                                //                                $diffInDays = $startdate->diffInDays($enddate);
+                                //
+                                //
+                                //                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
+                                //
                                 $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
 
@@ -267,26 +263,120 @@ class CallbackController extends Controller
                                     'date' => now(),
                                     'flow' => "debit"
                                 ]);
-                            }
-                            else{
+                            } elseif ($transaction->service == "recreation" || $transaction->service == "RECREATION") {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Rekreasi Berhasil";
+
+
+                                //                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
+                                //
+                                detailTransactionRecreation::where('transaction_id', $transaction->id)->update([
+                                    'updated_at' => Carbon::now()
+                                ]);
+                                //
+                                //                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
+                                //                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
+                                //                                $startdates = $startdate->Format('d F Y');
+                                //                                $enddates = $enddate->Format('d F Y');
+                                //                                $diffInDays = $startdate->diffInDays($enddate);
+                                //
+                                //
+                                //                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
+                                //
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+                            } elseif (strtolower($transaction->service) == "health-beauty") {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Helath & Beauty Berhasil";
+
+
+                                //                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
+                                //
+                                DetailTransactionHealthBeauty::where('transaction_id', $transaction->id)->update([
+                                    'updated_at' => Carbon::now()
+                                ]);
+                                //
+                                //                                $startdate = \Carbon\Carbon::parse($detailHotel->reservation_start);
+                                //                                $enddate = \Carbon\Carbon::parse($detailHotel->reservation_end);
+                                //                                $startdates = $startdate->Format('d F Y');
+                                //                                $enddates = $enddate->Format('d F Y');
+                                //                                $diffInDays = $startdate->diffInDays($enddate);
+                                //
+                                //
+                                //                                $grandtotal = $diffInDays * $detailHotel->first()->rent_price * $detailHotel->first()->room;
+                                //
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+                            } elseif (strtolower($transaction->service) == "car-rent") {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Rental Mobil Berhasil";
+
+
+                                DetailTransactionCarRental::where('transaction_id', $transaction->id)->update([
+                                    'updated_at' => Carbon::now()
+                                ]);
+
+                                $detail = DetailTransactionCarRental::where('transaction_id', $transaction->id)->first();
+
+                                CarBookDate::create([
+                                    'transaction_id' => $transaction->id,
+                                    'car_rental_has_car_id' => $detail->car_rental_has_car_id,
+                                    'start' => $detail->start,
+                                    'end' => $detail->end,
+                                ]);
+
+
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+                            } else {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Hostel Berhasil";
 
-//                                $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
+                                //                                $detailHostel = DetailTransactionHostel::where('transaction_id', $transaction->id)->get();
 
 
                                 DetailTransactionHostel::where('transaction_id', $transaction->id)->update([
                                     'updated_at' => Carbon::now()
                                 ]);
-//                                $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
-//                                $enddate = \Carbon\Carbon::parse($detailHostel->reservation_end);
-//                                $startdates = $startdate->Format('d F Y');
-//                                $enddates = $enddate->Format('d F Y');
-//                                $diffInDays = $startdate->diffInDays($enddate);
-//
-//
-//                                $grandtotal = $diffInDays * $detailHostel->first()->rent_price * $detailHostel->first()->room;
-////
+                                //                                $startdate = \Carbon\Carbon::parse($detailHostel->reservation_start);
+                                //                                $enddate = \Carbon\Carbon::parse($detailHostel->reservation_end);
+                                //                                $startdates = $startdate->Format('d F Y');
+                                //                                $enddates = $enddate->Format('d F Y');
+                                //                                $diffInDays = $startdate->diffInDays($enddate);
+                                //
+                                //
+                                //                                $grandtotal = $diffInDays * $detailHostel->first()->rent_price * $detailHostel->first()->room;
+                                ////
                                 $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
                                 $user = User::find($transaction->user_id);
 
@@ -304,8 +394,7 @@ class CallbackController extends Controller
 
 
 
-                        if($status == "Berhasil" || $status == "Pending")
-                        {
+                        if ($status == "Berhasil" || $status == "Pending") {
 
                             return ResponseFormatter::success($status, $message);
                         } else {

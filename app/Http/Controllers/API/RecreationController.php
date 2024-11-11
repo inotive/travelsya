@@ -194,9 +194,9 @@ class RecreationController extends Controller
             'items' => [
                 [
                     'product_id' => $data['package_id'],
-                    'name' => $package['recreation']['name'] ?? 'Invalid recreation',
+                    'name' => $package['name'] ?? 'Invalid recreation',
                     'price' => $amount, // tanpa pajak
-                    'quantity' => 1,
+                    'quantity' => $data['total_ticket'],
                 ],
             ],
             'amount' => $amount + $fees[0]['value'] + $kode_unik, // include pajak
@@ -393,9 +393,11 @@ class RecreationController extends Controller
         foreach ($recreations as $key => $rec) {
             if (count($rec['recreationPackages']) > 0) {
                 $item = [
+                    'id' => $rec['id'],
                     'name' => $rec['business_name'],
                     'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'unit_price' => $rec['recreationPackages'][0]['unit_price'],
                     'price' => $rec['recreationPackages'][0]['price'],
                     'rating_count' => count($rec['reviews']),
                     'avg_rating' => $rec->avgRating(),

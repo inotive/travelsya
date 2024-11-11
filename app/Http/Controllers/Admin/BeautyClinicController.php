@@ -11,47 +11,47 @@ use Illuminate\Support\Facades\Validator;
 
 class BeautyClinicController extends Controller
 {
-    
+
     public function index()
     {
         $users = DB::table('users')
-        ->select('users.*')
-        ->where('role', 1)
-        ->get();
+            ->select('users.*')
+            ->where('role', 1)
+            ->get();
 
         $clinics = DB::table('clinics')
-        ->join('users', 'clinics.user_id', '=', 'users.id')
-        ->join('cities', 'clinics.city', '=', 'cities.city_id')
-       
-        ->select(
-            'clinics.id as clinic_id', 
-            'clinics.*', 
-            'users.id as user_id', 
-            'users.*',
-            'cities.city_id as city_id',
-            'cities.image as city_image', 
-            'cities.*',
-            
-        )
-        ->get();
+            ->join('users', 'clinics.user_id', '=', 'users.id')
+            ->join('cities', 'clinics.city', '=', 'cities.city_id')
+
+            ->select(
+                'clinics.id as clinic_id',
+                'clinics.*',
+                'users.id as user_id',
+                'users.*',
+                'cities.city_id as city_id',
+                'cities.image as city_image',
+                'cities.*',
+
+            )
+            ->get();
 
         $cities = City::all();
 
         $packages = DB::table('clinic_has_packages')
-        ->join('categories_services', 'clinic_has_packages.categories_services_id', '=', 'categories_services.id')
-        ->select('categories_services.name as category_name')
-        ->get();
+            ->join('categories_services', 'clinic_has_packages.categories_services_id', '=', 'categories_services.id')
+            ->select('categories_services.name as category_name')
+            ->get();
 
         return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics', 'cities', 'packages'));
     }
 
-   
+
     public function create()
     {
         //
     }
 
-       public function store(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -70,8 +70,7 @@ class BeautyClinicController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/clinic', $imageName);
-            
+            $image->storeAs('media/clinic', $imageName);
         }
 
 
@@ -111,7 +110,7 @@ class BeautyClinicController extends Controller
 
     public function update(Request $request, string $id)
     {
-        
+
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
@@ -131,7 +130,7 @@ class BeautyClinicController extends Controller
 
 
         $clinic = Clinic::findOrFail($id);
-        
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
@@ -152,7 +151,7 @@ class BeautyClinicController extends Controller
             'image' => $imageName,
         ]);
 
-    
+
         toast('Mitra has been updated', 'success');
         return response()->json([
             'success' => true,

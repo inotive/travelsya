@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('services')) {
-            Schema::create('services', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->softDeletes();
-                $table->timestamps();
-            });
-        }
+        Schema::create('clinic_images', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('clinic_id');
+            $table->string('image')->nullable();
+            $table->boolean('main')->default(0);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -26,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('services');            //
-
+        Schema::dropIfExists('clinic_images');
     }
 };

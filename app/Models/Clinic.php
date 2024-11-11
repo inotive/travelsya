@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Clinic extends Model
 {
@@ -18,12 +21,63 @@ class Clinic extends Model
         'phone',
         'address',
         'category',
-        'image',
+        'open',
+        'close',
+        'description',
+        'highlight',
+        'badge',
+        'lat',
+        'ltd',
     ];
 
-    public function clinicPackages()
+    public function packages()
     {
-        return $this->hasMany(ClinicHasPackages::class, 'clinic_id', 'id');
+        return $this->hasMany(ClinicHasPackages::class, 'clinic_id', 'id')->orderBy('price');
     }
 
+    public function kota(): BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city', 'city_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function scopeActive()
+    {
+        return $this->where('is_active', 1);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(clinicImages::class, 'clinic_id', 'id');
+    }
+
+    /**
+     * Get the foto associated with the Clinic
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function image(): HasOne
+    {
+        return $this->hasOne(clinicImages::class, 'clinic_id', 'id')->where('main', 1);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ClinicRating::class, 'clinic_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    public function avgRating()
+    {
+        $rating = ClinicRating::where('clinic_id', $this->id)->get()->pluck('rate')->toArray();
+
+        $data = count($rating);
+
+        $avg = array_sum($rating) / $data;
+
+        return round($avg, 1);
+    }
 }

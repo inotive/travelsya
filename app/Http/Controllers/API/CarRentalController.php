@@ -5,11 +5,32 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use PHPUnit\Exception;
 use App\Http\Controllers\Controller;
+use App\Models\CarRentalHasCars;
+use App\Models\CarRentalRating;
+use App\Models\DetailTransactionCarRental;
+use App\Models\Fee;
+use App\Models\Service;
+use App\Models\Transaction;
+use App\Services\Point;
+use App\Services\Setting;
+use App\Services\Xendit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\Validator;
+use Throwable;
 
 class CarRentalController extends Controller
 {
+    protected $xendit, $point;
+
+    public function __construct(Xendit $xendit, Point $point)
+    {
+        $this->xendit = $xendit;
+        $this->point = $point;
+    }
 
     public function index(Request $request)
     {
@@ -54,14 +75,354 @@ class CarRentalController extends Controller
                 )
                 ->get();
 
-                if ($carRentalData->isNotEmpty()) {
-                    return ResponseFormatter::success($carRentalData, 'Data successfully loaded');
-                } else {
-                    return ResponseFormatter::success([], 'Data successfully loaded');
-                }
-
-            } catch (Exception $th) {
-                return ResponseFormatter::error($th->getMessage(), 'Car rental process failed', 500);
+            if ($carRentalData->isNotEmpty()) {
+                return ResponseFormatter::success($carRentalData, 'Data successfully loaded');
+            } else {
+                return ResponseFormatter::success([], 'Data successfully loaded');
             }
+        } catch (Exception $th) {
+            return ResponseFormatter::error($th->getMessage(), 'Car rental process failed', 500);
+        }
+    }
+
+    public function cari(Request $request)
+    {
+        // $validator = Validator::make($request->all(), [
+        //     'location' => 'required',
+        //     'date' => 'required|date',
+        //     'duration' => 'required',
+        //     'with_driver' => 'required',
+        // ]);
+
+        // if ($validator->fails()) {
+        //     return ResponseFormatter::error(
+        //         [
+        //             'response' => $validator->errors(),
+        //         ],
+        //         'Recreation process failed',
+        //         500,
+        //     );
+        // }
+
+        $data = $request->all();
+
+        $transmisi = $data['transmisi'] ?? null;
+
+        $type = "Tidak Dengan Drive";
+        $start = $data['date'] ?? null;
+        $city = $data['location'] ?? null;
+        $duration = $data['duration'] ?? null;
+
+        if ($transmisi !== null) {
+            $transmisi = $data['transmisi'] == 'otomatis' ? 'automatic' : 'manual';
+            $filter = $data['transmisi'];
+        } else {
+            $transmisi = null;
+            $filter = 'semua';
+        }
+
+        if (isset($data['with_driver']) && $data['with_driver'] == 1) {
+            $type = "Dengan Driver";
+        } else {
+            $type = null;
+        }
+
+        // $carRentals = CarRentalHasCars::Active()
+        //     ->with('carModel', 'brand', 'carRental')
+        //     ->whereDoesntHave('booked', function ($q) use ($start) {
+        //         $q->whereDate('start', '>', $start);
+        //     })
+        //     ->whereDoesntHave('booked', function ($q) use ($start) {
+        //         $q->whereDate('end', $start);
+        //     })
+        //     ->whereHas('carRental', function ($c) use ($city) {
+        //         $c->whereHas('kota', function ($k) use ($city) {
+        //             $k->where('city_name', 'like', '%' . $city . '%');
+        //         });
+        //     })
+        //     ->get();
+
+        // return [$type, $transmisi, $city];
+
+        $carRentals = CarRentalHasCars::Active()
+            ->with('carModel', 'brand', 'carRental')
+            ->when($type, function ($t, $type) {
+                $t->where('category_rent', $type);
+            })
+            ->when($transmisi, function ($t, $trans) {
+                $t->where('category', $trans);
+            })
+            ->when($city, function ($d, $city) {
+                $d->whereHas('carRental', function ($c) use ($city) {
+                    $c->whereHas('kota', function ($k) use ($city) {
+                        $k->where('city_name', 'like', '%' . $city . '%');
+                    });
+                });
+            })
+            ->orderBy('rental_price_per_day', 'asc')
+            ->get();
+
+        $newData = [
+            'filter' => $filter,
+            'cars' => []
+        ];
+
+        if ($carRentals->isNotEmpty()) {
+
+            foreach ($carRentals as $key => $val) {
+                $item = [
+                    'id' => $val['id'],
+                    'business_name' => $val['carRental']['business_name'] ?? 'Deleted Business',
+                    'city' => $val['carRental']['kota']['city_name'] ?? 'Deleted Business',
+                    'car_model' => $val['carModel']['name'] ?? 'deleted model',
+                    'car_brand' => $val['brand']['name'] ?? 'deleted brand',
+                    'chairs' => $val['number_seats'],
+                    'transmisi' => $val['category'],
+                    'category_rent' => $val['catgeory_rent'] == 'Tidak Dengan Driver' ? 'Lepas Kunci' : 'Dengan Driver',
+                    'image' => $val['image_url'] ? asset('storage/' . $val['image_url']) : asset('images/not_found.jpg'),
+                    'price' => $val['rental_price_per_day'],
+                ];
+
+                array_push($newData['cars'], $item);
+            }
+        }
+
+        return ResponseFormatter::success($newData, 'Data successfully loaded');
+    }
+
+    public function postRating(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'bintang' => 'required',
+            'transaction_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseFormatter::error(
+                [
+                    'response' => $validator->errors(),
+                ],
+                'Review Clinic process failed',
+                500,
+            );
+        }
+
+        $transaction = Transaction::with('detailTransactionCarRent')->find($request->transaction_id);
+
+        if ($transaction) {
+
+            CarRentalRating::create([
+                'car_rental_id'      => $transaction->detailTransactionCarRent->car_rental_id,
+                'transaction_id' => $request->transaction_id,
+                'car_rental_has_car_id' => $transaction->detailTransactionCarRent->car_rental_has_car_id,
+                'user_id'      => auth()->id(),
+                'rate'          => $request->bintang,
+                'comment'       => $request->review,
+            ]);
+
+            return ResponseFormatter::success([], 'Review Rekreasi Telah Berhasil Dikirim');
+        } else {
+            return ResponseFormatter::error([], 'Transaksi tidak ditemukan');
+        }
+    }
+
+    public function requestTransaction(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'service' => 'required|string',
+            'payment' => 'required|string',
+            'package_id' => 'required',
+            'point' => 'required',
+            'date' => 'required|date',
+            'duration' => 'required|integer',
+            'time' => 'required|date_format:H:i',
+            'location' => 'required|string',
+            'is_same' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return ResponseFormatter::error(
+                [
+                    'response' => $validator->errors(),
+                ],
+                'Car Rental process failed',
+                500,
+            );
+        }
+
+        if ($request->is_same == 0 || $request->is_same == "0") {
+            $validator = Validator::make($request->all(), [
+                'customer_call' => 'required',
+                'customer_name' => 'required',
+                'customer_phone' => 'required',
+                'customer_email' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return ResponseFormatter::error(
+                    [
+                        'response' => $validator->errors(),
+                    ],
+                    'Car Rental process failed',
+                    500,
+                );
+            }
+
+            $customer = [
+                'name' => $request->customer_call . ' ' . $request->customer_name,
+                'phone' => $request->customer_phone,
+                'email' => $request->customer_email,
+            ];
+        } else {
+            $customer = [
+                'name' => Auth::user()->name,
+                'phone' => Auth::user()->phone ?? '000000000000',
+                'email' => Auth::user()->email,
+            ];
+        }
+
+        $data = $request->all();
+
+        $package = CarRentalHasCars::find($data['package_id']);
+        $dateTime = $data['date'] . ' ' . $data['time'];
+
+        $now =  Carbon::parse($dateTime)->format('Y-m-d H:i');
+        $over = Carbon::parse($now)->addDays($data['duration'])->format('Y-m-d H:i');
+
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('car_rent') . '-' . time();
+
+        $service = Service::where('name', $data['service'])->first();
+
+        if (!$service) {
+            return ResponseFormatter::error([], 'Service not found', 500);
+        }
+
+        $setting = new Setting();
+        $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $package->price);
+
+
+        $amount = $package->rental_price_per_day * $data['duration'];
+
+        $kode_unik = random_int(0, 999);
+
+        $fee = Fee::where('service_id', 8)->first();
+        $fees = [
+            [
+                'type' => 'Admin',
+                'value' => $fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $kode_unik,
+            ],
+        ];
+
+        $saldoPointCustomer = 0;
+        // Jika user menggunakan point untuk transaksi
+        if ($request->point == 1) {
+            // history point masuk dan keluar customer
+            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+            // point masuk - point keluar
+            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+            $saldoPointCustomer = Auth::user()->point;
+            $fees = [
+                [
+                    'type' => 'Point',
+                    'value' => $saldoPointCustomer,
+                ],
+            ];
+        }
+
+        $model = $package['carModel']['name'] ?? 'Deleted model';
+        $brand = $package['brand']['name'] ?? 'Deleted brand';
+        $business = $package['carRental']['business_name'] ?? 'Deleted business';
+
+        // Create xendit
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    'product_id' => $data['package_id'],
+                    'name' => $model . ' - ' . $brand . ' - ' . $business,
+                    'price' => $amount, // tanpa pajak
+                    'quantity' => $data['duration'],
+                ],
+            ],
+            'amount' => $amount + $fees[0]['value'] + $kode_unik, // include pajak
+            'success_redirect_url' => route('redirect.succes'),
+            'failure_redirect_url' => route('redirect.fail'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $customer['name'],
+                'email' => $customer['email'],
+                'mobile_number' => $customer['phone'],
+            ],
+            'fees' => $fees,
+        ]);
+
+        // true buat trans
+        FacadesDB::transaction(function () use ($data, $now, $over, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
+            $storeTransaction = Transaction::create([
+                'no_inv' => $invoice,
+                'req_id' => 'CRRNT-' . time(),
+                'service' => $data['service'],
+                'service_id' => $service['id'],
+                'payment' => $data['payment'],
+                'user_id' => Auth::user()->id,
+                'status' => $payoutsXendit['status'],
+                'link' => $payoutsXendit['invoice_url'],
+                'total' => $amount + $fees[0]['value'] + $kode_unik,
+            ]);
+            // Pengurangan Point
+            if ($request->point == 1) {
+                $point = new Point();
+                $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
+            }
+
+            DetailTransactionCarRental::create([
+                "transaction_id" => $storeTransaction->id,
+                "car_rental_id" => $package['car_rental_id'],
+                "car_rental_has_car_id" => $package['id'],
+                "booking_id" => \Illuminate\Support\Str::random(6),
+                "start" => $now,
+                "end" => $over,
+                "location" => strToUpper($package['carRental']['kota']['city_name'] ?? $data['location']),
+                "rent_price" => $package['rental_price_per_day'],
+                "fee_admin" => $fees[0]['value'],
+                "duration" => $data['duration'],
+                "kode_unik" => $kode_unik,
+                "customer_name" => $customer['name'] ?? '-',
+                "customer_phone" => $customer['phone'] ?? '-',
+                "customer_email" => $customer['email'] ?? '-',
+            ]);
+        });
+
+        // return ResponseFormatter::success($hotel, 'Payment successfully created');
+        return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+    }
+
+    public function detail_car($id)
+    {
+        $car = CarRentalHasCars::with('carModel', 'brand', 'carRental')->find($id);
+
+        if ($car) {
+            $data = [
+                'id' => $car['id'],
+                'service' => 'car-rent',
+                'business_name' => $car['carRental']['business_name'] ?? 'Deleted business name',
+                'car_model' => $car['carModel']['name'] ?? 'deleted model',
+                'car_brand' => $car['brand']['name'] ?? 'deleted brand',
+                'category_rent' => $car['category_rent'] == 'Tidak Dengan Driver' ? 'Lepas Kunci' : 'Dengan Sopir',
+                'chairs' => $car['number_seats'],
+                'transmisi' => $car['category'],
+                'image' => $car['image_url'] ? asset('storage/' . $car['image_url']) : asset('images/not_found.jpg'),
+                'price' => $car['rental_price_per_day'],
+            ];
+
+            return ResponseFormatter::success($data, 'Data successfully loaded');
+        } else {
+            return ResponseFormatter::error([], 'Data Not Found');
+        }
     }
 }

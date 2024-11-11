@@ -20,98 +20,95 @@
                     <h1 class="mb-3">Update Mitra</h1>
                 </div>
                 <div class="g-9 mb-8 row">
-                  <input type="hidden" id="clinic_id" value="">
+                    <input type="hidden" id="clinic_id" value="">
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
                         @error('name')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @enderror
                     </div>
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                         <select class="form-select form-select-solid user_id-edit" id="user_id-edit">
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
                         @error('user_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @enderror
                     </div>
-  
+
                     <div class="col-md-6">
-                      <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
-                      <input type="text" class="form-control form-control-lg phone-edit" id="phone-edit" required />
-                      <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
-                      @error('phone')
-                          <span class="text-danger mt-1" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
-                  </div>
-  
+                        <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
+                        <input type="text" class="form-control form-control-lg phone-edit" id="phone-edit" required />
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
+                        @error('phone')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Active</label>
-                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit" id="is_active-edit">
+                        <select class="form-select form-select-solid is_active-edit" name="is-active-edit"
+                            id="is_active-edit">
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
                         @error('is_active')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
                         @enderror
                     </div>
-  
+
                     <div class="col-md-12">
-                      <label class="required fs-6 fw-semibold mb-2">Kota</label>
-                      <select class="js-example-basic-single form-control form-control-lg city-edit" name="city" id="city-edit">
-                          @foreach ($cities as $city)
-                          <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
-                          @endforeach
-                      </select>
-                      @error('city')
-                          <span class="text-danger mt-1" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
-                  </div>
-  
+                        <label class="required fs-6 fw-semibold mb-2">Kota</label>
+                        <select class="js-example-basic-single form-control form-control-lg city-edit" name="city"
+                            id="city-edit">
+                            @foreach ($cities as $city)
+                            <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                            @endforeach
+                        </select>
+                        @error('city')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
 
-                  <div class="col-md-12">
-                    <label for="image-edit" class="form-label">Gambar</label>
-                    <input type="file" class="form-control" id="image-edit" name="image">
-                </div>
+                    <div class="col-md-12">
+                        <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                        <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+                            <label class="btn btn-outline btn-danger" data-kt-button="true">
+                                <input class="btn-check category-edit" type="radio" name="category"
+                                    id="update-category-kesehatan" value="kesehatan" required />
+                                Kesehatan
+                            </label>
+                            <label class="btn btn-outline btn-danger" data-kt-button="true">
+                                <input class="btn-check category-edit" type="radio" name="category"
+                                    id="update-category-kecantikan" value="kecantikan" required />
+                                Kecantikan
+                            </label>
+                        </div>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-category-edit"></div>
+                        @error('category')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
 
-
-                  <div class="col-md-12">
-                      <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                      <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
-                          <label class="btn btn-outline btn-danger" data-kt-button="true">
-                              <input class="btn-check category-edit" type="radio" name="category" id="update-category-kesehatan" value="kesehatan" required />
-                              Kesehatan
-                          </label>
-                          <label class="btn btn-outline btn-danger" data-kt-button="true">
-                              <input class="btn-check category-edit" type="radio" name="category" id="update-category-kecantikan" value="kecantikan" required />
-                              Kecantikan
-                          </label>
-                      </div>
-                      <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-category-edit"></div>
-                      @error('category')
-                          <span class="text-danger mt-1" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
-                  </div>
-  
                     <div class="col-12">
                         <label for="" class="form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
@@ -121,7 +118,8 @@
                 <!--end::Input group-->
                 <!--begin::Actions-->
                 <div class="text-center">
-                    <button type="button" id="kt_modal_new_target_cancel" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="kt_modal_new_target_cancel" class="btn btn-light me-3"
+                        data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" id="update" class="btn btn-primary update">
                         <span class="indicator-label">Update</span>
                         <span class="indicator-progress">Please wait...
@@ -135,9 +133,9 @@
         <!--end::Modal content-->
     </div>
     <!--end::Modal dialog-->
-  </div>
-  <!--end::Modal - New Target-->
-  
+</div>
+<!--end::Modal - New Target-->
+
 <script src="{{ url('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js') }}"></script>
 <script src="{{ url('https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js') }}"></script>
 <script src="{{ url('//cdn.jsdelivr.net/npm/sweetalert2@11') }}"></script>
@@ -148,7 +146,7 @@
         // Handle click event for editing clinic
         $('body').on('click', '#btn-edit-clinic', function() {
             let clinic_id = $(this).data('id');
-        
+
             $.ajax({
                 url: `/admin/management-mitra/klinik-kecantikan/${clinic_id}`,
                 type: "GET",
@@ -173,11 +171,11 @@
                 }
             });
         });
-    
+
         // Handle update button click
         $('#update').click(function(e) {
             e.preventDefault();
-    
+
             // Define variables
             let clinic_id = $('#clinic_id').val();
             let user_id = $('#user_id-edit').val();
@@ -191,11 +189,11 @@
             let image = $('#image-edit').val();
             // Clear previous alerts
             $('.alert').addClass('d-none').html('');
-    
+
             console.log({
                 clinic_id, user_id, name, is_active, address, city, phone, token, category
             });
-    
+
             // AJAX request to update clinic data
             $.ajax({
                 url: `/admin/management-mitra/klinik-kecantikan/${clinic_id}`,
@@ -219,7 +217,7 @@
                 },
                 error: function(error) {
                     console.log('Update error:', error);
-    
+
                     // Check for specific error messages and display them
                     if (error.responseJSON) {
                         if (error.responseJSON.name) {
@@ -248,5 +246,4 @@
             });
         });
     });
-    </script>
-    
+</script>

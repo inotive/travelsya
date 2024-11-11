@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CarRentalHasCars extends Model
 {
@@ -41,10 +42,24 @@ class CarRentalHasCars extends Model
         return $this->belongsTo(Policy::class);
     }
 
+    /**
+     * Get all of the booked for the CarRentalHasCars
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function booked(): HasMany
+    {
+        return $this->hasMany(CarBookDate::class, 'car_rental_has_car_id', 'id');
+    }
+
     // Definisikan relasi ke model CarRental
     public function carRental()
     {
         return $this->belongsTo(CarRental::class);
     }
 
+    public function scopeActive()
+    {
+        return $this->where('status', "1");
+    }
 }
