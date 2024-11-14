@@ -172,8 +172,9 @@ class BusTravelController extends Controller
         return ResponseFormatter::success($newData, 'Data successfully loaded');
     }
 
-    public function formatSingleBus($collection)
+    public function formatSingleBus($collection, $date = null)
     {
+        $available = General::busAvailableTicket($collection, $date);
         $item = [
             'id' => $collection['id'],
             'business_name' => $collection['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
@@ -183,7 +184,8 @@ class BusTravelController extends Controller
             'arrival_point' => $collection['to']['name'] ?? 'Deleted point',
             'arrival_time' => Carbon::parse($collection['departure_time'])->addHours($collection['duration'] ?? 1)->format('H:i'),
             'price' => $collection['price'],
-            'available_tickets' => $collection['busTravel']['number_seats'] ?? 0,
+            // 'available_tickets' => $collection['busTravel']['number_seats'] ?? 0,
+            'available_tickets' => $available,
         ];
 
         return $item;
@@ -535,8 +537,8 @@ class BusTravelController extends Controller
         $datas['total_biaya'] = $total;
         $datas['date_pergi'] = $data['date_pergi'];
         $datas['date_pulang'] = $data['date_pulang'];
-        $datas['ticket_pergi'] = $this->formatSingleBus($pergi);
-        $datas['ticket_pulang'] = $pulang !== [] ? $this->formatSingleBus($pulang) : [];
+        $datas['ticket_pergi'] = $this->formatSingleBus($pergi, $data['date_pergi']);
+        $datas['ticket_pulang'] = $pulang !== [] ? $this->formatSingleBus($pulang, $data['date_pulang']) : [];
 
 
 
