@@ -377,6 +377,7 @@ class CallbackController extends Controller
                                         'bus_travel_id' => $d->bus_travel_id,
                                         'bus_travel_has_bus_id' => $d->bus_travel_has_bus_id,
                                         'bus_departure_id' => $d->bus_departure_id,
+                                        'departure_time' => $d->departure_time,
                                         'customer_name' => $d->customer_name,
                                         'customer_phone' => $d->customer_phone,
                                         'customer_email' => $d->customer_email,

@@ -17,7 +17,8 @@ class BusBooked extends Model
         "bus_departure_id",
         "customer_name",
         "customer_phone",
-        "customer_email"
+        "customer_email",
+        "departure_time",
     ];
 
     /**

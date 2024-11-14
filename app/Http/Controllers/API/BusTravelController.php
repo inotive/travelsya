@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\General;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BusDeparture;
@@ -147,7 +148,7 @@ class BusTravelController extends Controller
 
         $pulang = [];
 
-        if ($pp == 1 || $pp == "1") {
+        if ((int)$pp == 1) {
             $pulang = BusDeparture::with('busTravel', 'from', 'to')
                 ->has('busTravel')
                 ->whereHas('to', function ($f) use ($from) {
@@ -165,10 +166,8 @@ class BusTravelController extends Controller
         $newData['date_pergi'] = $request->date;
         $newData['date_pulang'] = $request->date_pulang;
         $newData['jumlah_penumpang'] = $request->jumlah_penumpang;
-        $newData['pergi'] = $this->formatBus($pergi);
-        $newData['pulang'] = $this->formatBus($pulang);
-
-
+        $newData['pergi'] = $this->formatBus($pergi, $date);
+        $newData['pulang'] = $this->formatBus($pulang, $date_pulang);
 
         return ResponseFormatter::success($newData, 'Data successfully loaded');
     }
@@ -190,11 +189,12 @@ class BusTravelController extends Controller
         return $item;
     }
 
-    public function formatBus($collections)
+    public function formatBus($collections, $date = null)
     {
         $newTicket = [];
 
         foreach ($collections as $key => $val) {
+            $available = General::busAvailableTicket($val, $date);
             $item = [
                 'id' => $val['id'],
                 'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
@@ -204,7 +204,8 @@ class BusTravelController extends Controller
                 'arrival_point' => $val['to']['name'] ?? 'Deleted point',
                 'arrival_time' => Carbon::parse($val['departure_time'])->addHours($val['duration'] ?? 1)->format('H:i'),
                 'price' => $val['price'],
-                'available_tickets' => $val['busTravel']['number_seats'] ?? 0,
+                // 'available_tickets' => $val['busTravel']['number_seats'] ?? 0,
+                'available_tickets' => $available,
             ];
 
             array_push($newTicket, $item);
