@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\BusBooked;
 use App\Models\CarBookDate;
+use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHostel;
@@ -344,6 +346,43 @@ class CallbackController extends Controller
                                     'start' => $detail->start,
                                     'end' => $detail->end,
                                 ]);
+
+
+                                $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);
+                                $user = User::find($transaction->user_id);
+
+                                $user->update(['point' => $user->point + $pointDiterima]);
+
+                                HistoryPoint::create([
+                                    'user_id' => $transaction->user_id,
+                                    'point' => $pointDiterima,
+                                    'transaction_id' => $transaction->id,
+                                    'date' => now(),
+                                    'flow' => "debit"
+                                ]);
+                            } elseif (strtolower($transaction->service) == "bus-travel") {
+                                $status = "Berhasil";
+                                $message = "Pemesanan Tiket Bus Berhasil";
+
+
+                                $detail = DetailTransactionBus::where('transaction_id', $transaction->id)->get();
+
+                                foreach ($detail as $key => $d) {
+                                    $d->update([
+                                        'updated_at' => Carbon::now()
+                                    ]);
+
+                                    BusBooked::create([
+                                        'transaction_id' => $d->transaction_id,
+                                        'bus_travel_id' => $d->bus_travel_id,
+                                        'bus_travel_has_bus_id' => $d->bus_travel_has_bus_id,
+                                        'bus_departure_id' => $d->bus_departure_id,
+                                        'customer_name' => $d->customer_name,
+                                        'customer_phone' => $d->customer_phone,
+                                        'customer_email' => $d->customer_email,
+                                    ]);
+                                }
+
 
 
                                 $pointDiterima = $settingPoint->calculatePoint($transaction->total, $transaction->service_id);

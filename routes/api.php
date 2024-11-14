@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AdController;
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\BusTravelController;
 use App\Http\Controllers\API\CallbackController;
 use App\Http\Controllers\API\CarRentalController;
 use App\Http\Controllers\API\HealthBeautyController;
@@ -81,9 +82,12 @@ route::get('/beauty_search', [HealthBeautyController::class, 'beauty_search']);
 route::get('/clinic_detail/{id}', [HealthBeautyController::class, 'detail']);
 
 // Car Rental
-// route::get('/find_car', [CarRentalController::class, 'search']);
 route::post('/find_car', [CarRentalController::class, 'cari']);
 route::get('/detail_car/{id}', [CarRentalController::class, 'detail_car']);
+
+// Bus & Travel
+route::post('/find_bus', [BusTravelController::class, 'cari']);
+route::post('/detail_pesanan_bus', [BusTravelController::class, 'detail_pesanan']);
 
 // PULSA & DATA
 route::get('/pulsa', [TopUpController::class, 'getPulsa']);
@@ -163,6 +167,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // rent car order
     route::post('car_rent/transaction/request', [CarRentalController::class, 'requestTransaction']);
     route::post('car_rent/rating', [CarRentalController::class, 'postRating']);
+
+    //Bus Travel Order
+    route::post('bus_order/transaction/request', [BusTravelController::class, 'requestTransaction']);
+    route::post('bus_order/transaction/detail_ticket', [BusTravelController::class, 'detail_ticket']);
+    route::post('bus_order/rating', [BusTravelController::class, 'postRating']);
 
     route::middleware('admin')->group(function () {
         route::post('/ads/store', [AdController::class, 'store']);

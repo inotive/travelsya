@@ -175,7 +175,9 @@ class HealthBeautyController extends Controller
 
         $kode_unik = random_int(0, 999);
 
-        $fee = Fee::where('service_id', 8)->first();
+        $fee = Fee::whereHas('service', function ($s) use ($data) {
+            $s->where('name', $data['service']);
+        })->first();
         $fees = [
             [
                 'type' => 'Admin',

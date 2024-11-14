@@ -255,7 +255,6 @@ class CarRentalController extends Controller
                 'customer_call' => 'required',
                 'customer_name' => 'required',
                 'customer_phone' => 'required',
-                'customer_email' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -305,7 +304,9 @@ class CarRentalController extends Controller
 
         $kode_unik = random_int(0, 999);
 
-        $fee = Fee::where('service_id', 8)->first();
+        $fee = Fee::whereHas('service', function ($s) use ($data) {
+            $s->where('name', $data['service']);
+        })->first();
         $fees = [
             [
                 'type' => 'Admin',
@@ -365,7 +366,7 @@ class CarRentalController extends Controller
         FacadesDB::transaction(function () use ($data, $now, $over, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
-                'req_id' => 'CRRNT-' . time(),
+                'req_id' => 'CR-' . time(),
                 'service' => $data['service'],
                 'service_id' => $service['id'],
                 'payment' => $data['payment'],
