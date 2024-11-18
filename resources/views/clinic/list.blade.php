@@ -5,10 +5,23 @@
         <div class="container d-flex justify-content-between align-items-center position-relative" style="top: -15px;">
             <a href="{{ url()->previous() }}" class="btn btn-outline-dark mb-3"><i class="bi bi-arrow-left"></i> Kembali</a>
             <form action="{{ url()->current() }}" method="GET" class="d-flex">
-                <div class="input-group">
-                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-search"></i></span>
-                    <input style="width: 310px; " type="search" name="search" value="{{ request()->query('search') }}" placeholder="Cari klinik kesehatan dan kecantikan disini" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
-                </div>
+                
+            <div class="position-relative" style="width: 350px;">
+                <!-- Search Icon -->
+                <i class="bi bi-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);"></i>
+            
+                <!-- Search Input -->
+                <input 
+                    type="search" 
+                    name="search" 
+                    value="{{ request()->query('search') }}" 
+                    placeholder="Cari klinik kesehatan dan kecantikan disini" 
+                    class="form-control rounded-pill" 
+                    aria-label="Search" 
+                    style="padding-left: 40px; border: 1px solid #ccc; box-shadow: none;"
+                >
+            </div>
+            
             </form>
         </div>
     
@@ -45,7 +58,7 @@
                     </svg>
                 </div>
 
-                <button class="search-button">Cari Sekarang</button>
+                <button class="search-button" onclick="window.location.href='{{ route('clinics.search') }}'">Cari Sekarang</button>
             </div>
         </section>
 

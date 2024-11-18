@@ -86,5 +86,10 @@ class BeautyClinicController extends Controller
         //
     }
 
-    
+    public function search(){
+
+
+        return view ('clinic.search');
+    }
+
 }
