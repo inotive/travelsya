@@ -43,7 +43,7 @@
 
 
         <!--begin::Toolbar wrapper-->
-        <div class="topbar d-flex align-items-stretch flex-shrink-0">
+        <div class="d-flex" style="">
 
 
             <!--begin::Theme mode-->
@@ -197,11 +197,11 @@
 
             
             @else
-                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle" style="background-color: white; border: 1px solid #383838 ;border-radius: 5px; min-width: 80px; height: 40px; padding: 20px; margin-right: 10px">
+                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle" style="background-color: white; border: 1px solid #ccc ;border-radius: 5px; min-width: 80px; height: 40px; padding: 20px; margin-right: 10px">
                     <a class="text-dark" href="{{route('login')}}">Masuk</a>
                 </div>
                 
-                <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle" style="background-color: #c41e3a; border: 1px solid #383838 ;border-radius: 5px; min-width: 80px; height: 40px; padding: 20px; margin-right: 20px">
+                <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle" style="background-color: #c41e3a; border: 1px solid #c41e3a ;border-radius: 5px; min-width: 80px; height: 40px; padding: 20px; margin-right: 20px">
                     <a class="text-white" href="{{route('login')}}">Daftar</a>
                 </div>
             @endif

@@ -30,4 +30,9 @@ class CarRentalController extends Controller
         return view('rental-mobil-remake.landing-rental-mobil');
     }
 
+    public function searchResult()
+    {
+        return view('rental-mobil-remake.search-result');
+    }
+
 }

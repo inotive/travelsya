@@ -307,7 +307,8 @@
 
 
     <!--begin::Root-->
-    <div class="d-flex flex-column flex-root">
+    
+    <div class="d-flex flex-column flex-root ">
         <!--begin::Page-->
         <div class="page d-flex flex-row flex-column-fluid">
             <!--begin::Wrapper-->
@@ -320,9 +321,9 @@
                 <!--end::Header-->
                 @yield('content-web')
                 <!--begin::Footer-->
-                <div class="footer py-4 d-flex flex-lg-column" style="background-color:#ffffff; just" id="kt_footer">
+                <div class="footer py-4 " style="background-color:#ffffff; margin-left: auto; margin-right: auto;" id="kt_footer">
                     <!--begin::Container-->
-                    <div class=" container-xxl ">
+                    <div class=" container-xxl">
                         <div class="row py-10  ">
                             <div class="col-md-3">
                                 <img class="logo-travelsya" style="width: 170px; height: 50px;" class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}" alt="logo-travelsya">
@@ -433,30 +434,22 @@
                             </div>
                             <div class="col-md-3">
                                 <p class="fw-bold fs-5 mt-5 mb-5">Lebih murah di aplikasi</p>
-                                {{-- <img alt=""
-                                    src="{{ asset('assets/media/products-categories/download-apps.png') }}"
-                                    class="w-200px" /> --}}
-                                <div class="col-8" style="margin-bottom: 16px;">
-                                    <a href="{{ url('https://play.google.com/store/apps/details?id=com.travelsya.id&pcampaignid=web_share') }}" target="_blank">
-                                        <img class="img-fluid" src="/media/ads/play_store.png" alt="play_store.png">
-                                    </a>
-                                </div>
-                                <div class="col-8">
-                                    <a href="{{ url('https://apps.apple.com/id/app/travelsya-travel-lifestyle/id6450695778?l=id') }}" target="_blank">
-                                        <img class="img-fluid" src="/media/ads/app_store.png" alt="app_store.png">
-                                    </a>
-                                </div>
+
+                                <a href="https://apps.apple.com/id/app/travelsya-travel-lifestyle/id6450695778?l=id" target="_blank">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg"
+                                        class="w-200px mb-4" alt="Apple App Store" />
+                                </a>
+                                
+                                <a href="https://play.google.com/store/apps/details?id=com.travelsya.id" target="_blank">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/512px-Google_Play_Store_badge_EN.svg.png"
+                                        class="w-200px" alt="Google Playstore" />
+                                </a>
+
                             </div>
                         </div>
                         <hr>
-                        <div class="row" >
-                            <!--begin::Copyright-->
-                            <div class="text-start order-2 order-md-1" style="background-color:#C02425;height: 60px;padding: 20px;">
-                                <span class="fw-semibold me-1 text-white" > @ 2024 PT. Travelsya Wisata Indonesia. All right reserved</span>
-                                <!-- <a href="https://keenthemes.com/" target="_blank"
-                                        class="text-gray-800 text-hover-primary">Keenthemes</a> -->
-                            </div>
-                            <!--end::Copyright-->
+                        <div class="copyright">
+                            <span class="fw-semibold me-1 text-white">@ 2024 PT. Travelsya Wisata Indonesia. All right reserved</span>
                         </div>
                     </div>
                 </div>
