@@ -215,6 +215,7 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/rekreasi/', 'show')->name('.rekreasi');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
+    Route::get('/reservasi/pembayaran', 'payment')->name('.payment');
 });
 
 Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function() {
@@ -372,7 +373,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
         Route::put('update-rekreasi/{id}', [\App\Http\Controllers\RecreationController::class, 'update'])->name('data-rekreasi.update');
         Route::post('/addrecreation/store', [\App\Http\Controllers\RecreationController::class, 'store'])->name('addrecreation.store');
-        Route::get('recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'show'])->name('recreation.show');
+        // Route::get('recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'show'])->name('recreation.show');
         Route::delete('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'destroy'])->name('recreation.destroy');
 
 

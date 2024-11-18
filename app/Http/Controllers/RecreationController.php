@@ -15,8 +15,15 @@ class RecreationController extends Controller
 {
 
     public function index(Request $request) {
-        $recreation_list = DB::table('recreation_has_packages')->get();
-        return view('recreation.list-recreation', ['recreation_list' => $recreation_list]);
+        $recreation_list = DB::table('recreation_has_packages')
+            ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')
+            ->join('cities', 'recreations.city', '=', 'cities.city_id')
+            ->select('recreation_has_packages.*', 'recreations.business_name as recreation_name', 'cities.city_name as city_name')
+            ->get();
+
+        return view('recreation.list-recreation', [
+            'recreation_list' => $recreation_list,
+        ]);
     }
 
     public function list(Request $request) {
@@ -34,7 +41,6 @@ class RecreationController extends Controller
             'category' => $category
         ]);
     }
-
 
     public function show($id) {
         $recreation = DB::table('recreation_has_packages')
@@ -183,6 +189,11 @@ class RecreationController extends Controller
     public function reservation(Request $request) {
 
         return view('recreation.reservation');
+    }
+
+    public function payment(Request $request){
+
+        return view('recreation.payment');
     }
 
     public function destroy($id) {
