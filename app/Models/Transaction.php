@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
@@ -63,9 +64,24 @@ class Transaction extends Model
         return $this->belongsTo(DetailTransactionHealthBeauty::class, 'id', 'transaction_id');
     }
 
+    /**
+     * Get all of the detailTransactionBus for the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function detailTransactionBus(): HasMany
+    {
+        return $this->hasMany(DetailTransactionBus::class, 'transaction_id', 'id');
+    }
+
     public function detailTransactionCarRent(): BelongsTo
     {
         return $this->belongsTo(DetailTransactionCarRental::class, 'id', 'transaction_id');
+    }
+
+    public function detailTransactionHealthBeauty(): BelongsTo
+    {
+        return $this->belongsTo(DetailTransactionHealthBeauty::class, 'id', 'transaction_id');
     }
 
 

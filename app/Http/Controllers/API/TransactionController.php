@@ -18,8 +18,12 @@ use App\Models\HostelRating;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\BusTravelHasBus;
+use App\Models\BusTravelRating;
 use App\Models\CarRentalHasCars;
+use App\Models\CarRentalRating;
 use App\Models\ClinicHasPackages;
+use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\DetailTransactionHealthBeauty;
 use Illuminate\Support\Facades\Auth;
@@ -131,6 +135,35 @@ class TransactionController extends Controller
                     'customer_email' => $data['customer_email'],
                 ];
             }
+        } elseif ($service['name'] == 'bus-travel') {
+            $data = DetailTransactionBus::with('departure')->where('transaction_id', $transaction_id)->get();
+            if ($data != null) {
+                $detail = [];
+
+                foreach ($data as $key => $d) {
+                    $ticket = BusTravelHasBus::find($d->bus_travel_has_bus_id);
+
+                    $model = $ticket['carModel']['name'] ?? 'Deleted model';
+                    $brand = $ticket['brand']['name'] ?? 'Deleted brand';
+
+                    $car = $model . ' - ' . $brand;
+
+                    $item =  [
+                        'id' => $d->id,
+                        'business_name' => $d->busTravel->business_name ?? 'Invalid car rental data',
+                        'from' => $d->departure->from->name ?? 'invalid data',
+                        'to' => $d->departure->to->name ?? 'invalid data',
+                        'departure' => Carbon::parse($d['departure_time'] ?? now())->format('d M Y H:i'),
+                        'customer_name' => $d['customer_name'],
+                        'customer_phone' => $d['customer_phone'],
+                        'customer_email' => $d['customer_email'],
+                    ];
+
+                    array_push($detail, $item);
+                }
+
+                return $detail;
+            }
         } elseif ($service['name'] == 'health-beauty') {
             $data = DetailTransactionHealthBeauty::where('transaction_id', $transaction_id)->first();
 
@@ -220,7 +253,6 @@ class TransactionController extends Controller
 
         $service = Service::find($transaction->first()->service_id);
 
-        // dd($transaction->first());
         $historyPoint = collect(HistoryPoint::where('transaction_id', $transaction->first()->id)->get());
         $receivedPoint = $historyPoint->where('flow', 'debit')->pluck('point')->first();
         $usedPoint = $historyPoint->where('flow', 'credit')->pluck('point')->first();
@@ -370,8 +402,8 @@ class TransactionController extends Controller
                     'email' => $recreation->user->email,
                 ]),
                 'expire_on' => Carbon::parse($detailTransaction->expire_on)->format('d M Y H:i'),
-                'req_id' => $detailTransaction->req_id,
-                'link' => $detailTransaction->link,
+                'req_id' => $detailTransaction->transaction->req_id,
+                'link' => $detailTransaction->transaction->link,
                 'service' => $recreation->service,
                 'payment' => $recreation->payment,
                 'payment_method' => $recreation->payment_method,
@@ -385,6 +417,151 @@ class TransactionController extends Controller
                 'created_at' => $detailTransaction->created_at,
 
             ]);
+        }
+
+        if ($service->name == 'health-beauty') {
+            $recreation = $transaction->with('detailTransactionHealthBeauty')->first();
+            $detailTransaction = $recreation->detailTransactionHealthBeauty;
+
+
+            $allRatings = RecreationRatings::where('transaction_id', $recreation->id)->get();
+
+            $review = $allRatings->map(function ($item) {
+                return [
+                    'rate' => $item->rate,
+                    'comment' => $item->comment
+                ];
+            });
+
+            $responseTransaction = array([
+                'id' => $detailTransaction->transaction_id,
+                'no_inv' => $recreation->no_inv,
+                'clinic_id' => $detailTransaction->clinic_id,
+                'package_id' => $detailTransaction->clinic_package_id,
+                'clinic_name' => $detailTransaction->clinic->business_name,
+                'package_name' => $detailTransaction->package->name,
+                'booking_id' => $recreation->booking_id,
+                'guest_identity' => array([
+                    'name' => $recreation->user->name,
+                    'handphone' => $recreation->user->phone,
+                    'email' => $recreation->user->email,
+                ]),
+                'expire_on' => Carbon::parse($detailTransaction->expire_on)->format('d M Y H:i'),
+                'req_id' => $detailTransaction->transaction->req_id,
+                'link' => $detailTransaction->transaction->link,
+                'service' => $recreation->service,
+                'payment' => $recreation->payment,
+                'payment_method' => $recreation->payment_method,
+                'payment_channel' => $recreation->payment_channel,
+                'status' => $recreation->status == 'Berhasil' ? 'PAID' : $recreation->status,
+                'fee_admin' => $recreation->fee_admin,
+                'total' => $recreation->grand_total,
+                'received_point' => $receivedPoint,
+                'used_point' => $usedPoint,
+                'review' => $review,
+                'created_at' => $detailTransaction->created_at,
+
+            ]);
+        }
+
+        if ($service->name == 'car-rent') {
+            $recreation = $transaction->with('detailTransactionCarRent')->first();
+            $detailTransaction = $recreation->detailTransactionCarRent;
+
+
+            $allRatings = CarRentalRating::where('transaction_id', $recreation->id)->get();
+
+            $review = $allRatings->map(function ($item) {
+                return [
+                    'rate' => $item->rate,
+                    'comment' => $item->comment
+                ];
+            });
+
+            $responseTransaction = array([
+                'id' => $detailTransaction->transaction_id,
+                'no_inv' => $recreation->no_inv,
+                'car_rental_id' => $detailTransaction->car_rental_id,
+                'car_rental_has_car_id' => $detailTransaction->car_rental_has_car_id,
+                'car_rental_name' => $detailTransaction->carRental->business_name,
+                'car_name' => $detailTransaction->car->brand->name,
+                'booking_id' => $recreation->booking_id,
+                'guest_identity' => array([
+                    'name' => $detailTransaction->customer_name,
+                    'handphone' => $detailTransaction->customer_phone,
+                    'email' => $detailTransaction->customer_email,
+                ]),
+                'expire_on' => Carbon::parse($detailTransaction->end)->format('d M Y H:i'),
+                'req_id' => $detailTransaction->transaction->req_id,
+                'link' => $detailTransaction->transaction->link,
+                'service' => $recreation->service,
+                'payment' => $recreation->payment,
+                'payment_method' => $recreation->payment_method,
+                'payment_channel' => $recreation->payment_channel,
+                'status' => $recreation->status == 'Berhasil' ? 'PAID' : $recreation->status,
+                'fee_admin' => $recreation->fee_admin,
+                'total' => $recreation->grand_total,
+                'received_point' => $receivedPoint,
+                'used_point' => $usedPoint,
+                'review' => $review,
+                'created_at' => $detailTransaction->created_at,
+
+            ]);
+        }
+
+        if ($service->name == 'bus-travel') {
+
+            $bus = $transaction->with('detailTransactionBus')->first();
+
+            $detailTransaction = $bus->detailTransactionBus;
+
+            $allRatings = BusTravelRating::where('transaction_id', $bus->id)->get();
+
+            $review = $allRatings->map(function ($item) {
+                return [
+                    'rate' => $item->rate,
+                    'comment' => $item->comment
+                ];
+            });
+
+            $responseTransaction = [
+                'tickets' => [],
+                'review' => $review
+            ];
+
+            foreach ($detailTransaction as $key => $d) {
+                $item = array([
+                    'transaction_id' => $d->transaction_id,
+                    'ticket_id' => $d->id,
+                    'no_inv' => $bus->no_inv,
+                    'bus_travel_id' => $d->bus_travel_id,
+                    'bus_travel_has_bus_id' => $d->bus_travel_has_bus_id,
+                    'bus_name' => $d->busTravel->business_name,
+                    'bus_travel_has_bus_name' => $d->busTravelHasBus->name,
+                    'booking_id' => $bus->booking_id,
+                    'guest_identity' => array([
+                        'name' => $d->customer_name,
+                        'handphone' => $d->customer_phone,
+                        'email' => $d->customer_email,
+                    ]),
+                    'date' => Carbon::parse($d->departure_time)->format('d M Y H:i'),
+                    'req_id' => $d->transaction->req_id,
+                    'link' => $d->transaction->link,
+                    'service' => $bus->service,
+                    'payment' => $bus->payment,
+                    'payment_method' => $bus->payment_method,
+                    'payment_channel' => $bus->payment_channel,
+                    'status' => $bus->status == 'Berhasil' ? 'PAID' : $bus->status,
+                    'fee_admin' => $bus->fee_admin,
+                    'total' => $bus->grand_total,
+                    'received_point' => $receivedPoint,
+                    'used_point' => $usedPoint,
+                    'review' => $review,
+                    'created_at' => $d->created_at,
+                ]);
+
+                array_push($responseTransaction['tickets'], $item);
+            }
         }
 
         // UNTUK HOSTEL
