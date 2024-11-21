@@ -54,6 +54,8 @@
             overflow-y: hidden;
         }
 
+
+
         .items {
             width: 100%;
             overflow-x: scroll;
@@ -80,12 +82,6 @@
         .menu-user a.active {
             color: #C02425 !important;
         }
-
-        /* .footer {
-                position: absolute;
-                bottom: 0;
-                width: 100%;
-            } */
 
         a.disabled {
             pointer-events: none;
@@ -289,226 +285,9 @@
 
 <!--begin::Body-->
 
-<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
+<body id="kt_body" class="">
     <!--begin::Theme mode setup on page load-->
 
-    <script>
-        var defaultThemeMode = "light";
-        var themeMode;
-
-        if (document.documentElement) {
-            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
-                themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
-            } else {
-                if (localStorage.getItem("data-bs-theme") !== null) {
-                    themeMode = localStorage.getItem("data-bs-theme");
-                } else {
-                    themeMode = defaultThemeMode;
-                }
-            }
-
-            if (themeMode === "system") {
-                themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-            }
-
-            document.documentElement.setAttribute("data-bs-theme", themeMode);
-
-            if (themeMode === "light") {
-                document.body.style.background = "#FFFFFF";
-            }
-        }
-
-    </script>
-    <!--end::Theme mode setup on page load-->
-
-
-
-    <!--begin::Root-->
-
-    <div class="d-flex flex-column flex-root ">
-        <!--begin::Page-->
-        <div class="page d-flex flex-row flex-column-fluid">
-            <!--begin::Wrapper-->
-            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
-                <!--begin::Header-->
-                <div id="kt_header" class="header  align-items-stretch mb-5 mb-lg-10" data-kt-sticky="true" data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
-                    @include('layouts.include.header-remake')
-                </div>
-                <!--end::Header-->
-                @yield('content-web')
-                <!--begin::Footer-->
-                <div class="footer py-4 " style="background-color:#ffffff; margin-left: auto; margin-right: auto;" id="kt_footer">
-                    <!--begin::Container-->
-                    <div class=" container-xxl">
-                        <div class="row py-10  ">
-                            <div class="col-md-3">
-                                <img class="logo-travelsya" style="width: 170px; height: 50px;" class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}" alt="logo-travelsya">
-                                <p class="mt-5"><strong>Alamat</strong></p>
-                                <p class="mt-5">Kalimantan Timur, Balikpapan, Indonesia</p>
-                                <p class="mt-5"><strong>Email</strong></p>
-                                <p class="mt-5">cs@travelsya.com</p>
-                                <p class="mt-5"><strong>Telp</strong></p>
-                                <p class="mt-5">(0542)8795954</p>
-                                <p class="mt-5"><strong>Ikuti Kami</strong></p>
-                                <div>
-                                    <a href="https://www.facebook.com/travelsya.id" target="_blank">
-                                        <i class="fab fa-facebook-f fs-1 text-black mr-5"></i>
-                                    </a>
-                                    <a href="https://twitter.com/travelsya_id" target="_blank">
-                                        <i class="fab fa-twitter fs-1 text-black mr-5"></i>
-                                    </a>
-                                    <a href="https://www.linkedin.com/company/travelsya-id/" target="_blank">
-                                        <i class="fab fa-linkedin fs-1 text-black mr-5"></i>
-                                    </a>
-                                    <a href="https://www.instagram.com/travelsya.id/" target="_blank">
-                                        <i class="fab fa-instagram fs-1 text-black mr-5"></i>
-                                    </a>
-                                    <a href="https://www.youtube.com/channel/UCrOQ3YvJv6l3sF4yfJnAeJQ" target="_blank">
-                                        <i class="fab fa-youtube fs-1 text-black ml-5"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col md-4">
-                                        <p class="fw-bold fs-5 mt-5 mb-5">Layanan</p>
-                                        <p data-bs-toggle="modal" data-bs-target="#modal-hotel">
-                                            <a class="text-dark inpo" href="#">
-                                                Booking Hotel
-                                            </a>
-                                        </p>
-                                        <p class="mt-5">Tiket Pesawat</p>
-                                        <p class="mt-5">Tiket Kereta Api</p>
-                                        <p class="mt-5">Tiket Bus & Travel</p>
-                                        <p class="mt-5">Tiket Rekreasi</p>
-                                        <p class="mt-5">Rental Mobil</p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-hostel">
-                                            <a class="text-dark" href="#">
-                                                Booking Hostel
-                                            </a>
-                                        </p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-pln">
-                                            <a class="text-dark" href="#">
-                                                Bayar PLN
-                                            </a>
-                                        </p>
-                                    </div>
-                                    <div class="col md-4">
-                                        <p class="fw-bold fs-5 mt-5">Layanan Lainnya</p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-bpjs">
-                                            <a class="text-dark" href="#">
-                                                Bayar BPJS
-                                            </a>
-                                        </p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-pdam">
-                                            <a class="text-dark" href="#">
-                                                Bayar PDAM
-                                            </a>
-                                        </p>
-                                        <p class="mt-5">Transfer Bank</p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-ewallet">
-                                            <a class="text-dark" href="#">
-                                                Top up Ewallet
-                                            </a>
-                                        </p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-pulsadata">
-                                            <a class="text-dark" href="#">
-                                                Pulsa & Data
-                                            </a>
-                                        </p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-tvBerbayar">
-                                            <a class="text-dark" href="#">
-                                                TV Berbayar
-                                            </a>
-                                        </p>
-                                        <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-pajak">
-                                            <a class="text-dark" href="#">
-                                                Bayar Pajak
-                                            </a>
-                                        </p>
-                                        <p class="mt-5">Health & Beauty</p>
-                                    </div>
-                                    <div class="col md-4">
-                                        <p class="fw-bold fs-5 mt-5">Dukungan</p>
-                                        <a href="{{ route('company.about') }}" class="text-dark">
-                                            <p class="mt-5">Tentang Kami</p>
-                                        </a>
-                                        <a href="/partner-hotel" class="text-dark">
-                                            <p class="mt-5">Partner</p>
-                                        </a>
-                                        <a href="{{route('bantuan-user')}}" class="text-dark">
-                                            <p class="mt-5">Pusat Bantuan</p>
-                                        </a>
-                                        <a href="{{route('company.terms')}}" class="text-dark">
-                                            <p class="mt-5">Kebijakan Privasi</p>
-                                        </a>
-                                        <a href="{{ route('company.privat') }}" class="text-dark">
-                                            <p class="mt-5">Syarat & Ketentuan</p>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3">
-                                <p class="fw-bold fs-5 mt-5 mb-5">Lebih murah di aplikasi</p>
-
-                                <a href="https://apps.apple.com/id/app/travelsya-travel-lifestyle/id6450695778?l=id" target="_blank">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" class="w-200px mb-4" alt="Apple App Store" />
-                                </a>
-
-                                <a href="https://play.google.com/store/apps/details?id=com.travelsya.id" target="_blank">
-                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Google_Play_Store_badge_EN.svg/512px-Google_Play_Store_badge_EN.svg.png" class="w-200px" alt="Google Playstore" />
-                                </a>
-
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="copyright">
-                            <span class="fw-semibold me-1 text-white">@ 2024 PT. Travelsya Wisata Indonesia. All right reserved</span>
-                        </div>
-                    </div>
-                </div>
-                <!--end::Container-->
-            </div>
-            <!--end::Footer-->
-        </div>
-        <!--end::Wrapper-->
-    </div>
-    <!--end::Page-->
-    </div>
-    <!--end::Root-->
-
-    <!--begin::Scrolltop-->
-    <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
-        <i class="ki-duotone ki-arrow-up"><span class="path1"></span><span class="path2"></span></i>
-    </div>
-    <!--end::Scrolltop-->
-    <div class="floating-container">
-        <div class="floating-button">+</div>
-        <div class="element-container">
-
-            <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
-                <span class="float-element tooltip-left">
-                    <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
-                </span>
-            </a>
-
-            <span class="float-element">
-                <a target="_blank" href="https://mailto:cs@travelsya.com">
-                    <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
-                </a>
-            </span>
-            <span class="float-element">
-                <a target="_blank" href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
-                    <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
-                </a>
-            </span>
-        </div>
-    </div>
-    <!--begin::Javascript-->
-    <script>
-        var hostUrl = "assets/index.html";
-
-    </script>
 
     <!--begin::Global Javascript Bundle(mandatory for all pages)-->
     <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>

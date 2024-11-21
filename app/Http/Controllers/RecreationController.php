@@ -40,6 +40,7 @@ class RecreationController extends Controller
         $data['type_list'] = CategoryRecreation::get()->pluck('name');
 
         return view('recreation.list-recreation', $data);
+
     }
 
     public function filter_recreation(Request $request)
@@ -111,7 +112,6 @@ class RecreationController extends Controller
             'category' => $category
         ]);
     }
-
 
     public function show($id)
     {
@@ -273,8 +273,12 @@ class RecreationController extends Controller
         return view('recreation.reservation');
     }
 
-    public function destroy($id)
-    {
+    public function payment(Request $request){
+
+        return view('recreation.payment');
+    }
+
+    public function destroy($id) {
         $recreation = DB::table('recreation_has_packages')->where('id', $id)->first();
 
         if ($recreation) {

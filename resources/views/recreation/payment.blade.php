@@ -9,7 +9,7 @@
     <!-- Detail Pemesanan -->
     <div class="row">
         <div class="col-md-8">
-            <p class="fs-3 fw-bold mb-0">Detail Pemesanan</p>
+            <p class="fs-3 fw-semibold mb-0">Detail Pemesanan</p>
             <p class="text-muted">Isi formulir ini dengan benar karena e-tiket akan dikirim ke alamat email sesuai data pemesan.</p>
             <div class="card p-4 mb-4 mt-4 shadow card-border-0 rounded-4">
                 <div class="card-title">
@@ -49,7 +49,7 @@
             </div>
 
             <!-- Tambah Perlindungan Extra -->
-            <p class="mt-5 fs-3 fw-bold mb-0">Tambah Perlindungan Extra</p>
+            <p class="mt-5 fs-3 fw-semibold mb-0">Tambah Perlindungan Extra</p>
             <p class="text-muted mb-4">Pilih satu opsi untuk melanjutkan pesanan.</p>
             <div class="card-group">
                 <div class="card p-4 shadow card-border-0 rounded-4">
@@ -142,8 +142,8 @@
             <div class="card card-border-0 rounded-4 shadow">
                 <div class="card-body">
                     <div class="d-flex">
-                        <p class="fs-5 fw-bold">Total Pembayaran</p>
-                        <p class="fs-5 fw-bold ms-auto">IDR 230.000
+                        <p class="fs-5 fw-medium">Total Pembayaran</p>
+                        <p class="fs-5 fw-semibold ms-auto">IDR 230.000
                             <i class="bi bi-chevron-down ms-2 text-dark" style="font-size: 1em; font-weight: 600;"></i>
                         </p>
                     </div>
