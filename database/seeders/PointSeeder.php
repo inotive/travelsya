@@ -14,7 +14,7 @@ class PointSeeder extends Seeder
     public function run(): void
     {
         Point::create([
-            'id' => 1,
+            'id' => 5,
             'service_id' => 1,
             'multiple' => 10000,
             'value' => 10,
@@ -23,7 +23,7 @@ class PointSeeder extends Seeder
             'updated_at' => '2023-06-04 11:06:25',
         ]);
         Point::create([
-            'id' => 2,
+            'id' => 6,
             'service_id' => 2,
             'multiple' => 10000,
             'value' => 10,
@@ -32,7 +32,7 @@ class PointSeeder extends Seeder
             'updated_at' => '2023-06-04 11:06:32',
         ]);
         Point::create([
-            'id' => 3,
+            'id' => 7,
             'service_id' => 3,
             'multiple' => 10000,
             'value' => 10,
@@ -41,7 +41,7 @@ class PointSeeder extends Seeder
             'updated_at' => '2023-06-04 11:06:39',
         ]);
         Point::create([
-            'id' => 4,
+            'id' => 8,
             'service_id' => 6,
             'multiple' => 10000,
             'value' => 10,
@@ -50,7 +50,7 @@ class PointSeeder extends Seeder
             'updated_at' => '2023-06-04 11:06:46',
         ]);
         Point::create([
-            'id' => 5,
+            'id' => 9,
             'service_id' => 7,
             'multiple' => 1000000,
             'value' => 100,
@@ -59,7 +59,7 @@ class PointSeeder extends Seeder
             'updated_at' => '2023-06-04 11:06:53',
         ]);
         Point::create([
-            'id' => 6,
+            'id' => 10,
             'service_id' => 4,
             'multiple' => 100000,
             'value' => 100,
@@ -68,7 +68,7 @@ class PointSeeder extends Seeder
             'updated_at' => null,
         ]);
         Point::create([
-            'id' => 7,
+            'id' => 11,
             'service_id' => 5,
             'multiple' => 100000,
             'value' => 100,
@@ -77,7 +77,7 @@ class PointSeeder extends Seeder
             'updated_at' => null,
         ]);
         Point::create([
-            'id' => 8,
+            'id' => 12,
             'service_id' => 8,
             'multiple' => 100000,
             'value' => 100,
@@ -86,7 +86,7 @@ class PointSeeder extends Seeder
             'updated_at' => null,
         ]);
         Point::create([
-            'id' => 9,
+            'id' => 13,
             'service_id' => 9,
             'multiple' => 100000,
             'value' => 100,
@@ -95,7 +95,7 @@ class PointSeeder extends Seeder
             'updated_at' => null,
         ]);
         Point::create([
-            'id' => 10,
+            'id' => 14,
             'service_id' => 10,
             'multiple' => 100000,
             'value' => 100,
@@ -104,7 +104,7 @@ class PointSeeder extends Seeder
             'updated_at' => null,
         ]);
         Point::create([
-            'id' => 11,
+            'id' => 15,
             'service_id' => 11,
             'multiple' => 100000,
             'value' => 100,
@@ -113,7 +113,7 @@ class PointSeeder extends Seeder
             'updated_at' => null,
         ]);
         Point::create([
-            'id' => 12,
+            'id' => 16,
             'service_id' => 12,
             'multiple' => 10000,
             'value' => 10,

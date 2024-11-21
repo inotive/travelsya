@@ -14,7 +14,7 @@ class FeeSeeder extends Seeder
     public function run(): void
     {
         Fee::create([
-            'id' => 1,
+            'id' => 5,
             'service_id' => 1,
             'value' => 2500.00,
             'percent' => 0,
@@ -23,7 +23,7 @@ class FeeSeeder extends Seeder
             'updated_at' => '2023-06-04 19:07:01',
         ]);
         Fee::create([
-            'id' => 2,
+            'id' => 6,
             'service_id' => 2,
             'value' => 1000.00,
             'percent' => 0,
@@ -32,7 +32,7 @@ class FeeSeeder extends Seeder
             'updated_at' => '2023-06-04 19:07:06',
         ]);
         Fee::create([
-            'id' => 3,
+            'id' => 7,
             'service_id' => 3,
             'value' => 1000.00,
             'percent' => 0,
@@ -41,7 +41,7 @@ class FeeSeeder extends Seeder
             'updated_at' => '2023-06-04 19:07:11',
         ]);
         Fee::create([
-            'id' => 4,
+            'id' => 8,
             'service_id' => 6,
             'value' => 1000.00,
             'percent' => 0,
@@ -50,7 +50,7 @@ class FeeSeeder extends Seeder
             'updated_at' => '2023-06-04 19:07:17',
         ]);
         Fee::create([
-            'id' => 5,
+            'id' => 9,
             'service_id' => 7,
             'value' => 1.00,
             'percent' => 1,
@@ -59,7 +59,7 @@ class FeeSeeder extends Seeder
             'updated_at' => '2023-06-04 19:07:25',
         ]);
         Fee::create([
-            'id' => 6,
+            'id' => 10,
             'service_id' => 4,
             'value' => 1.00,
             'percent' => 1,
@@ -68,7 +68,7 @@ class FeeSeeder extends Seeder
             'updated_at' => null,
         ]);
         Fee::create([
-            'id' => 7,
+            'id' => 11,
             'service_id' => 5,
             'value' => 1.00,
             'percent' => 1,
@@ -77,7 +77,7 @@ class FeeSeeder extends Seeder
             'updated_at' => null,
         ]);
         Fee::create([
-            'id' => 9,
+            'id' => 12,
             'service_id' => 8,
             'value' => 1.00,
             'percent' => 1,
@@ -86,7 +86,7 @@ class FeeSeeder extends Seeder
             'updated_at' => null,
         ]);
         Fee::create([
-            'id' => 10,
+            'id' => 13,
             'service_id' => 9,
             'value' => 1.00,
             'percent' => 1,
@@ -95,7 +95,7 @@ class FeeSeeder extends Seeder
             'updated_at' => null,
         ]);
         Fee::create([
-            'id' => 11,
+            'id' => 14,
             'service_id' => 10,
             'value' => 1.00,
             'percent' => 1,
@@ -104,7 +104,7 @@ class FeeSeeder extends Seeder
             'updated_at' => null,
         ]);
         Fee::create([
-            'id' => 12,
+            'id' => 15,
             'service_id' => 11,
             'value' => 1.00,
             'percent' => 1,
@@ -113,7 +113,7 @@ class FeeSeeder extends Seeder
             'updated_at' => null,
         ]);
         Fee::create([
-            'id' => 13,
+            'id' => 16,
             'service_id' => 12,
             'value' => 2500.00,
             'percent' => 0,

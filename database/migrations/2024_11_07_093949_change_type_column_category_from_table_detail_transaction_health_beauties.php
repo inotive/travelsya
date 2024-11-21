@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('detail_transaction_health_beauties', function (Blueprint $table) {
             $table->string('category')->nullable()->change();
-            $table->bigInteger('total_ticket')->default(1);
+            $table->bigInteger('total_ticket')->default(1)->change();
         });
     }
 
