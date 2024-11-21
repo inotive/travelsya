@@ -4,17 +4,16 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <form id="clinic-form" action="{{ route('clinics.update', $clinic->id) }}" method="POST">
+            <form id="clinic-form" action="{{ route('clinics.update', $clinic->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Tambahkan metode PUT untuk update -->
                 
                 <div class="mb-13 text-center">
                     <h1 class="mb-3">Edit Jasa</h1>
                 </div>
-
+               
                 <div class="row g-9 mb-8">
-                    <!-- Clinic ID -->
-                    <input type="hidden" name="clinic_id" value="{{ $clinic->clinic_id }}">
+                    
 
                     <!-- Nama Klinik -->
                     <div class="col-md-6">
@@ -26,16 +25,26 @@
                     <!-- Kategori Layanan -->
                     <div class="col-md-6">
                         <label for="categories_services_id" class="form-label">Kategori Layanan</label>
-                        <select name="categories_services_id" class="form-control" required>
-                            @foreach ($categories as $category)
-                                <option value="{{ $category->id }}" {{ $clinic->categories_services_id == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
+                        <select name="categories_services_id" id="categories_services_id" class="form-control" required>
+                            <!-- Options will be dynamically loaded -->
+                        </select>
+                    </div>
+
+                    @if(count($clinics) > 1)
+                    <!-- edit clinic_id -->
+                    <div class="col-md-6">
+                        <label for="clinic_id" class="form-label">Nama Bisnis</label>
+                        <select name="clinic_id" id="clinic_id" class="form-control" required>
+                            @foreach ($clinics as $clinicItem)
+                                <option value="{{ $clinicItem->id }}" {{ $clinic->clinic_id == $clinicItem->id ? 'selected' : '' }}>
+                                    {{ $clinicItem->clinic_name }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
-
-                   
+                   @else
+                   <input type="hidden" name="clinic_id" value="{{ $clinics->first()->id }}">
+                   @endif
 
                     <!-- Harga -->
                     <div class="col-md-6">
@@ -63,9 +72,12 @@
 
 
                     
-                    <div class="col-md-6">
-                        <label for="expiry_date" class="form-label">Gambar</label>
-                        <input type="file" class="form-control" id="image" name="image" value="{{ old('image', $clinic->image) }}" required>
+                    <div class="col-md-12">
+                        <label for="image" class="form-label">Gambar</label>
+                        <input type="file" class="form-control" id="image" name="image">
+                        @if($clinic->image)
+                            <img src="{{ asset('storage/clinichaspackages/'.$clinic->image) }}" alt="Current Image" style="max-width: 200px; margin-top: 10px;">
+                        @endif
                     </div>
 
                     <!-- Deskripsi -->
@@ -81,7 +93,7 @@
                     </div>
 
                     <!-- Status Aktif -->
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <label for="is_active" class="form-label">Status Aktif</label>
                         <select name="is_active" class="form-control" required>
                             <option value="1" {{ $clinic->is_active == 1 ? 'selected' : '' }}>Aktif</option>
@@ -97,7 +109,7 @@
                 <div class="text-center">
                     <div class="row">
                         <div class="col-6">
-                            <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">Cancel</a>
+                            <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">Batal</a>
                         </div>
                         <div class="col-6">
                             <button type="submit" class="btn btn-primary">
@@ -112,4 +124,48 @@
         </div>
     </div>
 </div>
+
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    // Load categories on page load if a clinic is already selected
+    var initialClinicId = $('#clinic_id').val();
+    if (initialClinicId) {
+        loadCategories(initialClinicId);
+    }
+
+    $('#clinic_id').change(function() {
+        var clinicId = $(this).val();
+        loadCategories(clinicId);
+    });
+
+    function loadCategories(clinicId) {
+        if (clinicId) {
+            $.ajax({
+                url: '{{ route('get.categories.by.clinic') }}',
+                type: 'GET',
+                data: { clinic_id: clinicId },
+                success: function(data) {
+                    $('#categories_services_id').empty();
+                    if (data.length > 0) {
+                        $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+                        $.each(data, function(key, category) {
+                            var selected = category.id == {{ $clinic->categories_services_id }} ? 'selected' : '';
+                            $('#categories_services_id').append('<option value="' + category.id + '" ' + selected + '>' + category.name + '</option>');
+                        });
+                    } else {
+                        $('#categories_services_id').append('<option value="">Tidak ada kategori tersedia</option>');
+                    }
+                },
+                error: function() {
+                    $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
+                }
+            });
+        } else {
+            $('#categories_services_id').empty().append('<option value="">Pilih Kategori</option>');
+        }
+    }
+});
+</script>

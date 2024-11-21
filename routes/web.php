@@ -234,7 +234,9 @@ Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clini
     Route::get('/', 'index')->name('.index');
     Route::get('/{id}/klinik/', 'show')->name('.klinik');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
-    Route::put('/admin/management-mitra/klinik-kecantikan/{id}', [BeautyClinicController::class, 'update']);
+    Route::put('/admin/management-mitra/klinik-kecantikan/{id}', 'update');
+    Route::get('/{id}/detail', 'show')->name('.detail'); // Ensure this matches the method in the controller
+    Route::get('/search', 'search')->name('.search');
 });
 
 // rental mobil
