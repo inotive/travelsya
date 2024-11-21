@@ -246,10 +246,6 @@ Route::controller(CarRentalController::class)->name('rental')->prefix('rental')-
 });
 // Route::get('/', 'index', [CarRentalController::class, 'index'])->name('index');
 
-
-
-
-
 //tranas
 Route::post('/cart', [TransactionController::class, 'cart'])->name('cart');
 Route::post('/request/ppob', [TransactionController::class, 'requestPpob'])->name('request.ppob');

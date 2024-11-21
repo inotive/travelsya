@@ -29,4 +29,9 @@ class CarRentalController extends Controller
         return view('rental-mobil.list-rental-mobil', compact('tanggalRental', 'durasiRental', 'ambilRental', 'jamRental', 'cars', 'categories', 'carRental'));
     }
 
+    public function searchResult()
+    {
+        return view('rental-mobil-remake.search-result');
+    }
+
 }

@@ -1,9 +1,17 @@
 <style>
 
+    /* SCRIPT LANDING RENTAL MOBIL */
+
     body {
         background-color: #f5f5f5;
+        overflow-x: hidden;
+        /* margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center; */
     }
-
+    
     .container {
         max-width: 1200px;
         margin: 0 auto;
@@ -153,13 +161,13 @@
 
     .search {
         display: flex;
-        align-items: center;
         border: 1px solid #ccc;
         border-radius: 30px;
         padding: 10px 20px;
-        background-color: #fff;
+        background-color: #ffffff;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         margin-bottom: 5px;
+        margin-right: -28%;
     }
 
     .search input {
@@ -305,7 +313,7 @@
             background: #f5f5f5;
         }
 
-        .search-button {
+        .submit-button {
             width: 100%;
             padding: 12px;
             background-color: #c41e3a;
@@ -351,7 +359,7 @@
             margin-left: 10%;
         }
 
-        .card {
+        .card-inpo {
             background-color: white;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -380,29 +388,246 @@
             font-size: 14px;
             color: #666;
         }
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.1;
+
+        .bubble{
+            opacity: 0.2;
+            background-color: #c41e3a; 
         }
-        .bubble-1 {
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: 100px;
-            background-color: #ffcccb;
-        }
-        .bubble-2 {
-            bottom: -50px;
-            right: -50px;
-            width: 150px;
-            height: 150px;
-            background-color: #ffcccb;
+
+        .bubble2{
+            opacity: 0.2;
+            background-color: #ff002b; 
         }
 
         .logo-travelsya{
             position: relative;
             margin-bottom: 20px;
+        }
+
+        .card {
+            margin: 0 auto;
+            width: 50%;
+            margin-left: 5px;
+            height: 400px;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: justify;
+            display: flex;
+        }
+
+        .card-car {
+            width: 250px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 12px;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .car-title {
+            font-size: 18px;
+            font-weight: 500;
+            margin: 12px 0 8px 0;
+            color: #333;
+        }
+
+        .car-stats {
+            display: flex;
+            gap: 16px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-icon {
+            width: 16px;
+            height: 16px;
+            opacity: 0.7;
+        }
+        
+        .city-card {
+            margin-top: 2%;
+        }
+
+        .copyright {
+            height: 60px;
+            background-color: #C02425;
+            padding: 20px;
+            width: 100vw;
+            box-sizing: border-box;
+            margin: 0;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+
+        /*SCRIPT HASIL PENCARIAN */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 10px 20px;
+            margin: 11%;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            flex-wrap: nowrap;
+        }
+        .search-bar input {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            margin-right: 20px;
+        }
+        .search-bar span {
+            margin: 0 10px;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+        }
+        .search-bar .divider {
+            height: 20px;
+            width: 1px;
+            background-color: #ddd;
+            margin: 0 10px;
+        }
+        .search-bar .search-button {
+            background-color: #ffe6e6;
+            color: #ff4d4d;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .location {
+            color: #d32f2f;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-right: 12%;
+        }
+        .location i {
+            margin-right: 5px;
+        }
+        .custom-container {
+            display: flex;
+            justify-content: space-between;
+            width: 78%;
+            margin: 20px auto;
+        }
+        .custom-left-buttons, .custom-right-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .custom-button {
+            padding: 10px 20px;
+            border-radius: 20px;
+            border: 2px solid #ccc;
+            background-color: #fdfdfd;
+            color: #000000;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .custom-button.active {
+            border: 2px solid #d32f2f;
+            color: #d32f2f;
+            background-color: #fff5f5;
+        }
+        .custom-button i {
+            font-size: 16px;
+        }
+
+        .car-card {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 78%;
+            margin: auto;
+            margin-bottom: 10px;
+        }
+        .car-card-image {
+            width: 180px;
+            height: 150px;
+            border-radius: 10px;
+        }
+        .car-card-details {
+            flex: 1;
+            margin-left: 20px;
+        }
+        .car-card-details h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .car-card-details .car-card-info {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            color: #666;
+        }
+        .car-card-details .car-card-info i {
+            margin-right: 5px;
+        }
+        .car-card-details .car-card-info span {
+            margin-right: 20px;
+        }
+        .car-card-price {
+            text-align: right;
+        }
+        .car-card-price p {
+            margin: 0;
+            color: #666;
+        }
+        .car-card-price .car-card-amount {
+            font-size: 20px;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        .car-card-price .car-card-button {
+            background-color: #d32f2f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        /* MODAL RENT */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
         }
 
 
