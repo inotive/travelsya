@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use PHPUnit\Exception;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use App\Models\CarRentalHasCars;
 use App\Models\CarRentalRating;
 use App\Models\DetailTransactionCarRental;
@@ -188,6 +189,86 @@ class CarRentalController extends Controller
         }
 
         return ResponseFormatter::success($newData, 'Data successfully loaded');
+    }
+
+    public function cari2(Request $request)
+    {
+        $data = $request->all();
+
+        $transmisi = $data['transmisi'] ?? null;
+
+        $type = "Tidak Dengan Drive";
+        $start = $data['date'] ?? null;
+        $city = $data['location'] ?? null;
+        $duration = $data['duration'] ?? null;
+
+        if ($transmisi !== null) {
+            $transmisi = $data['transmisi'] == 'otomatis' ? 'automatic' : 'manual';
+            $filter = $data['transmisi'];
+        } else {
+            $transmisi = null;
+            $filter = 'semua';
+        }
+
+        if (isset($data['with_driver']) && $data['with_driver'] == 1) {
+            $type = "Dengan Driver";
+        } else {
+            $type = null;
+        }
+
+        $model = Brand::with('vendor')
+            ->when($type, function ($t, $type) {
+                $t->whereHas('vendor', function ($v1) use ($type) {
+                    $v1->where('category_rent', $type);
+                });
+            })
+            ->when($transmisi, function ($t, $trans) {
+                $t->whereHas('vendor', function ($v2) use ($trans) {
+                    $v2->where('category', $trans);
+                });
+            })
+            ->when($city, function ($d, $city) {
+                $d->whereHas('vendor', function ($v3) use ($city) {
+                    $v3->whereHas('carRental', function ($c) use ($city) {
+                        $c->whereHas('kota', function ($k) use ($city) {
+                            $k->where('city_name', 'like', '%' . $city . '%');
+                        });
+                    });
+                });
+            })
+            ->get();
+
+        $newModel = [
+            'brand' => [],
+            'vendor' => [],
+        ];
+
+        foreach ($model as $key => $mod) {
+            if (count($mod['vendor']) > 0) {
+
+                $item['brand_id'] = $key;
+                $item['brand'] = ($mod['vendor'][0]['carModel']['name'] ?? 'Invalid Car Model') . ' ' . ($mod['vendor'][0]['brand']['name'] ?? 'Invalid Brand');
+                $item['seats'] = $mod['vendor'][0]['number_seats'];
+                $item['price'] = $mod['vendor'][0]['rental_price_per_day'];
+                $item['transmission'] = $mod['vendor'][0]['category'];
+                $item['image'] = $mod['vendor']['0']['image_url'] ? asset('storage/' . $mod['vendor']['0']['image_url']) : asset('images/not_found.jpg');
+
+                $subVendor = [];
+
+                foreach ($mod['vendor'] as $key2 => $ven) {
+                    $sub['id_car'] = $ven['id'];
+                    $sub['business_name'] = $ven['carRental']['business_name'];
+                    $sub['price'] = $ven['rental_price_per_day'];
+
+                    array_push($subVendor, $sub);
+                }
+
+                $newModel['brand'][$key] = $item;
+                $newModel['vendor'][$item['brand']] = $subVendor;
+            }
+        }
+
+        return ResponseFormatter::success($newModel, 'Data successfully loaded');
     }
 
     public function postRating(Request $request)
