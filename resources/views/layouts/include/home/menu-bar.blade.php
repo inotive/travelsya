@@ -114,7 +114,7 @@
                                 <span class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600">Pajak</span>
                             </div>
                         </div>
-                        {{-- <a href="{{ route('rekreasi.index') }}"
+                        <a href="{{ route('rekreasi.index') }}"
                             class="item-menubar col-4 col-md-3 col-lg-2 align-items-center">
                             <div class="row">
                                 <div class="col-md-4 col-sm-12 justify-content-center">
@@ -126,8 +126,8 @@
                                 <span
                                     class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600 text-gray-300">Rekreasi</span>
                             </div>
-                        </a> --}}
-                        <div class="item-menubar col-4 col-md-3 col-lg-2 align-items-center" data-bs-toggle="modal"
+                        </a>
+                        {{-- <div class="item-menubar col-4 col-md-3 col-lg-2 align-items-center" data-bs-toggle="modal"
                             data-bs-target="#modal-rekreasi">
                             <div class="row">
                                 <div class="col-md-4 col-sm-12 justify-content-center">
@@ -139,7 +139,7 @@
                                 <span
                                     class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600 text-gray-300">Rekreasi</span>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="item-menubar col-4 col-md-3 col-lg-2 align-items-center" data-bs-toggle="modal"
                             data-bs-target="#modal-health">
                             <div class="row">

@@ -1,15 +1,111 @@
 <!DOCTYPE html>
+
 <html lang="en">
+<!--begin::Head-->
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Rekreasi</title>
+    @include('layouts.partials.head')
 </head>
+<!--end::Head-->
 
-<body>
-    Halaman baru rekreasi
+<!--begin::Body-->
+
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled">
+    <!--begin::Theme mode setup on page load-->
+    <script>
+        var defaultThemeMode = "light";
+        var themeMode;
+
+        if (document.documentElement) {
+            if (document.documentElement.hasAttribute("data-bs-theme-mode")) {
+                themeMode = document.documentElement.getAttribute("data-bs-theme-mode");
+            } else {
+                if (localStorage.getItem("data-bs-theme") !== null) {
+                    themeMode = localStorage.getItem("data-bs-theme");
+                } else {
+                    themeMode = defaultThemeMode;
+                }
+            }
+
+            if (themeMode === "system") {
+                themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+
+            document.documentElement.setAttribute("data-bs-theme", themeMode);
+        }
+    </script>
+    <!--end::Theme mode setup on page load-->
+
+    <!--begin::Main-->
+    <!--begin::Root-->
+    <div class="d-flex flex-column flex-root">
+        <!--begin::Page-->
+        <div class="page d-flex flex-row flex-column-fluid">
+            <!--begin::Wrapper-->
+            <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
+                <!--begin::Header-->
+                <div id="kt_header" class="header  align-items-stretch mb-0" data-kt-sticky="true"
+                    data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
+                    @include('layouts.partials.header')
+                </div>
+                <!--end::Header-->
+                @yield('content')
+                <!--begin::Footer-->
+                @include('layouts.partials.footer')
+                <!--end::Container-->
+            </div>
+            <!--end::Footer-->
+
+        </div>
+        <!--end::Wrapper-->
+    </div>
+    <!--end::Page-->
+    </div>
+    <!--end::Root-->
+
+    <!--begin::Scrolltop-->
+    <div id="kt_scrolltop" class="scrolltop" data-kt-scrolltop="true">
+        <i class="ki-duotone ki-arrow-up"><span class="path1"></span><span class="path2"></span></i>
+    </div>
+    <!--end::Scrolltop-->
+<div class="floating-container">
+  <div class="floating-button">+</div>
+  <div class="element-container">
+
+    <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
+        <span class="float-element tooltip-left">
+          <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
+        </span>
+    </a>
+
+    <span class="float-element">
+        <a target="_blank" href="https://mailto:cs@travelsya.com">
+          <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
+        </a>
+    </span>
+    <span class="float-element">
+        <a target="_blank" href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
+          <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
+        </a>
+    </span>
+  </div>
+</div>
+    <!--begin::Javascript-->
+    @include('layouts.partials.foot')
+
+    @stack('js')
+
+    <script>
+        $('.js-daterangepicker').daterangepicker();
+
+        $(".main-menu li").on('click', function() {
+            $('.form-menu').removeClass('show active')
+        })
+
+    </script>
 </body>
 
+<!--end::Body-->
 </html>

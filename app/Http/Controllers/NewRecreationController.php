@@ -8,6 +8,6 @@ class NewRecreationController extends Controller
 {
     public function index()
     {
-        return view('layouts.app_v2');
+        return view('pagesv2.rekreasi.index');
     }
 }
