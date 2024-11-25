@@ -82,7 +82,7 @@ route::get('/beauty_search', [HealthBeautyController::class, 'beauty_search']);
 route::get('/clinic_detail/{id}', [HealthBeautyController::class, 'detail']);
 
 // Car Rental
-route::post('/find_car', [CarRentalController::class, 'cari']);
+route::post('/find_car', [CarRentalController::class, 'cari2']);
 route::get('/detail_car/{id}', [CarRentalController::class, 'detail_car']);
 
 // Bus & Travel
