@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\CarRentalController;
+use App\Http\Controllers\NewHealthBeautyController;
 use App\Http\Controllers\NewRecreationController;
 
 /*
@@ -226,6 +227,10 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
 
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
+});
+
+Route::group(['prefix' => 'health_beauty'], function () {
+    Route::get('/', [NewHealthBeautyController::class, 'index'])->name('health_beauty.index');
 });
 
 // Health & Beauty

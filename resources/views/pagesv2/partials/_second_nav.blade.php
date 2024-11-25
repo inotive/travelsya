@@ -16,7 +16,8 @@
                     <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
                         <i class="fa-solid fa-search"></i>
                     </span>
-                    <input type="text" class="form-control search-input" placeholder="Cari tempat rekreasi favorit kamu disini"/>
+                    <input type="text" class="form-control search-input"
+                        placeholder="Cari tempat rekreasi favorit kamu disini" />
                 </div>
             </div>
         </div>
