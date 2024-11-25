@@ -1,4 +1,5 @@
 @extends('layouts.web')
+
 <style>
     .filter-btn {
         border: 1px solid #ccc;
@@ -13,7 +14,6 @@
         color: #dc3545;
         border-color: #dc3545;
     }
-
 </style>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -156,7 +156,6 @@
             text-align: center;
         }
     }
-
 </style>
 @endpush
 @push('add-script')

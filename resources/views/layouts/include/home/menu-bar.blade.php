@@ -775,6 +775,5 @@
             text-align: center;
         }
     }
-
 </style>
 @endpush
