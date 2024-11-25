@@ -8,6 +8,6 @@ class NewHealthBeautyController extends Controller
 {
     public function index()
     {
-        return view('pagesv2.rekreasi.index');
+        return view('pagesv2.health_beauty.index');
     }
 }
