@@ -50,14 +50,16 @@
                 <h2>Apa yang ingin anda lakukan?</h2>
                 <div class="d-flex gap-3 flex-wrap mt-4 align-items-center">
                     @foreach ($type_list as $tl)
-                    <div class="filter-btn {{ $tl == $type ? 'active' : '' }}" data-filter="{{ $tl }}">{{ $tl }}</div>
+                    <div class="filter-btn {{ $tl == $type ? 'active' : '' }}" data-filter="{{ $tl }}">
+                        {{ $tl }}</div>
                     @endforeach
                     <input type="text" id="keyword" class="form-control form-control-lg ms-auto" name="keyword"
                         placeholder="Cari Tempat" value="" style="max-width: 300px;" />
                 </div>
 
                 <div id="results" class="mt-4">
-                    <h5 class="mt-10">Menampilkan {{ $recreation_list->count() }} hasil pencarian {{ $type }}</h5>
+                    <h5 class="mt-10">Menampilkan {{ $recreation_list->count() }} hasil pencarian {{ $type }}
+                    </h5>
                     <div class="row row-cols-1 row-cols-md-4 g-4">
                         @foreach ($recreation_list as $list)
                         @if (count($list->recreationPackages) > 0)
@@ -68,17 +70,18 @@
                                         class="card-img-top" alt="...">
                                     <div class="card-body d-flex flex-column">
                                         <h4 class="card-title text-capitalize">{{ $list->business_name }}</h4>
-                                        <p class="card-text flex-grow-1 text-capitalize">{{ $list->kota->city_name ??
-                                            'Deleted city' }}
+                                        <p class="card-text flex-grow-1 text-capitalize">
+                                            {{ $list->kota->city_name ?? 'Deleted city' }}
                                         </p>
                                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                                            <h4 style="color: rgb(255, 0, 0);">Rp.{{
-                                                number_format($list['recreationPackages'][0]->price ?? 0)}}
+                                            <h4 style="color: rgb(255, 0, 0);">
+                                                Rp.{{ number_format($list['recreationPackages'][0]->price ?? 0) }}
 
                                                 @if (count($list['recreationPackages']) > 1)
-                                                - {{
+                                                -
+                                                {{
                                                 number_format($list['recreationPackages'][count($list['recreationPackages'])
-                                                - 1]->price ?? 0)}}
+                                                - 1]->price ?? 0) }}
                                                 @endif
                                             </h4>
                                             <span class="card-text" style="color: rgb(255, 0, 0);">
@@ -147,7 +150,7 @@
             url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80") no-repeat center center;
         background-size: cover;
         /* border-bottom-left-radius: 4em;
-        border-bottom-right-radius: 4em; */
+            border-bottom-right-radius: 4em; */
     }
 
     @media (max-width: 767px) {
@@ -157,54 +160,61 @@
         }
     }
 </style>
+@media (max-width: 767px) {
+.item-label {
+margin-left: 0px;
+text-align: center;
+}
+}
+</style>
 @endpush
 @push('add-script')
 <script src="{{ asset('assets/plugins/custom/fslightbox/fslightbox.bundle.js') }}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        $("#card-filter").hide();
-        $("#button-refilter").click(function() {
-            $("#card-filter").toggle();
+            $("#card-filter").hide();
+            $("#button-refilter").click(function() {
+                $("#card-filter").toggle();
+            })
+
+            var today = new Date();
         })
 
-        var today = new Date();
-    })
-
-    // filter
-    $(document).ready(function() {
-        $('.filter-btn').click(function() {
-            $('.filter-btn').removeClass('active');
-            $(this).addClass('active');
-            filterResults();
-        });
-
-        $('#keyword').on('input', function() {
-            filterResults();
-        });
-
-        function filterResults() {
-            let filter = $('.filter-btn.active').data('filter');
-            let keyword = $('#keyword').val();
-
-            $.ajax({
-                url: '/recreations/filter', // Pastikan URL ini benar
-                method: 'GET',
-                data: {
-                    filter: filter,
-                    keyword: keyword
-                },
-                success: function(response) {
-                    console.log('respon', response);
-
-                    $('#results').html(response); // Pastikan elemen dengan ID 'results' ada di halaman
-                },
-                error: function(xhr) {
-                    console.error('Error:', xhr.responseText);
-                }
+        // filter
+        $(document).ready(function() {
+            $('.filter-btn').click(function() {
+                $('.filter-btn').removeClass('active');
+                $(this).addClass('active');
+                filterResults();
             });
-        }
-    });
 
+            $('#keyword').on('input', function() {
+                filterResults();
+            });
+
+            function filterResults() {
+                let filter = $('.filter-btn.active').data('filter');
+                let keyword = $('#keyword').val();
+
+                $.ajax({
+                    url: '/recreations/filter', // Pastikan URL ini benar
+                    method: 'GET',
+                    data: {
+                        filter: filter,
+                        keyword: keyword
+                    },
+                    success: function(response) {
+                        console.log('respon', response);
+
+                        $('#results').html(
+                        response); // Pastikan elemen dengan ID 'results' ada di halaman
+                    },
+                    error: function(xhr) {
+                        console.error('Error:', xhr.responseText);
+                    }
+                });
+            }
+        });
 </script>
 @endpush
