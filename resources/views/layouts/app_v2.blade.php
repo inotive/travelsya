@@ -70,28 +70,29 @@
         <i class="ki-duotone ki-arrow-up"><span class="path1"></span><span class="path2"></span></i>
     </div>
     <!--end::Scrolltop-->
-<div class="floating-container">
-  <div class="floating-button">+</div>
-  <div class="element-container">
+    <div class="floating-container">
+        <div class="floating-button">+</div>
+        <div class="element-container">
 
-    <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
-        <span class="float-element tooltip-left">
-          <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
-        </span>
-    </a>
+            <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
+                <span class="float-element tooltip-left">
+                    <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
+                </span>
+            </a>
 
-    <span class="float-element">
-        <a target="_blank" href="https://mailto:cs@travelsya.com">
-          <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
-        </a>
-    </span>
-    <span class="float-element">
-        <a target="_blank" href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
-          <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
-        </a>
-    </span>
-  </div>
-</div>
+            <span class="float-element">
+                <a target="_blank" href="https://mailto:cs@travelsya.com">
+                    <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
+                </a>
+            </span>
+            <span class="float-element">
+                <a target="_blank"
+                    href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
+                    <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
+                </a>
+            </span>
+        </div>
+    </div>
     <!--begin::Javascript-->
     @include('layouts.partials.foot')
 
@@ -103,9 +104,9 @@
         $(".main-menu li").on('click', function() {
             $('.form-menu').removeClass('show active')
         })
-
     </script>
 </body>
 
 <!--end::Body-->
+
 </html>

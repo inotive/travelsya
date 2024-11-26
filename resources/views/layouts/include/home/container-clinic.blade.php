@@ -3,62 +3,62 @@
 </div> --}}
 
 <div class="row gx-5 gx-xl-8 mb-xl-8 mb-5">
-  <!--begin::Col-->
-  <div class="col-xl-12">
+    <!--begin::Col-->
+    <div class="col-xl-12">
 
-      <!--begin::Tiles Widget 2 -->
-      <form action="{{ route('clinics.index') }}" method="GET"
-          class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
-          <!--begin::Body-->
-          <div class="card-body d-flex flex-column justify-content-between">
-              <!--begin::Title-->
-              <h2 class="fw-bold mb-5">Health & Beauty</h2>
-              <!--end::Title-->
+        <!--begin::Tiles Widget 2 -->
+        <form action="{{ route('clinics.index') }}" method="GET"
+            class="card bgi-no-repeat bgi-size-contain card-xl-stretch mb-xl-8 container-xxl mb-5">
+            <!--begin::Body-->
+            <div class="card-body d-flex flex-column justify-content-between">
+                <!--begin::Title-->
+                <h2 class="fw-bold mb-5">Health & Beauty</h2>
+                <!--end::Title-->
 
-              <!--begin::Radio group-->
-            <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+                <!--begin::Radio group-->
+                <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
 
-                <!--begin::Radio-->
-                <label class="btn btn-outline btn-danger active" data-kt-button="true">
-                    <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" value="health" checked required />
-                    <!--end::Input-->
-                    Health
-                </label>
-                <!--end::Radio-->
-
-                <!--begin::Radio-->
-                <label class="btn btn-outline btn-danger" data-kt-button="true">
-                    <!--begin::Input-->
-                    <input class="btn-check" type="radio" name="category" value="beauty" required />
-                    <!--end::Input-->
-                    Beauty
-                </label>
-                <!--end::Radio-->
-
-            </div>
-            <!--end::Radio group-->
-            <br>
-
-              <div class="row mb-3 gy-4">
-                  
-                  <div class="class=col-md-6 col-6 mb-5">
-
-                    <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
-                    <select name="location" id="location" class="form-select form-select-lg">
-                        <option value="balikpapan">Balikpapan</option>
-                        <option value="samarinda">Samarinda</option>
-                    </select>
-                    
-                </div>
-
-                <div class="class=col-md-6 col-6 mb-5">
-                    <label class="fs-5 fw-semibold mb-2">
-                        <span>Tanggal Pemesanan</span>
+                    <!--begin::Radio-->
+                    <label class="btn btn-outline btn-danger active" data-kt-button="true">
+                        <!--begin::Input-->
+                        <input class="btn-check" type="radio" name="category" value="health" checked required />
+                        <!--end::Input-->
+                        Health
                     </label>
-                    <input type="date" id="" class="form-control form-control-lg"
-                        name="keyword" placeholder="Tanggal" value="" />
+                    <!--end::Radio-->
+
+                    <!--begin::Radio-->
+                    <label class="btn btn-outline btn-danger" data-kt-button="true">
+                        <!--begin::Input-->
+                        <input class="btn-check" type="radio" name="category" value="beauty" required />
+                        <!--end::Input-->
+                        Beauty
+                    </label>
+                    <!--end::Radio-->
+
                 </div>
+                <!--end::Radio group-->
+                <br>
+
+                <div class="row mb-3 gy-4">
+
+                    <div class="class=col-md-6 col-6 mb-5">
+
+                        <label class="form-label fw-bold fs-6">Pilih Lokasi</label>
+                        <select name="location" id="location" class="form-select form-select-lg">
+                            <option value="balikpapan">Balikpapan</option>
+                            <option value="samarinda">Samarinda</option>
+                        </select>
+
+                    </div>
+
+                    <div class="class=col-md-6 col-6 mb-5">
+                        <label class="fs-5 fw-semibold mb-2">
+                            <span>Tanggal Pemesanan</span>
+                        </label>
+                        <input type="date" id="" class="form-control form-control-lg" name="keyword"
+                            placeholder="Tanggal" value="" />
+                    </div>
                     {{-- 
                   <div class="col-xl-4">
                     <label class="fs-5 fw-semibold mb-2">
@@ -71,19 +71,20 @@
                         <option value="general">Klinik Umum</option>
                     </select>
                 </div>
-                        --}}           
-                  <div class="d-flex justify-content-end">
-                      <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari Sekarang</button>
-                  </div>
+                        --}}
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-danger mt-8 w-100 mr-0" id="search-btn">Cari
+                            Sekarang</button>
+                    </div>
 
 
-              </div>
-          </div>
-          <!--end::Body-->
-      </form>
-      <!--end::Tiles Widget 2-->
+                </div>
+            </div>
+            <!--end::Body-->
+        </form>
+        <!--end::Tiles Widget 2-->
 
-      {{-- 
+        {{-- 
       <div class="col-xl-12 d-flex flex-column justify-content-between">
        <li class="nav-item">
         <h3>Menampilkan 120 Tempat Kesehatan</h3>  
@@ -145,123 +146,123 @@
 
       
   </div> --}}
-      
-  <!--end::Col-->
-</div>
+
+        <!--end::Col-->
+    </div>
 
 
-@push('add-style')
-  <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
-@endpush
+    @push('add-style')
+        <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    @endpush
 
-@push('add-script')
-  <script>
-      $(document).ready(function() {
+    @push('add-script')
+        <script>
+            $(document).ready(function() {
 
-          $.ajax({
-              type: "GET",
-              url: "{{ route('product.product.tax') }}",
-              success: function(response) {
-                  $('#productPajak').empty();
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('product.product.tax') }}",
+                    success: function(response) {
+                        $('#productPajak').empty();
 
-                  $.each(response, function(key, value) {
-                      $('#productPajak').append($('<option>', {
-                          value: value.kode,
-                          text: value.description
-                      }));
-                  });
-              }
-          });
+                        $.each(response, function(key, value) {
+                            $('#productPajak').append($('<option>', {
+                                value: value.kode,
+                                text: value.description
+                            }));
+                        });
+                    }
+                });
 
-          $('#noPelangganPajak').on('keyup', function() {
-              $('.textAlert').hide();
-          });
+                $('#noPelangganPajak').on('keyup', function() {
+                    $('.textAlert').hide();
+                });
 
 
-          $('#detailPajak').hide();
+                $('#detailPajak').hide();
 
-          $('#btnPeriksaPajak').on('click', function() {
-              var noPelangganPajak = $('#noPelangganPajak').val();
+                $('#btnPeriksaPajak').on('click', function() {
+                    var noPelangganPajak = $('#noPelangganPajak').val();
 
-              if (noPelangganPajak == '') {
-                  $('.textAlert').show();
-                  return false;
-              }
+                    if (noPelangganPajak == '') {
+                        $('.textAlert').show();
+                        return false;
+                    }
 
-              $('#alertPajak').empty()
-              $('#detailPajak').hide();
-              $('#btnPeriksaPajak').attr('disabled', true);
-              $('#btnPeriksaPajak').html(
-                  '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
-                  );
+                    $('#alertPajak').empty()
+                    $('#detailPajak').hide();
+                    $('#btnPeriksaPajak').attr('disabled', true);
+                    $('#btnPeriksaPajak').html(
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...'
+                    );
 
-              $.ajax({
-                  type: "POST",
-                  url: "{{ route('product.tax') }}",
-                  data: {
-                      'no_pelanggan': noPelangganPajak,
-                      'nom': $('#productPajak').val()
-                  },
-                  success: function(response) {
-                      // var simulateFeePajak = parseInt(responseTagihan.data.fee)
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('product.tax') }}",
+                        data: {
+                            'no_pelanggan': noPelangganPajak,
+                            'nom': $('#productPajak').val()
+                        },
+                        success: function(response) {
+                            // var simulateFeePajak = parseInt(responseTagihan.data.fee)
 
-                      // SIMULASI!!!
-                      var simulateFeePajak = 1000;
-                      var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 +
-                          1)) + 150000;
-                      var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
+                            // SIMULASI!!!
+                            var simulateFeePajak = 1000;
+                            var simulateAmountPajak = Math.floor(Math.random() * (300000 - 150000 +
+                                1)) + 150000;
+                            var simulateTotalPajak = simulateAmountPajak + simulateFeePajak;
 
-                      $('#namaPelangganPajak').text('Joko Susilo');
-                      $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(
-                          simulateAmountPajak));
-                      $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(
-                          simulateFeePajak));
-                      $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(
-                          simulateTotalPajak));
+                            $('#namaPelangganPajak').text('Joko Susilo');
+                            $('#totalTagihanPajak').text(new Intl.NumberFormat('id-ID').format(
+                                simulateAmountPajak));
+                            $('#biayaAdminPajak').text(new Intl.NumberFormat('id-ID').format(
+                                simulateFeePajak));
+                            $('#totalBayarPajak').text(new Intl.NumberFormat('id-ID').format(
+                                simulateTotalPajak));
 
-                      $('#inputNamaPelangganPajak').val('Joko Susilo');
-                      $('#inputTotalTagihanPajak').val(simulateAmountPajak);
-                      $('#inputBiayaAdminPajak').val(simulateFeePajak);
-                      $('#inputTotalBayarPajak').val(simulateTotalPajak);
+                            $('#inputNamaPelangganPajak').val('Joko Susilo');
+                            $('#inputTotalTagihanPajak').val(simulateAmountPajak);
+                            $('#inputBiayaAdminPajak').val(simulateFeePajak);
+                            $('#inputTotalBayarPajak').val(simulateTotalPajak);
 
-                      $('#btnPeriksaPajak').removeAttr('disabled');
-                      $('#btnPeriksaPajak').html('Periksa');
-                      $('#detailPajak').show();
-                  },
-                  error: function(xhr, status, error) {
-                      if (xhr.status === 400 || xhr.status === 500) {
-                          var alertDiv = $(
-                              `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
-                              );
+                            $('#btnPeriksaPajak').removeAttr('disabled');
+                            $('#btnPeriksaPajak').html('Periksa');
+                            $('#detailPajak').show();
+                        },
+                        error: function(xhr, status, error) {
+                            if (xhr.status === 400 || xhr.status === 500) {
+                                var alertDiv = $(
+                                    `<div class="alert alert-danger alert-dismissible fade show" role="alert">${xhr.responseJSON.data}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`
+                                );
 
-                          $('#alertPajak').empty().append(alertDiv);
-                      }
+                                $('#alertPajak').empty().append(alertDiv);
+                            }
 
-                      // Hapus spinner dan aktifkan tombol
-                      $('#btnPeriksaPajak').removeAttr('disabled');
-                      $('#btnPeriksaPajak').html('Periksa');
-                  }
-              });
-          });
-      });
+                            // Hapus spinner dan aktifkan tombol
+                            $('#btnPeriksaPajak').removeAttr('disabled');
+                            $('#btnPeriksaPajak').html('Periksa');
+                        }
+                    });
+                });
+            });
 
-      $(document).ready(function() {
-          // Handle the change event of the checkbox
-          $("#pajak").change(function() {
-              // Check if the checkbox is checked
-              if ($(this).is(":checked")) {
-                  // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
-                  $("#pajakPoint").prop("disabled", false);
-              } else {
-                  // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
-                  $("#pajakPoint").prop("disabled", true);
-                  $("#pajakPoint").remove();
-              }
-          });
-      });
-  </script>
+            $(document).ready(function() {
+                // Handle the change event of the checkbox
+                $("#pajak").change(function() {
+                    // Check if the checkbox is checked
+                    if ($(this).is(":checked")) {
+                        // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
+                        $("#pajakPoint").prop("disabled", false);
+                    } else {
+                        // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
+                        $("#pajakPoint").prop("disabled", true);
+                        $("#pajakPoint").remove();
+                    }
+                });
+            });
+        </script>
 
-  {{-- <script>
+        {{-- <script>
   $(document).ready(function () {
           $('#notelp').on('keyup', function (e) {
 
@@ -310,5 +311,4 @@
 
       })
 </script> --}}
-
-@endpush
+    @endpush
