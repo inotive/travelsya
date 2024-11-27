@@ -1,31 +1,39 @@
-@push('add_style')
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-@endpush
-<section class="hero-wrapper position-relative">
+<section class="hero-wrapper position-relative" style="margin-bottom: 75px;">
     <img src="{{ asset('images/spa_&_kecantikan.png') }}" alt="travelsya rekreasi" class="hero-img" height="100%"
         width="100%">
     <div class="hero-item-wrapper row position-absolute w-100 mx-auto">
         <div class="col-12 banner-title col-md-6">
             <span class="badge badge-custom-hero">Health and Beauty</span>
-            <h1 class="banner-text-title mt-5 text-white fw-bold">Cantik Sehat, Hidup Lebih Bahagia</h1>
+            <h1 class="banner-text-title mt-3 text-white fw-bold">Cantik Sehat, Hidup Lebih Bahagia</h1>
         </div>
         <div class="col-12 col-md-6 banner-search">
             <div class="search-banner-wrapper">
-                <div class="card card-body p-5">
+                <div class="card card-body p-3">
                     <form action="{{ route('health_beauty.show') }}" method="post">
                         @csrf
-                        <div class="mb-5">
-                            <ul class="nav nav-underline">
-                                <li class="nav-item">
-                                    <a href="#" aria-current="page" class="nav-link active">Health</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" aria-current="page" class="nav-link">Beauty</a>
-                                </li>
-                            </ul>
+
+                        <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+
+                            <!--begin::Radio-->
+                            <label class="btn btn-link active" data-kt-button="true">
+                                <!--begin::Input-->
+                                <input class="btn-check" type="radio" name="category" value="health" checked required />
+                                <!--end::Input-->
+                                Health
+                            </label>
+                            <!--end::Radio-->
+
+                            <!--begin::Radio-->
+                            <label class="btn btn-link" data-kt-button="true">
+                                <!--begin::Input-->
+                                <input class="btn-check" type="radio" name="category" value="beauty" required />
+                                <!--end::Input-->
+                                Beauty
+                            </label>
+                            <!--end::Radio-->
+
                         </div>
-                        <div class="input-group mb-5">
+                        <div class="input-group mb-3">
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-search"></i>
                             </span>
@@ -34,7 +42,7 @@
                                 <i class="fa-solid fa-location-crosshairs"></i>
                             </span>
                         </div>
-                        <div class="input-group mb-5">
+                        <div class="input-group mb-3">
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-calendar-days"></i>
                             </span>
@@ -52,11 +60,3 @@
         </div>
     </div>
 </section>
-@push('js')
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
-</script>
-@endpush

@@ -1,8 +1,8 @@
 <div class="second-nav border-top border-bottom border-3">
-    <div class="container d-flex align-items-center">
-        <div class="d-flex justify-content-between w-100">
+    <div class="container d-flex flex-row align-items-center">
+        <div class="d-flex w-100">
             <div class="d-flex align-items-center">
-                <a href="{{ route('home') }}" class="back-btn text-danger fs-16">
+                <a href="{{ route('home') }}" class="back-btn text-danger fs-16 text-decoration-none">
                     <h4 class="text-danger">
                         <i class="fa-solid fa-arrow-left me-2 text-danger"></i>
                         <span class="fw-bold my-auto">
@@ -11,8 +11,8 @@
                     </h4>
                 </a>
             </div>
-            <div class="d-flex align-items-center">
-                <div class="input-group mb-5">
+            <div class="ms-sm-auto">
+                <div class="input-group">
                     <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
                         <i class="fa-solid fa-search"></i>
                     </span>
