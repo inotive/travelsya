@@ -15,4 +15,9 @@ class NewHealthBeautyController extends Controller
         $data['clinics'] = [];
         return view('pagesv2.health_beauty.show', $data);
     }
+
+    public function detail(Request $request, $lokasi, $clinic){
+        $data['clinics'] = [];
+        return view('pagesv2.health_beauty.detail', $data);
+    }
 }

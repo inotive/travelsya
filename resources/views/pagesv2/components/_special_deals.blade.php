@@ -1,9 +1,9 @@
 <div class="section-header">
     <div style="display: flex; align-items: center;">
         <span style="font-size: 28px; margin-right: 10px; color: red;" class="fa-solid fa-tags"></span>
-        <h2 class="text-dark" style="position: relative; top: 3px;">Special Deals</h2>
+        <h2 class="text-dark" style="position: relative; top: 3px;">{{ $section_title }}</h2>
     </div>
-    <p class="mt-4">Jelajahi kategori-kategori kami untuk kebahagiaan maksimal</p>
+    <p class="mt-4">{{ $section_subtitle }}</p>
 </div>
 
 <div style="display: flex; gap: 10px; padding: 5px; border-radius: 10px; align-items: center; flex-direction:row;"
@@ -269,3 +269,4 @@
             </div>
         </div>
     </div>
+</div>
