@@ -1,4 +1,4 @@
-<div class="second-nav">
+<div class="second-nav border-top border-bottom border-3">
     <div class="container d-flex align-items-center">
         <div class="d-flex justify-content-between w-100">
             <div class="d-flex align-items-center">
