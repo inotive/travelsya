@@ -23,62 +23,50 @@
 <div id="categoriesCarouselControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <div class="card-wrapper container-md d-flex justify-content-around">
-                <div class="card" style="width: 24rem;">
+            <div class="card-wrapper container-md d-flex justify-content-around gap-2">
+                <div class="card shadow-sm">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
                 </div>
-                <div class="card" style="width: 24rem;">
+                <div class="card shadow-sm">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
                 </div>
-                <div class="card" style="width: 24rem;">
+                <div class="card shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                        class="card-img-top" alt="...">
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="card-wrapper container-sm d-flex   justify-content-around gap-2">
+                <div class="card shadow-sm rounded-6">
+                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                        class="card-img-top" alt="...">
+                </div>
+                <div class="card shadow-sm rounded-6">
+                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                        class="card-img-top" alt="...">
+                </div>
+                <div class="card shadow-sm rounded-6">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
                 </div>
             </div>
         </div>
         <div class="carousel-item">
-            <div class="card-wrapper container-sm d-flex   justify-content-around">
-                <div class="card" style="width: 24rem;">
+            <div class="card-wrapper container-sm d-flex  justify-content-around gap-2">
+                <div class="card  rounded-6">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
-                    <div class="card-body">
-                    </div>
                 </div>
-                <div class="card" style="width: 24rem;">
+                <div class="card shadow-sm rounded-6">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
-                    <div class="card-body">
-                    </div>
                 </div>
-                <div class="card" style="width: 24rem;">
+                <div class="card shadow-sm rounded-6">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
-                    <div class="card-body">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card-wrapper container-sm d-flex  justify-content-around">
-                <div class="card " style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                    </div>
-                </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                    </div>
-                </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                    </div>
                 </div>
             </div>
         </div>

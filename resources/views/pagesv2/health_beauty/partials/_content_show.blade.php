@@ -3,7 +3,7 @@
     integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 @endpush
 
-<div class="container">
+<div class="container mb-5">
     <section class="special-deals mt-5">
         @include('pagesv2.components._show', [
         'section_title' => $type,

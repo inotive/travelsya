@@ -14,8 +14,8 @@
 <div class="p-3 my-5">
     <div class="row g-3">
         <div class="col-md-6">
-            <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                class="img-fluid rounded shadow" alt="...">
+            <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg"
+                class="img-fluid rounded shadow" style="object-fit: contain;" alt="...">
         </div>
         <div class="col-md-6">
             <div class="row g-2">
@@ -98,7 +98,7 @@
 
 <div class="px-3 mb-3" id="paket">
     <div class="card bg-danger bg-opacity-25 p-3">
-        <div class="accordion">
+        <div class="accordion" id="list_paket">
             <div class="card accordion-item mb-3">
                 <div class="card-header p-0">
                     <div class="accordion-header w-100">
@@ -141,9 +141,12 @@
                             <span style="margin-left: auto;">
                                 <span class="text-danger fw-bold">IDR 230.000</span>/pax
                                 <span class="ms-3">
-                                    <span class="fa-solid fa-minus-circle text-danger fs-2"></span>
-                                    <span class="fs-2 ms-2">1</span>
-                                    <span class="fa-solid fa-plus-circle text-danger fs-2 ms-3"></span>
+                                    <span class="fa-solid fa-minus-circle text-danger fs-2" id="decrease_paket"
+                                        id_paket="1"></span>
+                                    <input type="hidden" name="val_paket_1" id="val_paket_1" value="1">
+                                    <span class="fs-2 mx-2" id="dummy_paket_1">1</span>
+                                    <span class="fa-solid fa-plus-circle text-danger fs-2" id="increase_paket"
+                                        id_paket="1"></span>
                                 </span>
                             </span>
                         </div>
@@ -152,7 +155,7 @@
                 <div class="card-footer">
                     <div class="d-flex flex-row align-items-center">
                         <span class="text-danger fw-bold">IDR 230.000</span>
-                        <button class="btn btn-danger" style="margin-left: auto;">Pilih Paket</button>
+                        <button class="btn btn-danger" style="margin-left: auto;" id="button_paket_1">Pesan</button>
                     </div>
                 </div>
             </div>
@@ -198,9 +201,12 @@
                             <span style="margin-left: auto;">
                                 <span class="text-danger fw-bold">IDR 230.000</span>/pax
                                 <span class="ms-3">
-                                    <span class="fa-solid fa-minus-circle text-danger fs-2"></span>
-                                    <span class="fs-2 ms-2">1</span>
-                                    <span class="fa-solid fa-plus-circle text-danger fs-2 ms-3"></span>
+                                    <span class="fa-solid fa-minus-circle text-danger fs-2" id="decrease_paket"
+                                        id_paket="2"></span>
+                                    <input type="hidden" name="val_paket_2" id="val_paket_2" value="0">
+                                    <span class="fs-2 ms-2" id="dummy_paket_2">0</span>
+                                    <span class="fa-solid fa-plus-circle text-danger fs-2 ms-3" id="increase_paket"
+                                        id_paket="2"></span>
                                 </span>
                             </span>
                         </div>
@@ -209,7 +215,8 @@
                 <div class="card-footer">
                     <div class="d-flex flex-row align-items-center">
                         <span class="text-danger fw-bold">IDR 230.000</span>
-                        <button class="btn btn-danger" style="margin-left: auto;">Pilih Paket</button>
+                        <button class="btn btn-danger" style="margin-left: auto;" id="button_paket_2">Pilih
+                            Paket</button>
                     </div>
                 </div>
             </div>
@@ -334,3 +341,31 @@
         quas culpa alias odit quos, quidem impedit saepe asperiores dolorem.
     </p>
 </div>
+
+@push('js')
+<script>
+    $(document).ready(function () {
+            $("#list_paket").on("click", "#decrease_paket", function () { 
+                let id = $(this).attr("id_paket");
+                let val_paket = parseInt($("#val_paket_"+id).val());
+                let decrease_val = val_paket;
+                if(val_paket - 1 >= 0){
+                    decrease_val = val_paket - 1;
+                }
+                $("#val_paket_"+id).val(decrease_val);
+                $("#dummy_paket_"+id).text(decrease_val);
+            })
+
+            
+            $("#list_paket").on("click", "#increase_paket", function () { 
+                let id = $(this).attr("id_paket");
+                let val_paket = parseInt($("#val_paket_"+id).val());
+                let increase_val = val_paket +1;
+                console.log(increase_val);
+                
+                $("#val_paket_"+id).val(increase_val);
+                $("#dummy_paket_"+id).text(increase_val);
+            })
+        });
+</script>
+@endpush

@@ -23,16 +23,22 @@
 <div id="specialdealsCarouselControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <div class="card-wrapper container-md d-flex justify-content-around">
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
+            <div class="card-wrapper container-md d-flex justify-content-around gap-2">
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
                                 <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
                             </div>
 
                             <h3 class="mt-3 text-dark">Spesial deals</h3>
@@ -50,15 +56,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
                                 <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
                             </div>
 
                             <h3 class="mt-3 text-dark">Spesial deals</h3>
@@ -76,97 +88,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <div class="card-content">
-                            <div class="lokasi d-flex align-items-center">
-                                <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
-                                <span>Jakarta</span>
-                            </div>
-
-                            <h3 class="mt-3 text-dark">Spesial deals</h3>
-
-                            <div class="rating d-flex align-items-center">
-                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb
-                                    ulasan)</span>
-                            </div>
-
-                            <div class="price mt-7">
-                                <span class="coret text-decoration-line-through">IDR 250.000</span>
-                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR 175.000</span>
-                            </div>
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <div class="card-wrapper container-sm d-flex   justify-content-around">
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
                     <div class="card-body">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
                                 <span>Jakarta</span>
-                            </div>
-
-                            <h3 class="mt-3 text-dark">Spesial deals</h3>
-
-                            <div class="rating d-flex align-items-center">
-                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb
-                                    ulasan)</span>
-                            </div>
-
-                            <div class="price mt-7">
-                                <span class="coret text-decoration-line-through">IDR 250.000</span>
-                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR 175.000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <div class="card-content">
-                            <div class="lokasi d-flex align-items-center">
-                                <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
-                                <span>Jakarta</span>
-                            </div>
-
-                            <h3 class="mt-3 text-dark">Spesial deals</h3>
-
-                            <div class="rating d-flex align-items-center">
-                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb
-                                    ulasan)</span>
-                            </div>
-
-                            <div class="price mt-7">
-                                <span class="coret text-decoration-line-through">IDR 250.000</span>
-                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR 175.000</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <div class="card-content">
-                            <div class="lokasi d-flex align-items-center">
-                                <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
-                                <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
                             </div>
 
                             <h3 class="mt-3 text-dark">Spesial deals</h3>
@@ -187,16 +123,22 @@
             </div>
         </div>
         <div class="carousel-item">
-            <div class="card-wrapper container-sm d-flex  justify-content-around">
-                <div class="card " style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
+            <div class="card-wrapper container-sm d-flex   justify-content-around gap-2">
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
                                 <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
                             </div>
 
                             <h3 class="mt-3 text-dark">Spesial deals</h3>
@@ -214,15 +156,21 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
                                 <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
                             </div>
 
                             <h3 class="mt-3 text-dark">Spesial deals</h3>
@@ -240,15 +188,121 @@
                         </div>
                     </div>
                 </div>
-                <div class="card" style="width: 24rem;">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="card-img-top" alt="...">
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="card-content">
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
-                                <span style="position: relative; left: 240px;" class="fa-regular fa-bookmark"></span>
                                 <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">Spesial deals</h3>
+
+                            <div class="rating d-flex align-items-center">
+                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
+                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb
+                                    ulasan)</span>
+                            </div>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 250.000</span>
+                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR 175.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <div class="card-wrapper container-sm d-flex  justify-content-around gap-2">
+                <div class="card ">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="lokasi d-flex align-items-center">
+                                <span class="fa-solid fa-location-dot me-2"></span>
+                                <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">Spesial deals</h3>
+
+                            <div class="rating d-flex align-items-center">
+                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
+                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb
+                                    ulasan)</span>
+                            </div>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 250.000</span>
+                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR 175.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="lokasi d-flex align-items-center">
+                                <span class="fa-solid fa-location-dot me-2"></span>
+                                <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
+                            </div>
+
+                            <h3 class="mt-3 text-dark">Spesial deals</h3>
+
+                            <div class="rating d-flex align-items-center">
+                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
+                                <span class="rating-number" style="position: relative; top: 1px;">4,8 (2rb
+                                    ulasan)</span>
+                            </div>
+
+                            <div class="price mt-7">
+                                <span class="coret text-decoration-line-through">IDR 250.000</span>
+                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR 175.000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+                    <div>
+                        <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
+                            class="card-img-top" alt="...">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2"
+                            style="top: 150px; left:50px; background-color:pink !important;">Big Deals
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-content">
+                            <div class="lokasi d-flex align-items-center">
+                                <span class="fa-solid fa-location-dot me-2"></span>
+                                <span>Jakarta</span>
+                                <span style="position: relative; margin-left: auto;"
+                                    class="fa-regular fa-bookmark"></span>
                             </div>
 
                             <h3 class="mt-3 text-dark">Spesial deals</h3>
