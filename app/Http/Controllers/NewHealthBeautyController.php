@@ -181,9 +181,9 @@ class NewHealthBeautyController extends Controller
         ];
         $dummy_partners = json_decode(json_encode($dummy_partners));
 
-        $data['chunked_special_deals'] = collect($dummy_special_deals)->chunk(4);
-        $data['chunked_categories'] = collect($dummy_categories)->chunk(4);
-        $data['chunked_partners'] = collect($dummy_partners)->chunk(4);
+        $data['special_deals'] = collect($dummy_special_deals)->chunk(4);
+        $data['categorises'] = collect($dummy_categories)->chunk(4);
+        $data['partners'] = collect($dummy_partners)->chunk(4);
         return view('pagesv2.health_beauty.index', $data);
     }
 
@@ -311,5 +311,10 @@ class NewHealthBeautyController extends Controller
     public function detail(Request $request, $lokasi, $clinic){
         $data['clinics'] = [];
         return view('pagesv2.health_beauty.detail', $data);
+    }
+
+    public function order(Request $request, $clinic){
+        $data['paket'] = [];
+        return view('pagesv2.health_beauty.order', $data);
     }
 }

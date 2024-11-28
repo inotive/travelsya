@@ -1,5 +1,5 @@
 <section class="hero-wrapper position-relative" style="margin-bottom: 75px;">
-    <img src="{{ asset('images/spa_&_kecantikan.png') }}" alt="travelsya rekreasi" class="hero-img" height="100%"
+    <img src="{{ asset('images/health_beauty.jpg') }}" alt="travelsya rekreasi" class="hero-img" height="100%"
         width="100%">
     <div class="hero-item-wrapper row position-absolute w-100 mx-auto">
         <div class="col-12 banner-title col-md-6">
@@ -17,7 +17,8 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link active" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="health" checked required />
+                                <input class="btn-check" type="radio" name="category" value="health" checked
+                                    required />
                                 <!--end::Input-->
                                 Health
                             </label>

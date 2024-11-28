@@ -106,17 +106,17 @@
         background-color: #ffffff47;
     }
 
-    .section-title .title{
+    .section-title .title {
         font-size: 24px;
         font-weight: 700;
     }
 
-    .section-title .subtitle{
+    .section-title .subtitle {
         font-size: 18px;
         color: #A5A5A5;
     }
 
-    .icon-wrapper{
+    .icon-wrapper {
         height: 30px;
         width: 30px;
         padding: 5px;
@@ -181,6 +181,48 @@
         cursor: default;
     }
 
+    .custom-dot-before::before {
+        content: ". ";
+        margin-left: 5px;
+    }
+
+    .custom-dot-after::after {
+        content: " .";
+        margin-right: 5px;
+    }
+
+    .mb-35px {
+        margin-bottom: 35px !important;
+    }
+
+    .mb-25px {
+        margin-bottom: 25px !important;
+    }
+
+    .btn-gray-carousel {
+        background-color: lightgray !important;
+        color: black !important;
+    }
+
+    .btn-gray-carousel:hover {
+        background-color: pink !important;
+        color: red !important;
+    }
+
+    .object-fit-contain {
+        object-fit: contain !important;
+    }
+
+    .card-img-top-rounded {
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+    }
+
+    .carousel-tab {
+        background-color: rgba(0, 0, 0, 0.50);
+        border-radius: 10px;
+        padding: 10px 20px;
+    }
 </style>
 <style>
     .item-menubar {
@@ -369,7 +411,6 @@
         background: #FF9800;
         box-shadow: 0 20px 20px -10px rgba(255, 152, 0, 0.5);
     }
-
 </style>
 @stack('add-style')
-{{-- @vite(['resources/js/app.js'])--}}
+{{-- @vite(['resources/js/app.js']) --}}

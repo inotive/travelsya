@@ -1,14 +1,15 @@
 <div class="section-title" style="margin-bottom:25px;">
-    <div class="subtitle text-capitalize mt-2">Menampilkan <span class="text-dark">{{ '1200' }}</span> hasil pencarian
+    <div class="subtitle text-capitalize mt-2">Menampilkan <span class="text-dark">{{ '1200' }}</span> hasil
+        pencarian
     </div>
-    <div class="subtitle text-capitalize mt-2">{{ $section_subtitle }}</div>
+    <div class="subtitle text-capitalize mt-2">{{ $section_title }}</div>
 </div>
 
 <div class="p-5 my-3">
     <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
         <div class="col p-3">
             <a href="{{ route('health_beauty.detail', ['lokasi' => 'jakarta', 'clinic' => 'lorem']) }}"
-                class="text-decoration-none">
+                class="text-decoration-none text-dark   ">
                 <div class="card" style="box-shadow: 0 10px 15px gray">
                     <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                         class="card-img-top" alt="...">
