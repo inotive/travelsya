@@ -188,46 +188,52 @@ class NewHealthBeautyController extends Controller
     }
 
     public function show(Request $request){
-        $dummy_clinics = [
+        $clinics = [
             [
                 'img' => '',
-                'lokasi' => 'jakarta',
+                'lokasi' => 'denpasar',
                 'name' => 'Product 1',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
             ],[
                 'img' => '',
-                'lokasi' => 'jakarta',
+                'lokasi' => 'denpasar',
                 'name' => 'Product 2',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
             ],[
                 'img' => '',
-                'lokasi' => 'jakarta',
+                'lokasi' => 'denpasar',
                 'name' => 'Product 3',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
             ],[
                 'img' => '',
-                'lokasi' => 'jakarta',
+                'lokasi' => 'denpasar',
                 'name' => 'Product 4',
+                'category' => 'beauty',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
             ],[
                 'img' => '',
-                'lokasi' => 'jakarta',
+                'lokasi' => 'denpasar',
                 'name' => 'Product 5',
+                'category' => 'beauty',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
             ],[
                 'img' => '',
-                'lokasi' => 'jakarta',
+                'lokasi' => 'denpasar',
                 'name' => 'Product 6',
+                'category' => 'beauty',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -235,6 +241,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 7',
+                'category' => 'beauty',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -242,6 +249,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 8',
+                'category' => 'beauty',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -249,6 +257,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 9',
+                'category' => 'beauty',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -256,6 +265,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 10',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -263,6 +273,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 11',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -270,6 +281,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 12',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -277,6 +289,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 13',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -284,6 +297,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 14',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -291,6 +305,7 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 15',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
@@ -298,13 +313,16 @@ class NewHealthBeautyController extends Controller
                 'img' => '',
                 'lokasi' => 'jakarta',
                 'name' => 'Product 16',
+                'category' => 'health',
                 'rate' => '4.8',
                 'origin_price' => 250000,
                 'cut_price' => 175000,
             ],
         ];
-        $dummy_clinics = json_decode(json_encode($dummy_clinics));
-        $data['chunked_clinics'] = collect($dummy_clinics);
+        $clinics = json_decode(json_encode($clinics));
+        $data['clinics'] = collect($clinics)->filter(function($clinic) use ($request){
+            return $clinic->category == $request->category;
+        });
         return view('pagesv2.health_beauty.show', $data);
     }
 

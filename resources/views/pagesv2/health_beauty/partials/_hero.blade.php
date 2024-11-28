@@ -38,7 +38,8 @@
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-search"></i>
                             </span>
-                            <input type="text" class="form-control" placeholder="Mau reservasi dimana?" />
+                            <input type="text" class="form-control" name="location"
+                                placeholder="Mau reservasi dimana?" />
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-location-crosshairs"></i>
                             </span>
@@ -47,7 +48,7 @@
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-calendar-days"></i>
                             </span>
-                            <input type="text" onfocus="(this.type='date')" class="form-control"
+                            <input type="text" name="date" onfocus="(this.type='date')" class="form-control"
                                 placeholder="Tanggal reservasi" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                         <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</button>
