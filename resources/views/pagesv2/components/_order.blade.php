@@ -37,6 +37,76 @@
             </div>
         </div>
 
+        <!-- Additional Safety -->
+        <div class="section-title" style="margin-bottom: 25px;">
+            <div style="display: flex; align-items: center;">
+                <h2 class="text-dark" style="position: relative; top: 3px;">Tambah Perlindungan Extra</h2>
+            </div>
+            <div class="subtitle text-capitalize mt-2">Pilih satu opsi untuk melanjutkan pemesanan</div>
+        </div>
+
+        <div class="mb-25px">
+            <div class="card rounded-4 border-1 shadow">
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="alert alert-primary" role="alert">
+                            Lindungi liburanmu dari yang gak pasti
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="card rounded-4 border border-dark">
+                            <div class="card-body d-flex flex-row align-items-center">
+                                <span class="fa-solid fa-money-bill text-success"></span>
+                                <div class="d-flex flex-column ms-3">
+                                    <span class="fw-bold">
+                                        100% Refund
+                                        <span class="fa-solid fa-exclamation-circle text-primary"></span>
+                                    </span>
+                                    <span>berubah pikiran di H-1 sebelum kunjuangan? Dapatkan uangmu kembali
+                                        100%!</span>
+                                </div>
+                                <input type="radio" class="ms-sm-auto" name="safety" id="safety_100" value="100"
+                                    checked>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="card rounded-4 border border-dark">
+                            <div class="card-body d-flex flex-row align-items-center">
+                                <span class="fa-solid fa-money-bill text-success"></span>
+                                <div class="d-flex flex-column ms-3">
+                                    <span class="fw-bold">
+                                        85% Refund
+                                        <span class="fa-solid fa-exclamation-circle text-primary opacity-50"></span>
+                                    </span>
+                                    <span>Menjamin refund hingga 85% harga tiket untuk pembatalan dengan alasan apa
+                                        pun</span>
+                                </div>
+                                <input type="radio" class="ms-sm-auto" name="safety" id="safety_85" value="85">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="card rounded-4 border border-dark">
+                            <div class="card-body d-flex flex-row align-items-center">
+                                <span class="fa-solid fa-xmark text-dark"></span>
+                                <span class="ms-3">lanjut tanpa perlindungan</span>
+                                <input type="radio" class="ms-sm-auto" name="safety" id="safety_85" value="85">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-bottom: 35px;">
+            <div class="subtitle text-capitalize mt-2">Dengan memilih asuransi, kamu telah menyetujui <span
+                    class="text-danger">Sarat dan Ketentuan</span> yang berlaku. Biaya tambahan terkait asuaransi
+                tertera di detail harga</div>
+        </div>
+        <!-- End Detail Pengunjung -->
+
+        <!-- Additional Safety -->
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
                 <h2 class="text-dark" style="position: relative; top: 3px;">Detail Pengunjung</h2>
@@ -72,6 +142,7 @@
                 </div>
             </div>
         </div>
+        <!-- End Detail Pengunjung -->
 
         <div class="mb-35px">
             <div class="card rounded-4 border-1 shadow">
@@ -81,17 +152,17 @@
                 </div>
                 <div class="card-body d-flex flex-row align-items-center">
                     <span class="fa-solid fa-gem fs-3 text-danger"></span>
-                    <span>Kamu akan mendapatkan 1000 poin</span>
+                    <span class="ms-3">Kamu akan mendapatkan 1000 poin</span>
                     <button class="btn btn-danger ms-sm-auto">Lanjutkan Pemesanan</button>
                 </div>
             </div>
         </div>
     </div>
     <div class="col-4">
-        <div class="card rounded-4 border-1 shadow fs-5">
+        <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
             <div class="card-body p-5">
-                <div class="d-flex flex-row">
-                    <img src="" alt="" width="50" height="50">
+                <div class="d-flex flex-row align-items-center">
+                    <img src="" alt="" width="50" height="50" class="rounded-1">
                     <span class="fw-bold ms-3 text-wrap">Klinik</span>
                     <span class="text-danger ms-sm-auto">Detail Paket</span>
                 </div>
@@ -118,6 +189,48 @@
                     <div class="d-flex flex-row">
                         <span class="fa-solid fs-3 mb-3 fa-clock"></span>
                         <span class="ms-3">Reservasi paling lambat 1 hari sebelumnya</span>
+                    </div>
+                </div>
+                <hr class="opacity-25 my-5">
+                <div class="d-flex flex-row align-items-center">
+                    <span>Total pembayaran</span>
+                    <span class="fs-3 ms-sm-auto">IDR 230.000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card rounded-4 border-1 shadow fs-5">
+            <div class="card-body p-5">
+                <div class="d-flex flex-row align-items-center">
+                    <img src="" alt="" width="50" height="50" class="rounded-1">
+                    <span class="fw-bold ms-3 text-wrap">Taman</span>
+                    <span class="text-danger ms-sm-auto">Detail Paket</span>
+                </div>
+                <hr class="opacity-25 my-5">
+                <div class="d-flex flex-column">
+                    <span>Tiket Reguler weekday</span>
+                    <span>2 tiket <span class="custom-dot-before">Adult 1, Child 1</span></span>
+                </div>
+                <hr class="opacity-25 my-5">
+                <div class="d-flex flex-column">
+                    <span>Masa Berlaku</span>
+                    <span>sen, 22 November 2024 - sel, 30 November 2024</span>
+                </div>
+                <hr class="opacity-25 my-5">
+                <div class="d-flex flex-column">
+                    <div class="d-flex flex-row">
+                        <span class="fa-solid fa-money-bill text-success"></span>
+                        <div class="d-flex flex-column ms-3">
+                            <span class="fw-bold">
+                                100% Refund
+                                <span class="fa-solid fa-exclamation-circle text-primary"></span>
+                            </span>
+                            <span>Asuransi tersedia dengan biaya tambahan</span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row">
+                        <span class="fa-solid fs-3 mb-3 fa-clock text-dark opacity-50"></span>
+                        <span class="ms-3">Berlaku hingga 7 hari sejak tanggal terpilih</span>
                     </div>
                 </div>
                 <hr class="opacity-25 my-5">

@@ -1,9 +1,8 @@
 <div class="container mb-5">
     <section class="special-deals mt-5">
 
-        @include('pagesv2.components._detail', [
+        @include('pagesv2.components._order', [
             'section_title' => $type,
-            'route' => 'health_beauty.order',
         ])
     </section>
 </div>

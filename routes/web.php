@@ -227,6 +227,9 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
 
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
+    Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
+    Route::get('/detail/{lokasi}/{clinic}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
+    Route::post('/detail/{clinic}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
 });
 
 Route::group(['prefix' => 'health_beauty'], function () {

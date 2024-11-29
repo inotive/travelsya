@@ -287,7 +287,7 @@
         }
     </style>
     @stack('add-style')
-    {{-- @vite(['resources/js/app.js'])--}}
+    {{-- @vite(['resources/js/app.js']) --}}
 </head>
 <!--end::Head-->
 
@@ -416,10 +416,10 @@
                                         <a href="/partner-hotel" class="text-white">
                                             <p>Partner</p>
                                         </a>
-                                        <a href="{{route('bantuan-user')}}" class="text-white">
+                                        <a href="{{ route('bantuan-user') }}" class="text-white">
                                             <p>Pusat Bantuan</p>
                                         </a>
-                                        <a href="{{route('company.terms')}}" class="text-white">
+                                        <a href="{{ route('company.terms') }}" class="text-white">
                                             <p>Kebijakan Privasi</p>
                                         </a>
                                         <a href="{{ route('company.privat') }}" class="text-white">
@@ -579,7 +579,6 @@
         $(".main-menu li").on('click', function() {
             $('.form-menu').removeClass('show active')
         })
-        
     </script>
 </body>
 

@@ -116,7 +116,7 @@
         </div>
     </div>
     <div class="card bg-danger bg-opacity-25 p-3">
-        <form action="{{ route('health_beauty.order', ['clinic' => 1]) }}" method="post">
+        <form action="{{ route($route, ['clinic' => 1]) }}" method="post">
             @csrf
             <div class="accordion" id="list_paket">
                 <div class="card accordion-item mb-3">

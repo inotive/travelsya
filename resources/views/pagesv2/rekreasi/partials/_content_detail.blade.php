@@ -3,7 +3,7 @@
 
         @include('pagesv2.components._detail', [
             'section_title' => $type,
-            'route' => 'health_beauty.order',
+            'route' => 'rekreasi.order',
         ])
     </section>
 </div>
