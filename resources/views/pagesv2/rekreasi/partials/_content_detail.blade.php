@@ -5,7 +5,8 @@
         @include('pagesv2.components._detail', [
         'section_title' => $type,
         'route' => 'rekreasi.order',
-        'package' => 'pagesv2.components._detail_recreation_package'
+        'package' => 'pagesv2.components._detail_recreation_package',
+        'facility' => true
         ])
     </section>
 </div>

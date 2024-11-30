@@ -17,7 +17,7 @@
                         <i class="fa-solid fa-search"></i>
                     </span>
                     <input type="text" class="form-control search-input"
-                        placeholder="Cari klinik keseharan dan kecantikan disini" />
+                        placeholder="Cari tempat rental mobil langganan kamu disini" />
                 </div>
             </div>
         </div>

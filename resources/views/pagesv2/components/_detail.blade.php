@@ -23,39 +23,54 @@
 </div>
 
 <div class="px-3 mb-35px">
-    <div id="ringkasan" class="mb-35px">
-        <div class="section-title mb-4">
-            <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 1.35vw)">
-                Klinik
+    <div class="row">
+        <div class="col-9">
+            <div id="ringkasan" class="mb-35px">
+                <div class="section-title mb-4">
+                    <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 1.35vw)">
+                        Klinik
+                    </div>
+                </div>
+                <div class="rating d-flex align-items-center mb-25px">
+                    <span class="bintang text-warning fs-1 fa fa-star checked me-2"></span>
+                    <span class="rating-number fs-3 fw-bold">4.8 / <small class="fs-6">5</small> <a href="#"
+                            class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx Ulasan)</a>
+                    </span>
+                    <span class="rating-number fs-3 custom-dot-before">2500 terjual</span>
+                </div>
+                <div class="lokasi d-flex align-items-center mb-25px">
+                    <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50"></span>
+                    <span class="fs-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, magnam.
+                        Voluptatum
+                        veritatis beatae
+                        quibusdam, excepturi quam ipsam soluta commodi quae.</span>
+                </div>
+                <div class="lokasi d-flex align-items-center mb-25px">
+                    <span class="fa-solid fa-clock fs-2 me-2 text-dark opacity-50"></span>
+                    <span class="fs-3 me-2">Buka: Hari ini 09.00 - 20.00</span>
+                    <a href="#" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
+                </div>
+            </div>
+            <div class="card bg-danger bg-opacity-25 rounded-4 pd-3 mb-35px">
+                <div class="card-body">
+                    <div id="highlight" class="mb-3">
+                        <h2>Highlight</h2>
+                        <ul class="fs-3">
+                            <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh</li>
+                            <li>kami menggunakan produk berkualitas tinggi seperti Davines dan Olaplex</li>
+                        </ul>
+                        <a href="#" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="rating d-flex align-items-center mb-25px">
-            <span class="bintang text-warning fs-1 fa fa-star checked me-2"></span>
-            <span class="rating-number fs-3 fw-bold">4.8 / <small class="fs-6">5</small> <a href="#"
-                    class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx Ulasan)</a> </span>
-            <span class="rating-number fs-3 custom-dot-before">2500 terjual</span>
-        </div>
-        <div class="lokasi d-flex align-items-center mb-25px">
-            <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50"></span>
-            <span class="fs-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, magnam. Voluptatum
-                veritatis beatae
-                quibusdam, excepturi quam ipsam soluta commodi quae.</span>
-        </div>
-        <div class="lokasi d-flex align-items-center mb-25px">
-            <span class="fa-solid fa-clock fs-2 me-2 text-dark opacity-50"></span>
-            <span class="fs-3 me-2">Buka: Hari ini 09.00 - 20.00</span>
-            <a href="#" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
-        </div>
-    </div>
-    <div class="card bg-danger bg-opacity-25 rounded-4 pd-3 mb-35px">
-        <div class="card-body">
-            <div id="highlight" class="mb-3">
-                <h2>Highlight</h2>
-                <ul class="fs-3">
-                    <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh</li>
-                    <li>kami menggunakan produk berkualitas tinggi seperti Davines dan Olaplex</li>
-                </ul>
-                <a href="#" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
+        <div class="col-3">
+            <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
+                <span class="d-flex justify-content-space-between gap-2 align-items-center">
+                    Mulai Dari <span class="text-danger fs-2 fw-bold">
+                        IDR 230.000
+                    </span>
+                </span>
             </div>
         </div>
     </div>
@@ -64,113 +79,7 @@
 
 @include($package)
 
-<div class="px-3 mb-3 d-flex flex-column mb-35px" id="review">
-    <div class="section-title mb-4">
-        <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
-            Review
-        </div>
-    </div>
-    <div class="d-flex align-items-center flex-row mb-3">
-        <span class="text-warning fs-2 bintang fa fa-star checked me-2"></span>
-        <span class="rating-number fw-bold text-dark opacity-50"
-            style="font-size: calc(1rem + 1.35vw)">4.8/<small>5</small></span>
-        <div class="d-flex flex-column ms-5 fs-5">
-            <h3>Bagus</h3>
-            <span class="opacity-75">Dari 2800 review</span>
-        </div>
-    </div>
-    <div class="d-flex
-            flex-row gap-2 p-1 rounded-1 align-items-center mb-3">
-        <button class="btn btn-gray-carousel btn-sm rounded-circle fs-2" data-bs-target="#specialdealsCarouselControls"
-            data-bs-slide="prev">
-            <span class="chevron fa-solid fa-chevron-left"></span>
-        </button>
-        <button class="btn btn-gray-carousel btn-sm rounded-circle fs-2" data-bs-target="#specialdealsCarouselControls"
-            data-bs-slide="next">
-            <span class="chevron fa-solid fa-chevron-right"></span>
-        </button>
-        <a href="#spesial_deals" class="text-danger ms-auto fw-bold fs-2">Lihat
-            Semua</a>
-    </div>
-    <div id="specialdealsCarouselControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="card-wrapper container-md d-flex justify-content-around gap-2">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex flex-row align-items-center mb-3">
-                                <div class="card-title d-flex align-items-center fs-2">5.0/<small
-                                        class="opacity-75">5</small>
-                                </div>
-                                <span class="opacity-75 ms-sm-auto">{{
-                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
-                            </div>
-                            <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
-                            <span class="fs-5 opacity-75">Pelayanan nyaman banget... Next bakalan balek lg buat
-                                treatment
-                                disana</span>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex flex-row align-items-center mb-3">
-                                <div class="card-title d-flex align-items-center fs-2">5.0/<small
-                                        class="opacity-75">5</small>
-                                </div>
-                                <span class="opacity-75 ms-sm-auto">{{
-                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
-                            </div>
-                            <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
-                            <span class="fs-5 opacity-75">Pelayanan nyaman banget... Next bakalan balek lg buat
-                                treatment
-                                disana</span>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex flex-row align-items-center mb-3">
-                                <div class="card-title d-flex align-items-center fs-2">5.0/<small
-                                        class="opacity-75">5</small>
-                                </div>
-                                <span class="opacity-75 ms-sm-auto">{{
-                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
-                            </div>
-                            <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
-                            <span class="fs-5 opacity-75">Pelayanan nyaman banget... Next bakalan balek lg buat
-                                treatment
-                                disana</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="card-wrapper container-md d-flex justify-content-around gap-2">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-center">5.0/<small>5</small></div>
-                            <div class="card-subtitle">Hayati Nur</div>
-                            <span>Pelayanan nyaman banget... Next bakalan balek lg buat treatment disana</span>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-center">5.0/<small>5</small></div>
-                            <div class="card-subtitle">Hayati Nur</div>
-                            <span>Pelayanan nyaman banget... Next bakalan balek lg buat treatment disana</span>
-                        </div>
-                    </div>
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-center">5.0/<small>5</small></div>
-                            <div class="card-subtitle">Hayati Nur</div>
-                            <span>Pelayanan nyaman banget... Next bakalan balek lg buat treatment disana</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+@include('pagesv2.components._review')
 
 <div class="px-3 mb-35px d-flex flex-column" id="lokasi">
     <div class="section-title mb-4">
@@ -202,6 +111,24 @@
         </div>
     </div>
 </div>
+
+@if ($facility)
+<div class="px-3 mb-35px d-flex flex-column fs-4" id="deskripsi">
+    <div class="section-title mb-4">
+        <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
+            Fasilitas
+        </div>
+    </div>
+    <div id="description" class="d-flex flex-row align-items-center">
+        <span class="fa-solid fa-store"></span>
+        <span class="ms-2">Roko Suvenir</span>
+        <span class="fa-solid fa-camera ms-5"></span>
+        <span class="ms-2">Spot Foto</span>
+        <span class="fa-solid fa-utensils ms-5"></span>
+        <span class="ms-2">Restoran/Food Court</span>
+    </div>
+</div>
+@endif
 
 <div class="px-3 mb-35px d-flex flex-column fs-4" id="deskripsi">
     <div class="section-title mb-4">

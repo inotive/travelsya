@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\CarRentalController;
+use App\Http\Controllers\NewCarRentController;
 use App\Http\Controllers\NewHealthBeautyController;
 use App\Http\Controllers\NewRecreationController;
 
@@ -237,6 +238,13 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::post('/show', [NewHealthBeautyController::class, 'show'])->name('health_beauty.show');
     Route::get('/detail/{lokasi}/{clinic}', [NewHealthBeautyController::class, 'detail'])->name('health_beauty.detail');
     Route::post('/order/{clinic}', [NewHealthBeautyController::class, 'order'])->name('health_beauty.order');
+});
+
+Route::group(['prefix' => 'car_rent'], function () {
+    Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
+    Route::post('/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
+    Route::get('/detail/{lokasi}/{provider}/{duration}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
+    Route::post('/order/{provider}', [NewCarRentController::class, 'order'])->name('car_rent.order');
 });
 
 // Health & Beauty
