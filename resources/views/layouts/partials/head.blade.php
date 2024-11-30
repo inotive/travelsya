@@ -28,7 +28,8 @@
 <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
 <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
 <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-{{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+{{--
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
 <!--end::Global Stylesheets Bundle-->
@@ -218,6 +219,11 @@
     .card-img-top-rounded {
         border-top-left-radius: 1rem;
         border-top-right-radius: 1rem;
+    }
+
+    .card-img-bottom-rounded {
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
     }
 
     .carousel-tab {
@@ -412,6 +418,14 @@
     .floating-container .float-element:nth-child(3) {
         background: #FF9800;
         box-shadow: 0 20px 20px -10px rgba(255, 152, 0, 0.5);
+    }
+
+    .dashed {
+        border: 1px dashed #000;
+    }
+
+    .border-bottom-dashed {
+        border-bottom: 1px dashed #000;
     }
 </style>
 @stack('add-style')

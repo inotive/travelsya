@@ -84,4 +84,18 @@ class General
 
         return $data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
     }
+
+    public static function getNextWeekdays($date): array
+    {
+        $weekdays = [];
+
+        while (count($weekdays) < 7) {
+            if ($date->isWeekday()) {
+                $weekdays[] = $date->format('Y-m-d');
+            }
+            $date->addDay();
+        }
+
+        return $weekdays;
+    }
 }
