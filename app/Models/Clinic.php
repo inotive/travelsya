@@ -30,7 +30,7 @@ class Clinic extends Model
         'ltd',
     ];
 
-    public function clinicPackages()
+    public function packages()
     {
         return $this->hasMany(ClinicHasPackages::class, 'clinic_id', 'id')->orderBy('price');
     }
