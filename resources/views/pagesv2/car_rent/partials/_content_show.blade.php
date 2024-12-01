@@ -124,8 +124,11 @@
                             <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
                                 <span class="mb-2"><span class="text-danger fw-bold">IDR 230.000</span> /
                                     hari</span>
-                                <button class="btn btn-danger py-1" id="provider_button" data-toogle="modal"
-                                    data-target="#providers">Pilih penyedia</button>
+                                <a href="{{ route('car_rent.detail', ['lokasi' => 'jakarta', 'duration' => 1, 'provider' => 'A']) }}"
+                                    class="text-decoration-none">
+                                    <button class="btn btn-danger py-1" id="provider_button" data-toogle="modal"
+                                        data-target="#providers">Pilih penyedia</button>
+                                </a>
                             </div>
                         </div>
                     </div>
