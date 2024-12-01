@@ -2,74 +2,43 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clinic;
 use Illuminate\Http\Request;
 
 class NewHealthBeautyController extends Controller
 {
     public function index()
     {
-        $dummy_special_deals = [
-            [
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 1',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 2',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 3',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 4',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 5',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 6',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 7',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 8',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],
-        ];
-        $dummy_special_deals = json_decode(json_encode($dummy_special_deals));
+        $special = Clinic::Active()->with('reviews', 'packages', 'kota')
+            ->whereHas('packages', function ($p) {
+                $p->whereColumn('unit_price', '>', 'price');
+            })
+            ->limit(10)
+            ->get();
 
-        $dummy_categories = [
+        $special_deals = [];
+
+        foreach ($special as $key => $rec) {
+            if (count($rec['packages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
+                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'name' => $rec['clinic_name'],
+                    'rate' => $rec->avgRating(),
+                    'category' => $rec['category'],
+                    'origin_price' => (int)$rec['packages'][0]['unit_price'],
+                    'cut_price' => $rec['packages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                ];
+
+                array_push($special_deals, $item);
+            }
+        }
+
+        $special_deals = json_decode(json_encode($special_deals));
+
+        $categories = [
             [
                 'img' => '',
                 'name' => 'Perawatan Kulit',
@@ -95,23 +64,8 @@ class NewHealthBeautyController extends Controller
                 'name' => 'Healthcare',
                 'slug' => 'healthcare'
             ],
-            [
-                'img' => '',
-                'name' => 'Makeup',
-                'slug' => 'makeup'
-            ],
-            [
-                'img' => '',
-                'name' => 'Perawatan Kuku',
-                'slug' => 'perawatan_kuku'
-            ],
-            [
-                'img' => '',
-                'name' => 'Healthcare',
-                'slug' => 'healthcare'
-            ],
         ];
-        $dummy_categories = json_decode(json_encode($dummy_categories));
+        $categories = json_decode(json_encode($categories));
 
         $dummy_partners = [
             [
@@ -181,9 +135,10 @@ class NewHealthBeautyController extends Controller
         ];
         $dummy_partners = json_decode(json_encode($dummy_partners));
 
-        $data['special_deals'] = collect($dummy_special_deals)->chunk(4);
-        $data['categorises'] = collect($dummy_categories)->chunk(4);
+        $data['special_deals'] = collect($special_deals)->chunk(4);
+        $data['categorises'] = collect($categories)->chunk(4);
         $data['partners'] = collect($dummy_partners)->chunk(4);
+
         return view('pagesv2.health_beauty.index', $data);
     }
 
