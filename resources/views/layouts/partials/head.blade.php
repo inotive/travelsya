@@ -429,6 +429,23 @@
     .border-bottom-dashed {
         border-bottom: 1px dashed #000;
     }
+
+    .swiper-container {
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+        max-width: 100%;
+        border-radius: 10px;
+    }
 </style>
 @stack('add-style')
 {{-- @vite(['resources/js/app.js']) --}}

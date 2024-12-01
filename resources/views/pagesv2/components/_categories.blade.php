@@ -5,38 +5,62 @@
     <div class="subtitle text-capitalize mt-2">{{ $section_subtitle }}</div>
 </div>
 
-<div style="display: flex; gap: 10px; border-radius: 10px; align-items: center; flex-direction:row; margin-bottom:25px;">
-    <button class="panah btn btn-gray-carousel rounded-circle" data-bs-target="#categoriesCarouselControls"
-        data-bs-slide="prev">
+<div
+    style="display: flex; gap: 10px; border-radius: 10px; align-items: center; flex-direction:row; margin-bottom:25px;">
+    <div class="panah btn btn-gray-carousel rounded-circle" id="category-button-prev">
         <span class="chevron fa-solid fa-chevron-left"></span>
-    </button>
-    <button class="panah btn btn-gray-carousel rounded-circle" data-bs-target="#categoriesCarouselControls"
-        data-bs-slide="next">
+    </div>
+    <div class="panah btn btn-gray-carousel rounded-circle" id="category-button-next">
         <span class="chevron fa-solid fa-chevron-right"></span>
-    </button>
+    </div>
     <a href="#spesial_deals" class="text-danger text-decoration-none"
         style="font-size: 1.5rem; font-weight:700; margin-left:auto;">Lihat
         Semua</a>
 </div>
 
-<div id="categoriesCarouselControls" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @foreach ($categorises as $key => $categories)
-            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                <div class="card-wrapper container-md d-flex justify-content-around gap-2">
-                    @foreach ($categories as $category)
-                        <div class="card shadow-sm rounded-4 d-flex flex-row align-items-center">
-                            <img src="{{ $category->img != '' ? $category->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                                class="rounded-4 img-fluid" alt="...">
-                            <div class="d-flex flex-column w-100 align-items-center"
-                                style="z-index: 1; position: absolute;">
-                                <div class="carousel-tab">
-                                    <h3 class="text-light fw-bold">{{ $category->name }}</h3>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+<div class="categories-swiper-container">
+    <div class="swiper-wrapper">
+        @foreach($categorises as $category)
+        <div class="swiper-slide gap-2">
+            <!-- Card -->
+            <div class="card shadow-sm rounded-4 d-flex flex-row align-items-center" style="width: 18rem;">
+                <img src="{{ $category->img != '' ? asset($category->img) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                    class="card-img-top" alt="{{ $category->name }}">
+                <div class="d-flex flex-column w-100 align-items-center" style="z-index: 1; position: absolute;">
+                    <div class="carousel-tab">
+                        <h3 class="text-light fw-bold">{{ $category->name }}</h3>
+                    </div>
                 </div>
             </div>
+        </div>
         @endforeach
     </div>
+</div>
+
+
+@push('js')
+<script>
+    const cswiper = new Swiper('.categories-swiper-container', {
+        slidesPerView: 4, // Tampilkan 4 slide sekaligus
+        spaceBetween: 50, // Jarak antar slide
+        navigation: {
+            nextEl: '#category-button-next',
+            prevEl: '#category-button-prev',
+        },
+        loop: true, // Aktifkan loop jika diperlukan
+        slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik
+        breakpoints: {
+            1200: {
+                slidesPerView: 4,
+            },
+            768: {
+                slidesPerView: 3, // Tampilkan 3 slide untuk layar lebih kecil
+            },
+            576: {
+                slidesPerView: 2, // Tampilkan 2 slide untuk layar sangat kecil
+            },
+        },
+    });
+</script>
+
+@endpush

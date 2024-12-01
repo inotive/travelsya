@@ -13,6 +13,10 @@
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous">
 </script> --}}
 
+<!-- begin:: js swiper -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- end:: js swiper -->
+
 <!--end::Global Javascript Bundle-->
 
 <!--begin::Vendors Javascript(used for this page only)-->
