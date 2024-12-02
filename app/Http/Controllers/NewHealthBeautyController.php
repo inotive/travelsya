@@ -36,36 +36,6 @@ class NewHealthBeautyController extends Controller
             }
         }
 
-        $item = [
-            'id' => 4,
-            'img' => 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg',
-            'lokasi' => 'Kota Dihapus',
-            'name' => 'klinik baru A',
-            'rate' => 4.75,
-            'category' => 'health',
-            'origin_price' => 350000,
-            'cut_price' => 275000,
-            'rating_count' => 189,
-        ];
-
-        array_push($special_deals, $item);
-
-        $item = [
-            'id' => 5,
-            'img' => 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg',
-            'lokasi' => 'Kota Dihapus',
-            'name' => 'klinik baru B',
-            'rate' => 4.85,
-            'category' => 'health',
-            'origin_price' => 450000,
-            'cut_price' => 399000,
-            'rating_count' => 2500,
-        ];
-
-        array_push($special_deals, $item);
-
-        $special_deals = json_decode(json_encode($special_deals));
-
         $categories = [
             [
                 'img' => '',
