@@ -40,6 +40,16 @@ class Clinic extends Model
         return $this->belongsTo(City::class, 'city', 'city_id');
     }
 
+    /**
+     * Get all of the transactions for the Clinic
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(DetailTransactionHealthBeauty::class, 'clinic_id', 'id');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
