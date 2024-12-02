@@ -5,7 +5,8 @@
         </div>
     </div>
     <div class="card bg-danger bg-opacity-25 p-3">
-        <form action="{{ route($route, ['clinic' => 1]) }}" method="post">
+        <form action="{{ route('health_beauty.order', ['lokasi' => '-', 'clinic' => $clinic->id, 'id' => '-']) }}"
+            method="post">
             <input type="hidden" name="service" value="health-beauty">
             <input type="hidden" name="payment" value="xendit">
             @csrf
@@ -15,9 +16,9 @@
                     <div class="card-header p-0">
                         <div class="accordion-header w-100">
                             <h2 class="w-100" id="paket-{{ $p['id'] }}">
-                                <button class="accordion-button collapsed bg-opacity-0 " type="button"
-                                    data-bs-toggle="collapse" data-bs-target="#paket-collapse-{{ $p['id'] }}" aria-expanded="false"
-                                    aria-controls="paket-collapse-{{ $p['id'] }}">
+                                <button class="accordion-button collapsed bg-opacity-0 align-items->start" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#paket-collapse-{{ $p['id'] }}"
+                                    aria-expanded="false" aria-controls="paket-collapse-{{ $p['id'] }}">
                                     <div class="d-flex flex-column">
                                         <h3>{{ $p['name'] }}</h3>
                                         @if (count($p['facilities']) > 0)
@@ -25,7 +26,8 @@
                                             <small>
                                                 @foreach ($p['facilities'] as $f)
                                                 <span class="fa-solid fa-money-bill me-1"></span>
-                                                <span class="me-3">{{ $f['facility']['name'] ?? 'Invalid facility' }}</span>
+                                                <span class="me-3">{{ $f['facility']['name'] ?? 'Invalid facility'
+                                                    }}</span>
                                                 @endforeach
                                             </small>
                                         </div>
@@ -53,7 +55,9 @@
                         aria-labelledby="paket-{{ $p['id'] }}">
                         <div class="mb-2">
                             Masa Berlaku: {{ \App\Helpers\General::getDateShortMonth(now()) }} -
-                            {{ \App\Helpers\General::getDateShortMonth(\Carbon\Carbon::now()->addDays($p['expiry_date'])) }}
+                            {{
+                            \App\Helpers\General::getDateShortMonth(\Carbon\Carbon::now()->addDays($p['expiry_date']))
+                            }}
                         </div>
                         <div class="mb-2 fw-bold">
                             Jumlah tiket

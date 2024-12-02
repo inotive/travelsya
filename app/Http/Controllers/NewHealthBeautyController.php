@@ -283,9 +283,9 @@ class NewHealthBeautyController extends Controller
         return view('pagesv2.health_beauty.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $clinic, $id = null){
+    public function detail(Request $request, $lokasi = null, $clinic, $id = null){
         if($id){
-            $data['clinic'] = Clinic::find($id);
+            $data['clinic'] = Clinic::with('reviews')->find($id);
         }else{
             $data['clinic'] = null;
         }

@@ -33,11 +33,13 @@
                 </div>
                 <div class="rating d-flex align-items-center mb-25px">
                     <span class="bintang text-warning fs-1 fa fa-star checked me-2"></span>
-                    <span class="rating-number fs-3 fw-bold">{{ $clinic->avgRating() }} / <small class="fs-6">5</small> <a href="#"
-                            class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{ $clinic->reviews->count() }} Ulasan)</a>
+                    <span class="rating-number fs-3 fw-bold">{{ $clinic->avgRating() }} / <small class="fs-6">5</small>
+                        <a href="#" class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{
+                            $clinic->reviews->count() }} Ulasan)</a>
                     </span>
                     @if ($clinic->transactions->count() > 0)
-                    <span class="rating-number fs-3 custom-dot-before">{{ number_format($clinic->transactions->count()) }} terjual</span>
+                    <span class="rating-number fs-3 custom-dot-before">{{ number_format($clinic->transactions->count())
+                        }} terjual</span>
                     @endif
                 </div>
                 <div class="lokasi d-flex align-items-center mb-25px">
@@ -46,7 +48,8 @@
                 </div>
                 <div class="lokasi d-flex align-items-center mb-25px">
                     <span class="fa-solid fa-clock fs-2 me-2 text-dark opacity-50"></span>
-                    <span class="fs-3 me-2">Buka: Hari ini {{ $clinic['open'] ?? '00:00' }} - {{ $clinic['close'] ?? '00:00' }}</span>
+                    <span class="fs-3 me-2">Buka: Hari ini {{ $clinic['open'] ?? '00:00' }} - {{ $clinic['close'] ??
+                        '00:00' }}</span>
                     <a href="javascript:" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
                 </div>
             </div>
@@ -55,7 +58,7 @@
                     <div id="highlight" class="mb-3">
                         <h2>Highlight</h2>
                         @if ($clinic['highlight'])
-                            {!! $clinic['highlight'] !!}
+                        {!! $clinic['highlight'] !!}
                         @else
                         <ul class="fs-3">
                             <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh</li>
@@ -90,21 +93,15 @@
     </div>
     <div class="d-flex align-items-center flex-row mb-3">
         <span class="text-warning fs-2 bintang fa fa-star checked me-2"></span>
-        <span class="rating-number fw-bold text-dark opacity-50"
-            style="font-size: calc(1rem + 1.35vw)">{{ $clinic->avgRating() }}/<small>5</small></span>
+        <span class="rating-number fw-bold text-dark opacity-50" style="font-size: calc(1rem + 1.35vw)">{{
+            $clinic->avgRating() }}/<small>5</small></span>
         <div class="d-flex flex-column ms-5 fs-5">
             <h3>
                 @if ($clinic->avgRating() > 4.7)
-                    Memuaskan
-                @elseif ($clinic->avgRating() <= 4.7)
-                    Bagus
-                @elseif ($clinic->avgRating() <= 3)
-                    Cukup
-                @elseif ($clinic->avgRating() <= 2.5)
-                    Kurang Bagus
-                @endif
-            </h3>
-            <span class="opacity-75">Dari {{ number_format($clinic->reviews->count()) }} review</span>
+                Memuaskan
+                @elseif ($clinic->avgRating() <= 4.7) Bagus @elseif ($clinic->avgRating() <= 3) Cukup @elseif ($clinic->
+                        avgRating() <= 2.5) Kurang Bagus @endif </h3>
+                            <span class="opacity-75">Dari {{ number_format($clinic->reviews->count()) }} review</span>
         </div>
     </div>
     <div class="d-flex
@@ -125,22 +122,23 @@
             <div class="carousel-item active">
                 <div class="card-wrapper container-md d-flex justify-content-around gap-2">
                     @if (count($clinic->reviews) > 0)
-                        @foreach ($clinic->reviews as $r)
-                        <div class="card border" style="min-width: 270px;">
-                            <div class="card-body">
-                                <div class="d-flex flex-row align-items-center mb-3">
-                                    <div class="card-title d-flex align-items-center fs-2"><bold class="text-dark fw-bold">{{ round($r['rate'], 1) }}</bold>/<small
-                                            class="opacity-75" style="font-size: 14px;">5</small>
-                                    </div>
-                                    <span
-                                        class="opacity-75 ms-sm-auto">{{ \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
+                    @foreach ($clinic->reviews as $r)
+                    <div class="card border" style="min-width: 270px;">
+                        <div class="card-body">
+                            <div class="d-flex flex-row align-items-center mb-3">
+                                <div class="card-title d-flex align-items-center fs-2">
+                                    <bold class="text-dark fw-bold">{{ round($r['rate'], 1) }}</bold>/<small
+                                        class="opacity-75" style="font-size: 14px;">5</small>
                                 </div>
-                                <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1 text-capitalize">
-                                    {{ $r['user']['name'] ?? 'Invalid User' }}</div>
-                                <span class="fs-5 opacity-75">{{ $r['comment'] }}</span>
+                                <span class="opacity-75 ms-sm-auto">{{
+                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
                             </div>
+                            <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1 text-capitalize">
+                                {{ $r['user']['name'] ?? 'Invalid User' }}</div>
+                            <span class="fs-5 opacity-75">{{ $r['comment'] }}</span>
                         </div>
-                        @endforeach
+                    </div>
+                    @endforeach
                     @endif
                 </div>
             </div>
@@ -188,7 +186,7 @@
     </div>
     <div id="description" class="d-flex flex-row align-items-center">
         <span class="fa-solid fa-store"></span>
-        <span class="ms-2">Roko Suvenir</span>
+        <span class="ms-2">Toko Suvenir</span>
         <span class="fa-solid fa-camera ms-5"></span>
         <span class="ms-2">Spot Foto</span>
         <span class="fa-solid fa-utensils ms-5"></span>

@@ -1,4 +1,5 @@
-<div style="display: flex; gap: 10px; border-radius: 10px; align-items: center; flex-direction:row; margin-bottom:25px;">
+<div
+    style="display: flex; gap: 10px; border-radius: 10px; align-items: center; flex-direction:row; margin-bottom:25px;">
     {{-- <button class="panah btn btn-gray-carousel rounded-circle" id="carousel-control-prev"
         data-target="#specialdealsCarouselControls" href="#specialdealsCarouselControls" data-slide="prev">
         <span class="chevron fa-solid fa-chevron-left"></span>
@@ -21,48 +22,48 @@
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
     <div class="swiper-wrapper">
         @foreach ($special_deals as $deal)
-            <div class="swiper-slide gap-2">
-                <!-- Card -->
-                <a href="{{ route('health_beauty.detail', ['lokasi' => $deal['lokasi'], 'clinic' => $deal['clinic'], 'id' => $deal['id']]) }}"
-                    class="text-decoration-none text-dark">
-                    <div class="card shadow-sm" style="width: 18rem;">
-                        <div class="position-relative">
-                            <img src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                                class="card-img-top" alt="{{ $deal['name'] }}"
-                                onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
-                            <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
-                                style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="lokasi d-flex align-items-center">
-                                <span class="fa-solid fa-location-dot me-2"></span>
-                                <span class="text-start">{{ $deal['lokasi'] }}</span>
-                                <span style="position: relative; margin-left: auto;"
-                                    class="fa-regular fa-bookmark fs-2"></span>
-                            </div>
-
-                            <h3 class="mt-3 text-dark text-start">{{ $deal['name'] }}</h3>
-
-                            <div class="rating d-flex align-items-center text-start">
-                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                                <span class="rating-number" style="position: relative; top: 1px;">{{ $deal['rate'] }}
-                                    ({{ $deal['rating_count'] }}
-                                    ulasan)
-                                </span>
-                            </div>
-
-                            <div class="price mt-3 text-start">
-                                <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                    {{ number_format($deal['origin_price'], 0, ',', '.') }}</span>
-                                <span class="text-danger text-bold">IDR
-                                    {{ number_format($deal['cut_price'], 0, ',', '.') }}</span>
-                            </div>
+        <div class="swiper-slide gap-2">
+            <!-- Card -->
+            <a href="{{ route('health_beauty.detail', ['lokasi' => $deal['lokasi'], 'clinic' => $deal['clinic'], 'id' => $deal['id']]) }}"
+                class="text-decoration-none text-dark">
+                <div class="card shadow-sm" style="width: 18rem;">
+                    <div class="position-relative">
+                        <img src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                            class="card-img-top" alt="{{ $deal['name'] }}"
+                            onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
+                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
+                            style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
                         </div>
                     </div>
+                    <div class="card-body">
+                        <div class="lokasi d-flex align-items-center">
+                            <span class="fa-solid fa-location-dot me-2"></span>
+                            <span class="text-start">{{ $deal['lokasi'] }}</span>
+                            <span style="position: relative; margin-left: auto;"
+                                class="fa-regular fa-bookmark fs-2"></span>
+                        </div>
 
-                </a>
-            </div>
+                        <h3 class="mt-3 text-dark text-start">{{ $deal['name'] }}</h3>
+
+                        <div class="rating d-flex align-items-center text-start">
+                            <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
+                            <span class="rating-number" style="position: relative; top: 1px;">{{ $deal['rate'] }}
+                                ({{ $deal['rating_count'] }}
+                                ulasan)
+                            </span>
+                        </div>
+
+                        <div class="price mt-3 text-start">
+                            <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
+                                {{ number_format($deal['origin_price'], 0, ',', '.') }}</span>
+                            <span class="text-danger text-bold">IDR
+                                {{ number_format($deal['cut_price'], 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </a>
+        </div>
         @endforeach
     </div>
 </div>
@@ -117,8 +118,8 @@
 </div> --}}
 
 @push('js')
-    <script>
-        const spswiper = new Swiper('#special-swiper-container', {
+<script>
+    const spswiper = new Swiper('#special-swiper-container', {
             slidesPerView: 4, // Tampilkan 4 slide sekaligus
             spaceBetween: 10, // Jarak antar slide
             navigation: {
@@ -143,5 +144,5 @@
                 },
             },
         });
-    </script>
+</script>
 @endpush

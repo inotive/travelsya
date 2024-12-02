@@ -41,20 +41,25 @@
                         </div>
                         <div class="rating d-flex align-items-center mb-25px">
                             <span class="bintang text-warning fs-1 fa fa-star checked me-2"></span>
-                            <span class="rating-number fs-3 fw-bold">{{ $clinic->avgRating() }} / <small class="fs-6">5</small> <a href="#"
-                                    class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{ $clinic->reviews->count() }} Ulasan)</a>
+                            <span class="rating-number fs-3 fw-bold">{{ $clinic->avgRating() }} / <small
+                                    class="fs-6">5</small> <a href="#"
+                                    class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{
+                                    $clinic->reviews->count() }} Ulasan)</a>
                             </span>
                             @if ($clinic->transactions->count() > 0)
-                            <span class="rating-number fs-3 custom-dot-before">{{ number_format($clinic->transactions->count()) }} terjual</span>
+                            <span class="rating-number fs-3 custom-dot-before">{{
+                                number_format($clinic->transactions->count()) }} terjual</span>
                             @endif
                         </div>
                         <div class="lokasi d-flex align-items-center mb-25px">
                             <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50"></span>
-                            <span class="fs-3">{{ $clinic['address'] }}, {{ $clinic->kota->city_name ?? 'Invalid city' }}</span>
+                            <span class="fs-3">{{ $clinic['address'] }}, {{ $clinic->kota->city_name ?? 'Invalid city'
+                                }}</span>
                         </div>
                         <div class="lokasi d-flex align-items-center mb-25px">
                             <span class="fa-solid fa-clock fs-2 me-2 text-dark opacity-50"></span>
-                            <span class="fs-3 me-2">Buka: Hari ini {{ $clinic['open'] ?? '00:00' }} - {{ $clinic['close'] ?? '00:00' }}</span>
+                            <span class="fs-3 me-2">Buka: Hari ini {{ $clinic['open'] ?? '00:00' }} - {{
+                                $clinic['close'] ?? '00:00' }}</span>
                             <a href="javascript:" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
                         </div>
                     </div>
@@ -63,14 +68,16 @@
                             <div id="highlight" class="mb-3">
                                 <h2>Highlight</h2>
                                 @if ($clinic['highlight'])
-                                    {!! $clinic['highlight'] !!}
+                                {!! $clinic['highlight'] !!}
                                 @else
                                 <ul class="fs-3">
-                                    <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh</li>
+                                    <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh
+                                    </li>
                                     <li>kami menggunakan produk berkualitas tinggi seperti Davines dan Olaplex</li>
                                 </ul>
                                 @endif
-                                <a href="javascript:" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
+                                <a href="javascript:" class="text-danger text-decoration-none fs-3">Lihat
+                                    Selengkapnya</a>
                             </div>
                         </div>
                     </div>
@@ -101,45 +108,29 @@
             </div>
             <div class="card rounded-4 border">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1413.9929019501262!2d100.36971342405258!3d-0.30524640058500946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd538bd1ff164a7%3A0xcea33881870dc19!2sJam%20Gadang%20Bukittinggi!5e0!3m2!1sen!2sid!4v1732690647336!5m2!1sen!2sid"
-                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" class="card-img-top-rounded"
-                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    src="https://www.google.com/maps?q={{ $clinic['lat'] }}, {{ $clinic['ltd'] }}&z=12&output=embed">
+                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
+                    class="card-img-top-rounded" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 <div class="card-body d-flex flex-row aligh-items-center">
                     <div class="d-flex flex-row align-items-center">
                         <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50 me-5"></span>
                         <span class="fs-3 ms-5">{{ $clinic['address'] }}</span>
                     </div>
                     <div class="d-flex flex-column align-items-center ms-sm-auto me-5">
-                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"><span
+                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
+                            onclick="openMap({{ $clinic['lat'] }}, {{ $clinic['ltd'] }})"><span
                                 class="fa-solid fa-location-arrow fs-1 me-2 text-danger fw-bold"></span></button>
                         <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
                     </div>
                     <div class="d-flex flex-column align-items-center mx-5  ">
-                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"><span
-                                class="fa-solid fa-location-arrow fs-1 me-2 text-danger fw-bold"></span></button>
+                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
+                            onclick="getDirection({{ $clinic['lat'] }}, {{ $clinic['ltd'] }})"><span
+                                class="fa-solid fa-route fs-1 me-2 text-danger fw-bold"></span></button>
                         <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
                     </div>
                 </div>
             </div>
         </div>
-
-        @if ($facility)
-        <div class="px-3 mb-35px d-flex flex-column fs-4" id="deskripsi">
-            <div class="section-title mb-4">
-                <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
-                    Fasilitas
-                </div>
-            </div>
-            <div id="description" class="d-flex flex-row align-items-center">
-                <span class="fa-solid fa-store"></span>
-                <span class="ms-2">Roko Suvenir</span>
-                <span class="fa-solid fa-camera ms-5"></span>
-                <span class="ms-2">Spot Foto</span>
-                <span class="fa-solid fa-utensils ms-5"></span>
-                <span class="ms-2">Restoran/Food Court</span>
-            </div>
-        </div>
-        @endif
 
         <div class="px-3 mb-35px d-flex flex-column fs-4" id="deskripsi">
             <div class="section-title mb-4">
@@ -178,6 +169,18 @@
                         $("#dummy_paket_" + id).text(increase_val);
                     })
                 });
+
+            function openMap(latitude, longitude){
+                // Event untuk membuka lokasi di tab baru
+                    const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+                    window.open(mapUrl, '_blank');
+            }
+
+            function getDirection(latitude, longitude){
+            // Event untuk mendapatkan rute
+                const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+                window.open(directionsUrl, '_blank');
+        }
         </script>
         @endpush
 
