@@ -2,72 +2,100 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recreation;
 use Illuminate\Http\Request;
 
 class NewRecreationController extends Controller
 {
     public function index()
     {
-        $dummy_special_deals = [
-            [
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 1',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 2',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 3',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 4',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 5',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 6',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 7',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 8',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],
-        ];
-        $dummy_special_deals = json_decode(json_encode($dummy_special_deals));
+        $specials = Recreation::Active()->with('recreationPackages', 'reviews', 'kota')
+            // ->whereHas('recreationPackages', function($p){
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
+            ->limit(10)
+            ->get();
+
+        $special_deals = [];
+
+        foreach ($specials as $key => $rec) {
+            if (count($rec['recreationPackages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
+                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'name' => $rec['clinic_name'],
+                    'rate' => $rec->avgRating(),
+                    'category' => $rec['category'],
+                    // 'origin_price' => (int)$rec['packages'][0]['unit_price'],
+                    'origin_price' => $rec['recreationPackages'][0]['unit_price'],
+                    'cut_price' => $rec['recreationPackages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                ];
+
+                array_push($special_deals, $item);
+            }
+        }
+        // $dummy_special_deals = [
+        //     [
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 1',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 2',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 3',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 4',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 5',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 6',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 7',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],[
+        //         'img' => '',
+        //         'lokasi' => 'jakarta',
+        //         'name' => 'Product 8',
+        //         'rate' => '4.8',
+        //         'origin_price' => 250000,
+        //         'cut_price' => 175000,
+        //     ],
+        // ];
+        // $dummy_special_deals = json_decode(json_encode($dummy_special_deals));
 
         $dummy_categories = [
             [
@@ -181,9 +209,9 @@ class NewRecreationController extends Controller
         ];
         $dummy_partners = json_decode(json_encode($dummy_partners));
 
-        $data['special_deals'] = collect($dummy_special_deals)->chunk(4);
-        $data['categorises'] = collect($dummy_categories)->chunk(4);
-        $data['partners'] = collect($dummy_partners)->chunk(4);
+        $data['special_deals'] = collect($special_deals);
+        $data['categorises'] = collect($dummy_categories);
+        $data['partners'] = collect($dummy_partners);
         return view('pagesv2.rekreasi.index', $data);
     }
 
