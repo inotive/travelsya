@@ -19,7 +19,7 @@
         Semua</a>
 </div>
 
-<div class="special-swiper-container">
+<div class="special-swiper-container overflow-hidden" id="special-swiper-container">
     <div class="swiper-wrapper">
         @foreach($special_deals as $deal)
         <div class="swiper-slide gap-2">
@@ -113,14 +113,18 @@
 
 @push('js')
 <script>
-    const spswiper = new Swiper('.special-swiper-container', {
+    const spswiper = new Swiper('#special-swiper-container', {
         slidesPerView: 4, // Tampilkan 4 slide sekaligus
         spaceBetween: 10, // Jarak antar slide
         navigation: {
             nextEl: '#swiper-button-next',
             prevEl: '#swiper-button-prev',
         },
+        autoplay: {
+            delay: 5000,
+        },
         loop: true, // Aktifkan loop jika diperlukan
+        autoRun: true,
         slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik
         breakpoints: {
             1200: {
