@@ -3,8 +3,8 @@
     "scripts": {
         "dev": "vite",
         "build": "vite build",
-        "push": "sh deploy.sh",
-        "push_uum": "sh deploy_uum.sh"
+        "push_main": "sh deploy.sh",
+        "push": "sh deploy_uum.sh"
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
