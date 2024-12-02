@@ -5,7 +5,6 @@
         @include('pagesv2.components._detail', [
         'section_title' => $type,
         'route' => 'health_beauty.order',
-        'package' => 'pagesv2.components._detail_health_beauty_package',
         'facility' => false
         ])
     </section>

@@ -36,30 +36,33 @@
                     <span class="rating-number fs-3 fw-bold">{{ $clinic->avgRating() }} / <small class="fs-6">5</small> <a href="#"
                             class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{ $clinic->reviews->count() }} Ulasan)</a>
                     </span>
-                    <span class="rating-number fs-3 custom-dot-before">2500 terjual</span>
+                    @if ($clinic->transactions->count() > 0)
+                    <span class="rating-number fs-3 custom-dot-before">{{ number_format($clinic->transactions->count()) }} terjual</span>
+                    @endif
                 </div>
                 <div class="lokasi d-flex align-items-center mb-25px">
                     <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50"></span>
-                    <span class="fs-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, magnam.
-                        Voluptatum
-                        veritatis beatae
-                        quibusdam, excepturi quam ipsam soluta commodi quae.</span>
+                    <span class="fs-3">{{ $clinic['address'] }}, {{ $clinic->kota->city_name ?? 'Invalid city' }}</span>
                 </div>
                 <div class="lokasi d-flex align-items-center mb-25px">
                     <span class="fa-solid fa-clock fs-2 me-2 text-dark opacity-50"></span>
-                    <span class="fs-3 me-2">Buka: Hari ini 09.00 - 20.00</span>
-                    <a href="#" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
+                    <span class="fs-3 me-2">Buka: Hari ini {{ $clinic['open'] ?? '00:00' }} - {{ $clinic['close'] ?? '00:00' }}</span>
+                    <a href="javascript:" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
                 </div>
             </div>
             <div class="card bg-danger bg-opacity-25 rounded-4 pd-3 mb-35px">
                 <div class="card-body">
                     <div id="highlight" class="mb-3">
                         <h2>Highlight</h2>
+                        @if ($clinic['highlight'])
+                            {!! $clinic['highlight'] !!}
+                        @else
                         <ul class="fs-3">
                             <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh</li>
                             <li>kami menggunakan produk berkualitas tinggi seperti Davines dan Olaplex</li>
                         </ul>
-                        <a href="#" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
+                        @endif
+                        <a href="javascript:" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
                     </div>
                 </div>
             </div>
@@ -68,7 +71,7 @@
             <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
                 <span class="d-flex justify-content-space-between gap-2 align-items-center">
                     Mulai Dari <span class="text-danger fs-2 fw-bold">
-                        IDR 230.000
+                        IDR {{ number_format($clinic['packages'][0]['price']) }}
                     </span>
                 </span>
             </div>
@@ -77,7 +80,7 @@
     <hr>
 </div>
 
-@include($package)
+@include('pagesv2.components._detail_health_beauty_package')
 
 @include('pagesv2.components._review')
 
@@ -95,8 +98,7 @@
         <div class="card-body d-flex flex-row aligh-items-center">
             <div class="d-flex flex-row align-items-center">
                 <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50 me-5"></span>
-                <span class="fs-3 ms-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet, magnam.
-                    Voluptatum</span>
+                <span class="fs-3 ms-5">{{ $clinic['address'] }}</span>
             </div>
             <div class="d-flex flex-column align-items-center ms-sm-auto me-5">
                 <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"><span
@@ -137,40 +139,7 @@
         </div>
     </div>
     <div id="description" class="opacity-75">
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta officia repellat vero, libero aspernatur
-            fugiat
-            iste consequatur fugit impedit at nisi esse dolorem distinctio aliquid, deleniti quam molestiae earum
-            blanditiis
-            quis nostrum. Eum error impedit obcaecati minus temporibus voluptas fugit amet ducimus illo animi, officia
-            sed
-            excepturi nemo voluptatem unde officiis beatae magni delectus? Quaerat ducimus ea alias rem est iure
-            praesentium
-            veritatis cupiditate eos cum illum, quas dolore, molestiae in laboriosam. Recusandae accusantium
-            consequuntur
-            suscipit sapiente ratione explicabo ducimus omnis expedita natus esse, eum optio quos repellendus! Hic quas
-            nobis tenetur excepturi inventore illo obcaecati culpa enim, soluta vel omnis modi, dolore commodi ipsa quod
-            eum! Recusandae cum fugiat deserunt hic et, doloribus, eveniet, eos placeat iure atque vitae consectetur
-            cupiditate nostrum. Officia, incidunt.
-        </p>
-        <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque corporis fuga quod, libero impedit sint
-            soluta
-            facere nam adipisci! Atque maxime incidunt sunt excepturi minus sit ducimus ullam maiores doloremque dolore,
-            quasi quos libero optio nam voluptatibus aliquam amet! Deserunt doloremque veritatis dignissimos. Nemo,
-            alias
-            ea. Quia quam deleniti odit.
-        </p>
-        <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima corporis exercitationem esse sit, eos
-            officiis
-            quas culpa alias odit quos, quidem impedit saepe asperiores dolorem.
-        </p>
-        <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minima corporis exercitationem esse sit, eos
-            officiis
-            quas culpa alias odit quos, quidem impedit saepe asperiores dolorem.
-        </p>
+        {!! $clinic['description'] ?? 'Belum ada deskripsi' !!}
 
     </div>
 </div>

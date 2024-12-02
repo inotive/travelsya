@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoriesServices;
 use App\Models\Clinic;
+use App\Models\ClinicHasPackages;
 use Illuminate\Http\Request;
 
 class NewHealthBeautyController extends Controller
@@ -331,7 +332,9 @@ class NewHealthBeautyController extends Controller
     }
 
     public function order(Request $request, $clinic){
-        $data['paket'] = [];
+        $data['paket'] = ClinicHasPackages::find($request->package_id);
+        $data['qty'] = $request->total_ticket;
+        dd($data);
         return view('pagesv2.health_beauty.order', $data);
     }
 }

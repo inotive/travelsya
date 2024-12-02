@@ -7,10 +7,20 @@
     <div class="d-flex align-items-center flex-row mb-3">
         <span class="text-warning fs-2 bintang fa fa-star checked me-2"></span>
         <span class="rating-number fw-bold text-dark opacity-50"
-            style="font-size: calc(1rem + 1.35vw)">4.8/<small>5</small></span>
+            style="font-size: calc(1rem + 1.35vw)">{{ $clinic->avgRating() }}/<small>5</small></span>
         <div class="d-flex flex-column ms-5 fs-5">
-            <h3>Bagus</h3>
-            <span class="opacity-75">Dari 2800 review</span>
+            <h3>
+                @if ($clinic->avgRating() > 4.7)
+                    Memuaskan
+                @elseif ($clinic->avgRating() <= 4.7)
+                    Bagus
+                @elseif ($clinic->avgRating() <= 3)
+                    Cukup
+                @elseif ($clinic->avgRating() <= 2.5)
+                    Kurang Bagus
+                @endif
+            </h3>
+            <span class="opacity-75">Dari {{ number_format($clinic->reviews->count()) }} review</span>
         </div>
     </div>
     <div class="d-flex
@@ -23,7 +33,7 @@
             data-bs-slide="next">
             <span class="chevron fa-solid fa-chevron-right"></span>
         </button>
-        <a href="#spesial_deals" class="text-danger ms-auto fw-bold fs-2">Lihat
+        <a href="javascript:" class="text-danger ms-auto fw-bold fs-2">Lihat
             Semua</a>
     </div>
     <div id="reviewsCarouselControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
@@ -69,10 +79,9 @@
                                 <span
                                     class="opacity-75 ms-sm-auto">{{ \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
                             </div>
-                            <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
-                            <span class="fs-5 opacity-75">Pelayanan nyaman banget... Next bakalan balek lg buat
-                                treatment
-                                disana</span>
+                            <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1 text-capitalize">
+                                {{ $r['user']['name'] ?? 'Invalid User' }}</div>
+                            <span class="fs-5 opacity-75">{{ $r['comment'] }}</span>
                         </div>
                     </div>
                 </div>
