@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoryRecreation;
 use App\Models\Recreation;
 use Illuminate\Http\Request;
 
@@ -36,182 +37,48 @@ class NewRecreationController extends Controller
                 array_push($special_deals, $item);
             }
         }
-        // $dummy_special_deals = [
-        //     [
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 1',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 2',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 3',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 4',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 5',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 6',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 7',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],[
-        //         'img' => '',
-        //         'lokasi' => 'jakarta',
-        //         'name' => 'Product 8',
-        //         'rate' => '4.8',
-        //         'origin_price' => 250000,
-        //         'cut_price' => 175000,
-        //     ],
-        // ];
-        // $dummy_special_deals = json_decode(json_encode($dummy_special_deals));
 
-        $dummy_categories = [
-            [
-                'img' => '',
-                'name' => 'Perawatan Kulit',
-                'slug' => 'perawatan_kulit'
-            ],
-            [
-                'img' => '',
-                'name' => 'Perawatan Kuku',
-                'slug' => 'perawatan_kuku'
-            ],
-            [
-                'img' => '',
-                'name' => 'Perawatan Rambut',
-                'slug' => 'perawatan_rambut'
-            ],
-            [
-                'img' => '',
-                'name' => 'Makeup',
-                'slug' => 'makeup'
-            ],
-            [
-                'img' => '',
-                'name' => 'Healthcare',
-                'slug' => 'healthcare'
-            ],
-            [
-                'img' => '',
-                'name' => 'Makeup',
-                'slug' => 'makeup'
-            ],
-            [
-                'img' => '',
-                'name' => 'Perawatan Kuku',
-                'slug' => 'perawatan_kuku'
-            ],
-            [
-                'img' => '',
-                'name' => 'Healthcare',
-                'slug' => 'healthcare'
-            ],
-        ];
-        $dummy_categories = json_decode(json_encode($dummy_categories));
+        $categories = CategoryRecreation::select('id', 'name')->get()->toArray();
 
-        $dummy_partners = [
-            [
-                'id' => 1,
-                'img' => '',
-                'name' => 'Partner 1',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 2,
-                'img' => '',
-                'name' => 'Partner 2',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 3,
-                'img' => '',
-                'name' => 'Partner 3',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 4,
-                'img' => '',
-                'name' => 'Partner 4',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 5,
-                'img' => '',
-                'name' => 'Partner 5',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 6,
-                'img' => '',
-                'name' => 'Partner 6',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 7,
-                'img' => '',
-                'name' => 'Partner 7',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 8,
-                'img' => '',
-                'name' => 'Partner 8',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-        ];
-        $dummy_partners = json_decode(json_encode($dummy_partners));
+        $categorises = [];
+
+        if(count($categories) > 0){
+            foreach ($categories as $key => $rec) {
+                $item = [
+                        'id' => $rec['id'],
+                        'name' => $rec['name'],
+                    ];
+
+                array_push($categorises, $item);
+            }
+        }
+
+        $data_partners = Recreation::Active()->with('reviews', 'kota')
+            ->limit(10)
+            ->get();
+
+        $partners = [];
+
+        foreach ($data_partners as $key => $rec) {
+                $item = [
+                    'id' => $rec['id'],
+                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
+                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'name' => $rec['clinic_name'],
+                    'rate' => $rec->avgRating(),
+                    'category' => $rec['category'],
+                    // 'origin_price' => (int)$rec['packages'][0]['unit_price'],
+                    'origin_price' => $rec['recreationPackages'][0]['unit_price'],
+                    'cut_price' => $rec['recreationPackages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                ];
+
+                array_push($partners, $item);
+        }
 
         $data['special_deals'] = collect($special_deals);
-        $data['categorises'] = collect($dummy_categories);
-        $data['partners'] = collect($dummy_partners);
+        $data['categorises'] = collect($categorises);
+        $data['partners'] = collect($partners);
         return view('pagesv2.rekreasi.index', $data);
     }
 
@@ -354,8 +221,8 @@ class NewRecreationController extends Controller
         return view('pagesv2.rekreasi.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $clinic){
-        $data['clinics'] = [];
+    public function detail(Request $request, $id){
+        $data['detail'] = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
         return view('pagesv2.rekreasi.detail', $data);
     }
 

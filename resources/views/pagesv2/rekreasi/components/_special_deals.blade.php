@@ -23,8 +23,7 @@
         @foreach ($special_deals as $deal)
             <div class="swiper-slide gap-2">
                 <!-- Card -->
-                <a href="{{ route('health_beauty.detail', ['lokasi' => $deal['lokasi'], 'clinic' => $deal['clinic'], 'id' => $deal['id']]) }}"
-                    class="text-decoration-none text-dark">
+                <a href="{{ route('rekreasi.detail', ['id' => $deal['id']]) }}" class="text-decoration-none text-dark">
                     <div class="card shadow-sm" style="width: 18rem;">
                         <div class="position-relative">
                             <img src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
@@ -54,7 +53,8 @@
 
                             <div class="price mt-3 text-start">
                                 <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                    {{ number_format($deal['origin_price'], 0, ',', '.') }}</span>
+                                    {{-- {{ number_format($deal['origin_price'], 0, ',', '.') }}</span> --}}
+                                    {{ $deal['origin_price'] }}</span>
                                 <span class="text-danger text-bold">IDR
                                     {{ number_format($deal['cut_price'], 0, ',', '.') }}</span>
                             </div>
