@@ -22,6 +22,9 @@ class DetailTransactionHealthBeauty extends Model
         "kode_unik",
         "is_used",
         "total_ticket",
+        "customer_name",
+        "customer_phone",
+        "customer_email",
     ];
 
     /**

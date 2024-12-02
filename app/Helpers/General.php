@@ -21,6 +21,13 @@ class General
         return $result;
     }
 
+    public static function countPoint($amount, $categoryid)
+    {
+        $point = \App\Models\Point::where('service_id', $categoryid)->first();
+
+        return round(($amount / $point->multiple) * $point->value);
+    }
+
     public static function busAvailableTicket($collection, $date)
     {
         $date = Carbon::parse($date . ' ' . $collection['departure_time'])->format('Y-m-d H:i');
