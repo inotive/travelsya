@@ -240,6 +240,8 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::get('/detail/{lokasi}/{clinic}/{id}', [NewHealthBeautyController::class, 'detail'])->name('health_beauty.detail');
     Route::post('/order/{clinic}', [NewHealthBeautyController::class, 'order'])->name('health_beauty.order');
     Route::post('/request_transaction', [NewHealthBeautyController::class, 'request_transaction'])->name('health_beauty.request_transaction');
+
+    Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');
 });
 
 Route::group(['prefix' => 'car_rent'], function () {

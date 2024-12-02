@@ -29,6 +29,15 @@ class NewHealthBeautyController extends Controller
         $this->xendit = $xendit;
         $this->point = $point;
     }
+
+    public function category($id){
+        if($id !== 'all'){
+            $data['packages'] = ClinicHasPackages::with('categoriesService')->where('categories_services_id', $id)->get();
+            $data['category'] = CategoriesServices::find($id);
+
+            return view('pagesv2.health_beauty.category', $data);
+        }
+    }
     public function index()
     {
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')
