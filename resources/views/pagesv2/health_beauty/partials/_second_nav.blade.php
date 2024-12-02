@@ -1,4 +1,4 @@
-<div class="second-nav border-top border-bottom border-3" style="margin-bottom: 35px;">
+<div class="second-nav border-top border-bottom border-3">
     <div class="container d-flex flex-row align-items-center">
         <div class="d-flex w-100">
             <div class="d-flex align-items-center">

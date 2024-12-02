@@ -25,9 +25,11 @@
                 <!-- Card -->
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
-                        <img onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'"
-                            src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                            class="card-img-top" alt="{{ $deal['name'] }}">
+                        <a
+                            href="{{ route('health_beauty.detail', ['lokasi' => $deal['lokasi'], 'clinic' => $deal['clinic'], 'id' => $deal['id']]) }}">
+                            <img src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                                class="card-img-top" alt="{{ $deal['name'] }}">
+                        </a>
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
                             style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
                         </div>
@@ -35,7 +37,7 @@
                     <div class="card-body">
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
-                            <span>{{ $deal['lokasi'] }}</span>
+                            <span class="text-start">{{ $deal['lokasi'] }}</span>
                             <span style="position: relative; margin-left: auto;"
                                 class="fa-regular fa-bookmark fs-2"></span>
                         </div>
@@ -52,8 +54,7 @@
 
                         <div class="price mt-3 text-start">
                             <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                {{-- {{ number_format($deal['origin_price'], 0, ',', '.') }}</span> --}}
-                                {{ $deal['origin_price'] }}</span>
+                                {{ number_format($deal['origin_price'], 0, ',', '.') }}</span>
                             <span class="text-danger text-bold">IDR
                                 {{ number_format($deal['cut_price'], 0, ',', '.') }}</span>
                         </div>
@@ -123,7 +124,7 @@
                 prevEl: '#swiper-button-prev',
             },
             autoplay: {
-                delay: 5000,
+                delay: 3000,
             },
             loop: true, // Aktifkan loop jika diperlukan
             autoRun: true,

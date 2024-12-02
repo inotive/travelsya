@@ -28,13 +28,13 @@
             <div id="ringkasan" class="mb-35px">
                 <div class="section-title mb-4">
                     <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 1.35vw)">
-                        Klinik
+                        {{ $clinic->clinic_name }}
                     </div>
                 </div>
                 <div class="rating d-flex align-items-center mb-25px">
                     <span class="bintang text-warning fs-1 fa fa-star checked me-2"></span>
-                    <span class="rating-number fs-3 fw-bold">4.8 / <small class="fs-6">5</small> <a href="#"
-                            class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx Ulasan)</a>
+                    <span class="rating-number fs-3 fw-bold">{{ $clinic->avgRating() }} / <small class="fs-6">5</small> <a href="#"
+                            class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{ $clinic->reviews->count() }} Ulasan)</a>
                     </span>
                     <span class="rating-number fs-3 custom-dot-before">2500 terjual</span>
                 </div>

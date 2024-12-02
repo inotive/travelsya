@@ -18,20 +18,20 @@
         Semua</a>
 </div>
 
-<div class="categories-swiper-container">
+<div class="categories-swiper-container overflow-hidden">
     <div class="swiper-wrapper">
         @foreach($categorises as $category)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <div class="card shadow-sm rounded-4 d-flex flex-row align-items-center" style="width: 18rem;">
-                <img src="{{ $category->img != '' ? asset($category->img) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                    class="card-img-top" alt="{{ $category->name }}">
+            <a href="javascript:" class="card shadow-sm rounded-4 d-flex flex-row align-items-center" style="width: 18rem;">
+                <img src="{{ $category['img'] ?? 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                    class="card-img-top" alt="{{ $category['name'] }}">
                 <div class="d-flex flex-column w-100 align-items-center" style="z-index: 1; position: absolute;">
                     <div class="carousel-tab">
-                        <h3 class="text-light fw-bold">{{ $category->name }}</h3>
+                        <h3 class="text-light fw-bold">{{ $category['name'] }}</h3>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         @endforeach
     </div>
@@ -49,6 +49,9 @@
         },
         loop: true, // Aktifkan loop jika diperlukan
         slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik
+        autoplay: {
+            delay: 5000,
+        },
         breakpoints: {
             1200: {
                 slidesPerView: 4,
