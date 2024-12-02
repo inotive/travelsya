@@ -26,30 +26,29 @@
         Semua</a>
 </div>
 
-<div class="partner-swiper-container">
+<div class="partner-swiper-container overflow-hidden">
     <div class="swiper-wrapper">
         @foreach($partners as $partner)
         <div class="swiper-slide gap-2">
             <!-- Card -->
             <div class="card shadow-sm" style="width: 18rem;">
                 <div class="position-relative">
-                    <img src="{{ $partner->img != '' ? asset($partner->img) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                        class="card-img-top" alt="{{ $partner->name }}">
+                    <img src="{{ $partner->image->image != null ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                        class="card-img-top" alt="{{ $partner->clinic_name }}">
                 </div>
-                <div class="card-body">
+                <div class="card-body p-3">
                     <div class="lokasi d-flex align-items-center">
-                        <span class="fa-solid fa-location-dot me-2"></span>
-                        <span>{{ $partner->lokasi }}</span>
+                        <span>{{ $partner->category }}</span>
                         <span style="position: relative; margin-left: auto;" class="fa-regular fa-bookmark fs-2"></span>
                     </div>
 
-                    <h3 class="mt-3 text-dark text-start">{{ $partner->name }}</h3>
+                    <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
 
                     <div class="price mt-6 text-start">
                         <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                            {{ number_format($partner->origin_price, 0, ',', '.') }}</span>
+                            {{ number_format($partner->packages[0]->unit_price ?? 120000, 0, ',', '.') }}</span>
                         <span class="text-danger text-bold">IDR
-                            {{ number_format($partner->cut_price, 0, ',', '.') }}</span>
+                            {{ number_format($partner->packages[0]->price ?? 120000, 0, ',', '.') }}</span>
                     </div>
                 </div>
             </div>
@@ -115,6 +114,9 @@
         navigation: {
             nextEl: '#swiper-button-next',
             prevEl: '#swiper-button-prev',
+        },
+        autoplay: {
+            delay: 5000,
         },
         loop: true, // Aktifkan loop jika diperlukan
         slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik

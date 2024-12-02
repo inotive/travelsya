@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoriesServices;
 use App\Models\Clinic;
 use Illuminate\Http\Request;
 
@@ -20,51 +21,28 @@ class NewHealthBeautyController extends Controller
 
         foreach ($special as $key => $rec) {
             if (count($rec['packages']) > 0) {
-                $item = [
-                    'id' => $rec['id'],
-                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
-                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                    'name' => $rec['clinic_name'],
-                    'rate' => $rec->avgRating(),
-                    'category' => $rec['category'],
-                    'origin_price' => (int)$rec['packages'][0]['unit_price'],
-                    'cut_price' => $rec['packages'][0]['price'],
-                    'rating_count' => count($rec['reviews']),
-                ];
+                foreach ($rec['packages'] as $key => $value) {
+                    $item = [
+                        'id' => $rec['id'],
+                        'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
+                        'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                        'clinic' => $rec['clinic_name'],
+                        'name' => $value['name'],
+                        'rate' => $rec->avgRating(),
+                        'category' => $rec['category'],
+                        'origin_price' => (int)$value['unit_price'],
+                        'cut_price' => $value['price'],
+                        'rating_count' => count($rec['reviews']),
+                    ];
+                    array_push($special_deals, $item);
+                }
 
-                array_push($special_deals, $item);
             }
         }
 
-        $categories = [
-            [
-                'img' => '',
-                'name' => 'Perawatan Kulit',
-                'slug' => 'perawatan_kulit'
-            ],
-            [
-                'img' => '',
-                'name' => 'Perawatan Kuku',
-                'slug' => 'perawatan_kuku'
-            ],
-            [
-                'img' => '',
-                'name' => 'Perawatan Rambut',
-                'slug' => 'perawatan_rambut'
-            ],
-            [
-                'img' => '',
-                'name' => 'Makeup',
-                'slug' => 'makeup'
-            ],
-            [
-                'img' => '',
-                'name' => 'Healthcare',
-                'slug' => 'healthcare'
-            ],
-        ];
-        $categories = json_decode(json_encode($categories));
+        $categories = CategoriesServices::get();
 
+        $partners = Clinic::with('packages')->orderBy('created_at', 'desc')->get();
         $dummy_partners = [
             [
                 'id' => 1,
@@ -135,7 +113,7 @@ class NewHealthBeautyController extends Controller
 
         $data['special_deals'] = collect($special_deals);
         $data['categorises'] = collect($categories);
-        $data['partners'] = collect($dummy_partners);
+        $data['partners'] = collect($partners);
 
         return view('pagesv2.health_beauty.index', $data);
     }
@@ -342,8 +320,13 @@ class NewHealthBeautyController extends Controller
         return view('pagesv2.health_beauty.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $clinic){
-        $data['clinics'] = [];
+    public function detail(Request $request, $lokasi, $clinic, $id = null){
+        if($id){
+            $data['clinic'] = Clinic::find($id);
+        }else{
+            $data['clinic'] = null;
+        }
+
         return view('pagesv2.health_beauty.detail', $data);
     }
 
