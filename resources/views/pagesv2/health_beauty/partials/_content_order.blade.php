@@ -173,17 +173,17 @@
                                     <div class="mb-3">
                                         <label for="nama_pengunjung" class="form-label">Nama</label>
                                         <input type="text" class="form-control" id="nama_pengunjung"
-                                            placeholder="Masukan nama pengunjung">
+                                            name="nama_pengunjung" placeholder="Masukan nama pengunjung">
                                     </div>
                                     <div class="mb-3">
                                         <label for="phone_pengunjung" class="form-label">Nomor Ponsel</label>
                                         <input type="text" class="form-control" id="phone_pengunjung"
-                                            placeholder="Masukan nomor handphone">
+                                            name="phone_pengunjung" placeholder="Masukan nomor handphone">
                                     </div>
                                     <div class="mb-3">
                                         <label for="email_pengunjung" class="form-label">Alamat Email</label>
                                         <input type="email" class="form-control" id="email_pengunjung"
-                                            placeholder="Masukan Email">
+                                            name="email_pengunjung" placeholder="Masukan Email">
                                     </div>
                                 </div>
                                 <div id="data_disabled_pengunjung" style="display: none;">
