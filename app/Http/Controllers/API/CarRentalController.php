@@ -17,9 +17,8 @@ use App\Services\Setting;
 use App\Services\Xendit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Throwable;
 
@@ -444,7 +443,7 @@ class CarRentalController extends Controller
         ]);
 
         // true buat trans
-        FacadesDB::transaction(function () use ($data, $now, $over, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
+        DB::transaction(function () use ($data, $now, $over, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'CR-' . time(),
