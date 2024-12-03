@@ -68,11 +68,12 @@
                                             {{ number_format($p['price']) }}</span>/pax
                                         <span class="ms-3">
                                             <span class="fa-solid fa-minus-circle text-danger fs-2" id="decrease_paket"
-                                                id_paket="1"></span>
-                                            <input type="hidden" name="total_ticket" id="val_paket_1" value="1">
-                                            <span class="fs-2 mx-2" id="dummy_paket_1">1</span>
+                                                id_paket="{{ $p['id'] }}"></span>
+                                            <input type="hidden" name="total_ticket"
+                                                id="val_paket_{{ $p['id'] }}" value="0">
+                                            <span class="fs-2 mx-2" id="dummy_paket_{{ $p['id'] }}">0</span>
                                             <span class="fa-solid fa-plus-circle text-danger fs-2" id="increase_paket"
-                                                id_paket="1"></span>
+                                                id_paket="{{ $p['id'] }}"></span>
                                         </span>
                                     </span>
                                 </div>
@@ -92,3 +93,29 @@
         </div>
     </div>
 </div>
+
+@push('js')
+    <script>
+        $("#list_paket").on("click", "#decrease_paket", function() {
+            let id = $(this).attr("id_paket");
+            let val_paket = parseInt($("#val_paket_" + id).val());
+            let decrease_val = val_paket;
+            if (val_paket - 1 >= 0) {
+                decrease_val = val_paket - 1;
+            }
+            $("#val_paket_" + id).val(decrease_val);
+            $("#dummy_paket_" + id).text(decrease_val);
+        })
+
+
+        $("#list_paket").on("click", "#increase_paket", function() {
+            let id = $(this).attr("id_paket");
+            let val_paket = parseInt($("#val_paket_" + id).val());
+            let increase_val = val_paket + 1;
+            console.log(increase_val);
+
+            $("#val_paket_" + id).val(increase_val);
+            $("#dummy_paket_" + id).text(increase_val);
+        });
+    </script>
+@endpush
