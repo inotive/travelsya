@@ -6,7 +6,7 @@
     </div>
     <div class="card bg-danger bg-opacity-25 p-3">
         <div class="accordion" id="list_paket">
-            @foreach ($clinic['packages'] as $p)
+            @foreach ($clinic['packages'] as $key => $p)
                 <form action="{{ route('health_beauty.order') }}" method="post">
                     <input type="hidden" name="service" value="health-beauty">
                     <input type="hidden" name="payment" value="xendit">
@@ -51,8 +51,8 @@
 
                             </div>
                         </div>
-                        <div class="card-body accordion-collapse collapse" id="paket-collapse-{{ $p['id'] }}"
-                            aria-labelledby="paket-{{ $p['id'] }}">
+                        <div class="card-body accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}"
+                            id="paket-collapse-{{ $p['id'] }}" aria-labelledby="paket-{{ $p['id'] }}">
                             <div class="mb-2">
                                 Masa Berlaku: {{ \App\Helpers\General::getDateShortMonth(now()) }} -
                                 {{ \App\Helpers\General::getDateShortMonth(\Carbon\Carbon::now()->addDays($p['expiry_date'])) }}
@@ -70,8 +70,8 @@
                                             <span class="fa-solid fa-minus-circle text-danger fs-2" id="decrease_paket"
                                                 id_paket="{{ $p['id'] }}"></span>
                                             <input type="hidden" name="total_ticket"
-                                                id="val_paket_{{ $p['id'] }}" value="0">
-                                            <span class="fs-2 mx-2" id="dummy_paket_{{ $p['id'] }}">0</span>
+                                                id="val_paket_{{ $p['id'] }}" value="1">
+                                            <span class="fs-2 mx-2" id="dummy_paket_{{ $p['id'] }}">1</span>
                                             <span class="fa-solid fa-plus-circle text-danger fs-2" id="increase_paket"
                                                 id_paket="{{ $p['id'] }}"></span>
                                         </span>
