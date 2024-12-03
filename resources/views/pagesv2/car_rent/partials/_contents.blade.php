@@ -1,14 +1,30 @@
 <div class="container mb-5">
-    <section class="special-deals" style="margin-bottom: 100px;">
-        @include('pagesv2.components.section_title', [
-        'section_title' => 'Specials Deals',
-        'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
-        ])
-        @include('pagesv2.car_rent.components._car_model', [
-        'section_title' => 'Specials Deals',
-        'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
-        'special_deals' => $special_deals,
-        ])
+    <section style="margin-bottom: 100px">
+        <div class="row">
+            <div class="col-4">
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-body d-flex flex-column justify-content-start">
+                        <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
+                            style="width: 25px; height: 25px;">
+                            <span class="fa-solid fa-car"></span>
+                        </div>
+                        <span>Cara Menyewa Mobil</span>
+                        <span>Cari tau mudahnya cara memesan Sewa mobil di Travelsya</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card shadow-sm rounded-4">
+                    <div class="card-body d-flex flex-column justify-content-start">
+                        <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
+                            style="width: 25px; height: 25px;">
+                            <span class="fa-solid fa-file"></span>
+                        </div>
+                        <span>Baca apa saja yang perlu kamu tahu</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <section class="with_cheuffeur" style="margin-bottom: 100px;">

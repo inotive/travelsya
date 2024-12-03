@@ -13,14 +13,14 @@
 
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
     <div class="swiper-wrapper">
-        @foreach ($favorite_cars as $car)
+        @foreach ($car_models as $model)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <a href="{{ route('car_rent.detail', ['id' => $car['id']]) }}" class="text-decoration-none text-dark">
+            <a href="{{ route('car_rent.detail', ['id' => $model['id']]) }}" class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $car['img'] != '' ? asset($car['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                            class="card-img-top" alt="{{ $car['name'] }}"
+                        <img src="{{ $model['img'] != '' ? asset($model['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                            class="card-img-top" alt="{{ $model['name'] }}"
                             onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
                             style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
@@ -29,12 +29,12 @@
                     <div class="card-body">
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
-                            <span class="text-start">{{ $car['lokasi'] }}</span>
+                            <span class="text-start">{{ $model['lokasi'] }}</span>
                             <span style="position: relative; margin-left: auto;"
                                 class="fa-regular fa-bookmark fs-2"></span>
                         </div>
 
-                        <h3 class="mt-3 text-dark text-start">{{ $car['name'] }}</h3>
+                        <h3 class="mt-3 text-dark text-start">{{ $model['name'] }}</h3>
                     </div>
                 </div>
 
