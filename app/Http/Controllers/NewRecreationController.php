@@ -11,9 +11,6 @@ class NewRecreationController extends Controller
     public function index()
     {
         $specials = Recreation::Active()->with('recreationPackages', 'reviews', 'kota')
-            // ->whereHas('recreationPackages', function($p){
-            //     $p->whereColumn('unit_price', '>', 'price');
-            // })
             ->limit(10)
             ->get();
 

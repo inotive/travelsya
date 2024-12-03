@@ -6,21 +6,15 @@
     </div>
     <div class="d-flex align-items-center flex-row mb-3">
         <span class="text-warning fs-2 bintang fa fa-star checked me-2"></span>
-        <span class="rating-number fw-bold text-dark opacity-50"
-            style="font-size: calc(1rem + 1.35vw)">{{ $clinic->avgRating() }}/<small>5</small></span>
+        <span class="rating-number fw-bold text-dark opacity-50" style="font-size: calc(1rem + 1.35vw)">{{
+            $clinic->avgRating() }}/<small>5</small></span>
         <div class="d-flex flex-column ms-5 fs-5">
             <h3>
                 @if ($clinic->avgRating() > 4.7)
-                    Memuaskan
-                @elseif ($clinic->avgRating() <= 4.7)
-                    Bagus
-                @elseif ($clinic->avgRating() <= 3)
-                    Cukup
-                @elseif ($clinic->avgRating() <= 2.5)
-                    Kurang Bagus
-                @endif
-            </h3>
-            <span class="opacity-75">Dari {{ number_format($clinic->reviews->count()) }} review</span>
+                Memuaskan
+                @elseif ($clinic->avgRating() <= 4.7) Bagus @elseif ($clinic->avgRating() <= 3) Cukup @elseif ($clinic->
+                        avgRating() <= 2.5) Kurang Bagus @endif </h3>
+                            <span class="opacity-75">Dari {{ number_format($clinic->reviews->count()) }} review</span>
         </div>
     </div>
     <div class="d-flex
@@ -46,8 +40,8 @@
                                 <div class="card-title d-flex align-items-center fs-2">5.0/<small
                                         class="opacity-75">5</small>
                                 </div>
-                                <span
-                                    class="opacity-75 ms-sm-auto">{{ \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
+                                <span class="opacity-75 ms-sm-auto">{{
+                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
                             </div>
                             <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
                             <span class="fs-5 opacity-75">Pelayanan nyaman banget... Next bakalan balek lg buat
@@ -61,8 +55,8 @@
                                 <div class="card-title d-flex align-items-center fs-2">5.0/<small
                                         class="opacity-75">5</small>
                                 </div>
-                                <span
-                                    class="opacity-75 ms-sm-auto">{{ \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
+                                <span class="opacity-75 ms-sm-auto">{{
+                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
                             </div>
                             <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
                             <span class="fs-5 opacity-75">Pelayanan nyaman banget... Next bakalan balek lg buat
@@ -76,8 +70,8 @@
                                 <div class="card-title d-flex align-items-center fs-2">4.0/<small
                                         class="opacity-75">5</small>
                                 </div>
-                                <span
-                                    class="opacity-75 ms-sm-auto">{{ \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
+                                <span class="opacity-75 ms-sm-auto">{{
+                                    \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
                             </div>
                             <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1 text-capitalize">
                                 {{ $r['user']['name'] ?? 'Invalid User' }}</div>
