@@ -14,7 +14,7 @@
             <div class="p-5 my-3">
                 <div class="row g-6 g-lg-6 justify-content-center">
                     @foreach ($categories as $category)
-                    <div class="col col-md-4 p-3 d-flex justify-content-center">
+                    <div class="col-12 col-lg-3 col-md-4 p-3 d-flex justify-content-center">
                         <a href="{{ route('health_beauty.category', ['id' => $category['id']]) }}" class="card shadow-sm rounded-4 d-flex flex-row align-items-center" style="width: 18rem;">
                             <img src="{{ $category['img'] ?? 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
                                 class="card-img-top card-img-bottom" alt="{{ $category['name'] }}">
