@@ -293,11 +293,12 @@ class NewHealthBeautyController extends Controller
         return view('pagesv2.health_beauty.detail', $data);
     }
 
-    public function order(Request $request, $clinic){
+    public function order(Request $request){
         $user = Auth::user();
-
+        return $request;
         if($user){
             $data['paket'] = ClinicHasPackages::find($request->package_id);
+            return $data;
             $data['qty'] = $request->total_ticket;
             $data['user'] = $user;
             $data['type'] = $data['paket']['clinic']['category'];

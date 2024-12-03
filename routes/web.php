@@ -238,7 +238,7 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::get('/show_special_deals', [NewHealthBeautyController::class, 'show_special_deals'])->name('health_beauty.show_special_deals');
     Route::post('/show', [NewHealthBeautyController::class, 'show'])->name('health_beauty.show');
     Route::get('/detail/{lokasi}/{clinic}/{id}', [NewHealthBeautyController::class, 'detail'])->name('health_beauty.detail');
-    Route::post('/order/{clinic}', [NewHealthBeautyController::class, 'order'])->name('health_beauty.order');
+    Route::post('/order', [NewHealthBeautyController::class, 'order'])->name('health_beauty.order');
     Route::post('/request_transaction', [NewHealthBeautyController::class, 'request_transaction'])->name('health_beauty.request_transaction');
 
     Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');
