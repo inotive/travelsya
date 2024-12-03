@@ -134,7 +134,7 @@
                     <div class="menu menu-rounded menu-column menu-lg-row menu-active-bg menu-title-gray-700 menu-state-primary menu-arrow-gray-500 fw-semibold my-5 my-lg-0 align-items-stretch px-2 px-lg-0"
                         id="#kt_header_menu" data-kt-menu="true">
                         <!--begin:Menu item-->
-                        <a href="#" class="menu-item fw-bold text-dark here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                        <a href="{{ route('user.orderHistory') }}" class="menu-item fw-bold text-dark here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
                             <!--begin:Menu link--><span class="menu-link py-3"><span
                                     class="menu-title text-dark">Cek Pesanan</span><span
                                     class="menu-arrow d-lg-none"></span></span>
