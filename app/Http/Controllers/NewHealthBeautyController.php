@@ -295,10 +295,8 @@ class NewHealthBeautyController extends Controller
 
     public function order(Request $request){
         $user = Auth::user();
-        return $request;
         if($user){
             $data['paket'] = ClinicHasPackages::find($request->package_id);
-            return $data;
             $data['qty'] = $request->total_ticket;
             $data['user'] = $user;
             $data['type'] = $data['paket']['clinic']['category'];
@@ -313,7 +311,7 @@ class NewHealthBeautyController extends Controller
 
     public function request_transaction(Request $request){
         $data = $request->all();
-
+        return $data;
         $package = ClinicHasPackages::find($data['package_id']);
 
         $now =  date('Y-m-d');
@@ -420,9 +418,9 @@ class NewHealthBeautyController extends Controller
                 "fee_admin" => $fees[0]['value'],
                 "kode_unik" => $kode_unik,
                 "total_ticket" => $data['total_ticket'],
-                "customer_name" => $data['sapa_pemesan'] .' '. $data['nama_pemesan'],
-                "customer_phone" => $data['phone_pemesan'],
-                "customer_email" => $data['email_pemesan'],
+                "customer_name" => $data['sapa_pengunjung'] .' '. $data['nama_pengunjung'],
+                "customer_phone" => $data['phone_pengunjung'],
+                "customer_email" => $data['email_pengunjung'],
                 "is_used" => 0,
             ]);
 
