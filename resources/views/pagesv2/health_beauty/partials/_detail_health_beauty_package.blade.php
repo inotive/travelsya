@@ -5,13 +5,13 @@
         </div>
     </div>
     <div class="card bg-danger bg-opacity-25 p-3">
-        <div class="accordion" id="list_paket">
-            @foreach ($clinic['packages'] as $p)
-            <form action="{{ route('health_beauty.order') }}"
-                method="post">
-                <input type="hidden" name="service" value="health-beauty">
-                <input type="hidden" name="payment" value="xendit">
-                @csrf
+        @foreach ($clinic['packages'] as $p)
+        <form action="{{ route('health_beauty.order') }}"
+            method="post">
+            <input type="hidden" name="service" value="health-beauty">
+            <input type="hidden" name="payment" value="xendit">
+            @csrf
+            <div class="accordion" id="list_paket">
                 <div class="card accordion-item mb-3">
                     <div class="card-header p-0">
                         <div class="accordion-header w-100">
@@ -87,9 +87,9 @@
                                 id="button_paket_{{ $p['id'] }}">Pesan</button>
                         </div>
                     </div>
-                    @endforeach
                 </div>
             </div>
         </form>
+        @endforeach
     </div>
 </div>
