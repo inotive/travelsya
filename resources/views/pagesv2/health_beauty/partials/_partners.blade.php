@@ -27,7 +27,7 @@
 </div>
 
 <div class="partner-swiper-container overflow-hidden">
-    <div class="swiper-wrapper">
+    <div class="swiper-wrapper mb-4">
         @foreach($partners as $partner)
         <div class="swiper-slide gap-2">
             <!-- Card -->

@@ -12,9 +12,9 @@
             </div>
 
             <div class="p-5 my-3">
-                <div class="row row-cols-4 row-cols-lg-5 row-cols-md-4 g-6 g-lg-6">
+                <div class="row g-6 g-lg-6 justify-content-center">
                     @foreach ($mitra as $partner)
-                    <div class="col p-3">
+                    <div class="col col-md-4 p-3 d-flex justify-content-center">
                         <a href="{{ route('health_beauty.detail', ['lokasi' => $partner->kota->city_name, 'clinic' => $partner['clinic_name'], 'id' => $partner['id']]) }}" class="card shadow-sm text-dark" style="width: 18rem;">
                             <div class="position-relative">
                                 <img src="{{ $partner->image->image != null ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"

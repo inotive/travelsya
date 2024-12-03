@@ -12,7 +12,7 @@
 </div>
 
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
-    <div class="swiper-wrapper">
+    <div class="swiper-wrapper mb-4">
         @foreach ($special_deals as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
