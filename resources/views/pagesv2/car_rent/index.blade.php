@@ -4,8 +4,7 @@
 @include('pagesv2.car_rent.partials._second_nav')
 @include('pagesv2.car_rent.partials._hero')
 @include('pagesv2.car_rent.partials._contents', [
-'special_deals' => $special_deals,
-'favorites_car' => $favorites_car,
+'car_models' => $car_models,
 'near_location' => $near_location,
 ])
 @endsection

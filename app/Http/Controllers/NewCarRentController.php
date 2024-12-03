@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CarModel;
+use App\Models\CarRentalHasCars;
 use Illuminate\Http\Request;
 
 class NewCarRentController extends Controller
@@ -9,91 +11,7 @@ class NewCarRentController extends Controller
     
     public function index()
     {
-        $dummy_special_deals = [
-            [
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 1',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 2',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 3',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 4',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 5',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 6',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 7',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],[
-                'img' => '',
-                'lokasi' => 'jakarta',
-                'name' => 'Product 8',
-                'rate' => '4.8',
-                'origin_price' => 250000,
-                'cut_price' => 175000,
-            ],
-        ];
-        $dummy_special_deals = json_decode(json_encode($dummy_special_deals));
-
-        $dummy_favorites_car = [
-            [
-                'img' => '',
-                'name' => 'Honda Mobilio',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Toyota New Avanza',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'All New Avanza 2022',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Toyota Innova Reborn',
-                'lugage' => '2',
-                'passage' => '6'
-            ],
-        ];
-        $dummy_favorites_car = json_decode(json_encode($dummy_favorites_car));
+        $car_models = CarModel::limit(10)->get();
 
         $dummy_near_location = [
             [
@@ -162,9 +80,8 @@ class NewCarRentController extends Controller
             ],
         ];
         $dummy_near_location = json_decode(json_encode($dummy_near_location));
-
-        $data['special_deals'] = collect($dummy_special_deals)->chunk(4);
-        $data['favorites_car'] = collect($dummy_favorites_car);
+        
+        $data['car_models'] = collect($car_models);
         $data['near_location'] = collect($dummy_near_location);
         return view('pagesv2.car_rent.index', $data);
     }

@@ -4,7 +4,7 @@
         'section_title' => 'Specials Deals',
         'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
         ])
-        @include('pagesv2.components._special_deals', [
+        @include('pagesv2.car_rent.components._car_model', [
         'section_title' => 'Specials Deals',
         'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
         'special_deals' => $special_deals,
@@ -100,7 +100,7 @@
             </div>
         </div>
         <div class="d-flex flex-row gap-2">
-            @foreach ($favorites_car as $car)
+            @foreach ($car_models as $car)
             <div class="card border border-dark rounded-4">
                 <img src="{{ $car->img != '' ? $car->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
                     class="card-img-top-rounded" alt="...">
@@ -142,6 +142,3 @@
         </div>
     </section>
 </div>
-
-@push('js')
-@endpush
