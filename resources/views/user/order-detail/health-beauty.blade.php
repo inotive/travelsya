@@ -43,11 +43,9 @@
                             </div>
                         </div>
                         @php
-                            $reviewCount = DB::table('hostel_ratings')
-                                ->where('hostel_ratings.transaction_id', $transaction->transaction->id)
-                                ->count();
+                            $reviewCount = $transaction->transaction->comment;
                         @endphp
-                        @if ($reviewCount == 0 && $transaction->transaction->status == 'PAID')
+                        @if (!isset($reviewCount) && $transaction->transaction->status == 'PAID')
                             <a href="#" data-bs-toggle="modal" data-bs-target="#review"
                                 class="btn btn-outline btn-outline-danger border border-danger fw-bold"
                                 style="padding: 12px 16px 12px 16px; border: 1px;">
@@ -372,7 +370,7 @@
     </div>
     {{-- End Container --}}
     <div class="modal fade" tabindex="-1" id="review" aria-hidden="true">
-        <<div class="modal-dialog modal-dialog-centered mw-550px">
+        <div class="modal-dialog modal-dialog-centered mw-550px">
             <!-- Tambahkan kelas justify-content-center di sini -->
             <div class="modal-content">
                 <div class="modal-header text-center">
@@ -386,11 +384,11 @@
                     </div>
                     <!--end::Close-->
                 </div>
-                <form action="{{ route('profile.order-detail.hostel.rating') }}" method="POST">
+                <form action="{{ route('profile.order-detail.health_beauty.rating') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="hostel_rooms_id" value="{{ $transaction->package->id }}" />
+                    <input type="hidden" name="package_id" value="{{ $transaction->clinic_package_id }}" />
                     <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}" />
-                    <input type="hidden" name="hostel_id" value="{{ $transaction->clinic->id }}" />
+                    <input type="hidden" name="clinic_id" value="{{ $transaction->clinic->id }}" />
                     <div class="modal-body text-center">
                         <div>
                             <div class="fs-4 fw-bold m-3 mb-5">Berikan Nilai Pada

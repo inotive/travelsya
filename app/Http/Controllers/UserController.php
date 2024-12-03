@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ClinicRating;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionHostel;
@@ -390,6 +391,22 @@ class UserController extends Controller
             'comment'        => $request->comment
         ]);
         toast('Hotel Rating Sudah Di Buat', 'success');
+        return redirect()->back();
+    }
+
+    public function createRatingDetailHealthBeauty(Request $request, ClinicRating $clinicRating)
+    {
+        $user_id = auth()->user()->id;
+
+        $clinicRating->create([
+            'transaction_id' => $request->transaction_id,
+            'user_id'        => $user_id,
+            'clinic_id'       => $request->clinic_id,
+            'clinic_package_id' => $request->package_id,
+            'rate'           => $request->rating,
+            'comment'        => $request->comment
+        ]);
+        toast('Clinic Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
 
