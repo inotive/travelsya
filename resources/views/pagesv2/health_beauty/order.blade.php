@@ -22,13 +22,13 @@
                         <div class="card rounded-4 border-1 shadow">
                             <div class="card-body">
                                 <div class="d-flex flex-row align-items-center mb-3">
-                                    <input type="radio" name="sapa_pemesan" id="radio_tuan" value="tuan" required>
+                                    <input type="radio" name="sapa_pemesan" id="radio_tuan" value="tuan">
                                     <span class="ms-3">Tuan</span>
                                     <input type="radio" name="sapa_pemesan" class="ms-5" id="radio_nyonya"
-                                        value="nyonya" required>
+                                        value="nyonya">
                                     <span class="ms-3">Nyonya</span>
                                     <input type="radio" name="sapa_pemesan" class="ms-5" id="radio_nona" value="nona"
-                                        required>
+                                    >
                                     <span class="ms-3">Nona</span>
                                 </div>
                                 <div class="mb-3">
@@ -39,7 +39,7 @@
                                 <div class="mb-3">
                                     <label for="phone_pemesan" class="form-label">Nomor Ponsel</label>
                                     <input type="text" name="phone_pemesan" id="phone_pemesan" class="form-control"
-                                        value="{{ $user->phone }}" placeholder="Masukan nomor Handphone">
+                                        value="{{ $user->phone }}" placeholder="Masukan nomor Handphone" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email_pemesan" class="form-label">Alamat Email</label>
