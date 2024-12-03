@@ -131,6 +131,7 @@ Route::get('profile/photo-profile', [UserController::class, 'photoProfile']);
 
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
 Route::get('/profile/order-detail/hostel/{id}', [UserController::class, 'orderDetailHostel'])->name('profile.order-detail.hostel')->middleware('auth');
+Route::get('/profile/order-detail/healthbauty/{id}', [UserController::class, 'orderDetailHealthBeauty'])->name('profile.order-detail.health-beauty')->middleware('auth');
 Route::post('/profile/order-detail/hotel/rating', [UserController::class, 'createRatingDetailHotel'])->name('profile.order-detail.hotel.rating')->middleware('auth');
 Route::post('/profile/order-detail/hostel/rating', [UserController::class, 'createRatingDetailHostel'])->name('profile.order-detail.hostel.rating')->middleware('auth');
 Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher')->middleware('auth');
@@ -239,6 +240,7 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::post('/show', [NewHealthBeautyController::class, 'show'])->name('health_beauty.show');
     Route::get('/detail/{lokasi}/{clinic}/{id}', [NewHealthBeautyController::class, 'detail'])->name('health_beauty.detail');
     Route::post('/order', [NewHealthBeautyController::class, 'order'])->name('health_beauty.order');
+    Route::post('/search', [NewHealthBeautyController::class, 'search'])->name('health_beauty.search');
     Route::post('/request_transaction', [NewHealthBeautyController::class, 'request_transaction'])->name('health_beauty.request_transaction');
 
     Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');

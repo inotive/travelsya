@@ -312,7 +312,7 @@
 
             $("#val_paket_" + id).val(increase_val);
             $("#dummy_paket_" + id).text(increase_val);
-        });       
+        });
 
         function syncField(){
             if( $("#toggle_pengunjung").is(":checked")){

@@ -9,7 +9,7 @@
         <div class="col-12 col-md-6 banner-search">
             <div class="search-banner-wrapper">
                 <div class="card card-body p-3">
-                    <form action="{{ route('health_beauty.show') }}" method="post">
+                    <form action="{{ route('health_beauty.search') }}" method="post">
                         @csrf
 
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">

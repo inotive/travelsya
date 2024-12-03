@@ -283,6 +283,25 @@ class NewHealthBeautyController extends Controller
         return view('pagesv2.health_beauty.show', $data);
     }
 
+    public function search(Request $request){
+        $city = '%' . $request->location . '%';
+
+        $data['clinics'] = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
+            ->whereHas('packages', function ($p) {
+                $p->whereColumn('unit_price', '>', 'price');
+            })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
+            ->get();
+
+        $data['section_title'] = strToUpper($request->location);
+
+        return view('pagesv2.health_beauty.show', $data);
+    }
+
     public function detail(Request $request, $lokasi = null, $clinic, $id = null){
         if($id){
             $data['clinic'] = Clinic::with('reviews')->find($id);
@@ -311,7 +330,7 @@ class NewHealthBeautyController extends Controller
 
     public function request_transaction(Request $request){
         $data = $request->all();
-        return $data;
+
         $package = ClinicHasPackages::find($data['package_id']);
 
         $now =  date('Y-m-d');

@@ -7,24 +7,24 @@
 
             @include('pagesv2.health_beauty.partials._detail_header');
             <div class="px-3 mb-5">
-                <ul class="nav">
+                <ul class="nav text-dark">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#ringkasan">Ringkasan</a>
+                        <a class="nav-link active text-dark" aria-current="page" href="#ringkasan">Ringkasan</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#highlight">Highlight</a>
+                        <a class="nav-link text-dark" href="#highlight">Highlight</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#paket">Paket</a>
+                        <a class="nav-link text-dark" href="#paket">Paket</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#review">Review</a>
+                        <a class="nav-link text-dark" href="#review">Review</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#lokasi">Lokasi</a>
+                        <a class="nav-link text-dark" href="#lokasi">Lokasi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#deskripsi">Deskripsi</a>
+                        <a class="nav-link text-dark" href="#deskripsi">Deskripsi</a>
                     </li>
                 </ul>
                 <hr>

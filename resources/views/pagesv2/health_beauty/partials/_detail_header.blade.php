@@ -17,27 +17,22 @@
 <div class="p-3 mb-35px">
     <div class="row g-3">
         <div class="col-md-6">
-            <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg"
-                class="img-fluid rounded shadow" style="object-fit: contain;" alt="...">
+            <img src="{{ asset('storage/' . $clinic->image->image) }}" onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg'"
+                class="img-fluid rounded shadow" style="object-fit: contain;" alt="{{ $clinic->clinic_name }}">
         </div>
         <div class="col-md-6">
             <div class="row g-2">
+                @foreach ($clinic->images as $k => $i)
                 <div class="col-6">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="img-fluid rounded shadow" alt="...">
+                    <img src="{{ asset('storage/'. $i->image) }}" onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max'"
+                        class="img-fluid rounded shadow" alt="{{ $clinic->clinic_image }}">
                 </div>
-                <div class="col-6">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="img-fluid rounded shadow" alt="...">
-                </div>
-                <div class="col-6">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="img-fluid rounded shadow" alt="...">
-                </div>
-                <div class="col-6">
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                        class="img-fluid rounded shadow" alt="...">
-                </div>
+                    @if ($k == 3)
+                        @php
+                            break;
+                        @endphp
+                    @endif
+                @endforeach
             </div>
         </div>
     </div>
