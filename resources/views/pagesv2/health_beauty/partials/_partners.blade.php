@@ -21,7 +21,7 @@
     <div class="panah btn btn-gray-carousel rounded-circle" id="swiper-button-next">
         <span class="chevron fa-solid fa-chevron-right"></span>
     </div>
-    <a href="{{ route('health_beauty.show_special_deals') }}" class="text-danger text-decoration-none"
+    <a href="{{ route('health_beauty.show_mitra') }}" class="text-danger text-decoration-none"
         style="font-size: 1.5rem; font-weight:700; margin-left:auto;">Lihat
         Semua</a>
 </div>
@@ -31,27 +31,27 @@
         @foreach($partners as $partner)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <div class="card shadow-sm" style="width: 18rem;">
+            <a href="{{ route('health_beauty.detail', ['lokasi' => $partner->kota->city_name, 'clinic' => $partner['clinic_name'], 'id' => $partner['id']]) }}" class="card shadow-sm text-dark" style="width: 18rem;">
                 <div class="position-relative">
                     <img src="{{ $partner->image->image != null ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
                         class="card-img-top" alt="{{ $partner->clinic_name }}">
                 </div>
                 <div class="card-body p-3">
-                    <div class="lokasi d-flex align-items-center">
-                        <span>{{ $partner->category }}</span>
-                        <span style="position: relative; margin-left: auto;" class="fa-regular fa-bookmark fs-2"></span>
+                    <div class="text-dark lokasi d-flex align-items-center">
+                        <span class="text-dark ">{{ $partner->category }}</span>
+                        <span style="position: relative; margin-left: auto;" class="fa-regular text-dark  fa-bookmark fs-2"></span>
                     </div>
 
                     <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
 
                     <div class="price mt-6 text-start">
-                        <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
+                        <span style="font-size: 0.8rem" class="coret text-dark  text-decoration-line-through">IDR
                             {{ number_format($partner->packages[0]->unit_price ?? 120000, 0, ',', '.') }}</span>
                         <span class="text-danger text-bold">IDR
                             {{ number_format($partner->packages[0]->price ?? 120000, 0, ',', '.') }}</span>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         @endforeach
     </div>

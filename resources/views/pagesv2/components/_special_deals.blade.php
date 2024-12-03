@@ -1,13 +1,5 @@
 <div
     style="display: flex; gap: 10px; border-radius: 10px; align-items: center; flex-direction:row; margin-bottom:25px;">
-    {{-- <button class="panah btn btn-gray-carousel rounded-circle" id="carousel-control-prev"
-        data-target="#specialdealsCarouselControls" href="#specialdealsCarouselControls" data-slide="prev">
-        <span class="chevron fa-solid fa-chevron-left"></span>
-    </button>
-    <button class="panah btn btn-gray-carousel rounded-circle" id="carousel-control-next"
-        data-target="#specialdealsCarouselControls" href="#specialdealsCarouselControls" data-slide="next">
-        <span class="chevron fa-solid fa-chevron-right"></span>
-    </button> --}}
     <div class="panah btn btn-gray-carousel rounded-circle" id="swiper-button-prev">
         <span class="chevron fa-solid fa-chevron-left"></span>
     </div>
@@ -119,30 +111,34 @@
 
 @push('js')
 <script>
-    const spswiper = new Swiper('#special-swiper-container', {
-            slidesPerView: 4, // Tampilkan 4 slide sekaligus
-            spaceBetween: 10, // Jarak antar slide
-            navigation: {
-                nextEl: '#swiper-button-next',
-                prevEl: '#swiper-button-prev',
-            },
-            autoplay: {
-                delay: 3000,
-            },
-            loop: true, // Aktifkan loop jika diperlukan
-            autoRun: true,
-            slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik
-            breakpoints: {
-                1200: {
-                    slidesPerView: 4,
+    $(document).ready(function(){
+        const spswiper = new Swiper('#special-swiper-container', {
+                slidesPerView: 4, // Tampilkan 4 slide sekaligus
+                spaceBetween: 10, // Jarak antar slide
+                navigation: {
+                    nextEl: '#swiper-button-next',
+                    prevEl: '#swiper-button-prev',
                 },
-                768: {
-                    slidesPerView: 3, // Tampilkan 3 slide untuk layar lebih kecil
+                autoplay: {
+                    delay: 5000,
                 },
-                576: {
-                    slidesPerView: 2, // Tampilkan 2 slide untuk layar sangat kecil
+                loop: true, // Aktifkan loop jika diperlukan
+                slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik
+                breakpoints: {
+                    1500:{
+                        slidesPerView: 5,
+                    },
+                    1200: {
+                        slidesPerView: 4,
+                    },
+                    768: {
+                        slidesPerView: 3, // Tampilkan 3 slide untuk layar lebih kecil
+                    },
+                    576: {
+                        slidesPerView: 2, // Tampilkan 2 slide untuk layar sangat kecil
+                    },
                 },
-            },
-        });
+            });
+    })
 </script>
 @endpush

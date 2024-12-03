@@ -4,7 +4,7 @@
             'section_title' => 'Specials Deals',
             'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
         ])
-        @include('pagesv2.components._special_deals', [
+        @include('pagesv2.health_beauty.partials._special_deals', [
             'section_title' => 'Specials Deals',
             'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
             'special_deals' => $special_deals,
@@ -12,7 +12,7 @@
     </section>
 
     <section class="categories" style="margin-bottom: 100px;">
-        @include('pagesv2.components._categories', [
+        @include('pagesv2.health_beauty.partials._categories', [
             'section_title' => 'Kebutuhan Kesehatan dan Kecantikan',
             'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagian maksimal',
             'categorises' => $categorises,

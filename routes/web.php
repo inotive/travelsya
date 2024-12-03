@@ -237,6 +237,7 @@ Route::group(['prefix' => 'rekreasi'], function () {
 
 Route::group(['prefix' => 'health_beauty'], function () {
     Route::get('/', [NewHealthBeautyController::class, 'index'])->name('health_beauty.index');
+    Route::get('show_mitra', [NewHealthBeautyController::class, 'show_mitra'])->name('health_beauty.show_mitra');
     Route::get('/show_special_deals', [NewHealthBeautyController::class, 'show_special_deals'])->name('health_beauty.show_special_deals');
     Route::post('/show', [NewHealthBeautyController::class, 'show'])->name('health_beauty.show');
     Route::get('/detail/{lokasi}/{clinic}/{id}', [NewHealthBeautyController::class, 'detail'])->name('health_beauty.detail');
