@@ -193,28 +193,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- @php
+                                        @php
                                             $transaction_id = $transaction->transaction_id;
                                             $user = Auth::id();
-                                            $rating_data = DB::table('transactions')
-                                                ->join('detail_transaction_hostel', 'transactions.id', '=', 'detail_transaction_hostel.transaction_id')
-                                                ->join('hostel_ratings', function ($join) {
-                                                    $join
-                                                        ->on('detail_transaction_hostel.hostel_id', '=', 'hostel_ratings.hostel_id')
-                                                        ->on('detail_transaction_hostel.hostel_room_id', '=', 'hostel_ratings.hostel_room_id');
-                                                })
-                                                ->where('transactions.id', '=', $transaction_id)
-                                                ->where('hostel_ratings.users_id', '=', $user)
-                                                ->orderBy('hostel_ratings.created_at', 'desc')
-                                                ->select('transactions.*', 'detail_transaction_hostel.*', 'hostel_ratings.*', 'hostel_ratings.created_at as comment_time')
-                                                ->first();
+                                            $rating_data = $transaction->transaction->comment;
 
                                             use Carbon\Carbon;
                                             Carbon::setLocale('id');
                                             $formatted_created_at = null;
                                             if ($rating_data) {
-                                                $commentTime = Carbon::parse($rating_data->comment_time);
-$formatted_created_at = $commentTime->diffForHumans();
+                                                $commentTime = Carbon::parse($rating_data->created_at);
+                                                $formatted_created_at = $commentTime->diffForHumans();
                                             }
                                         @endphp
                                         <div class="card border border-1 mb-5">
@@ -270,7 +259,7 @@ $formatted_created_at = $commentTime->diffForHumans();
                                                     <p class="fs-6 fw-light-grey-500">Data Tidak Ditemukan</p>
                                                 </div>
                                             @endif
-                                        </div> --}}
+                                        </div>
                                         {{-- Rincian Pembaayaran --}}
                                         <div class="card border border-1 mb-5">
                                             <div class="fs-4 fw-bold m-5 mb-0">
@@ -305,7 +294,13 @@ $formatted_created_at = $commentTime->diffForHumans();
                                                 <div class="d-flex mb-1 justify-content-between">
                                                     <div class="fs-8">Biaya Paket</div>
                                                     <div class="fs-8 fw-bold">
-                                                        {{ number_format($transaction->rent_price) }}
+                                                        {{ number_format($transaction->rent_price) }} x {{ number_format($transaction->total_ticket) }}
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex mb-1 justify-content-between">
+                                                    <div class="fs-8">Jumlah Tiket</div>
+                                                    <div class="fs-8 fw-bold">
+                                                        {{ number_format($transaction->total_ticket) }}
                                                     </div>
                                                 </div>
                                                 <div class="d-flex mb-1 justify-content-between">
