@@ -87,7 +87,7 @@
 
         @include('pagesv2.rekreasi.components._detail_recreation_package')
 
-        @include('pagesv2.components._review')
+        @include('pagesv2.rekreasi.components._review')
 
         <div class="px-3 mb-35px d-flex flex-column" id="lokasi">
             <div class="section-title mb-4">
@@ -153,8 +153,8 @@
 </div>
 
 @push('js')
-    <script>
-        $(document).ready(function() {
+<script>
+    $(document).ready(function() {
             $("#list_paket").on("click", "#decrease_paket", function() {
                 let id = $(this).attr("id_paket");
                 let val_paket = parseInt($("#val_paket_" + id).val());
@@ -177,5 +177,5 @@
                 $("#dummy_paket_" + id).text(increase_val);
             })
         });
-    </script>
+</script>
 @endpush

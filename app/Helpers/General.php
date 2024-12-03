@@ -86,10 +86,59 @@ class General
         ];
     }
 
+    public static function convertShortDateToIndo($date)
+    {
+        // Daftar nama bulan dan hari dalam bahasa Indonesia
+        $months = [
+            'January' => 'Jan',
+            'February' => 'Feb',
+            'March' => 'Mar',
+            'April' => 'Apr',
+            'May' => 'Mei',
+            'June' => 'Jun',
+            'July' => 'Jul',
+            'August' => 'Agus',
+            'September' => 'Sep',
+            'October' => 'Okt',
+            'November' => 'Nov',
+            'December' => 'Des'
+        ];
+
+        $days = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu'
+        ];
+
+        // Mengubah format tanggal ke dalam bahasa Indonesia
+        $timestamp = strtotime($date);
+        $day = date('l', $timestamp);  // Mendapatkan hari
+        $month = date('F', $timestamp);  // Mendapatkan bulan
+        $dateFormatted = date('d', $timestamp);  // Mendapatkan tanggal
+        $year = date('Y', $timestamp);  // Mendapatkan tahun
+
+        return [
+            'hari' => $days[$day],
+            'tanggal' => $dateFormatted,
+            'bulan' => $months[$month],
+            'tahun' =>$year
+        ];
+    }
+
     public static function getDateShortMonth($date){
         $data = General::convertDateToIndo($date);
 
         return $data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
+    }
+
+    public static function getDateShortDayMonth($date){
+        $data = General::convertShortDateToIndo($date);
+
+        return $data['tanggal'] . ' ' . $data['bulan'];
     }
 
     public static function getNextWeekdays($date): array
