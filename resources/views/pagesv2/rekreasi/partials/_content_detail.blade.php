@@ -89,6 +89,7 @@
 
         @include('pagesv2.rekreasi.components._review')
 
+        @if ($detail->lat && $detail->ltd)
         <div class="px-3 mb-35px d-flex flex-column" id="lokasi">
             <div class="section-title mb-4">
                 <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
@@ -96,8 +97,7 @@
                 </div>
             </div>
             <div class="card rounded-4 border">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1413.9929019501262!2d100.36971342405258!3d-0.30524640058500946!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2fd538bd1ff164a7%3A0xcea33881870dc19!2sJam%20Gadang%20Bukittinggi!5e0!3m2!1sen!2sid!4v1732690647336!5m2!1sen!2sid"
+                <iframe src="https://www.google.com/maps?q={{ $detail->lat }},{{ $detail->ltd }}&z=12&output=embed"
                     width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
                     class="card-img-top-rounded" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 <div class="card-body d-flex flex-row aligh-items-center">
@@ -108,18 +108,21 @@
                             Voluptatum</span>
                     </div>
                     <div class="d-flex flex-column align-items-center ms-sm-auto me-5">
-                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"><span
+                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
+                            onclick="showMap({{ $detail->lat }}, {{ $detail->ltd }})"><span
                                 class="fa-solid fa-location-arrow fs-1 me-2 text-danger fw-bold"></span></button>
                         <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
                     </div>
                     <div class="d-flex flex-column align-items-center mx-5  ">
-                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"><span
-                                class="fa-solid fa-location-arrow fs-1 me-2 text-danger fw-bold"></span></button>
-                        <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
+                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
+                            onclick="getDirection({{ $detail->lat }}, {{ $detail->ltd }})"><span
+                                class="fa-solid fa-route fs-1 me-2 text-danger fw-bold"></span></button>
+                        <span class="fs-3 text-danger fw-bold">Direksi</span>
                     </div>
                 </div>
             </div>
         </div>
+        @endif
 
         <div class="px-3 mb-35px d-flex flex-column fs-4" id="fasilitas">
             <div class="section-title mb-4">
@@ -177,5 +180,15 @@
                 $("#dummy_paket_" + id).text(increase_val);
             })
         });
+
+        function showMap(latitude, longitude){
+            const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            window.open(mapUrl, '_blank');
+        }
+
+        function getDirection(latitude, longitude){
+            const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+            window.open(directionsUrl, '_blank');
+        }
 </script>
 @endpush

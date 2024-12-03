@@ -67,6 +67,9 @@
             autoRun: true,
             slideToClickedSlide: true, // Untuk melompat ke slide yang di-klik
             breakpoints: {
+                1500: {
+                    slidesPerView: 5,
+                },
                 1200: {
                     slidesPerView: 4,
                 },
