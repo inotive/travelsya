@@ -12,11 +12,11 @@
 </div>
 
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
-    <div class="swiper-wrapper">
+    <div class="swiper-wrapper mb-4">
         @foreach ($special_deals as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <a href="{{ route('health_beauty.detail', ['lokasi' => $deal['lokasi'], 'clinic' => $deal['clinic'], 'id' => $deal['id']]) }}"
+            <a href="{{ route('health_beauty.detail', ['lokasi' => $deal->clinic->kota->city_name ?? '-', 'clinic' => $deal->clinic, 'id' => $deal['clinic_id']]) }}"
                 class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
@@ -30,7 +30,7 @@
                     <div class="card-body">
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
-                            <span class="text-start">{{ $deal['lokasi'] }}</span>
+                            <span class="text-start">{{ $deal->clinic->kota->city_name }}</span>
                             <span style="position: relative; margin-left: auto;"
                                 class="fa-regular fa-bookmark fs-2"></span>
                         </div>
@@ -39,17 +39,17 @@
 
                         <div class="rating d-flex align-items-center text-start">
                             <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                            <span class="rating-number" style="position: relative; top: 1px;">{{ $deal['rate'] }}
-                                ({{ $deal['rating_count'] }}
+                            <span class="rating-number" style="position: relative; top: 1px;">{{ $deal->avgRating() }}
+                                ({{ number_format($deal->reviews->count()) }}
                                 ulasan)
                             </span>
                         </div>
 
                         <div class="price mt-3 text-start">
                             <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                {{ number_format($deal['origin_price'], 0, ',', '.') }}</span>
+                                {{ number_format($deal['unit_price'], 0, ',', '.') }}</span>
                             <span class="text-danger text-bold">IDR
-                                {{ number_format($deal['cut_price'], 0, ',', '.') }}</span>
+                                {{ number_format($deal['price'], 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>

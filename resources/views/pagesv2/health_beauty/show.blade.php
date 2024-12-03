@@ -12,9 +12,9 @@
             </div>
 
             <div class="p-5 my-3">
-                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
+                <div class="row g-6 g-lg-6">
                     @foreach ($clinics as $clinic)
-                    <div class="col p-3">
+                    <div class="col-12 col-md-4 col-lg-3 p-3">
                         <a href="{{ route('health_beauty.detail', ['lokasi' => ($clinic->kota->city_name ?? '-'), 'clinic' => $clinic->clinic_name, 'id' => $clinic->id]) }}"
                             class="text-decoration-none text-dark   ">
                             <div class="card" style="box-shadow: 0 10px 15px gray">

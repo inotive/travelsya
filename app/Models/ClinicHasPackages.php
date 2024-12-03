@@ -63,4 +63,24 @@ class ClinicHasPackages extends Model
     {
         return $this->hasOne(ClinicPackageImages::class, 'clinic_package_id', 'id')->where('main', 1);
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ClinicRating::class, 'clinic_package_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    public function avgRating()
+    {
+        $rating = ClinicRating::where('clinic_package_id', $this->id)->get()->pluck('rate')->toArray();
+
+        $data = count($rating);
+
+        if($data > 0){
+            $avg = array_sum($rating) / $data;
+
+            return round($avg, 1);
+        }else{
+            return 0;
+        }
+    }
 }

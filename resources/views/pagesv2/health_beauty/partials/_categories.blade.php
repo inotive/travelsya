@@ -19,7 +19,7 @@
 </div>
 
 <div class="categories-swiper-container overflow-hidden">
-    <div class="swiper-wrapper">
+    <div class="swiper-wrapper mb-4">
         @foreach($categorises as $category)
         <div class="swiper-slide gap-2">
             <!-- Card -->

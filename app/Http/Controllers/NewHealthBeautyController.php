@@ -36,39 +36,19 @@ class NewHealthBeautyController extends Controller
             $data['category'] = CategoriesServices::find($id);
 
             return view('pagesv2.health_beauty.category', $data);
+        }else{
+            $data['categories'] = CategoriesServices::get();
+
+            return view('pagesv2.health_beauty.all_category', $data);
         }
     }
     public function index()
     {
-        $special = Clinic::Active()->with('reviews', 'packages', 'kota')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
-            ->limit(10)
-            ->get();
-
-        $special_deals = [];
-
-        foreach ($special as $key => $rec) {
-            if (count($rec['packages']) > 0) {
-                foreach ($rec['packages'] as $key => $value) {
-                    $item = [
-                        'id' => $rec['id'],
-                        'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
-                        'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                        'clinic' => $rec['clinic_name'],
-                        'name' => $value['name'],
-                        'rate' => $rec->avgRating(),
-                        'category' => $rec['category'],
-                        'origin_price' => (int)$value['unit_price'],
-                        'cut_price' => $value['price'],
-                        'rating_count' => count($rec['reviews']),
-                    ];
-                    array_push($special_deals, $item);
-                }
-
-            }
-        }
+        $special_deals = ClinicHasPackages::whereHas('clinic', function($c){
+            $c->Active();
+        })
+        ->limit(10)
+        ->whereColumn('unit_price', '>' ,'price')->get();
 
         $categories = CategoriesServices::get();
 
@@ -82,64 +62,12 @@ class NewHealthBeautyController extends Controller
     }
 
     public function show_special_deals(){
-        $special = Clinic::Active()->with('reviews', 'packages', 'kota')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
-            ->limit(10)
-            ->get();
 
-        $special_deals = [];
+        $special = ClinicHasPackages::whereHas('clinic', function($c){
+            $c->Active();
+        })->whereColumn('unit_price', '>' ,'price')->get();
 
-        foreach ($special as $key => $rec) {
-            if (count($rec['packages']) > 0) {
-                $item = [
-                    'id' => $rec['id'],
-                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
-                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                    'name' => $rec['clinic_name'],
-                    'rate' => $rec->avgRating(),
-                    'category' => $rec['category'],
-                    'origin_price' => (int)$rec['packages'][0]['unit_price'],
-                    'cut_price' => $rec['packages'][0]['price'],
-                    'rating_count' => count($rec['reviews']),
-                ];
-
-                array_push($special_deals, $item);
-            }
-        }
-
-        $item = [
-            'id' => 4,
-            'img' => 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg',
-            'lokasi' => 'Kota Dihapus',
-            'name' => 'klinik baru A',
-            'rate' => 4.75,
-            'category' => 'health',
-            'origin_price' => 350000,
-            'cut_price' => 275000,
-            'rating_count' => 189,
-        ];
-
-        array_push($special_deals, $item);
-
-        $item = [
-            'id' => 5,
-            'img' => 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg',
-            'lokasi' => 'Kota Dihapus',
-            'name' => 'klinik baru B',
-            'rate' => 4.85,
-            'category' => 'health',
-            'origin_price' => 450000,
-            'cut_price' => 399000,
-            'rating_count' => 2500,
-        ];
-
-        array_push($special_deals, $item);
-
-        $special_deals = json_decode(json_encode($special_deals));
-
-        $data['special_deals'] = collect($special_deals);
+        $data['special_deals'] = $special;
 
         return view('pagesv2.health_beauty.show_special_deals', $data);
     }
@@ -281,6 +209,12 @@ class NewHealthBeautyController extends Controller
             return $clinic->category == $request->category;
         });
         return view('pagesv2.health_beauty.show', $data);
+    }
+
+    public function show_mitra(){
+        $data['mitra'] = Clinic::Active()->get();
+
+        return view('pagesv2.health_beauty.all_mitra', $data);
     }
 
     public function search(Request $request){
