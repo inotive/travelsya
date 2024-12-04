@@ -44,17 +44,32 @@ class NewHealthBeautyController extends Controller
     }
     public function index()
     {
-        $special_deals = ClinicHasPackages::whereHas('clinic', function($c){
-            $c->Active();
+        $special_deals = ClinicHasPackages::with('clinic')->where(function($q){
+            $q->whereHas('clinic', function($c){
+                $c->where('category', 'kesehatan')
+                ->Active();
+            })
+            ->whereColumn('unit_price', '>' ,'price');
         })
         ->limit(10)
-        ->whereColumn('unit_price', '>' ,'price')->get();
+        ->get();
+
+        $special_deals_beauty = ClinicHasPackages::with('clinic')->where(function($q){
+            $q->whereHas('clinic', function($c){
+                $c->where('category', 'kecantikan')
+                ->Active();
+            })
+            ->whereColumn('unit_price', '>' ,'price');
+        })
+        ->limit(10)
+        ->get();
 
         $categories = CategoriesServices::get();
 
         $partners = Clinic::with('packages')->orderBy('created_at', 'desc')->get();
 
         $data['special_deals'] = collect($special_deals);
+        $data['special_deals_beauty'] = collect($special_deals_beauty);
         $data['categorises'] = collect($categories);
         $data['partners'] = collect($partners);
 

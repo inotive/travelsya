@@ -14,24 +14,14 @@
 
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
 
-                            <!--begin::Radio-->
-                            <label class="btn btn-link active" data-kt-button="true">
-                                <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="health" checked
-                                    required />
-                                <!--end::Input-->
-                                Health
-                            </label>
-                            <!--end::Radio-->
-
-                            <!--begin::Radio-->
-                            <label class="btn btn-link" data-kt-button="true">
-                                <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="beauty" required />
-                                <!--end::Input-->
-                                Beauty
-                            </label>
-                            <!--end::Radio-->
+                            <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6">
+                                <li class="nav-item">
+                                    <a class="nav-link active" data-bs-toggle="tab" href="#health_tab">Health</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#beauty_tab">Beauty</a>
+                                </li>
+                            </ul>
 
                         </div>
                         <div class="input-group mb-3">

@@ -233,6 +233,11 @@
         border-radius: 10px;
         padding: 10px 20px;
     }
+
+    .nav-line-tabs .nav-item .nav-link.active, .nav-line-tabs .nav-item.show .nav-link, .nav-line-tabs .nav-item .nav-link:hover:not(.disabled){
+        color: #C02425;
+        border-bottom: 1px solid #C02425 !important;
+    }
 </style>
 <style>
     .item-menubar {
