@@ -65,7 +65,7 @@
             </a>
         </div>
         @endforeach
-        @if (count($special_deals) < 6) @for ($i=0; $i < (6 - count($special_deals)); $i++) <div
+        @if (count($special_deals) < 5) @for ($i=0; $i < (5 - count($special_deals)); $i++) <div
             class="swiper-slide gap-2">
             <div class="card shadow-sm" style="width: 18rem;">
                 <div class="position-relative">
