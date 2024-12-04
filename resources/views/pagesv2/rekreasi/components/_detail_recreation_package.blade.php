@@ -36,7 +36,7 @@
                     <form action="{{ route('rekreasi.order', ['id' => $package->id]) }}" method="post">
                         @csrf
                         <div class="accordion" id="list_paket">
-                            <div class="card accordion-item mb-3">
+                            <div class="card accordion-item mb-3" id="package-weekday-on">
                                 <div class="card-header p-0 border-bottom-dashed">
                                     <div class="accordion-header w-100">
                                         <div class="w-100" id="paket-1">
@@ -112,16 +112,7 @@
                                     <div class="mb-35px">
                                         Masa Berlaku: <span
                                             class="fs-3 fw-bold">{{ \App\Helpers\General::getDateShortMonth(now()) }} -
-                                            {{ \App\Helpers\General::getDateShortMonth(
-                                                date(
-                                                    'Y-m-d H:i:s',
-                                                    strtotime(
-                                                        '+30
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            days',
-                                                        strtotime(now()),
-                                                    ),
-                                                ),
-                                            ) }}</span>
+                                            {{ \App\Helpers\General::getDateShortMonth(date('Y-m-d H:i:s', strtotime('+30 days', strtotime(now())))) }}</span>
                                     </div>
                                     <div class="mb-2 fw-bold">
                                         Jumlah tiket
@@ -167,108 +158,46 @@
                                 </div>
                             </div>
 
-                            <div class="card accordion-item mb-3">
+                            <div class="card accordion-item mb-3" id="package-weekend-off">
                                 <div class="card-header p-0 border-bottom-dashed">
                                     <div class="accordion-header w-100">
                                         <div class="w-100" id="paket-2">
-                                            <button class="accordion-button collapsed bg-opacity-0 " type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#paket-collapse-2"
-                                                aria-expanded="true" aria-controls="paket-collapse-2">
+                                            <button class="accordion-button bg-opacity-0 align-items-start"
+                                                type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#paket-collapse-2" aria-expanded="true"
+                                                aria-controls="paket-collapse-2">
                                                 <div class="d-flex flex-column">
                                                     <h2 class="mb-25px text-secondary">Tiket Reguler Weekday</h2>
                                                     <div class="d-flex flex-column mb-25px">
-                                                        <div class="d-flex flex-row align-items-center mb-25px fs-3">
+                                                        <div class="d-flex flex-row align-items-center mb-2 fs-3">
                                                             <span class="fa-solid fa-money-bill text-secondary"></span>
                                                             <span class="ms-3 text-secondary">Bisa 100% refund dengan
-                                                                auransi (Asuransi
+                                                                auransi
+                                                                (Asuransi
                                                                 tersedia dengan biaya tambahan)</span>
                                                         </div>
-                                                        <div class="d-flex flex-row align-items-center mb-25px fs-3">
+
+                                                        <div class="d-flex flex-row align-items-center mb-2 fs-3">
+                                                            <span class="fa-solid fa-calendar text-secondary"></span>
+                                                            <span class="ms-3 text-secondary">Bisa di
+                                                                re-schedule</span>
+                                                        </div>
+
+                                                        <div class="d-flex flex-row align-items-center mb-2 fs-3">
                                                             <span class="fa-solid fa-clock text-secondary"></span>
                                                             <span class="ms-3 text-secondary">
-                                                                Berlaku 7 hari sejak tanggal terpilih
+                                                                Berlaku
+                                                                {{ $package->expiry_date . ' ' . $package->expiry_type }}
+                                                                sejak tanggal
+                                                                terpilih
                                                             </span>
                                                         </div>
-                                                        <span class="text-2 text-danger fw-bold fs-2">Detail</span>
+                                                        <span class="text-2 text-secondary fw-bold fs-2">Detail</span>
                                                     </div>
                                                 </div>
                                             </button>
                                         </div>
 
-                                    </div>
-                                </div>
-                                <div class="card-body accordion-collapse collapse" id="paket-collapse-2"
-                                    aria-labelledby="paket-2">
-                                    <div
-                                        class="d-flex flex-row p-1 rounded-1 align-items-center mb-3 justify-content-between">
-                                        @php
-                                            $days = \App\Helpers\General::getNextWeekdays(now());
-                                        @endphp
-                                        @foreach ($days as $key => $day)
-                                            <card class="border rounded-2 d-flex flex-column align-items-center p-3">
-                                                <span
-                                                    class="fs-3 mb-3">{{ $key == 0 ? 'Besok' : date('D', strtotime($day)) }}</span>
-                                                <span class="fs-3">{{ date('d M', strtotime($day)) }}</span>
-                                            </card>
-                                        @endforeach
-                                    </div>
-                                    <div class="mb-35px">
-                                        Masa Berlaku: <span
-                                            class="fs-3 fw-bold">{{ \App\Helpers\General::getDateShortMonth(now()) }}
-                                            -
-                                            {{ \App\Helpers\General::getDateShortMonth(
-                                                date(
-                                                    'Y-m-d H:i:s',
-                                                    strtotime(
-                                                        '+30
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            days',
-                                                        strtotime(now()),
-                                                    ),
-                                                ),
-                                            ) }}</span>
-                                    </div>
-                                    <div class="mb-2 fw-bold">
-                                        Jumlah tiket
-                                    </div>
-                                    <div class="mb-25px card border p-0">
-                                        <div class="card-body d-flex flex-row align-items-center">
-                                            <div class="d-flex flex-column">
-                                                <span class="fs-1 fw-bold">Adult</span>
-                                                <span>Tinggi badan diatas 120cm</span>
-                                            </div>
-                                            <span style="margin-left: auto;">
-                                                <span class="text-danger fw-bold">IDR 230.000</span>/pax
-                                                <span class="ms-3">
-                                                    <span class="fa-solid fa-minus-circle text-danger fs-2"
-                                                        id="decrease_paket" id_paket="1"></span>
-                                                    <input type="hidden" name="val_paket_1" id="val_paket_1"
-                                                        value="1">
-                                                    <span class="fs-2 mx-2" id="dummy_paket_1">1</span>
-                                                    <span class="fa-solid fa-plus-circle text-danger fs-2"
-                                                        id="increase_paket" id_paket="1"></span>
-                                                </span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="mb-25px card border p-0">
-                                        <div class="card-body d-flex flex-row align-items-center">
-                                            <div class="d-flex flex-column">
-                                                <span class="fs-1 fw-bold">Child</span>
-                                                <span>Gratis untuk anak dibawah 2 tahun/span>
-                                            </div>
-                                            <span style="margin-left: auto;">
-                                                <span class="text-danger fw-bold">IDR 230.000</span>/pax
-                                                <span class="ms-3">
-                                                    <span class="fa-solid fa-minus-circle text-danger fs-2"
-                                                        id="decrease_paket" id_paket="1"></span>
-                                                    <input type="hidden" name="val_paket_1" id="val_paket_1"
-                                                        value="1">
-                                                    <span class="fs-2 mx-2" id="dummy_paket_1">1</span>
-                                                    <span class="fa-solid fa-plus-circle text-danger fs-2"
-                                                        id="increase_paket" id_paket="1"></span>
-                                                </span>
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-footer d-flex flex-column">
@@ -277,7 +206,7 @@
 
                                             <span class="text-secondary fw-bold fs-1">IDR 460.000</span>
                                         </div>
-                                        <button type="submit" class="btn btn-danger" style="margin-left: auto;"
+                                        <button type="submit" class="btn btn-secondary" style="margin-left: auto;"
                                             id="button_paket_1">Pesan</button>
                                     </div>
                                 </div>
