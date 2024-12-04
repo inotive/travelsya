@@ -6,15 +6,21 @@
     </div>
     <div class="d-flex align-items-center flex-row mb-3">
         <span class="text-warning fs-2 bintang fa fa-star checked me-2"></span>
-        <span class="rating-number fw-bold text-dark opacity-50" style="font-size: calc(1rem + 1.35vw)">{{
-            $detail->avgRating() }}/<small>5</small></span>
+        <span class="rating-number fw-bold text-dark opacity-50"
+            style="font-size: calc(1rem + 1.35vw)">{{ $detail->avgRating() }}/<small>5</small></span>
         <div class="d-flex flex-column ms-5 fs-5">
             <h3>
                 @if ($detail->avgRating() > 4.7)
-                Memuaskan
-                @elseif ($detail->avgRating() <= 4.7) Bagus @elseif ($detail->avgRating() <= 3) Cukup @elseif ($detail->
-                        avgRating() <= 2.5) Kurang Bagus @endif </h3>
-                            <span class="opacity-75">Dari {{ number_format($detail->reviews->count()) }} review</span>
+                    Memuaskan
+                @elseif ($detail->avgRating() <= 4.7)
+                    Bagus
+                @elseif ($detail->avgRating() <= 3)
+                    Cukup
+                @elseif ($detail->avgRating() <= 2.5)
+                    Kurang Bagus
+                @endif
+            </h3>
+            <span class="opacity-75">Dari {{ number_format($detail->reviews->count()) }} review</span>
         </div>
     </div>
     <div class="d-flex
@@ -30,32 +36,36 @@
     </div>
     <div class="review-swiper-container overflow-hidden" id="review-swiper-container">
         <div class="swiper-wrapper">
-            @foreach ($detail->reviews as $review)
-            <div class="swiper-slide gap-2">
-                <div class="card border" style="width: 18rem;">
-                    <div class="card-body">
-                        <div class="d-flex flex-row align-items-center mb-3">
-                            <div class="card-title d-flex align-items-center fs-2">{{ $review->rate }}/<small
-                                    class="opacity-75">5</small>
+
+            @if (count($detail->reviews) > 0)
+                @foreach ($detail->reviews as $r)
+                    <div class="swiper-slide gap-2">
+                        <div class="card border" style="width: 18rem;">
+                            <div class="card-body">
+                                <div class="d-flex flex-row align-items-center mb-3">
+                                    <div class="card-title d-flex align-items-center fs-2">
+                                        <bold class="text-dark fw-bold">{{ round($r['rate'], 1) }}</bold>/<small
+                                            class="opacity-75" style="font-size: 14px;">5</small>
+                                    </div>
+                                    <span
+                                        class="opacity-75 ms-sm-auto">{{ \App\Helpers\General::getDateShortMonth($detail['created_at']) }}</span>
+                                </div>
+                                <div
+                                    class="card-subtitle fs-6 opacity-75 fw-bold mb-1 text-capitalize d-flex align-items-start">
+                                    {{ $r['user']['name'] ?? 'Invalid User' }}</div>
+                                <span class="fs-6 opacity-75">{{ $r['comment'] }}</span>
                             </div>
-                            <span class="opacity-75 ms-sm-auto">{{
-                                \App\Helpers\General::getDateShortMonth($review->created_at ?? now()) }}</span>
-                        </div>
-                        <div class="text-start">
-                            <div class="card-subtitle fs-5 text-capitalize opacity-75 fw-bold mb-1">{{ $review->user->name ?? 'Invalid user' }}</div>
-                            <span class="fs-5 opacity-75">{{ $review->comment }}</span>
                         </div>
                     </div>
-                </div>
-            </div>
-            @endforeach
+                @endforeach
+            @endif
         </div>
     </div>
 </div>
 
 @push('js')
-<script>
-    const spswiper = new Swiper('#review-swiper-container', {
+    <script>
+        const spswiper = new Swiper('#review-swiper-container', {
             slidesPerView: 4, // Tampilkan 4 slide sekaligus
             spaceBetween: 10, // Jarak antar slide
             navigation: {
@@ -83,5 +93,5 @@
                 },
             },
         });
-</script>
+    </script>
 @endpush

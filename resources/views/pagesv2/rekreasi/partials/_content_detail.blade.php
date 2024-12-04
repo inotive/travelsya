@@ -46,7 +46,8 @@
                                     class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat
                                     {{ $detail->reviews->count() }} Ulasan)</a>
                             </span>
-                            <span class="rating-number fs-3 custom-dot-before">{{ $detail->booked->count() }} terjual</span>
+                            <span class="rating-number fs-3 custom-dot-before">{{ $detail->booked->count() }}
+                                terjual</span>
                         </div>
                         <div class="lokasi d-flex align-items-center mb-25px">
                             <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50"></span>
@@ -94,31 +95,44 @@
                         Lokasi
                     </div>
                 </div>
-                <div class="card rounded-4 border">
+                <<<<<<< HEAD <div class="card rounded-4 border">
                     <iframe
-                        src="https://www.google.com/maps?q={{ $detail->lat }},{{ $detail->ltd }}&z=12&output=embed"
-                        width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
-                        class="card-img-top-rounded" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    <div class="card-body d-flex flex-row aligh-items-center">
-                        <div class="d-flex flex-row align-items-center">
-                            <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50 me-5"></span>
-                            <span class="fs-3 ms-5">{{ $detail->address }}</span>
+                        src="https://www.google.com/maps?q={{ $detail->lat }},{{ $detail->ltd }}&z=12&output=embed"=======</div>
+
+
+                        <div class="px-3 mb-35px d-flex flex-column" id="lokasi">
+                            <div class="section-title mb-4">
+                                <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
+                                    Lokasi
+                                </div>
+                            </div>
+                            <div class="card rounded-4 border">
+                                <iframe
+                                    src="https://www.google.com/maps?q={{ $detail['lat'] }}, {{ $detail['ltd'] }}&z=12&output=embed">
+                                    >>>>>>> 9b983008 (perubahan di laptop)
+                                    width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"
+                                    class="card-img-top-rounded" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                <div class="card-body d-flex flex-row aligh-items-center">
+                                    <div class="d-flex flex-row align-items-center">
+                                        <span
+                                            class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50 me-5"></span>
+                                        <span class="fs-3 ms-5">{{ $detail['address'] }}</span>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-center ms-sm-auto me-5">
+                                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
+                                            onclick="openMap({{ $detail['lat'] }}, {{ $detail['ltd'] }})"><span
+                                                class="fa-solid fa-location-arrow fs-1 me-2 text-danger fw-bold"></span></button>
+                                        <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-center mx-5  ">
+                                        <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
+                                            onclick="getDirection({{ $detail['lat'] }}, {{ $detail['ltd'] }})"><span
+                                                class="fa-solid fa-route fs-1 me-2 text-danger fw-bold"></span></button>
+                                        <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex flex-column align-items-center ms-sm-auto me-5">
-                            <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
-                                onclick="showMap({{ $detail->lat }}, {{ $detail->ltd }})"><span
-                                    class="fa-solid fa-location-arrow fs-1 me-2 text-danger fw-bold"></span></button>
-                            <span class="fs-3 text-danger fw-bold">Lihat Peta</span>
-                        </div>
-                        <div class="d-flex flex-column align-items-center mx-5  ">
-                            <button class="bg-danger bg-opacity-25 rounded-circle border-0 p-4"
-                                onclick="getDirection({{ $detail->lat }}, {{ $detail->ltd }})"><span
-                                    class="fa-solid fa-route fs-1 me-2 text-danger fw-bold"></span></button>
-                            <span class="fs-3 text-danger fw-bold">Direksi</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         @endif
 
         <div class="px-3 mb-35px d-flex flex-column fs-4" id="fasilitas">
@@ -159,7 +173,27 @@
             window.open(mapUrl, '_blank');
         }
 
+
+        $("#list_paket").on("click", "#increase_paket", function() {
+        let id = $(this).attr("id_paket");
+        let val_paket = parseInt($("#val_paket_" + id).val());
+        let increase_val = val_paket + 1;
+        console.log(increase_val);
+
+        $("#val_paket_" + id).val(increase_val);
+        $("#dummy_paket_" + id).text(increase_val);
+        })
+        });
+
+
+        function openMap(latitude, longitude) {
+            // Event untuk membuka lokasi di tab baru
+            const mapUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+            window.open(mapUrl, '_blank');
+        }
+
         function getDirection(latitude, longitude) {
+            // Event untuk mendapatkan rute
             const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
             window.open(directionsUrl, '_blank');
         }
