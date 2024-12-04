@@ -24,7 +24,8 @@
         @foreach ($special_deals as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <a href="{{ route('rekreasi.detail', ['id' => $deal['id']]) }}" class="text-decoration-none text-dark">
+            <a href="{{ route('rekreasi.detail', ['id' => $deal['id'], 'date' => date('Y-m-d', strtotime(now()))]) }}"
+                class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
                         <img src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"

@@ -155,7 +155,7 @@ class General
         return $weekdays;
     }
 
-    public static function isWeekDays($date){
+    public static function isWeekEnd($date){
         return date('N', strtotime($date)) >= 6;
     }
 }
