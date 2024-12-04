@@ -283,7 +283,8 @@
         width: 100%;
         right: 11px;
     }
-    .bus-icon{
+
+    .bus-icon {
         background: #C02425;
         text-align: center;
         border-radius: 50px;
@@ -292,7 +293,8 @@
         border-radius: 50px;
         padding: 3px 7px;
     }
-    .shape-round-big{
+
+    .shape-round-big {
         height: 100px;
         width: 100px;
         background-color: #FFEEF1;
@@ -301,7 +303,8 @@
         right: -30px;
         top: -53px;
     }
-    .shape-round-small{
+
+    .shape-round-small {
         height: 34px;
         width: 34px;
         background-color: #FFBDBE;
@@ -310,34 +313,50 @@
         top: 27px;
         right: -16px;
     }
-    .bg-light{
+
+    .bg-light {
         background: #fff !important;
     }
-    .max-w-100{
+
+    .max-w-100 {
         max-width: 100px;
     }
-    .max-w-120{
+
+    .max-w-120 {
         max-width: 120px;
     }
-    .max-w-150{
+
+    .max-w-150 {
         max-width: 150px;
     }
-    .max-w-50{
+
+    .max-w-50 {
         max-width: 50px;
     }
-    .border-right-2{
+
+    .border-right-2 {
         border-right: 2px solid #928b8b !important;
     }
-    .round{
+
+    .round {
         border-radius: 50px;
     }
+
     .badge-secondary.badge-outline {
         border: 1px solid #989898 !important;
         color: #989898 !important;
         background-color: transparent;
     }
-    .mb-50{
+
+    .mb-50 {
         margin-bottom: 50px !important;
+    }
+
+    .nav-line-tabs .nav-item .nav-link.active,
+    .nav-line-tabs .nav-item.show .nav-link,
+    .nav-line-tabs .nav-item .nav-link:hover:not(.disabled) {
+        color: #C02425;
+        border-bottom: 1px solid #C02425 !important;
     }
 </style>
 <style>
@@ -552,7 +571,6 @@
         max-width: 100%;
         border-radius: 10px;
     }
-
 </style>
 @stack('add-style')
 {{-- @vite(['resources/js/app.js']) --}}
