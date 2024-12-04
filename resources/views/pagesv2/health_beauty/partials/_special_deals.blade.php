@@ -13,7 +13,7 @@
 
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
     <div class="swiper-wrapper mb-4">
-        @foreach ($special_deals as $deal)
+        @foreach ($data as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
             <a href="{{ route('health_beauty.detail', ['lokasi' => $deal->clinic->kota->city_name ?? '-', 'clinic' => $deal->clinic, 'id' => $deal['clinic_id']]) }}"
@@ -59,55 +59,6 @@
         @endforeach
     </div>
 </div>
-
-{{-- <div id="specialdealsCarouselControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        @foreach ($special_deals as $key => $deals)
-        <div class="carousel-item active">
-            <div class="card-wrapper container-md d-flex justify-content-around gap-2">
-                @foreach ($deals as $deal)
-                <div class="card rounded-4 shadow-sm">
-                    <div class="position-relative">
-                        <img src="{{ $deal->img != '' ? $deal->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                            class="card-img-top-rounded img-fluid" alt="...">
-                        <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
-                            style="bottom: 25px; left:50px; background-color:pink !important;">Big Deal
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-content">
-                            <div class="lokasi d-flex align-items-center">
-                                <span class="fa-solid fa-location-dot me-2"></span>
-                                <span>{{ $deal->lokasi }}</span>
-                                <span style="position: relative; margin-left: auto;"
-                                    class="fa-regular fa-bookmark fs-2"></span>
-                            </div>
-
-                            <h3 class="mt-3 text-dark">{{ $deal->name }}</h3>
-
-                            <div class="rating d-flex align-items-center">
-                                <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                                <span class="rating-number" style="position: relative; top: 1px;">{{ $deal->rate }}
-                                    (2rb
-                                    ulasan)
-                                </span>
-                            </div>
-
-                            <div class="price mt-7">
-                                <span class="coret text-decoration-line-through">IDR
-                                    {{ number_format($deal->origin_price, 0, ',', '.') }}</span>
-                                <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                    {{ number_format($deal->cut_price, 0, ',', '.') }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endforeach
-    </div>
-</div> --}}
 
 @push('js')
 <script>
