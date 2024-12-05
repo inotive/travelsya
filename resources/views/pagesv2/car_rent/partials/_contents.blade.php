@@ -1,33 +1,64 @@
 <div class="container mb-5">
-    <section style="margin-bottom: 100px">
+    <section style="margin-bottom: 60px">
         <div class="row">
             <div class="col-4">
-                <div class="card shadow-sm rounded-4">
-                    <div class="card-body d-flex flex-column justify-content-start">
+                <div class="card shadow-sm rounded-4 overflow-hidden">
+                    <div class="rounded-circle bg-danger position-absolute opacity-25"
+                        style="width:100px; height:100px; top: -50px; right: -40px;">
+                    </div>
+                    <div class="rounded-circle bg-danger position-absolute"
+                        style="width:25px; height:25px; top: 35px; right: -10px;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-start" style="z-index: 10;">
                         <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
-                            style="width: 25px; height: 25px;">
+                            style="width: 25px; height: 25px; right:0;">
                             <span class="fa-solid fa-car"></span>
                         </div>
-                        <span>Cara Menyewa Mobil</span>
+                        <span class="card-title my-2">Cara Menyewa Mobil</span>
                         <span>Cari tau mudahnya cara memesan Sewa mobil di Travelsya</span>
                     </div>
                 </div>
             </div>
             <div class="col-4">
-                <div class="card shadow-sm rounded-4">
+                <div class="card shadow-sm rounded-4 overflow-hidden">
+                    <div class="rounded-circle bg-danger position-absolute opacity-25"
+                        style="width:100px; height:100px; top: -50px; right: -40px;">
+                    </div>
+                    <div class="rounded-circle bg-danger position-absolute"
+                        style="width:25px; height:25px; top: 35px; right: -10px;">
+                    </div>
                     <div class="card-body d-flex flex-column justify-content-start">
                         <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
                             style="width: 25px; height: 25px;">
                             <span class="fa-solid fa-file"></span>
                         </div>
-                        <span>Baca apa saja yang perlu kamu tahu</span>
+                        <span class="card-title my-2">Syarat Sewa Mobil</span>
+                        <span>Baca apa saja yang perlu kamu tahu dan siapkan sebelum menyewa</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card shadow-sm rounded-4 overflow-hidden">
+                    <div class="rounded-circle bg-danger position-absolute opacity-25"
+                        style="width:100px; height:100px; top: -50px; right: -40px;">
+                    </div>
+                    <div class="rounded-circle bg-danger position-absolute"
+                        style="width:25px; height:25px; top: 35px; right: -10px;">
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-start">
+                        <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
+                            style="width: 25px; height: 25px;">
+                            <span class="fa-solid fa-shield-check"></span>
+                        </div>
+                        <span class="card-title my-2">Persyaratan Perjalanan</span>
+                        <span>Cek protokol dan syarat selama pandemi</span>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="with_cheuffeur" style="margin-bottom: 100px;">
+    <section class="with_cheuffeur" style="margin-bottom: 60px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
                 <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Dengan Supir</h2>
@@ -48,7 +79,7 @@
 
     </section>
 
-    <section class="with_cheuffeur" style="margin-bottom: 100px;">
+    <section class="with_cheuffeur" style="margin-bottom: 60px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
                 <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Lepas Kunci</h2>
@@ -64,7 +95,7 @@
 
     </section>
 
-    <section class="without_cheuffeur" style="margin-bottom: 100px;">
+    <section class="without_cheuffeur" style="margin-bottom: 60px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
                 <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Lepas Kunci</h2>
@@ -72,7 +103,7 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <div class="card border border-dark">
+                <div class="card border border-dark" style="height: 300px;">
                     <div class="card-body">
                         <span class="title">Syarat Sewa Mobil Dengan Supir</span>
                         <hr>
@@ -91,7 +122,7 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="card border border-dark">
+                <div class="card border border-dark" style="height: 300px;">
                     <div class="card-body">
                         <span class="title">Syarat Sewa Mobil Lepas Kunci</span>
                         <hr>
@@ -146,12 +177,17 @@
             </div>
         </div>
         <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
-            @foreach ($near_location as $loaction)
+            @foreach ($near_location as $location)
             <div class="col p-3">
-                <div class="card border border-dark rounded-4">
-                    <img src="{{ $loaction->img != '' ? $loaction->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                        class="card-img-top-rounded card-img-bottom-rounded" alt="...">
-
+                <div class="card border border-dark rounded-4 position-relative">
+                    <img src="{{ $location->img != '' ? $location->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                        class="card-img-top-rounded card-img-bottom-rounded img-fluid" style="filter: brightness(0.5)"
+                        alt="...">
+                    <h3 class="position-absolute translate-middle fw-bold text-light fs-2 shadow"
+                        style="top: 50%; left: 50%;">
+                        {{
+                        $location->name }}
+                    </h3>
                 </div>
             </div>
             @endforeach

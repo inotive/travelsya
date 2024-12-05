@@ -11,8 +11,7 @@ class NewCarRentController extends Controller
     
     public function index()
     {
-        $car_models = CarModel::limit(10)->get();
-
+        $car_models = CarModel::with('vendor')->limit(10)->get();
         $dummy_near_location = [
             [
                 'id' => 1,
