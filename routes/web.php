@@ -232,7 +232,7 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
     Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
-    Route::get('/detail/{id}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
+    Route::get('/detail/{id}/{date}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
     Route::post('/order/{id}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
 });
 

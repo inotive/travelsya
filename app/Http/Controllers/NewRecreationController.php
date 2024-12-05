@@ -218,8 +218,9 @@ class NewRecreationController extends Controller
         return view('pagesv2.rekreasi.show', $data);
     }
 
-    public function detail(Request $request, $id){
+    public function detail(Request $request, $id, $date){
         $data['detail'] = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
+        $data['date'] = $date;
         return view('pagesv2.rekreasi.detail', $data);
     }
 
