@@ -25,7 +25,6 @@ class NewRecreationController extends Controller
                     'name' => $rec['clinic_name'],
                     'rate' => $rec->avgRating(),
                     'category' => $rec['category'],
-                    // 'origin_price' => (int)$rec['packages'][0]['unit_price'],
                     'origin_price' => $rec['recreationPackages'][0]['unit_price'],
                     'cut_price' => $rec['recreationPackages'][0]['price'],
                     'rating_count' => count($rec['reviews']),
