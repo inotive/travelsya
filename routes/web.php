@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\BusTravelController;
 use App\Http\Controllers\CarRentalController;
 use App\Http\Controllers\NewCarRentController;
 use App\Http\Controllers\NewHealthBeautyController;
@@ -246,6 +247,11 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::post('/request_transaction', [NewHealthBeautyController::class, 'request_transaction'])->name('health_beauty.request_transaction');
 
     Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');
+});
+
+Route::group(['prefix' => 'bus_travel'], function(){
+    Route::get('/', [BusTravelController::class, 'index'])->name('bus_travel.index');
+    Route::post('search', [BusTravelController::class, 'search'])->name('bus_travel.search');
 });
 
 Route::group(['prefix' => 'car_rent'], function () {
