@@ -134,8 +134,9 @@ class NewCarRentController extends Controller
         return view('pagesv2.car_rent.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $provider){
+    public function detail(Request $request, $lokasi, $provider, $duration){
         $data['providers'] = [];
+        $data['duration'] = $duration;
         return view('pagesv2.car_rent.detail', $data);
     }
 
