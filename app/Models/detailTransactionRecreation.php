@@ -25,6 +25,12 @@ class detailTransactionRecreation extends Model
         "fee_admin",
         "kode_unik",
         "is_used",
+        "book_date",
+        "total_ticket",
+        "customer_name",
+        "customer_phone",
+        "customer_email",
+        "customer_country",
     ];
 
     /**

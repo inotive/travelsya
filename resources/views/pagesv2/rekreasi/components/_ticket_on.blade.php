@@ -71,9 +71,9 @@
                 </div>
                 <div class="mb-35px">
                     Masa Berlaku: <span class="fs-3 fw-bold">{{
-                        \App\Helpers\General::getDateShortMonth(now()) }} -
+                        \App\Helpers\General::getDateShortMonth($date) }} -
                         {{ \App\Helpers\General::getDateShortMonth(date('Y-m-d H:i:s', strtotime('+30
-                        days', strtotime(now())))) }}</span>
+                        days', strtotime($date)))) }}</span>
                 </div>
                 <div class="mb-2 fw-bold">
                     Jumlah tiket
@@ -113,6 +113,11 @@
                             </span>
                         </span>
                     </div>
+                    <input type="hidden" name="package_id" value="{{ $package->id }}">
+                    <input type="hidden" name="service" value="recreation">
+                    <input type="hidden" name="payment" value="xendit">
+                    <input type="hidden" name="point" value="0">
+                    <input type="hidden" name="book_date" value="{{ $date }}">
                     <button type="submit" class="btn btn-danger" style="margin-left: auto;"
                         id="button_paket_1">Pesan</button>
                 </div>

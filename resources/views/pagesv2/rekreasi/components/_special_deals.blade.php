@@ -20,15 +20,15 @@
 </div>
 
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
-    <div class="swiper-wrapper">
+    <div class="swiper-wrapper mb-3">
         @foreach ($special_deals as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <a href="{{ route('rekreasi.detail', ['id' => $deal['id'], 'date' => date('Y-m-d', strtotime(now()))]) }}"
+            <a href="{{ route('rekreasi.detail', ['id' => $deal['recreation_id'], 'date' => \Carbon\Carbon::now()->addDay()->format('Y-m-d')]) }}"
                 class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $deal['img'] != '' ? asset($deal['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                        <img src="{{ isset($deal['image']['image']) ? asset('storage/' . $deal['image']['image']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
                             class="card-img-top" alt="{{ $deal['name'] }}"
                             onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
@@ -38,7 +38,7 @@
                     <div class="card-body">
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
-                            <span class="text-start">{{ $deal['lokasi'] }}</span>
+                            <span class="text-start">{{ $deal['recreation']['kota']['city_name'] ?? 'Invalid city' }}</span>
                             <span style="position: relative; margin-left: auto;"
                                 class="fa-regular fa-bookmark fs-2"></span>
                         </div>
@@ -47,18 +47,18 @@
 
                         <div class="rating d-flex align-items-center text-start">
                             <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                            <span class="rating-number" style="position: relative; top: 1px;">{{ $deal['rate'] }}
-                                ({{ $deal['rating_count'] }}
+                            <span class="rating-number" style="position: relative; top: 1px;">{{ $deal->avgRating() }}
+                                ({{ $deal->reviews->count() }}
                                 ulasan)
                             </span>
                         </div>
 
                         <div class="price mt-3 text-start">
                             <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                {{-- {{ number_format($deal['origin_price'], 0, ',', '.') }}</span> --}}
-                            {{ $deal['origin_price'] }}</span>
+                                {{ number_format($deal['unit_price'], 0, ',', '.') }}</span>
+                            </span>
                             <span class="text-danger text-bold">IDR
-                                {{ number_format($deal['cut_price'], 0, ',', '.') }}</span>
+                                {{ number_format($deal['price'], 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>

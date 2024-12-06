@@ -30,6 +30,16 @@ class RecreationRatings extends Model
     }
 
     /**
+     * Get the user that owns the RecreationRatings
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'users_id', 'id');
+    }
+
+    /**
      * Get the package that owns the RecreationRatings
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
