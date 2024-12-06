@@ -16,25 +16,29 @@
             Cek ketersediaan paket
         </div>
         <div class="w-100 title text-capitalize d-flex flex-row align-items-center">
-            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d h:i:s', strtotime('+1 days',
-                strtotime(now())))]) }}" class="text-decotarion-none text-dark">
+            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDays(1)->format('Y-m-d')]) }}"
+                class="text-decotarion-none text-dark">
                 <button type="button"
-                    class="btn @if($date == date('Y-m-d h:i:s', strtotime('+1 days',
-                strtotime(now())))) bg-danger bg-opacity-25 text-danger @else btn-outline-secondary border @endif rounded-pill ms-2">Besok</button>
+                    class="btn {{ $date == \Carbon\Carbon::now()->addDays(1)->format('Y-m-d') ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border' }} rounded-pill ms-2">Besok</button>
             </a>
-            @for ($i = 2; $i <= 4; $i++) <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d', strtotime('+' . $i . ' days',
-                strtotime(now())))]) }}" class="text-decotarion-none text-dark">
-                <button type="button"
-                    class="btn @if($date == date('Y-m-d h:i:s', strtotime('+'.$i.' days',
-                strtotime(now())))) bg-danger bg-opacity-25 text-danger @else btn-outline-secondary border @endif border rounded-pill ms-2">{{
-                    \App\Helpers\General::getDateShortDayMonth(date('Y-m-d h:i:s', strtotime('+' . $i . ' days',
-                    strtotime(now())))) }}</button>
+            @for ($i = 2; $i <= 4; $i++) @php $current=\Carbon\Carbon::now()->addDays($i)->format('Y-m-d');
+                @endphp
+                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => $current]) }}"
+                    class="text-decotarion-none text-dark">
+                    <button type="button"
+                        class="btn {{ $date == $current ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border'}} rounded-pill ms-2">{{
+                        \App\Helpers\General::getDateShortDayMonth(\Carbon\Carbon::now()->addDays($i)->format('Y-m-d'))
+                        }}</button>
                 </a>
                 @endfor
-                <button type="button"
-                    class="btn btn-outline-danger border bg-danger bg-opacity-25 text-danger rounded-pill ms-2"><span
-                        class="fa-solid fa-calendar"> 15 Dec</span></button>
-                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d h:i:s', strtotime(now()))]) }}"
+                <a
+                    href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDays(9)->format('Y-m-d')]) }}">
+                    <button type="button"
+                        class="btn {{ $date == \Carbon\Carbon::now()->addDays(9)->format('Y-m-d') ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border' }} rounded-pill ms-2"><span
+                            class="fa-solid fa-calendar me-2"></span>{{ \Carbon\Carbon::now()->addDays(9)->format('d M')
+                        }}</button>
+                </a>
+                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDay()->format('Y-m-d')]) }}"
                     class="text-decoration-none text-danger fw-bold fs-3 ms-3">Reset</a>
         </div>
     </div>
@@ -44,7 +48,7 @@
 
             <div class="card bg-danger bg-opacity-25 p-3 mb-35px">
                 @if (\App\Helpers\General::isWeekEnd($date))
-                <span class="title fw-bold mb-3">{{ $package->name }}</span>
+                <span class="title fw-bold mb-3 text-capitalize">{{ $package->name }}</span>
 
                 @include('pagesv2.rekreasi.components._ticket_off', ['weektype' => 'Weekdays'])
                 @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekend', 'days' =>
@@ -56,6 +60,7 @@
                 @include('pagesv2.rekreasi.components._ticket_off', ['weektype' => 'Weekend'])
                 @endif
             </div>
+            @endforeach
             @endforeach
         </div>
 

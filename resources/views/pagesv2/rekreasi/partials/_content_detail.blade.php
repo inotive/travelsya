@@ -1,7 +1,7 @@
 <div class="container mb-5">
     <section class="special-deals mt-5">
 
-        @include('pagesv2.components._detail_header');
+        @include('pagesv2.rekreasi.components._detail_header');
 
         <div class="px-3 mb-5">
             <ul class="nav">
@@ -36,7 +36,7 @@
                     <div id="ringkasan" class="mb-35px">
                         <div class="section-title mb-4">
                             <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 1.35vw)">
-                                {{ $detail->name }}
+                                {{ $detail->business_name }}
                             </div>
                         </div>
                         <div class="rating d-flex align-items-center mb-25px">
@@ -46,7 +46,7 @@
                                     class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat
                                     {{ $detail->reviews->count() }} Ulasan)</a>
                             </span>
-                            <span class="rating-number fs-3 custom-dot-before">2500 terjual</span>
+                            <span class="rating-number fs-3 custom-dot-before">{{ $detail->booked->count() }} terjual</span>
                         </div>
                         <div class="lokasi d-flex align-items-center mb-25px">
                             <span class="fa-solid fa-location-dot fs-1 me-2 text-dark opacity-50"></span>
@@ -62,11 +62,9 @@
                         <div class="card-body">
                             <div id="highlight" class="mb-3">
                                 <h2>Highlight</h2>
-                                <ul class="fs-3">
-                                    <li>perawatan lengkap tersedian untuk rambut, alis, bulu matara, kuku, dan tubuh
-                                    </li>
-                                    <li>kami menggunakan produk berkualitas tinggi seperti Davines dan Olaplex</li>
-                                </ul>
+                                <div class="fs-3">
+                                    {!! $detail->highlight ?? 'Belum ada highlight' !!}
+                                </div>
                                 <a href="#" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
                             </div>
                         </div>
@@ -76,7 +74,7 @@
                     <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
                         <span class="d-flex justify-content-space-between gap-2 align-items-center">
                             Mulai Dari <span class="text-danger fs-2 fw-bold">
-                                IDR 230.000
+                                IDR {{ number_format($detail['recreationPackages'][0]['price']) }}
                             </span>
                         </span>
                     </div>

@@ -111,6 +111,11 @@
                             </span>
                         </span>
                     </div>
+                    <input type="hidden" name="package_id" value="{{ $package->id }}">
+                    <input type="hidden" name="service" value="recreation">
+                    <input type="hidden" name="payment" value="xendit">
+                    <input type="hidden" name="point" value="0">
+                    <input type="hidden" name="book_date" value="{{ $date }}">
                     <button type="submit" class="btn btn-danger" style="margin-left: auto;"
                         id="button_paket_1">Pesan</button>
                 </div>

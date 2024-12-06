@@ -252,6 +252,7 @@ class RecreationController extends Controller
                     "expire_on" => $expire,
                     "rent_price" => $package->price,
                     "fee_admin" => $fees[0]['value'],
+                    "total_ticket" => $data['total_ticket'],
                     "kode_unik" => $kode_unik,
                     "is_used" => 0,
                 ]);

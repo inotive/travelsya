@@ -7,10 +7,12 @@ use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionPPOB;
+use App\Models\detailTransactionRecreation;
 use App\Models\Help;
 use App\Models\HistoryPoint;
 use App\Models\HostelRating;
 use App\Models\HotelRating;
+use App\Models\RecreationRatings;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Services\Travelsya;
@@ -249,6 +251,17 @@ class UserController extends Controller
         return view('user.order-detail.health-beauty', $data);
     }
 
+    public function orderDetailRecreation($id)
+    {
+        $data['transaction'] = detailTransactionRecreation::with('transaction.guest', 'recreation', 'package', 'transaction')
+            ->whereHas('transaction', function ($q) use ($id) {
+                $q->where('no_inv', $id);
+            })->first();
+
+
+        return view('user.order-detail.recreation', $data);
+    }
+
     public function orderDetailListrikVoucher($id)
     {
 
@@ -400,13 +413,29 @@ class UserController extends Controller
 
         $clinicRating->create([
             'transaction_id' => $request->transaction_id,
-            'user_id'        => $user_id,
+            'users_id'        => $user_id,
             'clinic_id'       => $request->clinic_id,
             'clinic_package_id' => $request->package_id,
             'rate'           => $request->rating,
             'comment'        => $request->comment
         ]);
         toast('Clinic Rating Sudah Di Buat', 'success');
+        return redirect()->back();
+    }
+
+    public function createRatingDetailRecreation(Request $request, RecreationRatings $recreationRating)
+    {
+        $user_id = auth()->user()->id;
+
+        $recreationRating->create([
+            'transaction_id' => $request->transaction_id,
+            'users_id'        => $user_id,
+            'recreation_id'       => $request->recreation_id,
+            'recreation_package_id' => $request->package_id,
+            'rate'           => $request->rating,
+            'comment'        => $request->comment
+        ]);
+        toast('Recreation Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
 

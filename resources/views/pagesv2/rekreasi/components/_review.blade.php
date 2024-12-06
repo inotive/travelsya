@@ -39,10 +39,12 @@
                                     class="opacity-75">5</small>
                             </div>
                             <span class="opacity-75 ms-sm-auto">{{
-                                \App\Helpers\General::getDateShortMonth('2023-01-23') }}</span>
+                                \App\Helpers\General::getDateShortMonth($review->created_at ?? now()) }}</span>
                         </div>
-                        <div class="card-subtitle fs-5 opacity-75 fw-bold mb-1">Hayati Nur</div>
-                        <span class="fs-5 opacity-75">{{ $review->comment }}</span>
+                        <div class="text-start">
+                            <div class="card-subtitle fs-5 text-capitalize opacity-75 fw-bold mb-1">{{ $review->user->name ?? 'Invalid user' }}</div>
+                            <span class="fs-5 opacity-75">{{ $review->comment }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
