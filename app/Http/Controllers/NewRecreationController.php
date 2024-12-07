@@ -74,7 +74,7 @@ class NewRecreationController extends Controller
 
         return view('pagesv2.rekreasi.show', $data);
     }
-
+  
     public function detail(Request $request, $id, $date){
         $data['detail'] = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
         $data['date'] = $date;
@@ -213,7 +213,7 @@ class NewRecreationController extends Controller
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return redirect()->away($payoutsXendit['invoice_url']);
     }
-
+  
     public function order(Request $request){
         if(Auth::user()){
             $data = $request->all();

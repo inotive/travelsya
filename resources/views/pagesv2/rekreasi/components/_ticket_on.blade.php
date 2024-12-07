@@ -57,12 +57,10 @@
             </div>
             <div class="card-body accordion-collapse collapse show" id="paket-collapse-1" aria-labelledby="paket-1">
                 <div class="d-flex flex-row p-1 rounded-1 align-items-center mb-3 justify-content-between gap-1">
-                    @php
-                    $days = \App\Helpers\General::getNextWeekdays(now());
-                    @endphp
                     @foreach ($days as $key => $day)
                     <card class="border rounded-2 d-flex flex-column align-items-center p-3">
-                        <span class="fs-3 mb-3 d-flex flex-column align-items-center">{{ $key == 0 ?
+                        <span class="fs-3 mb-3 d-flex flex-column align-items-center">{{ $key == 0 &&
+                            \App\Helpers\General::isTomorow($date) ?
                             'Besok' : date('D', strtotime($day)) }}</span>
                         <span class="fs-3 d-flex flex-column align-items-center">{{ date('d M',
                             strtotime($day)) }}</span>
@@ -70,10 +68,10 @@
                     @endforeach
                 </div>
                 <div class="mb-35px">
-                    Masa Berlaku: <span class="fs-3 fw-bold">{{
-                        \App\Helpers\General::getDateShortMonth($date) }} -
-                        {{ \App\Helpers\General::getDateShortMonth(date('Y-m-d H:i:s', strtotime('+30
-                        days', strtotime($date)))) }}</span>
+                    Masa Berlaku: <span class="fs-3 fw-bold">{{ \App\Helpers\General::getDateShortMonth($date)
+                        }} -
+                        {{ \App\Helpers\General::getDateShortMonth(\App\Helpers\General::addingDays($date, 30))
+                        }}</span>
                 </div>
                 <div class="mb-2 fw-bold">
                     Jumlah tiket

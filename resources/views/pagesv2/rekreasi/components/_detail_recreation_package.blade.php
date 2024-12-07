@@ -17,18 +17,22 @@
             Cek ketersediaan paket
         </div>
         <div class="w-100 title text-capitalize d-flex flex-row align-items-center">
-            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDays(1)->format('Y-m-d')]) }}" class="text-decotarion-none text-dark">
-                <button type="button" class="btn {{ $date == \Carbon\Carbon::now()->addDays(1)->format('Y-m-d') ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border' }} rounded-pill ms-2">Besok</button>
+
+            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDays(1)->format('Y-m-d')]) }}"
+                class="text-decotarion-none text-dark">
+                <button type="button"
+                    class="btn {{ $date == \Carbon\Carbon::now()->addDays(1)->format('Y-m-d') ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border' }} rounded-pill ms-2">Besok</button>
             </a>
-            @for ($i = 2; $i <= 4; $i++)
-                @php
-                    $current = \Carbon\Carbon::now()->addDays($i)->format('Y-m-d');
+            @for ($i = 2; $i <= 4; $i++) @php $current=\Carbon\Carbon::now()->addDays($i)->format('Y-m-d');
                 @endphp
-                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => $current]) }}" class="text-decotarion-none text-dark">
-                    <button type="button" class="btn {{ $date == $current ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border'}} rounded-pill ms-2">{{
-                        \App\Helpers\General::getDateShortDayMonth(\Carbon\Carbon::now()->addDays($i)->format('Y-m-d')) }}</button>
+                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => $current]) }}"
+                    class="text-decotarion-none text-dark">
+                    <button type="button"
+                        class="btn {{ $date == $current ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border'}} rounded-pill ms-2">{{
+                        \App\Helpers\General::getDateShortDayMonth(\Carbon\Carbon::now()->addDays($i)->format('Y-m-d'))
+                        }}</button>
                 </a>
-            @endfor
+                @endfor
                 <a
                     href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDays(9)->format('Y-m-d')]) }}">
                     <button type="button"
@@ -49,10 +53,12 @@
                 <span class="title fw-bold mb-3 text-capitalize">{{ $package->name }}</span>
 
                 @include('pagesv2.rekreasi.components._ticket_off', ['weektype' => 'Weekdays'])
-                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekend'])
+                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekend', 'days' =>
+                \App\Helpers\General::getNextWeekends($date)])
                 @else
 
-                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekday'])
+                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekday', 'days' =>
+                \App\Helpers\General::getNextWeekdays($date)])
                 @include('pagesv2.rekreasi.components._ticket_off', ['weektype' => 'Weekend'])
                 @endif
             </div>

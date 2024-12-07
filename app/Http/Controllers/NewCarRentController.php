@@ -11,8 +11,7 @@ class NewCarRentController extends Controller
     
     public function index()
     {
-        $car_models = CarModel::limit(10)->get();
-
+        $car_models = CarModel::with('vendor')->limit(10)->get();
         $dummy_near_location = [
             [
                 'id' => 1,
@@ -135,8 +134,9 @@ class NewCarRentController extends Controller
         return view('pagesv2.car_rent.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $provider){
+    public function detail(Request $request, $lokasi, $provider, $duration){
         $data['providers'] = [];
+        $data['duration'] = $duration;
         return view('pagesv2.car_rent.detail', $data);
     }
 
