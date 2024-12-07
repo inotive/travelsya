@@ -234,6 +234,7 @@
         padding: 10px 20px;
     }
 
+<<<<<<< HEAD
     .nav-line-tabs .nav-item .nav-link.active,
     .nav-line-tabs .nav-item.show .nav-link,
     .nav-line-tabs .nav-item .nav-link:hover:not(.disabled) {
@@ -355,6 +356,9 @@
     .nav-line-tabs .nav-item .nav-link.active,
     .nav-line-tabs .nav-item.show .nav-link,
     .nav-line-tabs .nav-item .nav-link:hover:not(.disabled) {
+=======
+    .nav-line-tabs .nav-item .nav-link.active, .nav-line-tabs .nav-item.show .nav-link, .nav-line-tabs .nav-item .nav-link:hover:not(.disabled){
+>>>>>>> 7315029 (fix health tab)
         color: #C02425;
         border-bottom: 1px solid #C02425 !important;
     }
