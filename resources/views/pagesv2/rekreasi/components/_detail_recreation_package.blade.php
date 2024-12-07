@@ -16,13 +16,17 @@
             Cek ketersediaan paket
         </div>
         <div class="w-100 title text-capitalize d-flex flex-row align-items-center">
-            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d', strtotime('+1 days',
+            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d h:i:s', strtotime('+1 days',
                 strtotime(now())))]) }}" class="text-decotarion-none text-dark">
-                <button type="button" class="btn btn-outline-secondary border rounded-pill ms-2">Besok</button>
+                <button type="button"
+                    class="btn @if($date == date('Y-m-d h:i:s', strtotime('+1 days',
+                strtotime(now())))) bg-danger bg-opacity-25 text-danger @else btn-outline-secondary border @endif rounded-pill ms-2">Besok</button>
             </a>
             @for ($i = 2; $i <= 4; $i++) <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d', strtotime('+' . $i . ' days',
                 strtotime(now())))]) }}" class="text-decotarion-none text-dark">
-                <button type="button" class="btn btn-outline-secondary border rounded-pill ms-2">{{
+                <button type="button"
+                    class="btn @if($date == date('Y-m-d h:i:s', strtotime('+'.$i.' days',
+                strtotime(now())))) bg-danger bg-opacity-25 text-danger @else btn-outline-secondary border @endif border rounded-pill ms-2">{{
                     \App\Helpers\General::getDateShortDayMonth(date('Y-m-d h:i:s', strtotime('+' . $i . ' days',
                     strtotime(now())))) }}</button>
                 </a>
@@ -30,7 +34,7 @@
                 <button type="button"
                     class="btn btn-outline-danger border bg-danger bg-opacity-25 text-danger rounded-pill ms-2"><span
                         class="fa-solid fa-calendar"> 15 Dec</span></button>
-                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d', strtotime(now()))]) }}"
+                <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => date('Y-m-d h:i:s', strtotime(now()))]) }}"
                     class="text-decoration-none text-danger fw-bold fs-3 ms-3">Reset</a>
         </div>
     </div>
@@ -43,14 +47,16 @@
                 <span class="title fw-bold mb-3">{{ $package->name }}</span>
 
                 @include('pagesv2.rekreasi.components._ticket_off', ['weektype' => 'Weekdays'])
-                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekend'])
+                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekend', 'days' =>
+                \App\Helpers\General::getNextWeekends($date)])
                 @else
 
-                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekday'])
+                @include('pagesv2.rekreasi.components._ticket_on', ['weektype' => 'Weekday', 'days' =>
+                \App\Helpers\General::getNextWeekdays($date)])
                 @include('pagesv2.rekreasi.components._ticket_off', ['weektype' => 'Weekend'])
                 @endif
-                @endforeach
             </div>
+            @endforeach
         </div>
 
         <div class="col-4">

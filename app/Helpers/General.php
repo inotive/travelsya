@@ -130,8 +130,7 @@ class General
     }
 
     public static function getDateShortMonth($date){
-        $data = General::convertDateToIndo($date);
-
+        $data = General::convertShortDateToIndo($date);
         return $data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
     }
 
@@ -143,19 +142,47 @@ class General
 
     public static function getNextWeekdays($date): array
     {
+        $tomorow = Carbon::parse(date('Y-m-d h:i:s', strtotime('+1 days', strtotime($date))));
         $weekdays = [];
 
         while (count($weekdays) < 7) {
-            if ($date->isWeekday()) {
-                $weekdays[] = $date->format('Y-m-d');
+            if ($tomorow->isWeekDay()) {
+                $weekdays[] = $tomorow->format('Y-m-d');
             }
-            $date->addDay();
+            $tomorow->addDay();
         }
 
         return $weekdays;
     }
 
+    public static function getNextWeekends($date): array
+    {
+        $tomorow = Carbon::parse(date('Y-m-d h:i:s', strtotime('+1 days', strtotime($date))));
+        $weekends = [];
+
+        while (count($weekends) < 7) {
+            if ($tomorow->isWeekEnd()) {
+                $weekends[] = $tomorow->format('Y-m-d');
+            }
+            $tomorow->addDay();
+        }
+
+        return $weekends;
+    }
+
     public static function isWeekEnd($date){
         return date('N', strtotime($date)) >= 6;
+    }
+
+    public static function isTomorow($date){
+        return date('Y-m-d', strtotime('+1 days', strtotime($date))) == date('Y-m-d', strtotime(Carbon::tomorrow()));
+    }
+
+    public static function getCarbon($date){
+        return Carbon::parse($date);
+    }
+
+    public static function addingDays($date, $long){
+        return General::getCarbon($date)->addDays($long);
     }
 }
