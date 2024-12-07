@@ -61,7 +61,7 @@
                 @endif
             </div>
             @endforeach
-            @endforeach
+            <<<<<<< HEAD @endforeach=======>>>>>>> 423af87 (fix flow order special deals)
         </div>
 
         <div class="col-4">
