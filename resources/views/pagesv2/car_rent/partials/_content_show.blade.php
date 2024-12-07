@@ -1,10 +1,30 @@
 <div class="container mb-5">
-    <section class="special-deals mt-5">
-        <div class="section-title" style="margin-bottom:25px;">
-            <div class="subtitle text-capitalize mt-2">Menampilkan <span class="text-dark">{{ $providers->count()
-                    }}</span> hasil
-                pencarian
-            </div>
+    <section class="cars mt-5">
+        <div class="card border mb-5">
+            <form action="{{ route('car_rent.show') }}">
+                <div class="card-body d-flex flex-row align-items-center">
+                    <div class="input-group d-flex flex-row align-items-center border-0" style="width: 75%;">
+                        <span class="fa-solid fa-magnifying-glass input-group-text border-0 bg-light"></span>
+                        <select name="category" id="category" class="form-control border-0" style="width: 50px;">
+                            <option @if($category=='supir' ) selected @endif value="supir">Dengan Supir</option>
+                            <option @if($category=='lepas' ) selected @endif value="lepas">Lepas Kunci</option>
+                        </select>
+                        <div class="vr"></div>
+                        <input type="text" name="location" class="form-control border-0" id="location"
+                            value="{{ $location }}">
+                        <div class="vr"></div>
+                        <input type="text" name="date" id="date" onfocus="(this.type='date')"
+                            class="form-control border-0" value="{{ $date }}">
+                        <span class="fa-solid fa-circle fw-bold"></span>
+                        <input type="time" name="time" id="time" class="form-control border-0" value="{{ $time }}">
+                        <div class="vr"></div>
+                        <input type="number" name="duration" class="form-control border-0" id="duration"
+                            value="{{ $duration }}">
+                    </div>
+                    <button type="submit"
+                        class="bg-danger bg-opacity-25 text-danger btn btn-outline-danger ms-sm-auto">Cari</button>
+                </div>
+            </form>
         </div>
 
         <div class="p-5 my-3">

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\CarModel;
+use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
+use App\Models\City;
 use Illuminate\Http\Request;
 
 class NewCarRentController extends Controller
@@ -86,6 +88,8 @@ class NewCarRentController extends Controller
     }
 
     public function show(Request $request){
+        $city = City::where('city_name', 'like', '%'.$request->location.'%')->first();
+        $car_rentals = CarRental::with('hasCars')->where('city', $city->city_id)->get();
         $providers = [
             [
                 'img' => '',
@@ -130,6 +134,11 @@ class NewCarRentController extends Controller
             ],
         ];
         $providers = json_decode(json_encode($providers));
+        $data['category'] = $request->category;
+        $data['location'] = $request->location;
+        $data['date'] = $request->date;
+        $data['time'] = $request->time;
+        $data['duration'] = $request->duration;
         $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
     }

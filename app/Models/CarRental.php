@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CarRental extends Model
 {
@@ -27,5 +28,10 @@ class CarRental extends Model
     public function kota(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city', 'city_id');
+    }
+
+    public function hasCars(): HasMany
+    {
+        return $this->hasMany(CarRentalHasCars::class, 'car_rental_id', 'id');
     }
 }
