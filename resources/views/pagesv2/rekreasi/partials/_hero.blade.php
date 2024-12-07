@@ -9,7 +9,7 @@
             <div class="search-banner-wrapper">
                 <div class="card card-body p-5">
 
-                    <form action="{{ route('rekreasi.show') }}" method="post">
+                    <form action="{{ route('rekreasi.show', ['date' => \Carbon\Carbon::now()->addDays()->format('Y-m-d')]) }}" method="post">
                         @csrf
                         <div class="input-group mb-5">
                             <span class="input-group-text bg-transparent">

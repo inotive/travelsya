@@ -10,7 +10,8 @@ class CategoryRecreation extends Model
     use HasFactory;
 
     protected $fillable = [
-        "name"
+        "name",
+        "image",
     ];
 
 }

@@ -238,6 +238,7 @@ Route::group(['prefix' => 'rekreasi'], function () {
     Route::post('/order/{id}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
 
     Route::post('/request_transaction', [NewRecreationController::class, 'request_transaction'])->name('recreation.request_transaction');
+    Route::get('/category/{id}', [NewRecreationController::class, 'category'])->name('rekreasi.category');  
 });
 
 Route::group(['prefix' => 'health_beauty'], function () {

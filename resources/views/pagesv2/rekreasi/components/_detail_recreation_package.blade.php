@@ -5,6 +5,7 @@
         box-shadow: none;
         border-color: inherit;
     }
+
 </style>
 @endpush
 <div class="px-3 mb-35px fs-2" id="paket">
@@ -16,6 +17,7 @@
             Cek ketersediaan paket
         </div>
         <div class="w-100 title text-capitalize d-flex flex-row align-items-center">
+
             <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDays(1)->format('Y-m-d')]) }}"
                 class="text-decotarion-none text-dark">
                 <button type="button"
@@ -61,7 +63,6 @@
                 @endif
             </div>
             @endforeach
-            <<<<<<< HEAD @endforeach=======>>>>>>> 423af87 (fix flow order special deals)
         </div>
 
         <div class="col-4">
