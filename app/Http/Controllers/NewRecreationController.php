@@ -33,15 +33,47 @@ class NewRecreationController extends Controller
     {
         $special_deals = RecreationPackages::with('category', 'recreation')->whereColumn('price', '<', 'unit_price')->limit(10)->get();
 
-        $categories = CategoryRecreation::get();
+        $categories = CategoryRecreation::select('id', 'name')->get()->toArray();
 
-        $partners = Recreation::Active()->with('reviews', 'kota')
+        $categorises = [];
+
+        if(count($categories) > 0){
+            foreach ($categories as $key => $rec) {
+                $item = [
+                        'id' => $rec['id'],
+                        'name' => $rec['name'],
+                    ];
+
+                array_push($categorises, $item);
+            }
+        }
+
+        $data_partners = Recreation::Active()->with('reviews', 'kota')
             ->limit(10)
             ->get();
 
-        $data['special_deals'] = $special_deals;
-        $data['categorises'] = $categories;
-        $data['partners'] = $partners;
+        $partners = [];
+
+        foreach ($data_partners as $key => $rec) {
+                $item = [
+                    'id' => $rec['id'],
+                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
+                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'name' => $rec['clinic_name'],
+                    'rate' => $rec->avgRating(),
+                    'category' => $rec['category'],
+                    // 'origin_price' => (int)$rec['packages'][0]['unit_price'],
+                    'origin_price' => $rec['recreationPackages'][0]['unit_price'],
+                    'cut_price' => $rec['recreationPackages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                ];
+
+                array_push($partners, $item);
+        }
+
+        $data['special_deals'] = collect($special_deals);
+        $data['categorises'] = collect($categorises);
+        $data['partners'] = collect($partners);
         return view('pagesv2.rekreasi.index', $data);
     }
 
