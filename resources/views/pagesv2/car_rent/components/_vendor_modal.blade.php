@@ -50,8 +50,7 @@
                                 hari</span>
                             <a href="{{ route('car_rent.detail', ['lokasi' => 'jakarta', 'duration' => 1, 'provider' => 'A']) }}"
                                 class="text-decoration-none">
-                                <button class="btn btn-danger py-1" id="provider_button" data-toogle="modal"
-                                    data-target="#providers">Pilih penyedia</button>
+                                <button class="btn btn-danger">Pilih penyedia</button>
                             </a>
                         </div>
                     </div>

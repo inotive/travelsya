@@ -189,11 +189,11 @@
         <div class="row row-cols-6 row-cols-lg-6 g-6 g-lg-6 justify-content-center">
             @foreach ($car_models as $model)
             <div class="col p-3">
-                <a href="javascript:" class="text-decoration-none text-dark" id="provider_button" data-toogle="modal"
-                    data-target="#providers">
+                <a href="javascript:" class="text-decoration-none text-dark" id="provider_button"
+                    model="{{ $model->id }}" data-toogle="modal" data-target="#providers">
                     <div class="card border border-dark rounded-4">
-                        <img src="{{ $model->img != '' ? $model->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                            class="card-img-top-rounded" alt="...">
+                        <img src="{{ $model->img }}" class="card-img-top-rounded" alt="..."
+                            onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                         <div class="card-body">
                             <div class="card-content">
                                 <div class="lokasi d-flex justify-content-center">

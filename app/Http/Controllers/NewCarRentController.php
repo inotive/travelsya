@@ -14,6 +14,7 @@ class NewCarRentController extends Controller
     public function index()
     {
         $car_models = CarModel::with('vendor')->limit(10)->get();
+
         $dummy_near_location = [
             [
                 'id' => 1,
@@ -144,13 +145,23 @@ class NewCarRentController extends Controller
     }
 
     public function detail(Request $request, $lokasi, $provider, $duration){
-        $data['providers'] = [];
+        $data['provider'] = $provider;
         $data['duration'] = $duration;
         return view('pagesv2.car_rent.detail', $data);
     }
 
-    public function order(Request $request, $provider){
+    public function order(Request $request){
         $data['paket'] = [];
         return view('pagesv2.car_rent.order', $data);
+    }
+
+    public function getVendorCars($model_id){
+        if(!is_numeric($model_id)){
+            return response()->json(['error' => 'Invalid ID format']);
+        }
+
+        $car_vendors = CarRentalHasCars::with('carRental')->where('car_model_id', $model_id)->groupBy('car_model_id', 'car_rental_id')->get();
+
+        return response()->json(['data' => $car_vendors]);
     }
 }

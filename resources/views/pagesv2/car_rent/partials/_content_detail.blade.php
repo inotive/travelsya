@@ -126,8 +126,11 @@
             <div class="card-body">
                 <div class="d-flex flex-row align-items-center">
                     <span class="text-danger fw-bold">IDR 230.000</span>
-                    <button type="submit" class="btn btn-danger" style="margin-left: auto;"
-                        id="button_paket_1 }}">Pesan</button>
+                    <form action="{{ route('car_rent.order') }}" class="ms-am-auto">
+                        <input type="hidden" name="provider" value="{{ $provider }}">
+                        <button type="submit" class="btn btn-danger" style="margin-left: auto;"
+                            id="button_paket_1">Lanjut Ke Form Pemesanan</button>
+                    </form>
                 </div>
             </div>
         </div>
