@@ -7,6 +7,7 @@ use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NewCarRentController extends Controller
 {
@@ -144,15 +145,27 @@ class NewCarRentController extends Controller
         return view('pagesv2.car_rent.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $provider, $duration){
+    public function detail(Request $request, $lokasi, $model, $provider, $duration){
+        $data['model'] = $model;
         $data['provider'] = $provider;
         $data['duration'] = $duration;
         return view('pagesv2.car_rent.detail', $data);
     }
 
     public function order(Request $request){
-        $data['paket'] = [];
-        return view('pagesv2.car_rent.order', $data);
+        $user = Auth::user();
+        if($user){
+            $data['car'] = CarRentalHasCars::find($request->model);
+            $data['duration'] = $request->duration;
+            $data['user'] = $user;
+            $data['provider'] = $request->provider;
+
+            return view('pagesv2.car_rent.order', $data);
+        }else{
+            return redirect()->route('login');
+        }
+        // $data['paket'] = [];
+        // return view('pagesv2.car_rent.order', $data);
     }
 
     public function getVendorCars($model_id){

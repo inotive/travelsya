@@ -126,8 +126,11 @@
             <div class="card-body">
                 <div class="d-flex flex-row align-items-center">
                     <span class="text-danger fw-bold">IDR 230.000</span>
-                    <form action="{{ route('car_rent.order') }}" class="ms-am-auto">
+                    <form action="{{ route('car_rent.order') }}" method="post" class="ms-sm-auto">
+                        @csrf
                         <input type="hidden" name="provider" value="{{ $provider }}">
+                        <input type="hidden" name="duration" value="{{ $duration }}">
+                        <input type="hidden" name="model" value="{{ $model }}">
                         <button type="submit" class="btn btn-danger" style="margin-left: auto;"
                             id="button_paket_1">Lanjut Ke Form Pemesanan</button>
                     </form>
@@ -154,8 +157,8 @@
         @endif --}}
 
         @push('js')
-        <script>
-            $(document).ready(function() {
+            <script>
+                $(document).ready(function() {
                     $("#list_paket").on("click", "#decrease_paket", function() {
                         let id = $(this).attr("id_paket");
                         let val_paket = parseInt($("#val_paket_" + id).val());
@@ -166,19 +169,19 @@
                         $("#val_paket_" + id).val(decrease_val);
                         $("#dummy_paket_" + id).text(decrease_val);
                     })
-        
-        
+
+
                     $("#list_paket").on("click", "#increase_paket", function() {
                         let id = $(this).attr("id_paket");
                         let val_paket = parseInt($("#val_paket_" + id).val());
                         let increase_val = val_paket + 1;
                         console.log(increase_val);
-        
+
                         $("#val_paket_" + id).val(increase_val);
                         $("#dummy_paket_" + id).text(increase_val);
                     })
                 });
-        </script>
+            </script>
         @endpush
     </section>
 </div>

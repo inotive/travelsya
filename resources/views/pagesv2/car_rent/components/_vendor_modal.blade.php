@@ -48,7 +48,7 @@
                         <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
                             <span class="mb-2"><span class="text-danger fw-bold">IDR 230.000</span> /
                                 hari</span>
-                            <a href="{{ route('car_rent.detail', ['lokasi' => 'jakarta', 'duration' => 1, 'provider' => 'A']) }}"
+                            <a href="{{ route('car_rent.detail', ['lokasi' => 'jakarta', 'model' => 1, 'provider' => '1', 'duration' => 1]) }}"
                                 class="text-decoration-none">
                                 <button class="btn btn-danger">Pilih penyedia</button>
                             </a>
@@ -90,17 +90,17 @@
 </div>
 
 @push('js')
-<script>
-    $('#providers').on('shown.bs.modal', function () {
-        $('#provider_button').trigger('focus')
-    });
+    <script>
+        $('#providers').on('shown.bs.modal', function() {
+            $('#provider_button').trigger('focus')
+        });
 
-    $('#provider_button').click(function(){
-        $('#providers').modal('show');
-    });
+        $('#provider_button').click(function() {
+            $('#providers').modal('show');
+        });
 
-    $('#close_modal').click(function(){
-        $('#providers').modal('hide');
-    });
-</script>
+        $('#close_modal').click(function() {
+            $('#providers').modal('hide');
+        });
+    </script>
 @endpush

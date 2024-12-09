@@ -568,6 +568,10 @@
         max-width: 100%;
         border-radius: 10px;
     }
+
+    .fs-7 {
+        font-size: .85rem;
+    }
 </style>
 @stack('add-style')
 {{-- @vite(['resources/js/app.js']) --}}
