@@ -4,7 +4,7 @@
             <form action="{{ route('car_rent.show') }}">
                 <div class="card-body d-flex flex-row align-items-center">
                     <div class="input-group d-flex flex-row align-items-center border-0" style="width: 75%;">
-                        <span class="fa-solid fa-magnifying-glass input-group-text border-0 bg-light"></span>
+                        <span class="fa fa-search border-0 bg-light"></span>
                         <select name="category" id="category" class="form-control border-0" style="width: 50px;">
                             <option @if($category=='supir' ) selected @endif value="supir">Dengan Supir</option>
                             <option @if($category=='lepas' ) selected @endif value="lepas">Lepas Kunci</option>
@@ -15,11 +15,12 @@
                         <div class="vr"></div>
                         <input type="text" name="date" id="date" onfocus="(this.type='date')"
                             class="form-control border-0" value="{{ $date }}">
-                        <span class="fa-solid fa-circle fw-bold"></span>
+                        <span class="fa-solid fa-circle"></span>
                         <input type="time" name="time" id="time" class="form-control border-0" value="{{ $time }}">
                         <div class="vr"></div>
                         <input type="number" name="duration" class="form-control border-0" id="duration"
-                            value="{{ $duration }}">
+                            value="{{ $duration }}" size="5">
+                        <span>Hari</span>
                     </div>
                     <button type="submit"
                         class="bg-danger bg-opacity-25 text-danger btn btn-outline-danger ms-sm-auto">Cari</button>
@@ -27,68 +28,55 @@
             </form>
         </div>
 
+        <div class="p-5 mb-25px d-flex flex-row align-items-center">
+            <button class="btn btn-sm rounded-pill bg-danger bg-opacity-25 text-danger">Paket Reguler</button>
+            <button class="btn btn-sm rounded-pill">Paket All-In</button>
+        </div>
+
+        <div class="card shadow-sm rounded-4 overflow-hidden"
+            style="background: linear-gradient(to right, rgba(255, 150, 150, 0.5), white)">
+            <div class="rounded-circle bg-danger position-absolute opacity-25"
+                style="width:100px; height:100px; top: -50px; right: -40px;">
+            </div>
+            <div class="rounded-circle bg-danger position-absolute"
+                style="width:25px; height:25px; top: 35px; right: -10px;">
+            </div>
+            <div class="card-body d-flex flex-column justify-content-start" style="z-index: 10;">
+                <span class="card-title fw-bold my-2">Paket Ruguler</span>
+                <span>Cari tau mudahnya cara memesan Sewa mobil di Travelsya</span>
+            </div>
+        </div>
+
         <div class="p-5 my-3">
-            <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
-                @foreach ($providers as $provider)
+            <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6" id="car_brands">
+                @foreach ($city->has_cars as $car)
                 <div class="card shadow mb-1 w-100">
                     <div class="card-body d-flex flex-row">
-                        <img src="{{ $provider->img != '' ? $provider->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                            class="" width="150px" height="100px" alt="...">
+                        <img src="{{ asset('/storage/'.$car->image_url) }}" class="" width="150px" height="100px"
+                            alt="..."
+                            onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                         <div class="d-flex flex-column ms-5">
-                            <span class="fw-bold mb-3">{{ $provider->name }}</span>
+                            <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
                             <div class="d-flex flex-row align-items-center">
                                 <span class="fa-solid fa-suitcase"></span>
-                                <span class="ms-2">{{ $provider->lugage }} Koper</span>
+                                <span class="ms-2">{{ $car->policy_id }} Koper</span>
                                 <span class="fa-solid fa-user ms-5"></span>
-                                <span class="ms-2">{{ $provider->passage }} Penumpang</span>
+                                <span class="ms-2">{{ $car->number_seats }} Penumpang</span>
                             </div>
                         </div>
                         <div class="d-flex flex-column align-items-end ms-sm-auto">
                             <span class="mb-3">Mulai dari</span>
-                            <span class="mb-2"><span class="text-danger fs-5 fw-bold">IDR 230.000</span> / hari</span>
-                            <button class="btn btn-danger py-1" id="provider_button" data-toogle="modal"
-                                data-target="#providers">Pilih
+                            <span class="mb-2"><span class="text-danger fs-5 fw-bold">IDR {{
+                                    number_format($car->rental_price_per_day, 0, ',', '.')
+                                    }}</span> / hari</span>
+                            <!-- name, luggage, seats, id_brand, id_city -->
+                            <button class="btn btn-danger py-1"
+                                brand="{{ $car->brand->name.','.$car->policy_id.','.$car->number_seats.','.$car->brand->id.','.$city->city_id }}"
+                                id="provider_button" data-toogle="modal" data-target="#providers">Pilih
                                 Mobil</button>
                         </div>
                     </div>
                 </div>
-                {{-- <div class="col p-3">
-                    <a href="{{ route($route, ['lokasi' => $provider->lokasi, 'provider' => $provider->name, 'duration' => 1]) }}"
-                        class="text-decoration-none text-dark   ">
-                        <div class="card" style="box-shadow: 0 10px 15px gray">
-                            <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                                class="card-img-top" alt="...">
-                            <div class="card-body">
-                                <div class="card-content">
-                                    <div class="w-100 d-flex flex-row align-items-center">
-                                        <span class="fa-solid fa-location-dot me-2"></span>
-                                        <span>{{ ucwords($provider->lokasi) }}</span>
-                                        <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
-                                    </div>
-
-                                    <h3 class="mt-3 text-dark">{{ ucwords($provider->name) }}</h3>
-
-                                    <div class="rating d-flex align-items-center">
-                                        <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                                        <span class="rating-number" style="position: relative; top: 1px;">{{
-                                            str_replace(',',
-                                            '.', $provider->rate) }}
-                                            (2rb
-                                            ulasan)
-                                        </span>
-                                    </div>
-
-                                    <div class="price mt-7">
-                                        <span class="coret text-decoration-line-through">IDR
-                                            {{ number_format($provider->origin_price, 0, ',', '.') }}</span>
-                                        <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                            {{ number_format($provider->cut_price, 0, ',', '.') }}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div> --}}
                 @endforeach
             </div>
         </div>

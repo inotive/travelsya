@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CarRentalHasCars extends Model
@@ -56,6 +57,11 @@ class CarRentalHasCars extends Model
     public function carRental()
     {
         return $this->belongsTo(CarRental::class);
+    }
+
+    public function carRentalRate(): HasMany
+    {
+        return $this->hasMany(CarRentalRating::class, 'car_rental_has_car_id', 'id');
     }
 
     public function scopeActive()

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\BusBooked;
+use App\Models\CarRentalRating;
 use Carbon\Carbon;
 
 class General
@@ -184,5 +185,18 @@ class General
 
     public static function addingDays($date, $long){
         return General::getCarbon($date)->addDays($long);
+    }
+
+    public static function getCarRentalRate($car_renta_has_car_id){
+        $car_rental_has_car = CarRentalRating::where('car_rental_has_car_id', $car_renta_has_car_id)->get();
+        $collection = collect();
+        foreach ($car_rental_has_car as $key => $car_rental) {
+            $collection->push([
+                'rate' => $car_rental->rate,
+            ]);
+        }
+        $sum_rate = $collection->sum('rate');
+        return $sum_rate;
+        // return (double)$sum_rate->avg('sum');
     }
 }
