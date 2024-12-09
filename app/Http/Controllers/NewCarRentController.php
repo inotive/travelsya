@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CarModel;
+use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
+use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NewCarRentController extends Controller
 {
@@ -12,6 +15,7 @@ class NewCarRentController extends Controller
     public function index()
     {
         $car_models = CarModel::with('vendor')->limit(10)->get();
+
         $dummy_near_location = [
             [
                 'id' => 1,
@@ -86,6 +90,8 @@ class NewCarRentController extends Controller
     }
 
     public function show(Request $request){
+        $city = City::where('city_name', 'like', '%'.$request->location.'%')->first();
+        $car_rentals = CarRental::with('hasCars')->where('city', $city->city_id)->get();
         $providers = [
             [
                 'img' => '',
@@ -130,18 +136,45 @@ class NewCarRentController extends Controller
             ],
         ];
         $providers = json_decode(json_encode($providers));
+        $data['category'] = $request->category;
+        $data['location'] = $request->location;
+        $data['date'] = $request->date;
+        $data['time'] = $request->time;
+        $data['duration'] = $request->duration;
         $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $provider, $duration){
-        $data['providers'] = [];
+    public function detail(Request $request, $lokasi, $model, $provider, $duration){
+        $data['model'] = $model;
+        $data['provider'] = $provider;
         $data['duration'] = $duration;
         return view('pagesv2.car_rent.detail', $data);
     }
 
-    public function order(Request $request, $provider){
-        $data['paket'] = [];
-        return view('pagesv2.car_rent.order', $data);
+    public function order(Request $request){
+        $user = Auth::user();
+        if($user){
+            $data['car'] = CarRentalHasCars::find($request->model);
+            $data['duration'] = $request->duration;
+            $data['user'] = $user;
+            $data['provider'] = $request->provider;
+
+            return view('pagesv2.car_rent.order', $data);
+        }else{
+            return redirect()->route('login');
+        }
+        // $data['paket'] = [];
+        // return view('pagesv2.car_rent.order', $data);
+    }
+
+    public function getVendorCars($model_id){
+        if(!is_numeric($model_id)){
+            return response()->json(['error' => 'Invalid ID format']);
+        }
+
+        $car_vendors = CarRentalHasCars::with('carRental')->where('car_model_id', $model_id)->groupBy('car_model_id', 'car_rental_id')->get();
+
+        return response()->json(['data' => $car_vendors]);
     }
 }
