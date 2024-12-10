@@ -90,58 +90,73 @@ class NewCarRentController extends Controller
     }
 
     public function show(Request $request){
-        $city = City::where('city_name', 'like', '%'.$request->location.'%')->first();
-        $car_rentals = CarRental::with('hasCars')->where('city', $city->city_id)->get();
-        $providers = [
-            [
-                'img' => '',
-                'name' => 'Honda Mobilio',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Toyota New Avanza',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'All New Avanza 2022',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Toyota Innova Reborn',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Honda Mobilio',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Toyota New Avanza',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'All New Avanza 2022',
-                'lugage' => '2',
-                'passage' => '6'
-            ],[
-                'img' => '',
-                'name' => 'Toyota Innova Reborn',
-                'lugage' => '2',
-                'passage' => '6'
-            ],
-        ];
-        $providers = json_decode(json_encode($providers));
-        $data['category'] = $request->category;
-        $data['location'] = $request->location;
-        $data['date'] = $request->date;
-        $data['time'] = $request->time;
-        $data['duration'] = $request->duration;
-        $data['providers'] = collect($providers);
+        
+        // $providers = [
+        //     [
+        //         'img' => '',
+        //         'name' => 'Honda Mobilio',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'Toyota New Avanza',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'All New Avanza 2022',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'Toyota Innova Reborn',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'Honda Mobilio',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'Toyota New Avanza',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'All New Avanza 2022',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],[
+        //         'img' => '',
+        //         'name' => 'Toyota Innova Reborn',
+        //         'lugage' => '2',
+        //         'passage' => '6'
+        //     ],
+        // ];
+        // $providers = json_decode(json_encode($providers));
+        $data['category'] = $request->category ?? '';
+        $data['location'] = $request->location ?? '';
+        $data['date'] = $request->date ?? '';
+        $data['time'] = $request->time ?? '';
+        $data['duration'] = $request->duration ?? '';
+        $data['model'] = $request->model ?? '';
+        $data['model'] = $request->model_id ?? '';
+
+        if($request->location){
+            $city = City::
+            with(['has_cars' => function($query){$query->with(['brand', 'carRental', 'carRentalRate']);}])
+            ->where('city_name', 'like', '%'.$request->location.'%')
+            ->first();
+        }else{
+            $city = json_decode(json_encode($city = [
+                'city_id' => '',
+            ]));
+        }
+
+        $cars = CarRentalHasCars::filter(request(['model_id'], $city->city_id))->with(['brand', 'carRental'])->get();
+        $data['cars'] = $cars;
+        // $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
     }
 
@@ -155,8 +170,10 @@ class NewCarRentController extends Controller
     public function order(Request $request){
         $user = Auth::user();
         if($user){
-            $data['car'] = CarRentalHasCars::find($request->model);
+            $data['car'] = CarRentalHasCars::with(['brand', 'carRental', 'carModel'])->where('id', $request->car_id)->first();
             $data['duration'] = $request->duration;
+            $data['date'] = $request->date;
+            $data['category'] = $request->category;
             $data['user'] = $user;
             $data['provider'] = $request->provider;
 
@@ -168,12 +185,16 @@ class NewCarRentController extends Controller
         // return view('pagesv2.car_rent.order', $data);
     }
 
-    public function getVendorCars($model_id){
-        if(!is_numeric($model_id)){
-            return response()->json(['error' => 'Invalid ID format']);
+    public function getVendorCars($brand_id, $city_id){
+        if(!is_numeric($brand_id)){
+            return response()->json(['error' => 'Invalid ID Brand']);
         }
 
-        $car_vendors = CarRentalHasCars::with('carRental')->where('car_model_id', $model_id)->groupBy('car_model_id', 'car_rental_id')->get();
+        if(!is_numeric($city_id)){
+            return response()->json(['error' => 'Invalid ID City']);
+        }
+
+        $car_vendors = CarRentalHasCars::with('carRental')->where('brand_id', $brand_id)->get();
 
         return response()->json(['data' => $car_vendors]);
     }

@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use App\Models\BusBooked;
+use App\Models\CarRentalRating;
 use Carbon\Carbon;
 
 class General
@@ -82,7 +83,7 @@ class General
             'hari' => $days[$day],
             'tanggal' => $dateFormatted,
             'bulan' => $months[$month],
-            'tahun' =>$year
+            'tahun' => $year
         ];
     }
 
@@ -105,13 +106,13 @@ class General
         ];
 
         $days = [
-            'Sunday' => 'Minggu',
-            'Monday' => 'Senin',
-            'Tuesday' => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-            'Saturday' => 'Sabtu'
+            'Sunday' => 'Min',
+            'Monday' => 'Sen',
+            'Tuesday' => 'Sel',
+            'Wednesday' => 'Rab',
+            'Thursday' => 'Kam',
+            'Friday' => 'Jum',
+            'Saturday' => 'Sab'
         ];
 
         // Mengubah format tanggal ke dalam bahasa Indonesia
@@ -125,8 +126,13 @@ class General
             'hari' => $days[$day],
             'tanggal' => $dateFormatted,
             'bulan' => $months[$month],
-            'tahun' =>$year
+            'tahun' => $year
         ];
+    }
+
+    public static function getDayDateShortMonth($date){
+        $data = General::convertShortDateToIndo($date);
+        return $data['hari'] . ', ' .$data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
     }
 
     public static function getDateShortMonth($date){
@@ -184,5 +190,18 @@ class General
 
     public static function addingDays($date, $long){
         return General::getCarbon($date)->addDays($long);
+    }
+
+    public static function getCarRentalRate($car_renta_has_car_id){
+        $car_rental_has_car = CarRentalRating::where('car_rental_has_car_id', $car_renta_has_car_id)->get();
+        $collection = collect();
+        foreach ($car_rental_has_car as $key => $car_rental) {
+            $collection->push([
+                'rate' => $car_rental->rate,
+            ]);
+        }
+        $sum_rate = $collection->sum('rate');
+        return $sum_rate;
+        // return (double)$sum_rate->avg('sum');
     }
 }

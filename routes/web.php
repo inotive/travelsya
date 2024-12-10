@@ -261,7 +261,7 @@ Route::group(['prefix' => 'bus_travel'], function(){
 
 Route::group(['prefix' => 'car_rent'], function () {
     Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
-    Route::get('/get_cars_vendor/{model_id}', [NewCarRentController::class, 'getVendorCars']);
+    Route::get('/get_cars_vendor/{brand_id}/{city_id}', [NewCarRentController::class, 'getVendorCars']);
     Route::post('/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
     Route::get('/brand/{id}', [NewCarRentController::class, 'brand_detail'])->name('car_rent.brand.detail');
     Route::get('/model/{id}', [NewCarRentController::class, 'model_detail'])->name('car_rent.model.detail');

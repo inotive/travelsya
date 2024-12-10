@@ -1,35 +1,35 @@
 @push('add-style')
-<style>
-    .minh-350 {
-        min-height: 350px !important;
-    }
+    <style>
+        .minh-350 {
+            min-height: 350px !important;
+        }
 
-    .extra-content {
-        display: none;
-        margin-top: 16px;
-        color: #555;
-        max-height: 0;
-        /* Sembunyikan konten yang terpotong */
-        transition: max-height 0.75s ease-in-out;
-        /* Animasi smooth */
-        padding: 0;
-        /* Awalnya padding diset ke 0 */
-    }
+        .extra-content {
+            display: none;
+            margin-top: 16px;
+            color: #555;
+            max-height: 0;
+            /* Sembunyikan konten yang terpotong */
+            transition: max-height 0.75s ease-in-out;
+            /* Animasi smooth */
+            padding: 0;
+            /* Awalnya padding diset ke 0 */
+        }
 
-    .extra-content.show {
-        display: block;
-        max-height: 2000px;
-        /* Atur sesuai dengan tinggi maksimal konten */
-    }
+        .extra-content.show {
+            display: block;
+            max-height: 2000px;
+            /* Atur sesuai dengan tinggi maksimal konten */
+        }
 
-    .toggle-button {
-        background: none;
-        border: none;
-        color: #007bff;
-        cursor: pointer;
-        font-size: 14px;
-    }
-</style>
+        .toggle-button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
 @endpush
 <div class="container mb-5">
     <section style="margin-bottom: 60px">
@@ -180,37 +180,43 @@
 
     </section>
 
-    <section class="favorite_car" style="margin-bottom: 100px;">
+    <section class="favorite_car" id="favorite_car" style="margin-bottom: 100px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Lepas Kunci</h2>
+                <h2 class="text-dark" style="position: relative; top: 3px;">Kendaraan Favorite Rental Mobil di Travelsya
+                </h2>
             </div>
         </div>
         <div class="row row-cols-6 row-cols-lg-6 g-6 g-lg-6 justify-content-center">
             @foreach ($car_models as $model)
-            <div class="col p-3">
-                <a href="javascript:" class="text-decoration-none text-dark" id="provider_button"
-                    model="{{ $model->id }}" data-toogle="modal" data-target="#providers">
-                    <div class="card border border-dark rounded-4">
-                        <img src="{{ $model->img }}" class="card-img-top-rounded" alt="..."
-                            onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
-                        <div class="card-body">
-                            <div class="card-content">
-                                <div class="lokasi d-flex justify-content-center">
-                                    <span class="fw-bold">{{ $model->name }}</span>
-                                </div>
+                <form action="{{ route('car_rent.show') }}" method="post" id="form_favorite_car">
+                    @csrf
+                    <input type="hidden" name="model_id" value="{{ $model->id }}">
+                    <div class="col p-3">
+                        <a href="javascript:" class="text-decoration-none text-dark" id="provider_button"
+                            model="{{ $model->id }}" data-toogle="modal" data-target="#providers">
+                            <div class="card border border-dark rounded-4">
+                                <img src="{{ $model->img }}" class="card-img-top-rounded" alt="..."
+                                    onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
+                                <div class="card-body">
+                                    <div class="card-content">
+                                        <div class="lokasi d-flex justify-content-center">
+                                            <span class="fw-bold">{{ $model->name }}</span>
+                                        </div>
 
-                                <div class="price mt-7 d-flex flex-row align-items-center justify-content-center">
-                                    <span class="fa-solid fa-suitcase"></span>
-                                    <span class="ms-1">{{ $model->lugage }}</span>
-                                    <span class="fa-solid fa-user ms-5"></span>
-                                    <span class="ms-1">{{ $model->passage }}</span>
+                                        <div
+                                            class="price mt-7 d-flex flex-row align-items-center justify-content-center">
+                                            <span class="fa-solid fa-suitcase"></span>
+                                            <span class="ms-1">{{ $model->lugage }}</span>
+                                            <span class="fa-solid fa-user ms-5"></span>
+                                            <span class="ms-1">{{ $model->passage }}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </a>
                     </div>
-                </a>
-            </div>
+                </form>
             @endforeach
         </div>
     </section>
@@ -218,46 +224,145 @@
     <section class="favorite_car" style="margin-bottom: 100px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekata di Kota Lainnya</h2>
+                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekata di Kota Lainnya
+                </h2>
             </div>
         </div>
         <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
             @foreach ($near_location as $location)
-            <div class="col p-3">
-                <div class="card border border-dark rounded-4 position-relative">
-                    <img src="{{ $location->img != '' ? $location->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                        class="card-img-top-rounded card-img-bottom-rounded img-fluid" style="filter: brightness(0.5)"
-                        alt="...">
-                    <h3 class="position-absolute translate-middle fw-bold text-light fs-2 shadow"
-                        style="top: 50%; left: 50%;">
-                        {{
-                        $location->name }}
-                    </h3>
+                <div class="col p-3">
+                    <div class="card border border-dark rounded-4 position-relative">
+                        <img src="{{ $location->img != '' ? $location->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                            class="card-img-top-rounded card-img-bottom-rounded img-fluid"
+                            style="filter: brightness(0.5)" alt="...">
+                        <h3 class="position-absolute translate-middle fw-bold text-light fs-2 shadow"
+                            style="top: 50%; left: 50%;">
+                            {{ $location->name }}
+                        </h3>
+                    </div>
                 </div>
-            </div>
             @endforeach
         </div>
     </section>
 </div>
 
-@include('pagesv2.car_rent.components._vendor_modal')
+{{-- @include('pagesv2.car_rent.components._vendor_modal') --}}
+<!--div class="modal fade" id="providers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="d-flex flex-column border border-bottom" style="padding: 1.75rem;">
+                <div class="d-flex flex-row align-items-center mb-2">
+                    <span class="title fw-bold fs-5">Pilih Penyedia Rental</span>
+                    <button class="btn btn-outline-light close ms-sm-auto p-0" id="close_modal" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true" class="fs-1">&times;</span>
+                    </button>
+                </div>
+                <div class="d-flex flex-row">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold mb-3">Toyota New Brand</span>
+                        <div class="d-flex flex-row align-items-center">
+                            <span class="fa-solid fa-suitcase opacity-25"></span>
+                            {{-- <span class="ms-2 opacity-25">{{ $provider->lugage }} Koper</span> --}}
+                            <span class="fa-solid fa-user ms-5 opacity-25"></span>
+                            {{-- <span class="ms-2 opacity-25">{{ $provider->passage }} Penumpang</span> --}}
+                        </div>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg"
+                        class="ms-sm-auto" width="150px" height="100px" alt="...">
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow-sm mb-5">
+                    <div class="card-body d-flex flex-row">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold mb-5">SMJ RENT</span>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang text-warning fa fa-star checked me-2"></span>
+                                <span class="rating-number fw-bold">4.8 / <small>5</small> <a href="#"
+                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
+                                        Ulasan)</a>
+                                </span>
+                                <span class="rating-number custom-dot-before">2500 order</span>
+                            </div>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
+                                <span class="rating-number">Air Mineral</span>
+                            </div>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang fa-solid fa-user checked me-2"></span>
+                                <span class="rating-number">Supir bisa bahasa inggris</span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
+                            <span class="mb-2"><span class="text-danger fw-bold">IDR 230.000</span> /
+                                hari</span>
+                            <a href="{{ route('car_rent.detail', ['lokasi' => 'jakarta', 'model' => 1, 'provider' => '1', 'duration' => 1]) }}"
+                                class="text-decoration-none">
+                                <button class="btn btn-danger">Pilih penyedia</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow-sm mb-5">
+                    <div class="card-body d-flex flex-row">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold mb-5">SMJ RENT</span>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang text-warning fa fa-star checked me-2"></span>
+                                <span class="rating-number fw-bold">4.8 / <small>5</small> <a href="#"
+                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
+                                        Ulasan)</a>
+                                </span>
+                                <span class="rating-number custom-dot-before">2500 order</span>
+                            </div>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
+                                <span class="rating-number">Air Mineral</span>
+                            </div>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang fa-solid fa-user checked me-2"></span>
+                                <span class="rating-number">Supir bisa bahasa inggris</span>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
+                            <span class="mb-2"><span class="text-danger fw-bold">IDR 230.000</span> /
+                                hari</span>
+                            <button class="btn btn-danger py-1" id="provider_button" data-toogle="modal"
+                                data-target="#providers">Pilih penyedia</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</!--div-->
 
 @push('js')
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const toggleButton = document.querySelector(".toggle-button");
-        const extraContent = document.querySelector(".extra-content");
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const toggleButton = document.querySelector(".toggle-button");
+            const extraContent = document.querySelector(".extra-content");
 
-        toggleButton.addEventListener("click", function () {
-            if (extraContent.classList.contains("show")) {
-            extraContent.classList.remove("show");
-            toggleButton.textContent = "Baca lebih banyak";
-            } else {
-            extraContent.classList.add("show");
-            toggleButton.textContent = "Baca lebih sedikit";
-            }
+            toggleButton.addEventListener("click", function() {
+                if (extraContent.classList.contains("show")) {
+                    extraContent.classList.remove("show");
+                    toggleButton.textContent = "Baca lebih banyak";
+                } else {
+                    extraContent.classList.add("show");
+                    toggleButton.textContent = "Baca lebih sedikit";
+                }
+            });
         });
-    });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $("#favorite_car form#form_favorite_car").on("click", "a#provider_button", function(e) {
 
-</script>
+                $("form#form_favorite_car").submit();
+                e.preventDefault();
+                return false;
+            })
+        });
+    </script>
 @endpush
