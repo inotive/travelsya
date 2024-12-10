@@ -288,7 +288,8 @@
         right: 11px;
     }
 
-    .bus-icon {
+
+    .bus-icon  {
         background: #C02425;
         text-align: center;
         border-radius: 50px;
@@ -298,7 +299,8 @@
         padding: 3px 7px;
     }
 
-    .shape-round-big {
+
+    .shape-round-big  {
         height: 100px;
         width: 100px;
         background-color: #FFEEF1;
@@ -308,7 +310,8 @@
         top: -53px;
     }
 
-    .shape-round-small {
+
+    .shape-round-small  {
         height: 34px;
         width: 34px;
         background-color: #FFBDBE;
@@ -318,33 +321,45 @@
         right: -16px;
     }
 
-    .bg-light {
+
+    .bg-light  {
         background: #fff !important;
     }
 
-    .max-w-100 {
+    .max-w-200 {
+        max-width: 200px;
+    }
+
+
+    .max-w-100  {
         max-width: 100px;
     }
 
-    .max-w-120 {
+
+    .max-w-120  {
         max-width: 120px;
     }
 
-    .max-w-150 {
+
+    .max-w-150  {
         max-width: 150px;
     }
 
-    .max-w-50 {
+
+    .max-w-50  {
         max-width: 50px;
     }
 
-    .border-right-2 {
+
+    .border-right-2  {
         border-right: 2px solid #928b8b !important;
     }
 
-    .round {
+
+    .round  {
         border-radius: 50px;
     }
+
 
     .badge-secondary.badge-outline {
         border: 1px solid #989898 !important;
@@ -352,9 +367,21 @@
         background-color: transparent;
     }
 
-    .mb-50 {
+
+    .mb-50  {
         margin-bottom: 50px !important;
     }
+
+    .text-secondary-strong {
+        color: #878787 !important;
+    }
+
+    .lined {
+        height: 100%;
+        border-left: 2px solid #dfdfdf;
+        margin-left: 5px;
+    }
+
 </style>
 <style>
     .item-menubar {
