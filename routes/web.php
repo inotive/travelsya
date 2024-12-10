@@ -257,6 +257,7 @@ Route::group(['prefix' => 'health_beauty'], function () {
 Route::group(['prefix' => 'bus_travel'], function(){
     Route::get('/', [BusTravelController::class, 'index'])->name('bus_travel.index');
     Route::post('search', [BusTravelController::class, 'search'])->name('bus_travel.search');
+    Route::post('detail', [BusTravelController::class, 'detail'])->name('bus_travel.detail');
 });
 
 Route::group(['prefix' => 'car_rent'], function () {
