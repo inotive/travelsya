@@ -36,6 +36,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+<!-- Timepicker -->
+{{--
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.1/jquery.timepicker.min.css">
+--}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -284,7 +288,8 @@
         right: 11px;
     }
 
-    .bus-icon {
+
+    .bus-icon  {
         background: #C02425;
         text-align: center;
         border-radius: 50px;
@@ -294,7 +299,8 @@
         padding: 3px 7px;
     }
 
-    .shape-round-big {
+
+    .shape-round-big  {
         height: 100px;
         width: 100px;
         background-color: #FFEEF1;
@@ -304,7 +310,8 @@
         top: -53px;
     }
 
-    .shape-round-small {
+
+    .shape-round-small  {
         height: 34px;
         width: 34px;
         background-color: #FFBDBE;
@@ -314,7 +321,8 @@
         right: -16px;
     }
 
-    .bg-light {
+
+    .bg-light  {
         background: #fff !important;
     }
 
@@ -322,29 +330,36 @@
         max-width: 200px;
     }
 
-    .max-w-100 {
+
+    .max-w-100  {
         max-width: 100px;
     }
 
-    .max-w-120 {
+
+    .max-w-120  {
         max-width: 120px;
     }
 
-    .max-w-150 {
+
+    .max-w-150  {
         max-width: 150px;
     }
 
-    .max-w-50 {
+
+    .max-w-50  {
         max-width: 50px;
     }
 
-    .border-right-2 {
+
+    .border-right-2  {
         border-right: 2px solid #928b8b !important;
     }
 
-    .round {
+
+    .round  {
         border-radius: 50px;
     }
+
 
     .badge-secondary.badge-outline {
         border: 1px solid #989898 !important;
@@ -352,7 +367,8 @@
         background-color: transparent;
     }
 
-    .mb-50 {
+
+    .mb-50  {
         margin-bottom: 50px !important;
     }
 
@@ -580,6 +596,9 @@
         border-radius: 10px;
     }
 
+    .fs-7 {
+        font-size: .85rem;
+    }
 </style>
 @stack('add-style')
 {{-- @vite(['resources/js/app.js']) --}}

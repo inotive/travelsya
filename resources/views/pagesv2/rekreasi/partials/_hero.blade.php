@@ -9,14 +9,15 @@
             <div class="search-banner-wrapper">
                 <div class="card card-body p-5">
 
-                    <form action="{{ route('rekreasi.show', ['date' => \Carbon\Carbon::now()->addDays()->format('Y-m-d')]) }}" method="post">
+                    <form
+                        action="{{ route('rekreasi.show', ['date' => \Carbon\Carbon::now()->addDays()->format('Y-m-d')]) }}"
+                        method="post">
                         @csrf
                         <div class="input-group mb-5">
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-search"></i>
                             </span>
-                            <input type="text" class="form-control" name="lokasi"
-                                placeholder="Mau rekreasi dimana?" />
+                            <input type="text" class="form-control" name="lokasi" placeholder="Mau rekreasi dimana?" />
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-location-crosshairs"></i>
                             </span>
@@ -29,7 +30,8 @@
                                 placeholder="Tanggal reservasi" aria-label="Username" aria-describedby="basic-addon1" />
                         </div>
                         <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</button>
-                        {{-- <a href="{{ route('register') }}" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</a> --}}
+                        {{-- <a href="{{ route('register') }}" class="btn btn-danger w-100 fw-semibold bg-main">Cari
+                            Sekarang</a> --}}
                     </form>
                 </div>
             </div>
