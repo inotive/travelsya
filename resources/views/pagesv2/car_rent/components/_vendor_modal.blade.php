@@ -24,46 +24,60 @@
                 </div>
             </div>
             <div class="modal-body" id="modal_body_rental">
-                @foreach ($city->has_cars as $car)
-                <div class="card shadow-sm mb-5 d-none" id="rental_{{ $car->brand_id }}">
-                    <div class="card-body d-flex flex-row">
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold mb-5">{{ $car->carRental->business_name }}</span>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang text-warning fa fa-star checked me-2"></span>
-                                <span class="rating-number fw-bold">{{
-                                    \App\Helpers\General::getCarRentalRate($car->id) }} / <small>5</small> <a href="#"
-                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
-                                        Ulasan)</a>
-                                </span>
-                                <span class="rating-number custom-dot-before">2500 order</span>
+                @foreach ($cars as $car)
+                    <div class="card shadow-sm mb-5 d-none" id="rental_{{ $car->id }}">
+                        <div class="card-body d-flex flex-row">
+                            <div class="d-flex flex-column">
+                                <span class="fw-bold mb-5">{{ $car->carRental->business_name }}</span>
+                                <div class="rating d-flex align-items-center mb-1">
+                                    <span class="bintang text-warning fa fa-star checked me-2"></span>
+                                    <span
+                                        class="rating-number fw-bold">{{ \App\Helpers\General::getCarRentalRate($car->id) }}
+                                        / <small>5</small> <a href="#"
+                                            class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
+                                            Ulasan)</a>
+                                    </span>
+                                    <span class="rating-number custom-dot-before">2500 order</span>
+                                </div>
+                                <div class="rating d-flex align-items-center mb-1">
+                                    <span class="bintang fa-solid fa-suitcase checked me-2"></span>
+                                    <span class="rating-number">Air Mineral</span>
+                                </div>
+                                <div class="rating d-flex align-items-center mb-1">
+                                    <span class="bintang fa-solid fa-user checked me-2"></span>
+                                    <span class="rating-number">Supir bisa bahasa inggris</span>
+                                </div>
                             </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                <span class="rating-number">Air Mineral</span>
+                            <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
+                                <span class="mb-2"><span class="text-danger fw-bold">IDR
+                                        {{ number_format($car->rental_price_per_day, '0', ',', '.') }}</span> /
+                                    hari</span>
+                                <form action="{{ route('car_rent.order') }}" method="post">
+                                    @csrf
+                                    <input type="hidden" name="category" id="order_{{ $car->id }}_category"
+                                        value="{{ $category ? $category : 'supir' }}">
+                                    <input type="hidden" name="lokasi" id="order_{{ $car->id }}_lokasi"
+                                        value="{{ $car->carRental->city }}">
+                                    <input type="hidden" name="brand" id="order_{{ $car->id }}_brand"
+                                        value="{{ $car->brand_id }}">
+                                    <input type="hidden" name="date" id="order_{{ $car->id }}_date"
+                                        value="{{ $date && $time ? $date . ' ' . $time : date('Y-m-d H:i:s', strtotime(now())) }}">
+                                    <input type="hidden" name="model" id="order_{{ $car->id }}_model"
+                                        value="{{ $model ? $model : $car->car_model_id }}">
+                                    <input type="hidden" name="duration" id="order_{{ $car->id }}_duration"
+                                        value="{{ $duration ? $duration : 1 }}">
+                                    <input type="hidden" name="provider" id="order_{{ $car->id }}_provider"
+                                        value="{{ $car->car_rental_id }}">
+                                    <input type="hidden" name="car_id" id="order_{{ $car->id }}_provider"
+                                        value="{{ $car->id }}">
+                                    <button type="submit" class="btn btn-danger"
+                                        id="submit_{{ $car->id }}_order">Pilih
+                                        penyedia</button>
+                                </form>
+                                <span class="text-sm text-danger"></span>
                             </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-user checked me-2"></span>
-                                <span class="rating-number">Supir bisa bahasa inggris</span>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
-                            <span class="mb-2"><span class="text-danger fw-bold">IDR {{
-                                    number_format($car->rentail_price_per_day, '0', ',', '.') }}</span> /
-                                hari</span>
-                            <form action="{{ route('car_rent.order') }}" method="post">
-                                @csrf
-                                <input type="hidden" name="lokasi" value="{{ $city->city_id }}">
-                                <input type="hidden" name="brand" value="{{ $car->brand_id }}">
-                                <input type="hidden" name="date" value="{{ $date }}">
-                                <input type="hidden" name="time" value="{{ $time }}">
-                                <input type="hidden" name="duration" value="{{ $duration }}">
-                                <input type="hidden" name="provider" value="{{ $car->car_rental_id }}">
-                                <button type="submit" class="btn btn-danger">Pilih penyedia</button>
-                            </form>
                         </div>
                     </div>
-                </div>
                 @endforeach
             </div>
         </div>
@@ -72,40 +86,59 @@
 
 
 @push('js')
-<script>
-    $(document).ready(function () {
-        $('#providers').on('shown.bs.modal', function() {
-            $('#car_brands #provider_button').trigger('focus')
-        });
+    <script>
+        $(document).ready(function() {
+            $('#providers').on('shown.bs.modal', function() {
+                $('#car_brands #provider_button').trigger('focus')
+            });
 
-        $('#car_brands #provider_button').click(function() {
-            let brand_data = $(this).attr('brand').split(',');
-            console.log(brand_data);
-            
-            $("#brand_name").text(brand_data[0]); // brand name
-            $("#luggage_number").text(brand_data[1] + ' Koper'); // luggage number
-            $("#passage_number").text(brand_data[2] + ' Penumpang'); // passage number
+            function ToggleOrderSubmitButton(id) {
+                let inputs = $("#providers").find("input[id^='order_" + id + "_']");
 
-            $("#rental_"+brand_data[3]).each(function(){
-                $(this).removeClass('d-none');
-            })
-            
-            // $.ajax({
-            //     type: "GET",
-            //     url: "/car_rent/get_cars_vendor/"+brand_data[3]+"/"+brand_data[4], // brand_id, has_car id
-            //     dataType: "json",
-            //     success: function (response) {
-            //         console.log(response);
-                    
-            //     }
-            // });
-            
-            $('#providers').modal('show');
-        });
 
-        $('#close_modal').click(function() {
-            $('#providers').modal('hide');
+                let hasEmptyInput = inputs.toArray().some(input => $(input).val() === null || $(input).val() ===
+                    '');
+
+                console.log(hasEmptyInput);
+
+
+                if (hasEmptyInput) {
+                    $("#submit_" + id + "_order").prop('disabled', true);
+                } else {
+                    $("#submit_" + id + "_order").prop('disabled', false);
+                }
+            }
+
+            $('#car_brands #provider_button').click(function() {
+                let brand_data = $(this).attr('brand').split(',');
+
+                $("#brand_name").text(brand_data[0]); // brand name
+                $("#luggage_number").text(brand_data[1] + ' Koper'); // luggage number
+                $("#passage_number").text(brand_data[2] + ' Penumpang'); // passage number
+
+                $("#rental_" + brand_data[3]).each(function() {
+                    $(this).removeClass('d-none');
+                })
+
+                ToggleOrderSubmitButton(brand_data[3]);
+
+
+                // $.ajax({
+                //     type: "GET",
+                //     url: "/car_rent/get_cars_vendor/"+brand_data[3]+"/"+brand_data[4], // brand_id, has_car id
+                //     dataType: "json",
+                //     success: function (response) {
+                //         console.log(response);
+
+                //     }
+                // });
+
+                $('#providers').modal('show');
+            });
+
+            $('#close_modal').click(function() {
+                $('#providers').modal('hide');
+            });
         });
-    });
-</script>
+    </script>
 @endpush

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use function PHPUnit\Framework\returnSelf;
+
 class CarRentalHasCars extends Model
 {
     use HasFactory;
@@ -59,6 +61,10 @@ class CarRentalHasCars extends Model
         return $this->belongsTo(CarRental::class);
     }
 
+    public function city(){
+        return $this->belongsTo(City::class, 'city', 'city_id');
+    }
+
     public function carRentalRate(): HasMany
     {
         return $this->hasMany(CarRentalRating::class, 'car_rental_has_car_id', 'id');
@@ -67,5 +73,17 @@ class CarRentalHasCars extends Model
     public function scopeActive()
     {
         return $this->where('status', "1");
+    }
+
+    public function scopeFilter($query, array $filters, int $location = null){
+        $query->when($filters['mdoel_id'] ?? false, fn($query, $model_id) =>
+            $query->where('car_model_id', $model_id)
+        );
+
+        $query->when($location ?? false, fn($query, $location) =>
+            $query->whereHas('city', fn($query) =>
+                $query->where('city', $location)
+            )
+        );
     }
 }

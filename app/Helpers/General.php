@@ -83,7 +83,7 @@ class General
             'hari' => $days[$day],
             'tanggal' => $dateFormatted,
             'bulan' => $months[$month],
-            'tahun' =>$year
+            'tahun' => $year
         ];
     }
 
@@ -106,13 +106,13 @@ class General
         ];
 
         $days = [
-            'Sunday' => 'Minggu',
-            'Monday' => 'Senin',
-            'Tuesday' => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-            'Saturday' => 'Sabtu'
+            'Sunday' => 'Min',
+            'Monday' => 'Sen',
+            'Tuesday' => 'Sel',
+            'Wednesday' => 'Rab',
+            'Thursday' => 'Kam',
+            'Friday' => 'Jum',
+            'Saturday' => 'Sab'
         ];
 
         // Mengubah format tanggal ke dalam bahasa Indonesia
@@ -126,8 +126,13 @@ class General
             'hari' => $days[$day],
             'tanggal' => $dateFormatted,
             'bulan' => $months[$month],
-            'tahun' =>$year
+            'tahun' => $year
         ];
+    }
+
+    public static function getDayDateShortMonth($date){
+        $data = General::convertShortDateToIndo($date);
+        return $data['hari'] . ', ' .$data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
     }
 
     public static function getDateShortMonth($date){

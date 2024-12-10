@@ -157,13 +157,20 @@
                             <div class="row">
                                 <div class="col-6 d-flex flex-column">
                                     <span class="fs-7">Tanggal Penjemputan</span>
-                                    <span class="fs-4 f5-bold">Sel, 15 Okt 2024</span>
-                                    <span class="fs-4">09:54</span>
+                                    <span
+                                        class="fs-4 f5-bold">{{ \App\Helpers\General::getDayDateShortMonth($date) }}</span>
+                                    <span class="fs-4">{{ date('H:i', strtotime($date)) }}</span>
                                 </div>
                                 <div class="col-6 d-flex flex-column ms-sm-auto">
                                     <span class="fs-7">Tanggal Drop-off</span>
                                     <span class="fs-4 f5-bold">Sel, 15 Okt 2024</span>
-                                    <span class="fs-4">21:54</span>
+                                    <span class="fs-4">
+                                        @if (date('H:i', strtotime('+' . $duration * 12 . ' hours', strtotime($date))) < '23:59')
+                                            {{ date('H:i', strtotime('+' . $duration * 12 . ' hours', strtotime($date))) }}
+                                        @else
+                                            23.59
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
 
@@ -172,9 +179,15 @@
                                 <img src="" onerror="this.src=`{{ asset('images/not_found.jpg') }}`"
                                     alt="" width="50" height="50" class="rounded-1">
                                 <div class="d-flex flex-column ms-3">
-                                    <span class="fs-7">Dengan Supir</span>
-                                    <span class="fs-6 fw-bold">Toyota New Avanza</span>
-                                    <span class="fs-7 text-danger">SMJ Rent</span>
+                                    <span class="fs-7">
+                                        @if ($category == 'supir')
+                                            Dengan Supir
+                                        @else
+                                            Lepas Kunci
+                                        @endif
+                                    </span>
+                                    <span class="fs-6 fw-bold">{{ $car->brand->name }}</span>
+                                    <span class="fs-7 text-danger">{{ $car->carRental->business_name }}</span>
                                 </div>
                                 <span class="text-danger ms-sm-auto">Detail Paket</span>
                             </div>

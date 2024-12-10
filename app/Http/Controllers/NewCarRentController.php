@@ -90,10 +90,6 @@ class NewCarRentController extends Controller
     }
 
     public function show(Request $request){
-        $city = City::
-        with(['has_cars' => function($query){$query->with(['brand', 'carRental', 'carRentalRate']);}])
-        ->where('city_name', 'like', '%'.$request->location.'%')
-        ->first();
         
         // $providers = [
         //     [
@@ -139,18 +135,29 @@ class NewCarRentController extends Controller
         //     ],
         // ];
         // $providers = json_decode(json_encode($providers));
-        $data['category'] = $request->category;
-        $data['location'] = $request->location;
-        $data['date'] = $request->date;
-        $data['time'] = $request->time;
-        $data['duration'] = $request->duration;
-        $data['city'] = $city;
+        $data['category'] = $request->category ?? '';
+        $data['location'] = $request->location ?? '';
+        $data['date'] = $request->date ?? '';
+        $data['time'] = $request->time ?? '';
+        $data['duration'] = $request->duration ?? '';
+        $data['model'] = $request->model ?? '';
+        $data['model'] = $request->model_id ?? '';
+
+        if($request->location){
+            $city = City::
+            with(['has_cars' => function($query){$query->with(['brand', 'carRental', 'carRentalRate']);}])
+            ->where('city_name', 'like', '%'.$request->location.'%')
+            ->first();
+        }else{
+            $city = json_decode(json_encode($city = [
+                'city_id' => '',
+            ]));
+        }
+
+        $cars = CarRentalHasCars::filter(request(['model_id'], $city->city_id))->with(['brand', 'carRental'])->get();
+        $data['cars'] = $cars;
         // $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
-    }
-
-    public function show_model_car($model_id){
-
     }
 
     public function detail(Request $request, $lokasi, $model, $provider, $duration){
@@ -163,8 +170,10 @@ class NewCarRentController extends Controller
     public function order(Request $request){
         $user = Auth::user();
         if($user){
-            $data['car'] = CarRentalHasCars::find($request->model);
+            $data['car'] = CarRentalHasCars::with(['brand', 'carRental', 'carModel'])->where('id', $request->car_id)->first();
             $data['duration'] = $request->duration;
+            $data['date'] = $request->date;
+            $data['category'] = $request->category;
             $data['user'] = $user;
             $data['provider'] = $request->provider;
 
