@@ -17,7 +17,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link active" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="supir" checked required />
+                                <input class="btn-check" type="radio" name="category" value="dengan driver" checked required />
                                 <!--end::Input-->
                                 Dengan Supir
                             </label>
@@ -26,7 +26,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="lepas" required />
+                                <input class="btn-check" type="radio" name="category" value="tidak dengan driver" required />
                                 <!--end::Input-->
                                 Lepas Kunci
                             </label>
