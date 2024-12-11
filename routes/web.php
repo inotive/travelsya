@@ -257,6 +257,8 @@ Route::group(['prefix' => 'health_beauty'], function () {
 Route::group(['prefix' => 'bus_travel'], function(){
     Route::get('/', [BusTravelController::class, 'index'])->name('bus_travel.index');
     Route::post('search', [BusTravelController::class, 'search'])->name('bus_travel.search');
+    Route::post('detail', [BusTravelController::class, 'detail'])->name('bus_travel.detail');
+    Route::post('order', [BusTravelController::class, 'order'])->name('bus_travel.order');
 });
 
 Route::group(['prefix' => 'car_rent'], function () {
@@ -265,7 +267,7 @@ Route::group(['prefix' => 'car_rent'], function () {
     Route::post('/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
     Route::get('/brand/{id}', [NewCarRentController::class, 'brand_detail'])->name('car_rent.brand.detail');
     Route::get('/model/{id}', [NewCarRentController::class, 'model_detail'])->name('car_rent.model.detail');
-    Route::get('/detail/{lokasi}/{model}/{provider}/{duration}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
+    Route::get('/detail/{category}/{lokasi}/{model}/{provider}/{date}/{duration}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
     Route::post('/order', [NewCarRentController::class, 'order'])->name('car_rent.order');
 });
 

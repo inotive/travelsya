@@ -1,35 +1,35 @@
 @push('add-style')
-    <style>
-        .minh-350 {
-            min-height: 350px !important;
-        }
+<style>
+    .minh-350 {
+        min-height: 350px !important;
+    }
 
-        .extra-content {
-            display: none;
-            margin-top: 16px;
-            color: #555;
-            max-height: 0;
-            /* Sembunyikan konten yang terpotong */
-            transition: max-height 0.75s ease-in-out;
-            /* Animasi smooth */
-            padding: 0;
-            /* Awalnya padding diset ke 0 */
-        }
+    .extra-content {
+        display: none;
+        margin-top: 16px;
+        color: #555;
+        max-height: 0;
+        /* Sembunyikan konten yang terpotong */
+        transition: max-height 0.75s ease-in-out;
+        /* Animasi smooth */
+        padding: 0;
+        /* Awalnya padding diset ke 0 */
+    }
 
-        .extra-content.show {
-            display: block;
-            max-height: 2000px;
-            /* Atur sesuai dengan tinggi maksimal konten */
-        }
+    .extra-content.show {
+        display: block;
+        max-height: 2000px;
+        /* Atur sesuai dengan tinggi maksimal konten */
+    }
 
-        .toggle-button {
-            background: none;
-            border: none;
-            color: #007bff;
-            cursor: pointer;
-            font-size: 14px;
-        }
-    </style>
+    .toggle-button {
+        background: none;
+        border: none;
+        color: #007bff;
+        cursor: pointer;
+        font-size: 14px;
+    }
+</style>
 @endpush
 <div class="container mb-5">
     <section style="margin-bottom: 60px">
@@ -155,20 +155,22 @@
         </div>
         <div class="row justify-content-center">
             @foreach ($car_models as $model)
-                <div class="col-12 col-md-4 col-xl-3" onclick="submit({{ $model->id }})">
+            <div class="col-12 col-md-4 col-xl-3">
                 <form action="{{ route('car_rent.show') }}" method="post" id="form_favorite_car{{ $model->id }}">
                     @csrf
                     <input type="hidden" name="model_id" value="{{ $model->car_model_id }}">
                     <div class="col p-3">
-                        <a href="javascript:" class="text-decoration-none text-dark" id="provider_button{{ $model->id }}"
-                            model="{{ $model->id }}" data-toogle="modal" data-target="#providers{{ $model }}">
+                        <a href="javascript:" class="text-decoration-none text-dark"
+                            id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
                             <div class="card border border-dark rounded-4">
-                                <img src="{{ asset('storage/',$model->img_url) }}" class="card-img-top-rounded" alt="..."
+                                <img src="{{ asset('storage/',$model->img_url) }}" class="card-img-top-rounded"
+                                    alt="..."
                                     onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                                 <div class="card-body">
                                     <div class="card-content">
                                         <div class="lokasi d-flex justify-content-center">
-                                            <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }} {{ $model->brand->name ?? 'Invalid Brand' }}</span>
+                                            <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }} {{
+                                                $model->brand->name ?? 'Invalid Brand' }}</span>
                                         </div>
 
                                         <div
@@ -189,7 +191,7 @@
         </div>
     </section>
 
-    <section class="favorite_car" style="margin-bottom: 100px;">
+    <section class="near_location" style="margin-bottom: 100px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
                 <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekata di Kota Lainnya
@@ -198,118 +200,35 @@
         </div>
         <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
             @foreach ($near_location as $location)
-                <div class="col p-3">
-                    <div class="card border border-dark rounded-4 position-relative">
-                        <img src="{{ $location }}"
-                            onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
-                            class="card-img-top-rounded card-img-bottom-rounded img-fluid"
-                            style="filter: brightness(0.5)" alt="...">
-                        <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
-                            style="top: 50%; left: 50%;">
-                            {{ $location }}
-                        </h3>
-                    </div>
-                </div>
+            <div class="col p-3">
+                <form action="{{ route('car_rent.show') }}" method="post"
+                    id="form_location{{ \App\Helpers\General::getSlug($location) }}">
+                    @csrf
+                    <input type="hidden" name="location" value="{{ $location }}">
+                    <a href="javascript:" class="text-decoration-none text-dark"
+                        id="location_button{{ \App\Helpers\General::getSlug($location) }}"
+                        onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
+                        <div class="card border border-dark rounded-4 position-relative">
+                            <img src="{{ $location }}"
+                                onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
+                                class="card-img-top-rounded card-img-bottom-rounded img-fluid"
+                                style="filter: brightness(0.5)" alt="...">
+                            <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
+                                style="top: 50%; left: 50%;">
+                                {{ $location }}
+                            </h3>
+                        </div>
+                    </a>
+                </form>
+            </div>
             @endforeach
         </div>
     </section>
 </div>
 
-{{-- @include('pagesv2.car_rent.components._vendor_modal') --}}
-<!--div class="modal fade" id="providers" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="d-flex flex-column border border-bottom" style="padding: 1.75rem;">
-                <div class="d-flex flex-row align-items-center mb-2">
-                    <span class="title fw-bold fs-5">Pilih Penyedia Rental</span>
-                    <button class="btn btn-outline-light close ms-sm-auto p-0" id="close_modal" data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true" class="fs-1">&times;</span>
-                    </button>
-                </div>
-                <div class="d-flex flex-row">
-                    <div class="d-flex flex-column">
-                        <span class="fw-bold mb-3">Toyota New Brand</span>
-                        <div class="d-flex flex-row align-items-center">
-                            <span class="fa-solid fa-suitcase opacity-25"></span>
-                            {{-- <span class="ms-2 opacity-25">{{ $provider->lugage }} Koper</span> --}}
-                            <span class="fa-solid fa-user ms-5 opacity-25"></span>
-                            {{-- <span class="ms-2 opacity-25">{{ $provider->passage }} Penumpang</span> --}}
-                        </div>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg"
-                        class="ms-sm-auto" width="150px" height="100px" alt="...">
-                </div>
-            </div>
-            <div class="modal-body">
-                <div class="card shadow-sm mb-5">
-                    <div class="card-body d-flex flex-row">
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold mb-5">SMJ RENT</span>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang text-warning fa fa-star checked me-2"></span>
-                                <span class="rating-number fw-bold">4.8 / <small>5</small> <a href="#"
-                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
-                                        Ulasan)</a>
-                                </span>
-                                <span class="rating-number custom-dot-before">2500 order</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                <span class="rating-number">Air Mineral</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-user checked me-2"></span>
-                                <span class="rating-number">Supir bisa bahasa inggris</span>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
-                            <span class="mb-2"><span class="text-danger fw-bold">IDR 230.000</span> /
-                                hari</span>
-                            <a href="{{ route('car_rent.detail', ['lokasi' => 'jakarta', 'model' => 1, 'provider' => '1', 'duration' => 1]) }}"
-                                class="text-decoration-none">
-                                <button class="btn btn-danger">Pilih penyedia</button>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="card shadow-sm mb-5">
-                    <div class="card-body d-flex flex-row">
-                        <div class="d-flex flex-column">
-                            <span class="fw-bold mb-5">SMJ RENT</span>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang text-warning fa fa-star checked me-2"></span>
-                                <span class="rating-number fw-bold">4.8 / <small>5</small> <a href="#"
-                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
-                                        Ulasan)</a>
-                                </span>
-                                <span class="rating-number custom-dot-before">2500 order</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                <span class="rating-number">Air Mineral</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-user checked me-2"></span>
-                                <span class="rating-number">Supir bisa bahasa inggris</span>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
-                            <span class="mb-2"><span class="text-danger fw-bold">IDR 230.000</span> /
-                                hari</span>
-                            <button class="btn btn-danger py-1" id="provider_button" data-toogle="modal"
-                                data-target="#providers">Pilih penyedia</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</!--div-->
-
 @push('js')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
             const toggleButton = document.querySelector(".toggle-button");
             const extraContent = document.querySelector(".extra-content");
 
@@ -323,15 +242,18 @@
                 }
             });
         });
-    </script>
-    <script>
-        function submit(val){
-            $("#favorite_car form#form_favorite_car" + val).on("click", "a#provider_button" + val, function(e) {
+</script>
+<script>
+    function submit(val){
+        $("form#form_favorite_car"+val).submit();
+        e.preventDefault();
+        return false;
+    };
 
-                $("form#form_favorite_car"+val).submit();
-                e.preventDefault();
-                return false;
-            })
-        };
-    </script>
+    function submit_location(val){
+        $("form#form_location"+val).submit();
+        e.preventDefault();
+        return false;
+    };
+</script>
 @endpush

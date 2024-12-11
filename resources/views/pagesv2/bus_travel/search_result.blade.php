@@ -33,8 +33,8 @@
                                 @endforeach
                             </select>
                             <input type="text" name="date_pergi" onfocus="(this.type='date')"
-                                class="form-control border-none max-w-150 py-0 border-right-2" placeholder="Tgl Berangkat"
-                                value="{{ $date_pergi }}" />
+                                class="form-control border-none max-w-150 py-0 border-right-2"
+                                placeholder="Tgl Berangkat" value="{{ $date_pergi }}" />
                             <input type="number" name="jumlah_penumpang" min="1"
                                 class="form-control border-none py-0 max-w-50 pe-0" placeholder="Jumlah Tiket"
                                 value="{{ $jumlah_penumpang }}" />
