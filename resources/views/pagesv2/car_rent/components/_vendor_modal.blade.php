@@ -54,8 +54,14 @@
                                     {{ number_format($v['price'], '0', ',', '.') }}</span> /
                                 hari</span>
 
-                            <a
-                                href="{{ route('car_rent.detail', ['category' => $category ?? 'dengan driver', 'lokasi' => $v['location'], 'model' => $model ?? $v['car_model_id'], 'provider' => $v['car_id'], 'date' => ($date && $time) ? strtotime($date.' '.$time) : now()->timestamp, 'duration'=> $duration ?? 1]) }}">
+                            <a href="{{ route('car_rent.detail', [
+                                'category' => $category ?? 'dengan driver', 
+                                'lokasi' => $v['location'], 
+                                'model' => $model ?? $car->car_model_id, 
+                                'provider' => $v['car_id'], 
+                                'date' => ($date && $time) ? strtotime($date.' '.$time) : now()->timestamp, 
+                                'duration'=> $duration ?? 1
+                                ]) }}">
                                 {{-- <input type="hidden" name="category" id="order_{{ $v['car_id'] }}_category"
                                     value="{{ $category ? $category : 'supir' }}">
                                 <input type="hidden" name="lokasi" id="order_{{ $v['car_id'] }}_lokasi"

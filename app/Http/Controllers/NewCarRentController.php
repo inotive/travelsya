@@ -138,7 +138,6 @@ class NewCarRentController extends Controller
                 $q->where('car_model_id', $m);
             })
             ->get();
-
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
             $ven = [];
@@ -158,7 +157,6 @@ class NewCarRentController extends Controller
 
             $c['vendor'] = $ven;
         }
-
         $data['cars'] = $cars;
         $data['location'] = $location;
         $data['category'] = $category;

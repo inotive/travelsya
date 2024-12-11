@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\BusBooked;
 use App\Models\CarRentalRating;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class General
@@ -207,5 +208,9 @@ class General
         $sum_rate = $collection->sum('rate');
         return $sum_rate;
         // return (double)$sum_rate->avg('sum');
+    }
+
+    public static function getSlug($str){
+        return Str::slug($str);
     }
 }
