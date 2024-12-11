@@ -62,7 +62,7 @@
                         <div class="card-body d-flex flex-row">
                             <img src="{{ asset('/storage/' . $car->image_url) }}" class="" width="150px"
                                 height="100px" alt="..."
-                                onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
+                                onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                             <div class="d-flex flex-column ms-5">
                                 <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
                                 <div class="d-flex flex-row align-items-center">
@@ -79,18 +79,17 @@
                                     hari</span>
                                 <!-- name, luggage, seats, id_brand, id_city -->
                                 <button class="btn btn-danger py-1"
-                                    brand="{{ $car->brand->name . ',' . $car->policy_id . ',' . $car->number_seats . ',' . $car->id . ',' . $car->carRental->city }}"
-                                    id="provider_button" data-toogle="modal" data-target="#providers">Pilih
+                                    id="provider_button-{{ $car->id }}" data-bs-toggle="modal" data-bs-target="#providers-{{ $car->id }}">Pilih
                                     Mobil</button>
                             </div>
                         </div>
                     </div>
+                    @include('pagesv2.car_rent.components._vendor_modal')
                 @endforeach
             </div>
         </div>
     </section>
 
-    @include('pagesv2.car_rent.components._vendor_modal')
 
 
 </div>

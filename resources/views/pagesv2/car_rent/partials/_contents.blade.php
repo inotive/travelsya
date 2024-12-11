@@ -34,6 +34,7 @@
 <div class="container mb-5">
     <section style="margin-bottom: 60px">
         <div class="row">
+            @foreach ($rule as $r)
             <div class="col-4">
                 <div class="card shadow-sm rounded-4 overflow-hidden">
                     <div class="rounded-circle bg-danger position-absolute opacity-25"
@@ -45,49 +46,14 @@
                     <div class="card-body d-flex flex-column justify-content-start" style="z-index: 10;">
                         <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
                             style="width: 25px; height: 25px; right:0;">
-                            <span class="fa-solid fa-car"></span>
+                            <span class="{{ $r['icon'] }}"></span>
                         </div>
-                        <span class="card-title fw-bold my-2">Cara Menyewa Mobil</span>
-                        <span>Cari tau mudahnya cara memesan Sewa mobil di Travelsya</span>
+                        <span class="card-title fw-bold my-2 text-capitalize">{{ $r['title'] }}</span>
+                        <span>{{ $r['content'] }}</span>
                     </div>
                 </div>
             </div>
-            <div class="col-4">
-                <div class="card shadow-sm rounded-4 overflow-hidden">
-                    <div class="rounded-circle bg-danger position-absolute opacity-25"
-                        style="width:100px; height:100px; top: -50px; right: -40px;">
-                    </div>
-                    <div class="rounded-circle bg-danger position-absolute"
-                        style="width:25px; height:25px; top: 35px; right: -10px;">
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-start">
-                        <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
-                            style="width: 25px; height: 25px;">
-                            <span class="fa-solid fa-file"></span>
-                        </div>
-                        <span class="card-title fw-bold my-2">Syarat Sewa Mobil</span>
-                        <span>Baca apa saja yang perlu kamu tahu dan siapkan sebelum menyewa</span>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                <div class="card shadow-sm rounded-4 overflow-hidden">
-                    <div class="rounded-circle bg-danger position-absolute opacity-25"
-                        style="width:100px; height:100px; top: -50px; right: -40px;">
-                    </div>
-                    <div class="rounded-circle bg-danger position-absolute"
-                        style="width:25px; height:25px; top: 35px; right: -10px;">
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-start">
-                        <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
-                            style="width: 25px; height: 25px;">
-                            <span class="fa-solid fa-shield"></span>
-                        </div>
-                        <span class="card-title fw-bold my-2">Persyaratan Perjalanan</span>
-                        <span>Cek protokol dan syarat selama pandemi</span>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 
@@ -98,7 +64,7 @@
             </div>
         </div>
         <p class="w-100">
-            bepergian berssama keluarga atau kerabat semakin asyik juka anda menggunakan sarana transpotrasi yang tepat.
+            Bepergian berssama keluarga atau kerabat semakin asyik juka anda menggunakan sarana transpotrasi yang tepat.
             sewa mobil atau carter mobil dapat menjadi pilihan terbaik untuk memudahkan mobilitas anda. untuk semakin
             mendukung fleksibilitas anda saat bepergian, travelsya kini telah menjadi aplikasi sewa mobil yang
             terpercaya. aplikasi rental mobil travelsya membuat anda dapat menikmati kenyamanan ini dengan memesan
@@ -106,7 +72,7 @@
             tarif mobil yang dibutuhkan. cek harga sewa mobil harian untuk segera kepeluan anda.
         </p>
         <p class="w-100">
-            dapatkan durasi rental 24jan dengan memesan layanan sewa mobil lepas kunci di travelsya. jadikan perjalanan
+            Dapatkan durasi rental 24jan dengan memesan layanan sewa mobil lepas kunci di travelsya. jadikan perjalanan
             keluarga atau bisnis anda lebih hemat dan efisien
         </p>
 
@@ -187,29 +153,30 @@
                 </h2>
             </div>
         </div>
-        <div class="row row-cols-6 row-cols-lg-6 g-6 g-lg-6 justify-content-center">
+        <div class="row justify-content-center">
             @foreach ($car_models as $model)
-                <form action="{{ route('car_rent.show') }}" method="post" id="form_favorite_car">
+                <div class="col-12 col-md-4 col-xl-3" onclick="submit({{ $model->id }})">
+                <form action="{{ route('car_rent.show') }}" method="post" id="form_favorite_car{{ $model->id }}">
                     @csrf
-                    <input type="hidden" name="model_id" value="{{ $model->id }}">
+                    <input type="hidden" name="model_id" value="{{ $model->car_model_id }}">
                     <div class="col p-3">
-                        <a href="javascript:" class="text-decoration-none text-dark" id="provider_button"
-                            model="{{ $model->id }}" data-toogle="modal" data-target="#providers">
+                        <a href="javascript:" class="text-decoration-none text-dark" id="provider_button{{ $model->id }}"
+                            model="{{ $model->id }}" data-toogle="modal" data-target="#providers{{ $model }}">
                             <div class="card border border-dark rounded-4">
-                                <img src="{{ $model->img }}" class="card-img-top-rounded" alt="..."
-                                    onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
+                                <img src="{{ asset('storage/',$model->img_url) }}" class="card-img-top-rounded" alt="..."
+                                    onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                                 <div class="card-body">
                                     <div class="card-content">
                                         <div class="lokasi d-flex justify-content-center">
-                                            <span class="fw-bold">{{ $model->name }}</span>
+                                            <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }} {{ $model->brand->name ?? 'Invalid Brand' }}</span>
                                         </div>
 
                                         <div
                                             class="price mt-7 d-flex flex-row align-items-center justify-content-center">
                                             <span class="fa-solid fa-suitcase"></span>
-                                            <span class="ms-1">{{ $model->lugage }}</span>
+                                            <span class="ms-1">{{ 2 }}</span>
                                             <span class="fa-solid fa-user ms-5"></span>
-                                            <span class="ms-1">{{ $model->passage }}</span>
+                                            <span class="ms-1">{{ $model->number_seats }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -217,6 +184,7 @@
                         </a>
                     </div>
                 </form>
+            </div>
             @endforeach
         </div>
     </section>
@@ -232,12 +200,13 @@
             @foreach ($near_location as $location)
                 <div class="col p-3">
                     <div class="card border border-dark rounded-4 position-relative">
-                        <img src="{{ $location->img != '' ? $location->img : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                        <img src="{{ $location }}"
+                            onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
                             class="card-img-top-rounded card-img-bottom-rounded img-fluid"
                             style="filter: brightness(0.5)" alt="...">
-                        <h3 class="position-absolute translate-middle fw-bold text-light fs-2 shadow"
+                        <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
                             style="top: 50%; left: 50%;">
-                            {{ $location->name }}
+                            {{ $location }}
                         </h3>
                     </div>
                 </div>
@@ -264,13 +233,13 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
-            $("#favorite_car form#form_favorite_car").on("click", "a#provider_button", function(e) {
+        function submit(val){
+            $("#favorite_car form#form_favorite_car" + val).on("click", "a#provider_button" + val, function(e) {
 
-                $("form#form_favorite_car").submit();
+                $("form#form_favorite_car"+val).submit();
                 e.preventDefault();
                 return false;
             })
-        });
+        };
     </script>
 @endpush
