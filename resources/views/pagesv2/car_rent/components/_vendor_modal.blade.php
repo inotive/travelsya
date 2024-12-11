@@ -26,59 +26,59 @@
             <div class="modal-body">
                 @foreach ($car->vendor as $v)
                 {{-- {{ dd($v) }} --}}
-                    <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] }}">
-                        <div class="card-body d-flex flex-row">
-                            <div class="d-flex flex-column">
-                                <span class="fw-bold mb-5">{{ $v['business_name'] }}</span>
-                                <div class="rating d-flex align-items-center mb-1">
-                                    <span class="bintang text-warning fa fa-star checked me-2"></span>
-                                    <span
-                                        class="rating-number fw-bold">{{ \App\Helpers\General::getCarRentalRate($v['car_id']) }}
-                                        / <small>5</small> <a href="#"
-                                            class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
-                                            Ulasan)</a>
-                                    </span>
-                                    <span class="rating-number custom-dot-before">2500 order</span>
-                                </div>
-                                <div class="rating d-flex align-items-center mb-1">
-                                    <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                    <span class="rating-number">Air Mineral</span>
-                                </div>
-                                <div class="rating d-flex align-items-center mb-1">
-                                    <span class="bintang fa-solid fa-user checked me-2"></span>
-                                    <span class="rating-number">Supir bisa bahasa inggris</span>
-                                </div>
+                <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] }}">
+                    <div class="card-body d-flex flex-row">
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold mb-5">{{ $v['business_name'] }}</span>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang text-warning fa fa-star checked me-2"></span>
+                                <span class="rating-number fw-bold">{{
+                                    \App\Helpers\General::getCarRentalRate($v['car_id']) }}
+                                    / <small>5</small> <a href="#"
+                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
+                                        Ulasan)</a>
+                                </span>
+                                <span class="rating-number custom-dot-before">2500 order</span>
                             </div>
-                            <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
-                                <span class="mb-2"><span class="text-danger fw-bold">IDR
-                                        {{ number_format($v['price'], '0', ',', '.') }}</span> /
-                                    hari</span>
-                                <form action="{{ route('car_rent.order') }}" method="post">
-                                    @csrf
-                                    <input type="hidden" name="category" id="order_{{ $v['car_id'] }}_category"
-                                        value="{{ $category ? $category : 'supir' }}">
-                                    <input type="hidden" name="lokasi" id="order_{{ $v['car_id'] }}_lokasi"
-                                        value="{{ $v['location'] }}">
-                                    <input type="hidden" name="brand" id="order_{{ $v['car_id'] }}_brand"
-                                        value="{{ $v['brand_id'] }}">
-                                    <input type="hidden" name="date" id="order_{{ $v['car_id'] }}_date"
-                                        value="{{ $date && $time ? $date . ' ' . $time : date('Y-m-d H:i:s', strtotime(now())) }}">
-                                    <input type="hidden" name="model" id="order_{{ $v['car_id'] }}_model"
-                                        value="{{ $model ? $model : $v['car_model_id'] }}">
-                                    <input type="hidden" name="duration" id="order_{{ $v['car_id'] }}_duration"
-                                        value="{{ $duration ? $duration : 1 }}">
-                                    <input type="hidden" name="provider" id="order_{{ $v['car_id'] }}_provider"
-                                        value="{{ $v['car_id'] }}">
-                                    <input type="hidden" name="car_id" id="order_{{ $v['car_id'] }}_provider"
-                                        value="{{ $v['car_id'] }}">
-                                    <button type="submit" class="btn btn-danger"
-                                        id="submit_{{ $car['car_id'] }}_order">Pilih
-                                        penyedia</button>
-                                </form>
-                                <span class="text-sm text-danger"></span>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
+                                <span class="rating-number">Air Mineral</span>
+                            </div>
+                            <div class="rating d-flex align-items-center mb-1">
+                                <span class="bintang fa-solid fa-user checked me-2"></span>
+                                <span class="rating-number">Supir bisa bahasa inggris</span>
                             </div>
                         </div>
+                        <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
+                            <span class="mb-2"><span class="text-danger fw-bold">IDR
+                                    {{ number_format($v['price'], '0', ',', '.') }}</span> /
+                                hari</span>
+
+                            <a
+                                href="{{ route('car_rent.detail', ['category' => $category ?? 'dengan driver', 'lokasi' => $v['location'], 'model' => $model ?? $v['car_model_id'], 'provider' => $v['car_id'], 'date' => ($date && $time) ? strtotime($date.' '.$time) : now()->timestamp, 'duration'=> $duration ?? 1]) }}">
+                                {{-- <input type="hidden" name="category" id="order_{{ $v['car_id'] }}_category"
+                                    value="{{ $category ? $category : 'supir' }}">
+                                <input type="hidden" name="lokasi" id="order_{{ $v['car_id'] }}_lokasi"
+                                    value="{{ $v['location'] }}">
+                                <input type="hidden" name="brand" id="order_{{ $v['car_id'] }}_brand"
+                                    value="{{ $v['brand_id'] }}">
+                                <input type="hidden" name="date" id="order_{{ $v['car_id'] }}_date"
+                                    value="{{ $date && $time ? $date . ' ' . $time : date('Y-m-d H:i:s', strtotime(now())) }}">
+                                <input type="hidden" name="model" id="order_{{ $v['car_id'] }}_model"
+                                    value="{{ $model ? $model : $v['car_model_id'] }}">
+                                <input type="hidden" name="duration" id="order_{{ $v['car_id'] }}_duration"
+                                    value="{{ $duration ? $duration : 1 }}">
+                                <input type="hidden" name="provider" id="order_{{ $v['car_id'] }}_provider"
+                                    value="{{ $v['car_id'] }}">
+                                <input type="hidden" name="car_id" id="order_{{ $v['car_id'] }}_provider"
+                                    value="{{ $v['car_id'] }}"> --}}
+                                <button class="btn btn-danger" {{-- id="submit_{{ $car['car_id'] }}_order" --}}>Pilih
+                                    penyedia</button>
+                            </a>
+                            <span class="text-sm text-danger"></span>
+                        </div>
                     </div>
+                </div>
                 @endforeach
             </div>
         </div>
@@ -87,9 +87,9 @@
 
 
 @push('js')
-    <script>
-        $(document).ready(function() {
+<script>
+    $(document).ready(function() {
 
         });
-    </script>
+</script>
 @endpush
