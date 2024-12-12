@@ -8,26 +8,31 @@
                 @endif
                 <div class="card-body d-flex flex-row align-items-center">
                     <div class="input-group d-flex flex-row align-items-center border-0" style="width: 75%;">
-                        <span class="fa fa-search border-0 bg-light"></span>
-                        <select name="category" id="category" class="form-control border-0" style="width: 50px;">
+                        <span class="input-group-text border-none bg-light">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <select name="category" id="category"
+                            class="form-control border-none border-right-2 max-w-120 py-0">
                             <option @if ($category == 'supir') selected @endif value="supir">Dengan Supir
                             </option>
                             <option @if ($category == 'lepas') selected @endif value="lepas">Lepas Kunci
                             </option>
                         </select>
-                        <div class="vr"></div>
-                        <input type="text" name="location" class="form-control border-0" id="location"
-                            value="{{ $location }}">
-                        <div class="vr"></div>
+                        <input type="text" name="location" class="form-control border-none max-w-150" id="location"
+                            value="{{ $location }}" placeholder="lokasi anda">
                         <input type="text" name="date" id="date" onfocus="(this.type='date')"
-                            class="form-control border-0" value="{{ $date }}">
-                        <span class="fa-solid fa-circle"></span>
-                        <input type="time" name="time" id="time" class="form-control border-0"
-                            value="{{ $time }}">
-                        <div class="vr"></div>
-                        <input type="number" name="duration" class="form-control border-0" id="duration"
-                            value="{{ $duration }}" size="5">
-                        <span>Hari</span>
+                            class="form-control border-none border-left-2  max-w-200 py-0"
+                            value="{{ $date != '' ? $date : date('d/m/Y', strtotime(now())) }}"
+                            placeholder="tanggal sewa">
+                        <span class="input-group-text border-none bg-light">
+                            <i class="fa-solid fa-dot-circle fs-8"></i>
+                        </span>
+                        <input type="time" name="time" id="time"
+                            class="form-control border-none border-right-2 max-w-150 py-0"
+                            value="{{ $time != '' ? $time : date('H:i', strtotime(now())) }}">
+                        <input type="number" name="duration" class="form-control border-none py-0 max-w-50 pe-0"
+                            id="duration" value="{{ $duration ? $duration : 1 }}" size="5" placeholder="durasi">
+                        <div class="d-flex align-items-center">Hari</div>
                     </div>
                     <button type="submit"
                         class="bg-danger bg-opacity-25 text-danger btn btn-outline-danger ms-sm-auto">Cari</button>

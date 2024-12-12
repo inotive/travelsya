@@ -334,12 +334,20 @@
         max-width: 150px;
     }
 
+    .max-w-200 {
+        max-width: 200px;
+    }
+
     .max-w-50 {
         max-width: 50px;
     }
 
     .border-right-2 {
         border-right: 2px solid #928b8b !important;
+    }
+
+    .border-left-2 {
+        border-left: 2px solid #928b8b !important;
     }
 
     .round {
