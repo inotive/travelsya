@@ -52,4 +52,6 @@
     </div>
 
     @include('pagesv2.bus_travel.partials._filter_search')
+
+    @include('pagesv2.bus_travel.partials._bus_list')
 @endsection

@@ -7,7 +7,7 @@
     <div class="d-flex align-items-center flex-row mb-3">
         <span class="text-warning fs-2 bintang fa fa-star checked me-2"></span>
         <span class="rating-number fw-bold text-dark opacity-50" style="font-size: calc(1rem + 1.35vw)">
-            {{-- {{ $detail->avgRating() }} --}}
+            {{ \App\Helpers\General::getCarRentalRate($car->id) }}
             /<small>5</small></span>
         <div class="d-flex flex-column ms-5 fs-5">
             <h3>

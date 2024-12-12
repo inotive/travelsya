@@ -11,86 +11,45 @@ use Illuminate\Support\Facades\Auth;
 
 class NewCarRentController extends Controller
 {
-    
+
     public function index()
     {
-        $car_models = CarModel::with('vendor')->limit(10)->get();
+        // $car_models = CarModel::with('vendor')->limit(10)->get();
 
-        $dummy_near_location = [
+        $car_models = CarRentalHasCars::Active()
+            ->with('carModel', 'brand', 'carRental', 'booked')
+            ->withCount('booked')
+            ->orderBy('booked_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        $data['rule'] = [
             [
-                'id' => 1,
-                'img' => '',
-                'name' => 'Partner 1',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
+                'icon' => 'fa-solid fa-car',
+                'title' => 'Cara menyewa mobil',
+                'content' => 'Cari tau mudahnya cara memesan Sewa mobil di Travelsya',
             ],
             [
-                'id' => 2,
-                'img' => '',
-                'name' => 'Partner 2',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
+                'icon' => 'fa-solid fa-file',
+                'title' => 'Syarat Sewa mobil',
+                'content' => 'Baca apa saja yang perlu kamu tahu dan siapkan sebelum menyewa',
             ],
             [
-                'id' => 3,
-                'img' => '',
-                'name' => 'Partner 3',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 4,
-                'img' => '',
-                'name' => 'Partner 4',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 5,
-                'img' => '',
-                'name' => 'Partner 5',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 6,
-                'img' => '',
-                'name' => 'Partner 6',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 7,
-                'img' => '',
-                'name' => 'Partner 7',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
-            ],
-            [
-                'id' => 8,
-                'img' => '',
-                'name' => 'Partner 8',
-                'lokasi' => 'Jakarta',
-                'origin_price' => 300000,
-                'cut_price' => 225000,
+                'icon' => 'fa-solid fa-shield',
+                'title' => 'Persyaratan Perjalanan',
+                'content' => 'Cek protokol dan syarat selama pandemi',
             ],
         ];
-        $dummy_near_location = json_decode(json_encode($dummy_near_location));
-        
+
+        $near_location = CarRental::with('kota')->get()->pluck('kota.city_name', 'kota.city_name');
+
         $data['car_models'] = collect($car_models);
-        $data['near_location'] = collect($dummy_near_location);
+        $data['near_location'] = collect($near_location);
         return view('pagesv2.car_rent.index', $data);
     }
 
-    public function show(Request $request){
-        
+    public function show(Request $request)
+    {
         // $providers = [
         //     [
         //         'img' => '',
@@ -135,41 +94,97 @@ class NewCarRentController extends Controller
         //     ],
         // ];
         // $providers = json_decode(json_encode($providers));
-        $data['category'] = $request->category ?? '';
-        $data['location'] = $request->location ?? '';
-        $data['date'] = $request->date ?? '';
-        $data['time'] = $request->time ?? '';
-        $data['duration'] = $request->duration ?? '';
-        $data['model'] = $request->model ?? '';
-        $data['model'] = $request->model_id ?? '';
+        $category = $request->category;
+        $location = $request->location;
+        $date = $request->date;
+        $time = $request->time;
+        $duration = $request->duration;
+        $model = $request->model_id;
+        $car_model = $request->car_model_id;
 
-        if($request->location){
-            $city = City::
-            with(['has_cars' => function($query){$query->with(['brand', 'carRental', 'carRentalRate']);}])
-            ->where('city_name', 'like', '%'.$request->location.'%')
-            ->first();
-        }else{
-            $city = json_decode(json_encode($city = [
-                'city_id' => '',
-            ]));
+        // if ($request->location) {
+        //     $city = City::with(['has_cars' => function ($query) {
+        //             $query->with(['brand', 'carRental', 'carRentalRate']);
+        //         }])
+        //         ->where('city_name', 'like', '%' . $request->location . '%')
+        //         ->first();
+        // } else {
+        //     $city = json_decode(json_encode($city = [
+        //         'city_id' => '',
+        //     ]));
+        // }
+
+        // $cars = CarRentalHasCars::filter(request(['model_id'], $city->city_id))->with(['brand', 'carRental'])
+        // ->when($car_model, function($q, $m){
+        //     $q->where('car_model_id', $m);
+        // })
+        // ->get();
+
+        $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental')
+            ->when($location, function($q, $l){
+                $q->whereHas('carRental', function($r)use($l){
+                    $r->whereHas('kota', function($k)use($l){
+                        $k->where('city_name', 'like', '%'.$l.'%');
+                    });
+                });
+            })
+            ->when($category, function($q, $c){
+                $q->where('category', 'like', '%'.$c.'%');
+            })
+            ->when($model, function($q, $m){
+                $q->where('car_model_id', $m);
+            })
+            ->when($car_model, function($q, $m){
+                $q->where('car_model_id', $m);
+            })
+            ->get();
+        foreach ($cars as $key => $c) {
+            $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
+            $ven = [];
+
+            foreach ($vendor as $key => $v) {
+                $item = [
+                    'car_id' => $v['id'],
+                    'vendor_id' => $v['car_rental_id'],
+                    'business_name' => $v['carRental']['business_name'],
+                    'brand_id' => $v['brand_id'],
+                    'location' => $v['carRental']['kota']['city_name'],
+                    'price' => $v['rental_price_per_day'],
+                ];
+
+                array_push($ven, $item);
+            }
+
+            $c['vendor'] = $ven;
         }
-
-        $cars = CarRentalHasCars::filter(request(['model_id'], $city->city_id))->with(['brand', 'carRental'])->get();
         $data['cars'] = $cars;
+        $data['location'] = $location;
+        $data['category'] = $category;
+        $data['model'] = $model;
+        $data['car_model'] = $car_model;
+        $data['date'] = $date;
+        $data['time'] = $time;
+        $data['duration'] = $duration;
         // $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $model, $provider, $duration){
+    public function detail(Request $request, $category, $lokasi, $model, $provider, $date, $duration)
+    {
+        $data['car'] = CarRentalHasCars::with(['brand', 'carModel', 'carRental', 'carRentalRate'])->where('id', $provider)->first();
+        $data['date'] = $date;
+        $data['category'] = $category;
+        $data['lokasi'] = $lokasi;
         $data['model'] = $model;
         $data['provider'] = $provider;
         $data['duration'] = $duration;
         return view('pagesv2.car_rent.detail', $data);
     }
 
-    public function order(Request $request){
+    public function order(Request $request)
+    {
         $user = Auth::user();
-        if($user){
+        if ($user) {
             $data['car'] = CarRentalHasCars::with(['brand', 'carRental', 'carModel'])->where('id', $request->car_id)->first();
             $data['duration'] = $request->duration;
             $data['date'] = $request->date;
@@ -178,19 +193,20 @@ class NewCarRentController extends Controller
             $data['provider'] = $request->provider;
 
             return view('pagesv2.car_rent.order', $data);
-        }else{
+        } else {
             return redirect()->route('login');
         }
         // $data['paket'] = [];
         // return view('pagesv2.car_rent.order', $data);
     }
 
-    public function getVendorCars($brand_id, $city_id){
-        if(!is_numeric($brand_id)){
+    public function getVendorCars($brand_id, $city_id)
+    {
+        if (!is_numeric($brand_id)) {
             return response()->json(['error' => 'Invalid ID Brand']);
         }
 
-        if(!is_numeric($city_id)){
+        if (!is_numeric($city_id)) {
             return response()->json(['error' => 'Invalid ID City']);
         }
 

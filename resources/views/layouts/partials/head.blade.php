@@ -288,6 +288,7 @@
         right: 11px;
     }
 
+
     .bus-icon {
         background: #C02425;
         text-align: center;
@@ -297,6 +298,7 @@
         border-radius: 50px;
         padding: 3px 7px;
     }
+
 
     .shape-round-big {
         height: 100px;
@@ -308,6 +310,7 @@
         top: -53px;
     }
 
+
     .shape-round-small {
         height: 34px;
         width: 34px;
@@ -318,17 +321,25 @@
         right: -16px;
     }
 
+
     .bg-light {
         background: #fff !important;
     }
+
+    .max-w-200 {
+        max-width: 200px;
+    }
+
 
     .max-w-100 {
         max-width: 100px;
     }
 
+
     .max-w-120 {
         max-width: 120px;
     }
+
 
     .max-w-150 {
         max-width: 150px;
@@ -342,6 +353,7 @@
         max-width: 50px;
     }
 
+
     .border-right-2 {
         border-right: 2px solid #928b8b !important;
     }
@@ -354,11 +366,13 @@
         border-radius: 50px;
     }
 
+
     .badge-secondary.badge-outline {
         border: 1px solid #989898 !important;
         color: #989898 !important;
         background-color: transparent;
     }
+
 
     .mb-50 {
         margin-bottom: 50px !important;
