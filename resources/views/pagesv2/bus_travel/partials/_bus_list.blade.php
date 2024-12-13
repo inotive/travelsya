@@ -2,8 +2,8 @@
     @foreach ($pergi as $p)
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <form action="" method="POST">
-                @csrf
+            {{-- <form action="" method="POST">
+                @csrf --}}
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="d-flex">
@@ -74,15 +74,20 @@
                             <strong class="text-danger text-bold fs-3">IDR 230.000</strong> <span
                                 class="text-secondary-strong">/ hari</span>
                         </div>
-                        <input type="hidden" name="departure_id" value="{{ $p['id'] }}">
-                        <input type="hidden" name="kota_awal" value="{{ $p['id'] }}">
-                        <input type="hidden" name="kota_tujuan" value="{{ $p['id'] }}">
-                        <input type="hidden" name="is_pulang_pergi" value="{{ $p['id'] }}">
-                        <input type="hidden" name="jumlah_penumpang" value="{{ $p['id'] }}">
-                        <button type="submit" class="btn btn-danger mt-2 bg-main" style="margin-left: auto;">Pilih Mobil</button>
+                        <form action="{{ route('bus_travel.detail') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="departure_id" value="{{ $p['id'] }}">
+                            <input type="hidden" name="kota_awal" value="{{ $p['id'] }}">
+                            <input type="hidden" name="kota_tujuan" value="{{ $p['id'] }}">
+                            <input type="hidden" name="is_pulang_pergi" value="{{ $p['id'] }}">
+                            <input type="hidden" name="jumlah_penumpang" value="{{ $p['id'] }}">
+                            <button type="submit" class="btn btn-danger mt-2 bg-main" style="margin-left: auto;">Pilih
+                                Mobil</button>
+                        </form>
                     </div>
                 </div>
-            </form>
+                {{--
+            </form> --}}
         </div>
     </div>
     @endforeach

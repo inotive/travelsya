@@ -128,4 +128,8 @@ class BusTravelController extends Controller
 
         return $newTicket;
     }
+
+    public function detail(Request $request){
+        return view('pagesv2.bus_travel.detail');
+    }
 }

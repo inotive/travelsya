@@ -50,7 +50,6 @@ class NewCarRentController extends Controller
 
     public function show(Request $request)
     {
-
         // $providers = [
         //     [
         //         'img' => '',
@@ -139,7 +138,6 @@ class NewCarRentController extends Controller
                 $q->where('car_model_id', $m);
             })
             ->get();
-
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
             $ven = [];
@@ -159,7 +157,6 @@ class NewCarRentController extends Controller
 
             $c['vendor'] = $ven;
         }
-
         $data['cars'] = $cars;
         $data['location'] = $location;
         $data['category'] = $category;
@@ -172,8 +169,12 @@ class NewCarRentController extends Controller
         return view('pagesv2.car_rent.show', $data);
     }
 
-    public function detail(Request $request, $lokasi, $model, $provider, $duration)
+    public function detail(Request $request, $category, $lokasi, $model, $provider, $date, $duration)
     {
+        $data['car'] = CarRentalHasCars::with(['brand', 'carModel', 'carRental', 'carRentalRate'])->where('id', $provider)->first();
+        $data['date'] = $date;
+        $data['category'] = $category;
+        $data['lokasi'] = $lokasi;
         $data['model'] = $model;
         $data['provider'] = $provider;
         $data['duration'] = $duration;
