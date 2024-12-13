@@ -353,6 +353,9 @@
         max-width: 50px;
     }
 
+    .min-h-350 {
+        min-height: 350px !important;
+    }
 
     .border-right-2 {
         border-right: 2px solid #928b8b !important;
@@ -593,6 +596,24 @@
 
     .fs-7 {
         font-size: .85rem;
+    }
+
+    .lined {
+        position: relative;
+    }
+
+    .lined::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        background-color: #ddd;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+    }
+
+    .z-index-1 {
+        z-index: 1 !important;
     }
 </style>
 @stack('add-style')
