@@ -72,6 +72,8 @@
                                                 } elseif ($all->service_id == 12 || $all->service_id == 1 || $all->service_id == 11 || $all->service_id == 2) {
                                                     // top up
                                                     $route = route('profile.order-detail.listrik-voucher', $all->no_inv);
+                                                }elseif(strToLower($all->service) == 'health-beauty'){
+                                                    $route = route('profile.order-detail.health-beauty', $all->no_inv);
                                                 } else {
                                                     $route = route('profile.order-detail.listrik', $all->no_inv);
                                                 }

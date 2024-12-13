@@ -22,7 +22,8 @@
 
 
     <!--begin::Fonts(mandatory for all pages)-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" /> <!--end::Fonts-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
+    <!--end::Fonts-->
 
     <!--begin::Vendor Stylesheets(used for this page only)-->
     <link href="{{ asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.css') }}" rel="stylesheet"
@@ -36,10 +37,7 @@
     <!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
     <link href="{{ asset('assets/plugins/global/plugins.bundle.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ asset('assets/css/style.bundle.css') }}" rel="stylesheet" type="text/css" />
-<link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" />
     <!--end::Global Stylesheets Bundle-->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -50,9 +48,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <!-- end:: Style swiper -->
 
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
     <style>
-
         .main {
 
             grid-area: main;
@@ -97,177 +94,200 @@
         } */
 
         a.disabled {
-  pointer-events: none;
-  cursor: default;
-}
+            pointer-events: none;
+            cursor: default;
+        }
     </style>
-<style>
-  .item-menubar {
-    cursor: pointer;
-  }
-  .child-item-menubar {
-    display: flex;
-    background: url("./assets/media/bg-icon-menubar.png") no-repeat center center;
-    background-size: 72px 72px;
-    -webkit-box-pack: center;
-    justify-content: center;
-    align-items: center;
-    width: 72px;
-    height: 72px;
-    margin: 0 auto;
-  }
-  .item-label {
-    flex: 1;
-    align-self: center;
-    white-space: pre-wrap;
-    word-break: keep-all;
-    word-wrap: break-word;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 100%;
-    text-align: left;
-    margin-left: 1.2em;
-  }
-  .header-image {
-    border-radius: 0px;
-    background: linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)),
-    url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80") no-repeat center center;
-    background-size: cover;
-    border-bottom-left-radius: 4em;
-    border-bottom-right-radius: 4em;
-  }
-  @media (max-width: 767px) {
-    .item-label {
-      margin-left: 0px;
-      text-align: center;
-    }
-  }
-@-webkit-keyframes come-in {
-  0% {
-    -webkit-transform: translatey(100px);
-            transform: translatey(100px);
-    opacity: 0;
-  }
-  30% {
-    -webkit-transform: translateX(-50px) scale(0.4);
-            transform: translateX(-50px) scale(0.4);
-  }
-  70% {
-    -webkit-transform: translateX(0px) scale(1.2);
-            transform: translateX(0px) scale(1.2);
-  }
-  100% {
-    -webkit-transform: translatey(0px) scale(1);
-            transform: translatey(0px) scale(1);
-    opacity: 1;
-  }
-}
-@keyframes come-in {
-  0% {
-    -webkit-transform: translatey(100px);
-            transform: translatey(100px);
-    opacity: 0;
-  }
-  30% {
-    -webkit-transform: translateX(-50px) scale(0.4);
-            transform: translateX(-50px) scale(0.4);
-  }
-  70% {
-    -webkit-transform: translateX(0px) scale(1.2);
-            transform: translateX(0px) scale(1.2);
-  }
-  100% {
-    -webkit-transform: translatey(0px) scale(1);
-            transform: translatey(0px) scale(1);
-    opacity: 1;
-  }
-}
+    <style>
+        .item-menubar {
+            cursor: pointer;
+        }
 
-.floating-container {
-  position: fixed;
-  width: 100px;
-  height: 100px;
-  bottom: 0;
-  right: 0;
-  margin: 35px 25px;
-}
-.floating-container:hover {
-  height: 300px;
-}
-.floating-container:hover .floating-button {
-  box-shadow: 0 10px 25px rgba(105, 0, 0, 0.6);
-  -webkit-transform: translatey(5px);
-          transform: translatey(5px);
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-}
-.floating-container:hover .element-container .float-element:nth-child(1) {
-  -webkit-animation: come-in 0.4s forwards 0.2s;
-          animation: come-in 0.4s forwards 0.2s;
-}
-.floating-container:hover .element-container .float-element:nth-child(2) {
-  -webkit-animation: come-in 0.4s forwards 0.4s;
-          animation: come-in 0.4s forwards 0.4s;
-}
-.floating-container:hover .element-container .float-element:nth-child(3) {
-  -webkit-animation: come-in 0.4s forwards 0.6s;
-          animation: come-in 0.4s forwards 0.6s;
-}
-.floating-container .floating-button {
-  position: absolute;
-  width: 65px;
-  height: 65px;
-  background: #C02425;
-  bottom: 0;
-  border-radius: 50%;
-  left: 0;
-  right: 0;
-  margin: auto;
-  color: white;
-  line-height: 65px;
-  text-align: center;
-  font-size: 23px;
-  z-index: 100;
-  box-shadow: 0 10px 25px -5px rgba(105, 0, 0, 0.6);
-  cursor: pointer;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-}
-.floating-container .float-element {
-  position: relative;
-  display: block;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  margin: 15px auto;
-  color: white;
-  font-weight: 500;
-  text-align: center;
-  line-height: 50px;
-  z-index: 0;
-  opacity: 0;
-  -webkit-transform: translateY(100px);
-          transform: translateY(100px);
-}
-.floating-container .float-element .material-icons {
-  vertical-align: middle;
-  font-size: 16px;
-}
-.floating-container .float-element:nth-child(1) {
-  background: #42A5F5;
-  box-shadow: 0 20px 20px -10px rgba(66, 165, 245, 0.5);
-}
-.floating-container .float-element:nth-child(2) {
-  background: #4CAF50;
-  box-shadow: 0 20px 20px -10px rgba(76, 175, 80, 0.5);
-}
-.floating-container .float-element:nth-child(3) {
-  background: #FF9800;
-  box-shadow: 0 20px 20px -10px rgba(255, 152, 0, 0.5);
-}
-</style>
+        .child-item-menubar {
+            display: flex;
+            background: url("./assets/media/bg-icon-menubar.png") no-repeat center center;
+            background-size: 72px 72px;
+            -webkit-box-pack: center;
+            justify-content: center;
+            align-items: center;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto;
+        }
+
+        .item-label {
+            flex: 1;
+            align-self: center;
+            white-space: pre-wrap;
+            word-break: keep-all;
+            word-wrap: break-word;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            width: 100%;
+            text-align: left;
+            margin-left: 1.2em;
+        }
+
+        .header-image {
+            border-radius: 0px;
+            background: linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)),
+                url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80") no-repeat center center;
+            background-size: cover;
+            border-bottom-left-radius: 4em;
+            border-bottom-right-radius: 4em;
+        }
+
+        @media (max-width: 767px) {
+            .item-label {
+                margin-left: 0px;
+                text-align: center;
+            }
+        }
+
+        @-webkit-keyframes come-in {
+            0% {
+                -webkit-transform: translatey(100px);
+                transform: translatey(100px);
+                opacity: 0;
+            }
+
+            30% {
+                -webkit-transform: translateX(-50px) scale(0.4);
+                transform: translateX(-50px) scale(0.4);
+            }
+
+            70% {
+                -webkit-transform: translateX(0px) scale(1.2);
+                transform: translateX(0px) scale(1.2);
+            }
+
+            100% {
+                -webkit-transform: translatey(0px) scale(1);
+                transform: translatey(0px) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes come-in {
+            0% {
+                -webkit-transform: translatey(100px);
+                transform: translatey(100px);
+                opacity: 0;
+            }
+
+            30% {
+                -webkit-transform: translateX(-50px) scale(0.4);
+                transform: translateX(-50px) scale(0.4);
+            }
+
+            70% {
+                -webkit-transform: translateX(0px) scale(1.2);
+                transform: translateX(0px) scale(1.2);
+            }
+
+            100% {
+                -webkit-transform: translatey(0px) scale(1);
+                transform: translatey(0px) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .floating-container {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            bottom: 0;
+            right: 0;
+            margin: 35px 25px;
+        }
+
+        .floating-container:hover {
+            height: 300px;
+        }
+
+        .floating-container:hover .floating-button {
+            box-shadow: 0 10px 25px rgba(105, 0, 0, 0.6);
+            -webkit-transform: translatey(5px);
+            transform: translatey(5px);
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        .floating-container:hover .element-container .float-element:nth-child(1) {
+            -webkit-animation: come-in 0.4s forwards 0.2s;
+            animation: come-in 0.4s forwards 0.2s;
+        }
+
+        .floating-container:hover .element-container .float-element:nth-child(2) {
+            -webkit-animation: come-in 0.4s forwards 0.4s;
+            animation: come-in 0.4s forwards 0.4s;
+        }
+
+        .floating-container:hover .element-container .float-element:nth-child(3) {
+            -webkit-animation: come-in 0.4s forwards 0.6s;
+            animation: come-in 0.4s forwards 0.6s;
+        }
+
+        .floating-container .floating-button {
+            position: absolute;
+            width: 65px;
+            height: 65px;
+            background: #C02425;
+            bottom: 0;
+            border-radius: 50%;
+            left: 0;
+            right: 0;
+            margin: auto;
+            color: white;
+            line-height: 65px;
+            text-align: center;
+            font-size: 23px;
+            z-index: 100;
+            box-shadow: 0 10px 25px -5px rgba(105, 0, 0, 0.6);
+            cursor: pointer;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        .floating-container .float-element {
+            position: relative;
+            display: block;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin: 15px auto;
+            color: white;
+            font-weight: 500;
+            text-align: center;
+            line-height: 50px;
+            z-index: 0;
+            opacity: 0;
+            -webkit-transform: translateY(100px);
+            transform: translateY(100px);
+        }
+
+        .floating-container .float-element .material-icons {
+            vertical-align: middle;
+            font-size: 16px;
+        }
+
+        .floating-container .float-element:nth-child(1) {
+            background: #42A5F5;
+            box-shadow: 0 20px 20px -10px rgba(66, 165, 245, 0.5);
+        }
+
+        .floating-container .float-element:nth-child(2) {
+            background: #4CAF50;
+            box-shadow: 0 20px 20px -10px rgba(76, 175, 80, 0.5);
+        }
+
+        .floating-container .float-element:nth-child(3) {
+            background: #FF9800;
+            box-shadow: 0 20px 20px -10px rgba(255, 152, 0, 0.5);
+        }
+    </style>
     @stack('add-style')
-{{--    @vite(['resources/js/app.js'])--}}
+    {{-- @vite(['resources/js/app.js']) --}}
 </head>
 <!--end::Head-->
 
@@ -320,7 +340,8 @@
                     <div class=" container-xxl ">
                         <div class="row py-10">
                             <div class="col-md-3">
-                                <img class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}" alt="logo-travelsya">
+                                <img class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}"
+                                    alt="logo-travelsya">
                                 <p>Kalimantan Timur, Balikpapan</p>
                                 <p>Indonesia</p>
                                 <p>cs@travelsya.com</p>
@@ -395,10 +416,10 @@
                                         <a href="/partner-hotel" class="text-white">
                                             <p>Partner</p>
                                         </a>
-                                        <a href="{{route('bantuan-user')}}" class="text-white">
+                                        <a href="{{ route('bantuan-user') }}" class="text-white">
                                             <p>Pusat Bantuan</p>
                                         </a>
-                                        <a href="{{route('company.terms')}}" class="text-white">
+                                        <a href="{{ route('company.terms') }}" class="text-white">
                                             <p>Kebijakan Privasi</p>
                                         </a>
                                         <a href="{{ route('company.privat') }}" class="text-white">
@@ -409,16 +430,17 @@
                             </div>
                             <div class="col-md-3">
                                 <p class="fw-bold fs-5">Download Aplikasi</p>
-                                {{-- <img alt=""
-                                    src="{{ asset('assets/media/products-categories/download-apps.png') }}"
+                                {{-- <img alt="" src="{{ asset('assets/media/products-categories/download-apps.png') }}"
                                     class="w-200px" /> --}}
                                 <div class="col-8" style="margin-bottom: 16px;">
-                                    <a href="{{ url('https://play.google.com/store/apps/details?id=com.travelsya.id&pcampaignid=web_share') }}" target="_blank">
+                                    <a href="{{ url('https://play.google.com/store/apps/details?id=com.travelsya.id&pcampaignid=web_share') }}"
+                                        target="_blank">
                                         <img class="img-fluid" src="/media/ads/play_store.png" alt="play_store.png">
                                     </a>
                                 </div>
                                 <div class="col-8">
-                                    <a href="{{ url('https://apps.apple.com/id/app/travelsya-travel-lifestyle/id6450695778?l=id') }}" target="_blank">
+                                    <a href="{{ url('https://apps.apple.com/id/app/travelsya-travel-lifestyle/id6450695778?l=id') }}"
+                                        target="_blank">
                                         <img class="img-fluid" src="/media/ads/app_store.png" alt="app_store.png">
                                     </a>
                                 </div>
@@ -453,28 +475,29 @@
         <i class="ki-duotone ki-arrow-up"><span class="path1"></span><span class="path2"></span></i>
     </div>
     <!--end::Scrolltop-->
-<div class="floating-container">
-  <div class="floating-button">+</div>
-  <div class="element-container">
+    <div class="floating-container">
+        <div class="floating-button">+</div>
+        <div class="element-container">
 
-    <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
-        <span class="float-element tooltip-left">
-          <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
-        </span>
-    </a>
+            <a style="text-decoration: none" target="_blank" href="https://telp:05428795954">
+                <span class="float-element tooltip-left">
+                    <i class="fa-solid fa-phone text-white fs-1 material-icons"></i>
+                </span>
+            </a>
 
-    <span class="float-element">
-        <a target="_blank" href="https://mailto:cs@travelsya.com">
-          <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
-        </a>
-    </span>
-    <span class="float-element">
-        <a target="_blank" href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
-          <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
-        </a>
-    </span>
-  </div>
-</div>
+            <span class="float-element">
+                <a target="_blank" href="https://mailto:cs@travelsya.com">
+                    <i class="fa-solid fa-envelope text-white fs-1 material-icons"></i>
+                </a>
+            </span>
+            <span class="float-element">
+                <a target="_blank"
+                    href="https://api.whatsapp.com/send?phone=628115417708&text=Halo%20min%2C%20mau%20nanya%20nih">
+                    <i class="fa-brands fa-whatsapp text-white fs-1 material-icons"></i>
+                </a>
+            </span>
+        </div>
+    </div>
     <!--begin::Javascript-->
     <script>
         var hostUrl = "assets/index.html";
@@ -556,7 +579,6 @@
         $(".main-menu li").on('click', function() {
             $('.form-menu').removeClass('show active')
         })
-
     </script>
 </body>
 

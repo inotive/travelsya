@@ -38,6 +38,8 @@ use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 use App\Http\Controllers\CarRentalController;
+use App\Http\Controllers\NewCarRentController;
+use App\Http\Controllers\NewHealthBeautyController;
 use App\Http\Controllers\NewRecreationController;
 
 /*
@@ -129,6 +131,8 @@ Route::get('profile/photo-profile', [UserController::class, 'photoProfile']);
 
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
 Route::get('/profile/order-detail/hostel/{id}', [UserController::class, 'orderDetailHostel'])->name('profile.order-detail.hostel')->middleware('auth');
+Route::get('/profile/order-detail/healthbeauty/{id}', [UserController::class, 'orderDetailHealthBeauty'])->name('profile.order-detail.health-beauty')->middleware('auth');
+Route::post('/profile/order-detail/healthbeauty/rating', [UserController::class, 'createRatingDetailHealthBeauty'])->name('profile.order-detail.health_beauty.rating')->middleware('auth');
 Route::post('/profile/order-detail/hotel/rating', [UserController::class, 'createRatingDetailHotel'])->name('profile.order-detail.hotel.rating')->middleware('auth');
 Route::post('/profile/order-detail/hostel/rating', [UserController::class, 'createRatingDetailHostel'])->name('profile.order-detail.hostel.rating')->middleware('auth');
 Route::get('/profile/order-detail/top-up/{id}', [UserController::class, 'orderDetailListrikVoucher'])->name('profile.order-detail.listrik-voucher')->middleware('auth');
@@ -227,6 +231,30 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
 
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
+    Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
+    Route::get('/detail/{id}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
+    Route::post('/order/{id}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
+});
+
+Route::group(['prefix' => 'health_beauty'], function () {
+    Route::get('/', [NewHealthBeautyController::class, 'index'])->name('health_beauty.index');
+    Route::get('show_mitra', [NewHealthBeautyController::class, 'show_mitra'])->name('health_beauty.show_mitra');
+    Route::get('/show_special_deals', [NewHealthBeautyController::class, 'show_special_deals'])->name('health_beauty.show_special_deals');
+    Route::post('/show', [NewHealthBeautyController::class, 'show'])->name('health_beauty.show');
+    Route::get('/detail/{lokasi}/{clinic}/{id}', [NewHealthBeautyController::class, 'detail'])->name('health_beauty.detail');
+    Route::post('/order', [NewHealthBeautyController::class, 'order'])->name('health_beauty.order');
+    Route::post('/search', [NewHealthBeautyController::class, 'search'])->name('health_beauty.search');
+    Route::post('/request_transaction', [NewHealthBeautyController::class, 'request_transaction'])->name('health_beauty.request_transaction');
+
+    Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');
+});
+
+Route::group(['prefix' => 'car_rent'], function () {
+    Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
+    Route::post('/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
+    Route::get('/brand/{id}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
+    Route::get('/detail/{id}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
+    Route::post('/order/{provider}', [NewCarRentController::class, 'order'])->name('car_rent.order');
 });
 
 // Health & Beauty

@@ -1,0 +1,49 @@
+@extends('layouts.app_v2')
+
+@section('content')
+    @include('pagesv2.health_beauty.partials._second_nav')
+    @include('pagesv2.health_beauty.partials._hero')
+    <div class="container">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="health_tab" role="tabpanel">
+                <section class="special-deals" style="margin-bottom: 50px;">
+                    @include('pagesv2.components.section_title', [
+                        'section_title' => 'Specials Deals Kesehatan',
+                        'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
+                    ])
+                    @include('pagesv2.health_beauty.partials._special_deals', [
+                        'data' => $special_deals,
+                    ])
+                </section>
+
+            </div>
+            <div class="tab-pane fade" id="beauty_tab" role="tabpanel">
+                <section class="special-deals" style="margin-bottom: 50px;">
+                    @include('pagesv2.components.section_title', [
+                        'section_title' => 'Specials Deals Kecantikan',
+                        'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagiaan maksimal',
+                    ])
+                    @include('pagesv2.health_beauty.partials._special_deals', [
+                        'data' => $special_deals_beauty,
+                    ])
+                </section>
+
+            </div>
+        </div>
+        <section class="categories" style="margin-bottom: 50px;">
+            @include('pagesv2.health_beauty.partials._categories', [
+                'section_title' => 'Kebutuhan Kesehatan dan Kecantikan',
+                'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagian maksimal',
+                'categorises' => $categorises,
+            ])
+        </section>
+
+        <section class="partners" style="margin-bottom: 50px;">
+            @include('pagesv2.health_beauty.partials._partners', [
+                'section_title' => 'Kesehatan dan Kecantikan Terbaik!',
+                'section_subtitle' => 'Saatnya segerkan penampilan kamu dengan mitra-mitra terbaik kami',
+                'partners' => $partners,
+            ])
+        </section>
+    </div>
+@endsection

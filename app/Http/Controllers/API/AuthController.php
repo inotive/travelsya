@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Helpers\UploadFile;
 use App\Http\Controllers\Controller;
-use App\Mail\SendTokenResetPassword;
+use App\Http\Mail\SendTokenResetPassword;
 use App\Models\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;

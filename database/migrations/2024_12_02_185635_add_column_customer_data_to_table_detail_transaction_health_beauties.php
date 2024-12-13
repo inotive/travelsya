@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('detail_transaction_health_beauties', function (Blueprint $table) {
-            $table->string('category')->nullable()->change();
-            $table->bigInteger('total_ticket')->default(1)->change();
+            $table->string('customer_name')->nullable();
+            $table->string('customer_phone')->nullable();
+            $table->string('customer_email')->nullable();
         });
     }
 
