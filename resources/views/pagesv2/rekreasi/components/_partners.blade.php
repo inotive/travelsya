@@ -37,7 +37,7 @@
                     <div class="card-body">
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
-                            <span class="text-start">{{ $partner['kota']['city_name'] }}</span>
+                            <span class="text-start">{{ $partner['lokasi'] }}</span>
                             <span style="position: relative; margin-left: auto;"
                                 class="fa-regular fa-bookmark fs-2"></span>
                         </div>
@@ -46,9 +46,9 @@
 
                         <div class="rating d-flex align-items-center text-start">
                             <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
-                            <span class="rating-number" style="position: relative; top: 1px;">{{ $partner->avgRating()
+                            <span class="rating-number" style="position: relative; top: 1px;">{{ $partner['rate']
                                 }}
-                                ({{ number_format($partner->reviews->count()) }}
+                                ({{ number_format($partner['rating_count']) }}
                                 ulasan)
                             </span>
                         </div>

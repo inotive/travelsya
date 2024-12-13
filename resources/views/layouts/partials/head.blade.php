@@ -615,6 +615,18 @@
     .z-index-1 {
         z-index: 1 !important;
     }
+
+    .border-unset {
+        border: unset;
+    }
+
+    .align-items-unset {
+        align-items: unset;
+    }
+
+    .bg-snow-pink {
+        background-color: #FFF4F4;
+    }
 </style>
 @stack('add-style')
 {{-- @vite(['resources/js/app.js']) --}}
