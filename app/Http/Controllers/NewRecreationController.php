@@ -57,7 +57,7 @@ class NewRecreationController extends Controller
         foreach ($data_partners as $key => $rec) {
                 $item = [
                     'id' => $rec['id'],
-                    'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
+                    'img' => asset('storage/' . ($rec['image']['image'] ?? 'health_default.png')),
                     'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'name' => $rec['clinic_name'],
                     'rate' => $rec->avgRating(),
@@ -106,7 +106,7 @@ class NewRecreationController extends Controller
 
         return view('pagesv2.rekreasi.show', $data);
     }
-  
+
     public function detail(Request $request, $id, $date){
         $data['detail'] = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
         $data['date'] = $date;
@@ -245,7 +245,7 @@ class NewRecreationController extends Controller
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return redirect()->away($payoutsXendit['invoice_url']);
     }
-  
+
     public function order(Request $request){
         if(Auth::user()){
             $data = $request->all();
