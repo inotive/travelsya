@@ -1,58 +1,54 @@
 @push('add-style')
-<style>
-    .minh-350 {
-        min-height: 350px !important;
-    }
+    <style>
+        .extra-content {
+            display: none;
+            margin-top: 16px;
+            color: #555;
+            max-height: 0;
+            /* Sembunyikan konten yang terpotong */
+            transition: max-height 0.75s ease-in-out;
+            /* Animasi smooth */
+            padding: 0;
+            /* Awalnya padding diset ke 0 */
+        }
 
-    .extra-content {
-        display: none;
-        margin-top: 16px;
-        color: #555;
-        max-height: 0;
-        /* Sembunyikan konten yang terpotong */
-        transition: max-height 0.75s ease-in-out;
-        /* Animasi smooth */
-        padding: 0;
-        /* Awalnya padding diset ke 0 */
-    }
+        .extra-content.show {
+            display: block;
+            max-height: 2000px;
+            /* Atur sesuai dengan tinggi maksimal konten */
+        }
 
-    .extra-content.show {
-        display: block;
-        max-height: 2000px;
-        /* Atur sesuai dengan tinggi maksimal konten */
-    }
-
-    .toggle-button {
-        background: none;
-        border: none;
-        color: #007bff;
-        cursor: pointer;
-        font-size: 14px;
-    }
-</style>
+        .toggle-button {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
 @endpush
 <div class="container mb-5">
     <section style="margin-bottom: 60px">
         <div class="row">
             @foreach ($rule as $r)
-            <div class="col-4">
-                <div class="card shadow-sm rounded-4 overflow-hidden">
-                    <div class="rounded-circle bg-danger position-absolute opacity-25"
-                        style="width:100px; height:100px; top: -50px; right: -40px;">
-                    </div>
-                    <div class="rounded-circle bg-danger position-absolute"
-                        style="width:25px; height:25px; top: 35px; right: -10px;">
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-start" style="z-index: 10;">
-                        <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
-                            style="width: 25px; height: 25px; right:0;">
-                            <span class="{{ $r['icon'] }}"></span>
+                <div class="col-4">
+                    <div class="card shadow-sm rounded-4 overflow-hidden">
+                        <div class="rounded-circle position-absolute"
+                            style="background-color: #FFEEF1; width:100px; height:100px; top: -50px; right: -40px;">
                         </div>
-                        <span class="card-title fw-bold my-2 text-capitalize">{{ $r['title'] }}</span>
-                        <span>{{ $r['content'] }}</span>
+                        <div class="rounded-circle position-absolute"
+                            style="background-color: #FFBDBE; width:25px; height:25px; top: 35px; right: -10px;">
+                        </div>
+                        <div class="card-body d-flex flex-column justify-content-start" style="z-index: 10;">
+                            <div class="bg-danger text-light rounded-circle d-flex justify-content-center align-items-center"
+                                style="width: 25px; height: 25px; right:0;">
+                                <span class="{{ $r['icon'] }}"></span>
+                            </div>
+                            <span class="card-title fw-bold my-2 text-capitalize">{{ $r['title'] }}</span>
+                            <span>{{ $r['content'] }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
     </section>
@@ -102,7 +98,7 @@
         </div>
         <div class="row">
             <div class="col-6">
-                <div class="card border border-dark minh-350">
+                <div class="card border border-dark min-h-350">
                     <div class="card-body d-flex flex-column align-items-start">
                         <span class="title">Syarat Sewa Mobil Dengan Supir</span>
                         <hr>
@@ -126,7 +122,7 @@
                 </div>
             </div>
             <div class="col-6">
-                <div class="card border border-dark minh-350">
+                <div class="card border border-dark min-h-350">
                     <div class="card-body d-flex flex-column align-items-start">
                         <span class="title">Syarat Sewa Mobil Lepas Kunci</span>
                         <hr>
@@ -155,38 +151,39 @@
         </div>
         <div class="row justify-content-center">
             @foreach ($car_models as $model)
-            <div class="col-12 col-md-4 col-xl-3">
-                <form action="{{ route('car_rent.show') }}" method="post" id="form_favorite_car{{ $model->id }}">
-                    @csrf
-                    <input type="hidden" name="model_id" value="{{ $model->car_model_id }}">
-                    <div class="col p-3">
-                        <a href="javascript:" class="text-decoration-none text-dark"
-                            id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
-                            <div class="card border border-dark rounded-4">
-                                <img src="{{ asset('storage/',$model->img_url) }}" class="card-img-top-rounded"
-                                    alt="..."
-                                    onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
-                                <div class="card-body">
-                                    <div class="card-content">
-                                        <div class="lokasi d-flex justify-content-center">
-                                            <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }} {{
-                                                $model->brand->name ?? 'Invalid Brand' }}</span>
-                                        </div>
+                <div class="col-12 col-md-4 col-xl-3">
+                    <form action="{{ route('car_rent.show') }}" method="post"
+                        id="form_favorite_car{{ $model->id }}">
+                        @csrf
+                        <input type="hidden" name="model_id" value="{{ $model->car_model_id }}">
+                        <div class="col p-3">
+                            <a href="javascript:" class="text-decoration-none text-dark"
+                                id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
+                                <div class="card border border-dark rounded-4">
+                                    <img src="{{ asset('storage/', $model->img_url) }}" class="card-img-top-rounded"
+                                        alt="..."
+                                        onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                                    <div class="card-body">
+                                        <div class="card-content">
+                                            <div class="lokasi d-flex justify-content-center">
+                                                <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }}
+                                                    {{ $model->brand->name ?? 'Invalid Brand' }}</span>
+                                            </div>
 
-                                        <div
-                                            class="price mt-7 d-flex flex-row align-items-center justify-content-center">
-                                            <span class="fa-solid fa-suitcase"></span>
-                                            <span class="ms-1">{{ 2 }}</span>
-                                            <span class="fa-solid fa-user ms-5"></span>
-                                            <span class="ms-1">{{ $model->number_seats }}</span>
+                                            <div
+                                                class="price mt-7 d-flex flex-row align-items-center justify-content-center">
+                                                <span class="fa-solid fa-suitcase"></span>
+                                                <span class="ms-1">{{ 2 }}</span>
+                                                <span class="fa-solid fa-user ms-5"></span>
+                                                <span class="ms-1">{{ $model->number_seats }}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </a>
-                    </div>
-                </form>
-            </div>
+                            </a>
+                        </div>
+                    </form>
+                </div>
             @endforeach
         </div>
     </section>
@@ -200,35 +197,35 @@
         </div>
         <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
             @foreach ($near_location as $location)
-            <div class="col p-3">
-                <form action="{{ route('car_rent.show') }}" method="post"
-                    id="form_location{{ \App\Helpers\General::getSlug($location) }}">
-                    @csrf
-                    <input type="hidden" name="location" value="{{ $location }}">
-                    <a href="javascript:" class="text-decoration-none text-dark"
-                        id="location_button{{ \App\Helpers\General::getSlug($location) }}"
-                        onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
-                        <div class="card border border-dark rounded-4 position-relative">
-                            <img src="{{ $location }}"
-                                onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
-                                class="card-img-top-rounded card-img-bottom-rounded img-fluid"
-                                style="filter: brightness(0.5)" alt="...">
-                            <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
-                                style="top: 50%; left: 50%;">
-                                {{ $location }}
-                            </h3>
-                        </div>
-                    </a>
-                </form>
-            </div>
+                <div class="col p-3">
+                    <form action="{{ route('car_rent.show') }}" method="post"
+                        id="form_location{{ \App\Helpers\General::getSlug($location) }}">
+                        @csrf
+                        <input type="hidden" name="location" value="{{ $location }}">
+                        <a href="javascript:" class="text-decoration-none text-dark"
+                            id="location_button{{ \App\Helpers\General::getSlug($location) }}"
+                            onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
+                            <div class="card border border-dark rounded-4 position-relative">
+                                <img src="{{ $location }}"
+                                    onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
+                                    class="card-img-top-rounded card-img-bottom-rounded img-fluid"
+                                    style="filter: brightness(0.5)" alt="...">
+                                <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
+                                    style="top: 50%; left: 50%;">
+                                    {{ $location }}
+                                </h3>
+                            </div>
+                        </a>
+                    </form>
+                </div>
             @endforeach
         </div>
     </section>
 </div>
 
 @push('js')
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
             const toggleButton = document.querySelector(".toggle-button");
             const extraContent = document.querySelector(".extra-content");
 
@@ -242,18 +239,18 @@
                 }
             });
         });
-</script>
-<script>
-    function submit(val){
-        $("form#form_favorite_car"+val).submit();
-        e.preventDefault();
-        return false;
-    };
+    </script>
+    <script>
+        function submit(val) {
+            $("form#form_favorite_car" + val).submit();
+            e.preventDefault();
+            return false;
+        };
 
-    function submit_location(val){
-        $("form#form_location"+val).submit();
-        e.preventDefault();
-        return false;
-    };
-</script>
+        function submit_location(val) {
+            $("form#form_location" + val).submit();
+            e.preventDefault();
+            return false;
+        };
+    </script>
 @endpush

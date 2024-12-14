@@ -33,7 +33,7 @@ class NewRecreationController extends Controller
     {
         $special_deals = RecreationPackages::with('category', 'recreation')->whereColumn('price', '<', 'unit_price')->limit(10)->get();
 
-        $categories = CategoryRecreation::select('id', 'name')->get()->toArray();
+        $categories = CategoryRecreation::select('id', 'name', 'image')->get()->toArray();
 
         $categorises = [];
 
@@ -42,6 +42,7 @@ class NewRecreationController extends Controller
                 $item = [
                         'id' => $rec['id'],
                         'name' => $rec['name'],
+                        'image' => $rec['image'],
                     ];
 
                 array_push($categorises, $item);
@@ -59,7 +60,7 @@ class NewRecreationController extends Controller
                     'id' => $rec['id'],
                     'img' => asset('storage/' . $rec['image']['image'] ?? 'health_default.png'),
                     'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                    'name' => $rec['clinic_name'],
+                    'business_name' => $rec['business_name'],
                     'rate' => $rec->avgRating(),
                     'category' => $rec['category'],
                     // 'origin_price' => (int)$rec['packages'][0]['unit_price'],
