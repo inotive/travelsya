@@ -1,8 +1,8 @@
 <div class="container">
     @foreach ($pergi as $p)
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            {{-- <form action="" method="POST">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                {{-- <form action="" method="POST">
                 @csrf --}}
                 <div class="row">
                     <div class="col-12 col-md-6">
@@ -88,8 +88,8 @@
                 </div>
                 {{--
             </form> --}}
+            </div>
         </div>
-    </div>
     @endforeach
 
 </div>
