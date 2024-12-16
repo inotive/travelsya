@@ -22,7 +22,7 @@
                     <div class="opacity-50 fs-5 mt-2">Isi dengan lokasi jemput pada hari sewa pertamamu. (1)
                         Biaya jemput serta penggunaan mobil berlaku untuk lokasi di luar area 0 (Paket Reguler) atau
                         area
-                        2 (Paket All-in). (2) Biaya jemput hanya untuk hari pertama, biaya hari selanjuynya harus
+                        2 (Paket All-in). (2) Biaya jemput hanya untuk hari pertama, biaya hari selanjutnya harus
                         dibayarkan langsung ke vendor</div>
                 </div>
                 <div class="card shadow mb-35px">
@@ -87,42 +87,44 @@
                         keperluan
                         reschedule</div>
                 </div>
-                {{-- <form action="{{ /*route('health_beauty.request_transaction')*/ }}" method="POST"> --}}
-                    <form action="#" method="POST">
+                    <form action="{{ route('car_rent.request_transaction') }}" method="POST">
                         @csrf
                         <div class="mb-35px">
                             <div class="card rounded-4 border-1 shadow">
                                 <div class="card-body">
                                     <div class="d-flex flex-row align-items-center mb-3">
-                                        <input type="radio" name="sapa_pemesan" id="radio_tuan" value="tuan">
+                                        <input type="radio" name="customer_call" required id="radio_tuan" value="tuan">
                                         <span class="ms-3">Tuan</span>
-                                        <input type="radio" name="sapa_pemesan" class="ms-5" id="radio_nyonya"
+                                        <input type="radio" name="customer_call" required class="ms-5" id="radio_nyonya"
                                             value="nyonya">
                                         <span class="ms-3">Nyonya</span>
-                                        <input type="radio" name="sapa_pemesan" class="ms-5" id="radio_nona"
+                                        <input type="radio" name="customer_call" required class="ms-5" id="radio_nona"
                                             value="nona">
                                         <span class="ms-3">Nona</span>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="nama_pemesan" class="form-label">Nama</label>
-                                        <input type="text" name="nama_pemesan" id="nama_pemesan" class="form-control"
+                                        <label for="customer_nama" class="form-label">Nama</label>
+                                        <input type="text" name="customer_name" id="customer_nama" class="form-control"
                                             value="{{ $user->name }}" placeholder="Masukan nama">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="phone_pemesan" class="form-label">Nomor Ponsel</label>
-                                        <input type="text" name="phone_pemesan" id="phone_pemesan" class="form-control"
+                                        <label for="customer_phone" class="form-label">Nomor Ponsel</label>
+                                        <input type="text" name="customer_phone" id="customer_phone" class="form-control"
                                             value="{{ $user->phone }}" placeholder="Masukan nomor Handphone" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="email_pemesan" class="form-label">Alamat Email</label>
-                                        <input type="email" name="email_pemesan" id="email_pemesan" class="form-control"
+                                        <label for="customer_email" class="form-label">Alamat Email</label>
+                                        <input type="email" name="customer_email" id="customer_email" class="form-control"
                                             value="{{ $user->email }}" placeholder="Masukan Email">
                                     </div>
                                     {{-- <input type="hidden" name="total_ticket" value="{{ $qty }}"> --}}
-                                    <input type="hidden" name="service" value="health-beauty">
+                                    <input type="hidden" name="service" value="car-rent">
                                     <input type="hidden" name="payment" value="xendit">
-                                    {{-- <input type="hidden" name="package_id" value="{{ $paket['id'] }}"> --}}
+                                    <input type="hidden" name="date" value="{{ $date }}">
+                                    <input type="hidden" name="duration" value="{{ $duration }}">
+                                    <input type="hidden" name="package_id" value="{{ $car['id'] }}">
                                     <input type="hidden" name="point" value="0">
+                                    <input type="hidden" name="location" value="jakarta">
                                 </div>
                             </div>
                         </div>
@@ -144,8 +146,7 @@
                                 <div class="card-body d-flex flex-row align-items-center">
                                     <span class="fa-solid fa-gem fs-3 text-danger"></span>
                                     <span class="ms-3">Kamu akan mendapatkan
-                                        {{-- {{ \App\Helpers\General::countPoint($paket['price'] * $qty, $service_id) }}
-                                        --}}
+                                        {{ \App\Helpers\General::countPoint($car->rental_price_per_day * $duration, $service_id) }}
                                         poin</span>
                                     <button class="text-light btn btn-danger ms-sm-auto">Lanjutkan Pemesanan</button>
                                 </div>
@@ -159,13 +160,15 @@
                         <div class="row">
                             <div class="col-6 d-flex flex-column">
                                 <span class="fs-7">Tanggal Penjemputan</span>
-                                <span class="fs-4 f5-bold">{{ \App\Helpers\General::getDayDateShortMonth($date)
-                                    }}</span>
+                                <span class="fs-4 f5-bold">{{ \App\Helpers\General::getDayDateShortMonth($date) }}</span>
                                 <span class="fs-4">{{ date('H:i', strtotime($date)) }}</span>
                             </div>
                             <div class="col-6 d-flex flex-column ms-sm-auto">
                                 <span class="fs-7">Tanggal Drop-off</span>
-                                <span class="fs-4 f5-bold">Sel, 15 Okt 2024</span>
+                                @php
+                                    $end = \App\Helpers\General::addingDays($date,$duration - 1 )
+                                @endphp
+                                <span class="fs-4 f5-bold">{{ \App\Helpers\General::getDayDateShortMonth($end) }}</span>
                                 <span class="fs-4">
                                     @if (date('H:i', strtotime('+' . $duration * 12 . ' hours', strtotime($date)))
                                     < '23:59' ) {{ date('H:i', strtotime('+' . $duration * 12 . ' hours' ,
@@ -198,8 +201,8 @@
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
                             <span>Total pembayaran</span>
-                            {{-- <span class="fs-3 ms-sm-auto">IDR {{ number_format($qty * $paket['price']) }}</span>
-                            --}}
+                            <span class="fs-3 ms-sm-auto">IDR {{ number_format($duration * $car->rental_price_per_day) }}</span>
+
                         </div>
                     </div>
                 </div>

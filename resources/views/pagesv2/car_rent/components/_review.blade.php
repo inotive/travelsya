@@ -16,7 +16,7 @@
                 @elseif ($detail->avgRating() <= 4.7) Bagus @elseif ($detail->avgRating() <= 3) Cukup @elseif ($detail->
                         avgRating() <= 2.5) Kurang Bagus @endif --}} </h3>
                             <span class="opacity-75">Dari
-                                {{-- {{ number_format($detail->reviews->count()) }} --}}
+                                {{ number_format($car->carRental->reviews()->count()) }}
                                 review</span>
         </div>
     </div>

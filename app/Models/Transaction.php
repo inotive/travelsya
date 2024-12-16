@@ -141,6 +141,11 @@ class Transaction extends Model
         return $this->hasOne(RecreationRatings::class, 'transaction_id', 'id');
     }
 
+    public function commentCarRent(): HasOne
+    {
+        return $this->hasOne(CarRentalRating::class, 'transaction_id', 'id');
+    }
+
     public function historyPointIN()
     {
         return $this->hasMany(HistoryPoint::class)->where('flow', 'debit');

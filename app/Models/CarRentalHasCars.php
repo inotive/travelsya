@@ -24,7 +24,8 @@ class CarRentalHasCars extends Model
         'rental_price_per_day',
         'status',
         'description',
-        'category'
+        'category',
+        'koper',
     ];
 
     // Definisikan relasi ke model Brand
@@ -69,6 +70,8 @@ class CarRentalHasCars extends Model
     {
         return $this->hasMany(CarRentalRating::class, 'car_rental_has_car_id', 'id');
     }
+
+
 
     public function scopeActive()
     {

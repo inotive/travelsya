@@ -73,7 +73,7 @@
                                 <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
                                 <div class="d-flex flex-row align-items-center">
                                     <span class="fa-solid fa-suitcase"></span>
-                                    <span class="ms-2">{{ $car->policy_id }} Koper</span>
+                                    <span class="ms-2">{{ $car->koper }} Koper</span>
                                     <span class="fa-solid fa-user ms-5"></span>
                                     <span class="ms-2">{{ $car->number_seats }} Penumpang</span>
                                 </div>
