@@ -36,6 +36,10 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" type="text/css"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+<!-- Timepicker -->
+{{--
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-timepicker/1.14.1/jquery.timepicker.min.css">
+--}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -234,9 +238,147 @@
         padding: 10px 20px;
     }
 
-    .nav-line-tabs .nav-item .nav-link.active, .nav-line-tabs .nav-item.show .nav-link, .nav-line-tabs .nav-item .nav-link:hover:not(.disabled){
+    .nav-line-tabs .nav-item .nav-link.active,
+    .nav-line-tabs .nav-item.show .nav-link,
+    .nav-line-tabs .nav-item .nav-link:hover:not(.disabled) {
         color: #C02425;
         border-bottom: 1px solid #C02425 !important;
+    }
+
+    .border-none {
+        border: none !important;
+    }
+
+    .border-bottom-none {
+        border-bottom: none !important;
+    }
+
+    .border-top-none {
+        border-top: none !important;
+    }
+
+    .border-left-none {
+        border-left: none !important;
+    }
+
+    .border-right-none {
+        border-right: none !important;
+    }
+
+    .border-radius-bottom-left-none {
+        border-bottom-left-radius: 0 !important;
+    }
+
+    .border-radius-top-left-none {
+        border-top-left-radius: 0 !important;
+    }
+
+    .hr-line {
+        color: #928b8b;
+        border-left: 46px solid #fff;
+    }
+
+    .wrapper-search {
+        align-items: center;
+        justify-content: end;
+        position: absolute;
+        z-index: 999;
+        top: 30%;
+        width: 100%;
+        right: 11px;
+    }
+
+
+    .bus-icon {
+        background: #C02425;
+        text-align: center;
+        border-radius: 50px;
+        background: #C02425;
+        text-align: center;
+        border-radius: 50px;
+        padding: 3px 7px;
+    }
+
+
+    .shape-round-big {
+        height: 100px;
+        width: 100px;
+        background-color: #FFEEF1;
+        border-radius: 50px;
+        position: absolute;
+        right: -30px;
+        top: -53px;
+    }
+
+
+    .shape-round-small {
+        height: 34px;
+        width: 34px;
+        background-color: #FFBDBE;
+        border-radius: 50px;
+        position: absolute;
+        top: 27px;
+        right: -16px;
+    }
+
+
+    .bg-light {
+        background: #fff !important;
+    }
+
+    .max-w-200 {
+        max-width: 200px;
+    }
+
+
+    .max-w-100 {
+        max-width: 100px;
+    }
+
+
+    .max-w-120 {
+        max-width: 120px;
+    }
+
+
+    .max-w-150 {
+        max-width: 150px;
+    }
+
+    .max-w-200 {
+        max-width: 200px;
+    }
+
+    .max-w-50 {
+        max-width: 50px;
+    }
+
+    .min-h-350 {
+        min-height: 350px !important;
+    }
+
+    .border-right-2 {
+        border-right: 2px solid #928b8b !important;
+    }
+
+    .border-left-2 {
+        border-left: 2px solid #928b8b !important;
+    }
+
+    .round {
+        border-radius: 50px;
+    }
+
+
+    .badge-secondary.badge-outline {
+        border: 1px solid #989898 !important;
+        color: #989898 !important;
+        background-color: transparent;
+    }
+
+
+    .mb-50 {
+        margin-bottom: 50px !important;
     }
 </style>
 <style>
@@ -450,6 +592,40 @@
     .swiper-slide img {
         max-width: 100%;
         border-radius: 10px;
+    }
+
+    .fs-7 {
+        font-size: .85rem;
+    }
+
+    .lined {
+        position: relative;
+    }
+
+    .lined::after {
+        content: '';
+        position: absolute;
+        width: 2px;
+        background-color: #ddd;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+    }
+
+    .z-index-1 {
+        z-index: 1 !important;
+    }
+
+    .border-unset {
+        border: unset;
+    }
+
+    .align-items-unset {
+        align-items: unset;
+    }
+
+    .bg-snow-pink {
+        background-color: #FFF4F4;
     }
 </style>
 @stack('add-style')

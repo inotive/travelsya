@@ -74,6 +74,10 @@
                                                     $route = route('profile.order-detail.listrik-voucher', $all->no_inv);
                                                 }elseif(strToLower($all->service) == 'health-beauty'){
                                                     $route = route('profile.order-detail.health-beauty', $all->no_inv);
+                                                }elseif(strToLower($all->service) == 'car-rent'){
+                                                    $route = route('profile.order-detail.car-rent', $all->no_inv);
+                                                }elseif(strToLower($all->service) == 'recreation'){
+                                                    $route = route('profile.order-detail.recreation', $all->no_inv);
                                                 } else {
                                                     $route = route('profile.order-detail.listrik', $all->no_inv);
                                                 }

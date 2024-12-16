@@ -37,6 +37,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
 use App\Http\Controllers\Admin\ProductController as ProductAdminController;
 use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\BusTravelController;
 use App\Http\Controllers\CarRentalController;
 use App\Http\Controllers\NewCarRentController;
 use App\Http\Controllers\NewHealthBeautyController;
@@ -132,6 +133,10 @@ Route::get('profile/photo-profile', [UserController::class, 'photoProfile']);
 Route::get('/profile/order-detail/hotel/{id}', [UserController::class, 'orderDetailHotel'])->name('profile.order-detail.hotel')->middleware('auth');
 Route::get('/profile/order-detail/hostel/{id}', [UserController::class, 'orderDetailHostel'])->name('profile.order-detail.hostel')->middleware('auth');
 Route::get('/profile/order-detail/healthbeauty/{id}', [UserController::class, 'orderDetailHealthBeauty'])->name('profile.order-detail.health-beauty')->middleware('auth');
+Route::get('/profile/order-detail/recreation/{id}', [UserController::class, 'orderDetailRecreation'])->name('profile.order-detail.recreation')->middleware('auth');
+Route::post('/profile/order-detail/recreation/rating', [UserController::class, 'createRatingDetailRecreation'])->name('profile.order-detail.recreation.rating')->middleware('auth');
+Route::get('/profile/order-detail/car_rent/{id}', [UserController::class, 'orderDetailCarRent'])->name('profile.order-detail.car-rent')->middleware('auth');
+Route::post('/profile/order-detail/car_rent/rating', [UserController::class, 'createRatingDetailCarRent'])->name('profile.order-detail.car-rent.rating')->middleware('auth');
 Route::post('/profile/order-detail/healthbeauty/rating', [UserController::class, 'createRatingDetailHealthBeauty'])->name('profile.order-detail.health_beauty.rating')->middleware('auth');
 Route::post('/profile/order-detail/hotel/rating', [UserController::class, 'createRatingDetailHotel'])->name('profile.order-detail.hotel.rating')->middleware('auth');
 Route::post('/profile/order-detail/hostel/rating', [UserController::class, 'createRatingDetailHostel'])->name('profile.order-detail.hostel.rating')->middleware('auth');
@@ -232,8 +237,11 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
     Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
-    Route::get('/detail/{id}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
+    Route::get('/detail/{id}/{date}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
     Route::post('/order/{id}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
+
+    Route::post('/request_transaction', [NewRecreationController::class, 'request_transaction'])->name('recreation.request_transaction');
+    Route::get('/category/{id}', [NewRecreationController::class, 'category'])->name('rekreasi.category');
 });
 
 Route::group(['prefix' => 'health_beauty'], function () {
@@ -249,12 +257,22 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');
 });
 
+Route::group(['prefix' => 'bus_travel'], function(){
+    Route::get('/', [BusTravelController::class, 'index'])->name('bus_travel.index');
+    Route::post('search', [BusTravelController::class, 'search'])->name('bus_travel.search');
+    Route::post('detail', [BusTravelController::class, 'detail'])->name('bus_travel.detail');
+    Route::post('order', [BusTravelController::class, 'order'])->name('bus_travel.order');
+});
+
 Route::group(['prefix' => 'car_rent'], function () {
     Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
+    Route::get('/get_cars_vendor/{brand_id}/{city_id}', [NewCarRentController::class, 'getVendorCars']);
     Route::post('/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
-    Route::get('/brand/{id}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
-    Route::get('/detail/{id}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
-    Route::post('/order/{provider}', [NewCarRentController::class, 'order'])->name('car_rent.order');
+    Route::get('/brand/{id}', [NewCarRentController::class, 'brand_detail'])->name('car_rent.brand.detail');
+    Route::get('/model/{id}', [NewCarRentController::class, 'model_detail'])->name('car_rent.model.detail');
+    Route::get('/detail/{category}/{lokasi}/{model}/{provider}/{date}/{duration}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');
+    Route::post('/order', [NewCarRentController::class, 'order'])->name('car_rent.order');
+    Route::post('/request_transaction', [NewCarRentController::class, 'request_transaction'])->name('car_rent.request_transaction');
 });
 
 // Health & Beauty

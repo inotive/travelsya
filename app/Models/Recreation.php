@@ -21,6 +21,7 @@ class Recreation extends Model
         'phone',
         'address',
         'description',
+        'highlight',
         'open',
         'close',
     ];
@@ -28,6 +29,16 @@ class Recreation extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(CategoryRecreation::class, 'category_recreation_id', 'id');
+    }
+
+    /**
+     * Get all of the booked for the Recreation
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function booked(): HasMany
+    {
+        return $this->hasMany(detailTransactionRecreation::class, 'recreation_id', 'id');
     }
 
     /**

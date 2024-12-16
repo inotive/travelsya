@@ -17,7 +17,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link active" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="health" checked required />
+                                <input class="btn-check" type="radio" name="category" value="Dengan Driver" checked required />
                                 <!--end::Input-->
                                 Dengan Supir
                             </label>
@@ -26,7 +26,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="beauty" required />
+                                <input class="btn-check" type="radio" name="category" value="Tidak Dengan Driver" required />
                                 <!--end::Input-->
                                 Lepas Kunci
                             </label>
@@ -48,14 +48,18 @@
                                 <i class="fa-solid fa-calendar-days"></i>
                             </span>
                             <input type="text" name="date" onfocus="(this.type='date')" class="form-control"
-                                placeholder="Tanggal reservasi" aria-label="Username" aria-describedby="basic-addon1" />
+                                placeholder="Tanggal reservasi" aria-label="date" aria-describedby="basic-addon1"
+                                style="width: 25%;" />
+                            <input type="time" name="time" id="time" class="form-control"
+                                placeholder="Tanggal reservasi" aria-label="time" aria-describedby="basic-addon1" />
                         </div>
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-hourglass"></i>
                             </span>
-                            <input type="text" name="date" onfocus="(this.type='date')" class="form-control"
-                                placeholder="Tanggal reservasi" aria-label="Username" aria-describedby="basic-addon1" />
+                            <input type="number" name="duration" class="form-control" placeholder="Durasi sewa"
+                                aria-label="date" aria-describedby="basic-addon1" />
+                            <span class="input-group-text bg-transparent text-secondary">Durasi sewa 12 jam/hari</span>
                         </div>
                         <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</button>
 
@@ -68,3 +72,15 @@
         </div>
     </div>
 </section>
+
+@push('js')
+<script>
+    // $(document).ready(function () {
+    //     $("#time").datetimepicker({
+    //         pickDate: false,
+    //         timeFormat: 'h:i',
+    //         showMeridian: false
+    //     });
+    // });
+</script>
+@endpush

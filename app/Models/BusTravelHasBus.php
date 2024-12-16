@@ -44,4 +44,24 @@ class BusTravelHasBus extends Model
     {
         return $this->hasMany(BusBooked::class, 'bus_travel_has_bus_id', 'id');
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(BusTravelRating::class, 'bus_travel_has_bus_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    public function avgRating()
+    {
+        $rating = BusTravelRating::where('bus_travel_has_bus_id', $this->id)->get()->pluck('rate')->toArray();
+
+        $data = count($rating);
+        if($data > 0){
+            $avg = array_sum($rating) / $data;
+
+            return round($avg, 1);
+        }else{
+            return 0;
+        }
+
+    }
 }

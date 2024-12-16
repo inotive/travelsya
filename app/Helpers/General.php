@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\BusBooked;
+use App\Models\CarRentalRating;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 
 class General
@@ -82,7 +84,7 @@ class General
             'hari' => $days[$day],
             'tanggal' => $dateFormatted,
             'bulan' => $months[$month],
-            'tahun' =>$year
+            'tahun' => $year
         ];
     }
 
@@ -105,13 +107,13 @@ class General
         ];
 
         $days = [
-            'Sunday' => 'Minggu',
-            'Monday' => 'Senin',
-            'Tuesday' => 'Selasa',
-            'Wednesday' => 'Rabu',
-            'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-            'Saturday' => 'Sabtu'
+            'Sunday' => 'Min',
+            'Monday' => 'Sen',
+            'Tuesday' => 'Sel',
+            'Wednesday' => 'Rab',
+            'Thursday' => 'Kam',
+            'Friday' => 'Jum',
+            'Saturday' => 'Sab'
         ];
 
         // Mengubah format tanggal ke dalam bahasa Indonesia
@@ -125,13 +127,17 @@ class General
             'hari' => $days[$day],
             'tanggal' => $dateFormatted,
             'bulan' => $months[$month],
-            'tahun' =>$year
+            'tahun' => $year
         ];
     }
 
-    public static function getDateShortMonth($date){
-        $data = General::convertDateToIndo($date);
+    public static function getDayDateShortMonth($date){
+        $data = General::convertShortDateToIndo($date);
+        return $data['hari'] . ', ' .$data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
+    }
 
+    public static function getDateShortMonth($date){
+        $data = General::convertShortDateToIndo($date);
         return $data['tanggal'] . ' ' . $data['bulan'] . ' ' . $data['tahun'];
     }
 
@@ -143,15 +149,68 @@ class General
 
     public static function getNextWeekdays($date): array
     {
+        $tomorow = Carbon::parse(date('Y-m-d h:i:s', strtotime('+1 days', strtotime($date))));
         $weekdays = [];
 
         while (count($weekdays) < 7) {
-            if ($date->isWeekday()) {
-                $weekdays[] = $date->format('Y-m-d');
+            if ($tomorow->isWeekDay()) {
+                $weekdays[] = $tomorow->format('Y-m-d');
             }
-            $date->addDay();
+            $tomorow->addDay();
         }
 
         return $weekdays;
+    }
+
+    public static function getNextWeekends($date): array
+    {
+        $tomorow = Carbon::parse(date('Y-m-d h:i:s', strtotime('+1 days', strtotime($date))));
+        $weekends = [];
+
+        while (count($weekends) < 7) {
+            if ($tomorow->isWeekEnd()) {
+                $weekends[] = $tomorow->format('Y-m-d');
+            }
+            $tomorow->addDay();
+        }
+
+        return $weekends;
+    }
+
+    public static function isWeekEnd($date){
+        return date('N', strtotime($date)) >= 6;
+    }
+
+    public static function isTomorow($date){
+        return date('Y-m-d', strtotime('+1 days', strtotime($date))) == date('Y-m-d', strtotime(Carbon::tomorrow()));
+    }
+
+    public static function getCarbon($date){
+        return Carbon::parse($date);
+    }
+
+    public static function addingDays($date, $long){
+        return General::getCarbon($date)->addDays($long);
+    }
+
+    public static function addingHours($date, $long){
+        return General::getCarbon($date)->addHours($long);
+    }
+
+    public static function getCarRentalRate($car_renta_has_car_id){
+        $car_rental_has_car = CarRentalRating::where('car_rental_has_car_id', $car_renta_has_car_id)->get();
+        $collection = collect();
+        foreach ($car_rental_has_car as $key => $car_rental) {
+            $collection->push([
+                'rate' => $car_rental->rate,
+            ]);
+        }
+        $sum_rate = $collection->sum('rate');
+        return $sum_rate;
+        // return (double)$sum_rate->avg('sum');
+    }
+
+    public static function getSlug($str){
+        return Str::slug($str);
     }
 }
