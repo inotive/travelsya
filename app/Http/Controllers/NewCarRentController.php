@@ -79,7 +79,7 @@ class NewCarRentController extends Controller
         $dateTime = $data['date'];
 
         $now =  Carbon::parse($dateTime)->format('Y-m-d H:i');
-        $over = Carbon::parse($now)->addHours(12)->addDays(1 - $data['duration'])->format('Y-m-d H:i');
+        $over = Carbon::parse($now)->addDays((int)$data['duration'] - 1)->addHours(12)->format('Y-m-d H:i');
 
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('car_rent') . '-' . time();
 
@@ -201,6 +201,7 @@ class NewCarRentController extends Controller
 
     public function show(Request $request)
     {
+
         $category = $request->category;
         $location = $request->location;
         $date = $request->date ?? Carbon::now()->format('Y-m-d');
@@ -210,23 +211,26 @@ class NewCarRentController extends Controller
         $car_model = $request->car_model_id;
 
         $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental')
-            ->when($location, function($q, $l){
-                $q->whereHas('carRental', function($r)use($l){
-                    $r->whereHas('kota', function($k)use($l){
-                        $k->where('city_name', 'like', '%'.$l.'%');
+            ->where(function($k) use($location, $category, $model, $car_model){
+                $k->when($location, function($q, $l){
+                    $q->whereHas('carRental', function($r)use($l){
+                        $r->whereHas('kota', function($k)use($l){
+                            $k->where('city_name', 'like', '%'.$l.'%');
+                        });
                     });
+                })
+                ->when($category, function($q, $c){
+                    $q->where('category_rent', $c);
+                })
+                ->when($model, function($q, $m){
+                    $q->where('car_model_id', $m);
+                })
+                ->when($car_model, function($q, $m){
+                    $q->where('car_model_id', $m);
                 });
             })
-            ->when($category, function($q, $c){
-                $q->where('category', 'like', '%'.$c.'%');
-            })
-            ->when($model, function($q, $m){
-                $q->where('car_model_id', $m);
-            })
-            ->when($car_model, function($q, $m){
-                $q->where('car_model_id', $m);
-            })
             ->get();
+
 
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();

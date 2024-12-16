@@ -131,7 +131,7 @@
         <div class="card border">
             <div class="card-body">
                 <div class="d-flex flex-row align-items-center">
-                    <span class="text-danger fw-bold">IDR {{ number_format($car->rental_price_per_day, 0, ',', '.')
+                    <span class="text-danger fw-bold">IDR {{ number_format($car->rental_price_per_day * $duration, 0, ',', '.')
                         }}</span>
                     <form action="{{ route('car_rent.order') }}" method="post" class="ms-sm-auto">
                         @csrf
