@@ -14,7 +14,7 @@ class ServiceSeeder extends Seeder
     public function run(): void
     {
         Service::create( [
-            'id'=>1,
+            'id'=>5,
             'name'=>'pulsa',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -24,7 +24,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>2,
+            'id'=>6,
             'name'=>'data',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -34,7 +34,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>3,
+            'id'=>7,
             'name'=>'pln',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -44,7 +44,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>4,
+            'id'=>8,
             'name'=>'telkom',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -54,7 +54,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>5,
+            'id'=>9,
             'name'=>'bpjs',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -64,7 +64,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>6,
+            'id'=>10,
             'name'=>'negara',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -74,7 +74,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>7,
+            'id'=>11,
             'name'=>'hostel',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -84,7 +84,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>8,
+            'id'=>12,
             'name'=>'hotel',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -94,7 +94,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>9,
+            'id'=>13,
             'name'=>'finance',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -104,7 +104,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>10,
+            'id'=>14,
             'name'=>'tv-internet',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -114,7 +114,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>11,
+            'id'=>15,
             'name'=>'ewallet',
             'deleted_at'=>NULL,
             'created_at'=>NULL,
@@ -124,7 +124,7 @@ class ServiceSeeder extends Seeder
 
 
             Service::create( [
-            'id'=>12,
+            'id'=>16,
             'name'=>'listrik-token',
             'deleted_at'=>NULL,
             'created_at'=>'2023-10-02 00:37:37',

@@ -6,21 +6,27 @@
             <h1 class="banner-text-title mt-5 text-white fw-bold">Waktu Santai Bersama Keluarga</h1>
         </div>
         <div class="col-12 col-md-6 banner-search">
-            <div class="search-banner-wrapper">
-                <div class="card card-body p-5">
+            <div class="search-banner-wrapper w-500px">
+                <div class="card card-body">
 
                     <form
                         action="{{ route('rekreasi.show', ['date' => \Carbon\Carbon::now()->addDays()->format('Y-m-d')]) }}"
                         method="post">
                         @csrf
                         <div class="input-group mb-5">
-                            <span class="input-group-text bg-transparent">
-                                <i class="fa-solid fa-search"></i>
-                            </span>
-                            <input type="text" class="form-control" name="lokasi" placeholder="Mau rekreasi dimana?" />
-                            <span class="input-group-text bg-transparent">
-                                <i class="fa-solid fa-location-crosshairs"></i>
-                            </span>
+                            @php
+                                $cities = \App\Models\Recreation::pluck('city')->toArray(); // Ubah ke array
+                                $cityList = \App\Models\City::whereIn('city_id', $cities)->get(); // Query data sesuai ID
+                            @endphp
+                            <select name="lokasi" id="location" class="form-select select" data-control="select2"
+                                    data-placeholder="Pilih Lokasi" autocomplete="on">
+                                @foreach($cityList as $city)
+                                    <option value="{{ $city->city_name }}">{{ $city->city_name }}</option>
+                                @endforeach
+                            </select>
+
+                            {{--                            <input type="text" class="form-control" name="lokasi" placeholder="Mau rekreasi dimana?" />--}}
+
                         </div>
                         <div class="input-group mb-5">
                             <span class="input-group-text bg-transparent">

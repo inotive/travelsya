@@ -49,8 +49,12 @@ class BusTravels extends Model
 
         $data = count($rating);
 
-        $avg = array_sum($rating) / $data;
+        if($data > 0){
+            $avg = array_sum($rating) / $data;
 
-        return round($avg, 1);
+            return round($avg, 1);
+        }else{
+            return 0;
+        }
     }
 }

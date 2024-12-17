@@ -234,8 +234,8 @@ class NewHealthBeautyController extends Controller
 
     public function search(Request $request){
         $city = '%' . $request->location . '%';
-
-        $data['clinics'] = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
+        $data['clinics'] = Clinic::Active()->with('reviews', 'packages', 'kota')
+            ->where('category', 'kesehatan')
             ->whereHas('packages', function ($p) {
                 $p->whereColumn('unit_price', '>', 'price');
             })
@@ -245,7 +245,6 @@ class NewHealthBeautyController extends Controller
                 });
             })
             ->get();
-
         $data['section_title'] = strToUpper($request->location);
 
         return view('pagesv2.health_beauty.show', $data);

@@ -39,10 +39,10 @@
                                         </div>
 
                                         <div class="price mt-7">
-                                            <span class="coret text-decoration-line-through">IDR
-                                                {{ number_format($package->unit_price, 0, ',', '.') }}</span>
+{{--                                            <span class="coret text-decoration-line-through">IDR--}}
+{{--                                                {{ number_format($package->unit_price, 0, ',', '.') }}</span>--}}
                                             <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                                {{ number_format($package->price, 0, ',', '.') }}</span>
+                                                {{ number_format($package->price, 0, ',', '.') }} / {{$package->duration .' ' . $package->unit_price}}</span>
                                         </div>
                                     </div>
                                 </div>

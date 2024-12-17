@@ -173,7 +173,7 @@
                                             <div
                                                 class="price mt-7 d-flex flex-row align-items-center justify-content-center">
                                                 <span class="fa-solid fa-suitcase"></span>
-                                                <span class="ms-1">{{ 2 }}</span>
+                                                <span class="ms-1">{{ $model->koper }}</span>
                                                 <span class="fa-solid fa-user ms-5"></span>
                                                 <span class="ms-1">{{ $model->number_seats }}</span>
                                             </div>

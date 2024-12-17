@@ -20,7 +20,7 @@
                             <tr style="border-top: 2px dashed black;">
                                 <td>
                                     <span class="fa-solid fa-suitcase"></span>
-                                    <span class="ms-2">2 Koper</span>
+                                    <span class="ms-2">{{ $car->koper }} Koper</span>
                                 </td>
                                 <td>
                                     <span class="fa-solid fa-user"></span>
@@ -78,19 +78,16 @@
                 <div class="row pb-3 mb-3" style="border-bottom:2px dashed black;">
                     <div class="col-6 d-flex flex-column">
                         <span>Tanggal Penjemputan</span>
-                        <span class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth(date('Y-m-d',
-                            $date)) }}</span>
-                        <span class="fs-4">{{ date('H:i', $date) }}</span>
+                        <span class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth($date) }}</span>
+                        <span class="fs-4">{{ \Carbon\Carbon::parse($date)->format('H:i') }}</span>
                     </div>
                     <div class="col-6 d-flex flex-column">
                         <span>Tanggal Drop-off</span>
                         <span class="fs-3 title fw-bold">{{
-                            \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingHours(date('Y-m-d',
-                            $date), $duration *
+                            \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingHours($date, 12), $duration *
+                            12) }}</span>
+                        <span class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingHours($date, 12), $duration *
                             12)) }}</span>
-                        <span class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingHours(date('Y-m-d',
-                            $date), $duration *
-                            12))) }}</span>
                     </div>
                 </div>
                 <span class="text-success">Bisa refund, reschedule, dan overtime</span>
@@ -134,7 +131,7 @@
         <div class="card border">
             <div class="card-body">
                 <div class="d-flex flex-row align-items-center">
-                    <span class="text-danger fw-bold">IDR {{ number_format($car->rental_price_per_day, 0, ',', '.')
+                    <span class="text-danger fw-bold">IDR {{ number_format($car->rental_price_per_day * $duration, 0, ',', '.')
                         }}</span>
                     <form action="{{ route('car_rent.order') }}" method="post" class="ms-sm-auto">
                         @csrf

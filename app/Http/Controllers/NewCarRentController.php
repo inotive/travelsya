@@ -2,15 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ResponseFormatter;
 use App\Models\CarModel;
 use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
 use App\Models\City;
+use App\Models\DetailTransactionCarRental;
+use App\Models\Fee;
+use App\Models\Point;
+use App\Models\Service;
+use App\Models\Transaction;
+use App\Services\Setting;
+use App\Services\Xendit;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class NewCarRentController extends Controller
 {
+    protected $xendit, $point;
+
+    public function __construct(Xendit $xendit, Point $point)
+    {
+        $this->xendit = $xendit;
+        $this->point = $point;
+    }
 
     public function index()
     {
@@ -48,107 +65,185 @@ class NewCarRentController extends Controller
         return view('pagesv2.car_rent.index', $data);
     }
 
+    public function request_transaction(Request $request){
+
+        $customer = [
+            'name' => $request->customer_call . ' ' . $request->customer_name,
+            'phone' => $request->customer_phone,
+            'email' => $request->customer_email,
+        ];
+
+        $data = $request->all();
+
+        $package = CarRentalHasCars::find($data['package_id']);
+        $dateTime = $data['date'];
+
+        $now =  Carbon::parse($dateTime)->format('Y-m-d H:i');
+        $over = Carbon::parse($now)->addDays((int)$data['duration'] - 1)->addHours(12)->format('Y-m-d H:i');
+
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('car_rent') . '-' . time();
+
+        $service = Service::where('name', $data['service'])->first();
+
+        if (!$service) {
+            return ResponseFormatter::error([], 'Service not found', 500);
+        }
+
+        $setting = new Setting();
+        $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $package->price);
+
+
+        $amount = $package->rental_price_per_day * $data['duration'];
+
+        $kode_unik = random_int(0, 999);
+
+        $fee = Fee::whereHas('service', function ($s) use ($data) {
+            $s->where('name', $data['service']);
+        })->first();
+        $fees = [
+            [
+                'type' => 'Admin',
+                'value' => $fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $kode_unik,
+            ],
+        ];
+
+        $saldoPointCustomer = 0;
+        // Jika user menggunakan point untuk transaksi
+        if ($request->point == 1) {
+            // history point masuk dan keluar customer
+            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
+            // point masuk - point keluar
+            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
+            $saldoPointCustomer = Auth::user()->point;
+            $fees = [
+                [
+                    'type' => 'Point',
+                    'value' => $saldoPointCustomer,
+                ],
+            ];
+        }
+
+        $model = $package['carModel']['name'] ?? 'Deleted model';
+        $brand = $package['brand']['name'] ?? 'Deleted brand';
+        $business = $package['carRental']['business_name'] ?? 'Deleted business';
+
+        // Create xendit
+        $payoutsXendit = $this->xendit->create([
+            'external_id' => $invoice,
+            'items' => [
+                [
+                    'product_id' => $data['package_id'],
+                    'name' => $model . ' - ' . $brand . ' - ' . $business,
+                    'price' => $amount, // tanpa pajak
+                    'quantity' => $data['duration'],
+                ],
+            ],
+            'amount' => $amount + $fees[0]['value'] + $kode_unik, // include pajak
+            'success_redirect_url' => route('user.orderHistory'),
+            'failure_redirect_url' => route('redirect.fail'),
+            'invoice_duration ' => 72000,
+            'should_send_email' => true,
+            'customer' => [
+                'given_names' => $customer['name'],
+                'email' => $customer['email'],
+                'mobile_number' => $customer['phone'],
+            ],
+            'fees' => $fees,
+        ]);
+
+        // true buat trans
+        DB::transaction(function () use ($data, $now, $over, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
+            $storeTransaction = Transaction::create([
+                'no_inv' => $invoice,
+                'req_id' => 'CR-' . time(),
+                'service' => $data['service'],
+                'service_id' => $service['id'],
+                'payment' => $data['payment'],
+                'user_id' => Auth::user()->id,
+                'status' => $payoutsXendit['status'],
+                'link' => $payoutsXendit['invoice_url'],
+                'total' => $amount + $fees[0]['value'] + $kode_unik,
+            ]);
+            // Pengurangan Point
+            if ($request->point == 1) {
+                $point = new Point();
+                $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
+            }
+
+            DetailTransactionCarRental::create([
+                "transaction_id" => $storeTransaction->id,
+                "car_rental_id" => $package['car_rental_id'],
+                "car_rental_has_car_id" => $package['id'],
+                "booking_id" => \Illuminate\Support\Str::random(6),
+                "start" => $now,
+                "end" => $over,
+                "location" => strToUpper($package['carRental']['kota']['city_name'] ?? $data['location']),
+                "rent_price" => $package['rental_price_per_day'],
+                "fee_admin" => $fees[0]['value'],
+                "duration" => $data['duration'],
+                "kode_unik" => $kode_unik,
+                "customer_name" => $customer['name'] ?? '-',
+                "customer_phone" => $customer['phone'] ?? '-',
+                "customer_email" => $customer['email'] ?? '-',
+            ]);
+        });
+
+        // return ResponseFormatter::success($hotel, 'Payment successfully created');
+        // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+
+        // return ResponseFormatter::success($hotel, 'Payment successfully created');
+        return redirect()->away($payoutsXendit['invoice_url']);
+    }
+
     public function show(Request $request)
     {
-        // $providers = [
-        //     [
-        //         'img' => '',
-        //         'name' => 'Honda Mobilio',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'Toyota New Avanza',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'All New Avanza 2022',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'Toyota Innova Reborn',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'Honda Mobilio',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'Toyota New Avanza',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'All New Avanza 2022',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],[
-        //         'img' => '',
-        //         'name' => 'Toyota Innova Reborn',
-        //         'lugage' => '2',
-        //         'passage' => '6'
-        //     ],
-        // ];
-        // $providers = json_decode(json_encode($providers));
+
         $category = $request->category;
         $location = $request->location;
-        $date = $request->date;
-        $time = $request->time;
+        $date = $request->date ?? Carbon::now()->format('Y-m-d');
+        $time = $request->time ?? '08:00';
         $duration = $request->duration;
         $model = $request->model_id;
         $car_model = $request->car_model_id;
 
-        // if ($request->location) {
-        //     $city = City::with(['has_cars' => function ($query) {
-        //             $query->with(['brand', 'carRental', 'carRentalRate']);
-        //         }])
-        //         ->where('city_name', 'like', '%' . $request->location . '%')
-        //         ->first();
-        // } else {
-        //     $city = json_decode(json_encode($city = [
-        //         'city_id' => '',
-        //     ]));
-        // }
-
-        // $cars = CarRentalHasCars::filter(request(['model_id'], $city->city_id))->with(['brand', 'carRental'])
-        // ->when($car_model, function($q, $m){
-        //     $q->where('car_model_id', $m);
-        // })
-        // ->get();
-
         $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental')
-            ->when($location, function($q, $l){
-                $q->whereHas('carRental', function($r)use($l){
-                    $r->whereHas('kota', function($k)use($l){
-                        $k->where('city_name', 'like', '%'.$l.'%');
+            ->where(function($k) use($location, $category, $model, $car_model){
+                $k->when($location, function($q, $l){
+                    $q->whereHas('carRental', function($r)use($l){
+                        $r->whereHas('kota', function($k)use($l){
+                            $k->where('city_name', 'like', '%'.$l.'%');
+                        });
                     });
+                })
+                ->when($category, function($q, $c){
+                    $q->where('category_rent', $c);
+                })
+                ->when($model, function($q, $m){
+                    $q->where('car_model_id', $m);
+                })
+                ->when($car_model, function($q, $m){
+                    $q->where('car_model_id', $m);
                 });
             })
-            ->when($category, function($q, $c){
-                $q->where('category', 'like', '%'.$c.'%');
-            })
-            ->when($model, function($q, $m){
-                $q->where('car_model_id', $m);
-            })
-            ->when($car_model, function($q, $m){
-                $q->where('car_model_id', $m);
-            })
             ->get();
+
+
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
             $ven = [];
-
             foreach ($vendor as $key => $v) {
                 $item = [
                     'car_id' => $v['id'],
                     'vendor_id' => $v['car_rental_id'],
                     'business_name' => $v['carRental']['business_name'],
                     'brand_id' => $v['brand_id'],
-                    'location' => $v['carRental']['kota']['city_name'],
+                    'location' => $v['carRental']['kota']['city_name'] ?? '',
+                    'reviews' => $v['carRental']->reviews()->count(),
+                    'avgRating' => $v['carRental']->avgRating(),
                     'price' => $v['rental_price_per_day'],
                 ];
 
@@ -178,6 +273,7 @@ class NewCarRentController extends Controller
         $data['model'] = $model;
         $data['provider'] = $provider;
         $data['duration'] = $duration;
+
         return view('pagesv2.car_rent.detail', $data);
     }
 
@@ -187,10 +283,11 @@ class NewCarRentController extends Controller
         if ($user) {
             $data['car'] = CarRentalHasCars::with(['brand', 'carRental', 'carModel'])->where('id', $request->car_id)->first();
             $data['duration'] = $request->duration;
-            $data['date'] = $request->date;
+            $data['date'] = Carbon::parse($request->date)->format('Y-m-d H:i');
             $data['category'] = $request->category;
             $data['user'] = $user;
             $data['provider'] = $request->provider;
+            $data['service_id'] = Service::where('name', 'car-rent')->first()['id'];
 
             return view('pagesv2.car_rent.order', $data);
         } else {

@@ -1,175 +1,334 @@
-@extends('layouts.web')
+@extends('layouts.web-remake')
 
 @section('content-web')
-    <!--begin::Container-->
-    <div id="kt_content_container" class="d-flex flex-column-fluid align-items-start container-xxl">
-        <!--begin::Post-->
-        <div class="content flex-row-fluid mb-10" id="kt_content">
-            <form action="" class="d-flex flex-column" method="post">
-                @csrf
-                <div class="row w-75 me-auto ms-auto mt-10">
-                    <div class="col-7">
-                        <div class="card">
+<!-- Import Google Fonts: Roboto -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-                            <div class="card-header">
-                                <h2 class="card-title fw-bold">Detail Pesanan</h2>
-                            </div>
-                            <div class="card-body">
-                             
-                                
-                                    <div class="">
-                                        <label class="form-label fw-bold fs-6">Nama Lengkap</label>
-                                        <input type="name" class="form-control" value="Jihan Apriliani"
-                                            name="nama_lengkap">
-                                    </div>
-                                    <div class="mt-10">
-                                        <label class="form-label fw-bold fs-6">Email Address</label>
-                                        <input type="email" class="form-control" value="jihan@gmail.com"
-                                            name="email">
-                                    </div>
-                                    <div class="mt-10">
-                                        <label class="form-label fw-bold fs-6">Nomor Telepon</label>
-                                        <input type="phone" class="form-control" value="089876543456"
-                                            name="no_telfon">
-                                    </div>
-                               
-                              
-                            </div>
+<div class="container py-6">
+    <!-- Detail Pemesanan -->
+    <div class="row">
+        <div class="col-md-8">
+            <p class="fs-3 fw-bold mb-0">Detail Pemesanan</p>
+            <p class="text-muted">Isi formulir ini dengan benar karena e-tiket akan dikirim ke alamat email sesuai data pemesan.</p>
+            <div class="card p-4 mb-4 mt-4 shadow card-border-0 rounded-4">
+                <div class="card-title">
+                    <div class="radio-group mb-3 d-flex">
+                        <input type="radio" id="tuan" name="title" checked>
+                        <label class="radio-label fw-medium" for="tuan">Tuan</label>
 
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <h3 class="fw-bold card-title">Calm Spa & Leisure Place</h3>
-                                    </div>
-                                    <div class="col-12">
-                                        <span class="">Jl. Komplek Balikpapan Super Blok, Ruko Blok C No. 19-25, Jl. Jendral Sudirman, Damai, Kec. Balikpapan Kota, Kota Balikpapan, Kalimantan Timur 76114</span>
-                                        @for ($j = 0; $j < 5; $j++)
-                                            <span class="card-text fa fa-star mt-3" style="color: orange;">
-                                            </span>
-                                        @endfor
-                                    </div>
-                                   
-                                    
-                                    <div class="col-12">
-                                        <span>Paket : </span>
-                                        <span class="fw-bold mt-2">Paket Spa 1</span>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="badge badge-success rounded-2 mt-3 p-4">
-                                            Anda Memesan Paket Spa 1
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="row gy-3">
-                                    <div class="col-12 d-flex justify-content-between">
-                                        <p>Biaya </p>
-                                        <h5>
-                                          Rp 140.000
-                                        </h5>
-                                       
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-between">
-                                        <p>Fee Admin</p>
-                                        <h5>
-                                            Rp 14.000
-                                        </h5>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-between">
-                                        <p>Kode Unik</p>
-                                        <h5>
-                                             TRX017987654567
-                                        </h5>
-                                    </div>
-                                   
-                                  
-                                    <div class="col-12 d-flex justify-content-between grand-total-2">
-                                        <p>Grand Total</p>
-                                        <h4>
-                                            Rp 154.000
-                                        </h4>
-                                    </div>
-                                  
-                                    <div class="col-12">
+                        <input type="radio" id="nyonya" name="title">
+                        <label class="radio-label fw-medium ms-3" for="nyonya">Nyonya</label>
 
-                                        {{-- <input type="hidden" name="service" value="hotel">
-                                        <input type="hidden" name="payment_method" value="xendit">
-                                        <input type="hidden" name="hotel_id" value="{{ $hotelRoom->hotel->id }}">
-                                        <input type="hidden" name="hostel_room_id" value="{{ $hotelRoom->id }}">
-                                        <input type="hidden" name="point" value="{{ auth()->user()->point }}"
-                                            id="pointInput" disabled>
-                                      
-
-                                        <input type="hidden" name="start" value="{{ $params['start'] }}">
-                                        <input type="hidden" name="end" value="{{ $checkout->format('d-m-Y') }}">
-                                        <input type="hidden" name="name" value="{{ Auth()->user()->name }}">
-                                        <input type="hidden" name="pointFee" value="{{ $point }}">
-                                        <input type="hidden" name="room" value="{{ $params['room'] }}">
-                                        <input type="hidden" name="total_guest" value="{{ $params['guest'] }}">
-                                        <input type="hidden" name="uniqueCode" value="{{ $uniqueCode }}"> --}}
-                                        <button class="btn btn-lg w-100 text-white" style="background-color: #c02425">
-                                            Lanjut Pembayaran
-                                        </button>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <input type="radio" id="nona" name="title">
+                        <label class="radio-label fw-medium ms-3" for="nona">Nona</label>
                     </div>
                 </div>
-            </form>
+                <form>
+                    <div class="mb-4">
+                        <label for="name" class="form-label">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="name" placeholder="Nama">
+                    </div>
+                    <div class="mb-4">
+                        <label for="phone" class="form-label">Nomor Ponsel</label>
+                        <input type="text" class="form-control" id="phone" placeholder="08xxxxxxxx">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="form-label">Alamat Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="nationality" class="form-label">Kewarganegaraan</label>
+                        <select class="form-select" id="nationality">
+                            <option selected>Indonesia</option>
+                            <option>Malaysia</option>
+                            <option>Singapura</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Tambah Perlindungan Extra -->
+            <p class="mt-5 fs-3 fw-bold mb-0">Tambah Perlindungan Extra</p>
+            <p class="text-muted mb-4">Pilih satu opsi untuk melanjutkan pesanan.</p>
+            <div class="card-group">
+                <div class="card p-4 shadow card-border-0 rounded-4">
+                    <div class="alert alert-primary" role="alert">
+                        Lindungi liburanmu dari yang gak pasti.
+                    </div>
+                    <form id="refund-form">
+                        <div class="custom-radio-card" onclick="selectCard(this)">
+                            <input type="radio" name="refund-option" id="100-refund" value="100-refund">
+                            <label for="100-refund">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-cash fs-3" style="color: #52d641"></i>
+                                    <strong class="ms-2">100% Refund</strong>
+                                    <i class="bi bi-exclamation-circle-fill ms-2 text-primary fs-5"></i>
+                                </div>
+                                <p>Berubah pikiran di H-1 sebelum kunjungan? Dapatkan uangmu kembali 100%!</p>
+                            </label>
+                            <span class="radio-indicator"></span>
+                        </div>
+
+                        <div class="custom-radio-card" onclick="selectCard(this)">
+                            <input type="radio" name="refund-option" id="85-refund" value="85-refund">
+                            <label for="85-refund">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-cash fs-3" style="color: #52d641; opacity: 0.5"></i>
+                                    <strong class="ms-2">85% Refund</strong>
+                                    <i class="bi bi-exclamation-circle-fill ms-2 text-primary fs-5"></i>
+                                </div>
+                                <p>Menjamin refund hingga 85% harga tiket untuk pembatalan dengan alasan apa pun.</p>
+                            </label>
+                            <span class="radio-indicator"></span>
+                        </div>
+
+                        <div class="custom-radio-card selected-card" onclick="selectCard(this)">
+                            <input type="radio" name="refund-option" id="no-refund" value="no-refund" checked>
+                            <label for="no-refund">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-shield-x fs-3 text-dark"></i>
+                                    <strong class="ms-2">Lanjutkan tanpa perlindungan</strong>
+                                </div>
+                            </label>
+                            <span class="radio-indicator"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <p class="mt-4 text-muted">Dengan memilih asuransi, kamu telah menyetujui <strong style="color: #C02425">Syarat dan Ketentuan</strong> yang berlaku. Biaya tambahan terkait asuransi tertera di detail harga.</p>
         </div>
-        <!--end::Post-->
+
+        <!-- Detail Pembayaran -->
+        <div class="col-md-4">
+            <div class="card rounded-4 shadow card-border-0 p-4 mb-4" style="width: 100%; max-width: 400px">
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ asset('storage/images/transstudio.png') }}" class="img-fluid rounded" alt="" style="width: 60px; height: auto; object-fit: contain;">
+                    <h6 class="ms-3 mb-0 fw-medium">Jakarta Aquarium Safari</h6>
+                    <h6 style="margin-left: auto;" class="mb-0 fw-medium">
+                        <a href="#" style="color: #C02425; text-decoration: none;">Detail Paket</a>
+                    </h6>
+                </div>
+                <hr>
+                <p class="mb-1">Tiket Regular Weekday</p>
+                <p class="mb-0">2 tiket • 1 Adult, 1 Child</p>
+                <hr>
+                <p class="mb-1">Masa Berlaku:</p>
+                <p class="mb-0">Sen, 22 November 2024 - Sel, 30 November 2024</p>
+                <hr>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-cash fs-3" style="color: #52d641"></i>
+                    <p class="fs-5 fw-medium ms-2 mb-0" style="color: #52d641">Bisa 100% Refund dengan asuransi</p>
+                </div>
+                <p style="margin-left: 30px" class="mt-1">Asuransi tersedia dengan biaya tambahan</p>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-clock-fill fs-3"></i>
+                    <p class="fs-6 ms-2 mb-0">Berlaku <strong>7 hari</strong> sejak tanggal terpilih</p>
+                </div>
+
+                <hr style="border: none; border-top: 2px dashed #414141;" class="mt-4">
+
+                <div class="d-flex justify-content-between align-items-center fs-5 mt-3">
+                    <span>Total Pembayaran</span>
+                    <span class="fs-5 fw-semibold ms-auto">IDR 230.000
+                        <i class="bi bi-chevron-down ms-2 text-dark" style="font-size: 1em; font-weight: 600;"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8 mb-5">
+            <div class="card card-border-0 rounded-4 shadow">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <p class="fs-5 fw-bold">Total Pembayaran</p>
+                        <p class="fs-5 fw-bold ms-auto">IDR 230.000
+                            <i class="bi bi-chevron-down ms-2 text-dark" style="font-size: 1em; font-weight: 600;"></i>
+                        </p>
+                    </div>
+                    <hr style="border: none; border-top: 2px dashed #414141;" class="mt-4">
+
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-gem fs-5" style="color: #C02425"></i>
+                        <p class="ms-2 mb-0 text-muted">Bisa 100% Refund dengan asuransi</p>
+                        <a href="#" class="btn ms-auto text-white" style="background-color: #C02425; border-color: #C02425;">Lanjutkan Pembayaran</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <!--end::Container-->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
 
 @push('add-style')
-    <style>
-        body {
-            background-size: 100% 80px !important;
-        }
+<style>
+    body {
+        background-size: 100% 80px !important;
+        background-color: #ffffff;
+        font-family: 'Roboto', sans-serif;
+    }
 
-        .card-hostel:hover {
-            border: 1px solid #D9214E;
-            cursor: pointer;
-        }
-    </style>
+    .card-hostel:hover {
+        border: 1px solid #D9214E;
+        cursor: pointer;
+    }
+
+    .header-logo {
+        font-weight: bold;
+        color: #d9534f;
+    }
+
+    .radio-group input {
+        margin-right: 10px;
+    }
+
+    .highlight-box {
+        background-color: #f1f9ff;
+        border: 1px solid #00bfff;
+        border-radius: 10px;
+        padding: 15px;
+    }
+
+    .total-box {
+        font-size: 1.2rem;
+        color: #d9534f;
+        font-weight: bold;
+    }
+
+    .btn-primary {
+        background-color: #d9534f;
+        border-color: #d9534f;
+    }
+
+    .btn-primary:hover {
+        background-color: #c9302c;
+    }
+
+    .points-info {
+        font-size: 0.9rem;
+        color: #6c757d;
+        display: flex;
+        align-items: center;
+    }
+
+    .points-info img {
+        width: 16px;
+        margin-right: 5px;
+    }
+
+    .custom-radio-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .custom-radio-card input[type="radio"] {
+        display: none;
+    }
+
+    .custom-radio-card.selected-card {
+        background-color: #f0f8ff;
+        border-color: #007bff;
+    }
+
+    .radio-indicator {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        background-color: transparent;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    .custom-radio-card.selected-card .radio-indicator {
+        border-color: #007bff;
+        background-color: #007bff;
+    }
+
+    .radio-indicator::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background-color: white;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .custom-radio-card.selected-card .radio-indicator::after {
+        opacity: 1;
+    }
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    .radio-label {
+        position: relative;
+        padding-left: 25px;
+        cursor: pointer;
+    }
+
+    .radio-label::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 15px;
+        height: 15px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        background-color: white;
+    }
+
+    input[type="radio"]:checked+.radio-label::before {
+        border-color: #C02425;
+        background-color: white;
+    }
+
+    .radio-label::after {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: transparent;
+        transition: background-color 0.2s;
+    }
+
+    input[type="radio"]:checked+.radio-label::after {
+        background-color: #C02425;
+    }
+
+</style>
 @endpush
-
 @push('add-script')
-    <script>
-        $(document).ready(function() {
-            $(".grand-total-1").addClass("d-none");
-            $(".grand-total-2").removeClass("d-none");
-            $("#grand-total-1").prop("disabled", false);
-            $("#grand-total-2").prop("disabled", true);
-
-            // Handle the change event of the checkbox
-            $("#flexSwitchChecked").change(function() {
-                // Check if the checkbox is checked
-                if ($(this).is(":checked")) {
-                    // If checked, remove d-none from Grand Total 1 and add d-none to Grand Total 2
-                    $(".grand-total-1").removeClass("d-none");
-                    $(".grand-total-2").addClass("d-none");
-                    $("#grand-total-1").prop("disabled", false);
-                    $("#grand-total-2").prop("disabled", true);
-                    $("#pointInput").prop("disabled", false);
-                } else {
-                    // If not checked, remove d-none from Grand Total 2 and add d-none to Grand Total 1
-                    $(".grand-total-1").addClass("d-none");
-                    $(".grand-total-2").removeClass("d-none");
-                    $("#grand-total-1").prop("disabled", true);
-                    $("#grand-total-2").prop("disabled", false);
-                    $("#pointInput").prop("disabled", true);
-                    $("#pointInput").remove();
-                }
-            });
+<script>
+    function selectCard(card) {
+        const cards = document.querySelectorAll('.custom-radio-card');
+        cards.forEach(item => {
+            item.classList.remove('selected-card');
         });
-    </script>
+        card.classList.add('selected-card');
+    }
+
+</script>
 @endpush

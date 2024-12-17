@@ -101,10 +101,15 @@ class Recreation extends Model
     {
         $rating = RecreationRatings::where('recreation_id', $this->id)->get()->pluck('rate')->toArray();
 
-        $data = count($rating);
+        $data = count(value: $rating);
 
-        $avg = array_sum($rating) / $data;
+        if($data > 0){
+            $avg = array_sum($rating) / $data;
 
-        return round($avg, 1);
+            return round($avg, 1);
+        }else{
+            return 0;
+        }
+
     }
 }

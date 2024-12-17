@@ -34,4 +34,22 @@ class CarRental extends Model
     {
         return $this->hasMany(CarRentalHasCars::class, 'car_rental_id', 'id');
     }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(CarRentalRating::class, 'car_rental_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    public function avgRating()
+    {
+        $rating = CarRentalRating::where('car_rental_id', $this->id)->get()->pluck('rate')->toArray();
+
+        $data = count($rating);
+        if($data > 0){
+            $avg = array_sum($rating) / $data;
+            return round($avg, 1);
+        }else{
+            return 0;
+        }
+    }
 }

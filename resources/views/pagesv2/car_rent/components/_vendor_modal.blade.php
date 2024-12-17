@@ -14,9 +14,9 @@
                         <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
                         <div class="d-flex flex-row align-items-center">
                             <span class="fa-solid fa-suitcase opacity-25"></span>
-                            <span class="ms-2 opacity-25" id="luggage_number"></span>
+                            <span class="ms-2 opacity-25" id="luggage_number">{{ $car->koper }} Koper</span>
                             <span class="fa-solid fa-user ms-5 opacity-25"></span>
-                            <span class="ms-2 opacity-25" id="passage_number"></span>
+                            <span class="ms-2 opacity-25" id="passage_number">{{ $car->number_seats }} Penumpang</span>
                         </div>
                     </div>
                     <img src="https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -35,10 +35,10 @@
                                 <span class="rating-number fw-bold">{{
                                     \App\Helpers\General::getCarRentalRate($v['car_id']) }}
                                     / <small>5</small> <a href="#"
-                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat xxx
+                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{ number_format($v['reviews']) }}
                                         Ulasan)</a>
                                 </span>
-                                <span class="rating-number custom-dot-before">2500 order</span>
+                                <span class="rating-number custom-dot-before">{{ number_format($car->booked()->count()) }} order</span>
                             </div>
                             <div class="rating d-flex align-items-center mb-1">
                                 <span class="bintang fa-solid fa-suitcase checked me-2"></span>
@@ -55,11 +55,11 @@
                                 hari</span>
 
                             <a href="{{ route('car_rent.detail', [
-                                'category' => $category ?? 'dengan driver', 
-                                'lokasi' => $v['location'], 
-                                'model' => $model ?? $car->car_model_id, 
-                                'provider' => $v['car_id'], 
-                                'date' => ($date && $time) ? strtotime($date.' '.$time) : now()->timestamp, 
+                                'category' => $category ?? 'dengan driver',
+                                'lokasi' => $v['location'],
+                                'model' => $model ?? $car->car_model_id,
+                                'provider' => $v['car_id'],
+                                'date' => $date . ' ' . $time,
                                 'duration'=> $duration ?? 1
                                 ]) }}">
                                 {{-- <input type="hidden" name="category" id="order_{{ $v['car_id'] }}_category"
