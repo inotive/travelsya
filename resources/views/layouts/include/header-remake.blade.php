@@ -1,5 +1,6 @@
 <!--begin::Container-->
-<div class="container-xl d-flex align-items-center">
+
+<div class="container-xl d-flex align-items-center" style="border-bottom: 1px solid #ccc; width: 50000px;">
     <!--begin::Heaeder menu toggle-->
     <div class="d-flex topbar align-items-center d-lg-none ms-n2 me-3" title="Show aside menu">
         <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px" id="kt_header_menu_mobile_toggle">
@@ -42,18 +43,22 @@
 
 
         <!--begin::Toolbar wrapper-->
-        <div class="topbar d-flex align-items-stretch flex-shrink-0">
+        <div class="d-flex" style="">
 
 
             <!--begin::Theme mode-->
             <div class="d-flex align-items-center ms-1 ms-lg-3">
+
+                <a href="" style="margin-right: 40px; color: inherit; text-decoration: none;">Cek Pesanan</a>
+
+                <a href="" style="margin-right: 20px; color: inherit; text-decoration: none;">Support</a>
 
                 <!--begin::Menu toggle-->
                 <a href="#" class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                     <i class="ki-duotone ki-night-day theme-light-show fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span><span class="path7"></span><span class="path8"></span><span class="path9"></span><span class="path10"></span></i> <i class="ki-duotone ki-moon theme-dark-show fs-1"><span class="path1"></span><span class="path2"></span></i></a>
                 <!--begin::Menu toggle-->
 
-                <!--begin::Menu-->  
+                <!--begin::Menu-->
                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-gray-500 menu-active-bg menu-state-color fw-semibold py-4 fs-base w-150px" data-kt-menu="true" data-kt-element="theme-mode-menu">
                     <!--begin::Menu item-->
                     <div class="menu-item px-3 my-0">
@@ -189,11 +194,21 @@
                 <!--end::User account menu-->
                 <!--end::Menu wrapper-->
             </div>
+
+            
             @else
-            <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
-                <a class="text-white" href="{{route('login')}}">Login</a>
-            </div>
+                <div class="d-flex align-items-center ms-1 ms-lg-3" id="kt_header_user_menu_toggle" style="background-color: white; border: 1px solid #ccc ;border-radius: 5px; min-width: 80px; height: 40px; padding: 20px; margin-right: 10px">
+                    <a class="text-dark" href="{{route('login')}}">Masuk</a>
+                </div>
+                
+                <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle" style="background-color: #c41e3a; border: 1px solid #c41e3a ;border-radius: 5px; min-width: 80px; height: 40px; padding: 20px; margin-right: 20px">
+                    <a class="text-white" href="{{route('login')}}">Daftar</a>
+                </div>
             @endif
+
+            
+            
+            
             <!--end::User -->
 
             <!--begin::Aside mobile toggle-->

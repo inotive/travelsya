@@ -7,7 +7,7 @@
             <h1 class="banner-text-title mt-3 text-white fw-bold">Transportasi darat nyaman, aman, dan terjangkau</h1>
         </div>
         <div class="col-12 col-md-6 banner-search">
-            <div class="search-banner-wrapper">
+            <div class="search-banner-wrapper w-500px">
                 <div class="card card-body p-3">
                     <form action="{{ route('bus_travel.search') }}" method="post">
                         @csrf
