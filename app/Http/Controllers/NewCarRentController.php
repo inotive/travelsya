@@ -235,14 +235,13 @@ class NewCarRentController extends Controller
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
             $ven = [];
-
             foreach ($vendor as $key => $v) {
                 $item = [
                     'car_id' => $v['id'],
                     'vendor_id' => $v['car_rental_id'],
                     'business_name' => $v['carRental']['business_name'],
                     'brand_id' => $v['brand_id'],
-                    'location' => $v['carRental']['kota']['city_name'],
+                    'location' => $v['carRental']['kota']['city_name'] ?? '',
                     'reviews' => $v['carRental']->reviews()->count(),
                     'avgRating' => $v['carRental']->avgRating(),
                     'price' => $v['rental_price_per_day'],

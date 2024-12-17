@@ -47,7 +47,6 @@ class RecreationController extends Controller
     {
         $filter = $request->filter;
         $keyword = $request->keyword;
-
         $filtered = Recreation::when($filter, function ($q) use ($filter) {
             $q->whereHas('category', function ($cat) use ($filter) {
                 $cat->where('name', 'like', '%' . $filter . '%');

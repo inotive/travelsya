@@ -10,7 +10,7 @@
                             data-bs-toggle="collapse" data-bs-target="#paket-collapse-1" aria-expanded="true"
                             aria-controls="paket-collapse-1">
                             <div class="d-flex flex-column">
-                                <h2 class="mb-25px">{{ $package->description }} ({{ $weektype }})</h2>
+                                <h2 class="mb-25px">{{ $package->description }}</h2>
                                 <div class="d-flex flex-column mb-25px">
                                     @if ($package->is_refundable == 1)
                                     <div class="d-flex flex-row align-items-center mb-2 fs-3">
@@ -57,33 +57,38 @@
             </div>
             <div class="card-body accordion-collapse collapse show" id="paket-collapse-1" aria-labelledby="paket-1">
                 <div class="d-flex flex-row p-1 rounded-1 align-items-center mb-3 justify-content-between gap-1">
-                    @foreach ($days as $key => $day)
-                    <card class="border rounded-2 d-flex flex-column align-items-center p-3">
-                        <span class="fs-3 mb-3 d-flex flex-column align-items-center">{{ $key == 0 &&
-                            \App\Helpers\General::isTomorow($date) ?
-                            'Besok' : date('D', strtotime($day)) }}</span>
-                        <span class="fs-3 d-flex flex-column align-items-center">{{ date('d M',
-                            strtotime($day)) }}</span>
-                    </card>
-                    @endforeach
+{{--                    @foreach ($days as $key => $day)--}}
+{{--                    <card class="border rounded-2 d-flex flex-column align-items-center p-3">--}}
+{{--                        <span class="fs-3 mb-3 d-flex flex-column align-items-center">{{ $key == 0 &&--}}
+{{--                            \App\Helpers\General::isTomorow($date) ?--}}
+{{--                            'Besok' : date('D', strtotime($day)) }}</span>--}}
+{{--                        <span class="fs-3 d-flex flex-column align-items-center">{{ date('d M',--}}
+{{--                            strtotime($day)) }}</span>--}}
+{{--                    </card>--}}
+{{--                    @endforeach--}}
+                </div>
+                <div class="mb-35px">
+                    Durasi : {{$package->duration .' ' . $package->unit_price}}
                 </div>
                 <div class="mb-35px">
                     Masa Berlaku: <span class="fs-3 fw-bold">{{ \App\Helpers\General::getDateShortMonth($date)
                         }} -
                         {{ \App\Helpers\General::getDateShortMonth(\App\Helpers\General::addingDays($date, 30))
                         }}</span>
+
                 </div>
                 <div class="mb-2 fw-bold">
-                    Jumlah tiket
+                    Harga tiket
                 </div>
                 <div class="mb-25px card border p-0">
                     <div class="card-body d-flex flex-row align-items-center">
                         <div class="d-flex flex-column">
                             <span class="fs-1 fw-bold"></span>
                         </div>
-                        <div class="d-flex flex-row align-items-center ms-sm-auto">
-                            <span class="text-danger fw-bold">IDR
-                                {{ number_format($package->price, 0, ',', '.') }}</span> / Pax
+                        <div class="d-flex justify-content-between w-100">
+                            <div class="text-danger fw-bold">IDR
+                                {{ number_format($package->price, 0, ',', '.') }} / Orang </div>
+
                             <div class="ms-3 input-group w-auto">
                                 <button type="button" class="btn btn-light border-0 text-danger rounded-circle p-1"
                                     onclick="decreaseTicket({{ $package->id }})">

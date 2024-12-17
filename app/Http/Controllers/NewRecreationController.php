@@ -95,7 +95,6 @@ class NewRecreationController extends Controller
         $data['date'] = $request->date;
         $data['section_title'] = $request->lokasi;
         $loc = '%'.$request->lokasi.'%';
-
         $data['packages'] = RecreationPackages::where(function($q) use($loc){
             $q->whereHas('recreation', function($r)use($loc){
                 $r->whereHas('kota', function($k)use($loc){
