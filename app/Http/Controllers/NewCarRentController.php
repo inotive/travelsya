@@ -215,7 +215,7 @@ class NewCarRentController extends Controller
                 $k->when($location, function($q, $l){
                     $q->whereHas('carRental', function($r)use($l){
                         $r->whereHas('kota', function($k)use($l){
-                            $k->where('city_name', 'like', '%'.$l.'%');
+                            $k->where('city_name', 'like', '%'.$l.'%')->orWhere('city_id', $l);
                         });
                     });
                 })
