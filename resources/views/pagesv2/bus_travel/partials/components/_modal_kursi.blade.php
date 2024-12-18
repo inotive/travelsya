@@ -21,14 +21,41 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col p-3">
+                        <div class="card bg-snow-pink" style="border:1px solid var(--bs-danger);">
+                            <div class="card-body d-flex flex-column">
+                                <span class="fw-bold text-danger">Penumpang 1</span>
+                                <span class="text-danger">Kursi 6</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="modal-body bg-snow-pink min-h-350">
+                <div class="row border-bottom border-secondary pb-5">
+                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <div style="width: 25px; height: 25px; border: 2px solid var(--bs-dark); border-radius: 3px;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Tersedia</span>
+                        <div class="ms-5"
+                            style="width: 25px; height: 25px; border: 2px solid var(--bs-danger); border-radius: 3px;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Dipilih</span>
+                        <div class="ms-5"
+                            style="width: 25px; height: 25px; border-radius: 3px; background-color: #D3D4D4;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Tidak Tersedia</span>
+                    </div>
+                </div>
+                <div class="row">
+
+                </div>
+            </div>
+            <div class="modal-footer"></div>
         </div>
     </div>
 </div>
 
 @push('js')
-<script>
-
-</script>
+    <script></script>
 @endpush

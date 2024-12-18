@@ -632,6 +632,10 @@
         background-color: #FFF4F4;
     }
 
+    .accent-danger {
+        accent-color: var(--bs-danger);
+    }
+
     #map {
         height: 500px;
         width: 100%;

@@ -2,10 +2,6 @@
 
 @push('add-style')
     <style>
-        .accent-danger {
-            accent-color: var(--bs-danger);
-        }
-
         select#pilih_jemput,
         select#pilih_drop {
             color: var(--bs-danger);
@@ -37,21 +33,21 @@
                     </div>
                     <!-- jika menggunakan map -->
                     <!-- <div class="accordion" id="accord_jemput">
-                                                                                                                                                                        <div class="card shadow mb-35px">
-                                                                                                                                                                            <div class="card-header d-flex flex-row align-items-center" id="header_jemput">
-                                                                                                                                                                                <button class="btn btn-link btn-block text-danger fw-bold" type="button"
-                                                                                                                                                                                    data-toggle="collapse" data-target="#collapse_jemput" aria-expanded="true"
-                                                                                                                                                                                    aria-controls="collapse_jemput">Pilih Lokasi</button>
-                                                                                                                                                                                <span class="fa-solid fa-chevron-right ms-sm-auto"></span>
-                                                                                                                                                                            </div>
-                                                                                                                                                                            <div class="collapse" id="collapse_jemput" aria-labelledby="header_jemput"
-                                                                                                                                                                                data-parent="#accord_jemput">
-                                                                                                                                                                                <div class="card-body">
-                                                                                                                                                                                    <div id="map"></div>
+                                                                                                                                                                            <div class="card shadow mb-35px">
+                                                                                                                                                                                <div class="card-header d-flex flex-row align-items-center" id="header_jemput">
+                                                                                                                                                                                    <button class="btn btn-link btn-block text-danger fw-bold" type="button"
+                                                                                                                                                                                        data-toggle="collapse" data-target="#collapse_jemput" aria-expanded="true"
+                                                                                                                                                                                        aria-controls="collapse_jemput">Pilih Lokasi</button>
+                                                                                                                                                                                    <span class="fa-solid fa-chevron-right ms-sm-auto"></span>
+                                                                                                                                                                                </div>
+                                                                                                                                                                                <div class="collapse" id="collapse_jemput" aria-labelledby="header_jemput"
+                                                                                                                                                                                    data-parent="#accord_jemput">
+                                                                                                                                                                                    <div class="card-body">
+                                                                                                                                                                                        <div id="map"></div>
+                                                                                                                                                                                    </div>
                                                                                                                                                                                 </div>
                                                                                                                                                                             </div>
-                                                                                                                                                                        </div>
-                                                                                                                                                                    </div> -->
+                                                                                                                                                                        </div> -->
                     <div class="card shadow mb-35px">
                         <div class="card-body d-flex flex-column p-2">
                             <div class="d-flex flex-row align-items-center">
