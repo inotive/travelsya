@@ -288,6 +288,7 @@ class NewCarRentController extends Controller
             $data['user'] = $user;
             $data['provider'] = $request->provider;
             $data['service_id'] = Service::where('name', 'car-rent')->first()['id'];
+            $data['cities'] = City::orderBy('city_name', 'DESC')->get();
 
             return view('pagesv2.car_rent.order', $data);
         } else {
