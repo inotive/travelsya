@@ -132,4 +132,8 @@ class BusTravelController extends Controller
     public function detail(Request $request){
         return view('pagesv2.bus_travel.detail');
     }
+
+    public function order(Request $request){
+        return view('pagesv2.bus_travel.order');
+    }
 }

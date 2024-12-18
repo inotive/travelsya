@@ -24,7 +24,7 @@
                     <div class="col p-3">
                         <div class="card bg-snow-pink" style="border:1px solid var(--bs-danger);">
                             <div class="card-body d-flex flex-column">
-                                <span class="fw-bold text-danger">Penumpang 1</span>
+                                <span class="fw-bold text-danger">Penumpang 2</span>
                                 <span class="text-danger">Kursi 6</span>
                             </div>
                         </div>
@@ -47,15 +47,66 @@
                         <span class="ms-3 fs-3 text-dark opacity-75">Tidak Tersedia</span>
                     </div>
                 </div>
-                <div class="row">
-
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-1">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-2">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-3">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-4">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
                 </div>
             </div>
-            <div class="modal-footer"></div>
+            <div class="modal-bpdy p-5">
+                <form action="{{ route('bus_travel.order') }}" method="post">
+                    @csrf
+                    <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 @push('js')
-    <script></script>
+<script></script>
 @endpush

@@ -636,6 +636,10 @@
         accent-color: var(--bs-danger);
     }
 
+    .border-dark-2 {
+        border: 2px solid var(--bs-dark);
+    }
+
     #map {
         height: 500px;
         width: 100%;
