@@ -308,6 +308,8 @@ class BusTravelController extends Controller
             $berangkatPulang =  Carbon::parse($dateTimePulang)->format('Y-m-d H:i');
 
             $total += $pulang['price'];
+        }else{
+            $berangkatPulang = null;
         }
 
         $data = $request->all();
