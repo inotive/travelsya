@@ -16,7 +16,7 @@
                         email
                         sesuai dengan pemesanan</div>
                 </div>
-                <form action="{{ route('health_beauty.request_transaction') }}" method="POST">
+                <form action="{{ /*route('health_beauty.request_transaction')*/ }}" method="POST">
                     @csrf
                     <div class="mb-35px">
                         <div class="card rounded-4 border-1 shadow">
@@ -33,22 +33,22 @@
                                 <div class="mb-3">
                                     <label for="nama_pemesan" class="form-label">Nama</label>
                                     <input type="text" name="nama_pemesan" id="nama_pemesan" class="form-control"
-                                        value="{{ $user->name }}" placeholder="Masukan nama">
+                                        value="{{ /*$user->name*/ }}" placeholder="Masukan nama">
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone_pemesan" class="form-label">Nomor Ponsel</label>
                                     <input type="text" name="phone_pemesan" id="phone_pemesan" class="form-control"
-                                        value="{{ $user->phone }}" placeholder="Masukan nomor Handphone" required>
+                                        value="{{ /*$user->phone*/ }}" placeholder="Masukan nomor Handphone" required>
                                 </div>
                                 <div class="mb-3">
                                     <label for="email_pemesan" class="form-label">Alamat Email</label>
                                     <input type="email" name="email_pemesan" id="email_pemesan" class="form-control"
-                                        value="{{ $user->email }}" placeholder="Masukan Email">
+                                        value="{{ /*$user->email*/ }}" placeholder="Masukan Email">
                                 </div>
-                                <input type="hidden" name="total_ticket" value="{{ $qty }}">
+                                <input type="hidden" name="total_ticket" value="{{ /*$qty*/ }}">
                                 <input type="hidden" name="service" value="health-beauty">
                                 <input type="hidden" name="payment" value="xendit">
-                                <input type="hidden" name="package_id" value="{{ $paket['id'] }}">
+                                <input type="hidden" name="package_id" value="{{ /*$paket['id']*/ }}">
                                 <input type="hidden" name="point" value="0">
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div>
-                                        <h2 class="text-dark">Tiket {{ number_format($qty) }} pax</h2>
+                                        <h2 class="text-dark">Tiket {{ /*number_format($qty)*/ }} pax</h2>
                                     </div>
                                     <div class="form-check form-switch form-check-custom form-check-solid">
                                         <input class="form-check-input h-20px w-30px" type="checkbox" value=""
@@ -226,12 +226,12 @@
                         <div class="card rounded-4 border-1 shadow">
                             <div class="card-header d-flex flex-row align-items-center">
                                 <h2 class="fw-bold">Total Pembayaran</h2>
-                                <h2 class="fw-bold">IDR {{ number_format($paket['price'] * $qty) }}</h2>
+                                <h2 class="fw-bold">IDR {{ /*number_format($paket['price'] * $qty)*/ }}</h2>
                             </div>
                             <div class="card-body d-flex flex-row align-items-center">
                                 <span class="fa-solid fa-gem fs-3 text-danger"></span>
-                                <span class="ms-3">Kamu akan mendapatkan {{
-                                    \App\Helpers\General::countPoint(($paket['price'] * $qty), $service_id) }}
+                                <span class="ms-3">Kamu akan mendapatkan {{ /*
+                                    \App\Helpers\General::countPoint(($paket['price'] * $qty), $service_id)*/ }}
                                     poin</span>
                                 <button class="text-light btn btn-danger ms-sm-auto">Lanjutkan Pemesanan</button>
                             </div>
@@ -243,24 +243,25 @@
                 <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
                     <div class="card-body p-5">
                         <div class="d-flex flex-row align-items-center">
-                            <img src="{{ asset('storage/'. $paket->image->image) }}"
-                                onerror="this.src=`{{ asset('images/not_found.jpg') }}`" alt="" width="50" height="50"
-                                class="rounded-1">
-                            <span class="fw-bold ms-3 text-wrap">{{ $paket['clinic']['clinic_name'] ?? 'Invalid clinic'
-                                }}</span>
+                            <img src="{{ /*asset('storage/'. $paket->image->image)*/ }}"
+                                onerror="this.src=`{{ /*asset('images/not_found.jpg')*/ }}`" alt="" width="50"
+                                height="50" class="rounded-1">
+                            <span class="fw-bold ms-3 text-wrap">{{ /*$paket['clinic']['clinic_name'] ?? 'Invalid
+                                clinic'
+                                */ }}</span>
                             <span class="text-danger ms-sm-auto">Detail Paket</span>
                         </div>
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-column">
-                            <span>{{ $paket['name'] }}</span>
-                            <span>{{ $qty }} tiket <span class="custom-dot-before">{{ $qty }} Pax</span></span>
+                            <span>{{ /*$paket['name']*/ }}</span>
+                            <span>{{ /*$qty*/ }} tiket <span class="custom-dot-before">{{ /*$qty*/ }} Pax</span></span>
                         </div>
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-column">
                             <span>Masa Berlaku</span>
-                            <span>{{ \App\Helpers\General::getDateShortMonth(now()) }} - {{
+                            <span>{{ /*\App\Helpers\General::getDateShortMonth(now())*/ }} - {{ /*
                                 \App\Helpers\General::getDateShortMonth(\Carbon\Carbon::now()->addDays($paket['expiry_date']))
-                                }}</span>
+                                */ }}</span>
                         </div>
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-column">
@@ -270,7 +271,8 @@
                             </div>
                             <div class="d-flex flex-row">
                                 <span class="fa-solid fs-3 mb-3 fa-clock"></span>
-                                <span class="ms-3">Berlaku hingga {{ $paket['expiry_date'] }} hari sejak dibeli</span>
+                                <span class="ms-3">Berlaku hingga {{ /*$paket['expiry_date']*/ }} hari sejak
+                                    dibeli</span>
                             </div>
                             <div class="d-flex flex-row">
                                 <span class="fa-solid fs-3 mb-3 fa-clock"></span>
@@ -280,7 +282,7 @@
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
                             <span>Total pembayaran</span>
-                            <span class="fs-3 ms-sm-auto">IDR {{ number_format($qty * $paket['price']) }}</span>
+                            <span class="fs-3 ms-sm-auto">IDR {{ /*number_format($qty * $paket['price'])*/ }}</span>
                         </div>
                     </div>
                 </div>
