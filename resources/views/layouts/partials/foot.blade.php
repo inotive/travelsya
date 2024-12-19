@@ -58,5 +58,10 @@
     integrity="sha512-Tn2m0TIpgVyTzzvmxLNuqbSJH3JP8jm+Cy3hvHrW7ndTDcJ1w5mBiksqDBb8GpE2ksktFvDB/ykZ0mDpsZj20w=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <!--end::Custom Javascript-->
+
+<!-- Begin:: Leaflet JavaScript -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<!-- End:: Leaflet JavaScript -->
+
 <!--end::Javascript-->
 @include('sweetalert::alert')

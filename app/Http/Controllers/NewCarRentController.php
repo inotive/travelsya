@@ -215,7 +215,7 @@ class NewCarRentController extends Controller
                 $k->when($location, function($q, $l){
                     $q->whereHas('carRental', function($r)use($l){
                         $r->whereHas('kota', function($k)use($l){
-                            $k->where('city_name', 'like', '%'.$l.'%');
+                            $k->where('city_name', 'like', '%'.$l.'%')->orWhere('city_id', $l);
                         });
                     });
                 })
@@ -288,6 +288,7 @@ class NewCarRentController extends Controller
             $data['user'] = $user;
             $data['provider'] = $request->provider;
             $data['service_id'] = Service::where('name', 'car-rent')->first()['id'];
+            $data['cities'] = City::orderBy('city_name', 'DESC')->get();
 
             return view('pagesv2.car_rent.order', $data);
         } else {

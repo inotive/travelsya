@@ -48,6 +48,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 <!-- end:: Style swiper -->
 
+<!-- Begin:: Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<!-- End:: Leaflet CSS-->
+
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
 <style>
     body#kt_body {
@@ -626,6 +630,19 @@
 
     .bg-snow-pink {
         background-color: #FFF4F4;
+    }
+
+    .accent-danger {
+        accent-color: var(--bs-danger);
+    }
+
+    .border-dark-2 {
+        border: 2px solid var(--bs-dark);
+    }
+
+    #map {
+        height: 500px;
+        width: 100%;
     }
 </style>
 @stack('add-style')
