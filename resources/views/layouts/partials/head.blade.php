@@ -632,6 +632,20 @@
         background-color: #FFF4F4;
     }
 
+    .bg-soft-coral {
+        background-color: #FFEEE0;
+    }
+
+    .alert-soft-coral {
+        color: #FFEEE0;
+        border-color: #FFEEE0;
+        background-color: var(--bs-warning-light)
+    }
+
+    .alert-soft-coral .alert-link {
+        color: #FFEEE0
+    }
+
     .accent-danger {
         accent-color: var(--bs-danger);
     }
