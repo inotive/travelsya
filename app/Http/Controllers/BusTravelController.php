@@ -167,7 +167,22 @@ class BusTravelController extends Controller
     }
 
     public function order(Request $request){
-        dd($request);
+        $user = auth()->user();
+
+        if(!$user){
+            return redirect()->route('login');
+        }
+        $param = $request;
+
+        $data['is_pulang_pergi'] = $param['is_pulang_pergi'];
+        $data['departure_id'] = $param['departure_id'];
+        $data['kota_awal'] = $param['kota_awal'];
+        $data['kota_tujuan'] = $param['kota_tujuan'];
+        $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
+        $data['date_pergi'] = $param['date_pergi'];
+        $data['date_pulang'] = $param['date_pulang'];
+
+        $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
 
         return view('pagesv2.bus_travel.order');
     }
