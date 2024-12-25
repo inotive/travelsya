@@ -43,6 +43,6 @@ class BusBooked extends Model
 
     public function departure(): BelongsTo
     {
-        return $this->belongsTo(BusTravelHasBus::class, 'bus_travel_has_bus_id', 'id');
+        return $this->belongsTo(BusDeparture::class, 'bus_departure_id', 'id');
     }
 }
