@@ -14,18 +14,18 @@
                 <span class="mb-20px">Rab, 16 okt - 08:00 - 11:05 - 2j</span>
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6" id="list_penumpang">
                     <div class="col p-3">
-                        <div class="card bg-snow-pink" style="border:1px solid var(--bs-danger);" data-penumpang="1">
+                        <div class="card border-dark-2" data-penumpang="1">
                             <div class="card-body d-flex flex-column">
-                                <span class="fw-bold text-danger">Penumpang 1</span>
-                                <span class="text-danger" id="kursi_penumpang_1"></span>
+                                <span class="fw-bold text-dark" id="nama_penumpang_1">Penumpang 1</span>
+                                <span class="text-dark" id="kursi_penumpang_1"></span>
                             </div>
                         </div>
                     </div>
                     <div class="col p-3">
-                        <div class="card bg-snow-pink" style="border:1px solid var(--bs-danger);" data-penumpang="2">
+                        <div class="card border-dark-2" data-penumpang="2">
                             <div class="card-body d-flex flex-column">
-                                <span class="fw-bold text-danger">Penumpang 2</span>
-                                <span class="text-danger" id="kursi_penumpang_2"></span>
+                                <span class="fw-bold text-dark" id="nama_penumpang_2">Penumpang 2</span>
+                                <span class="text-dark" id="kursi_penumpang_2"></span>
                             </div>
                         </div>
                     </div>
@@ -62,33 +62,33 @@
                 </div>
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
                     id="row-2">
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_21" nomor="21"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_21" nomor="21"></div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_22" nomor="22"></div>
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_23" nomor="23"></div>
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_24" nomor="24"></div>
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_25" nomor="25"></div>
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_22" nomor="22"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_23" nomor="23"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_24" nomor="24"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_25" nomor="25"></div>
                 </div>
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
                     id="row-3">
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_31" nomor="31">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_31" nomor="31">
                     </div>
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_32" nomor="32">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_32" nomor="32">
                     </div>
-                    <div type="button" class="col mx-5"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_33" nomor="33">
-                    </div>
-                    <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_34" nomor="34">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kuris_33" nomor="33">
                     </div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;"id="pilih_kuris_35" nomor="35">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_34" nomor="34">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_35" nomor="35">
                     </div>
                 </div>
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
@@ -139,12 +139,21 @@
 </div>
 
 @push('js')
-    <script>
-        $("#list_penumpang").on("click", ".card", function() {
-            let penumpang = $(this).data('penumpang');
-            $("#list_penumpang .card").removeClass('border-danger');
-            $(this).addClass('border-danger');
-            $("#modal_kursi").modal('show');
-        });
-    </script>
+<script>
+    $("#list_penumpang").on("click", ".card", function() {
+        let penumpang = $(this).data('penumpang');
+        $(this).removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
+        $("#nama_penumpang_"+penumpang).removeClass('text-dark').addClass('text-danger');
+        $("#kursi_penumpang_"+penumpang).removeClass('text-dark').addClass('text-danger');
+        $("#list_penumpang .card").removeClass('border-danger');
+        console.log(penumpang);
+        // $(this).addClass('border-danger');
+        // $("#modal_kursi").modal('show');
+        
+    });
+
+    function activedPenumpang(nomor){
+        //
+    }
+</script>
 @endpush

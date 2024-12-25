@@ -44,7 +44,7 @@ class BusTravelController extends Controller
         $to = '%' . $request->kota_tujuan . '%';
         $date = $request->date_pergi;
         $date_pulang = $request->date_pulang;
-        $qty = $request->jumlah_penumpang;
+        $qty = $request->jumlah_penumpang ? $request->jumlah_penumpang : 1;
         $pp = $request->is_pulang_pergi;
         $selected_agent = $request->agent ? '%'.$request->agent.'%' : null;
 

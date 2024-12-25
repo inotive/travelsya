@@ -79,33 +79,37 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-4">
-                    <img src="{{ asset('storage/' . $departure->busTravel->busTravel->image ) }}" class="object-fit-contain w-100" alt="{{ $departure->busTravel->name }}"
+                    <img src="{{ asset('storage/' . $departure->busTravel->busTravel->image ) }}"
+                        class="object-fit-contain w-100" alt="{{ $departure->busTravel->name }}"
                         onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                 </div>
                 <div class="col-8 d-flex flex-column">
                     <div class="d-flex flex-row align-items-center">
                         <div>
-                            <span class="fw-bold">{{ $departure->busTravel->busTravel->business_name ?? 'Invalid name' }}</span><br>
+                            <span class="fw-bold">{{ $departure->busTravel->busTravel->business_name ?? 'Invalid name'
+                                }}</span><br>
                             <small>{{ $departure->busTravel->name }}</small>
                         </div>
                         <div class="ms-2">
                             <span><i class="fa-solid fa-star text-warning"></i></span>
-                            <span class="ms-1"><span class="fw-bold">{{ number_format($departure->busTravel->avgRating()) }}</span>/5</span>
+                            <span class="ms-1"><span class="fw-bold">{{
+                                    number_format($departure->busTravel->avgRating()) }}</span>/5</span>
                         </div>
                     </div>
                     <hr>
                     <div class="row p-2">
                         <div class="col-3">
                             <span><i class="fa-solid fa-suitcase"></i></span>
-                            <span class="ms-2">Kapasitas {{ number_format($departure->busTravel->number_seats) }} Kursi</span>
+                            <span class="ms-2">Kapasitas {{ number_format($departure->busTravel->number_seats) }}
+                                Kursi</span>
                         </div>
                         {{-- @if (isset($departure->busTravel->facilitites)) --}}
-                            @foreach ($departure->busTravel->facilities as $f)
-                            <div class="col-3">
-                                <span><i class="{{ $f->facility->icon }}"></i></span>
-                                <span class="ms-2">{{ $f->facility->name }}</span>
-                            </div>
-                            @endforeach
+                        @foreach ($departure->busTravel->facilities as $f)
+                        <div class="col-3">
+                            <span><i class="{{ $f->facility->icon }}"></i></span>
+                            <span class="ms-2">{{ $f->facility->name }}</span>
+                        </div>
+                        @endforeach
                         {{-- @endif --}}
                     </div>
                 </div>
@@ -178,8 +182,9 @@
         </div>
     </div> --}}
     <div class="card shadow rouded-4 mb-35px">
-        <div class="card-body d-flex flex-row align-items-center justify-content-between">
-            <form action="{{ route('bus_travel.order') }}" method="post">
+        <div class="card-body">
+            <form action="{{ route('bus_travel.order') }}" method="post"
+                class="d-flex flex-row align-items-center justify-content-between">
                 @csrf
                 <input type="text" name="departure_id" value="{{ $departure->id }}" hidden>
                 <input type="text" name="kota_awal" value="{{ $departure->from->id }}" hidden>

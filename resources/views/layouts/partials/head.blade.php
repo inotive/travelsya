@@ -639,11 +639,15 @@
     .alert-soft-coral {
         color: #FFEEE0;
         border-color: #FFEEE0;
-        background-color: var(--bs-warning-light)
+        background-color: #FFEEE0;
     }
 
     .alert-soft-coral .alert-link {
         color: #FFEEE0
+    }
+
+    .alert-soft-coral i {
+        color: #FF8928;
     }
 
     .accent-danger {
@@ -652,6 +656,10 @@
 
     .border-dark-2 {
         border: 2px solid var(--bs-dark);
+    }
+
+    .border-danger-2 {
+        border: 2px solid var(--bs-danger);
     }
 
     #map {
