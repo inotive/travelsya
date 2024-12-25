@@ -16,6 +16,7 @@ class BusTravels extends Model
         'is_active',
         'city',
         'phone',
+        'image',
         'address',
     ];
 

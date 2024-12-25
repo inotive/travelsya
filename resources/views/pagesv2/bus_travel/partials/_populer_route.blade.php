@@ -8,42 +8,11 @@
     <div class="card border-none">
         <div class="card-body p-0">
             <div class="row">
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
-                <div class="col-md-3 col-12 p-3">
-                    <span class="fs-5">Bus Surabaya Jakarta</span>
-                </div>
+                @foreach ($route as $r)
+                <a href="javascript:" class="col-md-3 col-12 p-3">
+                    <span class="fs-5 text-dark text-capitalize">Bus {{ strToLower($r['from']) }} {{ strToLower($r['to']) }}</span>
+                </a>
+                @endforeach
             </div>
         </div>
     </div>

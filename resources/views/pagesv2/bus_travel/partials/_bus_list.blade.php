@@ -1,8 +1,8 @@
 <div class="container">
     @foreach ($pergi as $p)
-        <div class="card shadow-sm mb-4">
-            <div class="card-body">
-                {{-- <form action="" method="POST">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            {{-- <form action="" method="POST">
                 @csrf --}}
                 <div class="row">
                     <div class="col-12 col-md-6">
@@ -71,8 +71,8 @@
                             Mulai dari
                         </div>
                         <div class="price text-start">
-                            <strong class="text-danger text-bold fs-3">IDR 230.000</strong> <span
-                                class="text-secondary-strong">/ hari</span>
+                            <strong class="text-danger text-bold fs-3">IDR {{ number_format($p['price']) }}</strong>
+                            {{-- <span class="text-secondary-strong">/ hari</span> --}}
                         </div>
                         <form action="{{ route('bus_travel.detail') }}" method="post">
                             @csrf
@@ -81,6 +81,8 @@
                             <input type="hidden" name="kota_tujuan" value="{{ $p['id'] }}">
                             <input type="hidden" name="is_pulang_pergi" value="{{ $p['id'] }}">
                             <input type="hidden" name="jumlah_penumpang" value="{{ $p['id'] }}">
+                            <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                            <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
                             <button type="submit" class="btn btn-danger mt-2 bg-main" style="margin-left: auto;">Pilih
                                 Mobil</button>
                         </form>
@@ -88,8 +90,8 @@
                 </div>
                 {{--
             </form> --}}
-            </div>
         </div>
+    </div>
     @endforeach
 
 </div>

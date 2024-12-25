@@ -50,6 +50,11 @@ class BusTravelHasBus extends Model
         return $this->hasMany(BusTravelRating::class, 'bus_travel_has_bus_id', 'id')->orderBy('created_at', 'desc');
     }
 
+    public function facilities()
+    {
+        return $this->hasMany(BusTravelHasFacility::class, 'bus_travel_has_bus_id', 'id');
+    }
+
     public function avgRating()
     {
         $rating = BusTravelRating::where('bus_travel_has_bus_id', $this->id)->get()->pluck('rate')->toArray();

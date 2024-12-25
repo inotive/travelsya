@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\General;
+use App\Models\BusBooked;
 use App\Models\BusDeparture;
 use App\Models\BusRoute;
 use App\Models\BusTravels;
@@ -14,6 +15,26 @@ class BusTravelController extends Controller
 {
     public function index(){
         $data['city'] = BusRoute::get()->pluck('name', 'name');
+
+        $route = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+
+        $data['route'] = $route->map(function($r){
+            $r['from'] = $r->departure->from->name ?? '-';
+            $r['to'] = $r->departure->to->name ?? '-';
+
+            return $r;
+        });
+
+        $route_travel = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+
+        $data['route_travel'] = $route_travel->map(function($r){
+            $r['from'] = $r->departure->from->name ?? '-';
+            $r['to'] = $r->departure->to->name ?? '-';
+
+            return $r;
+        });
+
+        $data['popular'] = BusTravels::withCount('booked')->orderBy('booked_count', 'desc')->limit(8)->get();
 
         return view('pagesv2.bus_travel.index', $data);
     }
@@ -130,10 +151,39 @@ class BusTravelController extends Controller
     }
 
     public function detail(Request $request){
-        return view('pagesv2.bus_travel.detail');
+        $param = $request;
+
+        $data['is_pulang_pergi'] = $param['is_pulang_pergi'];
+        $data['departure_id'] = $param['departure_id'];
+        $data['kota_awal'] = $param['kota_awal'];
+        $data['kota_tujuan'] = $param['kota_tujuan'];
+        $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
+        $data['date_pergi'] = $param['date_pergi'];
+        $data['date_pulang'] = $param['date_pulang'];
+
+        $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
+
+        return view('pagesv2.bus_travel.detail', $data);
     }
 
     public function order(Request $request){
+        $user = auth()->user();
+
+        if(!$user){
+            return redirect()->route('login');
+        }
+        $param = $request;
+
+        $data['is_pulang_pergi'] = $param['is_pulang_pergi'];
+        $data['departure_id'] = $param['departure_id'];
+        $data['kota_awal'] = $param['kota_awal'];
+        $data['kota_tujuan'] = $param['kota_tujuan'];
+        $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
+        $data['date_pergi'] = $param['date_pergi'];
+        $data['date_pulang'] = $param['date_pulang'];
+
+        $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
+
         return view('pagesv2.bus_travel.order');
     }
 }
