@@ -632,12 +632,34 @@
         background-color: #FFF4F4;
     }
 
+    .bg-soft-coral {
+        background-color: #FFEEE0;
+    }
+
+    .alert-soft-coral {
+        color: #FFEEE0;
+        border-color: #FFEEE0;
+        background-color: #FFEEE0;
+    }
+
+    .alert-soft-coral .alert-link {
+        color: #FFEEE0
+    }
+
+    .alert-soft-coral i {
+        color: #FF8928;
+    }
+
     .accent-danger {
         accent-color: var(--bs-danger);
     }
 
     .border-dark-2 {
         border: 2px solid var(--bs-dark);
+    }
+
+    .border-danger-2 {
+        border: 2px solid var(--bs-danger);
     }
 
     #map {

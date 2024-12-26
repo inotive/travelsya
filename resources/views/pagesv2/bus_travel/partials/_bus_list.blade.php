@@ -74,7 +74,7 @@
                             <strong class="text-danger text-bold fs-3">IDR {{ number_format($p['price']) }}</strong>
                             {{-- <span class="text-secondary-strong">/ hari</span> --}}
                         </div>
-                        <form action="{{ route('bus_travel.detail') }}" method="post">
+                        {{-- <form action="{{ route('bus_travel.detail') }}" method="post">
                             @csrf
                             <input type="hidden" name="departure_id" value="{{ $p['id'] }}">
                             <input type="hidden" name="kota_awal" value="{{ $p['id'] }}">
@@ -82,10 +82,14 @@
                             <input type="hidden" name="is_pulang_pergi" value="{{ $p['id'] }}">
                             <input type="hidden" name="jumlah_penumpang" value="{{ $p['id'] }}">
                             <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                            <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
-                            <button type="submit" class="btn btn-danger mt-2 bg-main" style="margin-left: auto;">Pilih
-                                Mobil</button>
-                        </form>
+                            <input type="hidden" name="date_pulang" value="{{ $date_pulang }}"> --}}
+                            <a
+                                href="{{ route('bus_travel.detail', ['departure_id' => $p['id'], 'kota_awal' => $kota_awal, 'kota_tujuan' => $kota_tujuan, 'is_pulang_pergi' => $is_pulang_pergi, 'jumlah_penumpang' => $jumlah_penumpang, 'date_pergi' => $date_pergi ?? date('d-m-Y', strtotime(now())), 'date_pulang' => $date_pulang]) }}">
+                                <button class="btn btn-danger mt-2 bg-main" style="margin-left: auto;">Pilih
+                                    Mobil</button>
+                            </a>
+                            {{--
+                        </form> --}}
                     </div>
                 </div>
                 {{--
