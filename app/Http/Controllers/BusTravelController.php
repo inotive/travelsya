@@ -150,16 +150,16 @@ class BusTravelController extends Controller
         return $newTicket;
     }
 
-    public function detail(Request $request){
+    public function detail(Request $request, $departure_id, $kota_awal, $kota_tujuan, $is_pulang_pergi, $jumlah_penumpang, $date_pergi, $date_pulang = null){
         $param = $request;
 
-        $data['is_pulang_pergi'] = $param['is_pulang_pergi'];
-        $data['departure_id'] = $param['departure_id'];
-        $data['kota_awal'] = $param['kota_awal'];
-        $data['kota_tujuan'] = $param['kota_tujuan'];
-        $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
-        $data['date_pergi'] = $param['date_pergi'];
-        $data['date_pulang'] = $param['date_pulang'];
+        $data['departure_id'] = $departure_id;
+        $data['kota_awal'] = $kota_awal;
+        $data['kota_tujuan'] = $kota_tujuan;
+        $data['is_pulang_pergi'] = $is_pulang_pergi;
+        $data['jumlah_penumpang'] = $jumlah_penumpang;
+        $data['date_pergi'] = $date_pergi;
+        $data['date_pulang'] = $date_pulang;
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
 
