@@ -44,6 +44,11 @@ class DetailTransactionBus extends Model
     {
         return $this->belongsTo(BusTravels::class, 'bus_travel_id', 'id');
     }
+
+    public function bus(): BelongsTo
+    {
+        return $this->belongsTo(BusTravelHasBus::class, 'bus_travel_has_bus_id', 'id');
+    }
     public function departure(): BelongsTo
     {
         return $this->belongsTo(BusDeparture::class, 'bus_departure_id', 'id');

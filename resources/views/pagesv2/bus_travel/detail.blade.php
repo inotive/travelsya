@@ -194,7 +194,7 @@
                 <input type="text" name="date_pergi" value="{{ $date_pergi }}" hidden>
                 <input type="text" name="date_pulang" value="{{ $date_pulang }}" hidden>
 
-                <span class="fs-2 text-danger">IDR {{ number_format($departure->price) }}</span>
+                <span class="fs-2 text-danger">IDR {{ number_format($departure->price) }} X {{ number_format($jumlah_penumpang) }}</span>
                 <button type="submit" class="btn btn-danger">Pesan</button>
             </form>
         </div>

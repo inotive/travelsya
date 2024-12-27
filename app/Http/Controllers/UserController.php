@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CarRentalRating;
 use App\Models\ClinicRating;
+use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHotel;
@@ -273,6 +274,18 @@ class UserController extends Controller
 
 
         return view('user.order-detail.car-rent', $data);
+    }
+
+    public function orderDetailBusTravel($id)
+    {
+        $data['tickets'] = DetailTransactionBus::with('transaction.guest', 'busTravel', 'bus', 'transaction')
+            ->whereHas('transaction', function ($q) use ($id) {
+                $q->where('no_inv', $id);
+            })->get();
+
+        $data['transaction'] = $data['tickets'][0];
+
+        return view('user.order-detail.bus-travel', $data);
     }
 
     public function orderDetailListrikVoucher($id)

@@ -137,6 +137,10 @@ Route::get('/profile/order-detail/recreation/{id}', [UserController::class, 'ord
 Route::post('/profile/order-detail/recreation/rating', [UserController::class, 'createRatingDetailRecreation'])->name('profile.order-detail.recreation.rating')->middleware('auth');
 Route::get('/profile/order-detail/car_rent/{id}', [UserController::class, 'orderDetailCarRent'])->name('profile.order-detail.car-rent')->middleware('auth');
 Route::post('/profile/order-detail/car_rent/rating', [UserController::class, 'createRatingDetailCarRent'])->name('profile.order-detail.car-rent.rating')->middleware('auth');
+
+Route::get('/profile/order-detail/bus_travel/{id}', [UserController::class, 'orderDetailBusTravel'])->name('profile.order-detail.bus-travel')->middleware('auth');
+Route::post('/profile/order-detail/bus_travel/rating', [UserController::class, 'createRatingDetailBusTravel'])->name('profile.order-detail.bus-travel.rating')->middleware('auth');
+
 Route::post('/profile/order-detail/healthbeauty/rating', [UserController::class, 'createRatingDetailHealthBeauty'])->name('profile.order-detail.health_beauty.rating')->middleware('auth');
 Route::post('/profile/order-detail/hotel/rating', [UserController::class, 'createRatingDetailHotel'])->name('profile.order-detail.hotel.rating')->middleware('auth');
 Route::post('/profile/order-detail/hostel/rating', [UserController::class, 'createRatingDetailHostel'])->name('profile.order-detail.hostel.rating')->middleware('auth');
@@ -262,6 +266,7 @@ Route::group(['prefix' => 'bus_travel'], function(){
     Route::post('/search', [BusTravelController::class, 'search'])->name('bus_travel.search');
     Route::get('/detail/{departure_id}/{kota_awal}/{kota_tujuan}/{is_pulang_pergi}/{jumlah_penumpang}/{date_pergi?}/{date_pulang?}', [BusTravelController::class, 'detail'])->name('bus_travel.detail');
     Route::post('/order', [BusTravelController::class, 'order'])->name('bus_travel.order');
+    Route::post('/request_transaction', [BusTravelController::class, 'request_transaction'])->name('bus_travel.request_transaction');
 });
 
 Route::group(['prefix' => 'car_rent'], function () {
