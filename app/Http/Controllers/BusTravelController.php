@@ -63,10 +63,10 @@ class BusTravelController extends Controller
     {
         $from = '%' . $request->kota_awal . '%';
         $to = '%' . $request->kota_tujuan . '%';
-        $date = $request->date_pergi;
-        $date_pulang = $request->date_pulang;
+        $date = $request->date_pergi ?? now()->format('Y-m-d');
+        $date_pulang = $request->date_pulang ?? null;
         $qty = $request->jumlah_penumpang ? $request->jumlah_penumpang : 1;
-        $pp = $request->is_pulang_pergi;
+        $pp = $request->is_pulang_pergi ?? 0;
         $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
 
         $pergi = BusDeparture::with('busTravel', 'from', 'to')
@@ -115,6 +115,70 @@ class BusTravelController extends Controller
         $newData['kota_tujuan'] = $request->kota_tujuan;
         $newData['date_pergi'] = $request->date_pergi;
         $newData['date_pulang'] = $request->date_pulang;
+        $newData['jumlah_penumpang'] = $qty;
+        $newData['pergi'] = $this->formatBus($pergi, $date);
+        $newData['pulang'] = $this->formatBus($pulang, $date_pulang);
+        $newData['city'] = BusRoute::get()->pluck('name', 'name');
+
+        return view('pagesv2.bus_travel.search_result', $newData);
+    }
+
+    public function findByRoute($kota_awal, $kota_tujuan)
+    {
+        $from = '%' . $kota_awal . '%';
+        $to = '%' . $kota_tujuan . '%';
+        $date = now()->format('Y-m-d');
+        $date_pulang = $request->date_pulang ?? null;
+        $qty = 1;
+        $pp = 0;
+        $selected_agent = null;
+
+        $pergi = BusDeparture::with('busTravel', 'from', 'to')
+            ->has('busTravel')
+            ->whereHas('from', function ($f) use ($from) {
+                $f->where('name', 'like', $from);
+            })
+            ->whereHas('to', function ($t) use ($to) {
+                $t->where('name', 'like', $to);
+            })
+            ->when($selected_agent, function ($q, $a) {
+                $q->whereHas('busTravel', function ($b) use ($a) {
+                    $b->whereHas('busTravel', function ($b2) use ($a) {
+                        $b2->where('business_name', 'like', $a);
+                    });
+                });
+            })
+            ->get();
+
+        $pulang = [];
+
+        if ((int)$pp == 1) {
+            $pulang = BusDeparture::with('busTravel', 'from', 'to')
+                ->has('busTravel')
+                ->whereHas('to', function ($f) use ($from) {
+                    $f->where('name', 'like', $from);
+                })
+                ->whereHas('from', function ($t) use ($to) {
+                    $t->where('name', 'like', $to);
+                })
+                ->when($selected_agent, function ($q, $a) {
+                    $q->whereHas('busTravel', function ($b) use ($a) {
+                        $b->whereHas('busTravel', function ($b2) use ($a) {
+                            $b2->where('business_name', 'like', $a);
+                        });
+                    });
+                })
+                ->get();
+        }
+
+        $newData['agent'] = BusTravels::Active()->get();
+        $newData['selected_agent'] = $request->agent ?? null;
+
+        $newData['is_pulang_pergi'] = $pp;
+        $newData['kota_awal'] = $kota_awal;
+        $newData['kota_tujuan'] = $kota_tujuan;
+        $newData['date_pergi'] = $date;
+        $newData['date_pulang'] = null;
         $newData['jumlah_penumpang'] = $qty;
         $newData['pergi'] = $this->formatBus($pergi, $date);
         $newData['pulang'] = $this->formatBus($pulang, $date_pulang);
