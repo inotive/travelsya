@@ -294,9 +294,9 @@ class BusTravelController extends Controller
 
         if ((int)$request->is_same == 0) {
             $validator = Validator::make($request->all(), [
-                'customer_call' => 'required',
-                'customer_name' => 'required',
-                'customer_phone' => 'required',
+                'customer_call_1' => 'required',
+                'customer_name_1' => 'required',
+                'customer_phone_1' => 'required',
             ]);
 
             if ($validator->fails()) {
@@ -310,9 +310,9 @@ class BusTravelController extends Controller
             }
 
             $customer = [
-                'name' => $request->customer_call . ' ' . $request->customer_name,
-                'phone' => $request->customer_phone,
-                'email' => $request->customer_email,
+                'name' => $request->customer_call_1 . ' ' . $request->customer_name_1,
+                'phone' => $request->customer_phone_1,
+                'email' => $request->customer_email_1,
             ];
         } else {
             $customer = [
@@ -482,9 +482,9 @@ class BusTravelController extends Controller
                     "price" => $pergi['price'],
                     "fee_admin" => $fees[0]['value'] / $data['jumlah_penumpang'],
                     "kode_unik" => $kode_unik,
-                    "customer_name" => $customer['name'] ?? '-',
-                    "customer_phone" => $customer['phone'] ?? '-',
-                    "customer_email" => $customer['email'] ?? '-',
+                    "customer_name" => $request['customer_call_'.$i].' '.$request['customer_name_'.$i] ?? '-',
+                    "customer_phone" => $request['customer_phone_'.$i] ?? '-',
+                    "customer_email" => $request['customer_email_'.$i] ?? '-',
                 ]);
 
                 if ((int)$data['is_pulang_pergi'] == 1) {
@@ -501,9 +501,9 @@ class BusTravelController extends Controller
                         "fee_admin" => 0,
                         // "duration" => $data['duration'],
                         "kode_unik" => $kode_unik,
-                        "customer_name" => $customer['name'] ?? '-',
-                        "customer_phone" => $customer['phone'] ?? '-',
-                        "customer_email" => $customer['email'] ?? '-',
+                        "customer_name" => $request['customer_call_'.$i].' '.$request['customer_name_'.$i] ?? '-',
+                        "customer_phone" => $request['customer_phone_'.$i] ?? '-',
+                        "customer_email" => $request['customer_email_'.$i] ?? '-',
                     ]);
                 }
             }
