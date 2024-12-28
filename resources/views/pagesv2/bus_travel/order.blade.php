@@ -82,8 +82,9 @@
                                     </div>
                                     @if ($i === 1)
                                     <div class="form-check form-switch form-check-custom form-check-solid">
-                                        <input name="is_same" class="form-check-input h-20px w-30px" type="checkbox"
-                                            value="" id="toggle_pengunjung" />
+                                        <input type="hidden" name="is_same" id="is_same_value" value="0">
+                                        <input name="is_same_check" class="form-check-input h-20px w-30px"
+                                            type="checkbox" id="toggle_pengunjung" />
                                         <label class="form-check-label" for="flexSwitchChecked">
                                             Sama dengan pemesan
                                         </label>
@@ -255,6 +256,7 @@
 
                 function syncField() {
                     if ($("#toggle_pengunjung").is(":checked")) {
+                        $("#is_same_value").val(1);
                         hidePengunjung();
 
                         let sapa_pemesan = $("input[name='sapa_pemesan']:checked").val();
@@ -274,6 +276,7 @@
                         $("#phone_disabled_pengunjung").val($("#phone_pemesan").val());
                         $("#email_disabled_pengunjung").val($("#email_pemesan").val());
                     } else {
+                        $("#is_same_value").val(0);
                         showPengunjung();
                     }
                 }
