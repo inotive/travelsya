@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BusTravelRating;
 use App\Models\CarRentalRating;
 use App\Models\ClinicRating;
 use App\Models\DetailTransactionBus;
@@ -317,68 +318,68 @@ class UserController extends Controller
             )
             ->where('transactions.no_inv', $id)
             ->first();
-//         dd($transactionPPOB);
-        $pemasukan = DB::table('history_points')
-            ->select('transaction_id', 'point as jumlah_point')
-            ->where('flow', 'debit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
-            ->first();
+        //         dd($transactionPPOB);
+                $pemasukan = DB::table('history_points')
+                    ->select('transaction_id', 'point as jumlah_point')
+                    ->where('flow', 'debit')
+                    ->where('transaction_id', $transactionPPOB->transaction_id)
+                    ->first();
 
-        $pengeluaran = DB::table('history_points')
-            ->select('transaction_id', 'point as jumlah_point')
-            ->where('flow', 'credit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
-            ->first();
-        //dd($transactionPPOB);
+                $pengeluaran = DB::table('history_points')
+                    ->select('transaction_id', 'point as jumlah_point')
+                    ->where('flow', 'credit')
+                    ->where('transaction_id', $transactionPPOB->transaction_id)
+                    ->first();
+                //dd($transactionPPOB);
 
 
-        // $transaction = DetailTransactionPPOB::where('id', 2)->first();
-        return view('user.order-detail.listrik-voucher', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
-    }
+                // $transaction = DetailTransactionPPOB::where('id', 2)->first();
+                return view('user.order-detail.listrik-voucher', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
+            }
 
-    public function orderDetailListrik($id)
-    {
-        $transactionPPOB = DB::table('detail_transaction_ppob')
-            ->join('products', 'detail_transaction_ppob.product_id', '=', 'products.id')
-            ->join('transactions', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
-            ->join('users', 'transactions.user_id', '=', 'users.id')
-            ->leftJoin('history_points', 'transactions.id', '=', 'history_points.transaction_id')
-            // ->join('history_points', 'detail_transaction_ppob.history_point_id', '=', 'history_points.id')
-            ->select(
-                'detail_transaction_ppob.*',
-                'products.name as product_name',
-                'transactions.no_inv as inv_num',
-                'transactions.service as service',
-                'transactions.created_at as created_transaction',
-                'transactions.payment_method as payment_method',
-                'transactions.status as status',
-                'history_points.point as points',
-                'transactions.total',
-                'users.name as user_name',
-                DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
-                DB::raw('detail_transaction_ppob.total_tagihan +
-            detail_transaction_ppob.fee_travelsya -
-            (CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as total_after_fee')
-            )
-            ->where('transactions.no_inv', $id)
-            ->first();
+            public function orderDetailListrik($id)
+            {
+                $transactionPPOB = DB::table('detail_transaction_ppob')
+                    ->join('products', 'detail_transaction_ppob.product_id', '=', 'products.id')
+                    ->join('transactions', 'detail_transaction_ppob.transaction_id', '=', 'transactions.id')
+                    ->join('users', 'transactions.user_id', '=', 'users.id')
+                    ->leftJoin('history_points', 'transactions.id', '=', 'history_points.transaction_id')
+                    // ->join('history_points', 'detail_transaction_ppob.history_point_id', '=', 'history_points.id')
+                    ->select(
+                        'detail_transaction_ppob.*',
+                        'products.name as product_name',
+                        'transactions.no_inv as inv_num',
+                        'transactions.service as service',
+                        'transactions.created_at as created_transaction',
+                        'transactions.payment_method as payment_method',
+                        'transactions.status as status',
+                        'history_points.point as points',
+                        'transactions.total',
+                        'users.name as user_name',
+                        DB::raw('(CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as point_pengeluaran'),
+                        DB::raw('detail_transaction_ppob.total_tagihan +
+                    detail_transaction_ppob.fee_travelsya -
+                    (CASE WHEN history_points.flow = "credit" THEN history_points.point ELSE 0 END) as total_after_fee')
+                    )
+                    ->where('transactions.no_inv', $id)
+                    ->first();
 
-        // dd($transactionPPOB->transaction_id);
+                // dd($transactionPPOB->transaction_id);
 
-        $pemasukan = DB::table('history_points')
-            ->select('transaction_id', 'point as jumlah_point')
-            ->where('flow', 'debit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
-            ->first();
+                $pemasukan = DB::table('history_points')
+                    ->select('transaction_id', 'point as jumlah_point')
+                    ->where('flow', 'debit')
+                    ->where('transaction_id', $transactionPPOB->transaction_id)
+                    ->first();
 
-        $pengeluaran = DB::table('history_points')
-            ->select('transaction_id', 'point as jumlah_point')
-            ->where('flow', 'credit')
-            ->where('transaction_id', $transactionPPOB->transaction_id)
-            ->first();
+                $pengeluaran = DB::table('history_points')
+                    ->select('transaction_id', 'point as jumlah_point')
+                    ->where('flow', 'credit')
+                    ->where('transaction_id', $transactionPPOB->transaction_id)
+                    ->first();
 
-//        dd($transactionPPOB->inv_num);
-//
+        //        dd($transactionPPOB->inv_num);
+        //
         return view('user.order-detail.listrik', compact('transactionPPOB', 'pemasukan', 'pengeluaran'));
     }
 
@@ -462,6 +463,22 @@ class UserController extends Controller
             'comment'        => $request->comment
         ]);
         toast('Clinic Rating Sudah Di Buat', 'success');
+        return redirect()->back();
+    }
+
+    public function createRatingDetailBusTravel(Request $request, BusTravelRating $busTravelRating)
+    {
+        $user_id = auth()->user()->id;
+
+        $busTravelRating->create([
+            'transaction_id' => $request->transaction_id,
+            'user_id'        => $user_id,
+            'bus_travel_id'       => $request->bus_travel_id,
+            'bus_travel_has_bus_id' => $request->package_id,
+            'rate'           => $request->rating,
+            'comment'        => $request->comment
+        ]);
+        toast('Bus Travel Rating Sudah Di Buat', 'success');
         return redirect()->back();
     }
 

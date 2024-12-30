@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         @php
-                            $reviewCount = $transaction->transaction->comment;
+                            $reviewCount = $transaction->transaction->commentBusTravel;
                         @endphp
                         @if (!isset($reviewCount) && $transaction->transaction->status == 'PAID')
                             <a href="#" data-bs-toggle="modal" data-bs-target="#review"
@@ -391,11 +391,11 @@
                     </div>
                     <!--end::Close-->
                 </div>
-                <form action="{{ route('profile.order-detail.car-rent.rating') }}" method="POST">
+                <form action="{{ route('profile.order-detail.bus-travel.rating') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="package_id" value="{{ $transaction->car_rental_has_car_id }}" />
+                    <input type="hidden" name="package_id" value="{{ $transaction->bus_travel_has_bus_id }}" />
                     <input type="hidden" name="transaction_id" value="{{ $transaction->transaction_id }}" />
-                    <input type="hidden" name="car_rental_id" value="{{ $transaction->busTravel->id }}" />
+                    <input type="hidden" name="bus_travel_id" value="{{ $transaction->bus_travel_id }}" />
                     <div class="modal-body text-center">
                         <div>
                             <div class="fs-4 fw-bold m-3 mb-5">Berikan Nilai Pada
