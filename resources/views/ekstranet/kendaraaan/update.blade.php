@@ -1,4 +1,8 @@
-@extends('ekstranet.layout', ['title' => 'Daftar Kendaraan Update Data', 'url' => '#'])
+@extends('ekstranet.layout', [
+    'title' => 'Beranda',
+    'url' => '#',
+    'subTitle' => 'Edit Data',
+])
 
 @section('content-admin')
     {{-- FORM UPDATE --}}
@@ -11,11 +15,13 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Merk</label>
-                        <select class="form-control" id="brand_id" name="brand_id">
-                            <option value="">Pilih Merk</option>
+                        <select class="form-select" id="brand_id" name="brand_id" data-control="select2"
+                            data-placeholder="Pilih Merk" data-allow-clear="true">
+                            <option value="" disabled {{ !$car->brand_id ? 'selected' : '' }}>Pilih Merk</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}" {{ $brand->id == $car->brand_id ? 'selected' : '' }}>
-                                    {{ $brand->name }}</option>
+                                    {{ $brand->name }}
+                                </option>
                             @endforeach
                         </select>
                         @error('brand_id')
@@ -28,11 +34,13 @@
 
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Model</label>
-                        <select class="form-control" id="car_model_id" name="car_model_id">
-                            <option value="">Pilih Model</option>
+                        <select class="form-select" id="car_model_id" name="car_model_id" data-control="select2"
+                            data-placeholder="Pilih Model" data-allow-clear="true">
+                            <option value="" disabled {{ !$car->car_model_id ? 'selected' : '' }}>Pilih Model</option>
                             @foreach ($car_models as $car_model)
                                 <option value="{{ $car_model->id }}"
-                                    {{ $car_model->id == $car->car_model_id ? 'selected' : '' }}>{{ $car_model->name }}
+                                    {{ $car_model->id == $car->car_model_id ? 'selected' : '' }}>
+                                    {{ $car_model->name }}
                                 </option>
                             @endforeach
                         </select>
@@ -83,8 +91,10 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
-                        <input class="form-control form-control-lg" id="rental_price_per_day"
-                            placeholder="Masukkan Biaya Sewa" name="rental_price_per_day"
+                        <input class="form-control form-control-lg" id="rental_price_per_day_display"
+                            placeholder="Masukkan Biaya Sewa"
+                            value="{{ number_format($car->rental_price_per_day, 0, ',', '.') }}" />
+                        <input type="hidden" id="rental_price_per_day" name="rental_price_per_day"
                             value="{{ $car->rental_price_per_day }}" />
 
                         @error('rental_price_per_day')
@@ -113,7 +123,8 @@
                         <select class="form-control" id="years" name="years">
                             <?php
                                 for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
-                                    <option value="<?=$years;?>" <?= $car->years == $years ? 'selected' : '' ?>><?=$years;?></option>
+                            <option value="<?= $years ?>" <?= $car->years == $years ? 'selected' : '' ?>><?= $years ?>
+                            </option>
                             <?php endfor; ?>
                         </select>
                         @error('policy_id')
@@ -181,9 +192,79 @@
     </div>
 @endsection
 
+@push('add-script')
+    <script>
+        $('#brand_id').on('change', function() {
+            var brand_id = $(this).val();
+
+            if (brand_id) {
+                $('#car_model_id').prop('disabled', false);
+
+                $.ajax({
+                    url: '{{ url('/partner/get-model-kendaraan') }}',
+                    type: 'GET',
+                    data: {
+                        brand_id: brand_id
+                    },
+                    success: function(response) {
+                        $('#car_model_id').empty();
+
+                        $('#car_model_id').append(
+                            '<option selected disabled value="">Pilih Model</option>');
+
+                        if (response.models.length > 0) {
+                            $.each(response.models, function(index, model) {
+                                $('#car_model_id').append('<option value="' + model.id + '">' +
+                                    model.name + '</option>');
+                            });
+                        } else {
+                            $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
+                        }
+
+                        @if ($car->car_model_id)
+                            $('#car_model_id').val('{{ $car->car_model_id }}').trigger('change');
+                        @endif
+                    },
+                    error: function() {
+                        alert("Terjadi kesalahan saat mengambil data model.");
+                    }
+                });
+            } else {
+                $('#car_model_id').prop('disabled', true);
+                $('#car_model_id').empty();
+                $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+            }
+        });
+
+        $(document).ready(function() {
+            var selectedBrandId = $('#brand_id').val();
+            if (selectedBrandId) {
+                $('#brand_id').trigger('change');
+            }
+        });
+
+        function formatRupiah(amount) {
+            return amount.toString().replace(/[^0-9]/g, '')
+                .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                .replace(/([0-9])([0-9]{3})\./g, '$1.$2.');
+        }
+
+        const rentalInput = document.getElementById('rental_price_per_day_display');
+        const rentalRawInput = document.getElementById('rental_price_per_day');
+
+        rentalInput.addEventListener('keyup', function() {
+            let value = rentalInput.value;
+
+            let formattedValue = formatRupiah(value);
+
+            rentalInput.value = formattedValue;
+
+            rentalRawInput.value = value.replace(/[^0-9]/g, '');
+        });
+    </script>
+@endpush
+
 <style>
-
-
     .active {
         background: #007bff;
         color: white;
