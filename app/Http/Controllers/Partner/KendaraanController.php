@@ -20,12 +20,19 @@ class KendaraanController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
         $car_rental = CarRental::all();
 
-        $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')->get();
+        $car_rental_id = CarRental::where('user_id', $user->id)->pluck('id')->first();
+
+        $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')
+            ->where('car_rental_id', $car_rental_id)
+            ->get();
+
         return view('ekstranet.kendaraaan.list-kendaraan', compact('cars', 'brands', 'car_models', 'policies', 'car_rental'));
     }
 
@@ -54,7 +61,12 @@ class KendaraanController extends Controller
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $car_rental = CarRental::find(2);
+        $user = auth()->user();
+        $car_rental = CarRental::where('user_id', $user->id)->first();
+
+        if (!$car_rental) {
+            return redirect()->route('partner.daftar.kendaraan')->with('error', 'Anda tidak memiliki car rental!');
+        }
 
         if ($request->hasFile('image_url')) {
             $image = $request->file('image_url');
@@ -175,5 +187,4 @@ class KendaraanController extends Controller
 
         return redirect()->back()->with('delete', 'Data berhasil dihapus!');
     }
-
 }

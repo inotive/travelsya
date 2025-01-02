@@ -19,7 +19,7 @@
                         <th>Brand</th>
                         <th>Model</th>
                         <th>Tahun</th>
-                        <th class="text-center">Tipe</th>
+                        <th class="text-center px-2">Tipe</th>
                         <th>Jumlah Seat</th>
                         <th>Kategori Rental</th>
                         <th>Biaya Rental</th>
@@ -46,7 +46,7 @@
                             <td>{{ $car->carModel->name ?? '' }}</td>
                             {{-- <td>{{ $car->policy->id }}</td> --}}
                             <td>{{ $car->years }}</td>
-                            <td><span class="badge badge-primary">{{ ucwords($car->category) }}</span></td>
+                            <td class="text-center"><span class="badge badge-primary">{{ ucwords($car->category) }}</span></td>
                             <td class="text-center">{{ $car->number_seats }}</td>
                             <td>{{ $car->category_rent }}</td>
                             <td>Rp. {{ number_format($car->rental_price_per_day, 0,',','.') }}</td>
