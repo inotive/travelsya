@@ -23,7 +23,6 @@ class CarRentalController extends Controller
         }
 
         $cars = $query->with(['brand', 'carRental'])->get();
-        $carRental = CarRental::all();
         $categories = CarRentalHasCars::select('category')->distinct()->get();
 
         return view('rental-mobil.list-rental-mobil', compact('tanggalRental', 'durasiRental', 'ambilRental', 'jamRental', 'cars', 'categories', 'carRental'));

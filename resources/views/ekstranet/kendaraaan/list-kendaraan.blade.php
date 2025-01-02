@@ -2,103 +2,92 @@
 
 @section('content-admin')
     <div class="card">
-        <div class="card-body">
-            <form action="" method="GET">
-                <div class="row">
-                    <div class="col-25">
-                        <div class="card mt-3">
-                            <div class="card-body">
-                                <div class="row gy-5 g-xl-10">
-                                    <div class="col-12">
-                                        <a href="halaman-create" class="btn btn-sm btn-light-primary">
-                                            <i class="ki-duotone ki-plus fs-2"></i>Tambah Data Mobil</a>
+        <div class="card-header pt-5">
+            <div class="card-toolbar">
+                <a class="btn btn-sm btn-light-primary" href="halaman-create">
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Data Mobil</a>
+            </div>
+        </div>
+        <div class="card-body py-3">
+            <div class="table-responsive">
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                       id="kt_datatable_zero_configuration">
+                    <thead class="fw-bold">
+                    <tr>
+                        <th>No</th>
+                        <th>Gambar</th>
+                        <th>Brand</th>
+                        <th>Model</th>
+                        <th>Tahun</th>
+                        <th class="text-center">Tipe</th>
+                        <th>Jumlah Seat</th>
+                        <th>Kategori Rental</th>
+                        <th>Biaya Rental</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                    </thead>
 
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered fw-normal"
-                                                id="kt_datatable_zero_configuration">
-                                                <thead class="fw-bold">
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Gambar</th>
-                                                        <th>Brand</th>
-                                                        <th>Model</th>
-                                                        <th>Tahun</th>
-                                                        <th>Jumlah Seat</th>
-                                                        <th>Kategori Rental</th>
-                                                        <th>Biaya Rental</th>
-                                                        <th>Status</th>
-                                                        <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
+                    <tbody id="table-posts">
+                    @php
+                        $no = 1;
+                    @endphp
 
-                                                <tbody id="table-posts">
+                    @foreach ($cars as $car)
+                        <tr id="index_{{ $car->id }}">
+                            <td>{{ $no++ }}</td>
+                            <td>
+                                @if ($car->image_url)
+                                    <img src="{{ asset('storage/cars/' . $car->image_url) }}"
+                                         style="width: 130px; height: 100px; object-fit: contain;">
+                                @endif
+                            </td>
+                            <td>{{ $car->brand->name ?? '' }}</td>
+                            <td>{{ $car->carModel->name ?? '' }}</td>
+                            {{-- <td>{{ $car->policy->id }}</td> --}}
+                            <td>{{ $car->years }}</td>
+                            <td><span class="badge badge-primary">{{ ucwords($car->category) }}</span></td>
+                            <td class="text-center">{{ $car->number_seats }}</td>
+                            <td>{{ $car->category_rent }}</td>
+                            <td>Rp. {{ number_format($car->rental_price_per_day, 0,',','.') }}</td>
+                            <td class="text-center">
+                                @if ($car->status == '1')
+                                    <span class="badge badge-success">Aktif</span>
+                                @else
+                                    <span class="badge badge-danger">Tidak Aktif</span>
+                                @endif
+                            </td>
 
-                                                    @php
-                                                        $no = 1;
-                                                    @endphp
-
-                                                    @foreach ($cars as $car)
-                                                        <tr id="index_{{ $car->id }}">
-                                                            <td>{{ $no++ }}</td>
-                                                            <td>
-                                                                @if ($car->image_url)
-                                                                    <img src="{{ asset('storage/cars/' . $car->image_url) }}"
-                                                                    style="width: 130px; height: 100px; object-fit: contain;">
-                                                                @endif
-                                                            </td>
-                                                            <td>{{ $car->brand->name ?? '' }}</td>
-                                                            <td>{{ $car->carModel->name ?? '' }}</td>
-                                                            {{-- <td>{{ $car->policy->id }}</td> --}}
-                                                            <td>{{ $car->years }}</td>
-                                                            <td>{{ $car->number_seats }}</td>
-                                                            <td>{{ $car->category_rent }}</td>
-                                                            <td>{{ $car->rental_price_per_day }}</td>
-                                                            <td class="text-center">
-                                                                @if ($car->status == '1')
-                                                                    <span class="badge badge-success">Aktif</span>
-                                                                @else
-                                                                    <span class="badge badge-danger">Tidak Aktif</span>
-                                                                @endif
-                                                            </td>
-
-                                                            <td class="text-center">
-                                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                                    data-kt-menu="true" style="">
-                                                                    <div class="menu-item px-3">
-                                                                        <a href="{{ route('partner.show.kendaraan', $car->id) }}" type="button" class="menu-link px-3 text-warning" id="btn-edit-rental" data-id="{{ $car->id }}">
-                                                                            Edit
-                                                                        </a>
-                                                                    </div>
-                                                                    <div class="menu-item px-3">
-                                                                        <a type="button" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $car->id }}">
-                                                                            Hapus
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-
-                                                                <a href="#"
-                                                                    class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                                    data-kt-menu-trigger="click"
-                                                                    data-kt-menu-placement="bottom-end">
-                                                                    Aksi
-                                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    @endforeach
-
-                                                </tbody>
-
-                                            </table>
-                                        </div>
+                            <td class="text-center">
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                     data-kt-menu="true" style="">
+                                    <div class="menu-item px-3">
+                                        <a href="{{ route('partner.show.kendaraan', $car->id) }}" type="button" class="menu-link px-3 text-warning" id="btn-edit-rental" data-id="{{ $car->id }}">
+                                            Edit
+                                        </a>
+                                    </div>
+                                    <div class="menu-item px-3">
+                                        <a type="button" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $car->id }}">
+                                            Hapus
+                                        </a>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                    </div>
-                </div>
-            </form>
+                                <a href="#"
+                                   class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                   data-kt-menu-trigger="click"
+                                   data-kt-menu-placement="bottom-end">
+                                    Aksi
+                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    </tbody>
+
+                </table>
+            </div>
         </div>
     </div>
 

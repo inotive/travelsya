@@ -2,9 +2,14 @@
 
 @section('content-admin')
     {{-- FORM CREATE --}}
-    <div class="main-content">
-        <div class="form-container">
-            <h2>Form Tambah Data</h2>
+    <div class="card ">
+        <div class="card-header">
+            <h1 class="card-title fw-bold">
+               Tambah Mobil
+            </h1>
+        </div>
+        <div class="card-body">
+            <!--begin:Form-->
             <form action="{{ route('partner.kendaraan.create') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -18,7 +23,7 @@
                             @endforeach
                         </select>
                         @error('brand_id')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -34,7 +39,7 @@
                             @endforeach
                         </select>
                         @error('car_model_id')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -51,7 +56,7 @@
                             <option value="automatic">Matic</option>
                         </select>
                         @error('category')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -66,7 +71,7 @@
                             <option value="Tidak Dengan Driver">Tidak Dengan Driver</option>
                         </select>
                         @error('category_rent')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -78,33 +83,33 @@
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
                         <input class="form-control form-control-lg" id="rental_price_per_day"
-                            placeholder="Masukkan Biaya Sewa" name="rental_price_per_day" required />
+                               placeholder="Masukkan Biaya Sewa" name="rental_price_per_day" required />
 
                         @error('rental_price_per_day')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                      </div>
+                    </div>
 
-                      <div class="form-group">
+                    <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Durasi</label>
                         <input class="form-control form-control-lg" id="duration"
-                            placeholder="Berapa Lama Durasi" name="duration" required />
+                               placeholder="Berapa Lama Durasi" name="duration" required />
 
                         @error('duration')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                      </div>
+                    </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Tahun</label>
                         <select class="form-control" id="years" name="years">
-                            <?php
+                                <?php
                                 $result_arr_['years'] = "2019";
                                 if($result_arr_['years'] == true){
                                     $selected_year = "selected";
@@ -112,12 +117,12 @@
                                     $selected_year = " ";
                                 }
 
-                                for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
-                                    <option value="<?=$years;?>" <?php echo $selected_year;?>><?=$years;?></option>
+                            for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
+                            <option value="<?=$years;?>" <?php echo $selected_year;?>><?=$years;?></option>
                             <?php endfor; ?>
                         </select>
                         @error('policy_id')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -127,14 +132,14 @@
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
                         <input class="form-control form-control-lg" id="number_seats"
-                            placeholder="Masukkan Jumlah Kursi" name="number_seats" required />
+                               placeholder="Masukkan Jumlah Kursi" name="number_seats" required />
 
                         @error('number_seats')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                      </div>
+                    </div>
                 </div>
 
                 <div class="form-row">
@@ -147,7 +152,7 @@
                         </select>
 
                         @error('status')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -159,7 +164,7 @@
                         <input type="file" class="form-control" id="image" name="image_url">
 
                         @error('image')
-                            <span class="text-danger mt-1" role="alert">
+                        <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -173,12 +178,11 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="reset">Tutup</button>
-                    <button type="submit" class="primary">Tambah Data</button>
+                    <button type="reset" class="btn btn-secondary">Tutup</button>
+                    <button type="submit" class="btn btn-primary">Tambah Data</button>
                 </div>
             </form>
         </div>
-    </div>
     </div>
 @endsection
 
