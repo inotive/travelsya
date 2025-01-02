@@ -72,6 +72,8 @@ class KendaraanController extends Controller
             $image = $request->file('image_url');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('cars', $imageName, 'public');
+        } else {
+            $imageName = NULL;
         }
 
         if ($validator->fails()) {
@@ -186,5 +188,14 @@ class KendaraanController extends Controller
         $car->delete();
 
         return redirect()->back()->with('delete', 'Data berhasil dihapus!');
+    }
+
+    public function getCarModels(Request $request)
+    {
+        $models = CarModel::where('brand_id', $request->brand_id)->get();
+
+        return response()->json([
+            'models' => $models
+        ]);
     }
 }

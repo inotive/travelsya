@@ -458,6 +458,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::delete('kendaraan-delete/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'destroy'])->name('partner.kendaraan.delete');
         Route::get('daftar-kendaraan/show/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'show'])->name('partner.show.kendaraan');
         Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
+        Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}', [ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');

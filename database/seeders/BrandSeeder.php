@@ -14,31 +14,23 @@ class BrandSeeder extends Seeder
     public function run(): void
     {
         Brand::create([
-            'name' => 'Pajero Sports',
+            'name' => 'Ford',
         ]);
 
         Brand::create([
-            'name' => 'Honda Civic',
+            'name' => 'Toyota',
         ]);
 
         Brand::create([
-            'name' => 'HRV',
+            'name' => 'Hyundai',
         ]);
 
         Brand::create([
-            'name' => 'Carry',
+            'name' => 'Honda',
         ]);
 
         Brand::create([
-            'name' => 'Xenia',
-        ]);
-
-        Brand::create([
-            'name' => 'Sigra',
-        ]);
-
-        Brand::create([
-            'name' => 'Honda Jazz',
+            'name' => 'Mitsubishi',
         ]);
     }
 }

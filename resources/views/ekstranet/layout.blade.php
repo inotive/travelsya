@@ -135,7 +135,7 @@
                                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Home</a>
+                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Daftar Kendaraan</a>
                                             </li>
                                             <!--end::Item-->
                                             <!--begin::Item-->
@@ -145,7 +145,7 @@
                                             <!--end::Item-->
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-												<a href="{{$url}}" class="text-muted text-hover-primary">{{$title}}</a>
+												<a href="{{$url}}" class="text-muted text-hover-primary">{{$subTitle ?? $title}}</a>
 												</li>
                                             <!--end::Item-->
 

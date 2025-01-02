@@ -1,11 +1,15 @@
-@extends('ekstranet.layout', ['title' => 'Daftar Kendaraan Create Data', 'url' => '#'])
+@extends('ekstranet.layout', [
+    'title' => 'Daftar Kendaraan Create Data',
+    'url' => '#',
+    'subTitle' => 'Tambah Data',
+])
 
 @section('content-admin')
     {{-- FORM CREATE --}}
     <div class="card ">
         <div class="card-header">
             <h1 class="card-title fw-bold">
-               Tambah Mobil
+                Tambah Mobil
             </h1>
         </div>
         <div class="card-body">
@@ -16,14 +20,15 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Merk</label>
-                        <select class="form-control" id="brand_id" name="brand_id">
-                            <option value="">Pilih Merk</option>
+                        <select class="form-select" id="brand_id" name="brand_id" data-control="select2"
+                            data-placeholder="Pilih Merk" data-allow-clear="true">
+                            <option selected disabled value="">Pilih Merk</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                             @endforeach
                         </select>
                         @error('brand_id')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -32,14 +37,15 @@
 
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Model</label>
-                        <select class="form-control" id="car_model_id" name="car_model_id">
-                            <option value="">Pilih Model</option>
+                        <select class="form-select" id="car_model_id" name="car_model_id" data-control="select2"
+                            data-placeholder="Pilih Model" data-allow-clear="true" disabled>
+                            <option selected disabled value="">Pilih Model</option>
                             @foreach ($car_models as $car_model)
                                 <option value="{{ $car_model->id }}">{{ $car_model->name }}</option>
                             @endforeach
                         </select>
                         @error('car_model_id')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -56,7 +62,7 @@
                             <option value="automatic">Matic</option>
                         </select>
                         @error('category')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -71,7 +77,7 @@
                             <option value="Tidak Dengan Driver">Tidak Dengan Driver</option>
                         </select>
                         @error('category_rent')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -83,10 +89,10 @@
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
                         <input class="form-control form-control-lg" id="rental_price_per_day"
-                               placeholder="Masukkan Biaya Sewa" name="rental_price_per_day" required />
+                            placeholder="Masukkan Biaya Sewa" name="rental_price_per_day" required />
 
                         @error('rental_price_per_day')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -94,11 +100,11 @@
 
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                        <input class="form-control form-control-lg" id="duration"
-                               placeholder="Berapa Lama Durasi" name="duration" required />
+                        <input class="form-control form-control-lg" id="duration" placeholder="Berapa Lama Durasi"
+                            name="duration" required />
 
                         @error('duration')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -109,7 +115,7 @@
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Tahun</label>
                         <select class="form-control" id="years" name="years">
-                                <?php
+                            <?php
                                 $result_arr_['years'] = "2019";
                                 if($result_arr_['years'] == true){
                                     $selected_year = "selected";
@@ -118,11 +124,11 @@
                                 }
 
                             for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
-                            <option value="<?=$years;?>" <?php echo $selected_year;?>><?=$years;?></option>
+                            <option value="<?= $years ?>" <?php echo $selected_year; ?>><?= $years ?></option>
                             <?php endfor; ?>
                         </select>
                         @error('policy_id')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -131,11 +137,11 @@
 
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
-                        <input class="form-control form-control-lg" id="number_seats"
-                               placeholder="Masukkan Jumlah Kursi" name="number_seats" required />
+                        <input class="form-control form-control-lg" id="number_seats" placeholder="Masukkan Jumlah Kursi"
+                            name="number_seats" required />
 
                         @error('number_seats')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -152,7 +158,7 @@
                         </select>
 
                         @error('status')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -164,7 +170,7 @@
                         <input type="file" class="form-control" id="image" name="image_url">
 
                         @error('image')
-                        <span class="text-danger mt-1" role="alert">
+                            <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -186,9 +192,49 @@
     </div>
 @endsection
 
+@push('add-script')
+    <script>
+        $('#brand_id').on('change', function() {
+            var brand_id = $(this).val();
+
+            if (brand_id) {
+                $('#car_model_id').prop('disabled', false);
+
+                $.ajax({
+                    url: '{{ url('/partner/get-model-kendaraan') }}',
+                    type: 'GET',
+                    data: {
+                        brand_id: brand_id
+                    },
+                    success: function(response) {
+                        $('#car_model_id').empty();
+
+                        $('#car_model_id').append(
+                            '<option selected disabled value="">Pilih Model</option>');
+
+                        if (response.models.length > 0) {
+                            $.each(response.models, function(index, model) {
+                                $('#car_model_id').append('<option value="' + model.id + '">' +
+                                    model.name + '</option>');
+                            });
+                        } else {
+                            $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
+                        }
+                    },
+                    error: function() {
+                        alert("Terjadi kesalahan saat mengambil data model.");
+                    }
+                });
+            } else {
+                $('#car_model_id').prop('disabled', true);
+                $('#car_model_id').empty();
+                $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+            }
+        });
+    </script>
+@endpush
+
 <style>
-
-
     .active {
         background: #007bff;
         color: white;
