@@ -53,9 +53,10 @@
                               <td class="text-center">{{ $rental->phone }}</td>
                              
                               <td class="text-center">
-                                  @if ($rental->is_active === 1)
+                                {{-- {{dd($rental->is_active)}} --}}
+                                  @if ($rental->car_rentals_is_active === 1)
                                       <span class="badge badge-success">Aktif</span>
-                                  @elseif ($rental->is_active === 0)
+                                  @elseif ($rental->car_rentals_is_active === 0)
                                       <span class="badge badge-danger">Tidak Aktif</span>
                                   @endif
                               </td>
