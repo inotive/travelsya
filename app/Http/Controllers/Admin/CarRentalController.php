@@ -27,6 +27,7 @@ class CarRentalController extends Controller
         ->select(
             'car_rentals.id as car_rental_id', 
             'car_rentals.*', 
+            'car_rentals.is_active as car_rentals_is_active',
             'users.id as user_id', 
             'users.*',
             'cities.city_id as city_id',
@@ -35,9 +36,7 @@ class CarRentalController extends Controller
         )
         ->get();
 
-
         $cities = City::all();
-
 
         return view('admin.management-mitra.rental-mobil.index', compact('users', 'car_rentals', 'cities'));
     }
