@@ -59,7 +59,7 @@ class BeautyClinicController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -82,7 +82,7 @@ class BeautyClinicController extends Controller
         $clinic->address = $request->input('address');
         $clinic->is_active = 1; // Assuming new clinics are active by default
         $clinic->category = $request->input('category');
-        $clinic->image = $imageName;
+        // $clinic->image = $imageName;
         $clinic->save();
 
 

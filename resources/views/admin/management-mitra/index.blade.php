@@ -139,7 +139,7 @@
 
                                         <!--begin::Inputs-->
                                         <input type="file" name="image" accept=".png, .jpg, .jpeg" />
-                                        <input type="hidden" name="image_remove" />
+                                        {{-- <input type="hidden" name="image_remove" /> --}}
                                         <!--end::Inputs-->
                                     </label>
                                     <!--end::Edit button-->
