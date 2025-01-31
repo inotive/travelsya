@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\models\HotelRoomImage;
+use App\Models\HotelRoomImage;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
