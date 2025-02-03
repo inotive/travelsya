@@ -177,6 +177,7 @@ class ClinicHasPackageController extends Controller
             // Ambil semua kategori tanpa filter clinic_id
             $categories = CategoriesServices::all();
 
+
             return response()->json($categories);
         }
 

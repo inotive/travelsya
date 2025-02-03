@@ -446,7 +446,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
         Route::put('update-rekreasi/{id}', [\App\Http\Controllers\RecreationController::class, 'update'])->name('data-rekreasi.update');
         Route::post('/addrecreation/store', [\App\Http\Controllers\RecreationController::class, 'store'])->name('addrecreation.store');
-        // Route::get('recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'show'])->name('recreation.show');
+        Route::get('recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'show'])->name('recreation.show');
         Route::delete('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'destroy'])->name('recreation.destroy');
 
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
@@ -476,8 +476,6 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('clinics/{id}/edit', [\App\Http\Controllers\ClinicHasPackageController::class, 'edit'])->name('clinics.edit');
             Route::put('clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'update'])->name('clinics.update');
             Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
-            // penambahan route untuk mengambil kategori clinic
-            Route::get('/categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get.categories.by.clinic');
         });
 
 
