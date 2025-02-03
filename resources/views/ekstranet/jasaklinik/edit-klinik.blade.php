@@ -29,9 +29,10 @@
                             <label for="categories_services_id" class="form-label">Kategori Layanan</label>
                             <select name="categories_services_id" id="categories_services_id" class="form-control" required>
                                 <!-- Options will be dynamically loaded -->
+                                {{-- <option value="{{ $categories }}" {{ $clinic['clinic_id'] }}></option> --}}
                             </select>
                         </div>
-
+                        <div id="data-id-service" data-variable="{{ $clinic->categories_services_id }}"></div>
                         @if (count($clinics) > 1)
                             <!-- edit clinic_id -->
                             <div class="col-md-6">
@@ -156,16 +157,28 @@
                 url: '{{ route('get.categories.by.clinic') }}', // Pastikan URL ini benar sesuai rute Laravel
                 type: 'GET',
                 success: function(data) {
+                    const serviceClinicId = $("#data-id-service").attr("data-variable");
+                    // console.info(serviceClinicId);
                     console.log("Categories Data:",
                         data); // Debug log untuk memeriksa data kategori yang diterima
                     $('#categories_services_id').empty();
-
                     if (data.length > 0) {
                         $('#categories_services_id').append(
                             '<option value="">Pilih Kategori</option>');
                         $.each(data, function(key, category) {
-                            $('#categories_services_id').append('<option value="' + category
-                                .id + '">' + category.name + '</option>');
+                            let option = $("<option>", {
+                                value: category.id,
+                                text: category.name
+                            });
+
+                            if(category.id == serviceClinicId) {
+                                option.attr("selected", true);
+                                console.info("true")
+                            };
+
+                            $("#categories_services_id").append(option);
+                            // $('#categories_services_id').append('<option value="' + category
+                            //     .id + `" ${category.id == clinicId ? 'selected' : ''} >` + category.name + '</option>');
                         });
                     } else {
                         $('#categories_services_id').append(

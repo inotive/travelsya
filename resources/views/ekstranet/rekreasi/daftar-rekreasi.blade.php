@@ -19,7 +19,7 @@
                 <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
                         <th class="text-center">No.</th>
-                        <th class="text-center">Binis</th>
+                        <th class="text-center">Bisnis</th>
                         <th class="text-center">Kategori</th>
                         <th class="text-center">Paket</th>
                         <th class="text-center">Durasi</th>
