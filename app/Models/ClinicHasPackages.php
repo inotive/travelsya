@@ -26,6 +26,7 @@ class ClinicHasPackages extends Model
         'duration_type',
         'discount_type',
         'discount',
+        'expiry_date'
     ];
 
     public function categoriesService()
