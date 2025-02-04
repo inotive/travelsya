@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 
 class MitraController extends Controller
@@ -93,13 +94,18 @@ class MitraController extends Controller
 
     public function storeMitra(Request $request)
     {
+        // dd($request);
         $validator = Validator::make($request->all(), [
             'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required',
+            'nomor_telfon' => 'required'
             // 'image'    => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()->back()->withErrors($validator)->withInput()->with('openModal', '#create');
+            // return response()->json($validator->errors(), 422);
         }
         if ($request->hasFile('image')) {
             $image = $this->storeFile($request->file('image'), 'profile');

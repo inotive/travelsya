@@ -34,6 +34,8 @@ class UserController extends Controller
         // $request['role'] = $request->role;
         $request['role'] = 0;
         $request['email'] = $request->email;
+        $request['point'] = 0; // Perhatikan
+        $request['is_active'] = 1; // Perhatikan
         $request['password'] = password_hash($request->password, PASSWORD_DEFAULT);
         User::create($request->all());
 
