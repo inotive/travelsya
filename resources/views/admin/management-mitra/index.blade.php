@@ -172,23 +172,35 @@
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
                                 <label class=" required fs-6 fw-semibold mb-2">Nama User</label>
-                                <input class="form-control form-control-lg" id="name" name="name"
+                                <input class="form-control form-control-lg @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}"
                                     placeholder="Masukan nama perusahaan" required />
+                                @error('name')
+                                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class=" required fs-6 fw-semibold mb-2">Email</label>
-                                <input class="form-control form-control-lg" id="email" name="email"
+                                <input class="form-control form-control-lg @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}"
                                     placeholder="Masukan nama email" required />
+                                @error('email')
+                                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class=" required fs-6 fw-semibold mb-2">Password</label>
-                                <input class="form-control form-control-lg" id="password" name="password"
-                                    type="password" placeholder="Masukan nama email" required />
+                                <input class="form-control form-control-lg @error('password') is-invalid @enderror" id="password" name="password"
+                                    type="password" placeholder="Masukan password" required />
+                                @error('nomor_telfon')
+                                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="col-md-12">
                                 <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
-                                <input class="form-control form-control-lg" id="phone" name="nomor_telfon"
+                                <input class="form-control form-control-lg @error('nomor_telfon') is-invalid @enderror" id="phone" name="nomor_telfon" value="{{ old('nomor_telfon') }}"
                                     placeholder="Masukan nomor telfon" required />
+                                @error('nomor_telfon')
+                                    <div class="alert alert-danger mt-2">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <!--end::Input group-->
@@ -222,6 +234,16 @@
             </form>
         </div>
         <!--end::Modal dialog-->
+        @if(session('openModal'))
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                var modal = document.querySelector("{{ session('openModal') }}");
+                if (modal) {
+                    new bootstrap.Modal(modal).show();
+                }
+        });
+            </script>      
+        @endif
     </div>
     <!--end::Modal - New Target-->
 
@@ -409,6 +431,8 @@
 @push('add-script')
     <script>
         $(document).ready(function() {
+        
+            $('#createModal').modal('show');
 
             // $('.btn-warning').click(function (){
             //
