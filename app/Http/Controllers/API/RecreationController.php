@@ -395,7 +395,7 @@ class RecreationController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['business_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => asset('storage/' . $rec['image'] ? $rec['image']['image'] : 'not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'unit_price' => $rec['recreationPackages'][0]['unit_price'],
                     'price' => $rec['recreationPackages'][0]['price'],
