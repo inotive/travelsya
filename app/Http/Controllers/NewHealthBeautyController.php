@@ -66,7 +66,7 @@ class NewHealthBeautyController extends Controller
 
         $categories = CategoriesServices::get();
 
-        $partners = Clinic::with('packages')->orderBy('created_at', 'desc')->get();
+        $partners = Clinic::with(['packages', 'images'])->orderBy('created_at', 'desc')->get();
 
         $data['special_deals'] = collect($special_deals);
         $data['special_deals_beauty'] = collect($special_deals_beauty);
