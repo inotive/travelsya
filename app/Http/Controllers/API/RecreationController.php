@@ -392,10 +392,16 @@ class RecreationController extends Controller
 
         foreach ($recreations as $key => $rec) {
             if (count($rec['recreationPackages']) > 0) {
+                if(!$rec['image']){
+                    $img = asset('storage/not_found.png');
+                }else{
+                    $img = asset('storage/' . $rec['image']['image']);
+                }
+
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['business_name'],
-                    'image' => asset('storage/' . $rec['image'] ? $rec['image']['image'] : 'not_found.png'),
+                    'image' => $img,
                     'location' => $rec['kota'] ? $rec['kota']['city_name'] : 'Kota dihapus',
                     'unit_price' => $rec['recreationPackages'][0]['unit_price'],
                     'price' => $rec['recreationPackages'][0]['price'],
