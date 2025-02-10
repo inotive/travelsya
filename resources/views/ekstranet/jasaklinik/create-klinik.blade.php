@@ -4,7 +4,7 @@
 <div class="container">
 
     <div class="card">
-        
+
         <div class="card-body">
             <form id="clinic-form" action="{{ route('clinics.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -27,7 +27,7 @@
                         @enderror
                     </div>
 
-                    
+
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                         <select class="form-control" name="categories_services_id" required>
@@ -41,12 +41,12 @@
                             </span>
                         @enderror
                     </div>
-    
-                
-                    
+
+
+
                     <input type="hidden" name="clinid_id" value="1">
 
-                    
+
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Biaya</label>
                         <input class="form-control form-control-lg" placeholder="Masukan biaya" name="price" required />
@@ -56,7 +56,7 @@
                             </span>
                         @enderror
                     </div>
-                    
+
                     <div class="col-md-3">
                         <label class="required fs-6 fw-semibold mb-2">Durasi</label>
                         <input class="form-control form-control-lg" placeholder="Masukan durasi" name="duration" required />
@@ -79,7 +79,7 @@
                             </span>
                         @enderror
                     </div>
-                    
+
 
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Masa Berlaku (hari)</label>
@@ -91,7 +91,7 @@
                         @enderror
                     </div>
 
-                    
+
                     <input type="hidden" name="specialist_id" value="1">
 
 
@@ -105,7 +105,7 @@
                         <label for="description" class="form-label">Deskripsi</label>
                         <textarea name="description" cols="30" rows="3" class="form-control" required></textarea>
                     </div>
-    
+
 
                     <div class="col-12">
                         <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
@@ -113,11 +113,10 @@
                     </div>
 
 
-
                     <input type="hidden" name="is_active" value="1">
 
-                    <input type="hidden" name="clinic_id" value="1">
-                    
+                    <input type="hidden" name="clinic_id" value="{{ Illuminate\Support\Facades\Auth::user()->clinic->id }}">
+
                     <input type="hidden" name="unit_price" value="unit_price">
                 </div>
                 <!--end::Input group-->
@@ -142,5 +141,5 @@
     </div>
 </div>
 
-        
+
 @endsection
