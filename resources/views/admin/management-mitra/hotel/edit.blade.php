@@ -31,14 +31,8 @@
                 <div class="g-9 mb-8 row">
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                        <input type="text" class="form-control form-control-lg" id="name-edit" required />
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
-
-                        @error('name')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{$message}}</strong>
-                        </span>
-                        @enderror
+                        <input type="text" class="form-control form-control-lg" id="name-edit" required/>
+                        <div class="text-danger mt-1"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Mitra</label>
@@ -47,12 +41,7 @@
                             <option value="{{$user->id}}">{{$user->name}}</option>
                             @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
-                        @error('user_id')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{$message}}</strong>
-                        </span>
-                        @enderror
+                        <div class="text-danger mt-1"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Active</label>
@@ -60,23 +49,18 @@
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                        @error('is_active')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{$message}}</strong>
-                        </span>
-                        @enderror
+                        <div class="text-danger mt-1"></div>
                     </div>
                     <div class="col-12">
                         <label for="" class="form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control" required></textarea>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
+                        <div class="text-danger mt-1"></div>
                     </div>
                     <div class="col-md-12">
                         <label for="website" class="form-label">Website</label>
                         <input type="text" id="website-edit" class="form-control" placeholder="Masukan website"
                             required>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-website-edit"></div>
+                        <div class="text-danger mt-1"></div>
                     </div>
 
                     <div class="col-md-12">
@@ -86,11 +70,7 @@
                             <option value="Samarinda">Samarinda</option>
                             <option value="Banjarmasin">Banjarmasin</option>
                         </select>
-                        @error('city')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{$message}}</strong>
-                        </span>
-                        @enderror
+                        <div class="text-danger mt-1"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Bintang</label>
@@ -251,51 +231,60 @@
             },
             error:function(error){
 
-                if(error.responseJSON.name[0]) {
-
-                    //show alert
-                    $('#alert-name-edit').removeClass('d-none');
-                    $('#alert-name-edit').addClass('d-block');
-                    //add message to alert
-                    $('#alert-name-edit').html(error.responseJSON.name[0]);
+                const message = error.responseJSON;
+                $('.is-invalid').removeClass('is-invalid').next().empty();
+                
+                if(message) {
+                    for (const key in message) {
+                        $(`#${key}-edit`).addClass('is-invalid').next().html(message[key]);
+                    }
                 }
 
-                if(error.responseJSON.user_id[0]) {
-                    $('#alert-user_id-edit').removeClass('d-none');
-                    $('#alert-user_id-edit').addClass('d-block');
-                    $('#alert-user_id-edit').html(error.responseJSON.user_id[0]);
-                }
+                // if(error.responseJSON.name[0]) {
 
-                if(error.responseJSON.star[0]) {
-                    $('#alert-star-edit').removeClass('d-none');
-                    $('#alert-star-edit').addClass('d-block');
-                    $('#alert-star-edit').html(error.responseJSON.star[0]);
-                }
-                if(error.responseJSON.website[0]) {
-                    $('#alert-website-edit').removeClass('d-none');
-                    $('#alert-website-edit').addClass('d-block');
-                    $('#alert-website-edit').html(error.responseJSON.website[0]);
-                }
-                if(error.responseJSON.name[0]) {
-                    $('#alert-user_id-edit').removeClass('d-none');
-                    $('#alert-user_id-edit').addClass('d-block');
-                    $('#alert-user_id-edit').html(error.responseJSON.name[0]);
-                }
-                if(error.responseJSON.is_active[0]) {
-                    $('#alert-is_active-edit').removeClass('d-none');
-                    $('#alert-is_active-edit').addClass('d-block');
-                    $('#alert-is_active-edit').html(error.responseJSON.is_active[0]);
-                }
-                if(error.responseJSON.city[0]) {
-                    $('#alert-city-edit').removeClass('d-none');
-                    $('#alert-city-edit').addClass('d-block');
-                    $('#alert-city-edit').html(error.responseJSON.city[0]);
-                }
-                if(error.responseJSON.address[0]) {
-                    $('#alert-address-edit').removeClass('d-none');
-                    $('#alert-address-edit').addClass('d-block');
-                    $('#alert-address-edit').html(error.responseJSON.address[0]);
-                }
+                //     //show alert
+                //     $('#alert-name-edit').removeClass('d-none');
+                //     $('#alert-name-edit').addClass('d-block');
+                //     //add message to alert
+                //     $('#alert-name-edit').html(error.responseJSON.name[0]);
+                // }
+
+                // if(error.responseJSON.user_id[0]) {
+                //     $('#alert-user_id-edit').removeClass('d-none');
+                //     $('#alert-user_id-edit').addClass('d-block');
+                //     $('#alert-user_id-edit').html(error.responseJSON.user_id[0]);
+                // }
+
+                // if(error.responseJSON.star[0]) {
+                //     $('#alert-star-edit').removeClass('d-none');
+                //     $('#alert-star-edit').addClass('d-block');
+                //     $('#alert-star-edit').html(error.responseJSON.star[0]);
+                // }
+                // if(error.responseJSON.website[0]) {
+                //     $('#alert-website-edit').removeClass('d-none');
+                //     $('#alert-website-edit').addClass('d-block');
+                //     $('#alert-website-edit').html(error.responseJSON.website[0]);
+                // }
+                // if(error.responseJSON.name[0]) {
+                //     $('#alert-user_id-edit').removeClass('d-none');
+                //     $('#alert-user_id-edit').addClass('d-block');
+                //     $('#alert-user_id-edit').html(error.responseJSON.name[0]);
+                // }
+                // if(error.responseJSON.is_active[0]) {
+                //     $('#alert-is_active-edit').removeClass('d-none');
+                //     $('#alert-is_active-edit').addClass('d-block');
+                //     $('#alert-is_active-edit').html(error.responseJSON.is_active[0]);
+                // }
+                // if(error.responseJSON.city[0]) {
+                //     $('#alert-city-edit').removeClass('d-none');
+                //     $('#alert-city-edit').addClass('d-block');
+                //     $('#alert-city-edit').html(error.responseJSON.city[0]);
+                // }
+                // if(error.responseJSON.address[0]) {
+                //     $('#alert-address-edit').removeClass('d-none');
+                //     $('#alert-address-edit').addClass('d-block');
+                //     $('#alert-address-edit').html(error.responseJSON.address[0]);
+                // }
             }
 
         });

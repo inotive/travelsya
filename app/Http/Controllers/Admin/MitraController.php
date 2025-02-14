@@ -48,8 +48,8 @@ class MitraController extends Controller
         $user = User::findorFail($id);
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            // 'email'    => 'required|email|unique:users,email',
-
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'phone' => 'required'
         ]);
 
         if ($validator->fails()) {

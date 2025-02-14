@@ -14,9 +14,7 @@ class CustomerController extends Controller
     {
         $customers = User::where('role', 2)
             ->with('transaction')
-            ->paginate(10);
-
-
+            ->get();
         return view('admin.management-customer.index', compact('customers'));
     }
 
@@ -114,9 +112,7 @@ class CustomerController extends Controller
                 'created_at' => $item[0]->created_at,
             ];
         })->values()->all();
-
-        //dd($detailTransactions);
-
+        
         return response()->json($detailTransactions);
     }
 

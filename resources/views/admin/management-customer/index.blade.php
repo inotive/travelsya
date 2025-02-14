@@ -15,7 +15,7 @@
             <!--begin::Table container-->
             <div class="table-responsive">
                 <!--begin::Table-->
-                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle display" id="kt_datatable_zero_configuration">
                     <!--begin::Table head-->
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
@@ -96,7 +96,7 @@
                     </tbody>
                     <!--end::Table body-->
                 </table>
-                {{ $customers->appends(request()->input())->links('vendor.pagination.bootstrap-5') }}
+                {{-- {{ $customers->appends(request()->input())->links('vendor.pagination.bootstrap-5') }} --}}
                 <!--end::Table-->
             </div>
             <!--end::Table container-->

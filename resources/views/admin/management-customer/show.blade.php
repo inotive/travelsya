@@ -84,32 +84,73 @@
         method: 'GET',
         data: { customerId: customerId },
         success: function(response) {
-
             // Fill Table Body
             var tableBody = $('#dataTbody');
-            var data = response;
+            // console.info('Ini adalah data:', response);
             tableBody.empty();
 
-            for (var i = 0; i < data.length; i++) {
-                $('.nama-customer').text(data[i].user)
 
-                var created_at = formatDate(data[i].created_at);
-                var row = '<tr>' +
-                    '<td>' + created_at + '</td>' +
-                    '<td>' + data[i].no_inv + '</td>' +
-                    '<td><span class="badge badge-rounded badge-primary">' + (data[i].service_name ? data[i].service_name.charAt(0).toUpperCase() + data[i].service_name.slice(1) : '-') + '</span></td>' +
-                    '<td>' + data[i].transaction_name + ' - ' + data[i].transaction_desc + '</td>' +
-                    '<td>' + (data[i].payment_method ? data[i].payment_method.replace(/_/g, ' ') : '-') + '</td>' +
-                    '<td>' + (data[i].transaction_price ? 'Rp ' + data[i].transaction_price.toLocaleString('id-ID') : '-') + '</td>' +
-                    '<td>' + (data[i].fee_admin ? 'Rp ' + data[i].fee_admin.toLocaleString('id-ID') : '-') + '</td>' +
-                    '<td>' + data[i].debit_point + ' Point' + '</td>' +
-                    '<td>' + data[i].credit_point + ' Point' + '</td>' +
-                    '</tr>';
-
-                tableBody.append(row);
-
-
+            var kelas =  $('.dataTables_empty');
+            if(response.length > 0) {
+                kelas.remove();
+            } else if (kelas.length === 0) {
+                tableBody.append(
+                    `<tr class='odd'>
+                        <td valign='top' colspan='9' class='dataTables_empty'>
+                            No data available in table
+                        </td>    
+                    </tr>`
+                );
             }
+
+
+            response.forEach(customer => {
+                $('.nama-customer').text(customer.user)
+                
+                var created_at = formatDate(customer.created_at);
+                tableBody.append(
+                    '<tr>' +
+                        '<td>' + created_at + '</td>' +
+                        '<td>' + customer.no_inv + '</td>' +
+                        '<td><span class="badge badge-rounded badge-primary">' + (customer.service_name ? customer.service_name.charAt(0).toUpperCase() + customer.service_name.slice(1) : '-') + '</span></td>' +
+                        '<td>' + customer.transaction_name + ' - ' + customer.transaction_desc + '</td>' +
+                        '<td>' + (customer.payment_method ? customer.payment_method.replace(/_/g, ' ') : '-') + '</td>' +
+                        '<td>' + (customer.transaction_price ? 'Rp ' + customer.transaction_price.toLocaleString('id-ID') : '-') + '</td>' +
+                        '<td>' + (customer.fee_admin ? 'Rp ' + customer.fee_admin.toLocaleString('id-ID') : '-') + '</td>' +
+                        '<td>' + customer.debit_point + ' Point' + '</td>' +
+                        '<td>' + customer.credit_point + ' Point' + '</td>' +
+                    '</tr>'
+                );
+            });
+
+            // $('#kt_datatable_zero_configuration').DataTable().destroy(); // Hancurkan DataTable yang ada
+            // $('#kt_datatable_zero_configuration').DataTable();
+
+            // $('#kt_datatable_zero_configuration').DataTable();
+
+            // for (var i = 0; i < data.length; i++) {
+
+                
+            //     $('.nama-customer').text(data[i].user)
+                
+            //     var created_at = formatDate(data[i].created_at);
+            //     var row = '<tr>' +
+            //         '<td>' + created_at + '</td>' +
+            //         '<td>' + data[i].no_inv + '</td>' +
+            //         '<td><span class="badge badge-rounded badge-primary">' + (data[i].service_name ? data[i].service_name.charAt(0).toUpperCase() + data[i].service_name.slice(1) : '-') + '</span></td>' +
+            //         '<td>' + data[i].transaction_name + ' - ' + data[i].transaction_desc + '</td>' +
+            //         '<td>' + (data[i].payment_method ? data[i].payment_method.replace(/_/g, ' ') : '-') + '</td>' +
+            //         '<td>' + (data[i].transaction_price ? 'Rp ' + data[i].transaction_price.toLocaleString('id-ID') : '-') + '</td>' +
+            //         '<td>' + (data[i].fee_admin ? 'Rp ' + data[i].fee_admin.toLocaleString('id-ID') : '-') + '</td>' +
+            //         '<td>' + data[i].debit_point + ' Point' + '</td>' +
+            //         '<td>' + data[i].credit_point + ' Point' + '</td>' +
+            //         '</tr>';
+
+            //     tableBody.append(row);
+            //     const table = $('#kt_datatable_zero_configuration').DataTable();
+                
+
+            // }
 
             // Inisialisasi DataTable
                 // $('#kt_datatable_zero_configuration').DataTable({

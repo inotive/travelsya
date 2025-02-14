@@ -336,16 +336,19 @@
                                 <label class=" required fs-6 fw-semibold mb-2">Nama User</label>
                                 <input class="form-control form-control-lg" id="edit-name" name="name"
                                     placeholder="Masukan nama perusahaan" required />
+                                <div class="text-danger mt-1"></div>
                             </div>
                             <div class="col-md-6">
                                 <label class=" required fs-6 fw-semibold mb-2">Email</label>
                                 <input class="form-control form-control-lg" id="edit-email" name="email"
                                     placeholder="Masukan nama email" required />
+                                <div class="text-danger mt-1"></div>
                             </div>
                             <div class="col-md-6">
                                 <label class=" required fs-6 fw-semibold mb-2">Password</label>
                                 <input class="form-control form-control-lg" id="edit-password" name="password"
                                     type="password" placeholder="Masukan Password Baru" />
+                                <div class="text-danger mt-1"></div>
 
                                 <div class="fs-7 fw-semibold text-muted">Kosongkan Jika Tidak Ingin Merubah Password Lama
                                 </div>
@@ -354,6 +357,7 @@
                                 <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
                                 <input class="form-control form-control-lg" id="edit-phone" name="phone"
                                     placeholder="Masukan nomor telfon" required />
+                                <div class="text-danger mt-1"></div>
                             </div>
                         </div>
                         <!--begin::Heading-->
@@ -537,18 +541,15 @@
                     location.reload();
                 },
                 error: function(error) {
-                    if (error.responseJSON && error.responseJSON.name && error.responseJSON.name[0]) {
-                        // Show alert
-                        $('#alert-edit-name').removeClass('d-none').addClass('d-block');
-                        $('#alert-edit-image').removeClass('d-none').addClass('d-block');
-                        $('#alert-edit-is_active').removeClass('d-none').addClass('d-block');
+                    const message = error.responseJSON;
+                    // console.info(message);
 
+                    $('.is-invalid').removeClass('is-invalid').next().empty();
 
-                        // Add message to alert
-                        $('#alert-edit-name').html(error.responseJSON.name[0]);
-                        $('#alert-edit-image').html(error.responseJSON.name[0]);
-                        $('#alert-edit-is_active').html(error.responseJSON.name[0]);
-
+                    if(message) {
+                        for (const key in message) {
+                            $(`#edit-${key}`).addClass('is-invalid').next().html(message[key]);
+                        }
                     }
                 }
             });
