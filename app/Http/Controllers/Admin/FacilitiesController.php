@@ -46,9 +46,9 @@ class FacilitiesController extends Controller
         }
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image')->store('media/facilities');
-            
-            
+            $image = $request->file('image')->store('facilities', 'public');
+
+
         } else {
             return response()->json(['error' => 'Tidak ada file yang diunggah'], 422);
         }
