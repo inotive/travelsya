@@ -10,44 +10,43 @@
             </h3>
             {{-- <div class="card-toolbar">
            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-           <i class="ki-duotone ki-plus fs-2"></i>New Point</a>
-       </div> --}}
+           <i class="ki-duotone ki-plus fs-2"></i>New Point</a> --}}
         </div>
-        <!--end::Header-->
-        <!--begin::Body-->
-        <div class="card-body py-3">
-            <!--begin::Table container-->
-            <div class="table-responsive">
-                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                    id="kt_datatable_zero_configuration">
-                    <thead>
-                        <tr class="fw-bold fs-6 text-gray-800">
-                            <th>No.</th>
-                            <th class="text-center">Layanan</th>
-                            <th class="text-center">Kelipatan Transaksi</th>
-                            <th class="text-center">Jumlah Point Yang Di Dapat Oleh Customer</th>
-                            <th class="text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($points as $point)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ strtoupper($point->service->name) }}</td>
-                                <td class="text-center">Rp. {{ number_format($point->multiple, 0, ',', '.') }}</td>
-                                <td class="text-center">{{ $point->value }} Point / {{ General::rp($point->multiple) }}</td>
-                                <td class="text-center"><button class="btn btn-sm btn-primary" data-id="{{ $point->id }}"
-                                        data-categoryid="{{ $point->category_id }}" data-multiple="{{ $point->multiple }}"
-                                        data-value="{{ $point->value }}" data-bs-toggle="modal" data-bs-target="#edit">Edit
-                                        Data</button></td>
-                        @endforeach
-                    </tbody>
-                </table>
-                {{--                <!--end::Table--> --}}
-            </div>
-            <!--end::Table container-->
+    </div>
+    <!--end::Header-->
+    <!--begin::Body-->
+    <div class="card-body py-3">
+        <!--begin::Table container-->
+        <div class="table-responsive">
+            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
+                <thead>
+                    <tr class="fw-bold fs-6 text-gray-800">
+                        <th>No.</th>
+                        <th class="text-center">Layanan</th>
+                        <th class="text-center">Kelipatan Transaksi</th>
+                        <th class="text-center">Jumlah Point Yang Di Dapat Oleh Customer</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($points as $point)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ strtoupper($point->service->name) }}</td>
+                            <td class="text-center">Rp. {{ number_format($point->multiple, 0, ',', '.') }}</td>
+                            <td class="text-center">{{ $point->value }} Point / {{ General::rp($point->multiple) }}</td>
+                            <td class="text-center"><button class="btn btn-sm btn-primary" data-id="{{ $point->id }}"
+                                    data-categoryid="{{ $point->category_id }}" data-multiple="{{ $point->multiple }}"
+                                    data-value="{{ $point->value }}" data-bs-toggle="modal" data-bs-target="#edit">Edit
+                                    Data</button></td>
+                    @endforeach
+                </tbody>
+            </table>
+            {{--                <!--end::Table--> --}}
         </div>
-        <!--begin::Body-->
+        <!--end::Table container-->
+    </div>
+    <!--begin::Body-->
     </div>
     <!--end::Tables Widget 11-->
     {{-- modal --}}
@@ -166,17 +165,17 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.point.update') }}">
+                        action="{{ route('admin.point.update') }}" onsubmit="return false;">
                         @method('put')
                         @csrf
                         <input type="hidden" name="id" id="id">
+
                         <!--begin::Heading-->
                         <div class="mb-13 text-center">
-                            <!--begin::Title-->
                             <h1 class="mb-3">Setting Point Yang Diperoleh Customer</h1>
-                            <!--end::Title-->
                         </div>
                         <!--end::Heading-->
+
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
@@ -184,39 +183,30 @@
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">Rp.</span>
                                     <input type="text" name="multiple" id="multiple" class="form-control"
-                                           placeholder="Masukan kelipatan transaksi">
+                                        placeholder="Masukan kelipatan transaksi">
                                 </div>
-                                @error('multiple')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <div id="alert-multiple" class="text-danger mt-1 d-none"></div>
                             </div>
-                            <div class="col-md-12 ">
-                                <label class="form-label required">Jumlah Point Yang Akan Diterima Setiap Kelipatan Transaksi</label>
+
+                            <div class="col-md-12">
+                                <label class="form-label required">Jumlah Point Yang Akan Diterima Setiap Kelipatan
+                                    Transaksi</label>
                                 <div class="input-group">
                                     <input type="text" name="value" id="value" class="form-control"
-                                           placeholder="Masukan Jumlah Point">
+                                        placeholder="Masukan Jumlah Point">
                                     <span class="input-group-text" id="basic-addon1">Point</span>
                                 </div>
-
-                                @error('value')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                                <div id="alert-value" class="text-danger mt-1 d-none"></div>
                             </div>
                         </div>
                         <!--end::Input group-->
+
                         <!--begin::Actions-->
                         <div class="d-flex justify-content-between">
                             <button type="reset" id="kt_modal_new_target_cancel"
                                 class="btn btn-light me-3 w-100">Cancel</button>
-                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">
-                                <span class="indicator-label">Simpan Perubahan</span>
-                                <span class="indicator-progress">Please wait...
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
+                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">Simpan
+                                Perubahan</button>
                         </div>
                         <!--end::Actions-->
                     </form>
@@ -235,7 +225,7 @@
     <script>
         $(function() {
             $('#edit').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
+                var button = $(event.relatedTarget); // The button that triggered the modal
                 var id = button.data('id');
                 var multiple = button.data('multiple');
                 var name = button.data('name');
@@ -248,10 +238,61 @@
                 modal.find('#multiple').val(multiple);
                 modal.find('#value').val(value);
 
+                // Optionally set the is_percent field if you have it
                 $(`#percent option[value=${is_percent}]`).attr('selected', 'selected');
+            });
 
+            // Submit button click event to handle form submission via AJAX
+            $('#kt_modal_new_target_submit').click(function(e) {
+                e.preventDefault(); // Prevent the form from submitting normally
+
+                let id = $('#id').val();
+                let multiple = $('#multiple').val();
+                let value = $('#value').val();
+                let token = $("meta[name='csrf-token']").attr("content");
+
+                // Reset any existing error messages
+                $('#alert-multiple').addClass('d-none').removeClass('d-block');
+                $('#alert-value').addClass('d-none').removeClass('d-block');
+
+                // Make the AJAX request to update the point
+                $.ajax({
+                    url: `/admin/point`, // Update this URL if necessary
+                    type: 'PUT',
+                    data: {
+                        "id": id,
+                        "multiple": multiple,
+                        "value": value,
+                        "_token": token
+                    },
+                    success: function(response) {
+                        // On success, close the modal and reload the page
+                        $('#kt_modal_new_target_form')[0].reset(); // Reset form fields
+                        $('#edit').modal('hide'); // Hide the modal
+                        location.reload(); // Reload the page to reflect changes
+                    },
+                    error: function(error) {
+                        console.log("Validation Error", error);
+
+                        // Check if the error response contains validation messages
+                        if (error.responseJSON && error.responseJSON.errors) {
+                            // Handle validation error messages
+                            if (error.responseJSON.errors.multiple) {
+                                $('#alert-multiple').removeClass('d-none').addClass('d-block')
+                                    .html(error.responseJSON.errors.multiple[
+                                    0]); // Show the error message for 'multiple'
+                            }
+                            if (error.responseJSON.errors.value) {
+                                $('#alert-value').removeClass('d-none').addClass('d-block')
+                                    .html(error.responseJSON.errors.value[
+                                    0]); // Show the error message for 'value'
+                            }
+                        }
+                    }
+                });
             });
         });
+
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",

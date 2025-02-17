@@ -22,10 +22,25 @@ class PointController extends Controller
 
     public function updatePoint(Request $request)
     {
+        $request->validate([
+            'multiple' => 'required|numeric',
+            'value' => 'required|numeric',
+        ]);
+
         $setting = Point::find($request->id);
+
+        if (!$setting) {
+            return response()->json(['message' => 'Point setting not found'], 404);
+        }
+
         $setting->update($request->all());
+
         toast('Point has been updated', 'success');
-        return redirect()->back();
+        return response()->json([
+            'success' => true,
+            'message' => 'Data Berhasil Diudapte!',
+            'data'    => $setting
+        ]);
     }
 
     public function storePoint(Request $request)
