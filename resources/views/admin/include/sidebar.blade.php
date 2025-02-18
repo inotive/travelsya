@@ -1,6 +1,6 @@
 
 @php
-    
+
     function getActiveMitraLink() {
         return Route::currentRouteName()=='admin.mitra' || Route::currentRouteName()=='admin.hotel.index' || Route::currentRouteName()=='admin.hostel.index'  || Route::currentRouteName()=='admin.klinik-kecantikan.index' || Route::currentRouteName()=='admin.rental-mobil.index' || Route::currentRouteName()=='admin.rekreasi.index' || Route::currentRouteName()=='admin.bus-travel.index';
     }
@@ -18,8 +18,8 @@
 
     .menu-item.here .menu-title.custom, .menu-item.here .menu-arrow {
         color: gray !important;
-     } 
-     
+     }
+
 </style>
 
 <!--begin::Sidebar-->
@@ -164,7 +164,7 @@
                                     </span>
 
                                     <span class="menu-title" style="color: white;">Riwayat Transaksi</span>
-     
+
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
@@ -175,15 +175,15 @@
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>
-                                    
+
                                     <span class="menu-title custom">Riwayat Transaksi</span>
-                                    
+
                                     </a>
                                     <!--end:Menu link-->
                                 </div>
                             @endif
 
-                           
+
                             <!--end:Menu item-->
                         </div>
                         <!--end:Menu sub-->
@@ -224,10 +224,10 @@
                     @else
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ getActiveMitraLink()  ? 'here show' : '' }} ">
                     @endif
-                    
+
                         <!--begin:Menu link-->
 
-                       
+
                             <span class="menu-link {{ getActiveMitraLink()  ? 'main-accordion' : '' }}">
                             <span class="menu-icon {{ getActiveMitraLink()  ? 'main-accordion' : '' }}">
                                  <i class="fas fa-users fs-3">
@@ -243,9 +243,9 @@
                             @endif
 
 
-                          
+
                             <span class="menu-arrow {{ getActiveMitraLink()  ? 'main-accordion' : '' }}"></span>
-                        
+
                     </span>
                         <!--end:Menu link-->
                         <!--begin:Menu sub-->
@@ -268,8 +268,8 @@
                                             <span class="menu-title custom">Semua Mitra</span>
                                     </a>
                                 @endif
-                               
-                               
+
+
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
@@ -293,8 +293,8 @@
                                     </a>
                                 @endif
 
-                          
-                                
+
+
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
@@ -318,7 +318,7 @@
                                     </a>
                                 @endif
 
-                               
+
                                 <!--end:Menu link-->
                             </div>
                             <!--end:Menu item-->
@@ -342,8 +342,8 @@
                                     </a>
                                 @endif
 
-                          
-                                
+
+
                                 <!--end:Menu link-->
                             </div>
 
@@ -366,8 +366,8 @@
                                     </a>
                                 @endif
 
-                          
-                                
+
+
                                 <!--end:Menu link-->
                             </div>
 
@@ -390,8 +390,8 @@
                                     </a>
                                 @endif
 
-                          
-                                
+
+
                                 <!--end:Menu link-->
                             </div>
 
@@ -414,8 +414,8 @@
                                     </a>
                                 @endif
 
-                          
-                                
+
+
                                 <!--end:Menu link-->
                             </div>
 
@@ -484,7 +484,7 @@
                     </span>
                         <!--end:Menu link-->
                     </a>
-                    <a href="{{route('admin.help.index')}}" class="menu-item {{(Request::segment(2)=="help") ? 'here' : ''}} menu-accordion">
+                    <a href="{{route('admin.help.index')}}" class="menu-item {{(Request::segment(2)=="helps") ? 'here' : ''}} menu-accordion">
 
                         <!--begin:Menu link-->
                         <span class="menu-link">

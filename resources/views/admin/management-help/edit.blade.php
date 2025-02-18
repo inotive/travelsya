@@ -58,7 +58,7 @@
                         <div id="kt_docs_quill_basic">
                             {!! $help->content !!}
                         </div>
-                        <input type="hidden" name="content" id="hidden-content">
+                        <input type="text" name="content" id="hidden-content" value="{!! $help->content !!}">
                 </div>
                 <!--end:: Body-->
                 <div class="card-footer d-flex justify-content-between">

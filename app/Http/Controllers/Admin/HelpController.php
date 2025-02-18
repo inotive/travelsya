@@ -47,7 +47,9 @@ class HelpController extends Controller
 
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            $errorMessages = $validator->errors()->all();
+            toast($errorMessages, 'error');
+            return redirect()->back();
         }
 
 
@@ -97,7 +99,9 @@ class HelpController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            $errorMessages = $validator->errors()->all();
+            toast($errorMessages, 'error');
+            return redirect()->back();
         }
         // $help = Help::find($id);
         $help->update([
