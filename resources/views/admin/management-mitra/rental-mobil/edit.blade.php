@@ -33,13 +33,7 @@
                   <div class="col-md-12">
                       <label class="required fs-6 fw-semibold mb-2">Nama</label>
                       <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
-                      <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
-
-                      @error('name')
-                          <span class="text-danger mt-1" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
+                      <div class="alert alert-danger mt-1 d-none"></div>              
                   </div>
                   <div class="col-md-6">
                       <label class="required fs-6 fw-semibold mb-2">Mitra</label>
@@ -48,23 +42,13 @@
                               <option value="{{ $user->id }}">{{ $user->name }}</option>
                           @endforeach
                       </select>
-                      <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
-                      @error('user_id')
-                          <span class="text-danger mt-1" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
+                      <div class="alert alert-danger mt-1 d-none"></div>
                   </div>
 
                   <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
                     <input type="text" class="form-control form-control-lg phone-edit" id="phone-edit" required />
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
-                    @error('phone')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <div class="alert alert-danger mt-1 d-none"></div>
                 </div>
 
                   <div class="col-md-12">
@@ -73,12 +57,7 @@
                           <option value="1">Yes</option>
                           <option value="0">No</option>
                       </select>
-                      <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                      @error('is_active')
-                          <span class="text-danger mt-1" role="alert">
-                              <strong>{{ $message }}</strong>
-                          </span>
-                      @enderror
+                      <div class="alert alert-danger mt-1 d-none"></div>
                   </div>
 
                   <div class="col-md-12">
@@ -88,17 +67,13 @@
                         <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                         @endforeach
                     </select>
-                    @error('city')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                    <div class="alert alert-danger mt-1 d-none"></div>
                 </div>
 
                   <div class="col-12">
                       <label for="" class="form-label">Alamat</label>
                       <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
-                      <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
+                      <div class="alert alert-danger mt-1 d-none"></div>
                   </div>
                  
                  
@@ -136,6 +111,7 @@
 $(document).ready(function() {
     $('body').on('click', '#btn-edit-rental', function() {
         let rental_id = $(this).data('id');
+        $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
     
         $.ajax({
             url: `/admin/management-mitra/rental-mobil/${rental_id}`,
@@ -194,9 +170,19 @@ $(document).ready(function() {
             $('#modal-edit').modal('hide');
             location.reload();
         },
-        error: function(error) {
+        error: function(errors) {
 
-            console.log(`berikut errornya`, error);
+            // console.log(`berikut errornya`, errors);
+
+            const messages = errors.responseJSON;
+            $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
+                
+            if(messages) {
+                for (const key in messages) {
+                    $(`.${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                }
+            }
+
 
             // if (error.responseJSON.name[0]) {
 

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 
 
@@ -35,28 +36,36 @@ class AdController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->file('image'));
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'url' => 'required',
-            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
+            'url' => 'nullable|string',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'is_active' => 'required',
         ]);
+
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()->with('openModal', true);
         }
-//        $file = $request->file('image');
-//        $nama_foto = $file->hashName();
-//
-//        $path = public_path('media/ads');
-//        $file->move($path, $nama_foto);
 
-        $image = $request->file('image')->store('media/ads');
+        // if ($validator->fails()) {
+            
+        //     return response()->json($validator->errors(), 422);
+        // }
 
+        if ($request->hasFile('image')) {
+           $img = $request->file('image');
+           $imgName = time() . '_' .$img->getClientOriginalName();
+           $img->move(public_path('media/ads'), $imgName);
+        }
         Ad::create([
-            'name'  => $request->name,
-            'url'   => $request->url,
-            'image' => $image,
-            'is_active' => $request->is_active
+         'name'  => $request->name,
+         'url'   => $request->url,
+         'image' => $imgName,
+         'is_active' => $request->is_active
         ]);
 
         toast('Ads has been created', 'success');
@@ -90,8 +99,8 @@ class AdController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'url' => 'required',
-            'image'     => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'url' => 'nullable|string',
+            'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048|nullable',
 
         ]);
 
@@ -99,30 +108,50 @@ class AdController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if ($request->hasFile('image')) {
+        $imgName = $ad->image;
 
-            //upload new image
-            $image = $request->file('image')->store('media/ads');
-            // $image->storeAs('media/ads', $image->hashName(), 'public');
+        if($request->hasFile('image')) {
+            $img = $request->file('image');
+            $imgName = time() . '_' .$img->getClientOriginalName();
+            $img->move(public_path('media/ads'), $imgName);
 
-            Storage::delete('media/ads/'.$ad->image);
-
-            $ad->update([
-                'image'     => $image,
-                'name'     => $request->name,
-                'url'   => $request->url,
-                'is_active' => $request->is_active,
-            ]);
-
-        } else {
-
-            //update post without image
-            $ad->update([
-                'name'     => $request->name,
-                'url'   => $request->url,
-                'is_active' => $request->is_active,
-            ]);
+            $imgPath = public_path('/media/ads/' . $ad->image);
+            if(File::exists($imgPath)) {
+                File::delete($imgPath);
+            };
         }
+
+        $ad->update([
+            'name'  => $request->name,
+            'url'   => $request->url,
+            'image' => $imgName,
+            'is_active' => $request->is_active
+        ]);
+
+        // if ($request->hasFile('image')) {
+
+        //     //upload new image
+        //     $image = $request->file('image')->store('media/ads');
+        //     // $image->storeAs('media/ads', $image->hashName(), 'public');
+
+        //     Storage::delete('media/ads/'.$ad->image);
+
+        //     $ad->update([
+        //         'image'     => $image,
+        //         'name'     => $request->name,
+        //         'url'   => $request->url,
+        //         'is_active' => $request->is_active,
+        //     ]);
+
+        // } else {
+
+        //     //update post without image
+        //     $ad->update([
+        //         'name'     => $request->name,
+        //         'url'   => $request->url,
+        //         'is_active' => $request->is_active,
+        //     ]);
+        // }
 
 
 
@@ -140,8 +169,13 @@ class AdController extends Controller
     public function destroy($id)
     {
         $ad = Ad::find($id);
+        $imgPath = public_path('/media/ads/' . $ad->image);
+
+        if(File::exists($imgPath)) {
+            File::delete($imgPath);
+        }
+
         $ad->delete();
-        Storage::delete('media/ads/'.$ad->image);
 
 
 

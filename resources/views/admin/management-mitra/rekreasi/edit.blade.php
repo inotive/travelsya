@@ -32,13 +32,7 @@
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
-
-                        @error('name')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Mitra</label>
@@ -47,23 +41,13 @@
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
-                        @error('user_id')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
                         <input type="text" class="form-control form-control-lg phone-edit" id="phone-edit" required />
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
-                        @error('phone')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-6">
@@ -73,11 +57,7 @@
                             <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                             @endforeach
                         </select>
-                        @error('city')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-6">
@@ -89,32 +69,19 @@
                             </option>
                             @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-category-edit"></div>
-                        @error('category_recreation_id')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-6">
                         <label class="fs-6 fw-semibold mb-2">Latitude</label>
                         <input class="form-control form-control-lg" id="lat-edit" type="number" step="any" name="lat" />
-                        @error('lat')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-6">
                         <label class="fs-6 fw-semibold mb-2">Longitude</label>
                         <input class="form-control form-control-lg" id="ltd-edit" type="number" step="any" name="ltd" />
-                        @error('ltd')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-6">
@@ -123,18 +90,13 @@
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                        @error('is_active')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-12">
                         <label for="" class="form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                 </div>
@@ -166,6 +128,7 @@
     $(document).ready(function() {
         $('body').on('click', '#btn-edit-rental', function() {
             let recreation_id = $(this).data('id');
+            $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
 
             $.ajax({
                 url: `/admin/management-mitra/rekreasi/${recreation_id}`
@@ -226,8 +189,15 @@
                     $('#modal-edit').modal('hide');
                     location.reload();
                 }
-                , error: function(error) {
-                    console.log(`berikut errornya`, error);
+                , error: function(errors) {
+                    const messages = errors.responseJSON;
+                    $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
+                        
+                    if(messages) {
+                        for (const key in messages) {
+                            $(`#${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                        }
+                    }
                 }
             });
         });

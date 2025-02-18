@@ -60,9 +60,9 @@ class HostelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            // 'address' => 'required',
+            'address' => 'required',
             'star' => 'required',
-            'website' => 'required',
+            // 'website' => 'required',
             'user_id' => 'required',
             'city' => 'required',
             // 'is_active' => 'required',
@@ -70,8 +70,12 @@ class HostelController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()->with('openModal', true);;
         }
+
         DB::table('hostels')->insert([
             'name' => ucwords($request->name),
             'user_id' => $request->user_id,
@@ -156,7 +160,7 @@ class HostelController extends Controller
             'name' => 'required',
             'address' => 'required',
             'star' => 'required',
-            // 'user_id' => 'required',
+            'user_id' => 'required',
             'city' => 'required',
             'is_active' => 'required',
 
