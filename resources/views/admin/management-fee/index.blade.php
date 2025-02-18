@@ -40,8 +40,8 @@
 
                                 </td>
                                 <td class="text-center"><button class="btn btn-sm btn-primary" data-id="{{ $fee->id }}"
-                                        data-bs-toggle="modal" data-bs-target="#edit"
-                                        id="btn-edit-post">Edit Biaya</button></td>
+                                        data-bs-toggle="modal" data-bs-target="#edit" id="btn-edit-post">Edit Biaya</button>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -233,74 +233,74 @@
                         action="{{ route('admin.management-fee.update') }}">
                         @method('put')
                         @csrf --}}
-                        <input type="hidden" name="id" id="id">
-                        <!--begin::Heading-->
-                        <div class="mb-13 text-center">
-                            <!--begin::Title-->
-                            <h1 class="mb-3">Ubah Biaya Admin</h1>
-                            <!--end::Title-->
+                    <input type="hidden" name="id" id="id">
+                    <!--begin::Heading-->
+                    <div class="mb-13 text-center">
+                        <!--begin::Title-->
+                        <h1 class="mb-3">Ubah Biaya Admin</h1>
+                        <!--end::Title-->
+                    </div>
+                    <!--end::Heading-->
+                    <!--begin::Input group-->
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-12 fv-row">
+                            <label class="required fs-6 fw-semibold mb-2">Layanan</label>
+                            <select class="form-select" id="service_id" disabled>
+                                @foreach ($services as $service)
+                                    <option value="{{ $service->id }}">{{ strtoupper($service->name) }}</option>
+                                @endforeach
+                            </select>
+                            <input type="hidden" id="service_id" name="service_id">
+                            @error('service_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        <!--end::Heading-->
-                        <!--begin::Input group-->
-                        <div class="row g-9 mb-8">
-                            <div class="col-md-12 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Layanan</label>
-                                <select class="form-select" id="service_id" disabled>
-                                    @foreach ($services as $service)
-                                        <option value="{{ $service->id }}">{{ strtoupper($service->name) }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="hidden" id="service_id" name="service_id">
-                                @error('service_id')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Input group-->
+                    <div class="row g-9 mb-8">
+                        <div class="col-md-6 fv-row">
+                            <label class="required fs-6 fw-semibold mb-2">Tipe Biaya Admin</label>
+                            <select class="form-select" id="percent" name="percent">
+                                <option value="0">Rupiah</option>
+                                <option value="1">Presentase</option>
+                            </select>
+                            @error('percent')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        <!--end::Input group-->
-                        <!--begin::Input group-->
-                        <div class="row g-9 mb-8">
-                            <div class="col-md-6 fv-row">
-                                <label class="required fs-6 fw-semibold mb-2">Tipe Biaya Admin</label>
-                                <select class="form-select" id="percent" name="percent">
-                                    <option value="0">Rupiah</option>
-                                    <option value="1">Presentase</option>
-                                </select>
-                                @error('percent')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                            <div class="col-md-6 fv-row">
-                                <label class="form-label required">Besaran Biaya Admin</label>
+                        <div class="col-md-6 fv-row">
+                            <label class="form-label required">Besaran Biaya Admin</label>
 
-                                <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1">Rp. </span>
-                                    <input type="text" name="value" class="form-control"
-                                           id="value" placeholder="Value">
-                                </div>
-                                @error('value')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1">Rp. </span>
+                                <input type="text" name="value" class="form-control" id="value"
+                                    placeholder="Value">
                             </div>
+                            @error('value')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
-                        <!--end::Input group-->
-                        <!--begin::Actions-->
-                        <div class="d-flex justify-content-between">
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Actions-->
+                    <div class="d-flex justify-content-between">
 
-                            <button type="reset" id="kt_modal_new_target_cancel"
-                                class="btn btn-light me-3 w-100">Cancel</button>
-                            <button type="submit" id="update" class="btn btn-primary w-100">
-                                <span class="indicator-label">Simpan Perubahan</span>
-                                <span class="indicator-progress">Please wait...
-                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                            </button>
-                        </div>
-                        <!--end::Actions-->
+                        <button type="reset" id="kt_modal_new_target_cancel"
+                            class="btn btn-light me-3 w-100" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="update" class="btn btn-primary w-100">
+                            <span class="indicator-label">Simpan Perubahan</span>
+                            <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                        </button>
+                    </div>
+                    <!--end::Actions-->
                     {{-- </form> --}}
                     <!--end:Form-->
                 </div>
@@ -314,6 +314,18 @@
 @endsection
 
 @push('add-script')
+    <script>
+        document.getElementById('percent').addEventListener('change', function() {
+            var percentValue = this.value;
+            var addonText = document.getElementById('basic-addon1');
+
+            if (percentValue == '1') {
+                addonText.textContent = '%';
+            } else {
+                addonText.textContent = 'Rp. ';
+            }
+        });
+    </script>
     <script>
         //  $(function() {
         //     $('#edit').on('show.bs.modal', function(event) {

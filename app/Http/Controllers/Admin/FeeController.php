@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fee;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FeeController extends Controller
 {
@@ -31,6 +32,19 @@ class FeeController extends Controller
     public function updateFee(Request $request, $id)
     {
         $setting = Fee::find($id);
+        
+        $validator = Validator::make($request->all(), [
+            'service_id' => 'required',
+            'percent' => 'required',
+            'value' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            $errorMessages = $validator->errors()->all();
+            toast($errorMessages, 'error');
+            return redirect()->back();
+        }
+
         $setting->update($request->all());
         toast('Fee admin has been updated', 'success');
         return redirect()->back();
