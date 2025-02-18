@@ -1,4 +1,4 @@
-@extends('admin.layout', ['title' => 'Daftar Iklan', 'url' => ''])
+@extends('admin.layout', ['title' => 'Kelola Kota', 'url' => ''])
 
 @section('content-admin')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -55,7 +55,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     <button type="reset" id="kt_modal_new_target_cancel"
-                                        class="btn btn-light me-3">Cancel
+                                        class="btn btn-light me-3" data-bs-dismiss="modal">Cancel
                                     </button>
                                 </div>
                                 <div class="col-6">
