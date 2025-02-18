@@ -32,13 +32,7 @@
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
-
-                        @error('name')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Mitra</label>
@@ -47,12 +41,7 @@
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
-                        @error('user_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Active</label>
@@ -60,23 +49,18 @@
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                        @error('is_active')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-12">
                         <label for="" class="form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
                         <label for="website" class="form-label">Website</label>
                         <input type="text" id="website-edit" class="form-control website-edit"
                             placeholder="Masukan website">
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-website-edit"></div>
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-12">
@@ -86,11 +70,7 @@
                             <option value="Samarinda">Samarinda</option>
                             <option value="Banjarmasin">Banjarmasin</option>
                         </select>
-                        @error('city')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Bintang</label>
@@ -229,6 +209,7 @@
 
 
         let hostel_id = $(this).data('id');
+        $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none')
 
         $.ajax({
             url: `/admin/management-mitra/hostel/${hostel_id}`,
@@ -294,7 +275,7 @@
             success: function(response) {
 
                 $('#modal-edit').modal('hide');
-                location.reload();
+               location.reload();
 
                 //data post
                 // let hotel = `
@@ -318,36 +299,48 @@
 
 
             },
-            error: function(error) {
+            error: function(errors) {
 
-                if (error.responseJSON.name[0]) {
-
-                    //show alert
-                    $('#alert-name-edit').removeClass('d-none');
-                    $('#alert-name-edit').addClass('d-block');
-                    $('#alert-user_id-edit').removeClass('d-none');
-                    $('#alert-user_id-edit').addClass('d-block');
-                    $('#alert-website-edit').removeClass('d-none');
-                    $('#alert-website-edit').addClass('d-block');
-                    $('#alert-star-edit').removeClass('d-none');
-                    $('#alert-star-edit').addClass('d-block');
-                    $('#alert-is_active-edit').removeClass('d-none');
-                    $('#alert-is_active-edit').addClass('d-block');
-                    $('#alert-address-edit').removeClass('d-none');
-                    $('#alert-address-edit').addClass('d-block');
-                    $('#alert-city-edit').removeClass('d-none');
-                    $('#alert-city-edit').addClass('d-block');
-
-
-                    //add message to alert
-                    $('#alert-name-edit').html(error.responseJSON.name[0]);
-                    $('#alert-user_id-edit').html(error.responseJSON.name[0]);
-                    $('#alert-website-edit').html(error.responseJSON.name[0]);
-                    $('#alert-star-edit').html(error.responseJSON.name[0]);
-                    $('#alert-is_active-edit').html(error.responseJSON.name[0]);
-                    $('#alert-address-edit').html(error.responseJSON.name[0]);
-                    $('#alert-city-edit').html(error.responseJSON.name[0]);
+                console.error(errors.responseJSON);
+                $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none')
+                const messages = errors.responseJSON;
+                
+                if(messages) {
+                    for (const key in messages) {
+                        $(`#${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                    }
                 }
+
+
+
+                // if (error.responseJSON.name[0]) {
+
+                //     //show alert
+                //     $('#alert-name-edit').removeClass('d-none');
+                //     $('#alert-name-edit').addClass('d-block');
+                //     $('#alert-user_id-edit').removeClass('d-none');
+                //     $('#alert-user_id-edit').addClass('d-block');
+                //     $('#alert-website-edit').removeClass('d-none');
+                //     $('#alert-website-edit').addClass('d-block');
+                //     $('#alert-star-edit').removeClass('d-none');
+                //     $('#alert-star-edit').addClass('d-block');
+                //     $('#alert-is_active-edit').removeClass('d-none');
+                //     $('#alert-is_active-edit').addClass('d-block');
+                //     $('#alert-address-edit').removeClass('d-none');
+                //     $('#alert-address-edit').addClass('d-block');
+                //     $('#alert-city-edit').removeClass('d-none');
+                //     $('#alert-city-edit').addClass('d-block');
+
+
+                //     //add message to alert
+                //     $('#alert-name-edit').html(error.responseJSON.name[0]);
+                //     $('#alert-user_id-edit').html(error.responseJSON.name[0]);
+                //     $('#alert-website-edit').html(error.responseJSON.name[0]);
+                //     $('#alert-star-edit').html(error.responseJSON.name[0]);
+                //     $('#alert-is_active-edit').html(error.responseJSON.name[0]);
+                //     $('#alert-address-edit').html(error.responseJSON.name[0]);
+                //     $('#alert-city-edit').html(error.responseJSON.name[0]);
+                // }
 
             }
 

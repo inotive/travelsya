@@ -46,6 +46,7 @@ class FacilitiesController extends Controller
         }
 
         if ($request->hasFile('image')) {
+            // Storage::disk('local')->put('example.txt', 'Contents');
             $image = $request->file('image')->store('media/facilities');
             
             

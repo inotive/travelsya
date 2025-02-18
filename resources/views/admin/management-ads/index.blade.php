@@ -36,7 +36,7 @@
                                 <td class="text-center">{{ $ad->name }}</td>
                                 <td class="text-center">{{ $ad->url }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset('storage/'. $ad->image) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset('media/ads/'. $ad->image) }}" class="rounded" width="50">
                                 </td>
                                 <td class="text-center">
                                     @if ($ad->is_active)
@@ -276,30 +276,39 @@
                             <div class="col-md-12">
 
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                                <input class="form-control form-control-lg" id="name"
-                                    placeholder="Masukan nama Iklan" name="name" required />
+                                <input class="form-control form-control-lg @error('name') is-invalid @enderror" id="name"
+                                    placeholder="Masukan nama Iklan" name="name" />
 
+                                <!-- error message untuk title -->
                                 @error('name')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Link</label>
-                                <input type="text" name="url" class="form-control" placeholder="Masukan website" required>
+                                <input type="text" name="url" class="form-control @error('url') is-invalid @enderror" placeholder="Masukan website">
+
+                                <!-- error message untuk title -->
+                                @error('url')
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Active</label>
-                                <select class="form-select form-select-solid is_active-edit" name="is_active" id="is_active-edit">
+                                <select class="form-select form-select-solid is_active @error('is_active') is-invalid @enderror" name="is_active" id="is_active">
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
+                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active"></div>
+                                <!-- error message untuk title -->
                                 @error('is_active')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
 
@@ -368,6 +377,13 @@
                 });
 
 
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                @if ($errors->any() || session('openModal'))
+                    var myModal = new bootstrap.Modal(document.getElementById('create'));
+                    myModal.show();
+                @endif
             });
         </script>
     @endpush

@@ -71,8 +71,17 @@ class RecreationController extends Controller
             'address' => 'required',
         ]);
 
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors(), 422);
+        // }
+
+        // dd($request);
+
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()->with('openModal', true);;
         }
 
         DB::table('recreations')->insert([
@@ -134,7 +143,6 @@ class RecreationController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
 
         $recreation = Recreation::findOrFail($id);
         $recreation->update([

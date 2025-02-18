@@ -368,49 +368,52 @@
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                                <input class="form-control form-control-lg" id="name"
-                                    placeholder="Masukan nama hostel" name="name" required />
-
+                                <input class="form-control form-control-lg @error('name') is-invalid @enderror" id="name"
+                                    placeholder="Masukan nama hostel" name="name" value="{{ old('name') }}" />
                                 @error('name')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-md-6">
                                 <label class="required fs-6 fw-semibold mb-2">Mitra</label>
-                                <select class="form-control" id="user_id" name="user_id">
+                                <select class="form-control @error('user_id') is-invalid @enderror" id="user_id" name="user_id">
                                     @foreach ($users as $user)
-                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->id }}" {{ old("user_id") == $user->id ? "selected":"" }}>{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('user_id')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                                 <input type="hidden" value="1">
                             </div>
                             <div class="col-md-6">
                                 <label class="required fs-6 fw-semibold mb-2">City</label>
-                                <select name="city" id="" class="form-control">
-                                    <option value="Balikpapan">Balikpapan</option>
-                                    <option value="Samarinda">Samarinda</option>
-                                    <option value="Banjarmasin">Banjarmasin</option>
+                                <select name="city" id="" class="form-control @error('city') is-invalid @enderror">
+                                    @php
+                                        $cities = ['Balikpapan', 'Samarinda', 'Banjarmasin'];
+                                    @endphp
+                                    @foreach ($cities as $city)
+                                        <option value="{{ $city }}" {{ old("city") == $city ? "selected":"" }}>{{ $city }}</option>
+                                    @endforeach
                                 </select>
                                 @error('city')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Alamat</label>
-                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control @error('address') is-invalid @enderror">{{ old('address') }}</textarea>
+                                @error('address')
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                @enderror                                
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Website</label>
-                                <input type="text" name="website" class="form-control" placeholder="Masukan website">
+                                <input type="text" name="website" class="form-control @error('website') is-invalid @enderror" value="{{ old('website') }}" placeholder="Masukan website">
+
+                                @error('website')
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                @enderror
                             </div>
 
 
@@ -712,6 +715,13 @@
                 });
 
 
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                @if ($errors->any() || session('openModal'))
+                    var myModal = new bootstrap.Modal(document.getElementById('create'));
+                    myModal.show();
+                @endif
             });
         </script>
     @endpush

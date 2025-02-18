@@ -160,6 +160,7 @@
     $('body').on('click', '#tombol-edit', function () {
 
         let hotel_id = $(this).data('id');
+        $('.is-invalid').removeClass('is-invalid').next().empty();
 
         $.ajax({
             url: `/admin/management-mitra/hotel/${hotel_id}`,
