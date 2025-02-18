@@ -42,15 +42,16 @@ class FacilitiesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            $errorMessages = $validator->errors()->all();
+            toast($errorMessages, 'error');
+            return redirect()->back();
         }
 
         if ($request->hasFile('image')) {
             $image = $request->file('image')->store('facilities', 'public');
-
-
         } else {
-            return response()->json(['error' => 'Tidak ada file yang diunggah'], 422);
+            toast('Tidak ada file yang diunggah', 'error');
+            return redirect()->back();
         }
 
         Facility::create([
