@@ -45,7 +45,7 @@ class ProfileController extends Controller
                 throw new Exception('Nama Telah Tepakai!');
             }
             if ($emailExist !== null) {
-                toast('Gagal update profile: Nama Telah Tepakai!', 'error');
+                toast('Gagal update profile: Email Telah Tepakai!', 'error');
                 return redirect()->back();
                 throw new Exception('Email Telah Tepakai!');
             }
