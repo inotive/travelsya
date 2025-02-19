@@ -25,6 +25,7 @@ class BeautyClinicController extends Controller
 
             ->select(
                 'clinics.id as clinic_id',
+                'clinics.phone as clinic_phone',
                 'clinics.*',
                 'users.id as user_id',
                 'users.*',
@@ -41,6 +42,8 @@ class BeautyClinicController extends Controller
             ->join('categories_services', 'clinic_has_packages.categories_services_id', '=', 'categories_services.id')
             ->select('categories_services.name as category_name')
             ->get();
+
+        // dd($clinics);
 
         return view('admin.management-mitra.klinik-kecantikan.index', compact('users', 'clinics', 'cities', 'packages'));
     }

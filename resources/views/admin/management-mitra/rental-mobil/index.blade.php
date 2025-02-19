@@ -50,7 +50,7 @@
                               <td class="text-center">{{ $rental->address }}</td>
 
                               
-                              <td class="text-center">{{ $rental->phone }}</td>
+                              <td class="text-center">{{ $rental->car_rental_phone }}</td>
                              
                               <td class="text-center">
                                 {{-- {{dd($rental->is_active)}} --}}

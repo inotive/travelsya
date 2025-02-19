@@ -26,6 +26,7 @@ class CarRentalController extends Controller
         ->join('cities', 'car_rentals.city', '=', 'cities.city_id')
         ->select(
             'car_rentals.id as car_rental_id', 
+            'car_rentals.phone as car_rental_phone', 
             'car_rentals.*', 
             'car_rentals.is_active as car_rentals_is_active',
             'users.id as user_id', 

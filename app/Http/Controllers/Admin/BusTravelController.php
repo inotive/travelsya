@@ -27,6 +27,7 @@ class BusTravelController extends Controller
         ->join('cities', 'bus_travels.city', '=', 'cities.city_id')
         ->select(
             'bus_travels.id as bus_travel_id', 
+            'bus_travels.phone as bus_travel_phone',
             'bus_travels.*', 
             'users.id as user_id', 
             'users.*',

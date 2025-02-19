@@ -60,7 +60,7 @@
 
                         <td class="text-center">{{ $clinic->address }}</td>
 
-                        <td class="text-center">{{ $clinic->phone }}</td>
+                        <td class="text-center">{{ $clinic->clinic_phone }}</td>
 
                         <td class="text-center">
                             @if ($clinic->is_active === 1)

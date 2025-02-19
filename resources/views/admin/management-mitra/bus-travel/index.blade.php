@@ -50,7 +50,7 @@
                               <td class="text-center">{{ $bus_travel->address }}</td>
 
 
-                              <td class="text-center">{{ $bus_travel->phone }}</td>
+                              <td class="text-center">{{ $bus_travel->bus_travel_phone }}</td>
 
                               <td class="text-center">
                                   @if ($bus_travel->is_active === 1)
