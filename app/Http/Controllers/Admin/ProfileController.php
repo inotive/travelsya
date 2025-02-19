@@ -40,16 +40,27 @@ class ProfileController extends Controller
             $emailExist = $this->user->where('email', $request->email)->where('id', '!=', $profile->id)->first();
 
             if ($exist !== null) {
+                toast('Gagal update profile: Nama Telah Tepakai!', 'error');
+                return redirect()->back();
                 throw new Exception('Nama Telah Tepakai!');
             }
             if ($emailExist !== null) {
+                toast('Gagal update profile: Nama Telah Tepakai!', 'error');
+                return redirect()->back();
                 throw new Exception('Email Telah Tepakai!');
             }
 
 
             $imageProfile = $profile->image;
 
-            if ($request->hasFile('image')) {
+            if ($request->input('image_remove') == '1') {
+                Log::info('Menghapus gambar profil...');
+                if ($profile->image && Storage::disk('public')->exists('profile/' . $profile->image)) {
+                    Storage::disk('public')->delete('profile/' . $profile->image);
+                    $imageProfile = null;
+                    Log::info('Gambar berhasil dihapus');
+                }
+            } else if ($request->hasFile('image')) {
                 Log::info('File image ditemukan di request.');
 
                 if ($request->hasFile('image') && $request->file('image')->isValid()) {
@@ -92,11 +103,14 @@ class ProfileController extends Controller
                 'type' => 'success'
             ]);
 
+
+            toast('Berhasil update profile', 'success');
             return redirect()->route('admin.edit-profile', $profile->id);
         } catch (Exception $e) {
 
             DB::rollBack();
 
+            toast('Gagal update profile: ' . $e->getMessage(), 'error');
             session()->flash('flash', [
                 'message' => $e->getMessage(),
                 'type' => 'danger'
