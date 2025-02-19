@@ -292,8 +292,8 @@
                     <!--begin::Actions-->
                     <div class="d-flex justify-content-between">
 
-                        <button type="reset" id="kt_modal_new_target_cancel"
-                            class="btn btn-light me-3 w-100" data-bs-dismiss="modal">Cancel</button>
+                        <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3 w-100"
+                            data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" id="update" class="btn btn-primary w-100">
                             <span class="indicator-label">Simpan Perubahan</span>
                             <span class="indicator-progress">Please wait...
@@ -315,8 +315,8 @@
 
 @push('add-script')
     <script>
-        document.getElementById('percent').addEventListener('change', function() {
-            var percentValue = this.value;
+        function updateAddonText() {
+            var percentValue = document.getElementById('percent').value;
             var addonText = document.getElementById('basic-addon1');
 
             if (percentValue == '1') {
@@ -324,6 +324,14 @@
             } else {
                 addonText.textContent = 'Rp. ';
             }
+        }
+
+        document.getElementById('percent').addEventListener('change', function() {
+            updateAddonText();
+        });
+
+        $('#edit').on('shown.bs.modal', function() {
+            updateAddonText();
         });
     </script>
     <script>
