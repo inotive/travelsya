@@ -34,7 +34,7 @@
             <div class="d-flex justify-content-center align-items-center"
                 style="width: 75px; height: 75px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
                 <a href="{{ $ads->url }}" target="_blank">
-                    <img src="{{ asset('media/ads/' . $ads->image) }}" alt="Dokumentasi"
+                    <img src="{{ asset('media/ads/' . $ads->image) }}" alt="Ads"
                         style="width: 100%; height: auto; object-fit: cover;">
                 </a>
             </div>
