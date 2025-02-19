@@ -40,14 +40,14 @@ class ProfileController extends Controller
             $emailExist = $this->user->where('email', $request->email)->where('id', '!=', $profile->id)->first();
 
             if ($exist !== null) {
-                toast('Gagal update profile: Nama Telah Tepakai!', 'error');
+                toast('Gagal update profile: Nama Telah Terpakai!', 'error');
                 return redirect()->back();
-                throw new Exception('Nama Telah Tepakai!');
+                throw new Exception('Nama Telah Terpakai!');
             }
             if ($emailExist !== null) {
-                toast('Gagal update profile: Email Telah Tepakai!', 'error');
+                toast('Gagal update profile: Email Telah Terpakai!', 'error');
                 return redirect()->back();
-                throw new Exception('Email Telah Tepakai!');
+                throw new Exception('Email Telah Terpakai!');
             }
 
 
