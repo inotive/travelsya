@@ -34,7 +34,17 @@ class TransactionController extends Controller
                 $join->on('transactions.id', '=', 'detail_transaction_hostel.transaction_id');
             })
             ->where('transactions.deleted_at', null)
-            ->groupBy('transactions.id')
+            ->groupBy(
+                'transactions.id',
+                'transactions.no_inv',
+                'transactions.payment_method',
+                'transactions.payment_channel',
+                'transactions.status',
+                'transactions.total',
+                'transactions.service',
+                'transactions.created_at',
+                'transactions.service_id'
+            )
             ->orderBy('transactions.created_at', 'desc')
             ->selectRaw('
                 transactions.id,
