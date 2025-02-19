@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Helpers\UploadFile;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
@@ -49,9 +50,24 @@ class ProfileController extends Controller
             $imageProfile = $profile->image;
 
             if ($request->hasFile('image')) {
-                Storage::disk('public')->delete('profile/' . $profile->image);
+                Log::info('File image ditemukan di request.');
+
+                if ($request->hasFile('image') && $request->file('image')->isValid()) {
+                    Log::info('File image valid.');
+                } else {
+                    Log::error('File image tidak valid.');
+                }
+
+                if ($profile->image && Storage::disk('public')->exists('profile/' . $profile->image)) {
+                    Storage::disk('public')->delete('profile/' . $profile->image);
+                }
+
                 $image = $this->storeFile($request->file('image'), 'profile');
                 $imageProfile = $image;
+
+                Log::info('Gambar berhasil disimpan: ' . $image);
+            } else {
+                Log::info('Tidak ada file image di request.');
             }
 
             $data = [
