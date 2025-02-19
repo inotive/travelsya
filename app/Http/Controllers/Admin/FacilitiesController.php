@@ -7,6 +7,7 @@ use App\Models\Facility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -91,7 +92,7 @@ class FacilitiesController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
 
@@ -100,13 +101,17 @@ class FacilitiesController extends Controller
         }
 
         if ($request->hasFile('image')) {
+            $oldImagePath = 'public/' . $facility->icon;
+            if (Storage::exists($oldImagePath)) {
+                Storage::delete($oldImagePath);
+                Log::info('File deleted successfully: ' . $oldImagePath);
+            } else {
+                Log::info('File not found: ' . $oldImagePath);
+            }
+
 
             //upload new image
-            $image = $request->file('image')->store('media/facilities');
-
-
-            //delete old image
-            Storage::delete('public/' . $facility->image);
+            $image = $request->file('image')->store('facilities', 'public');
 
             DB::table('facilities')->where('id', $facility->id)->update([
                 'icon' => $image,
