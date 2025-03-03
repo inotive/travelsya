@@ -53,12 +53,11 @@
                             <span class="mb-2"><span class="text-danger fw-bold">IDR
                                     {{ number_format($v['price'], '0', ',', '.') }}</span> /
                                 hari</span>
-
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan driver',
-                                'lokasi' => $v['location'],
+                                'lokasi' => $v['location'] ?? '',
                                 'model' => $model ?? $car->car_model_id,
-                                'provider' => $v['car_id'],
+                                'provider' => $v['car_id'] ?? '',
                                 'date' => $date . ' ' . $time,
                                 'duration'=> $duration ?? 1
                                 ]) }}">
