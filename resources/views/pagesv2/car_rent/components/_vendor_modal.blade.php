@@ -56,7 +56,7 @@
 
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan driver',
-                                'lokasi' => $v['location'],
+                                'lokasi' => $v['location'] ?? 'jakarta',
                                 'model' => $model ?? $car->car_model_id,
                                 'provider' => $v['car_id'],
                                 'date' => $date . ' ' . $time,

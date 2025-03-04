@@ -151,6 +151,7 @@
         </div>
         <div class="row justify-content-center">
             @foreach ($car_models as $model)
+            {{-- {{ dd($model) }} --}}
                 <div class="col-12 col-md-4 col-xl-3">
                     <form action="{{ route('car_rent.show') }}" method="post"
                         id="form_favorite_car{{ $model->id }}">
@@ -160,7 +161,7 @@
                             <a href="javascript:" class="text-decoration-none text-dark"
                                 id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
                                 <div class="card border border-dark rounded-4">
-                                    <img src="{{ asset('storage/', $model->img_url) }}" class="card-img-top-rounded"
+                                    <img src="{{ asset($model->carModel->image) }}" class="card-img-top-rounded"
                                         alt="..."
                                         onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                                     <div class="card-body">

@@ -201,7 +201,6 @@ class NewCarRentController extends Controller
 
     public function show(Request $request)
     {
-
         $category = $request->category;
         $location = $request->location;
         $date = $request->date ?? Carbon::now()->format('Y-m-d');

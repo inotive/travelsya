@@ -17,9 +17,15 @@
 <div class="p-3 mb-35px">
     <div class="row g-3">
         <div class="col-md-6">
-            <img src="{{ asset('storage/' . $clinic->image->image) }}" onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg'"
-                class="img-fluid rounded shadow" style="object-fit: contain;" alt="{{ $clinic->clinic_name }}">
+            @if (isset($clinic->image))
+                <img src="{{ asset('storage/' . $clinic->image->image) }}" onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg'"
+                    class="img-fluid rounded shadow" style="object-fit: contain;" alt="{{ $clinic->clinic_name }}">
+            @else
+                <img src="'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&fm=jpg'"
+                    class="img-fluid rounded shadow" style="object-fit: contain;" alt="{{ $clinic->clinic_name }}">
+            @endif
         </div>
+        @if (isset($clinic->images))
         <div class="col-md-6">
             <div class="row g-2">
                 @foreach ($clinic->images as $k => $i)
@@ -35,5 +41,6 @@
                 @endforeach
             </div>
         </div>
+        @endif
     </div>
 </div>

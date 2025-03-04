@@ -66,7 +66,7 @@
                 @foreach ($cars as $car)
                     <div class="card shadow mb-1 w-100">
                         <div class="card-body d-flex flex-row">
-                            <img src="{{ asset('/storage/' . $car->image_url) }}" class="" width="150px"
+                            <img src="{{ asset($car->carModel->image ?? null) }}" class="" width="150px"
                                 height="100px" alt="..."
                                 onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                             <div class="d-flex flex-column ms-5">
