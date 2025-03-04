@@ -55,13 +55,14 @@
                                 hari</span>
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan driver',
-                                'lokasi' => $v['location'] ?? '',
+                                'lokasi' => !empty($v['location']) ? $v['location'] : 'default_lokasi',
                                 'model' => $model ?? $car->car_model_id,
-                                'provider' => $v['car_id'] ?? '',
-                                'date' => $date . ' ' . $time,
+                                'provider' => !empty($v['car_id']) ? $v['car_id'] : 'default_provider',
+                                'date' => trim(($date ?? '') . ' ' . ($time ?? '')),
                                 'duration'=> $duration ?? 1
-                                ]) }}">
-                                {{-- <input type="hidden" name="category" id="order_{{ $v['car_id'] }}_category"
+                            ]) }}">
+
+                            {{-- <input type="hidden" name="category" id="order_{{ $v['car_id'] }}_category"
                                     value="{{ $category ? $category : 'supir' }}">
                                 <input type="hidden" name="lokasi" id="order_{{ $v['car_id'] }}_lokasi"
                                     value="{{ $v['location'] }}">

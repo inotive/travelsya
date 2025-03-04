@@ -231,7 +231,6 @@ class NewCarRentController extends Controller
             })
             ->get();
 
-
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
             $ven = [];
@@ -252,6 +251,7 @@ class NewCarRentController extends Controller
 
             $c['vendor'] = $ven;
         }
+        dd($cars);
         $data['cars'] = $cars;
         $data['location'] = $location;
         $data['category'] = $category;
