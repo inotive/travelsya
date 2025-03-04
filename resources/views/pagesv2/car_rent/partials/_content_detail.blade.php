@@ -12,19 +12,17 @@
                             class="img-fluid rounded shadow w-100" style="object-fit: contain;" alt="...">
                     </div>
                     <div class="col-9 d-flex flex-column">
-                        <span class="mb-3">{{ $category == 'dengan driver' ? 'Dengan Driver' : 'Tidak Dengan Driver'
-                            }}</span>
                         <h5 class="mb-3">{{ $car->brand->name }}</h5>
                         <span class="text-danger mb-3">{{ $car->carRental->business_name }}</span>
                         <table class="table borderless">
                             <tr style="border-top: 2px dashed black;">
                                 <td>
-                                    <span class="fa-solid fa-suitcase"></span>
-                                    <span class="ms-2">{{ $car->koper }} Koper</span>
+                                    <span class="fa-solid fa-user-group"></span>
+                                    <span class="ms-2">1 - {{ $car->number_seats }} Penumpang</span>
                                 </td>
                                 <td>
-                                    <span class="fa-solid fa-user"></span>
-                                    <span class="ms-2">1 - {{ $car->number_seats }} Penumpang</span>
+                                    <span class="fa-solid fa-gears"></span>
+                                    <span class="ms-2">{{ $car->category }}</span>
                                 </td>
                             </tr>
                             <tr style="border-top: 2px dashed black;">
@@ -34,7 +32,7 @@
                                 </td>
                                 <td>
                                     <span class="fa-solid fa-user"></span>
-                                    <span class="ms-2">Supir bisa bahasa inggris</span>
+                                    <span class="ms-2">{{ ucwords($car->category_rent) }}</span>
                                 </td>
                             </tr>
                         </table>
@@ -47,23 +45,8 @@
             <div class="card-body d-flex flex-column">
                 <h3 class="mb-3">Kebijakan Rental</h3>
                 <div class="d-flex flex-row">
-                    <span class="fa-solid fa-route text-danger"></span>
                     <div>
-                        <ul>
-                            <li>Penggunaan dari 00:00 hingga 23:59 per hari, hanya penggunaan area jakarta</li>
-                            <li>Pemakaian di luar Jakarta dimulai dari Bandung dan jawa Barat sekitranya akan dikenekan
-                                tambahan biaya sebesar Rp. 100.000</li>
-                            <li>Pemakaian daerah Jawa Tengah akan dikenai tambahan biaya sebesar Rp. 150.000</li>
-                            <li>Pemakaian daerah Jawa Timur akan dikenail tambahan biaya sebesar Rp. 200.000</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="d-flex flex-row">
-                    <span class="fa-solid fa-gas-pump text-danger"></span>
-                    <div>
-                        <ul>
-                            <li>Kembalikan bensin seperti semula</li>
-                        </ul>
+                        {!! $car->policy->description !!}
                     </div>
                 </div>
             </div>
@@ -84,12 +67,10 @@
                     <div class="col-6 d-flex flex-column">
                         <span>Tanggal Drop-off</span>
                         <span class="fs-3 title fw-bold">{{
-                            \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingHours($date, 12),
-                            $duration *
-                            12) }}</span>
-                        <span class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingHours($date, 12),
-                            $duration *
-                            12)) }}</span>
+                            \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingDays($date,
+                            $duration)) }}</span>
+                        <span class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingDays($date, $duration)))
+                            }}</span>
                     </div>
                 </div>
                 <span class="text-success">Bisa refund, reschedule, dan overtime</span>
@@ -97,7 +78,7 @@
             </div>
         </div>
 
-        <h3 class="mb-35px">Tentang Paket Reguler</h3>
+        {{-- <h3 class="mb-35px">Tentang Paket Reguler</h3>
 
         <div class="row mb-35px">
             <div class="col-6">
@@ -128,7 +109,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
         <div class="card border">
             <div class="card-body">

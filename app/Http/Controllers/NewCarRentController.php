@@ -265,14 +265,14 @@ class NewCarRentController extends Controller
 
     public function detail(Request $request, $category, $lokasi, $model, $provider, $date, $duration)
     {
-        $data['car'] = CarRentalHasCars::with(['brand', 'carModel', 'carRental', 'carRentalRate'])->where('id', $provider)->first();
+        $data['car'] = CarRentalHasCars::with(['brand', 'carModel', 'carRental', 'carRentalRate', 'policy'])->where('id', $provider)->first();
         $data['date'] = $date;
         $data['category'] = $category;
         $data['lokasi'] = $lokasi;
         $data['model'] = $model;
         $data['provider'] = $provider;
         $data['duration'] = $duration;
-
+        
         return view('pagesv2.car_rent.detail', $data);
     }
 
@@ -280,7 +280,7 @@ class NewCarRentController extends Controller
     {
         $user = Auth::user();
         if ($user) {
-            $data['car'] = CarRentalHasCars::with(['brand', 'carRental', 'carModel'])->where('id', $request->car_id)->first();
+            $data['car'] = CarRentalHasCars::with(['brand', 'carRental', 'carModel', 'policy'])->where('id', $request->car_id)->first();
             $data['duration'] = $request->duration;
             $data['date'] = Carbon::parse($request->date)->format('Y-m-d H:i');
             $data['category'] = $request->category;
