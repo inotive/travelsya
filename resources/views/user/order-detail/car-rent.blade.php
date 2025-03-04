@@ -115,7 +115,7 @@
                                             <div class="m-5 d-flex align-items-center">
                                                 @php
                                                     $roomImage = $transaction->car->image_url;
-                                                    $imagePath = $roomImage ? 'storage/'. ($roomImage) : 'https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+                                                    $imagePath = $transaction->car->carModel->image ? $transaction->car->carModel->image : 'https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
                                                 @endphp
                                                 <div class="symbol symbol-75px"
                                                     style="background:url('{{ asset($imagePath) }}')">
