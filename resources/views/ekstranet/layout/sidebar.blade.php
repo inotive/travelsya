@@ -209,6 +209,18 @@
                     <!--end:Menu link-->
                 </a>
 
+                <a href="{{ route('partner.daftar.bus-travel') }}"
+                   class="menu-item {{ Request::segment(2) == 'daftar-bus-travel' ? 'here' : '' }} menu-accordion">
+                    <!--begin:Menu link-->
+                    <span class="menu-link">
+                                <span class="menu-icon">
+                                    <i class="fas fa-bus fs-3"></i>
+                                </span>
+                                <span class="menu-title">Bus & Travel</span>
+                            </span>
+                    <!--end:Menu link-->
+                </a>
+
 
                 @if (count($hotel) > 0)
                     @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')

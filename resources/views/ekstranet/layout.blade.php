@@ -135,7 +135,7 @@
                                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Daftar Kendaraan</a>
+                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Konfigurasi</a>
                                             </li>
                                             <!--end::Item-->
                                             <!--begin::Item-->

@@ -460,6 +460,13 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
         Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
+        Route::get('daftar-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'index'])->name('partner.daftar.bus-travel');
+        Route::get('create-bus', [\App\Http\Controllers\Partner\BusTravelController::class, 'create'])->name('partner.create.bus-travel');
+        Route::post('create-bus', [\App\Http\Controllers\Partner\BusTravelController::class, 'store'])->name('partner.store.bus-travel');
+        Route::get('daftar-bus-travel/show/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'show'])->name('partner.show.bus-travel');
+        Route::post('daftar-bus-travel/edit/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'update'])->name('partner.update.bus-travel');
+        Route::delete('bus-travel-delete/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'destroy'])->name('partner.delete.bus-travel');
+
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}', [ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
         Route::get('daftar-room/detailroom/hostel/{id}', [ManagementRoomController::class, 'detailroomhostel'])->name('partner.management.room.detailroomhostel');
