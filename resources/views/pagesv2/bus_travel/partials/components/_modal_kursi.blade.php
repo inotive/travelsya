@@ -262,8 +262,9 @@
             console.log(penumpang);
             $(this).addClass('border-danger');
             $("#modal_kursi").modal('show');
-
         });
+
+        let kursi = $('div[]')
 
         function activedPenumpang(nomor) {
             //
