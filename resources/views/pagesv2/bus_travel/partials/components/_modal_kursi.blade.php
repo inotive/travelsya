@@ -50,81 +50,194 @@
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
                     id="row-1">
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_11" nomor="11"></div>
+                        id="pilih_kursi_11" nomor="11"></div>
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_12" nomor="12"></div>
+                        id="pilih_kursi_12" nomor="12"></div>
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_13" nomor="13"></div>
+                        id="pilih_kursi_13" nomor="13"></div>
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_14" nomor="14"></div>
+                        id="pilih_kursi_14" nomor="14"></div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_15" nomor="15"></div>
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_15" nomor="15"></div>
                 </div>
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                    id="row-2">
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_21" nomor="21"></div>
+                    id="row-5">
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_22" nomor="22"></div>
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_23" nomor="23"></div>
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_24" nomor="24"></div>
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_25" nomor="25"></div>
-                </div>
-                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                    id="row-3">
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_31" nomor="31">
-                    </div>
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_32" nomor="32">
-                    </div>
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_33" nomor="33">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_21" nomor="21">
                     </div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_34" nomor="34">
-                    </div>
-                    <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_35" nomor="35">
-                    </div>
-                </div>
-                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                    id="row-4">
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_41" nomor="41">
-                    </div>
-                    <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_42" nomor="42">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_22" nomor="22">
                     </div>
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_43" nomor="43">
-                    </div>
-                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_44" nomor="44">
+                        id="pilih_kursi_23" nomor="23">
                     </div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_45" nomor="45">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_24" nomor="24">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_25" nomor="25">
                     </div>
                 </div>
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
                     id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_31" nomor="31">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_32" nomor="32">
+                    </div>
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_51" nomor="51">
+                        id="pilih_kursi_33" nomor="33">
                     </div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_52" nomor="52">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_34" nomor="34">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_35" nomor="35">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_41" nomor="41">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_42" nomor="42">
                     </div>
                     <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
-                        id="pilih_kuris_53" nomor="53">
+                        id="pilih_kursi_43" nomor="43">
                     </div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_54" nomor="54">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_44" nomor="44">
                     </div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kuris_55" nomor="55">
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_45" nomor="45">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_51" nomor="51">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_52" nomor="52">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_53" nomor="53">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_54" nomor="54">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_55" nomor="55">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_61" nomor="61">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_62" nomor="62">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_63" nomor="63">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_64" nomor="64">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_65" nomor="65">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_71" nomor="71">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_72" nomor="72">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_73" nomor="73">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_74" nomor="74">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_75" nomor="75">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_81" nomor="81">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_82" nomor="82">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_83" nomor="83">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_84" nomor="84">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_85" nomor="85">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_91" nomor="91">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_92" nomor="92">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_93" nomor="93">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_94" nomor="94">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_95" nomor="95">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_101" nomor="101">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_102" nomor="102">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_103" nomor="103">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_104" nomor="104">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_105" nomor="105">
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-5">
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_111" nomor="111">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_112" nomor="112">
+                    </div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"
+                        id="pilih_kursi_113" nomor="113">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_114" nomor="114">
+                    </div>
+                    <div type="button" class="col mx-5 border-dark-2"
+                        style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_115" nomor="115">
                     </div>
                 </div>
             </div>
@@ -139,21 +252,21 @@
 </div>
 
 @push('js')
-<script>
-    $("#list_penumpang").on("click", ".card", function() {
-        let penumpang = $(this).data('penumpang');
-        $(this).removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
-        $("#nama_penumpang_"+penumpang).removeClass('text-dark').addClass('text-danger');
-        $("#kursi_penumpang_"+penumpang).removeClass('text-dark').addClass('text-danger');
-        $("#list_penumpang .card").removeClass('border-danger');
-        console.log(penumpang);
-        // $(this).addClass('border-danger');
-        // $("#modal_kursi").modal('show');
-        
-    });
+    <script>
+        $("#list_penumpang").on("click", ".card", function() {
+            let penumpang = $(this).data('penumpang');
+            $(this).removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
+            $("#nama_penumpang_" + penumpang).removeClass('text-dark').addClass('text-danger');
+            $("#kursi_penumpang_" + penumpang).removeClass('text-dark').addClass('text-danger');
+            $("#list_penumpang .card").removeClass('border-danger');
+            console.log(penumpang);
+            $(this).addClass('border-danger');
+            $("#modal_kursi").modal('show');
 
-    function activedPenumpang(nomor){
-        //
-    }
-</script>
+        });
+
+        function activedPenumpang(nomor) {
+            //
+        }
+    </script>
 @endpush
