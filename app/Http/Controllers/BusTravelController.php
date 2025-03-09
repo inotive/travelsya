@@ -248,12 +248,15 @@ class BusTravelController extends Controller
         $data['date_pulang'] = $date_pulang;
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
+        // dd($data['departure']->busTravel->number_seats%2);
+        // dd($data);
 
         return view('pagesv2.bus_travel.detail', $data);
     }
 
     public function order(Request $request)
     {
+        // dd($request);
         $user = auth()->user();
 
         if (!$user) {
@@ -268,6 +271,9 @@ class BusTravelController extends Controller
         $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
+        for ($i=1; $i <= $param['jumlah_penumpang']; $i++) { 
+            $data['kursi_penumpang_'.$i] = $param['kursi_penumpang_'.$i];
+        }
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
         $data['user'] = $user;
@@ -275,6 +281,8 @@ class BusTravelController extends Controller
         $service = Service::where('name', 'bus-travel')->first();
 
         $data['service_id'] = $service->id;
+
+        // dd($data);
 
         return view('pagesv2.bus_travel.order', $data);
     }
