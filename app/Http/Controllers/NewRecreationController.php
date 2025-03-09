@@ -104,6 +104,8 @@ class NewRecreationController extends Controller
         })
         ->get();
 
+    
+
         return view('pagesv2.rekreasi.show', $data);
     }
 

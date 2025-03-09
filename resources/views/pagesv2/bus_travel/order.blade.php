@@ -96,12 +96,14 @@
                                     <img src="{{ asset('images/icon/chair.png') }}" width="25px" height="25px" alt="">
                                     <div class="d-flex flex-column ms-5">
                                         <Span>{{ $departure->busTravel->busTravel->business_name }}</Span>
-                                        <Span>Kursi {{ $departure->busTravel->number_seats }}</Span>
+                                        <Span>Kursi {{ ${"kursi_penumpang_$i"} }}</Span>
                                     </div>
                                     <span class="text-danger fw-bold ms-sm-auto">Ubah Kursi</span>
                                 </div>
                                 <div id="data_pengunjung">
                                     <div class="d-flex flex-row align-items-center mb-3">
+                                        <input type="hidden" value={{ ${"kursi_penumpang_$i"} }}
+                                            name="kursi_penumpang_{{ $i }}">
                                         <input type="radio" name="customer_call_{{ $i }}" class=" accent-danger"
                                             id="radio_tuan" value="tuan" checked required>
                                         <span class="ms-3">Tuan</span>
@@ -134,6 +136,8 @@
 
                                 <div id="data_disabled_pengunjung" style="display: none;">
                                     <div class="d-flex flex-row align-items-center mb-3">
+                                        <input type="hidden" value={{ ${"kursi_penumpang_$i"} }}
+                                            name="kursi_penumpang_{{ $i }}">
                                         <input type="radio" name="sapa_disabled_pengunjung" id="radio_tuan" value="tuan"
                                             disabled>
                                         <span class="ms-3">Tuan</span>
