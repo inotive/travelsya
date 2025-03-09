@@ -4,58 +4,58 @@
 <style>
     /* @import url('https://fonts.googleapis.com/css?family=Chivo:300,300i,400,400i,700,700i,900,900i|Saira+Extra+Condensed:100,200,300,400,500,600,700,800|Saira:100,200,300,400,500,600,700,800');
 
-        .timeline {
-            position: relative;
-            margin-top: 15px;
-            margin: 0;
-        }
+                    .timeline {
+                        position: relative;
+                        margin-top: 15px;
+                        margin: 0;
+                    }
 
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 2px;
-            background-color: #ddd;
-            top: 0;
-            bottom: 0;
-            left: 10px;
-        }
+                    .timeline::after {
+                        content: '';
+                        position: absolute;
+                        width: 2px;
+                        background-color: #ddd;
+                        top: 0;
+                        bottom: 0;
+                        left: 10px;
+                    }
 
-        .timeline-row {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            padding: 10px 6px;
-            position: relative;
-            background-color: inherit;
-        }
+                    .timeline-row {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        padding: 10px 6px;
+                        position: relative;
+                        background-color: inherit;
+                    }
 
-        .timeline-row::after {
-            content: '';
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: white;
-            border: 2px solid #ff9f55;
-            top: 15px;
-            border-radius: 50%;
-            z-index: 1;
-        }
+                    .timeline-row::after {
+                        content: '';
+                        position: absolute;
+                        width: 10px;
+                        height: 10px;
+                        background-color: white;
+                        border: 2px solid #ff9f55;
+                        top: 15px;
+                        border-radius: 50%;
+                        z-index: 1;
+                    }
 
-        .timeline-time {
-            font-size: 16px;
-            font-weight: bold;
-            margin-left: 15px;
-        }
+                    .timeline-time {
+                        font-size: 16px;
+                        font-weight: bold;
+                        margin-left: 15px;
+                    }
 
-        .timeline-location {
-            flex-grow: 1;
-            padding-left: 10px;
-        }
+                    .timeline-location {
+                        flex-grow: 1;
+                        padding-left: 10px;
+                    }
 
-        .timeline-location:first-child {
-            border-left: none;
-            padding-left: 0;
-        }*/
+                    .timeline-location:first-child {
+                        border-left: none;
+                        padding-left: 0;
+                    }*/
 </style>
 @endpush
 
@@ -79,7 +79,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-4">
-                    <img src="{{ asset('storage/' . $departure->busTravel->busTravel->image ) }}"
+                    <img src="{{ asset('storage/' . $departure->busTravel->busTravel->image) }}"
                         class="object-fit-contain w-100" alt="{{ $departure->busTravel->name }}"
                         onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                 </div>
@@ -174,14 +174,15 @@
         </div>
     </div>
     <hr class="mb-35px" style="border-top: 2px dashed #777;">
-    {{-- <div class="card shadow rouded-4 mb-35px">
+    <div class="card shadow rouded-4 mb-35px">
         <div class="card-body d-flex flex-row align-items-center justify-content-between">
-            <span class="fs-2 text-danger">IDR {{ number_format($departure->price) }}</span>
+            <span class="fs-2 text-danger">IDR {{ number_format($departure->price * $jumlah_penumpang, 0, ',',
+                '.') }}</span>
             <button class="btn btn-danger" id="kursi_button" data-bs-toggle="modal" data-bs-target="#modal_kursi">Pilih
                 Kursi</button>
         </div>
-    </div> --}}
-    <div class="card shadow rouded-4 mb-35px">
+    </div>
+    {{-- <div class="card shadow rouded-4 mb-35px">
         <div class="card-body">
             <form action="{{ route('bus_travel.order') }}" method="post"
                 class="d-flex flex-row align-items-center justify-content-between">
@@ -194,11 +195,12 @@
                 <input type="text" name="date_pergi" value="{{ $date_pergi }}" hidden>
                 <input type="text" name="date_pulang" value="{{ $date_pulang }}" hidden>
 
-                <span class="fs-2 text-danger">IDR {{ number_format($departure->price) }} X {{ number_format($jumlah_penumpang) }}</span>
-                <button type="submit" class="btn btn-danger">Pesan</button>
+                <span class="fs-2 text-danger">IDR {{ number_format($departure->price) }} X
+                    {{ number_format($jumlah_penumpang) }}</span>
+                <button type="button" id="list_penumpang" class="btn btn-danger">Pesan</button>
             </form>
         </div>
-    </div>
+    </div> --}}
 
     @include('pagesv2.bus_travel.partials.components._modal_kursi')
 </div>

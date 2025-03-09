@@ -662,6 +662,15 @@
         border: 2px solid var(--bs-danger);
     }
 
+    .acquired {
+        background-color: #5b5b5b !important;
+    }
+
+    .choosed {
+        background-color: #FFF4F4 !important;
+        border: 2px solid var(--bs-danger) !important;
+    }
+
     #map {
         height: 500px;
         width: 100%;
