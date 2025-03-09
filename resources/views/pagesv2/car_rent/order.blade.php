@@ -21,12 +21,12 @@
         <div class="row" style="padding-top: 50px;">
             <div class="col-8">
 
-                <div class="section-title" style="margin-bottom: 25px;">
+                {{-- <div class="section-title" style="margin-bottom: 25px;">
                     <div style="display: flex; align-items: center;">
                         <h2 class="text-dark" style="position: relative; top: 3px;">Lokasi Jemput</h2>
                     </div>
                     <div class="opacity-50 fs-5 mt-2">Isi dengan lokasi jemput pada hari sewa pertamamu.</div>
-                </div>
+                </div> --}}
                 <!-- jika menggunakan map -->
                 <!-- <div class="accordion" id="accord_jemput">
                         <div class="card shadow mb-35px">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div> -->
-                <div class="card shadow mb-35px">
+                {{-- <div class="card shadow mb-35px">
                     <div class="card-body d-flex flex-column p-2">
                         <div class="d-flex flex-row align-items-center">
                             <select class="form-select border-none" id="pilih_jemput">
@@ -53,19 +53,17 @@
                                 <option value="{{ $city->city_id }}">{{ ucwords($city->city_name) }}</option>
                                 @endforeach
                             </select>
-                            {{-- <span class="text-danger fw-bold">Pilih Lokasi</span>.
-                            <span class="fa-solid fa-chevron-right ms-sm-auto"></span> --}}
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                <div class="section-title" style="margin-bottom: 25px;">
+                {{-- <div class="section-title" style="margin-bottom: 25px;">
                     <div style="display: flex; align-items: center;">
                         <h2 class="text-dark" style="position: relative; top: 3px;">Lokasi Drop-off</h2>
                     </div>
                     <div class="opacity-50 fs-5 mt-2">isi dengan lokasi drop-off pada hari sewa terakhirmu.</div>
-                </div>
-                <div class="card shadow mb-35px">
+                </div> --}}
+                {{-- <div class="card shadow mb-35px">
                     <div class="card-body d-flex flex-column p-3">
                         <div class="form-check form-switch">
                             <input class="form-check-input" id="sync_jemput_drop" type="checkbox" role="switch"
@@ -83,7 +81,7 @@
                             </select>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 {{-- <div class="section-title" style="margin-bottom: 25px;">
                     <div style="display: flex; align-items: center;">
                         <h2 class="text-dark" style="position: relative; top: 3px;">Fasilitas Ekstra</h2>
@@ -207,7 +205,7 @@
 
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
-                            <img src=""
+                            <img src="{{ asset($car->carModel->image ?? null) }}"
                                 onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
                                 alt="" width="50" height="50" class="rounded-1">
                             <div class="d-flex flex-column ms-3">

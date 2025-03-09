@@ -119,7 +119,7 @@
                         '.') }}</h6>
                 </div>
                 <div class="d-flex flex-row align-items-center py-5">
-                    <span>Kamu akan mendapatkan XXXX Poin</span>
+                    <span>Kamu akan mendapatkan {{ \App\Helpers\General::countPoint($car->rental_price_per_day * $duration, $service_id) }} Poin</span>
                     <form action="{{ route('car_rent.order') }}" method="post" class="ms-sm-auto">
                         @csrf
                         <input type="hidden" name="provider" value="{{ $provider }}">

@@ -270,6 +270,8 @@ Route::group(['prefix' => 'bus_travel'], function(){
     Route::post('/request_transaction', [BusTravelController::class, 'request_transaction'])->name('bus_travel.request_transaction');
 });
 
+Route::post('/s_car_rent', [NewCarRentController::class, 'search_ajax'])->name('search_car_rent');
+
 Route::group(['prefix' => 'car_rent'], function () {
     Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
     Route::get('/get_cars_vendor/{brand_id}/{city_id}', [NewCarRentController::class, 'getVendorCars']);

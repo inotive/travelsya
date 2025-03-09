@@ -34,14 +34,14 @@
 
                         </div>
                         <div class="input-group mb-3">
-                            @php
+                            {{-- @php
                                 $cities = \App\Models\CarRental::pluck('city')->toArray(); // Ubah ke array
                                 $cityList = \App\Models\City::whereIn('city_id', $cities)->get(); // Query data sesuai ID
-                            @endphp
+                            @endphp --}}
                             <select name="location" id="location" class="form-select select" data-control="select2"
                                     data-placeholder="Pilih Lokasi" autocomplete="on">
-                                @foreach($cityList as $city)
-                                    <option value="{{ $city->city_name }}">{{ $city->city_name }}</option>
+                                @foreach($near_location as $city)
+                                    <option value="{{ $city }}">{{ $city }}</option>
                                 @endforeach
                             </select>
                         </div>
