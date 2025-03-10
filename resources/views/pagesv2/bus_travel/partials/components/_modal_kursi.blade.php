@@ -1,14 +1,14 @@
 @push('css')
-<style>
-    .acquired {
-        background-color: var(--bs-secondary) !important;
-    }
+    <style>
+        .acquired {
+            background-color: var(--bs-secondary) !important;
+        }
 
-    .choosed {
-        background-color: #FFF4F4 !important;
-        border: 2px solid var(--bs-danger) !important;
-    }
-</style>
+        .choosed {
+            background-color: #FFF4F4 !important;
+            border: 2px solid var(--bs-danger) !important;
+        }
+    </style>
 @endpush
 <div class="modal fade" id="modal_kursi" tabindex="-1" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -23,81 +23,81 @@
                 </div>
                 <span class="fw-bold title">{{ $departure->busTravel->name }}</span>
                 <small class="mb-20px">{{ $departure->busTravel->class }}</small>
-                <span class="mb-20px">{{ \App\Helpers\General::getDayDateShortMonth($date_pergi) }} - {{
-                    date('h:i',strtotime($departure->departure_time)) }} -
+                <span class="mb-20px">{{ \App\Helpers\General::getDayDateShortMonth($date_pergi) }} -
+                    {{ date('h:i', strtotime($departure->departure_time)) }} -
                     {{ $departure->duration }}j</span>
 
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6" id="list_penumpang">
-                    @for ($i = 1; $i <= $jumlah_penumpang; $i++) <div class="col p-3">
-                        <div class="card border-dark-2" data-penumpang="{{ $i }}">
-                            <div class="card-body d-flex flex-column">
-                                <span class="fw-bold text-dark" id="nama_penumpang_{{ $i }}">Penumpang {{ $i }}</span>
-                                <span class="text-dark" id="baris__{{ $i }}"></span>
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        <div class="col p-3">
+                            <div class="card border-dark-2" data-penumpang="{{ $i }}">
+                                <div class="card-body d-flex flex-column">
+                                    <span class="fw-bold text-dark" id="nama_penumpang_{{ $i }}">Penumpang
+                                        {{ $i }}</span>
+                                    <span class="text-dark" id="baris__{{ $i }}"></span>
+                                </div>
                             </div>
                         </div>
-                </div>
-                @endfor
-            </div>
-        </div>
-        <div class="modal-body bg-snow-pink min-h-350">
-            <div class="row border-bottom border-secondary pb-5">
-                <div class="col-12 d-flex flex-row justify-content-center align-items-center">
-                    <div style="width: 25px; height: 25px; border: 2px solid var(--bs-dark); border-radius: 3px;">
-                    </div>
-                    <span class="ms-3 fs-3 text-dark opacity-75">Tersedia</span>
-                    <div class="ms-5"
-                        style="width: 25px; height: 25px; border: 2px solid var(--bs-danger); border-radius: 3px;">
-                    </div>
-                    <span class="ms-3 fs-3 text-dark opacity-75">Dipilih</span>
-                    <div class="ms-5" style="width: 25px; height: 25px; border-radius: 3px; background-color: #D3D4D4;">
-                    </div>
-                    <span class="ms-3 fs-3 text-dark opacity-75">Tidak Tersedia</span>
+                    @endfor
                 </div>
             </div>
-            <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                id="row-1">
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5 border-dark-2"
-                    style="width: 25px; height: 25px; border-radius: 3px;"></div>
-            </div>
-            <div id="baris_kursi_penumpang">
-                @php
-                $row = 2;
-                $total_row = floor($departure->busTravel->number_seats/4) + 1;
-                @endphp
-                @for ($i = 1; $i <= $departure->busTravel->number_seats; $i++)
-                    @if ($i%4 == 1)
-                    <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                        id="row-{{ $row }}">
-                        <div type="button" class="col mx-5 border-dark-2"
-                            style="width: 25px; height: 25px; border-radius: 3px;" onclick="setChair({{ $i }})"
-                            id="pilih_kursi_{{ $i }}" nomor="{{ $i }}"></div>
-                        @elseif($i%4 == 2)
-                        @if($i==10)
-                        <div type="button" class="col mx-5 border-dark-2 acquired"
-                            style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_{{ $i }}"
-                            nomor="{{ $i }}"></div>
-                        @else
-                        <div type="button" class="col mx-5 border-dark-2"
-                            style="width: 25px; height: 25px; border-radius: 3px;" onclick="setChair({{ $i }})"
-                            id="pilih_kursi_{{ $i }}" nomor="{{ $i }}"></div>
-                        @endif
-
-                        <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                        @elseif($i%4 == 0)
-                        <div type="button" class="col mx-5 border-dark-2"
-                            style="width: 25px; height: 25px; border-radius: 3px;" onclick="setChair({{ $i }})"
-                            id="pilih_kursi_{{ $i }}" nomor="{{ $i }}"></div>
+            <div class="modal-body bg-snow-pink min-h-350">
+                <div class="row border-bottom border-secondary pb-5">
+                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <div style="width: 25px; height: 25px; border: 2px solid var(--bs-dark); border-radius: 3px;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Tersedia</span>
+                        <div class="ms-5"
+                            style="width: 25px; height: 25px; border: 2px solid var(--bs-danger); border-radius: 3px;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Dipilih</span>
+                        <div class="ms-5"
+                            style="width: 25px; height: 25px; border-radius: 3px; background-color: #D3D4D4;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Tidak Tersedia</span>
                     </div>
-                    @else
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-1">
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
                     <div type="button" class="col mx-5 border-dark-2"
-                        style="width: 25px; height: 25px; border-radius: 3px;" onclick="setChair({{ $i }})"
-                        id="pilih_kursi_{{ $i }}" nomor="{{ $i }}"></div>
-                    @endif
+                        style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                </div>
+                <div id="baris_kursi_penumpang">
+                    @php
+                        $row = 2;
+                        $total_row = floor($departure->busTravel->number_seats / 4) + 1;
+                    @endphp
+                    @for ($i = 1; $i <= $departure->busTravel->number_seats; $i++)
+                        @if ($i % 4 == 1)
+                            <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                                id="row-{{ $row }}">
+                                <div type="button" class="col mx-5 border-dark-2"
+                                    style="width: 25px; height: 25px; border-radius: 3px;"
+                                    onclick="setChair({{ $i }})" id="pilih_kursi_{{ $i }}"
+                                    nomor="{{ $i }}"></div>
+                            @elseif($i % 4 == 2)
+                                <div type="button" class="col mx-5 border-dark-2"
+                                    style="width: 25px; height: 25px; border-radius: 3px;"
+                                    onclick="setChair({{ $i }})" id="pilih_kursi_{{ $i }}"
+                                    nomor="{{ $i }}"></div>
 
+                                <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                            @elseif($i % 4 == 0)
+                                <div type="button" class="col mx-5 border-dark-2"
+                                    style="width: 25px; height: 25px; border-radius: 3px;"
+                                    onclick="setChair({{ $i }})" id="pilih_kursi_{{ $i }}"
+                                    nomor="{{ $i }}"></div>
+                            </div>
+                        @else
+                            <div type="button" class="col mx-5 border-dark-2"
+                                style="width: 25px; height: 25px; border-radius: 3px;"
+                                onclick="setChair({{ $i }})" id="pilih_kursi_{{ $i }}"
+                                nomor="{{ $i }}"></div>
+                        @endif
                     @endfor
                     {{-- <div
                         class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
@@ -280,91 +280,97 @@
                             style="width: 25px; height: 25px; border-radius: 3px;" id="pilih_kursi_115" nomor="115">
                         </div>
                     </div> --}}
+                </div>
             </div>
-        </div>
-        <div class="modal-bpdy p-5">
-            <form action="{{ route('bus_travel.order') }}" method="post">
-                @csrf
-                <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                <input type="hidden" name="departure_id" value="{{ $departure_id }}">
-                <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
-                <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
-                @for ($i = 1; $i <= $jumlah_penumpang; $i++) <input type="hidden" name="kursi_penumpang_{{ $i }}"
-                    id="kursi_pilihan_penumpang_{{ $i }}">
+            <div class="modal-bpdy p-5">
+                <form action="{{ route('bus_travel.order') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                    <input type="hidden" name="departure_id" value="{{ $departure_id }}">
+                    <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                    <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                    <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                    <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                    <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        <input type="hidden" name="kursi_penumpang_{{ $i }}"
+                            id="kursi_pilihan_penumpang_{{ $i }}">
                     @endfor
                     <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
 @push('js')
-<script>
-    // $("#list_penumpang").on("click", ".card", function() {
-    //         let penumpang = $(this).data('penumpang');
-    //         $(this).removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
-    //         $("#nama_penumpang_" + penumpang).removeClass('text-dark').addClass('text-danger');
-    //         $("#baris__" + penumpang).removeClass('text-dark').addClass('text-danger');
-    //         $("#list_penumpang .card").removeClass('border-danger');
-    //         console.log(penumpang);
-    //         $(this).addClass('border-danger');
-    //         $("#modal_kursi").modal('show');
-    //     });
+    <script>
+        // $("#list_penumpang").on("click", ".card", function() {
+        //         let penumpang = $(this).data('penumpang');
+        //         $(this).removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
+        //         $("#nama_penumpang_" + penumpang).removeClass('text-dark').addClass('text-danger');
+        //         $("#baris__" + penumpang).removeClass('text-dark').addClass('text-danger');
+        //         $("#list_penumpang .card").removeClass('border-danger');
+        //         console.log(penumpang);
+        //         $(this).addClass('border-danger');
+        //         $("#modal_kursi").modal('show');
+        //     });
 
-    var id_penumpang;
-    $(document).ready(function () {
-        let chairs = $("#baris_kursi_penumpang").find(`[id^="pilih_kursi_"]`);
-        
-        $("#list_penumpang").on("click", ".card", function() {
-            let clickedCard = $(this);
-            let penumpang = clickedCard.data('penumpang');
-            id_penumpang = penumpang;
-            
-            clickedCard.removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
-            $("#nama_penumpang_" + penumpang).removeClass('text-dark').addClass('text-danger');
-            $("#baris__" + penumpang).removeClass('text-dark').addClass('text-danger');
+        var id_penumpang;
+        $(document).ready(function() {
+            let chairs = $("#baris_kursi_penumpang").find(`[id^="pilih_kursi_"]`);
 
-            let otherCards = $("#list_penumpang").find(".card").not(clickedCard);
-            otherCards.each(function(index, other){
-                let other_penumpang = $(other).data('penumpang');
-                $(other).addClass('border-dark-2').removeClass(['bg-snow-pink', 'border-danger-2']);
-                $("#nama_penumpang_" + other_penumpang).addClass('text-dark').removeClass('text-danger');
-                $("#baris__" + other_penumpang).addClass('text-dark').removeClass('text-danger');
-            })
-            
+            $("#list_penumpang").on("click", ".card", function() {
+                let clickedCard = $(this);
+                let penumpang = clickedCard.data('penumpang');
+                id_penumpang = penumpang;
+
+                clickedCard.removeClass('border-dark-2').addClass(['bg-snow-pink', 'border-danger-2']);
+                $("#nama_penumpang_" + penumpang).removeClass('text-dark').addClass('text-danger');
+                $("#baris__" + penumpang).removeClass('text-dark').addClass('text-danger');
+
+                let otherCards = $("#list_penumpang").find(".card").not(clickedCard);
+                otherCards.each(function(index, other) {
+                    let other_penumpang = $(other).data('penumpang');
+                    $(other).addClass('border-dark-2').removeClass(['bg-snow-pink',
+                        'border-danger-2'
+                    ]);
+                    $("#nama_penumpang_" + other_penumpang).addClass('text-dark').removeClass(
+                        'text-danger');
+                    $("#baris__" + other_penumpang).addClass('text-dark').removeClass(
+                    'text-danger');
+                })
+
+            });
         });
-    });
 
-    function setChair(chair){
-        if(id_penumpang == '' || id_penumpang == null){
-            alert('Pilih Penumpang terlebih dahulu');
-            return;
-        }
-
-        let previousChoice = $(`[id^="kursi_pilihan_penumpang_"]`);
-
-        previousChoice.each(function(index, choice){
-            if(chair == $(choice).val()){
-                alert("Kursi Ini telah anda pilih");
+        function setChair(chair) {
+            if (id_penumpang == '' || id_penumpang == null) {
+                alert('Pilih Penumpang terlebih dahulu');
                 return;
             }
-        });
 
-        choosedByPenumpang = $("#kursi_pilihan_penumpang_"+id_penumpang).val();
-        
-        $("#baris_kursi_penumpang #pilih_kursi_"+choosedByPenumpang).removeClass(['border-danger-2', 'bg-snow-pink']).addClass(['border-dark-2']);
-        
-        // let acquiredChairs = $(`#baris_kursi_penumpang [class*="acquired"]`);
-        // let choosedID = $(`[id^="kursi_pilihan_penumpang_"]`);
-        // let otherChairs = $(`#baris_kursi_penumpang [id^="pilih_kursi_"]`).not(acquiredChairs, choosedChairs);
-        
-        $(`#pilih_kursi_${chair}`).removeClass(['border-dark-2']).addClass(['border-danger-2', 'bg-snow-pink']);
-        $(`#kursi_pilihan_penumpang_${id_penumpang}`).val(chair);
-        
-    }
-</script>
+            let previousChoice = $(`[id^="kursi_pilihan_penumpang_"]`);
+
+            previousChoice.each(function(index, choice) {
+                if (chair == $(choice).val()) {
+                    alert("Kursi Ini telah anda pilih");
+                    return;
+                }
+            });
+
+            choosedByPenumpang = $("#kursi_pilihan_penumpang_" + id_penumpang).val();
+
+            $("#baris_kursi_penumpang #pilih_kursi_" + choosedByPenumpang).removeClass(['border-danger-2', 'bg-snow-pink'])
+                .addClass(['border-dark-2']);
+
+            // let acquiredChairs = $(`#baris_kursi_penumpang [class*="acquired"]`);
+            // let choosedID = $(`[id^="kursi_pilihan_penumpang_"]`);
+            // let otherChairs = $(`#baris_kursi_penumpang [id^="pilih_kursi_"]`).not(acquiredChairs, choosedChairs);
+
+            $(`#pilih_kursi_${chair}`).removeClass(['border-dark-2']).addClass(['border-danger-2', 'bg-snow-pink']);
+            $(`#kursi_pilihan_penumpang_${id_penumpang}`).val(chair);
+
+        }
+    </script>
 @endpush

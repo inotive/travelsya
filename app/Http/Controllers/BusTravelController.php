@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\General;
 use App\Helpers\ResponseFormatter;
 use App\Models\BusBooked;
+use App\Models\BusCostumerHasChair;
 use App\Models\BusDeparture;
 use App\Models\BusRoute;
 use App\Models\BusTravels;
@@ -248,6 +249,7 @@ class BusTravelController extends Controller
         $data['date_pulang'] = $date_pulang;
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
+        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->orderBy('kursi_pergi')->get(); 
         // dd($data['departure']->busTravel->number_seats%2);
         // dd($data);
 
@@ -289,6 +291,7 @@ class BusTravelController extends Controller
 
     public function request_transaction(Request $request)
     {
+        dd($request);
         $validator = Validator::make($request->all(), [
             'service' => 'required|string',
             'payment' => 'required|string',
