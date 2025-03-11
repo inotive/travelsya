@@ -205,7 +205,7 @@
 
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
-                            <img src="{{ asset($car->carModel->image ?? null) }}"
+                            <img src="{{ asset($car->brand->image ?? null) }}"
                                 onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
                                 alt="" width="50" height="50" class="rounded-1">
                             <div class="d-flex flex-column ms-3">
