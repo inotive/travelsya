@@ -1,14 +1,14 @@
 @push('css')
-<style>
-    .acquired {
-        background-color: var(--bs-secondary) !important;
-    }
+    <style>
+        .acquired {
+            background-color: var(--bs-secondary) !important;
+        }
 
-    .choosed {
-        background-color: #FFF4F4 !important;
-        border: 2px solid var(--bs-danger) !important;
-    }
-</style>
+        .choosed {
+            background-color: #FFF4F4 !important;
+            border: 2px solid var(--bs-danger) !important;
+        }
+    </style>
 @endpush
 <div class="modal fade" id="modal_kursi" tabindex="-1" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
@@ -28,113 +28,154 @@
                     {{ $departure->duration }}j</span>
 
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6" id="list_penumpang">
-                    @for ($i = 1; $i <= $jumlah_penumpang; $i++) <div class="col p-3">
-                        <div class="card border-dark-2" data-penumpang="{{ $i }}">
-                            <div class="card-body d-flex flex-column">
-                                <span class="fw-bold text-dark" id="nama_penumpang_{{ $i }}">Penumpang
-                                    {{ $i }}</span>
-                                <span class="text-dark" id="baris__{{ $i }}"></span>
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        <div class="col p-3">
+                            <div class="card border-dark-2" data-penumpang="{{ $i }}">
+                                <div class="card-body d-flex flex-column">
+                                    <span class="fw-bold text-dark" id="nama_penumpang_{{ $i }}">Penumpang
+                                        {{ $i }}</span>
+                                    <span class="text-dark" id="kursi_baris_{{ $i }}"></span>
+                                </div>
                             </div>
                         </div>
-                </div>
-                @endfor
-            </div>
-        </div>
-        <div class="modal-body bg-snow-pink min-h-350">
-            <div class="row border-bottom border-secondary pb-5">
-                <div class="col-12 d-flex flex-row justify-content-center align-items-center">
-                    <div style="width: 25px; height: 25px; border: 2px solid var(--bs-dark); border-radius: 3px;">
-                    </div>
-                    <span class="ms-3 fs-3 text-dark opacity-75">Tersedia</span>
-                    <div class="ms-5"
-                        style="width: 25px; height: 25px; border: 2px solid var(--bs-danger); border-radius: 3px;">
-                    </div>
-                    <span class="ms-3 fs-3 text-dark opacity-75">Dipilih</span>
-                    <div class="ms-5" style="width: 25px; height: 25px; border-radius: 3px; background-color: #D3D4D4;">
-                    </div>
-                    <span class="ms-3 fs-3 text-dark opacity-75">Tidak Tersedia</span>
+                    @endfor
                 </div>
             </div>
-            <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                id="row-1">
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                <div type="button" class="col mx-5 border-dark-2"
-                    style="width: 25px; height: 25px; border-radius: 3px;"></div>
-            </div>
-            <div id="baris_kursi_penumpang">
-                @php
-                $row = 2;
-                $total_row = floor($departure->busTravel->number_seats / 4) + 1;
-                @endphp
-                @for ($i = 1; $i <= $departure->busTravel->number_seats; $i++)
-                    @if ($i % 4 == 1)
-                    <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
-                        id="row-{{ $row }}">
-                        <div @if(!$choosedChairs->contains('kursi_pergi', $i)) type="button" @endif class="col mx-5
+            <div class="modal-body bg-snow-pink min-h-350">
+                <div class="row border-bottom border-secondary pb-5">
+                    <div class="col-12 d-flex flex-row justify-content-center align-items-center">
+                        <div style="width: 25px; height: 25px; border: 2px solid var(--bs-dark); border-radius: 3px;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Tersedia</span>
+                        <div class="ms-5"
+                            style="width: 25px; height: 25px; border: 2px solid var(--bs-danger); border-radius: 3px;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Dipilih</span>
+                        <div class="ms-5"
+                            style="width: 25px; height: 25px; border-radius: 3px; background-color: #D3D4D4;">
+                        </div>
+                        <span class="ms-3 fs-3 text-dark opacity-75">Tidak Tersedia</span>
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-1">
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;">
+                    </div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;">
+                        <h5>A</h5>
+                    </div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;">
+                        <h5>B</h5>
+                    </div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;">
+                        <h5>C</h5>
+                    </div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;">
+                        <h5>D</h5>
+                    </div>
+                </div>
+                <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                    id="row-0">
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                    <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px; padding: unset;"><img
+                            src="/assets/img/steer.svg" width="25" height="25" alt=""></div>
+                </div>
+                <div id="baris_kursi_penumpang">
+                    @php
+                        $row = 1;
+                        $total_row = floor($departure->busTravel->number_seats / 4) + 1;
+                    @endphp
+                    @for ($i = 1; $i <= $departure->busTravel->number_seats; $i++)
+                        @if ($i % 4 == 1)
+                            <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6 d-flex flex-row align-items-center justify-content-center p-3"
+                                id="row-{{ $row }}">
+                                <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;">
+                                    <h5>{{ $row }}</h5>
+                                </div>
+                                <div @if (!$choosedChairs->contains('kursi_pergi', 'A' . $row)) type="button" @endif
+                                    class="col mx-5
                             border-dark-2
-                            @if($choosedChairs->contains('kursi_pergi', $i)) acquired @endif"
-                            style="width: 25px; height: 25px; border-radius: 3px;"
-                            @if(!$choosedChairs->contains('kursi_pergi', $i)) onclick="setChair({{ $i }})" @endif
-                            id="pilih_kursi_{{ $i }}"
-                            nomor="{{ $i }}"></div>
-                        @elseif($i % 4 == 2)
-                        <div @if(!$choosedChairs->contains('kursi_pergi', $i)) type="button" @endif class="col mx-5
+                            @if ($choosedChairs->contains('kursi_pergi', 'A' . $row)) acquired @endif"
+                                    style="width: 25px; height: 25px; border-radius: 3px;"
+                                    @if (!$choosedChairs->contains('kursi_pergi', 'A' . $row)) onclick="setChair('{{ 'A' . $row }}')" @endif
+                                    id="pilih_kursi_{{ 'A' . $row }}" nomor="{{ 'A' . $row }}"></div>
+                            @elseif($i % 4 == 2)
+                                <div @if (!$choosedChairs->contains('kursi_pergi', 'B' . $row)) type="button" @endif
+                                    class="col mx-5
                             border-dark-2
-                            @if($choosedChairs->contains('kursi_pergi', $i)) acquired @endif"
-                            style="width: 25px; height: 25px; border-radius: 3px;"
-                            @if(!$choosedChairs->contains('kursi_pergi', $i)) onclick="setChair({{ $i }})" @endif
-                            id="pilih_kursi_{{ $i }}"
-                            nomor="{{ $i }}"></div>
+                            @if ($choosedChairs->contains('kursi_pergi', 'B' . $row)) acquired @endif"
+                                    style="width: 25px; height: 25px; border-radius: 3px;"
+                                    @if (!$choosedChairs->contains('kursi_pergi', 'B' . $row)) onclick="setChair('{{ 'B' . $row }}')" @endif
+                                    id="pilih_kursi_{{ 'B' . $row }}" nomor="{{ 'B' . $row }}"></div>
 
-                        <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
-                        @elseif($i % 4 == 0)
-                        <div @if(!$choosedChairs->contains('kursi_pergi', $i)) type="button" @endif class="col mx-5
+                                <div class="col mx-5" style="width: 25px; height: 25px; border-radius: 3px;"></div>
+                            @elseif($i % 4 == 0)
+                                <div @if (!$choosedChairs->contains('kursi_pergi', 'D' . $row)) type="button" @endif
+                                    class="col mx-5
                             border-dark-2
-                            @if($choosedChairs->contains('kursi_pergi', $i)) acquired @endif"
-                            style="width: 25px; height: 25px; border-radius: 3px;"
-                            @if(!$choosedChairs->contains('kursi_pergi', $i)) onclick="setChair({{ $i }})" @endif
-                            id="pilih_kursi_{{ $i }}"
-                            nomor="{{ $i }}"></div>
-                    </div>
-                    @else
-                    <div @if(!$choosedChairs->contains('kursi_pergi', $i)) type="button" @endif class="col mx-5
+                            @if ($choosedChairs->contains('kursi_pergi', 'D' . $row)) acquired @endif"
+                                    style="width: 25px; height: 25px; border-radius: 3px;"
+                                    @if (!$choosedChairs->contains('kursi_pergi', 'D' . $row)) onclick="setChair('{{ 'D' . $row }}')" @endif
+                                    id="pilih_kursi_{{ 'D' . $row }}" nomor="{{ 'D' . $row }}"></div>
+                            </div>
+                            @php
+                                $row++;
+                            @endphp
+                        @else
+                            <div @if (!$choosedChairs->contains('kursi_pergi', 'C' . $row)) type="button" @endif
+                                class="col mx-5
                         border-dark-2
-                        @if($choosedChairs->contains('kursi_pergi', $i)) acquired @endif"
-                        style="width: 25px; height: 25px; border-radius: 3px;"
-                        @if(!$choosedChairs->contains('kursi_pergi', $i)) onclick="setChair({{ $i }})" @endif
-                        id="pilih_kursi_{{ $i }}"
-                        nomor="{{ $i }}"></div>
-                    @endif
+                        @if ($choosedChairs->contains('kursi_pergi', 'C' . $row)) acquired @endif"
+                                style="width: 25px; height: 25px; border-radius: 3px;"
+                                @if (!$choosedChairs->contains('kursi_pergi', 'C' . $row)) onclick="setChair('{{ 'C' . $row }}')" @endif
+                                id="pilih_kursi_{{ 'C' . $row }}" nomor="{{ 'C' . $row }}"></div>
+                        @endif
                     @endfor
 
+                </div>
             </div>
-        </div>
-        <div class="modal-bpdy p-5">
-            <form action="{{ route('bus_travel.order') }}" method="post">
-                @csrf
-                <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                <input type="hidden" name="departure_id" value="{{ $departure_id }}">
-                <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
-                <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
-                @for ($i = 1; $i <= $jumlah_penumpang; $i++) <input type="hidden" name="kursi_penumpang_{{ $i }}"
-                    id="kursi_pilihan_penumpang_{{ $i }}">
-                    @endfor
-                    <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
-            </form>
+            <div class="modal-bpdy p-5">
+                <form action="{{ route('bus_travel.order') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                    <input type="hidden" name="departure_id" value="{{ $departure_id }}">
+                    <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                    <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                    <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                    <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                    <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
+                    @if (isset($is_order))
+                        @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                            <input type="hidden" name="kursi_penumpang_{{ $i }}"
+                                id="kursi_pilihan_penumpang_{{ $i }}"
+                                value="{{ ${"kursi_penumpang_$i"} }}">
+                        @endfor
+                    @else
+                        @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                            <input type="hidden" name="kursi_penumpang_{{ $i }}"
+                                id="kursi_pilihan_penumpang_{{ $i }}">
+                        @endfor
+                    @endif
+                    @if (isset($is_order))
+                        <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">Lanjutan
+                            Order</button>
+                    @else
+                        <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
+                    @endif
+                </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
 
 @push('js')
-<script>
-    var id_penumpang;
+    <script>
+        var id_penumpang;
         // var choosedChair = $(`[id^="kursi_pilihan_penumpang_"]`);
         $(document).ready(function() {
             let chairs = $("#baris_kursi_penumpang").find(`[id^="pilih_kursi_"]`);
@@ -157,7 +198,7 @@
                     $("#nama_penumpang_" + other_penumpang).addClass('text-dark').removeClass(
                         'text-danger');
                     $("#baris__" + other_penumpang).addClass('text-dark').removeClass(
-                    'text-danger');
+                        'text-danger');
                 })
 
             });
@@ -189,7 +230,23 @@
 
             $(`#pilih_kursi_${chair}`).removeClass(['border-dark-2']).addClass(['border-danger-2', 'bg-snow-pink']);
             $(`#kursi_pilihan_penumpang_${id_penumpang}`).val(chair);
+            $("#kursi_baris_" + id_penumpang).text(chair);
 
         }
-</script>
+
+        function setChairForOrder() {
+            let costumerChairs = $(`[id^="kursi_pilihan_penumpang_"]`);
+            costumerChairs.each(function(index, value) {
+                let baris = index + 1;
+                let chair = $(value).val();
+                $("#pilih_kursi_" + chair).removeClass(['border-dark-2']).addClass(['border-danger-2',
+                    'bg-snow-pink'
+                ]);
+
+                $("#list_penumpang #kursi_baris_" + baris).text(chair);
+            })
+
+            $("#modal_kursi").modal("show");
+        }
+    </script>
 @endpush

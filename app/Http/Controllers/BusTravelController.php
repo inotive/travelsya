@@ -272,6 +272,7 @@ class BusTravelController extends Controller
         $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
+        $data['is_order'] = 1;
         for ($i=1; $i <= $param['jumlah_penumpang']; $i++) { 
             $data['kursi_penumpang_'.$i] = $param['kursi_penumpang_'.$i];
         }
