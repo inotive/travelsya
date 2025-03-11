@@ -9,12 +9,14 @@ class BusCostumerHasChair extends Model
 {
     protected $fillable = [
         'id_costumer',
-        'id_bus_travel',
         'id_departure',
+        'penumpang_ke',
+        'is_pulang_pergi',
         'date_pergi',
         'date_pulang',
         'kursi_pergi',
-        'kursi_pulang'
+        'kursi_pulang',
+        'is_active'
     ];
 
     public function user(){

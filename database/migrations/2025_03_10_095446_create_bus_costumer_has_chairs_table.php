@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('bus_costumer_has_chairs', function (Blueprint $table) {
             $table->id();
             $table->integer('id_costumer');
-            $table->integer('id_bus_travel')->nullable();
-            $table->integer('id_departure')->nullable();
-            $table->date('date_pergi')->nullable();
+            $table->integer('id_departure');
+            $table->integer('penumpang_ke');
+            $table->boolean('is_pulang_pergi')->default(false);
+            $table->date('date_pergi');
             $table->date('date_pulang')->nullable();
-            $table->integer('kursi_pergi')->nullable();
-            $table->integer('kursi_pulang')->nullable();
+            $table->string('kursi_pergi');
+            $table->string('kursi_pulang')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
