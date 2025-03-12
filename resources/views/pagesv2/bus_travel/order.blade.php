@@ -96,14 +96,18 @@
                                     <img src="{{ asset('images/icon/chair.png') }}" width="25px" height="25px" alt="">
                                     <div class="d-flex flex-column ms-5">
                                         <Span>{{ $departure->busTravel->busTravel->business_name }}</Span>
-                                        <Span>Kursi {{ ${"kursi_penumpang_$i"} }}</Span>
+                                        <Span id="baris_kursi_penumpang_{{ $i }}">Kursi {{ ${"kursi_penumpang_$i"}
+                                            }}</Span>
                                     </div>
-                                    <span class="text-danger fw-bold ms-sm-auto">Ubah Kursi</span>
+                                    <a href="javascript:" onclick="setChairForOrder()"
+                                        class="text-decoration-none ms-sm-auto">
+                                        <span class="text-danger fw-bold">Ubah Kursi</span>
+                                    </a>
                                 </div>
                                 <div id="data_pengunjung">
                                     <div class="d-flex flex-row align-items-center mb-3">
                                         <input type="hidden" value={{ ${"kursi_penumpang_$i"} }}
-                                            name="kursi_penumpang_{{ $i }}">
+                                            name="kursi_penumpang_{{ $i }}" id="kursi_penumpang_{{ $i }}">
                                         <input type="radio" name="customer_call_{{ $i }}" class=" accent-danger"
                                             id="radio_tuan" value="tuan" checked required>
                                         <span class="ms-3">Tuan</span>
@@ -121,23 +125,22 @@
                                             required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="customer_phone_{{ $i }}" class="form-label">Nomor Ponsel</label>
+                                        <label for="customer_phone_{{ $i }}" class="form-label">Nomor
+                                            Ponsel</label>
                                         <input type="text" class="form-control" id="customer_phone_{{ $i }}"
                                             name="customer_phone_{{ $i }}" placeholder="Masukan nomor handphone"
                                             required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="customer_email_{{ $i }}" class="form-label">Alamat Email</label>
+                                        <label for="customer_email_{{ $i }}" class="form-label">Alamat
+                                            Email</label>
                                         <input type="email" class="form-control" id="customer_email_{{ $i }}"
                                             name="customer_email_{{ $i }}" placeholder="Masukan Email" required>
                                     </div>
                                 </div>
                                 @if ($i === 1)
-
                                 <div id="data_disabled_pengunjung" style="display: none;">
                                     <div class="d-flex flex-row align-items-center mb-3">
-                                        <input type="hidden" value={{ ${"kursi_penumpang_$i"} }}
-                                            name="kursi_penumpang_{{ $i }}">
                                         <input type="radio" name="sapa_disabled_pengunjung" id="radio_tuan" value="tuan"
                                             disabled>
                                         <span class="ms-3">Tuan</span>
@@ -154,12 +157,14 @@
                                             placeholder="Masukan nama pengunjung" disabled readonly>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="phone_disabled_pengunjung" class="form-label">Nomor Ponsel</label>
+                                        <label for="phone_disabled_pengunjung" class="form-label">Nomor
+                                            Ponsel</label>
                                         <input type="text" class="form-control" id="phone_disabled_pengunjung"
                                             placeholder="Masukan nomor handphone" disabled readonly>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="email_disabled_pengunjung" class="form-label">Alamat Email</label>
+                                        <label for="email_disabled_pengunjung" class="form-label">Alamat
+                                            Email</label>
                                         <input type="email" class="form-control" id="email_disabled_pengunjung"
                                             placeholder="Masukan Email" disabled readonly>
                                     </div>
@@ -169,6 +174,7 @@
                         </div>
             </div>
             @endfor
+
             <!-- End Detail Pengunjung -->
 
             <div class="mb-35px">
@@ -181,7 +187,8 @@
                 <div class="card rounded-4 border-1 shadow">
                     <div class="card-header d-flex flex-row align-items-center">
                         <h2 class="fw-bold">Total Pembayaran</h2>
-                        <h2 class="fw-bold">IDR {{ number_format($departure->price * $jumlah_penumpang) }}</h2>
+                        <h2 class="fw-bold">IDR {{ number_format($departure->price * $jumlah_penumpang) }}
+                        </h2>
                     </div>
                     <div class="card-body d-flex flex-row align-items-center">
                         <span class="fa-solid fa-gem fs-3 text-danger"></span>
@@ -195,6 +202,7 @@
             </div>
             </form>
         </div>
+
         <div class="col-4">
             <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
                 <div class="card-body p-5">
@@ -220,16 +228,18 @@
                     <hr class="opacity-25 my-5">
                     <div class="d-flex flex-row align-items-center">
                         <span>Total pembayaran</span>
-                        <span class="fs-3 ms-sm-auto">IDR {{ number_format($departure->price * $jumlah_penumpang)
-                            }}</span>
+                        <span class="fs-3 ms-sm-auto">IDR
+                            {{ number_format($departure->price * $jumlah_penumpang) }}</span>
                     </div>
                 </div>
             </div>
         </div>
+
+    </section>
 </div>
 
-</section>
-</div>
+
+@include('pagesv2.bus_travel.partials.components._modal_kursi')
 
 
 
