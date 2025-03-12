@@ -5,12 +5,12 @@
         <div class="card accordion-item mb-3">
             <div class="card-header p-0 border-bottom-dashed">
                 <div class="accordion-header w-100">
-                    <div class="w-100" id="paket-1">
+                    <div class="w-100" id="paket-{{ $key }}">
                         <button class="accordion-button collapsed bg-opacity-0 align-items-start" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#paket-collapse-1" aria-expanded="true"
-                            aria-controls="paket-collapse-1">
+                            data-bs-toggle="collapse" data-bs-target="#paket-collapse-{{ $key }}"
+                            aria-expanded="true" aria-controls="paket-collapse-{{ $key }}">
                             <div class="d-flex flex-column">
-                                <h2 class="mb-25px">{{ $package->description }}</h2>
+                                <h2 class="mb-25px">{{ $package->name }}</h2>
                                 <div class="d-flex flex-column mb-25px">
                                     @if ($package->is_refundable == 1)
                                         <div class="d-flex flex-row align-items-center mb-2 fs-3">
@@ -55,7 +55,8 @@
 
                 </div>
             </div>
-            <div class="card-body accordion-collapse collapse show" id="paket-collapse-1" aria-labelledby="paket-1">
+            <div class="card-body accordion-collapse collapse @if ($package->is_weekend == 1 && \App\Helpers\General::isWeekEnd($date)) show @elseif(!$package->is_weekend == 1 && !\App\Helpers\General::isWeekEnd($date)) show @endif"
+                id="paket-collapse-{{ $key }}" aria-labelledby="paket-{{ $key }}">
                 <div class="d-flex flex-row p-1 rounded-1 align-items-center mb-3 justify-content-between gap-1">
                     {{--                    @foreach ($days as $key => $day) --}}
                     {{--                    <card class="border rounded-2 d-flex flex-column align-items-center p-3"> --}}
@@ -68,7 +69,7 @@
                     {{--                    @endforeach --}}
                 </div>
                 <div class="mb-35px">
-                    Durasi : {{ $package->duration . ' ' . $package->unit_price }}
+                    Durasi : {{ $package->duration . ' ' . $package->expiry_type }}
                 </div>
                 <div class="mb-35px">
                     Masa Berlaku: <span class="fs-3 fw-bold">{{ \App\Helpers\General::getDateShortMonth($date) }} -
