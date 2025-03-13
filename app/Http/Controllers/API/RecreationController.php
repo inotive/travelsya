@@ -295,10 +295,18 @@ class RecreationController extends Controller
 
         foreach ($data as $key => $dat) {
             if (count($dat['recreationPackages']) > 0) {
+                $img = $dat['image']['image'] ?? null;
+
+                if($img){
+                    $img = asset('storage/' . $dat['image']['image']);
+                }else{
+                    $img = asset('images/not_found.jpg');
+                }
+
                 $item = [
                     'id' => $dat['id'],
                     'name' => $dat['business_name'],
-                    'image' => asset('storage/' . $dat['image']['image'] ?? 'not_found.png'),
+                    'image' => $img,
                     'location' => $dat['kota']['city_name'] ?? 'Kota dihapus',
                     'price' => $dat['recreationPackages'][0]['price'],
                     'rating_count' => count($dat['reviews']),
@@ -322,16 +330,24 @@ class RecreationController extends Controller
 
             foreach ($recreations as $key => $rec) {
                 if (count($rec['recreationPackages'])) {
-                    $item = [
-                        'name' => $rec['business_name'],
-                        'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
-                        'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                        'price' => $rec['recreationPackages'][0]['price'],
-                        'rating_count' => count($rec['reviews']),
-                        'avg_rating' => $rec->avgRating(),
-                    ];
+                        $img = $rec['image']['image'] ?? null;
 
-                    array_push($recre, $item);
+                        if($img){
+                            $img = asset('storage/' . $rec['image']['image']);
+                        }else{
+                            $img = asset('images/not_found.jpg');
+                        }
+
+                        $item = [
+                            'name' => $rec['business_name'],
+                            'image' => $img,
+                            'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                            'price' => $rec['recreationPackages'][0]['price'],
+                            'rating_count' => count($rec['reviews']),
+                            'avg_rating' => $rec->avgRating(),
+                        ];
+
+                        array_push($recre, $item);
                 }
             }
 
