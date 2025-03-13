@@ -50,7 +50,7 @@
                         @include('pagesv2.rekreasi.components._ticket_on', [
                             'weektype' => $weektype,
                             'days' => \App\Helpers\General::getNextWeekdays($date),
-                            'weekend_package_on' => $weekend_package_on,
+                            'today_price' => $package->price,
                         ])
                     @else
                         @if ($is_weekend)
