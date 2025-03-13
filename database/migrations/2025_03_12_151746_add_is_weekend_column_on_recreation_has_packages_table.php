@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('recreation_has_packages', function (Blueprint $table) {
-            $table->boolean('is_weekend')->default(false);
+            $table->boolean('has_weekend')->default(false);
+            $table->bigInteger('weekend_price')->nullable();
         });
     }
 
@@ -22,7 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('recreation_has_packages', function (Blueprint $table) {
-            $table->dropColumn('is_weekend');
+            $table->dropColumn('has_weekend');
+            $table->dropColumn('weekend_price');
         });
     }
 };

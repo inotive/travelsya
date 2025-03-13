@@ -46,17 +46,38 @@
         <div class="col-12">
             @foreach ($detail->recreationPackages as $key => $package)
                 <div class="card bg-danger bg-opacity-25 p-3 mb-35px">
-                    @php
-                        if ($package->is_weekend == 1) {
-                            $weektype = 'Weekend';
-                        } else {
-                            $weektype = 'Weekday';
-                        }
-                    @endphp
-                    @include('pagesv2.rekreasi.components._ticket_on', [
-                        'weektype' => $weektype,
-                        'days' => \App\Helpers\General::getNextWeekdays($date),
-                    ])
+                    @if ($package->has_weekend == 0)
+                        @include('pagesv2.rekreasi.components._ticket_on', [
+                            'weektype' => $weektype,
+                            'days' => \App\Helpers\General::getNextWeekdays($date),
+                            'weekend_package_on' => $weekend_package_on,
+                        ])
+                    @else
+                        @if ($is_weekend)
+                            @include('pagesv2.rekreasi.components._ticket_off', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->price,
+                            ])
+
+                            @include('pagesv2.rekreasi.components._ticket_on', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->weekend_price,
+                            ])
+                        @else
+                            @include('pagesv2.rekreasi.components._ticket_on', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->price,
+                            ])
+                            @include('pagesv2.rekreasi.components._ticket_off', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->weekend_price,
+                            ])
+                        @endif
+                    @endif
                     {{--                @if (\App\Helpers\General::isWeekEnd($date)) --}}
                     {{--                <span class="title fw-bold mb-3 text-capitalize">{{ $package->name }}</span> --}}
 
