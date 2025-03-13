@@ -38,18 +38,46 @@
                     class="btn {{ $date == \Carbon\Carbon::now()->addDays(9)->format('Y-m-d') ? 'btn-outline-danger fs-6 border bg-danger bg-opacity-25 text-danger' : 'btn-outline-secondary border' }} rounded-pill ms-2"><span
                         class="fa-solid fa-calendar me-2"></span>{{ \Carbon\Carbon::now()->addDays(9)->format('d M') }}</button>
             </a>
-            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->addDay()->format('Y-m-d')]) }}"
+            <a href="{{ route('rekreasi.detail', ['id' => $detail->id, 'date' => \Carbon\Carbon::now()->format('Y-m-d')]) }}"
                 class="text-decoration-none text-danger fw-bold fs-3 ms-3">Reset</a>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
-            @foreach ($detail->recreationPackages as $package)
+            @foreach ($detail->recreationPackages as $key => $package)
                 <div class="card bg-danger bg-opacity-25 p-3 mb-35px">
-                    @include('pagesv2.rekreasi.components._ticket_on', [
-                        'weektype' => 'Weekday',
-                        'days' => \App\Helpers\General::getNextWeekdays($date),
-                    ])
+                    @if ($package->has_weekend == 0)
+                        @include('pagesv2.rekreasi.components._ticket_on', [
+                            'weektype' => $weektype,
+                            'days' => \App\Helpers\General::getNextWeekdays($date),
+                            'weekend_package_on' => $weekend_package_on,
+                        ])
+                    @else
+                        @if ($is_weekend)
+                            @include('pagesv2.rekreasi.components._ticket_off', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->price,
+                            ])
+
+                            @include('pagesv2.rekreasi.components._ticket_on', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->weekend_price,
+                            ])
+                        @else
+                            @include('pagesv2.rekreasi.components._ticket_on', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->price,
+                            ])
+                            @include('pagesv2.rekreasi.components._ticket_off', [
+                                'weektype' => $weektype,
+                                'days' => \App\Helpers\General::getNextWeekdays($date),
+                                'today_price' => $package->weekend_price,
+                            ])
+                        @endif
+                    @endif
                     {{--                @if (\App\Helpers\General::isWeekEnd($date)) --}}
                     {{--                <span class="title fw-bold mb-3 text-capitalize">{{ $package->name }}</span> --}}
 

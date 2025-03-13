@@ -114,6 +114,14 @@ class NewRecreationController extends Controller
         $data['date'] = $date;
         $data['current'] = $date;
 
+        if (\App\Helpers\General::isWeekEnd($date) == true) {
+            $data['weektype'] = 'weekend';
+            $data['is_weekend'] = true;
+        } else {
+            $data['weektype'] = 'weekday';
+            $data['is_weekend'] = false;
+        }
+
         return view('pagesv2.rekreasi.detail', $data);
     }
 
