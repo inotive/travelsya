@@ -48,7 +48,7 @@
                 <div class="card bg-danger bg-opacity-25 p-3 mb-35px">
                     @if ($package->has_weekend == 0)
                         @include('pagesv2.rekreasi.components._ticket_on', [
-                            'weektype' => $weektype,
+                            'weektype' => 'weekday',
                             'days' => \App\Helpers\General::getNextWeekdays($date),
                             'today_price' => $package->price,
                         ])

@@ -125,6 +125,25 @@ class NewRecreationController extends Controller
         return view('pagesv2.rekreasi.detail', $data);
     }
 
+    public function order(Request $request){
+        if(Auth::user()){
+            $data = $request->all();
+            $data['user'] =  Auth::user();
+            $data['section_title'] =  'recreation';
+            $data['package'] = RecreationPackages::find($data['package_id']);
+            if($request->weekend_ticket == 'weekday'){
+                $data['package_price'] = $data['package']['price'];
+            }else{
+                $data['package_price'] = $data['package']['weekend_price'];
+            }
+            $data['service_id'] = Service::where('name', $data['service'])->first()['id'];
+            $data['country'] = Country::get();
+            return view('pagesv2.rekreasi.order', $data);
+        }else{
+            return redirect()->route('login');
+        }
+    }
+
     public function request_transaction(Request $request){
 
         if(!Auth::user()){
@@ -152,7 +171,12 @@ class NewRecreationController extends Controller
         }
 
         $setting = new Setting();
-        $amount = $package->price * $data['total_ticket'];
+
+        if($request->weekend_ticket == 'weekday'){
+            $amount = $package->price * $data['total_ticket'];
+        }else{
+            $amount = $package->weekend_price * $data['total_ticket'];
+        }
 
         $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $amount);
 
@@ -255,19 +279,5 @@ class NewRecreationController extends Controller
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return redirect()->away($payoutsXendit['invoice_url']);
-    }
-
-    public function order(Request $request){
-        if(Auth::user()){
-            $data = $request->all();
-            $data['user'] =  Auth::user();
-            $data['section_title'] =  'recreation';
-            $data['package'] = RecreationPackages::find($data['package_id']);
-            $data['service_id'] = Service::where('name', $data['service'])->first()['id'];
-            $data['country'] = Country::get();
-            return view('pagesv2.rekreasi.order', $data);
-        }else{
-            return redirect()->route('login');
-        }
     }
 }
