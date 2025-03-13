@@ -9,18 +9,25 @@
                         <span aria-hidden="true" class="fs-1">&times;</span>
                     </button>
                 </div>
-                <div class="d-flex flex-row">
+                <div class="d-flex flex-row justify-content-between">
                     <div class="d-flex flex-column">
                         <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
                         <div class="d-flex flex-row align-items-center">
-                            <span class="fa-solid fa-suitcase opacity-25"></span>
-                            <span class="ms-2 opacity-25" id="luggage_number">{{ $car->koper }} Koper</span>
-                            <span class="fa-solid fa-user ms-5 opacity-25"></span>
+                            <span class="fa-solid fa-user-group ms-5 opacity-25"></span>
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->number_seats }} Penumpang</span>
+                            <span class="fa-solid fa-gears ms-5 opacity-25"></span>
+                            <span class="ms-2 opacity-25" id="passage_number">{{ $car->category }}</span>
+                            @if (strtolower($car->category_rent) == 'dengan driver')
+                            <span class="fa-solid fa-user ms-5 opacity-25"></span>
+                            @else
+                            <span class="fa-solid fa-user-slash ms-5 opacity-25"></span>
+                            @endif
+                            <span class="ms-2 opacity-25" id="passage_number">{{ $car->category_rent }}</span>
                         </div>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        class="ms-sm-auto" width="150px" height="100px" alt="...">
+                    <img src="{{ asset($car->carModel->image ?? null) }}" class="" width="150px" height="100px"
+                        alt="..."
+                        onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                 </div>
             </div>
             <div class="modal-body">
@@ -35,10 +42,12 @@
                                 <span class="rating-number fw-bold">{{
                                     \App\Helpers\General::getCarRentalRate($v['car_id']) }}
                                     / <small>5</small> <a href="#"
-                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{ number_format($v['reviews']) }}
+                                        class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{
+                                        number_format($v['reviews']) }}
                                         Ulasan)</a>
                                 </span>
-                                <span class="rating-number custom-dot-before">{{ number_format($car->booked()->count()) }} order</span>
+                                <span class="rating-number custom-dot-before">{{ number_format($car->booked()->count())
+                                    }} order</span>
                             </div>
                             <div class="rating d-flex align-items-center mb-1">
                                 <span class="bintang fa-solid fa-suitcase checked me-2"></span>
@@ -55,7 +64,7 @@
                                 hari</span>
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan driver',
-                                'lokasi' => !empty($v['location']) ? $v['location'] : 'default_lokasi',
+                                'lokasi' => $v['location'] ?? 'jakarta',
                                 'model' => $model ?? $car->car_model_id,
                                 'provider' => !empty($v['car_id']) ? $v['car_id'] : 'default_provider',
                                 'date' => trim(($date ?? '') . ' ' . ($time ?? '')),

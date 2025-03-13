@@ -440,7 +440,7 @@ class UserController extends Controller
 
         $clinicRating->create([
             'transaction_id' => $request->transaction_id,
-            'users_id'        => $user_id,
+            'user_id'        => $user_id ?? Auth::user()->id,
             'clinic_id'       => $request->clinic_id,
             'clinic_package_id' => $request->package_id,
             'rate'           => $request->rating,

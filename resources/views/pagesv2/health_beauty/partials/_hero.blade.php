@@ -32,7 +32,7 @@
                             <select name="location" id="location" class="form-select select" data-control="select2"
                                     data-placeholder="Pilih Lokasi" autocomplete="on">
                                 @foreach($cityList as $city)
-                                    <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                                    <option value="{{ $city->city_name }}">{{ $city->city_name }}</option>
                                 @endforeach
                             </select>
                         </div>

@@ -13,6 +13,7 @@ class Brand extends Model
 
     protected $fillable = [
         'name',
+        'image',
     ];
 
     public function vendor(): HasMany
