@@ -86,6 +86,7 @@ route::post('/find_car', [CarRentalController::class, 'cari2']);
 route::get('/detail_car/{id}', [CarRentalController::class, 'detail_car']);
 
 // Bus & Travel
+route::get('/bus_city', [BusTravelController::class, 'city']);
 route::post('/find_bus', [BusTravelController::class, 'cari']);
 route::post('/detail_pesanan_bus', [BusTravelController::class, 'detail_pesanan']);
 

@@ -249,7 +249,7 @@ class BusTravelController extends Controller
         $data['date_pulang'] = $date_pulang;
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
-        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->where('is_active', 1)->orderBy('kursi_pergi')->get(); 
+        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->where('is_active', 1)->orderBy('kursi_pergi')->get();
         // dd($data['departure']->busTravel->number_seats%2);
 
         return view('pagesv2.bus_travel.detail', $data);
@@ -273,7 +273,7 @@ class BusTravelController extends Controller
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
         $data['is_order'] = 1;
-        for ($i=1; $i <= $param['jumlah_penumpang']; $i++) { 
+        for ($i=1; $i <= $param['jumlah_penumpang']; $i++) {
             $data['kursi_penumpang_'.$i] = $param['kursi_penumpang_'.$i];
         }
 
@@ -283,7 +283,7 @@ class BusTravelController extends Controller
         $service = Service::where('name', 'bus-travel')->first();
 
         $data['service_id'] = $service->id;
-        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $param['departure_id'])->where('date_pergi', $param['date_pergi'])->where('is_active', 1)->orderBy('kursi_pergi')->get(); 
+        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $param['departure_id'])->where('date_pergi', $param['date_pergi'])->where('is_active', 1)->orderBy('kursi_pergi')->get();
 
         // dd($data);
 
@@ -292,7 +292,7 @@ class BusTravelController extends Controller
 
     public function request_transaction(Request $request)
     {
-        for ($i=1; $i < $request->jumlah_penumpang; $i++) { 
+        for ($i=1; $i < $request->jumlah_penumpang; $i++) {
             $data_kursi = [
                 'id_costumer' => auth()->user()->id,
                 'id_departure' => $request->ticket_pergi_id,
