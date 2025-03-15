@@ -2,7 +2,7 @@
     <div class="container d-flex flex-row align-items-center">
         <div class="d-flex w-100">
             <div class="d-flex align-items-center">
-                <a href="{{ route('home') }}" class="back-btn text-danger fs-16 text-decoration-none">
+                <a href="javascript:" onclick="history.back()" class="back-btn text-danger fs-16 text-decoration-none">
                     <h4 class="text-danger">
                         <i class="fa-solid fa-arrow-left me-2 text-danger"></i>
                         <span class="fw-bold my-auto">
@@ -17,7 +17,7 @@
                         <i class="fa-solid fa-search"></i>
                     </span>
                     <input type="text" class="form-control search-input"
-                        placeholder="Cari rental mobil langganan kamu disini" />
+                        placeholder="Cari Bus atau Travel langganan kamu disini" />
                 </div>
             </div>
         </div>
