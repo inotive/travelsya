@@ -24,7 +24,7 @@
 
         <section class="partners" style="margin-bottom: 100px;">
             @include('pagesv2.rekreasi.components._partners', [
-            'section_title' => 'Tempat bermain terbaik di Jakrta!',
+            'section_title' => 'Tempat bermain terbaik di Sekitar Anda!',
             'section_subtitle' => 'Menghabiskan waktu luang bersama keluarga jadi semakin seru',
             'partners' => $partners,
             ])

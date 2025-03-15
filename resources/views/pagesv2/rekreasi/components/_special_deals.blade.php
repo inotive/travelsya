@@ -39,8 +39,8 @@
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
                             <span class="text-start">{{ $deal['recreation']['kota']['city_name'] ?? 'Invalid city' }}</span>
-                            <span style="position: relative; margin-left: auto;"
-                                class="fa-regular fa-bookmark fs-2"></span>
+                            {{-- <span style="position: relative; margin-left: auto;"
+                                class="fa-regular fa-bookmark fs-2"></span> --}}
                         </div>
 
                         <h3 class="mt-3 text-dark text-start">{{ $deal['name'] }}</h3>
