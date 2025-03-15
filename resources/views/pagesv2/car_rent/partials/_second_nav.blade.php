@@ -19,9 +19,11 @@
                     <input type="text" onkeyup="findData()" id="find" class="form-control search-input"
                         placeholder="Cari tempat rental mobil langganan kamu disini" />
                 </div>
-                <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result" style="z-index: 9999">
+                <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result"
+                    style="z-index: 9999">
                     <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
-                        <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>
+                        <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2
+                            karakter</div>
                     </div>
                 </div>
             </div>

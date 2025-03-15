@@ -238,6 +238,8 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/reservasi/pembayaran', 'payment')->name('.payment');
 });
 
+Route::post('/s_recreation', [NewRecreationController::class, 'search_ajax'])->name('search_recreation');
+
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
     Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
