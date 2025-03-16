@@ -85,7 +85,7 @@ class NewRecreationController extends Controller
         $recreations = RecreationPackages::with(['recreation', 'category', 'image'])->whereHas('recreation', function($q) use($find) {
             $q->where('business_name', 'like', $find);
         })->get();
-        
+
 
 
         $date = Carbon::now()->format('Y-m-d');
@@ -108,7 +108,7 @@ class NewRecreationController extends Controller
                                         <div class="flex-grow-1 me-2">
 
                                             <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
-                                                . ($recreation->recreation->business_name ?? 'deleted brand') . ' - ' . ($recreation->recreation->business_name ?? 'deleted model') .
+                                                . $recreation->name . ' - ' . ($recreation->category->name ?? 'deleted category') .
                                             '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
@@ -119,7 +119,7 @@ class NewRecreationController extends Controller
                                 </a>
                                 <hr>' ;
         }
-        
+
         // return response()->json(['result' => $result]);
 
         return $result;
@@ -151,7 +151,7 @@ class NewRecreationController extends Controller
         })
         ->get();
 
-    
+
 
         return view('pagesv2.rekreasi.show', $data);
     }
