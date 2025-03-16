@@ -33,6 +33,53 @@ class BusTravelController extends Controller
         $this->point = $point;
     }
 
+    public function search_ajax(request $request){
+        $find = '%' . $request->name . '%';
+
+        $buses = BusDeparture::with('busTravel', 'from', 'to')->whereHas('busTravel', function($q) use($find) {
+            $q->whereHas('busTravel', function($b) use ($find){
+                $b->where('business_name', 'like', $find);
+            });
+        })->get();
+
+        $date = Carbon::now()->format('d-m-Y H:i');
+
+        $result = null;
+        foreach ($buses as $key => $bus) {
+            $img = isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
+            $result = $result . '<a href="' .
+                                route('bus_travel.detail', ['departure_id' => $bus['id'],
+                                    'kota_awal' => ($bus['from']['name'] ?? null),
+                                    'kota_tujuan' => ($bus['to']['name'] ?? null),
+                                    'is_pulang_pergi' => 0,
+                                    'jumlah_penumpang' => 1,
+                                    'date_pergi' => date('d-m-Y', strtotime(now())),
+                                    'date_pulang' => null]
+                                    )
+
+
+                                    .'" class="d-flex w-100 flex-stack">
+
+                                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+
+                                        <div class="flex-grow-1 me-2">
+
+                                            <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
+                                                . ($bus['from']['name'] ?? 'Invalid Route') . ' -> ' . ($bus['to']['name'] ?? 'Invalid Route') .
+                                            '</span>
+
+                                            <span class="text-muted fw-semibold d-block fs-7">
+                                                ' . ($bus['busTravel']['busTravel']['business_name'] ?? 'Invalid bus') . '
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <hr>' ;
+        }
+
+        return $result;
+    }
+
     public function index()
     {
         $data['city'] = BusRoute::get()->pluck('name', 'name');

@@ -271,6 +271,8 @@ Route::group(['prefix' => 'bus_travel'], function(){
 });
 
 Route::post('/s_car_rent', [NewCarRentController::class, 'search_ajax'])->name('search_car_rent');
+Route::post('/s_clinic', [NewHealthBeautyController::class, 'search_ajax'])->name('search_clinic');
+Route::post('/s_travel', [BusTravelController::class, 'search_ajax'])->name('search_travel');
 
 Route::group(['prefix' => 'car_rent'], function () {
     Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
