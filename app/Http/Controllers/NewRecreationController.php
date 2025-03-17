@@ -119,7 +119,7 @@ class NewRecreationController extends Controller
                                 </a>
                                 <hr>' ;
         }
-        
+
         // return response()->json(['result' => $result]);
 
         return $result;
@@ -151,7 +151,7 @@ class NewRecreationController extends Controller
         })
         ->get();
 
-    
+
 
         return view('pagesv2.rekreasi.show', $data);
     }
