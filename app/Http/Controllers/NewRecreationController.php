@@ -84,7 +84,7 @@ class NewRecreationController extends Controller
         // $carRent = recreation::withCount('hasCars')->where('business_name', 'like', $find)->get();
         $recreations = RecreationPackages::with(['recreation', 'category', 'image'])->whereHas('recreation', function($q) use($find) {
             $q->where('business_name', 'like', $find);
-        })->get();
+        })->orWhere('name', 'like', $find)->get();
         
 
 
@@ -108,11 +108,11 @@ class NewRecreationController extends Controller
                                         <div class="flex-grow-1 me-2">
 
                                             <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
-                                                . ($recreation->recreation->business_name ?? 'deleted brand') . ' - ' . ($recreation->recreation->business_name ?? 'deleted model') .
+                                                . ($recreation->recreation->business_name ?? 'deleted brand') . ' - ' . ($recreation->name ?? 'deleted model') .
                                             '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
-                                                ' . $recreation->recreation->business_name . ' - ' . $recreation->recreation->kota->city_name .'
+                                                ' . $recreation->name . ' - ' . $recreation->recreation->kota->city_name .'
                                             </span>
                                         </div>
                                     </div>
