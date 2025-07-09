@@ -8,13 +8,6 @@
         <div class="card-body">
             <form id="clinic-form" action="{{ route('clinics.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <!--begin::Heading-->
-                <div class="mb-13 text-center">
-                    <!--begin::Title-->
-                    <h1 class="mb-3">Create Jasa Kecantikan</h1>
-                    <!--end::Title-->
-                </div>
-                <!--end::Heading-->
                 <!--begin::Input group-->
                 <div class="row g-9 mb-8">
                     <div class="col-md-6">

@@ -7,11 +7,6 @@
 @section('content-admin')
     {{-- FORM CREATE --}}
     <div class="card ">
-        <div class="card-header">
-            <h1 class="card-title fw-bold">
-                Tambah Bus & Travel
-            </h1>
-        </div>
         <div class="card-body">
             <!--begin:Form-->
             <form action="{{ route('partner.store.bus-travel') }}" method="POST" enctype="multipart/form-data">

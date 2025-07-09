@@ -1,5 +1,5 @@
 @extends('ekstranet.layout', [
-    'title' => 'Beranda',
+    'title' => 'Update Data Kendaraan',
     'url' => '#',
     'subTitle' => 'Edit Data',
 ])

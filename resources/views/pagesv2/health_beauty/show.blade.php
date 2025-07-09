@@ -39,10 +39,10 @@
                                         </div>
 
                                         <div class="price mt-7">
-                                            <span class="coret text-decoration-line-through">IDR
-                                                {{ number_format($clinic['packages'][0]->unit_price, 0, ',', '.') }}</span>
+{{--                                            <span class="coret text-decoration-line-through">IDR--}}
+{{--                                                {{ number_format($clinic['packages'][0]->unit_price ?? 0, 0, ',', '.') }}</span>--}}
                                             <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                                {{ number_format($clinic['packages'][0]->price, 0, ',', '.') }}</span>
+                                                {{ number_format($clinic['packages'][0]->price ?? 0, 0, ',', '.') }}</span>
                                         </div>
                                     </div>
                                 </div>

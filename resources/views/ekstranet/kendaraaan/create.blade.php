@@ -1,5 +1,5 @@
 @extends('ekstranet.layout', [
-    'title' => 'Beranda',
+    'title' => 'Tambah Bus & Travel',
     'url' => '#',
     'subTitle' => 'Tambah Data',
 ])
@@ -7,11 +7,6 @@
 @section('content-admin')
     {{-- FORM CREATE --}}
     <div class="card ">
-        <div class="card-header">
-            <h1 class="card-title fw-bold">
-                Tambah Mobil
-            </h1>
-        </div>
         <div class="card-body">
             <!--begin:Form-->
             <form action="{{ route('partner.kendaraan.create') }}" method="POST" enctype="multipart/form-data">

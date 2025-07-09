@@ -3,16 +3,10 @@
 @section('content-admin')
 
 <div class="card ">
-    <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+    <div class="card-body">
         <!--begin:Form-->
         <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('addrecreation.store') }}">
             @csrf
-            <!--begin::Heading-->
-            <div class="mb-13 text-center">
-                <h1 class="mb-3 mt-10">Tambah Rekreasi</h1>
-            </div>
-            <!--end::Heading-->
-
             <div class="row g-9 mb-8">
 
                 <div class="col-md-12">

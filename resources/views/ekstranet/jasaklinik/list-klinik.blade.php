@@ -2,16 +2,16 @@
 
 @section('content-admin')
     <!--begin::Tables Widget 11-->
-
-    <a class="btn btn-sm btn-primary mb-3" href="{{ route('clinics.create') }}">
-        <i class="ki-duotone ki-plus fs-2"></i> Tambah Jasa Kecantikan
-    </a>
-
-
     <div class="card mb-5 mb-xl-8">
-
+        <div class="card-header">
+            <div class="card-toolbar">
+                <a class="btn btn-sm btn-light-primary" href="{{ route('clinics.create') }}">
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Jasa Kecantikan</a>
+            </div>
+        </div>
         <!--begin::Body-->
         <div class="card-body py-3">
+
             <!--begin::Table container-->
             <div class="table-responsive">
                 <!--begin::Table-->
@@ -21,7 +21,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Nama Jasa</th>
                             <th class="text-center">Kategori</th>
-                            <th class="text-center">Durasi</th>
+                            <th class="text-center">Masa Berlaku</th>
                             <th class="text-center">Biaya</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Aksi</th>
@@ -36,9 +36,9 @@
                                         {{ $clinic->name }}
                                         <div class="d-flex justify-content-center align-items-center"
                                             style="width: 125px; height: auto; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
-                                            <a href="{{ asset('/storage/' . $clinic->images->first()->image) }}"
+                                            <a href="{{ asset('/storage/' . ($clinic->images->first()->image ?? '') ) }}"
                                                 target="_blank">
-                                                <img src="{{ asset('/storage/' . $clinic->images->first()->image) }}"
+                                                <img src="{{ asset('/storage/' . ($clinic->images->first()->image ?? '') ) }}"
                                                     alt="Dokumentasi" style="width: 100%; height: auto; object-fit: cover;">
                                             </a>
                                         </div>
@@ -46,8 +46,8 @@
                                 </td>
                                 <td class="text-center">{{ $clinic->categoriesService->name ?? 'Kategori tidak ditemukan' }}
                                 </td>
-                                <td class="text-center">{{ $clinic->duration }}</td>
-                                <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }}</td>
+                                <td class="text-center">{{ $clinic->expiry_date }} Hari</td>
+                                <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }} / {{ $clinic->duration }} Menit</td>
                                 <td class="text-center">
                                     @if ($clinic->is_active === 1)
                                         <span class="badge badge-success">Aktif</span>
@@ -124,27 +124,25 @@
     @push('add-script')
         <script>
             $(document).ready(function() {
-                var table = $('#clinicTable').DataTable({
-                    paging: false,
-                    searching: true,
-                    info: false,
-                    ordering: false,
-                    columnDefs: [{
-                        orderable: false,
-                        targets: -1
-                    }],
-                    dom: "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6 text-end'f>>" +
-                        // Memindahkan search bar ke kanan
-                        "<'table-responsive'tr>", // Menampilkan hanya tabel di body
-                    language: {
-                        search: "Cari: ", // Label untuk search bar
-                        zeroRecords: "Data tidak ditemukan"
-                    }
+
+                $('#clinicTable').DataTable({
+                    "scrollY": "500px"
+                    , "scrollCollapse": true
+                    , "language": {
+                        "lengthMenu": "_MENU_"
+                        , }
+                    , "dom": "<'row'" +
+                        "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +
+                        "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                        ">" +
+                        "<'table-responsive'tr>" +
+                        "<'row'" +
+                        "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                        "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                        ">"
                 });
 
-                $('#clinicTable thead tr:eq(1) th input').on('keyup change', function() {
-                    table.column($(this).parent().index()).search(this.value).draw();
-                });
+
             });
         </script>
     @endpush
