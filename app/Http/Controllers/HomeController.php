@@ -125,26 +125,39 @@ class HomeController extends Controller
             Log::error('Error loading home page', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
         }
 
-        $data['ewallets'] = Product::where('is_active', 1)
-            ->where('category', 'ewallet')
-            ->where('service_id', 11)
-            ->distinct('name')
-            ->pluck('name');
+        try {
+            Log::info('Fetching ewallet products');
+            $data['ewallets'] = Product::where('is_active', 1)
+                ->where('category', 'ewallet')
+                ->where('service_id', 11)
+                ->distinct('name')
+                ->pluck('name');
 
-        $data['listAds'] = DB::table('ads')
-            ->where('is_active', 1)
-            ->where('deleted_at', null)
-            ->orderBy('created_at', 'desc')
-            ->get();
+            Log::info('Fetching ads');
+            $data['listAds'] = DB::table('ads')
+                ->where('is_active', 1)
+                ->where('deleted_at', null)
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        $data['hotelByCity'] = DB::table('cities')->where('status', 1)
-            ->orderBy('city_name', 'asc')
-            ->get();
+            Log::info('Fetching hotels by city');
+            $data['hotelByCity'] = DB::table('cities')->where('status', 1)
+                ->orderBy('city_name', 'asc')
+                ->get();
 
-        $data['cities'] = City::all();
+            Log::info('Fetching all cities');
+            $data['cities'] = City::all();
 
-        $data['recreation_city'] = City::whereHas('recreations')->get();
-        $data['category_recreation'] = CategoryRecreation::get();
+            Log::info('Fetching recreation cities');
+            $data['recreation_city'] = City::whereHas('recreations')->get();
+            
+            Log::info('Fetching recreation categories');
+            $data['category_recreation'] = CategoryRecreation::get();
+            
+            Log::info('All home page data prepared successfully');
+        } catch (\Exception $e) {
+            Log::error('Error loading additional home page data', ['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        }
 
         return view('home', $data);
     }
