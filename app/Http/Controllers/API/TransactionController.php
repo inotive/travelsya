@@ -92,7 +92,7 @@ class TransactionController extends Controller
 
             if ($data != null) {
                 $hostelData = Hostel::where('id', $data->hostel_id)->first();
-                $hostelRoom = HostelRoom::where('hostel_id', $hostelData->id)->where('id', $data->hostel_room_id)->first()->name ?? 'Invalid hostel room data';
+                $hostelRoom = $hostelData && $data->hostel_room_id ? HostelRoom::where('hostel_id', $hostelData->id)->where('id', $data->hostel_room_id)->first()->name : null;
 
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
