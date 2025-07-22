@@ -17,9 +17,21 @@ class IsUser
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->user()?->role === 2 || Auth::guest()) {
+            // Allow regular users (role 2) and guests to access
             return $next($request);
         }
 
-        return redirect()->back();
+        // For admin users (role 1), redirect to admin dashboard
+        if (auth()->user()?->role === 1) {
+            return redirect()->route('admin.dashboard');
+        }
+        
+        // For partner users (role 3), redirect to partner dashboard
+        if (auth()->user()?->role === 3) {
+            return redirect()->route('partner.dashboard');
+        }
+        
+        // Default fallback for any other roles
+        return redirect()->route('admin.login');
     }
 }

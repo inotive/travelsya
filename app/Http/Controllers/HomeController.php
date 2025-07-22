@@ -24,8 +24,11 @@ class HomeController extends Controller
 
     public function home()
     {
+        Log::info('home page loaded');
+
         $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage')->latest()->get();
         $dummyHotels = $hotels->map(function ($hotel) {
+            Log::info('fetching hotel', $hotel->toArray());
             return [
                 'id' => $hotel->id,
                 'name' => $hotel->name,
@@ -33,6 +36,7 @@ class HomeController extends Controller
             ];
         })->toArray();
 
+        Log::info('fetching hotel favorite');
         $hotel_favorite = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage')
             ->select('hotels.id', 'hotels.name', 'hotels.user_id')
             ->selectSub(function ($query) {
@@ -52,9 +56,11 @@ class HomeController extends Controller
             ->get();
 
 
+        Log::info('fetching hotel detail');
         $hotelDetails = [];
 
         foreach ($hotel_favorite as $favorite) {
+            Log::info('fetching hotel detail', $favorite->toArray());
             $jumlahTransaksi = $favorite->hotelRating->count();
             $totalRating = $favorite->hotelRating->sum('rate');
 
@@ -74,6 +80,7 @@ class HomeController extends Controller
             ];
         }
 
+        Log::info('fetching hostel favorite');
         $hostel_favorite = Hostel::where('hostels.is_active', '=', 1)->with('hostelRoom', 'hostelImage', 'rating', 'hostelFacilities')
             ->withCount([
                 "hostelRoom as price_avg" => function ($q) {
@@ -93,11 +100,7 @@ class HomeController extends Controller
             ->limit(4)
             ->get();
 
-        $data['hotels'] = $dummyHotels;
-        $data['hotel_favorite'] = $hotel_favorite;
-        $data['hotel_detail'] = $hotelDetails;
-        $data['hostel_favorite'] = $hostel_favorite;
-
+        Log::info('fetching ewallets');
         $data['ewallets'] = Product::where('is_active', 1)
             ->where('category', 'ewallet')
             ->where('service_id', 11)
