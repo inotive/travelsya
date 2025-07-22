@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Hotel;
-use App\Models\Product;
-use Illuminate\Http\Request;
-use App\Models\Hostel;
-use App\Models\City;
-use App\Services\Travelsya;
 use App\Http\Controllers\Controller;
 use App\Models\CategoryRecreation;
+use App\Models\City;
+use App\Models\Hostel;
+use App\Models\Hotel;
+use App\Models\Product;
 use App\Models\Recreation;
+use App\Services\Travelsya;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
