@@ -178,9 +178,44 @@
                     </div>
                 </div>
 
-                <div class="col-12">
-                    <label for="" class="form-label">Peraturan</label>
-                    <textarea name="description" id="description" cols="30" rows="5" class="form-control">{{ $car->description }}</textarea>
+                <div class="col-12 mb-4">
+                    <label for="description" class="form-label required fs-6 fw-semibold mb-2">Peraturan</label>
+                    <textarea name="description" id="description" cols="30" rows="5"
+                        class="form-control">{{ $car->description }}</textarea>
+                </div>
+
+                @if(isset($car->images) && count($car->images) > 0)
+                <div class="col-md-12 mb-4">
+                    <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
+                    <div class="row">
+                        @foreach($car->images as $image)
+                        <div class="col-md-3 mb-3">
+                            <div class="card">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" alt="Image">
+                                <div class="card-body text-center">
+                                    @if($image->main == 1)
+                                        <span class="badge bg-primary">Gambar Utama</span>
+                                    @else
+                                        <span class="badge bg-secondary">Gambar Tambahan</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+                
+                <div class="col-12 mb-4">
+                    <label class="form-label fs-6 fw-semibold mb-2">Tambah Gambar Baru</label>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="images[]" accept="image/*">
+                        <input type="hidden" name="main_image[]" value="1">
+                        <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                    </div>
+                    <div id="additional-images"></div>
+                    <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
+                    <div class="form-text">Unggah gambar baru akan menambahkan ke gambar yang sudah ada. Gambar utama baru akan menggantikan gambar utama lama.</div>
                 </div>
 
                 <div class="button-group">
@@ -241,6 +276,23 @@
             if (selectedBrandId) {
                 $('#brand_id').trigger('change');
             }
+            
+            // Handle adding additional images
+            $('#add-more-images').click(function() {
+                $('#additional-images').append(`
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="images[]" accept="image/*">
+                        <input type="hidden" name="main_image[]" value="0">
+                        <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                        <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                    </div>
+                `);
+            });
+            
+            // Handle removing additional images
+            $(document).on('click', '.remove-image', function() {
+                $(this).closest('.input-group').remove();
+            });
         });
 
         function formatRupiah(amount) {

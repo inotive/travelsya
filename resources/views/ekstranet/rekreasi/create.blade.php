@@ -1,11 +1,11 @@
 @extends('ekstranet.layout', ['title' => 'Daftar Rekreasi - Tambah Rekreasi ', 'url' => '#'])
 
 @section('content-admin')
-
-<div class="card ">
-    <div class="card-body">
-        <!--begin:Form-->
-        <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('addrecreation.store') }}">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <!--begin:Form-->
+            <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('addrecreation.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row g-9 mb-8">
 
@@ -95,6 +95,18 @@
                     </span>
                     @enderror
                 </div>
+                
+                <!-- Multiple Image Upload -->
+                <div class="col-md-12 mt-4">
+                    <label class="required fs-6 fw-semibold mb-2">Gambar Rekreasi</label>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="images[]" accept="image/*" required>
+                        <input type="hidden" name="main_image[]" value="1">
+                        <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                    </div>
+                    <div id="additional-images"></div>
+                    <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
+                </div>
             </div>
 
             <!--begin::Actions-->
@@ -115,4 +127,26 @@
         </form>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Handle adding additional images
+        $('#add-more-images').click(function() {
+            $('#additional-images').append(`
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="images[]" accept="image/*">
+                    <input type="hidden" name="main_image[]" value="0">
+                    <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                    <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                </div>
+            `);
+        });
+        
+        // Handle removing additional images
+        $(document).on('click', '.remove-image', function() {
+            $(this).closest('.input-group').remove();
+        });
+    });
+</script>
 @endsection

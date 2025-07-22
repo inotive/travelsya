@@ -61,11 +61,10 @@ class KendaraanController extends Controller
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $user = auth()->user();
-        $car_rental = CarRental::where('user_id', $user->id)->first();
+        // Validation has already been done above
 
-        if (!$car_rental) {
-            return redirect()->route('partner.daftar.kendaraan')->with('error', 'Anda tidak memiliki car rental!');
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
         if ($request->hasFile('image_url')) {
@@ -76,12 +75,8 @@ class KendaraanController extends Controller
             $imageName = NULL;
         }
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
         $data = [
-            'car_rental_id' => $car_rental->id,
+            'car_rental_id' => $request->car_rental_id,
             'brand_id' => $request->brand_id,
             'car_model_id' => $request->car_model_id,
             'category' => $request->category,
@@ -107,8 +102,9 @@ class KendaraanController extends Controller
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
+        $car_rentals = CarRental::all();
 
-        return view('ekstranet.kendaraaan.update', compact('car', 'brands', 'policies', 'car_models', 'id'));
+        return view('ekstranet.kendaraaan.update', compact('car', 'brands', 'policies', 'car_models', 'car_rentals', 'id'));
     }
 
     public function update(Request $request, $id)
@@ -169,8 +165,9 @@ class KendaraanController extends Controller
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
+        $car_rentals = CarRental::where('user_id', auth()->user()->id)->get();
 
-        return view('ekstranet.kendaraaan.create', compact('brands', 'policies', 'car_models'));
+        return view('ekstranet.kendaraaan.create', compact('brands', 'policies', 'car_models', 'car_rentals'));
     }
 
     public function halamanUpdate()
@@ -178,8 +175,9 @@ class KendaraanController extends Controller
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
+        $car_rentals = CarRental::all();
 
-        return view('ekstranet.kendaraaan.update', compact('brands', 'policies', 'car_models'));
+        return view('ekstranet.kendaraaan.update', compact('brands', 'policies', 'car_models', 'car_rentals'));
     }
 
     public function destroy($id)

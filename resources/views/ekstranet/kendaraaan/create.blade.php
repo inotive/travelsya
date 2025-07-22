@@ -1,189 +1,198 @@
-@extends('ekstranet.layout', [
-    'title' => 'Tambah Bus & Travel',
-    'url' => '#',
-    'subTitle' => 'Tambah Data',
-])
+@extends('ekstranet.layout', ['title' => 'Tambah Kendaraan', 'url' => ''])
 
 @section('content-admin')
-    {{-- FORM CREATE --}}
-    <div class="card ">
-        <div class="card-body">
-            <!--begin:Form-->
-            <form action="{{ route('partner.kendaraan.create') }}" method="POST" enctype="multipart/form-data">
-                @csrf
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('partner.kendaraan.create') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <!--begin::Input group-->
+                    <div class="row g-9 mb-8">
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Merk</label>
-                        <select class="form-select" id="brand_id" name="brand_id" data-control="select2"
-                            data-placeholder="Pilih Merk" data-allow-clear="true">
-                            <option selected disabled value="">Pilih Merk</option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('brand_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
+                        <div class="col-md-12">
+                            <label class="required fs-6 fw-semibold mb-2">Bisnis</label>
+                            <select class="form-control" name="car_rental_id" id="car_rental_id" required>
+                                <option value="">-- Pilih Bisnis --</option>
+                                @foreach ($car_rentals as $car_rental)
+                                    <option value="{{ $car_rental->id }}">{{ $car_rental->business_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('car_rental_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Merk</label>
+                            <select class="form-control" id="brand_id" name="brand_id" required>
+                                <option value="">Pilih Merk</option>
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('brand_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Model</label>
+                            <select class="form-control" id="car_model_id" name="car_model_id" required>
+                                <option value="">Pilih Model</option>
+                                @foreach ($car_models as $car_model)
+                                    <option value="{{ $car_model->id }}">{{ $car_model->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('car_model_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Tipe</label>
+                            <select class="form-control" id="category" name="category" required>
+                                <option value="">Pilih Tipe</option>
+                                <option value="manual">Manual</option>
+                                <option value="automatic">Matic</option>
+                            </select>
+                            @error('category')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Kategori Rental</label>
+                            <select class="form-control" id="category_rent" name="category_rent" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Lepas Kunci">Lepas Kunci</option>
+                                <option value="Dengan Supir">Dengan Supir</option>
+                            </select>
+                            @error('category_rent')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1">Rp</span>
+                                <input type="text" class="form-control" id="rental_price_per_day_display"
+                                    placeholder="Biaya Sewa" aria-label="rental_price_per_day_display"
+                                    aria-describedby="basic-addon1" required>
+                                <input type="hidden" id="rental_price_per_day" name="rental_price_per_day">
+                            </div>
+                            @error('rental_price_per_day')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Durasi</label>
+                            <input type="text" class="form-control" id="duration" name="duration" placeholder="Durasi" required>
+                            @error('duration')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Tahun</label>
+                            <select class="form-control" id="years" name="years">
+                                <option value="">Pilih Tahun</option>
+                                @php
+                                    $currentYear = date('Y');
+                                    $startYear = $currentYear - 20;
+                                    $endYear = $currentYear;
+                                @endphp
+
+                                @for ($year = $endYear; $year >= $startYear; $year--)
+                                    <option value="{{ $year }}">{{ $year }}</option>
+                                @endfor
+                            </select>
+                            @error('years')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
+                            <input type="number" class="form-control" id="number_seats" name="number_seats"
+                                placeholder="Jumlah Kursi" required>
+                            @error('number_seats')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="">Pilih Status</option>
+                                <option value="1">Aktif</option>
+                                <option value="0">Tidak Aktif</option>
+                            </select>
+                            @error('status')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-12">
+                            <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            @error('description')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-12 mt-4">
+                            <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" name="image_url" accept="image/*" required>
+                                <input type="hidden" name="main_image[]" value="1">
+                                <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                            </div>
+                            <div id="additional-images"></div>
+                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
+                        </div>
                     </div>
-
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Model</label>
-                        <select class="form-select" id="car_model_id" name="car_model_id" data-control="select2"
-                            data-placeholder="Pilih Model" data-allow-clear="true" disabled>
-                            <option selected disabled value="">Pilih Model</option>
-                            @foreach ($car_models as $car_model)
-                                <option value="{{ $car_model->id }}">{{ $car_model->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('car_model_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
+                    <!--end::Input group-->
+                    <!--begin::Actions-->
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <button type="reset" class="btn btn-light w-100" onclick="history.back()">Cancel</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <span class="indicator-label">Simpan</span>
+                                    <span class="indicator-progress">Please wait...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Tipe</label>
-                        <select class="form-control" id="category" name="category">
-                            <option value="">Pilih Tipe</option>
-                            <option value="manual">Manual</option>
-                            <option value="automatic">Matic</option>
-                        </select>
-                        @error('category')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Kategori Rental</label>
-                        <select class="form-control" id="category_rent" name="category_rent">
-                            <option value="">Pilih Kategori Rental</option>
-                            <option value="Dengan Driver">Dengan Driver</option>
-                            <option value="Tidak Dengan Driver">Tidak Dengan Driver</option>
-                        </select>
-                        @error('category_rent')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
-                        <input class="form-control form-control-lg" id="rental_price_per_day_display"
-                            placeholder="Masukkan Biaya Sewa" />
-                        <input type="hidden" id="rental_price_per_day" name="rental_price_per_day" />
-
-                        @error('rental_price_per_day')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                        <input class="form-control form-control-lg" id="duration" placeholder="Berapa Lama Durasi"
-                            name="duration" required />
-
-                        @error('duration')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Tahun</label>
-                        <select class="form-control" id="years" name="years">
-                            <?php
-                                $result_arr_['years'] = "2019";
-                                if($result_arr_['years'] == true){
-                                    $selected_year = "selected";
-                                }else{
-                                    $selected_year = " ";
-                                }
-
-                            for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
-                            <option value="<?= $years ?>" <?php echo $selected_year; ?>><?= $years ?></option>
-                            <?php endfor; ?>
-                        </select>
-                        @error('policy_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
-                        <input class="form-control form-control-lg" id="number_seats" placeholder="Masukkan Jumlah Kursi"
-                            name="number_seats" required />
-
-                        @error('number_seats')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Status</label>
-                        <select class="form-control" id="status" name="status">
-                            <option value="">Pilih Status Rental</option>
-                            <option value="1">Aktif</option>
-                            <option value="0">Tidak Aktif</option>
-                        </select>
-
-                        @error('status')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="fs-6 fw-semibold mb-2">Gambar</label>
-                        <input type="file" class="form-control" id="image" name="image_url">
-
-                        @error('image')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <label for="" class="form-label">Peraturan</label>
-                    <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
-                </div>
-
-                <div class="button-group">
-                    <button type="reset" class="btn btn-secondary">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Tambah Data</button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -226,6 +235,23 @@
                 $('#car_model_id').empty();
                 $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
             }
+        });
+        
+        // Handle adding additional images
+        $('#add-more-images').click(function() {
+            $('#additional-images').append(`
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="images[]" accept="image/*">
+                    <input type="hidden" name="main_image[]" value="0">
+                    <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                    <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                </div>
+            `);
+        });
+        
+        // Handle removing additional images
+        $(document).on('click', '.remove-image', function() {
+            $(this).closest('.input-group').remove();
         });
 
         function formatRupiah(amount) {

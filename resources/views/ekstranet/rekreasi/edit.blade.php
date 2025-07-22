@@ -5,7 +5,7 @@
 <div class="card ">
     <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
         <!--begin:Form-->
-        <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('data-rekreasi.update', $recreation_has_packages->id) }}">
+        <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('data-rekreasi.update', $recreation_has_packages->id) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <!--begin::Heading-->
@@ -126,6 +126,42 @@
                     </span>
                     @enderror
                 </div>
+                
+                <!-- Existing Images -->
+                @if(isset($recreation_has_packages->images) && count($recreation_has_packages->images) > 0)
+                <div class="col-md-12 mt-4">
+                    <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
+                    <div class="row">
+                        @foreach($recreation_has_packages->images as $image)
+                        <div class="col-md-3 mb-3">
+                            <div class="card">
+                                <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" alt="Image">
+                                <div class="card-body text-center">
+                                    @if($image->main == 1)
+                                        <span class="badge bg-primary">Gambar Utama</span>
+                                    @else
+                                        <span class="badge bg-secondary">Gambar Tambahan</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+                
+                <!-- Multiple Image Upload -->
+                <div class="col-md-12 mt-4">
+                    <label class="fs-6 fw-semibold mb-2">Tambah Gambar Baru</label>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="images[]" accept="image/*">
+                        <input type="hidden" name="main_image[]" value="1">
+                        <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                    </div>
+                    <div id="additional-images"></div>
+                    <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
+                    <div class="form-text">Unggah gambar baru akan menambahkan ke gambar yang sudah ada. Gambar utama baru akan menggantikan gambar utama lama.</div>
+                </div>
 
             </div>
 
@@ -169,5 +205,26 @@
 
 </script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Handle adding additional images
+        $('#add-more-images').click(function() {
+            $('#additional-images').append(`
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="images[]" accept="image/*">
+                    <input type="hidden" name="main_image[]" value="0">
+                    <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                    <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                </div>
+            `);
+        });
+        
+        // Handle removing additional images
+        $(document).on('click', '.remove-image', function() {
+            $(this).closest('.input-group').remove();
+        });
+    });
+</script>
 
 @endsection

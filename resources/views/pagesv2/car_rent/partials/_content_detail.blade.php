@@ -46,7 +46,7 @@
                 <h3 class="mb-3">Kebijakan Rental</h3>
                 <div class="d-flex flex-row">
                     <div>
-                        {!! $car->policy->description !!}
+                        {!! $car->policy->description ?? '-' !!}
                     </div>
                 </div>
             </div>
@@ -66,11 +66,10 @@
                     </div>
                     <div class="col-6 d-flex flex-column">
                         <span>Tanggal Drop-off</span>
-                        <span class="fs-3 title fw-bold">{{
-                            \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingDays($date,
-                            $duration)) }}</span>
-                        <span class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingDays($date, $duration)))
-                            }}</span>
+                        <span
+                            class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingDays($date, $duration)) }}</span>
+                        <span
+                            class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingDays($date, $duration))) }}</span>
                     </div>
                 </div>
                 <span class="text-success">Bisa refund, reschedule, dan overtime</span>
@@ -115,8 +114,9 @@
             <div class="card-body">
                 <div class="d-flex flex-row align-items-center border-bottom-dashed py-5">
                     <span class="title fw-bold">Total Pembayaran</span>
-                    <h6 class="fw-bold ms-sm-auto">IDR {{ number_format($car->rental_price_per_day * $duration, 0, ',',
-                        '.') }}</h6>
+                    <h6 class="fw-bold ms-sm-auto">IDR
+                        {{ number_format($car->rental_price_per_day * $duration, 0, ',', '.') }}
+                    </h6>
                 </div>
                 <div class="d-flex flex-row align-items-center py-5">
                     <span>Kamu akan mendapatkan XXXX Poin</span>
@@ -155,8 +155,8 @@
         @endif --}}
 
         @push('js')
-        <script>
-            $(document).ready(function() {
+            <script>
+                $(document).ready(function() {
                     $("#list_paket").on("click", "#decrease_paket", function() {
                         let id = $(this).attr("id_paket");
                         let val_paket = parseInt($("#val_paket_" + id).val());
@@ -179,7 +179,7 @@
                         $("#dummy_paket_" + id).text(increase_val);
                     })
                 });
-        </script>
+            </script>
         @endpush
     </section>
 </div>
