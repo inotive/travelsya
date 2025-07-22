@@ -4,43 +4,22 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <form id="clinic-form" action="{{ route('clinics.update', $clinic->id) }}" method="POST"
+                <form id="clinic-form" action="{{ route('clinics.update', $clinic->id ?? '') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT') <!-- Tambahkan metode PUT untuk update -->
 
-                    <div class="mb-13 text-center">
-                        <h1 class="mb-3">Edit Jasa</h1>
-                    </div>
+                    <!--begin::Input group-->
 
                     <div class="row g-9 mb-8">
-
-
-                        <!-- Nama Klinik -->
-                        <div class="col-md-6">
-                            <label for="name" class="form-label">Nama Klinik</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                value="{{ old('name', $clinic->name) }}" required>
-                        </div>
-
-
-                        <!-- Kategori Layanan -->
-                        <div class="col-md-6">
-                            <label for="categories_services_id" class="form-label">Kategori Layanan</label>
-                            <select name="categories_services_id" id="categories_services_id" class="form-control" required>
-                                <!-- Options will be dynamically loaded -->
-                                {{-- <option value="{{ $categories }}" {{ $clinic['clinic_id'] }}></option> --}}
-                            </select>
-                        </div>
-                        <div id="data-id-service" data-variable="{{ $clinic->categories_services_id }}"></div>
                         @if (count($clinics) > 1)
-                            <!-- edit clinic_id -->
-                            <div class="col-md-6">
-                                <label for="clinic_id" class="form-label">Nama Bisnis</label>
+                            <!-- Klinik -->
+                            <div class="col-md-12">
+                                <label for="clinic_id" class="form-label required fs-6 fw-semibold mb-2">Klinik</label>
                                 <select name="clinic_id" id="clinic_id" class="form-control" required>
                                     @foreach ($clinics as $clinicItem)
                                         <option value="{{ $clinicItem->id }}"
-                                            {{ $clinic->clinic_id == $clinicItem->id ? 'selected' : '' }}>
+                                            {{ ($clinic->clinic_id ?? '') == $clinicItem->id ? 'selected' : '' }}>
                                             {{ $clinicItem->clinic_name }}
                                         </option>
                                     @endforeach
@@ -50,95 +29,128 @@
                             <input type="hidden" name="clinic_id" value="{{ $clinics->first()->id }}">
                         @endif
 
-                        <!-- Harga -->
+                        <!-- Nama Jasa -->
                         <div class="col-md-6">
-                            <label for="price" class="form-label">Biaya</label>
-                            <input type="number" class="form-control" id="price" name="price"
-                                value="{{ old('price', $clinic->price) }}" required>
+                            <label for="name" class="form-label required fs-6 fw-semibold mb-2">Nama Jasa</label>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name"
+                                value="{{ old('name', $clinic->name ?? '') }}" required>
+                        </div>
+
+                        <!-- Kategori -->
+                        <div class="col-md-6">
+                            <label for="categories_services_id" class="form-label required fs-6 fw-semibold mb-2">Kategori</label>
+                            <select class="form-control" id="categories_services_id" name="categories_services_id" required>
+                                <!-- Options will be dynamically loaded -->
+                            </select>
+                        </div>
+
+                        <!-- Biaya -->
+                        <div class="col-md-6">
+                            <label for="price" class="form-label required fs-6 fw-semibold mb-2">Biaya</label>
+                            <input type="number" class="form-control form-control-lg" id="price" name="price"
+                                value="{{ old('price', $clinic->price ?? '') }}" required>
                         </div>
 
                         <!-- Durasi -->
                         <div class="col-md-3">
-                            <label for="duration" class="form-label">Durasi </label>
-                            <input type="text" class="form-control" id="duration" name="duration"
-                                value="{{ old('duration', $clinic->duration) }}" required>
+                            <label for="duration" class="form-label required fs-6 fw-semibold mb-2">Durasi</label>
+                            <input type="text" class="form-control form-control-lg" id="duration" name="duration"
+                                value="{{ old('duration', $clinic->duration ?? '') }}" required>
                         </div>
 
+                        <!-- Tipe Durasi -->
                         <div class="col-md-3">
-                            <label for="duration_type" class="form-label">Tipe Durasi</label>
+                            <label for="duration_type" class="form-label required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                             <select class="form-control form-control-lg" id="duration_type" name="duration_type" required>
                                 <option value="menit"
-                                    {{ old('duration_type', $clinic->duration_type) == 'menit' ? 'selected' : '' }}>Menit
+                                    {{ old('duration_type', $clinic->duration_type ?? '') == 'menit' ? 'selected' : '' }}>Menit
                                 </option>
                                 <option value="jam"
-                                    {{ old('duration_type', $clinic->duration_type) == 'jam' ? 'selected' : '' }}>Jam
+                                    {{ old('duration_type', $clinic->duration_type ?? '') == 'jam' ? 'selected' : '' }}>Jam
                                 </option>
                             </select>
-                            @error('duration_type')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
                         </div>
 
-                        <!-- Tanggal Kadaluarsa -->
+                        <!-- Masa Berlaku -->
                         <div class="col-md-6">
-                            <label for="expiry_date" class="form-label">Masa Berlaku(hari)</label>
+                            <label for="expiry_date" class="form-label required fs-6 fw-semibold mb-2">Masa Berlaku (hari)</label>
                             <input type="number" class="form-control" id="expiry_date" name="expiry_date"
-                                value="{{ old('expiry_date', $clinic->expiry_date) }}" required>
+                                value="{{ old('expiry_date', $clinic->expiry_date ?? '') }}" required>
                         </div>
 
-                        <!-- Gambar -->
-                        <div class="col-md-12">
-                            <label for="image" class="form-label">Gambar</label>
-                            <input type="file" class="form-control" id="image" name="image">
-                            @if ($clinic->image)
-                                <img src="{{ asset('storage/clinichaspackages/' . $clinic->image) }}" alt="Current Image"
-                                    style="max-width: 200px; margin-top: 10px;">
-                            @endif
+                        <!-- Specialist ID (hidden) -->
+                        <input type="hidden" name="specialist_id" value="1">
+
+                        <!-- Multiple Images -->
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Gambar (Multiple)</label>
+                            <input type="file" class="form-control form-control-lg" name="images[]" multiple accept="image/*" />
+                            <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus</small>
                         </div>
 
                         <!-- Deskripsi -->
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Deskripsi</label>
-                            <textarea name="description" class="form-control" id="description" rows="3" required>{{ old('description', $clinic->description) }}</textarea>
+                        <div class="col-12">
+                            <label for="description" class="form-label required fs-6 fw-semibold mb-2">Deskripsi</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ old('description', $clinic->description ?? '') }}</textarea>
                         </div>
 
-                        <!-- Rules -->
-                        <div class="col-md-12">
-                            <label for="rules" class="form-label">Peraturan</label>
-                            <input type="text" name="rules" class="form-control" id="rules"
-                                value="{{ old('rules', $clinic->rules) }}" required>
+                        <!-- Aturan -->
+                        <div class="col-12">
+                            <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
+                            <textarea name="rules" id="rules" cols="30" rows="2" class="form-control" required>{{ old('rules', $clinic->rules ?? '') }}</textarea>
                         </div>
 
-                        <!-- Status Aktif -->
-                        <div class="col-md-12">
-                            <label for="is_active" class="form-label">Status Aktif</label>
-                            <select name="is_active" class="form-control" required>
-                                <option value="1" {{ $clinic->is_active == 1 ? 'selected' : '' }}>Aktif</option>
-                                <option value="0" {{ $clinic->is_active == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                        <!-- Status -->
+                        <div class="col-md-6">
+                            <label for="is_active" class="form-label required fs-6 fw-semibold mb-2">Status Aktif</label>
+                            <select class="form-control form-control-lg" id="is_active" name="is_active" required>
+                                <option value="1" {{ old('is_active', $clinic->is_active ?? 1) == 1 ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('is_active', $clinic->is_active ?? 1) == 0 ? 'selected' : '' }}>Tidak Aktif</option>
                             </select>
                         </div>
-                    </div>
 
-                    <input type="hidden" name="specialist_id" value="1">
+                        <!-- Unit Price (hidden) -->
+                        <input type="hidden" name="unit_price" value="unit_price">
 
-                    <input type="hidden" name="unit_price" value="unit_price">
-
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col-6">
-                                <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">Batal</a>
-                            </div>
-                            <div class="col-6">
-                                <button type="submit" class="btn btn-primary">
-                                    <span class="indicator-label">Update</span>
-                                    <span class="indicator-progress">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                </button>
+                        <!-- Existing Images -->
+                        @if(isset($clinicImages) && count($clinicImages) > 0)
+                        <div class="col-md-12 mt-4">
+                            <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
+                            <div class="row">
+                                @foreach($clinicImages as $image)
+                                <div class="col-md-3 mb-3">
+                                    <div class="card">
+                                        <img src="{{ asset('storage/' . $image->image) }}" class="card-img-top" alt="Clinic Image">
+                                        <div class="card-body text-center">
+                                            @if($image->main == 1)
+                                                <span class="badge bg-primary">Main Image</span>
+                                            @else
+                                                <span class="badge bg-secondary">Additional Image</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
                             </div>
                         </div>
+                        @endif
+                        
+                        <div id="data-id-service" data-variable="{{ $clinic->categories_services_id ?? '' }}"></div>
                     </div>
+                    <!--end::Input group-->
+                    <!--begin::Actions-->
+                    <div class="text-end mt-4">
+                        <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">
+                            <span class="indicator-label">Cancel</span>
+                        </a>
+                        <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                            <span class="indicator-label">Update</span>
+                            <span class="indicator-progress">Please wait...
+                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </button>
+                    </div>
+                    <!--end::Actions-->
                 </form>
             </div>
         </div>

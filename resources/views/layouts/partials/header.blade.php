@@ -11,9 +11,9 @@
 
     <!--begin::Header Logo-->
     <div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0 mt-3 mb-3">
-        <a href="{{route('home')}}">
-            <img alt="Logo" src="{{asset('assets/media/logos/logo.png')}}" class="logo-default h-40px" />
-            <img alt="Logo" src="{{asset('assets/media/logos/logo.png')}}" class="logo-sticky h-40px" />
+        <a href="{{ route('home') }}">
+            <img alt="Logo" src="{{ asset('assets/media/logos/new-logo-1.png') }}" class="logo-default h-40px" />
+            <img alt="Logo" src="{{ asset('assets/media/logos/new-logo-1.png') }}" class="logo-sticky h-40px" />
         </a>
     </div>
     <!--end::Header Logo-->
@@ -79,9 +79,11 @@
                         <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="light">
                             <span class="menu-icon" data-kt-element="icon">
                                 <i class="ki-duotone ki-night-day fs-2"><span class="path1"></span><span
-                                        class="path2"></span><span class="path3"></span><span class="path4"></span><span
-                                        class="path5"></span><span class="path6"></span><span class="path7"></span><span
-                                        class="path8"></span><span class="path9"></span><span class="path10"></span></i>
+                                        class="path2"></span><span class="path3"></span><span
+                                        class="path4"></span><span class="path5"></span><span
+                                        class="path6"></span><span class="path7"></span><span
+                                        class="path8"></span><span class="path9"></span><span
+                                        class="path10"></span></i>
                             </span>
                             <span class="menu-title">
                                 Light
@@ -108,7 +110,8 @@
                         <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="system">
                             <span class="menu-icon" data-kt-element="icon">
                                 <i class="ki-duotone ki-screen fs-2"><span class="path1"></span><span
-                                        class="path2"></span><span class="path3"></span><span class="path4"></span></i>
+                                        class="path2"></span><span class="path3"></span><span
+                                        class="path4"></span></i>
                             </span>
                             <span class="menu-title">
                                 System
@@ -134,10 +137,10 @@
                     <div class="menu menu-rounded menu-column menu-lg-row menu-active-bg menu-title-gray-700 menu-state-primary menu-arrow-gray-500 fw-semibold my-5 my-lg-0 align-items-stretch px-2 px-lg-0"
                         id="#kt_header_menu" data-kt-menu="true">
                         <!--begin:Menu item-->
-                        <a href="{{ route('user.orderHistory') }}" class="menu-item fw-bold text-dark here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
-                            <!--begin:Menu link--><span class="menu-link py-3"><span
-                                    class="menu-title text-dark">Cek Pesanan</span><span
-                                    class="menu-arrow d-lg-none"></span></span>
+                        <a href="{{ route('user.orderHistory') }}"
+                            class="menu-item fw-bold text-dark here menu-here-bg menu-lg-down-accordion me-0 me-lg-2">
+                            <!--begin:Menu link--><span class="menu-link py-3"><span class="menu-title text-dark">Cek
+                                    Pesanan</span><span class="menu-arrow d-lg-none"></span></span>
                             <!--end:Menu link-->
                             <!--begin:Menu sub-->
 
@@ -149,87 +152,89 @@
 
             </div>
             <!--begin::User-->
-            @if(Auth::check())
-            <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
-                <!--begin::Menu wrapper-->
-                <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px"
-                    data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-                    <div class="symbol symbol-30px">
-                        <div class="symbol-label fs-2 fw-bold bg-white text-danger">
-                            {{-- {{ substr( Auth::user()->name, 0,1 ) }} --}}
-                            <img class="h-30px w-30px rounded"
-                                src="{{ (auth()->user()->image ?? null) != null ? asset('storage/public/users/' . auth()->user()->image) : asset('assets/img/default-company.png') }}"
-                                alt="" />
-                        </div>
-                    </div>
-                </div>
-
-                <!--begin::User account menu-->
-                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
-                    data-kt-menu="true">
-                    <!--begin::Menu item-->
-                    <div class="menu-item px-3">
-                        <div class="menu-content d-flex align-items-center px-3">
-
-                            <!--begin::Username-->
-                            <div class="d-flex flex-column">
-                                {{ Auth::user()->name ?? '-' }}
-                                <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
-                                    {{(session()->get('user')) ? session()->get('user')['data']['email'] : '' }}</a>
+            @if (Auth::check())
+                <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+                    <!--begin::Menu wrapper-->
+                    <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px"
+                        data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end">
+                        <div class="symbol symbol-30px">
+                            <div class="symbol-label fs-2 fw-bold bg-white text-danger">
+                                {{-- {{ substr( Auth::user()->name, 0,1 ) }} --}}
+                                <img class="h-30px w-30px rounded"
+                                    src="{{ (auth()->user()->image ?? null) != null ? asset('storage/public/users/' . auth()->user()->image) : asset('assets/img/default-company.png') }}"
+                                    alt="" />
                             </div>
-                            <!--end::Username-->
                         </div>
                     </div>
-                    <!--end::Menu item-->
 
-                    <!--begin::Menu separator-->
-                    <div class="separator my-2"></div>
-                    <!--end::Menu separator-->
+                    <!--begin::User account menu-->
+                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
+                        data-kt-menu="true">
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-3">
+                            <div class="menu-content d-flex align-items-center px-3">
 
-                    <!--begin::Menu item-->
-                    <div class="menu-item px-5">
-                        <a href="{{route('user.profile')}}" class="menu-link px-5">
-                            Akun Saya
-                        </a>
-                    </div>
-                    <!--end::Menu item-->
-                    <!--begin::Menu item-->
-                    <div class="menu-item px-5">
-                        <a href="{{route('user.orderHistory')}}" class="menu-link px-5">
-                            Cek Pesanan
-                        </a>
-                    </div>
-                    <!--end::Menu item-->
+                                <!--begin::Username-->
+                                <div class="d-flex flex-column">
+                                    {{ Auth::user()->name ?? '-' }}
+                                    <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
+                                        {{ session()->get('user') ? session()->get('user')['data']['email'] : '' }}</a>
+                                </div>
+                                <!--end::Username-->
+                            </div>
+                        </div>
+                        <!--end::Menu item-->
 
-                    <!--begin::Menu separator-->
-                    <div class="separator my-2"></div>
-                    <!--end::Menu separator-->
+                        <!--begin::Menu separator-->
+                        <div class="separator my-2"></div>
+                        <!--end::Menu separator-->
 
-                    <!--begin::Menu item-->
-                    <div class="menu-item px-5">
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+                            <a href="{{ route('user.profile') }}" class="menu-link px-5">
+                                Akun Saya
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+                            <a href="{{ route('user.orderHistory') }}" class="menu-link px-5">
+                                Cek Pesanan
+                            </a>
+                        </div>
+                        <!--end::Menu item-->
 
-                        <a href="{{route('logout')}}" onclick="event.preventDefault();
+                        <!--begin::Menu separator-->
+                        <div class="separator my-2"></div>
+                        <!--end::Menu separator-->
+
+                        <!--begin::Menu item-->
+                        <div class="menu-item px-5">
+
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"
-                            class="menu-link px-5">
-                            Sign Out
-                        </a>
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                            @csrf
-                        </form>
+                                class="menu-link px-5">
+                                Sign Out
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                @csrf
+                            </form>
+                        </div>
+                        <!--end::Menu item-->
                     </div>
-                    <!--end::Menu item-->
+                    <!--end::User account menu-->
+                    <!--end::Menu wrapper-->
                 </div>
-                <!--end::User account menu-->
-                <!--end::Menu wrapper-->
-            </div>
             @else
-            {{-- <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
+                {{-- <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                 <a class="text-dark" href="{{route('login')}}">Login</a>
             </div> --}}
 
-            <a href="{{ route('login') }}"
-                class="btn btn-outline btn-outline-secondary text-dark btn-active-light-secondary me-4">Masuk</a>
-            <a href="{{ route('register') }}" class="btn btn-danger fw-semibold bg-main">Daftar</a>
+                <a href="{{ route('login') }}"
+                    class="btn btn-outline btn-outline-secondary text-dark btn-active-light-secondary me-4">Masuk</a>
+                <a href="{{ route('register') }}" class="btn btn-danger fw-semibold bg-main">Daftar</a>
             @endif
             <!--end::User -->
 

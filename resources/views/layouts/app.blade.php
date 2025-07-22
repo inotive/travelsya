@@ -40,7 +40,8 @@
 
 <!--begin::Body-->
 
-<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled"  style="background-color: #C02425;">
+<body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed toolbar-enabled"
+    style="background-color: #C02425;">
 
     <!--begin::Root-->
     <div class="d-flex flex-column flex-root">
@@ -58,9 +59,9 @@
                         <!--begin::Header Logo-->
                         <div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0 mt-3 mb-3">
                             <a href="{{ route('home') }}">
-                                <img alt="Logo" src="{{ asset('assets/media/logos/logo.png') }}"
+                                <img alt="Logo" src="{{ asset('assets/media/logos/new-logo-1.png') }}"
                                     class="logo-default h-40px" />
-                                <img alt="Logo" src="{{ asset('assets/media/logos/logo.png') }}"
+                                <img alt="Logo" src="{{ asset('assets/media/logos/new-logo-1.png') }}"
                                     class="logo-sticky h-40px" />
                             </a>
                         </div>

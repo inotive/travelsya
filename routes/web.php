@@ -199,7 +199,7 @@ Route::controller(ProductController::class)->name('product')->prefix('product')-
 });
 Route::prefix('checkout')->group(function () {
     Route::get('detail/product/{product}', [ProductController::class, 'show'])->name('checkout.product');
-    Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
+    // Route::get('dashboard', [DashboardPartnerController::class, 'index'])->name('partner.dashboard');
     Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
 });
 Route::post('/ajax/ppob', [ProductController::class, 'ajaxPpob']);
@@ -261,7 +261,7 @@ Route::group(['prefix' => 'health_beauty'], function () {
     Route::get('/category/{id}', [NewHealthBeautyController::class, 'category'])->name('health_beauty.category');
 });
 
-Route::group(['prefix' => 'bus_travel'], function(){
+Route::group(['prefix' => 'bus_travel'], function () {
     Route::get('/', [BusTravelController::class, 'index'])->name('bus_travel.index');
     Route::post('/search', [BusTravelController::class, 'search'])->name('bus_travel.search');
     Route::get('/findbyroute/{kota_awal}/{kota_tujuan}', [BusTravelController::class, 'findByRoute'])->name('bus_travel.findroute');

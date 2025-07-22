@@ -15,8 +15,10 @@ class IsPartner
      */
     public function handle(Request $request, Closure $next): Response
     {
+        \Log::info('User attempting partner access: ' . auth()->user()?->email . ' with role: ' . auth()->user()?->role . ' (type: ' . gettype(auth()->user()?->role) . ')');
 
-        if (auth()->user()?->role === 1) {
+        // Changed from strict comparison (===) to loose comparison (==) to match the controller
+        if (auth()->user()?->role == 1) {
             return $next($request);
         }
 

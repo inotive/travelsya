@@ -38,7 +38,7 @@
                         data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent"
                         data-kt-menu-placement="bottom-end">
                         <img alt="Logo"
-                                        src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }} " />
+                                        src="{{ auth()->user() && isset(auth()->user()->image) ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }} " />
                     </div>
                     <!--begin::User account menu-->
                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
@@ -49,7 +49,7 @@
                                 <!--begin::Avatar-->
                                 <div class="symbol symbol-50px me-5">
                                     <img alt="Logo"
-                                        src="{{ auth()->user()->image != null ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }} " />
+                                        src="{{ auth()->user() && isset(auth()->user()->image) ? asset('storage/profile/' . auth()->user()->image) : asset('assets/img/default-company.png') }} " />
                                 </div>
                                 <!--end::Avatar-->
                                 <!--begin::Username-->
@@ -66,7 +66,7 @@
                         </div>
                         <!--end::Menu item-->
                         <div class="menu-item px-5">
-                            <a href="{{ route('admin.edit-profile', auth()->user()->id) }}" class="menu-link px-5">
+                            <a href="{{ route('admin.edit-profile', auth()->id()) }}" class="menu-link px-5">
                                 <span class="menu-text">Profile</span>
                             </a>
                         </div>

@@ -15,8 +15,8 @@ class ClinicHasPackageController extends Controller
 {
     public function index(Request $request)
     {
-        // Mendapatkan user_id dari request atau session (sesuaikan sesuai logika aplikasi Anda)
-        $userId = $request->input('user_id') ?? auth()->user()->id;
+        // Mendapatkan user_id dari request atau session
+        $userId = $request->input('user_id') ?? auth()->id();
 
         // Ambil semua user dengan role 1 (misalnya untuk admin atau dokter klinik)
         $users = DB::table('users')
@@ -101,12 +101,23 @@ class ClinicHasPackageController extends Controller
         // $clinic->duration_type = $request->input('duration_type');
         $clinic->save();
 
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images/clinic_package_images', 'public');
-            ClinicPackageImages::create([
-                'clinic_package_id' => $clinic->id,
-                'image' => $imagePath,
-            ]);
+        // Handle multiple image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $key => $image) {
+                $imagePath = $image->store('images/clinic_package_images', 'public');
+                
+                // Set the first image as main image
+                $isMain = ($key === 0) ? 1 : 0;
+                
+                // Get the ID explicitly to avoid undefined property error
+                $clinicId = $clinic->id ?? null;
+                
+                ClinicPackageImages::create([
+                    'clinic_package_id' => $clinicId,
+                    'image' => $imagePath,
+                    'main' => $isMain
+                ]);
+            }
         }
 
         return redirect()->route('clinics.list')->with('success', 'Clinic service added successfully.');
@@ -125,8 +136,8 @@ class ClinicHasPackageController extends Controller
         // Validasi input
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'categories_services_id' => 'required', // Misalnya memastikan kategori yang dipilih ada
-            'clinic_id' => 'nullable', // Misalnya memastikan klinik yang dipilih ada
+            'categories_services_id' => 'required', // Memastikan kategori yang dipilih ada
+            'clinic_id' => 'nullable', // Memastikan klinik yang dipilih ada
             'rules' => 'required|string',
             'duration_type' => 'required|in:menit,jam', // Pastikan nilai duration_type valid
             'duration' => 'nullable',
@@ -135,22 +146,40 @@ class ClinicHasPackageController extends Controller
             'description' => 'required|string',
             'price' => 'required', // Validasi harga minimal 0
             'is_active' => 'required',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi untuk multiple images
         ]);
 
         // Update data klinik setelah validasi
         $clinic->update([
-            'name' => $request->name,
-            'categories_services_id' => $request->categories_services_id,
-            'clinic_id' => $request->clinic_id,
-            'rules' => $request->rules,
-            'duration_type' => $request->duration_type,
-            'duration' => $request->duration,
-            'unit_price' => $request->unit_price,
-            'expiry_date' => $request->expiry_date,
-            'description' => $request->description,
-            'price' => $request->price,
-            'is_active' => $request->is_active,
+            'name' => $request->input('name'),
+            'categories_services_id' => $request->input('categories_services_id'),
+            'clinic_id' => $request->input('clinic_id'),
+            'rules' => $request->input('rules'),
+            'duration_type' => $request->input('duration_type'),
+            'duration' => $request->input('duration'),
+            'unit_price' => $request->input('unit_price'),
+            'expiry_date' => $request->input('expiry_date'),
+            'description' => $request->input('description'),
+            'price' => $request->input('price'),
+            'is_active' => $request->input('is_active'),
         ]);
+        
+        // Handle multiple image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $key => $image) {
+                $imagePath = $image->store('images/clinic_package_images', 'public');
+                
+                // Set the first image as main image if no main image exists
+                $clinicId = $clinic->id ?? null; // Get the ID explicitly with null fallback
+                $isMain = ($key === 0 && $clinicId && !ClinicPackageImages::where('clinic_package_id', $clinicId)->where('main', 1)->exists()) ? 1 : 0;
+                
+                ClinicPackageImages::create([
+                    'clinic_package_id' => $clinicId,
+                    'image' => $imagePath,
+                    'main' => $isMain
+                ]);
+            }
+        }
 
         return redirect()->route('clinics.list')->with('success', 'Klinik berhasil diperbarui.');
     }
@@ -176,12 +205,15 @@ class ClinicHasPackageController extends Controller
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all();
         $clinics = Clinic::all(); // Ambil semua klinik
+        
+        // Fetch existing images for this clinic package
+        $clinicImages = ClinicPackageImages::where('clinic_package_id', $id)->get();
 
         if (!$clinic) {
             return redirect()->back()->withErrors('Klinik tidak ditemukan.');
         }
 
-        return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories', 'clinics'));
+        return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories', 'clinics', 'clinicImages'));
     }
 
     public function getCategoriesByClinic(Request $request)
