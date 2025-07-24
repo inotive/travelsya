@@ -120,7 +120,7 @@
                                 @foreach($clinicImages as $image)
                                 <div class="col-md-3 mb-3">
                                     <div class="card">
-                                        <img src="{{ asset('storage/' . $image->image) }}" class="card-img-top" alt="Clinic Image">
+                                        <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image">
                                         <div class="card-body text-center">
                                             @if($image->main == 1)
                                                 <span class="badge bg-primary">Main Image</span>

@@ -26,6 +26,7 @@ class BeautyClinicController extends Controller
             ->select(
                 'clinics.id as clinic_id',
                 'clinics.phone as clinic_phone',
+                'clinics.is_active as clinic_active',
                 'clinics.*',
                 'users.id as user_id',
                 'users.*',

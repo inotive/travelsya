@@ -53,6 +53,20 @@
                                     @foreach ($user->hotel as $hotel)
                                         <span class="badge badge-info">{{ $hotel->name }}</span>
                                     @endforeach
+
+                                    <span class="badge badge-info">{{ $user->clinic->clinic_name ?? '' }}</span>
+                                    
+                                    @foreach ($user->rentals as $rental)
+                                        <span class="badge badge-info">{{ $rental->business_name }}</span>
+                                    @endforeach
+
+                                    @foreach ($user->recreations as $recreation)
+                                        <span class="badge badge-info">{{ $recreation->business_name }}</span>
+                                    @endforeach
+
+                                    @foreach ($user->bus_travels as $bus_travel)
+                                        <span class="badge badge-info">{{ $bus_travel->business_name }}</span>
+                                    @endforeach
                                 </td>
                                 <td class="text-center">{{ $user->phone ?? 'Belum Ada' }}</td>
                                 <td class="text-center">
@@ -196,7 +210,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
-                                <input class="form-control form-control-lg @error('nomor_telfon') is-invalid @enderror" id="phone" name="nomor_telfon" value="{{ old('nomor_telfon') }}"
+                                <input type="number" class="form-control form-control-lg @error('nomor_telfon') is-invalid @enderror" id="phone" name="nomor_telfon" value="{{ old('nomor_telfon') }}"
                                     placeholder="Masukan nomor telfon" required />
                                 @error('nomor_telfon')
                                     <div class="alert alert-danger mt-2">{{ $message }}</div>
@@ -355,7 +369,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label class=" required fs-6 fw-semibold mb-2">Nomor Telfon</label>
-                                <input class="form-control form-control-lg" id="edit-phone" name="phone"
+                                <input type="number" class="form-control form-control-lg" id="edit-phone" name="phone"
                                     placeholder="Masukan nomor telfon" required />
                                 <div class="text-danger mt-1"></div>
                             </div>

@@ -172,7 +172,7 @@
                     <div class="row g-9 mb-8">
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
-                            <input class="form-control form-control-lg @error('name') is-invalid @enderror" id="name"  value="{{ old('name') }}" placeholder="Masukan nama bisnis" name="name"/>
+                            <input class="form-control form-control-lg @error('name') is-invalid @enderror" id="name"  value="{{ old('name') }}" placeholder="Masukan nama bisnis" name="name"/ required>
 
                             @error('name')
                                 <div class="alert alert-danger mt-1">{{ $message }}</div>
@@ -180,9 +180,10 @@
                         </div>
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Mitra</label>
-                            <select class="form-control @error('user_id') is-invalid @enderror" id="user_id" name="user_id">
+                            <select class="form-control @error('user_id') is-invalid @enderror" id="user_id" name="user_id" required>
+                                <option value="">--Pilih Mitra--</option>
                                 @foreach ($users as $user)
-                                <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
                                 @endforeach
                             </select>
                             @error('user_id')
@@ -193,7 +194,7 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
-                            <input class="form-control form-control-lg @error('phone') is-invalid @enderror" value="{{ old('phone') }}" id="phone" placeholder="Masukan nomor telepon... " name="phone" />
+                            <input type="number" class="form-control form-control-lg @error('phone') is-invalid @enderror" value="{{ old('phone') }}" id="phone" placeholder="Masukan nomor telepon... " name="phone" required />
 
                             @error('phone')
                                 <div class="alert alert-danger mt-1">{{ $message }}</div>
@@ -219,9 +220,10 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
 
-                            <select class="js-example-basic-single form-control form-control-lg @error('city') is-invalid @enderror" name="city" id="city">
+                            <select class="js-example-basic-single form-control form-control-lg @error('city') is-invalid @enderror" name="city" id="city" required>
+                                <option value="">--Pilih Kota/Kabupaten--</option>
                                 @foreach ($cities as $city)
-                                <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                                    <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                                 @endforeach
                             </select>
 
@@ -233,7 +235,8 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                            <select name="category_recreation_id" class="form-select @error('category_recreation_id') is-invalid @enderror" aria-label="Default select example">
+                            <select name="category_recreation_id" class="form-select @error('category_recreation_id') is-invalid @enderror" aria-label="Default select example" required>
+                                <option value="">--Pilih Kategori--</option>
                                 @foreach ($category as $item)
                                     <option value="{{ $item->id }}" {{ old('category_recreation_id') == $item->id ? 'selected' : '' }}>{{ $item->name }}</option>
                                 @endforeach
@@ -244,8 +247,8 @@
                         </div>
 
                         <div class="col-12">
-                            <label for="" class="form-label">Alamat</label>
-                            <textarea name="address" id="address" cols="30" rows="5" class="form-control @error('category_recreation_id') is-invalid @enderror">{{ old('category_recreation_id') }}</textarea>
+                            <label for="" class="required form-label">Alamat</label>
+                            <textarea name="address" id="address" cols="30" rows="5" class="form-control @error('category_recreation_id') is-invalid @enderror" required>{{ old('category_recreation_id') }}</textarea>
                             @error('address')
                                 <div class="alert alert-danger mt-1">{{ $message }}</div>
                             @enderror

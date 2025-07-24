@@ -48,11 +48,9 @@
                             <button class="btn btn-sm btn-light-primary btn-icon" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="showDetail({{ $item->id }})">
                                 <i class="fa fa-info-circle" aria-hidden="true"></i>
                             </button>
-                            <button class="btn btn-sm btn-light-warning btn-icon">
-                                <a href="{{ route('recreation.edit', $item->id) }}">
-                                    <i class="fa fa-pencil" aria-hidden="true"></i>
-                                </a>
-                            </button>
+                            <a href="{{ route('recreation.edit', $item->id) }}" class="btn btn-sm btn-light-warning btn-icon">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </a>
                             <button class="btn btn-sm btn-light-danger btn-icon" onclick="deleteRecreation({{ $item->id }})">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                             </button>

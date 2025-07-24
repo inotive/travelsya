@@ -99,12 +99,25 @@ class RecreationController extends Controller
     {
         $category = DB::table('category_recreations')->get();
 
-        $data = DB::table('recreation_has_packages')
-            ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')  // Join ke tabel recreations
-            ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
-            ->where('recreations.user_id', Auth::id())
-            ->select('recreation_has_packages.*', 'category_recreations.name as category_name', 'recreations.business_name')
-            ->get();
+        // $data = DB::table('recreation_has_packages')
+        //     ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')  // Join ke tabel recreations
+        //     ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
+        //     ->where('recreations.user_id', Auth::id())
+        //     ->select('recreation_has_packages.*', 'category_recreations.name as category_name', 'recreations.business_name')
+        //     ->get();
+
+        $data = RecreationPackages::with(['recreation.categoryRecreation'])
+    ->whereHas('recreation', function ($query) {
+        $query->where('user_id', Auth::id());
+    })
+    ->get()
+    ->map(function ($item) {
+        $item->category_name = $item->recreation->categoryRecreation->name ?? null;
+        $item->business_name = $item->recreation->business_name ?? null;
+        return $item;
+    });
+
+        // dd($data);
 
         return view('ekstranet.rekreasi.daftar-rekreasi', [
             'data' => $data,
@@ -175,7 +188,7 @@ class RecreationController extends Controller
             'unit_price' => 'required|string|max:255',
             'expiry' => 'required|numeric',
             'expiry_type' => 'required|string|in:Hari,Jam',
-            'price' => 'required|numeric',
+            'price' => 'required',
             'is_active' => 'required|boolean',
         ]);
 
@@ -184,6 +197,8 @@ class RecreationController extends Controller
         $categoryRecreation = DB::table('category_recreations')
             ->where('id', $recreationId)
             ->first();
+
+        $price = (int) preg_replace('/[^\d]/', '', $request->price);
 
         DB::table('recreation_has_packages')->insert([
             'recreation_id' => $recreationId,
@@ -195,7 +210,7 @@ class RecreationController extends Controller
             'expiry_date' => $request->expiry,
             'expiry_type' => $request->expiry_type,
             'unit_price' => $request->unit_price,
-            'price' => $request->price,
+            'price' => $price, 
             'is_active' => $request->is_active,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),

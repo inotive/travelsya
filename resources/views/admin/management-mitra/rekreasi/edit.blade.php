@@ -46,7 +46,7 @@
 
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
-                        <input type="text" class="form-control form-control-lg phone-edit" id="phone-edit" required />
+                        <input type="number" class="form-control form-control-lg phone-edit" id="phone-edit" required />
                         <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
@@ -94,8 +94,8 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="" class="form-label">Alamat</label>
-                        <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
+                        <label for="" class="required form-label">Alamat</label>
+                        <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit" required></textarea>
                         <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
@@ -103,8 +103,8 @@
                 <!--end::Input group-->
                 <!--begin::Actions-->
                 <div class="text-center">
-                    <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
-                    </button>
+                  <button type="button" id="kt_modal_new_target_cancel" class="btn btn-light me-3"
+                        data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" id="update" class="btn btn-primary update">
                         <span class="indicator-label">Update</span>
                         <span class="indicator-progress">Please wait...

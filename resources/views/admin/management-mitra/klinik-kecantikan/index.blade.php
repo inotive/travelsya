@@ -63,9 +63,9 @@
                         <td class="text-center">{{ $clinic->clinic_phone }}</td>
 
                         <td class="text-center">
-                            @if ($clinic->is_active === 1)
+                            @if ($clinic->clinic_active === 1)
                             <span class="badge badge-success">Aktif</span>
-                            @elseif ($clinic->is_active === 0)
+                            @elseif ($clinic->clinic_active === 0)
                             <span class="badge badge-danger">Tidak Aktif</span>
                             @endif
                         </td>
@@ -246,9 +246,10 @@
                         </div>
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Mitra</label>
-                            <select class="form-control" id="user_id" name="user_id">
+                            <select class="form-control" id="user_id" name="user_id" required>
+                                <option value="">--Pilih Mitra--</option>
                                 @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                             @error('user_id')
@@ -261,7 +262,7 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
-                            <input class="form-control form-control-lg" id="phone"
+                            <input type="number" class="form-control form-control-lg" id="phone"
                                 placeholder="Masukan nomor telepon... " name="phone" required />
 
                             @error('phone')
@@ -276,9 +277,10 @@
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
-                            <select class="js-example-basic-single form-control form-control-lg" name="city" id="city">
+                            <select class="js-example-basic-single form-control form-control-lg" name="city" id="city" required>
+                                <option value="">--Pilih Kota/Kabupaten--</option>
                                 @foreach ($cities as $city)
-                                <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                                    <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                                 @endforeach
                             </select>
 
@@ -294,22 +296,22 @@
                         <!--begin::Radio group-->
                         <div class="btn-group w-60" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
                             <!--begin::Radio-->
-                            <label class="btn btn-outline btn-danger active" data-kt-button="true">
+                            <label class="btn btn-outline btn-danger" data-kt-button="true">
                                 <input class="btn-check" type="radio" name="category" value="kesehatan" required />
                                 Kesehatan
                             </label>
                             <!--end::Radio-->
 
                             <!--begin::Radio-->
-                            <label class="btn btn-outline btn-danger" data-kt-button="true">
-                                <input class="btn-check" type="radio" name="category" value="kecantikan" required />
+                            <label class="btn btn-outline btn-danger active" data-kt-button="true">
+                                <input class="btn-check" type="radio" name="category" value="kecantikan" checked required />
                                 Kecantikan
                             </label>
                             <!--end::Radio-->
                         </div>
 
                         <div class="col-12">
-                            <label for="" class="form-label">Alamat</label>
+                            <label for="" class="required form-label">Alamat</label>
                             <textarea name="address" id="address" cols="30" rows="5" class="form-control"
                                 required></textarea>
                         </div>

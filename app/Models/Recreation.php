@@ -97,6 +97,11 @@ class Recreation extends Model
         return $this->hasMany(RecreationRatings::class, 'recreation_id', 'id')->orderBy('created_at', 'desc');
     }
 
+    public function categoryRecreation()
+    {
+        return $this->belongsTo(CategoryRecreation::class);
+    }       
+
     public function avgRating()
     {
         $rating = RecreationRatings::where('recreation_id', $this->id)->get()->pluck('rate')->toArray();

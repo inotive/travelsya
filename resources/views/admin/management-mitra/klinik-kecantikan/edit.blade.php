@@ -48,7 +48,7 @@
 
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
-                        <input type="text" class="form-control form-control-lg phone-edit" id="phone-edit" required />
+                        <input type="number" class="form-control form-control-lg phone-edit" id="phone-edit" required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
                         @error('phone')
                         <span class="text-danger mt-1" role="alert">
@@ -77,7 +77,7 @@
                         <select class="js-example-basic-single form-control form-control-lg city-edit" name="city"
                             id="city-edit">
                             @foreach ($cities as $city)
-                            <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                                <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                             @endforeach
                         </select>
                         @error('city')
@@ -90,12 +90,12 @@
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
-                            <label class="btn btn-outline btn-danger" data-kt-button="true">
+                            <label class="btn btn-outline btn-danger label-kesehatan" data-kt-button="true">
                                 <input class="btn-check category-edit" type="radio" name="category"
                                     id="update-category-kesehatan" value="kesehatan" required />
                                 Kesehatan
                             </label>
-                            <label class="btn btn-outline btn-danger" data-kt-button="true">
+                            <label class="btn btn-outline btn-danger label-kecantikan" data-kt-button="true">
                                 <input class="btn-check category-edit" type="radio" name="category"
                                     id="update-category-kecantikan" value="kecantikan" required />
                                 Kecantikan
@@ -110,7 +110,7 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="" class="form-label">Alamat</label>
+                        <label for="" class="required form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
                     </div>
@@ -162,7 +162,11 @@
                     $('#city-edit').trigger('change');
                     $('#phone-edit').val(response.data.phone);
                     $(`input[name="category"][value="${response.data.category}"]`).prop('checked', true);
-                    $('#image-edit').val(response.data.image);
+
+                    const isKecantikan = response.data.category === 'kecantikan';
+                    $('.label-kecantikan').toggleClass('active', isKecantikan);
+                    $('.label-kesehatan').toggleClass('active', !isKecantikan);
+                    
                     // Show the modal
                     $('#modal-edit').modal('show');
                 },

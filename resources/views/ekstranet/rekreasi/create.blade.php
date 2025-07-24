@@ -21,7 +21,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                    <input class="form-control form-control-lg" type="number" placeholder="Rp." name="price" required />
+                    <input class="form-control form-control-lg" type="text" id="harga" placeholder="Rp." name="price" required />
                     @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -113,7 +113,7 @@
             <div class="text-center">
                 <div class="row">
                     <div class="col-6 mb-2">
-                        <button type="reset" class="btn btn-light w-100" onclick="history.back()">Cancel</button>
+                        <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button>
                     </div>
                     <div class="col-6">
                         <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">
@@ -147,6 +147,31 @@
         $(document).on('click', '.remove-image', function() {
             $(this).closest('.input-group').remove();
         });
+
+        function formatRupiah(angka, prefix) {
+            angka = angka.toString().replace(/[^,\d]/g, '');
+            const split = angka.split(',');
+            const sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                const separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix !== undefined ? prefix + rupiah : rupiah;
+        }
+
+
+        $('#harga').on('input', function () {
+            let input = $(this).val();
+            let formatted = formatRupiah(input, 'Rp. ');
+            $(this).val(formatted);
+        });
+
+
     });
 </script>
 @endsection

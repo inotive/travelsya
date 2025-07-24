@@ -24,9 +24,9 @@ class MitraController extends Controller
         // $cities = DB::table('cities')->orderBy('city_name','asc')->get();
         // dd($vendors);
 
-        $users = User::with('hostel', 'hotel')
+        $users = User::with(['hostel', 'hotel', 'clinic', 'rentals', 'recreations'])
             ->where('role', 1)->get();
-        //         dd($users);
+        // dd($users);
         return view('admin.management-mitra.index', compact('vendors', 'users'));
     }
 
