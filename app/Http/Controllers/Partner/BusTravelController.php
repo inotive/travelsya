@@ -35,7 +35,7 @@ class BusTravelController extends Controller
 
     public function create()
     {
-        $bus_travel = BusTravels::all();
+        $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
 
         $view = [
             'bus_travel' => $bus_travel,
@@ -47,6 +47,7 @@ class BusTravelController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'bus_travel_id' => 'required|exists:bus_travels,id',
             'name' => 'required',
             'class' => 'required',
             'is_active' => 'required',
@@ -59,10 +60,17 @@ class BusTravelController extends Controller
         }
 
         $user = auth()->user();
-        $bus_travel = BusTravels::where('user_id', $user->id)->first();
-
+        $bus_travel_id = $request->input('bus_travel_id');
+        
+        // Check if the bus travel exists
+        $bus_travel = BusTravels::where('id', $bus_travel_id)->first();
         if (!$bus_travel) {
-            return redirect()->route('partner.daftar.bus-travel')->with('error', 'Anda tidak memiliki bus & travel!');
+            return redirect()->route('partner.daftar.bus-travel')->with('error', 'Bus & Travel tidak ditemukan!');
+        }
+        
+        // Check if the bus travel belongs to the current user
+        if ($bus_travel->user_id != $user->id) {
+            return redirect()->route('partner.daftar.bus-travel')->with('error', 'Bus & Travel ini bukan milik Anda!');
         }
 
         if ($request->hasFile('image')) {
@@ -74,11 +82,11 @@ class BusTravelController extends Controller
         }
 
         $data = [
-            'bus_travel_id' => $bus_travel->id,
-            'name' => $request->name,
-            'class' => $request->class,
-            'is_active' => $request->is_active,
-            'number_seats' => $request->number_seats,
+            'bus_travel_id' => $request->input('bus_travel_id'),
+            'name' => $request->input('name'),
+            'class' => $request->input('class'),
+            'is_active' => $request->input('is_active'),
+            'number_seats' => $request->input('number_seats'),
             'image' => $imageName,
         ];
 

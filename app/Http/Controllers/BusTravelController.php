@@ -85,7 +85,7 @@ class BusTravelController extends Controller
                 });
             })
             ->get();
-
+        dd($pergi);
         $pulang = [];
 
         if ((int)$pp == 1) {
@@ -482,9 +482,9 @@ class BusTravelController extends Controller
                     "price" => $pergi['price'],
                     "fee_admin" => $fees[0]['value'] / $data['jumlah_penumpang'],
                     "kode_unik" => $kode_unik,
-                    "customer_name" => $request['customer_call_'.$i].' '.$request['customer_name_'.$i] ?? '-',
-                    "customer_phone" => $request['customer_phone_'.$i] ?? '-',
-                    "customer_email" => $request['customer_email_'.$i] ?? '-',
+                    "customer_name" => $request['customer_call_' . $i] . ' ' . $request['customer_name_' . $i] ?? '-',
+                    "customer_phone" => $request['customer_phone_' . $i] ?? '-',
+                    "customer_email" => $request['customer_email_' . $i] ?? '-',
                 ]);
 
                 if ((int)$data['is_pulang_pergi'] == 1) {
@@ -501,9 +501,9 @@ class BusTravelController extends Controller
                         "fee_admin" => 0,
                         // "duration" => $data['duration'],
                         "kode_unik" => $kode_unik,
-                        "customer_name" => $request['customer_call_'.$i].' '.$request['customer_name_'.$i] ?? '-',
-                        "customer_phone" => $request['customer_phone_'.$i] ?? '-',
-                        "customer_email" => $request['customer_email_'.$i] ?? '-',
+                        "customer_name" => $request['customer_call_' . $i] . ' ' . $request['customer_name_' . $i] ?? '-',
+                        "customer_phone" => $request['customer_phone_' . $i] ?? '-',
+                        "customer_email" => $request['customer_email_' . $i] ?? '-',
                     ]);
                 }
             }

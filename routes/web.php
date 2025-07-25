@@ -467,6 +467,25 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('daftar-bus-travel/edit/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'update'])->name('partner.update.bus-travel');
         Route::delete('bus-travel-delete/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'destroy'])->name('partner.delete.bus-travel');
 
+        // Bus routes management
+        // Route::get('bus-routes', [\App\Http\Controllers\Partner\BusRouteController::class, 'index'])->name('partner.bus.routes');
+        // Route::get('bus-routes/create', [\App\Http\Controllers\Partner\BusRouteController::class, 'create'])->name('partner.bus.routes.create');
+        // Route::post('bus-routes/store', [\App\Http\Controllers\Partner\BusRouteController::class, 'store'])->name('partner.bus.routes.store');
+        // Route::get('bus-routes/edit/{id}', [\App\Http\Controllers\Partner\BusRouteController::class, 'edit'])->name('partner.bus.routes.edit');
+        // Route::post('bus-routes/update/{id}', [\App\Http\Controllers\Partner\BusRouteController::class, 'update'])->name('partner.bus.routes.update');
+        // Route::delete('bus-routes/delete/{id}', [\App\Http\Controllers\Partner\BusRouteController::class, 'destroy'])->name('partner.bus.routes.delete');
+
+        // Bus departures management
+        Route::get('bus-departures', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures');
+        Route::get('bus-departures/bus/{busId}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures.bus');
+        Route::post('bus-departures/store', [\App\Http\Controllers\Partner\BusDepartureController::class, 'store'])->name('partner.bus.departures.store');
+        Route::post('bus-departures/update', [\App\Http\Controllers\Partner\BusDepartureController::class, 'update'])->name('partner.bus.departures.update');
+        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'destroy'])->name('partner.bus.departures.delete');
+
+        // Keep these routes for backward compatibility
+        Route::get('bus-departures/create', [\App\Http\Controllers\Partner\BusDepartureController::class, 'create'])->name('partner.bus.departures.create');
+        Route::get('bus-departures/edit/{id}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'edit'])->name('partner.bus.departures.edit');
+
         Route::get('daftar-room', [ManagementRoomController::class, 'index'])->name('partner.management.room');
         Route::get('daftar-room/detailroom/hotel/{id}', [ManagementRoomController::class, 'detailroomhotel'])->name('partner.management.room.detailroomhotel');
         Route::get('daftar-room/detailroom/hostel/{id}', [ManagementRoomController::class, 'detailroomhostel'])->name('partner.management.room.detailroomhostel');
