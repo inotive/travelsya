@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Recreation;
 use App\Models\City;
 use App\Http\Controllers\Controller;
+use App\Models\recreationImages;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -69,13 +70,8 @@ class RecreationController extends Controller
             'city' => 'required',
             'category_recreation_id' => 'required',
             'address' => 'required',
+            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
-
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
-
-        // dd($request);
 
         if ($validator->fails()) {
             return redirect()
@@ -84,20 +80,44 @@ class RecreationController extends Controller
                 ->withInput()->with('openModal', true);;
         }
 
-        DB::table('recreations')->insert([
-            'business_name' => ucwords($request->name),
-            'category_recreation_id' => $request->category_recreation_id,
-            'user_id' => $request->user_id,
-            'city' => $request->city,
-            'phone' => $request->phone,
-            'lat' => $request->lat,
-            'ltd' => $request->ltd,
-            'address' => $request->address,
-            'is_active' => 1,
-        ]);
+        DB::beginTransaction();
 
-        toast('Mitra has been created', 'success');
-        return redirect()->back();
+        try {
+            $recreationId = DB::table('recreations')->insertGetId([
+                'business_name' => ucwords($request->name),
+                'category_recreation_id' => $request->category_recreation_id,
+                'user_id' => $request->user_id,
+                'city' => $request->city,
+                'phone' => $request->phone,
+                'lat' => $request->lat,
+                'ltd' => $request->ltd,
+                'address' => $request->address,
+                'is_active' => 1,
+            ]);
+
+            if($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imgName = time() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('recreation', $imgName, 'public');
+                recreationImages::create([
+                    'recreation_id' => $recreationId,
+                    'image' => $imgName
+                ]);
+            }
+
+            DB::commit();
+
+            toast('Mitra has been created', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            toast('Mitra creation failed. Please try again.', 'error');
+            return redirect()
+                ->back()
+                ->withInput();
+        }
+
+        
     }
 
     /**

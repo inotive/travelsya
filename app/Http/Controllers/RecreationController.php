@@ -203,7 +203,7 @@ class RecreationController extends Controller
             $categoryRecreation = DB::table('category_recreations')
                 ->where('id', $recreationId)
                 ->first();
-
+            
             $price = (int) preg_replace('/[^\d]/', '', $request->price);
 
             $request['category_recreation_id'] = $categoryRecreation->id;

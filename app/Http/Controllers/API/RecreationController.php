@@ -314,39 +314,11 @@ class RecreationController extends Controller
 
     public function recreation_by_category($id)
     {
-        $category = CategoryRecreation::find($id);
-
-        if ($category) {
-            $recreations = Recreation::active()->where('category_recreation_id', $id)->with(['reviews', 'recreationPackages.images', 'kota'])->get();
-            // $recre = [];
-
-            // foreach ($recreations as $key => $rec) {
-            //     if (count($rec['recreationPackages'])) {
-            //         $item = [
-            //             'name' => $rec['business_name'],
-            //             'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
-            //             'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-            //             'price' => $rec['recreationPackages'][0]['price'],
-            //             'rating_count' => count($rec['reviews']),
-            //             'avg_rating' => $rec->avgRating(),
-            //         ];  
-            //         array_push($recre, $item);
-            //     }
-            // }
-
-            foreach($recreations as $recreation) {
-                $recreation->category_name = $category->name;
-                $recreation['category'] = CategoryRecreation::select('id', 'name')->get();
-            }
-
-            // $data['category_name'] = $category['name'];
-            // $data['category'] = CategoryRecreation::select('id', 'name')->get();
-            // $data['recreations'] = $recre;
+        $category = CategoryRecreation::select('id')->findOrFail($id);
+        $recreations = Recreation::active()->where('category_recreation_id', $category->id)->with(['reviews', 'kota'])->get();
             
-            return ResponseFormatter::success($recreations, 'Data successfully loaded');
-        } else {
-            return ResponseFormatter::error([], 'Category not found');
-        }
+        return ResponseFormatter::success($recreations, 'Data successfully loaded');
+        // return ResponseFormatter::error([], 'Category not found');
     }
 
     public function detail_recreations($id)

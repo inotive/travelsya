@@ -47,7 +47,7 @@
                             <label class="required fs-6 fw-semibold mb-2">Model</label>
                             <select class="form-control" id="car_model_id" name="car_model_id" required>
                                 @foreach ($car_models as $car_model)
-                                    <option value="{{ $car_model->id }}" {{ old('car_model_id', $car->car_model_id) === $car->car_model_id ? 'selected' : '' }} >{{ $car_model->name }}</option>
+                                    <option value="{{ $car_model->id }}" {{ old('car_model_id', $car->car_model_id) ===  $car_model->id ? 'selected' : '' }} >{{ $car_model->name }}</option>
                                 @endforeach
                             </select>
                             @error('car_model_id')
@@ -221,48 +221,7 @@
 
 @push('add-script')
     <script>
-        $('#brand_id').on('change', function() {
-            var brand_id = $(this).val();
-
-            if (brand_id) {
-                $('#car_model_id').prop('disabled', false);
-
-                $.ajax({
-                    url: '{{ url('/partner/get-model-kendaraan') }}',
-                    type: 'GET',
-                    data: {
-                        brand_id: brand_id
-                    },
-                    success: function(response) {
-                        $('#car_model_id').empty();
-
-                        $('#car_model_id').append(
-                            '<option selected disabled value="">Pilih Model</option>');
-
-                        if (response.models.length > 0) {
-                            $.each(response.models, function(index, model) {
-                                $('#car_model_id').append('<option value="' + model.id + '">' +
-                                    model.name + '</option>');
-                            });
-                        } else {
-                            $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
-                        }
-
-                        @if ($car->car_model_id)
-                            $('#car_model_id').val('{{ $car->car_model_id }}').trigger('change');
-                        @endif
-                    },
-                    error: function() {
-                        alert("Terjadi kesalahan saat mengambil data model.");
-                    }
-                });
-            } else {
-                $('#car_model_id').prop('disabled', true);
-                $('#car_model_id').empty();
-                $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
-            }
-        });
-
+    
         $(document).ready(function() {
             var selectedBrandId = $('#brand_id').val();
             if (selectedBrandId) {

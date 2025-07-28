@@ -75,13 +75,15 @@ class KendaraanController extends Controller
             $imageName = NULL;
         }
 
+        $price = (int) preg_replace('/[^\d]/', '', $request->rental_price_per_day);
+
         $data = [
             'car_rental_id' => $request->car_rental_id,
             'brand_id' => $request->brand_id,
             'car_model_id' => $request->car_model_id,
             'category' => $request->category,
             'category_rent' => $request->category_rent,
-            'rental_price_per_day' => $request->rental_price_per_day,
+            'rental_price_per_day' => $price,
             'duration' => $request->duration,
             'description' => $request->description,
             // 'policy_id' => $request->policy_id,
@@ -102,6 +104,7 @@ class KendaraanController extends Controller
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
+        // dd($car_models);
         $car_rentals = CarRental::all();
 
         return view('ekstranet.kendaraaan.update', compact('car', 'brands', 'policies', 'car_models', 'car_rentals', 'id'));

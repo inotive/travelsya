@@ -50,8 +50,21 @@
                                     @endif
                                 </td>
 
-                                <td class="text-center">
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                <td>
+
+                                    <div class="d-flex gap-1">
+                                        <a href="{{ route('partner.bus.departures.bus', $bus->id) }}" class="btn btn-sm btn-light-info btn-icon">
+                                            <i class="fa fa-clock" aria-hidden="true"></i>
+                                        </a>
+                                        <a href="{{ route('partner.show.bus-travel', $bus->id) }}" class="btn btn-sm btn-light-warning btn-icon">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </a>
+                                        <a type="button" class="btn btn-sm btn-light-danger btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $bus->id }}">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+
+                                    {{-- <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
                                         <a href="{{ route('partner.bus.departures.bus', $bus->id) }}" type="button"
                                             class="menu-link px-3 text-warning" id="btn-edit-bus"
@@ -71,14 +84,14 @@
                                                 Hapus
                                             </a>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
-                                    <a href="#"
+                                    {{-- <a href="#"
                                         class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
                                         data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
                                         Aksi
                                         <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                    </a>
+                                    </a> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -103,7 +116,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form action="" method="POST" id="form-delete">
+                    <form action="{{ route('partner.delete.bus-travel', $bus->id) }}" method="POST" id="form-delete">
                         @method('delete')
                         @csrf
                         <button type="submit" class="btn btn-danger">Hapus</button>

@@ -246,6 +246,17 @@
                             @enderror
                         </div>
 
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="required fs-6 fw-semibold mb-2">Gambar</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+
+                                @error('image')
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="col-12">
                             <label for="" class="required form-label">Alamat</label>
                             <textarea name="address" id="address" cols="30" rows="5" class="form-control @error('category_recreation_id') is-invalid @enderror" required>{{ old('category_recreation_id') }}</textarea>

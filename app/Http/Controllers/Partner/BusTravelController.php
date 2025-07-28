@@ -56,7 +56,10 @@ class BusTravelController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
         $user = auth()->user();
@@ -102,9 +105,11 @@ class BusTravelController extends Controller
         $bus = BusTravelHasBus::with('busTravel')
             ->where('id', $id)
             ->first();
+        $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
 
         $view = [
             'bus' => $bus,
+            'bus_travel' =>  $bus_travel
         ];
 
         return view('ekstranet.bus-travel.update', $view);
@@ -123,13 +128,17 @@ class BusTravelController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput();
         }
 
         if ($request->hasFile('image')) {
+            Storage::delete('buses/' . $bus->image);
             $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('cars', $imageName, 'public');
+            $image->storeAs('buses', $imageName, 'public');
         } else {
             $imageName = $bus->image;
         }
@@ -147,6 +156,12 @@ class BusTravelController extends Controller
     public function destroy($id)
     {
         $bus = BusTravelHasBus::find($id);
+
+        $img = $bus->image;
+        if($img) {
+            Storage::delete('buses/' . $img);
+        }
+
         $bus->delete();
 
         return redirect()->back()->with('delete', 'Data berhasil dihapus!');

@@ -31,7 +31,8 @@ return new class extends Migration
             $table->integer("number_seats");
             $table->string('category_rent');
             $table->enum("category", ["manual", "automatic"]);
-            $table->float("rental_price_per_day");
+            // $table->float("rental_price_per_day");
+            $table->decimal('rental_price_per_day', 15, 2);
             $table->string('duration');
             $table->string("status");
             $table->text("description");

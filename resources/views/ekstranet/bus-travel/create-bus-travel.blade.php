@@ -15,10 +15,10 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Bisnis Bus & Travel</label>
-                        <select class="form-control" id="bus_travel_id" name="bus_travel_id" required>
+                        <select class="form-control" id="bus_travel_id" name="bus_travel_id">
                             <option value="">Pilih Bisnis Bus & Travel</option>
                             @foreach($bus_travel as $bt)
-                                <option value="{{ $bt->id }}">{{ $bt->business_name }}</option>
+                                <option value="{{ $bt->id }}"  {{ old('bus_travel_id') == $bt->id ? 'selected' : '' }}>{{ $bt->business_name }}</option>
                             @endforeach
                         </select>
 
@@ -33,7 +33,7 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                        <input type="text" class="form-control form-control-lg" id="name" name="name"
+                        <input type="text" class="form-control form-control-lg" id="name" name="name" value="{{ old('name') }}"
                             placeholder="Masukkan Nama" />
 
                         @error('name')
@@ -46,7 +46,7 @@
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Kelas</label>
                         <input class="form-control form-control-lg" id="duration" placeholder="Masukkan Kelas"
-                            name="class" required />
+                            name="class" value="{{ old('class') }}" />
 
                         @error('class')
                             <span class="text-danger mt-1" role="alert">
@@ -61,8 +61,8 @@
                         <label class="required fs-6 fw-semibold mb-2">Status</label>
                         <select class="form-control" id="is_active" name="is_active">
                             <option value="">Pilih Status</option>
-                            <option value="1">Aktif</option>
-                            <option value="0">Tidak Aktif</option>
+                            <option value="1" {{ old('is_active') == 1 ? 'selected' : '' }}>Aktif</option>
+                            <option value="0" {{ old('is_active') == 0 ? 'selected' : '' }}>Tidak Aktif</option>
                         </select>
 
                         @error('is_active')
@@ -75,7 +75,7 @@
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
                         <input class="form-control form-control-lg" id="number_seats" placeholder="Masukkan Jumlah Kursi"
-                            name="number_seats" required />
+                            name="number_seats" value="{{ old('number_seats') }}" />
 
                         @error('number_seats')
                             <span class="text-danger mt-1" role="alert">
@@ -100,8 +100,8 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="reset" class="btn btn-secondary">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Tambah Data</button>
+                    <button type="reset" class="btn btn-secondary">Kembali</button>
+                    <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
         </div>
