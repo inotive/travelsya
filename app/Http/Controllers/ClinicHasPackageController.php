@@ -10,6 +10,7 @@ use App\Models\ClinicPackageImages;
 use App\Models\Specialist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ClinicHasPackageController extends Controller
 {
@@ -33,7 +34,8 @@ class ClinicHasPackageController extends Controller
             ->whereHas('clinic', function ($query) use ($userId) {
                 $query->where('user_id', $userId);  // Filter berdasarkan user_id
             })
-            ->paginate(10);
+            ->get();
+        // dd($clinics);
 
         // Ambil data kategori layanan
         $categories = CategoriesServices::all();
@@ -47,8 +49,6 @@ class ClinicHasPackageController extends Controller
 
     public function create()
     {
-
-
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all();
 
@@ -62,76 +62,83 @@ class ClinicHasPackageController extends Controller
     {
         //dd($request->all());
 
-        // $request->validate([
-        //     'clinic_id' => 'required|integer',
-        //     'categories_services_id' => 'required|integer',
-        //     'specialist_id' => 'required|integer',
-        //     'name' => 'required|string|max:255',
-        //     'rules' => 'required|string|max:255',
-        //     'description' => 'required|string',
-        //     'duration' => 'required|string|max:255',
-        //     'unit_price' => 'required|string|max:255',
-        //     'expiry_date' => 'required|date',
-        //     'price' => 'required|numeric',
-        //     'is_active' => 'required|boolean',
-        //    'duration_type' => 'required|enum',
+        $request->validate([
+            'clinic_id' => 'required|integer',
+            'categories_services_id' => 'required|integer',
+            'specialist_id' => 'required|integer',
+            'name' => 'required|string|max:255',
+            'rules' => 'required|string|max:255',
+            'description' => 'required|string',
+            'duration' => 'required|string|max:255',
+            'unit_price' => 'required|string|max:255',
+            'expiry_date' => 'required',
+            'price' => 'required',
+            'is_active' => 'required|boolean',
+           'duration_type' => 'required|in:jam,menit',
+           'images' => 'required|array',
+           'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
-        //]);
-        // $imageName = null;
-        // if ($request->hasFile('image')) {
-        //     $image = $request->file('image');
-        //     $imageName = time() . '.' . $image->getClientOriginalExtension();
-        //     $image->storeAs('public/clinichaspackages', $imageName);
-        // }
+        ]);
 
-        $clinic = new ClinicHasPackages();
-        $clinic->clinic_id = $request->input('clinic_id');
-        $clinic->name = $request->input('name');
-        $clinic->rules = $request->input('rules');
-        $clinic->specialist_id = $request->input('specialist_id');
-        $clinic->clinic_id = $request->input('clinic_id');
-        $clinic->categories_services_id = $request->input('categories_services_id');
-        $clinic->duration = $request->input('duration');
-        $clinic->description = $request->input('description');
-        $clinic->price = $request->input('price');
-        $clinic->unit_price = $request->input('unit_price');
-        $clinic->expiry_date = $request->input('expiry_date');
-        $clinic->is_active = $request->input('is_active');
-        // $clinic->image = $imageName;
-        // $clinic->duration_type = $request->input('duration_type');
-        $clinic->save();
+        DB::beginTransaction();
+        try {
+            $price = (int) preg_replace('/[^\d]/', '', $request->price);
 
-        // Handle multiple image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $key => $image) {
-                $imagePath = $image->store('images/clinic_package_images', 'public');
-                
-                // Set the first image as main image
-                $isMain = ($key === 0) ? 1 : 0;
-                
-                // Get the ID explicitly to avoid undefined property error
-                $clinicId = $clinic->id ?? null;
-                
-                ClinicPackageImages::create([
-                    'clinic_package_id' => $clinicId,
-                    'image' => $imagePath,
-                    'main' => $isMain
-                ]);
+            $clinic = new ClinicHasPackages();
+            $clinic->clinic_id = $request->input('clinic_id');
+            $clinic->name = $request->input('name');
+            $clinic->rules = $request->input('rules');
+            $clinic->specialist_id = $request->input('specialist_id');
+            $clinic->clinic_id = $request->input('clinic_id');
+            $clinic->categories_services_id = $request->input('categories_services_id');
+            $clinic->duration = $request->input('duration');
+            $clinic->description = $request->input('description');
+            $clinic->price = $price;
+            $clinic->unit_price = $request->input('unit_price');
+            $clinic->expiry_date = $request->input('expiry_date');
+            $clinic->is_active = $request->input('is_active');
+            // $clinic->image = $imageName;
+            // $clinic->duration_type = $request->input('duration_type');
+            $clinic->save();
+
+            // Handle multiple image uploads
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $key => $image) {
+                    $imagePath = $image->store('images/clinic_package_images', 'public');
+                    
+                    // Set the first image as main image
+                    $isMain = ($key === 0) ? 1 : 0;
+                    
+                    // Get the ID explicitly to avoid undefined property error
+                    $clinicId = $clinic->id ?? null;
+                    
+                    ClinicPackageImages::create([
+                        'clinic_package_id' => $clinicId,
+                        'image' => $imagePath,
+                        'main' => $isMain
+                    ]);
+                }
             }
+
+            DB::commit();
+
+            return redirect()->route('clinics.list')->with('success', 'Clinic service added successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Failed to add clinic service. Please try again.'])
+                ->withInput();
         }
 
-        return redirect()->route('clinics.list')->with('success', 'Clinic service added successfully.');
+        
     }
 
 
     // Mengupdate data klinik
     public function update(Request $request, $id)
     {
-        $clinic = ClinicHasPackages::find($id);
-
-        if (!$clinic) {
-            return redirect()->back()->withErrors('Klinik tidak ditemukan.');
-        }
 
         // Validasi input
         $validatedData = $request->validate([
@@ -149,39 +156,68 @@ class ClinicHasPackageController extends Controller
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi untuk multiple images
         ]);
 
-        // Update data klinik setelah validasi
-        $clinic->update([
-            'name' => $request->input('name'),
-            'categories_services_id' => $request->input('categories_services_id'),
-            'clinic_id' => $request->input('clinic_id'),
-            'rules' => $request->input('rules'),
-            'duration_type' => $request->input('duration_type'),
-            'duration' => $request->input('duration'),
-            'unit_price' => $request->input('unit_price'),
-            'expiry_date' => $request->input('expiry_date'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'is_active' => $request->input('is_active'),
-        ]);
-        
-        // Handle multiple image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $key => $image) {
-                $imagePath = $image->store('images/clinic_package_images', 'public');
-                
-                // Set the first image as main image if no main image exists
-                $clinicId = $clinic->id ?? null; // Get the ID explicitly with null fallback
-                $isMain = ($key === 0 && $clinicId && !ClinicPackageImages::where('clinic_package_id', $clinicId)->where('main', 1)->exists()) ? 1 : 0;
-                
-                ClinicPackageImages::create([
-                    'clinic_package_id' => $clinicId,
-                    'image' => $imagePath,
-                    'main' => $isMain
-                ]);
+        DB::beginTransaction();
+        try {
+
+            $clinic = ClinicHasPackages::with('images')->find($id);
+            if (!$clinic) {
+                return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
+
+            $price = (int) preg_replace('/[^\d]/', '', $request->price);
+
+            // Update data klinik setelah validasi
+            $clinic->update([
+                'name' => $request->input('name'),
+                'categories_services_id' => $request->input('categories_services_id'),
+                'clinic_id' => $request->input('clinic_id'),
+                'rules' => $request->input('rules'),
+                'duration_type' => $request->input('duration_type'),
+                'duration' => $request->input('duration'),
+                'unit_price' => $request->input('unit_price'),
+                'expiry_date' => $request->input('expiry_date'),
+                'description' => $request->input('description'),
+                'price' => $price,
+                'is_active' => $request->input('is_active'),
+            ]);
+            
+            // Handle multiple image uploads
+            if ($request->hasFile('images')) {
+                if(count($clinic->images) > 0) {
+                    foreach($clinic->images as $image) {
+                        Storage::delete($image->image);
+                        $image->delete();
+                    }
+                }
+
+                foreach ($request->file('images') as $key => $image) {
+                    $imagePath = $image->store('images/clinic_package_images', 'public');
+                    
+                    // Set the first image as main image if no main image exists
+                    $clinicId = $clinic->id ?? null; // Get the ID explicitly with null fallback
+                    $isMain = ($key === 0 && $clinicId && !ClinicPackageImages::where('clinic_package_id', $clinicId)->where('main', 1)->exists()) ? 1 : 0;
+                    
+                    ClinicPackageImages::create([
+                        'clinic_package_id' => $clinicId,
+                        'image' => $imagePath,
+                        'main' => $isMain
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('clinics.list')->with('success', 'Klinik berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Gagal mengubah klinik.'])
+                ->withInput();
         }
 
-        return redirect()->route('clinics.list')->with('success', 'Klinik berhasil diperbarui.');
+        
     }
 
 

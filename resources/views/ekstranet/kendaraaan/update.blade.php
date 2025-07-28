@@ -5,224 +5,216 @@
 ])
 
 @section('content-admin')
-    {{-- FORM UPDATE --}}
-    <div class="main-content">
-        <div class="form-container">
-            <h2>Form Update Data</h2>
-            <form action="{{ route('partner.kendaraan.update', $car->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Merk</label>
-                        <select class="form-select" id="brand_id" name="brand_id" data-control="select2"
-                            data-placeholder="Pilih Merk" data-allow-clear="true">
-                            <option value="" disabled {{ !$car->brand_id ? 'selected' : '' }}>Pilih Merk</option>
-                            @foreach ($brands as $brand)
-                                <option value="{{ $brand->id }}" {{ $brand->id == $car->brand_id ? 'selected' : '' }}>
-                                    {{ $brand->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('brand_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('partner.kendaraan.create') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <!--begin::Input group-->
+                    <div class="row g-9 mb-8">
 
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Model</label>
-                        <select class="form-select" id="car_model_id" name="car_model_id" data-control="select2"
-                            data-placeholder="Pilih Model" data-allow-clear="true">
-                            <option value="" disabled {{ !$car->car_model_id ? 'selected' : '' }}>Pilih Model</option>
-                            @foreach ($car_models as $car_model)
-                                <option value="{{ $car_model->id }}"
-                                    {{ $car_model->id == $car->car_model_id ? 'selected' : '' }}>
-                                    {{ $car_model->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('car_model_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-                </div>
+                        <div class="col-md-12">
+                            <label class="required fs-6 fw-semibold mb-2">Bisnis</label>
+                            <select class="form-control" name="car_rental_id" id="car_rental_id" required>
+                                @foreach ($car_rentals as $car_rental)
+                                    <option value="{{ $car_rental->id }}" {{ old('car_rental_id', $car->car_rental_id) === $car_rental->id }} >{{ $car_rental->business_name }}</option>
+                                @endforeach
+                            </select>
+                            @error('car_rental_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Tipe</label>
-                        <select class="form-control" id="category" name="category">
-                            <option value="">Pilih Tipe</option>
-                            <option value="manual" {{ $car->category == 'manual' ? 'selected' : '' }}>Manual</option>
-                            <option value="automatic" {{ $car->category == 'automatic' ? 'selected' : '' }}>Matic</option>
-                        </select>
-                        @error('category')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Merk</label>
+                            <select class="form-control" id="brand_id" name="brand_id" required>
+                                {{-- <option value="">Pilih Merk</option> --}}
+                                @foreach ($brands as $brand)
+                                    <option value="{{ $brand->id }}" {{ old('brand_id', $car->brand_id) === $brand->id }} >{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('brand_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Kategori Rental</label>
-                        <select class="form-control" id="category_rent" name="category_rent">
-                            <option value="">Pilih Kategori Rental</option>
-                            <option value="Dengan Driver" {{ $car->category_rent == 'Dengan Driver' ? 'selected' : '' }}>
-                                Dengan Driver</option>
-                            <option value="Tidak Dengan Driver"
-                                {{ $car->category_rent == 'Tidak Dengan Driver' ? 'selected' : '' }}>Tidak Dengan Driver
-                            </option>
-                        </select>
-                        @error('category_rent')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-                </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Model</label>
+                            <select class="form-control" id="car_model_id" name="car_model_id" required>
+                                @foreach ($car_models as $car_model)
+                                    <option value="{{ $car_model->id }}" {{ old('car_model_id', $car->car_model_id) === $car->car_model_id ? 'selected' : '' }} >{{ $car_model->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('car_model_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
-                        <input class="form-control form-control-lg" id="rental_price_per_day_display"
-                            placeholder="Masukkan Biaya Sewa"
-                            value="{{ number_format($car->rental_price_per_day, 0, ',', '.') }}" />
-                        <input type="hidden" id="rental_price_per_day" name="rental_price_per_day"
-                            value="{{ $car->rental_price_per_day }}" />
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Tipe</label>
+                            <select class="form-control" id="category" name="category" required>
+                                @php
+                                    $types = ['manual' => 'Manual', 'automatic' => 'Matic'];
+                                @endphp
+                                @foreach ($types as $key => $label)
+                                   <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('category')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                        @error('rental_price_per_day')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Kategori Rental</label>
+                            <select class="form-control" id="category_rent" name="category_rent" required>
+                                @php
+                                    $categories = ['Lepas Kunci', 'Dengan Supir'];
+                                @endphp
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category }}" {{ old('category_rent', $car->category_rent) === $category ? 'selected' : '' }} >{{ $category }}</option>
+                                @endforeach
+                                <option value="Lepas Kunci">Lepas Kunci</option>
+                                <option value="Dengan Supir">Dengan Supir</option>
+                            </select>
+                            @error('category_rent')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                        <input class="form-control form-control-lg" id="duration" placeholder="Berapa Lama Durasi"
-                            name="duration" value="{{ $car->duration }}" />
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Biaya Sewa</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1">Rp</span>
+                                <input type="text" class="form-control" id="rental_price_per_day_display"
+                                    placeholder="Biaya Sewa" aria-label="rental_price_per_day_display"
+                                    aria-describedby="basic-addon1" required>
+                                <input type="hidden" id="rental_price_per_day" name="rental_price_per_day">
+                            </div>
+                            @error('rental_price_per_day')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                        @error('duration')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Durasi</label>
+                            <input type="text" class="form-control" id="duration" name="duration" placeholder="Durasi" value="{{ $car->duration }}" required>
+                            @error('duration')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Tahun Kendaraan</label>
-                        <select class="form-control" id="years" name="years">
-                            <?php
-                                for ($years = (int)date('Y'); 1900 <= $years; $years--): ?>
-                            <option value="<?= $years ?>" <?= $car->years == $years ? 'selected' : '' ?>><?= $years ?>
-                            </option>
-                            <?php endfor; ?>
-                        </select>
-                        @error('policy_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Tahun</label>
+                            <select class="form-control" id="years" name="years" required>
+                                @php
+                                    $currentYear = date('Y');
+                                    $startYear = $currentYear - 20;
+                                    $endYear = $currentYear;
+                                @endphp
 
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
-                        <input class="form-control form-control-lg" id="number_seats" placeholder="Masukkan Jumlah Kursi"
-                            name="number_seats" value="{{ $car->number_seats }}" />
+                                @for ($year = $endYear; $year >= $startYear; $year--)
+                                    <option value="{{ $year }}" {{ old('years', $car->years) == $year ? 'selected' : ''}} >{{ $year }}</option>
+                                @endfor
+                            </select>
+                            @error('years')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                        @error('number_seats')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-                </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
+                            <input type="number" class="form-control" id="number_seats" name="number_seats" value="{{ $car->number_seats }}"
+                                placeholder="Jumlah Kursi" required>
+                            @error('number_seats')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label class="required fs-6 fw-semibold mb-2">Status</label>
-                        <select class="form-control" id="status" name="status">
-                            <option value="">Pilih Status</option>
-                            <option value="1" {{ $car->status == 1 ? 'selected' : '' }}>Tersedia</option>
-                            <option value="0" {{ $car->status == 0 ? 'selected' : '' }}>Tidak Tersedia</option>
-                        </select>
-                        @error('status')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Status</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="1" {{ $car->status === 1 ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ $car->status === 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                            </select>
+                            @error('status')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                    <div class="form-group">
-                        <label class="fs-6 fw-semibold mb-2">Gambar</label>
-                        <input type="file" class="form-control" id="image" name="image_url"
-                            value="{{ $car->image_url }}">
+                        <div class="col-md-12">
+                            <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ $car->description }}</textarea>
+                            @error('description')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
-                        @error('image')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
-                    </div>
-                </div>
-
-                <div class="col-12 mb-4">
-                    <label for="description" class="form-label required fs-6 fw-semibold mb-2">Peraturan</label>
-                    <textarea name="description" id="description" cols="30" rows="5"
-                        class="form-control">{{ $car->description }}</textarea>
-                </div>
-
-                @if(isset($car->images) && count($car->images) > 0)
-                <div class="col-md-12 mb-4">
-                    <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                    <div class="row">
-                        @foreach($car->images as $image)
-                        <div class="col-md-3 mb-3">
-                            <div class="card">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" alt="Image">
-                                <div class="card-body text-center">
-                                    @if($image->main == 1)
-                                        <span class="badge bg-primary">Gambar Utama</span>
-                                    @else
-                                        <span class="badge bg-secondary">Gambar Tambahan</span>
-                                    @endif
+                        <!-- Existing Images -->
+                        @if($car->image_url)
+                            <div class="col-md-12 mt-4">
+                                <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card">
+                                            <img src="{{ Storage::url('cars/' . $car->image_url) }}" class="card-img-top" alt="Image">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-                
-                <div class="col-12 mb-4">
-                    <label class="form-label fs-6 fw-semibold mb-2">Tambah Gambar Baru</label>
-                    <div class="input-group mb-3">
-                        <input type="file" class="form-control" name="images[]" accept="image/*">
-                        <input type="hidden" name="main_image[]" value="1">
-                        <label class="input-group-text bg-primary text-white">Gambar Utama</label>
-                    </div>
-                    <div id="additional-images"></div>
-                    <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
-                    <div class="form-text">Unggah gambar baru akan menambahkan ke gambar yang sudah ada. Gambar utama baru akan menggantikan gambar utama lama.</div>
-                </div>
+                        @endif
 
-                <div class="button-group">
-                    <button type="reset">Tutup</button>
-                    <button type="submit" class="primary">Update Data</button>
-                </div>
-            </form>
+                        <div class="col-md-12 mt-4">
+                            <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" name="image" accept="image/*" required>
+                                {{-- <label class="input-group-text bg-primary text-white">Gambar Utama</label> --}}
+                            </div>
+                            {{-- <div id="additional-images"></div>
+                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button> --}}
+                        </div>
+                    </div>
+                    <!--end::Input group-->
+                    <!--begin::Actions-->
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <span class="indicator-label">Simpan</span>
+                                    <span class="indicator-progress">Please wait...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
@@ -296,23 +288,30 @@
         });
 
         function formatRupiah(amount) {
-            return amount.toString().replace(/[^0-9]/g, '')
-                .replace(/([0-9])([0-9]{3})$/, '$1.$2')
-                .replace(/([0-9])([0-9]{3})\./g, '$1.$2.');
+        return amount.toString().replace(/[^0-9]/g, '')
+            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
         const rentalInput = document.getElementById('rental_price_per_day_display');
         const rentalRawInput = document.getElementById('rental_price_per_day');
 
-        rentalInput.addEventListener('keyup', function() {
-            let value = rentalInput.value;
+        // Ambil data dari blade
+        const rawRentalPrice = @json(old('rental_price_per_day', $car->rental_price_per_day));
 
-            let formattedValue = formatRupiah(value);
-
-            rentalInput.value = formattedValue;
-
-            rentalRawInput.value = value.replace(/[^0-9]/g, '');
+        document.addEventListener('DOMContentLoaded', function () {
+            if (rentalInput && rawRentalPrice) {
+                const formattedValue = formatRupiah(rawRentalPrice);
+                rentalInput.value = formattedValue;
+                rentalRawInput.value = rawRentalPrice;
+            }
         });
+
+        rentalInput.addEventListener('keyup', function () {
+            let value = rentalInput.value.replace(/[^0-9]/g, '');
+            rentalInput.value = formatRupiah(value);
+            rentalRawInput.value = value;
+        });
+
     </script>
 @endpush
 

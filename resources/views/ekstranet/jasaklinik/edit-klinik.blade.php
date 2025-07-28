@@ -47,8 +47,8 @@
                         <!-- Biaya -->
                         <div class="col-md-6">
                             <label for="price" class="form-label required fs-6 fw-semibold mb-2">Biaya</label>
-                            <input type="number" class="form-control form-control-lg" id="price" name="price"
-                                value="{{ old('price', $clinic->price ?? '') }}" required>
+                            <input type="text" class="form-control form-control-lg" id="price" name="price"
+                                value="@currency(old('price', $clinic->price ?? ''))" required>
                         </div>
 
                         <!-- Durasi -->
@@ -114,41 +114,48 @@
 
                         <!-- Existing Images -->
                         @if(isset($clinicImages) && count($clinicImages) > 0)
-                        <div class="col-md-12 mt-4">
-                            <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                            <div class="row">
-                                @foreach($clinicImages as $image)
-                                <div class="col-md-3 mb-3">
-                                    <div class="card">
-                                        <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image">
-                                        <div class="card-body text-center">
-                                            @if($image->main == 1)
-                                                <span class="badge bg-primary">Main Image</span>
-                                            @else
-                                                <span class="badge bg-secondary">Additional Image</span>
-                                            @endif
+                            <div class="col-md-12 mt-4">
+                                <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
+                                <div class="row">
+                                    @foreach($clinicImages as $image)
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card">
+                                            <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image">
+                                            <div class="card-body text-center">
+                                                @if($image->main == 1)
+                                                    <span class="badge bg-primary">Main Image</span>
+                                                @else
+                                                    <span class="badge bg-secondary">Additional Image</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
+                                    @endforeach
                                 </div>
-                                @endforeach
                             </div>
-                        </div>
                         @endif
                         
                         <div id="data-id-service" data-variable="{{ $clinic->categories_services_id ?? '' }}"></div>
                     </div>
                     <!--end::Input group-->
                     <!--begin::Actions-->
-                    <div class="text-end mt-4">
-                        <a href="{{ route('clinics.list') }}" class="btn btn-light me-3">
-                            <span class="indicator-label">Cancel</span>
-                        </a>
-                        <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                            <span class="indicator-label">Update</span>
-                            <span class="indicator-progress">Please wait...
-                                <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                            </span>
-                        </button>
+
+                    <div class="text-center">
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <a href="{{ route('clinics.list') }}" class="btn btn-light w-100 me-3">
+                                    <span class="indicator-label">Batal</span>
+                                </a>
+                                {{-- <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button> --}}
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">
+                                    <span class="indicator-label">Simpan</span>
+                                    <span class="indicator-progress">Please wait...
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <!--end::Actions-->
                 </form>

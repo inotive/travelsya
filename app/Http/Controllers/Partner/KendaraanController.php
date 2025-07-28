@@ -55,7 +55,7 @@ class KendaraanController extends Controller
             'duration' => 'required',
             'description' => 'required',
             // 'policy_id' => 'nullable',
-            'years' => 'nullable',
+            'years' => 'required',
             'number_seats' => 'required',
             'status' => 'required',
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -67,8 +67,8 @@ class KendaraanController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if ($request->hasFile('image_url')) {
-            $image = $request->file('image_url');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('cars', $imageName, 'public');
         } else {
@@ -123,7 +123,7 @@ class KendaraanController extends Controller
             'duration' => 'required',
             'description' => 'required',
             // 'policy_id' => 'nullable',
-            'years' => 'nullable',
+            'years' => 'required',
             'number_seats' => 'required',
             'status' => 'required',
             'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
@@ -135,8 +135,10 @@ class KendaraanController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        if ($request->hasFile('image_url')) {
-            $image = $request->file('image_url');
+        if ($request->hasFile('image')) {
+            $oldImage = $car->image_url;
+            if($oldImage) Storage::delete('cars/' . $car->image_url);
+            $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
             $image->storeAs('cars', $imageName, 'public');
         } else {

@@ -39,9 +39,9 @@
                         <td>{{ 'Rp '.number_format($item->price) ?? '' }}</td>
                         <td>
                             @if ($item->is_active === 1)
-                            <span class="badge badge-success">Aktif</span>
+                                <span class="badge badge-success">Aktif</span>
                             @else
-                            <span class="badge badge-danger">Tidak Aktif</span>
+                                <span class="badge badge-danger">Tidak Aktif</span>
                             @endif
                         </td>
                         <td>

@@ -35,7 +35,7 @@
                                     <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                                         {{ $clinic->name }}
                                         <div class="d-flex justify-content-center align-items-center"
-                                            style="width: 125px; height: auto; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
+                                            style="width: 125px; height: 125px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
                                             <a href="{{ asset('/storage/' . ($clinic->images->first()->image ?? '') ) }}"
                                                 target="_blank">
                                                 <img src="{{ asset('/storage/' . ($clinic->images->first()->image ?? '') ) }}"
@@ -47,7 +47,7 @@
                                 <td class="text-center">{{ $clinic->categoriesService->name ?? 'Kategori tidak ditemukan' }}
                                 </td>
                                 <td class="text-center">{{ $clinic->expiry_date }} Hari</td>
-                                <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }} / {{ $clinic->duration }} Menit</td>
+                                <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }} / <span class="text-capitalize">{{ $clinic->duration_type }}</span></td>
                                 <td class="text-center">
                                     @if ($clinic->is_active === 1)
                                         <span class="badge badge-success">Aktif</span>
@@ -55,28 +55,14 @@
                                         <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
-                                <td class="text-center">
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                        data-kt-menu="true">
-                                        <div class="menu-item px-3">
-                                            <a href="{{ route('clinics.edit', $clinic->id) }}"
-                                                class="menu-link px-3 text-warning">
-                                                Edit
-                                            </a>
-                                        </div>
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal"
-                                                data-kt-customer-table-filter="delete_row"
-                                                data-bs-target="#kt_modal_delete_customer{{ $clinic->id }}">
-                                                Delete
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <a href="#"
-                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        Aksi
-                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                <td>
+                                    <a href="{{ route('clinics.edit', $clinic->id) }}" class="btn btn-sm btn-light-warning btn-icon">
+                                        <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-light-danger btn-icon" data-bs-toggle="modal"
+                                        data-kt-customer-table-filter="delete_row"
+                                        data-bs-target="#kt_modal_delete_customer{{ $clinic->id }}">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -114,9 +100,9 @@
                 </table>
             </div>
             <!--end::Table container-->
-            <div class="d-flex justify-content-center mt-4">
+            {{-- <div class="d-flex justify-content-center mt-4">
                 {{ $clinics->links() }}
-            </div>
+            </div> --}}
         </div>
         <!--end::Body-->
     </div>

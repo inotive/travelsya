@@ -110,7 +110,7 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tahun</label>
-                            <select class="form-control" id="years" name="years">
+                            <select class="form-control" id="years" name="years" required>
                                 <option value="">Pilih Tahun</option>
                                 @php
                                     $currentYear = date('Y');
@@ -167,12 +167,11 @@
                         <div class="col-md-12 mt-4">
                             <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
                             <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="image_url" accept="image/*" required>
-                                <input type="hidden" name="main_image[]" value="1">
-                                <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                                <input type="file" class="form-control" name="image" accept="image/*" required>
+                                {{-- <label class="input-group-text bg-primary text-white">Gambar Utama</label> --}}
                             </div>
-                            <div id="additional-images"></div>
-                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
+                            {{-- <div id="additional-images"></div>
+                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button> --}}
                         </div>
                     </div>
                     <!--end::Input group-->
@@ -180,7 +179,7 @@
                     <div class="text-center">
                         <div class="row">
                             <div class="col-6 mb-2">
-                                <button type="reset" class="btn btn-light w-100" onclick="history.back()">Cancel</button>
+                                <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button>
                             </div>
                             <div class="col-6">
                                 <button type="submit" class="btn btn-primary w-100">
@@ -242,7 +241,6 @@
             $('#additional-images').append(`
                 <div class="input-group mb-3">
                     <input type="file" class="form-control" name="images[]" accept="image/*">
-                    <input type="hidden" name="main_image[]" value="0">
                     <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
                     <button type="button" class="btn btn-danger remove-image">Hapus</button>
                 </div>

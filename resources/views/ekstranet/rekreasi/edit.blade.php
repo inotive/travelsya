@@ -10,7 +10,7 @@
             @method('PUT')
             <!--begin::Heading-->
             <div class="mb-13 text-center">
-                <h1 class="mb-3 mt-10">Tambah Rekreasi</h1>
+                <h1 class="mb-3 mt-10">Edit Rekreasi</h1>
             </div>
             <!--end::Heading-->
 
@@ -28,7 +28,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation_has_packages->price }}" type="number" placeholder="Rp." name="price" required />
+                    <input class="form-control form-control-lg" value="@currency($recreation_has_packages->price)" type="text" id="harga" placeholder="Rp." name="price" required />
                     @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -126,7 +126,7 @@
                     </span>
                     @enderror
                 </div>
-                
+
                 <!-- Existing Images -->
                 @if(isset($recreation_has_packages->images) && count($recreation_has_packages->images) > 0)
                 <div class="col-md-12 mt-4">
@@ -135,7 +135,7 @@
                         @foreach($recreation_has_packages->images as $image)
                         <div class="col-md-3 mb-3">
                             <div class="card">
-                                <img src="{{ asset('storage/' . $image->image_path) }}" class="card-img-top" alt="Image">
+                                <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Image">
                                 <div class="card-body text-center">
                                     @if($image->main == 1)
                                         <span class="badge bg-primary">Gambar Utama</span>
@@ -169,7 +169,7 @@
             <div class="text-center">
                 <div class="row">
                     <div class="col-6 mb-2">
-                        <button type="reset" class="btn btn-light w-100" onclick="history.back()">Cancel</button>
+                        <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button>
                     </div>
                     <div class="col-6">
                         <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">
@@ -223,6 +223,29 @@
         // Handle removing additional images
         $(document).on('click', '.remove-image', function() {
             $(this).closest('.input-group').remove();
+        });
+
+        function formatRupiah(angka, prefix) {
+            angka = angka.toString().replace(/[^,\d]/g, '');
+            const split = angka.split(',');
+            const sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            if (ribuan) {
+                const separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix !== undefined ? prefix + rupiah : rupiah;
+        }
+
+
+        $('#harga').on('input', function () {
+            let input = $(this).val();
+            let formatted = formatRupiah(input, 'Rp. ');
+            $(this).val(formatted);
         });
     });
 </script>

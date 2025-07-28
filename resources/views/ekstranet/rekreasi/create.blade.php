@@ -58,9 +58,9 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
-                    <input class="form-control form-control-lg" id="expiry" type="number" name="expiry" placeholder="Masa Berlaku" required />
-                    @error('expiry')
+                    <label for="expiry_date" class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
+                    <input class="form-control form-control-lg" id="expiry_date" type="number" name="expiry_date" placeholder="Masa Berlaku" required />
+                    @error('expiry_date')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -127,6 +127,16 @@
         </form>
     </div>
 </div>
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

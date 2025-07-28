@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\CategoryRecreation;
 use App\Models\Recreation;
 use App\Models\RecreationPackages;
+use App\Models\RecreationPackagesImages;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 use function Laravel\Prompts\table;
 
@@ -107,15 +109,15 @@ class RecreationController extends Controller
         //     ->get();
 
         $data = RecreationPackages::with(['recreation.categoryRecreation'])
-    ->whereHas('recreation', function ($query) {
-        $query->where('user_id', Auth::id());
-    })
-    ->get()
-    ->map(function ($item) {
-        $item->category_name = $item->recreation->categoryRecreation->name ?? null;
-        $item->business_name = $item->recreation->business_name ?? null;
-        return $item;
-    });
+            ->whereHas('recreation', function ($query) {
+                $query->where('user_id', Auth::id());
+            })
+            ->get()
+            ->map(function ($item) {
+                $item->category_name = $item->recreation->categoryRecreation->name ?? null;
+                $item->business_name = $item->recreation->business_name ?? null;
+                return $item;
+            });
 
         // dd($data);
 
@@ -186,44 +188,71 @@ class RecreationController extends Controller
             'description' => 'required|string',
             'duration' => 'required|string|max:255',
             'unit_price' => 'required|string|max:255',
-            'expiry' => 'required|numeric',
+            'expiry_date' => 'required|numeric',
             'expiry_type' => 'required|string|in:Hari,Jam',
             'price' => 'required',
             'is_active' => 'required|boolean',
         ]);
 
-        $recreationId = $request->input('recreation_id');
+        DB::beginTransaction();
 
-        $categoryRecreation = DB::table('category_recreations')
-            ->where('id', $recreationId)
-            ->first();
+        try {
 
-        $price = (int) preg_replace('/[^\d]/', '', $request->price);
+            $recreationId = $request->input('recreation_id');
 
-        DB::table('recreation_has_packages')->insert([
-            'recreation_id' => $recreationId,
-            'category_recreation_id' => $categoryRecreation->id,
-            'name' => $request->name,
-            'rules' => $request->rules,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'expiry_date' => $request->expiry,
-            'expiry_type' => $request->expiry_type,
-            'unit_price' => $request->unit_price,
-            'price' => $price, 
-            'is_active' => $request->is_active,
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
-        ]);
+            $categoryRecreation = DB::table('category_recreations')
+                ->where('id', $recreationId)
+                ->first();
 
+            $price = (int) preg_replace('/[^\d]/', '', $request->price);
+
+            $request['category_recreation_id'] = $categoryRecreation->id;
+            $request['price'] = $price;
+
+            $recreation = RecreationPackages::create($request->all());
+
+            // Handle multiple image uploads
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $key => $image) {
+                    $imagePath = $image->store('images/recreation_package_images', 'public');
+                    
+                    // Set the first image as main image
+                    $isMain = ($key === 0) ? 1 : 0;
+                    
+                    // Get the ID explicitly to avoid undefined property error
+                    $recreationId = $recreation->id ?? null;
+                    
+                    RecreationPackagesImages::create([
+                        'recreation_package_id' => $recreationId,
+                        'image' => $imagePath,
+                        'main' => $isMain
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('partner.daftar-rekreasi')
+                ->with('success', 'Berhasil menambahkan rekreasi!');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Gagal menambah rekreasi!'])
+                ->withInput();
+        }
+        
         return redirect()->route('partner.daftar-rekreasi')->with('success', 'Data berhasil ditambahkan!');
     }
 
 
     public function edit($id)
     {
-        $recreation_has_packages = DB::table('recreation_has_packages')->where('id', $id)->first();
+        $recreation_has_packages = RecreationPackages::with('images')
+            ->findOrFail($id);
 
+        // DB::table('recreation_has_packages')->where('id', $id)->first();
         if (!$recreation_has_packages) {
             return redirect()->route('rekreasi.index')->with('error', 'Rekreasi tidak ditemukan.');
         }
@@ -237,7 +266,7 @@ class RecreationController extends Controller
         $recreations = DB::table('recreations')
             ->where('user_id', Auth::id())
             ->get();
-
+        // dd($recreation_has_packages->images);
         return view('ekstranet.rekreasi.edit', compact('recreation_has_packages', 'category', 'expiryTypes', 'recreations'));
     }
 
@@ -252,33 +281,49 @@ class RecreationController extends Controller
             'expiry' => 'required|numeric',
             'expiry_type' => 'required|string|in:Hari,Jam',
             'unit_price' => 'required|string',
-            'price' => 'required|numeric',
+            'price' => 'required',
             'is_active' => 'required|boolean',
             'recreation_id' => 'required|exists:recreations,id',
         ]);
 
-        $recreation = DB::table('recreations')->where('id', $request->recreation_id)->first();
+        DB::beginTransaction();
 
-        if (!$recreation) {
-            return redirect()->route('partner.daftar-rekreasi')->with('error', 'Rekreasi tidak valid.');
+        try {
+            $recreationPackage = RecreationPackages::with('images')->findOrFail($id);
+            // Handle multiple image uploads
+            if ($request->hasFile('images')) {
+                if(count($recreationPackage->images) > 0) {
+                    foreach($recreationPackage->images as $image) {
+                        Storage::delete($image->image);
+                        $image->delete();
+                    }
+                }
+                foreach ($request->file('images') as $key => $image) {
+                    $imagePath = $image->store('images/recreation_package_images', 'public');
+                        
+                    // Set the first image as main image
+                    $isMain = ($key === 0) ? 1 : 0;
+                        
+                    RecreationPackagesImages::create([
+                        'recreation_package_id' => $id,
+                        'image' => $imagePath,
+                        'main' => $isMain
+                    ]);
+                }
+            }
+            $price = (int) preg_replace('/[^\d]/', '', $request->price);
+            $request['price'] = $price;
+            $recreationPackage->update($request->all());
+
+            DB::commit();
+            return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()
+                ->back()
+                ->withErrors(['error' => 'Gagal mengubah rekreasi!'])
+                ->withInput();
         }
-
-        DB::table('recreation_has_packages')->where('id', $id)->update([
-            'recreation_id' => $request->recreation_id,
-            'category_recreation_id' => $recreation->category_recreation_id,
-            'name' => $request->name,
-            'rules' => $request->rules,
-            'description' => $request->description,
-            'duration' => $request->duration,
-            'expiry_date' => $request->expiry,
-            'expiry_type' => $request->expiry_type,
-            'unit_price' => $request->unit_price,
-            'price' => $request->price,
-            'is_active' => $request->is_active,
-            'updated_at' => Carbon::now(),
-        ]);
-
-        return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
     }
 
     public function reservation(Request $request)
@@ -293,13 +338,27 @@ class RecreationController extends Controller
     }
 
     public function destroy($id) {
-        $recreation = DB::table('recreation_has_packages')->where('id', $id)->first();
 
-        if ($recreation) {
-            DB::table('recreation_has_packages')->where('id', $id)->delete();
+        DB::beginTransaction();
+        try {
+            $recreationPackage = RecreationPackages::with('images')->findOrFail($id);
+        
+            if(count($recreationPackage->images) > 0) {
+                foreach($recreationPackage->images as $image) {
+                    Storage::delete($image->image);
+                    $image->delete();
+                }
+            }
+            $recreationPackage->delete();
+
+            DB::commit();
+
             return response()->json(['success' => 'Recreation package deleted successfully']);
-        } else {
-            return response()->json(['message' => 'Data not found'], 404);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => 'Failed to delete recreation package']);
         }
+        
+
     }
 }
