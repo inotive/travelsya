@@ -185,10 +185,10 @@
                                 <div class="col-md-4 col-sm-12 justify-content-center">
                                     <div class="child-item-menubar">
                                         <img src="{{ asset('assets/media/products-categories/icon-bus.png') }}"
-                                            style="filter: grayscale(1)" class="w-40px" />
+                                            style="filter: grayscale(0)" class="w-40px" />
                                     </div>
                                 </div>
-                                <span class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600 text-gray-300">Bus
+                                <span class="col-md-8 col-sm-12 fw-bold fs-6 item-label text-gray-600">Bus
                                     & Travel</span>
                             </div>
                         </a>

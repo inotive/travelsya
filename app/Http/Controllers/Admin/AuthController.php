@@ -25,17 +25,18 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
+
             // Debug logging
             \Log::info('User authenticated: ' . auth()->user()->email . ' with role: ' . auth()->user()->role);
-            
+
             if (auth()->user()->role == 1) {
                 \Log::info('Redirecting to partner dashboard');
                 return redirect()->route('partner.dashboard');
             }
-
-            \Log::info('Redirecting to admin dashboard');
-            return redirect()->intended('admin/dashboard');
+            if (auth()->user()->role == 2) {
+                \Log::info('Redirecting to admin dashboard');
+                return redirect()->intended('admin/dashboard');
+            }
         }
 
         return back()->withErrors([
@@ -53,7 +54,4 @@ class AuthController extends Controller
 
         return redirect()->route('admin.login');
     }
-
-
-
 }

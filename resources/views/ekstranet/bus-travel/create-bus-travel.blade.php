@@ -14,6 +14,24 @@
 
                 <div class="form-row">
                     <div class="form-group">
+                        <label class="required fs-6 fw-semibold mb-2">Bisnis Bus & Travel</label>
+                        <select class="form-control" id="bus_travel_id" name="bus_travel_id" required>
+                            <option value="">Pilih Bisnis Bus & Travel</option>
+                            @foreach($bus_travel as $bt)
+                                <option value="{{ $bt->id }}">{{ $bt->business_name }}</option>
+                            @endforeach
+                        </select>
+
+                        @error('bus_travel_id')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text" class="form-control form-control-lg" id="name" name="name"
                             placeholder="Masukkan Nama" />

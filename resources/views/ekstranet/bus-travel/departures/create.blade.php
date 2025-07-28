@@ -1,0 +1,159 @@
+@extends('ekstranet.layout', [
+    'title' => 'Kelola Jadwal Kedatangan',
+    'url' => route('ekstranet.bus-travel.departures.index'),
+    'subTitle' => 'Tambah Data',
+])
+
+@section('content')
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <div class="toolbar" id="kt_toolbar">
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Tambah Jadwal Keberangkatan</h1>
+                    <span class="h-20px border-gray-200 border-start mx-4"></span>
+                    <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+                        <li class="breadcrumb-item text-muted">
+                            <a href="{{ route('partner.dashboard') }}" class="text-muted text-hover-primary">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="bullet bg-gray-200 w-5px h-2px"></span>
+                        </li>
+                        <li class="breadcrumb-item text-muted">
+                            <a href="{{ route('partner.bus.departures') }}" class="text-muted text-hover-primary">Jadwal
+                                Keberangkatan</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <span class="bullet bg-gray-200 w-5px h-2px"></span>
+                        </li>
+                        <li class="breadcrumb-item text-dark">Tambah Jadwal</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <div id="kt_content_container" class="container-xxl">
+                <div class="card">
+                    <div class="card-header border-0 pt-6">
+                        <div class="card-title">
+                            <h3 class="card-title align-items-start flex-column">
+                                <span class="card-label fw-bolder fs-3 mb-1">Form Tambah Jadwal Keberangkatan</span>
+                                <span class="text-muted mt-1 fw-bold fs-7">Isi data jadwal keberangkatan dengan benar</span>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
+                        @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                        @endif
+                        <form action="{{ route('partner.bus.departures.store') }}" method="POST">
+                            @csrf
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Bus</label>
+                                <div class="col-lg-8 fv-row">
+                                    <select name="bus_travel_has_bus_id"
+                                        class="form-select form-select-solid form-select-lg" required>
+                                        <option value="">Pilih Bus</option>
+                                        @foreach ($buses as $id => $name)
+                                            <option value="{{ $id }}"
+                                                {{ old('bus_travel_has_bus_id') == $id ? 'selected' : '' }}>
+                                                {{ $name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Kota Keberangkatan</label>
+                                <div class="col-lg-8 fv-row">
+                                    <select name="from_route_id" class="form-select form-select-solid form-select-lg"
+                                        required>
+                                        <option value="">Pilih Kota Keberangkatan</option>
+                                        @foreach ($routes as $id => $name)
+                                            <option value="{{ $id }}"
+                                                {{ old('from_route_id') == $id ? 'selected' : '' }}>{{ $name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Kota Tujuan</label>
+                                <div class="col-lg-8 fv-row">
+                                    <select name="to_route_id" class="form-select form-select-solid form-select-lg"
+                                        required>
+                                        <option value="">Pilih Kota Tujuan</option>
+                                        @foreach ($routes as $id => $name)
+                                            <option value="{{ $id }}"
+                                                {{ old('to_route_id') == $id ? 'selected' : '' }}>{{ $name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Waktu Keberangkatan</label>
+                                <div class="col-lg-8 fv-row">
+                                    <input type="time" name="departure_time"
+                                        class="form-control form-control-lg form-control-solid"
+                                        value="{{ old('departure_time') }}" required />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Durasi Perjalanan (Jam)</label>
+                                <div class="col-lg-8 fv-row">
+                                    <input type="number" name="duration"
+                                        class="form-control form-control-lg form-control-solid"
+                                        placeholder="Masukkan durasi perjalanan dalam jam" value="{{ old('duration') }}"
+                                        min="1" required />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Harga Tiket (Rp)</label>
+                                <div class="col-lg-8 fv-row">
+                                    <input type="number" name="price"
+                                        class="form-control form-control-lg form-control-solid"
+                                        placeholder="Masukkan harga tiket" value="{{ old('price') }}" min="1000"
+                                        required />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Hari Operasional</label>
+                                <div class="col-lg-8 fv-row">
+                                    <select name="days" class="form-select form-select-solid form-select-lg" required>
+                                        <option value="">Pilih Hari Operasional</option>
+                                        <option value="1" {{ old('days') == 1 ? 'selected' : '' }}>Senin</option>
+                                        <option value="2" {{ old('days') == 2 ? 'selected' : '' }}>Selasa</option>
+                                        <option value="3" {{ old('days') == 3 ? 'selected' : '' }}>Rabu</option>
+                                        <option value="4" {{ old('days') == 4 ? 'selected' : '' }}>Kamis</option>
+                                        <option value="5" {{ old('days') == 5 ? 'selected' : '' }}>Jumat</option>
+                                        <option value="6" {{ old('days') == 6 ? 'selected' : '' }}>Sabtu</option>
+                                        <option value="7" {{ old('days') == 7 ? 'selected' : '' }}>Minggu</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-6">
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-8">
+                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <a href="{{ route('partner.bus.departures') }}" class="btn btn-secondary">Batal</a>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
