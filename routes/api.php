@@ -69,6 +69,9 @@ route::get('/hotel/room/{id}', [HotelController::class, 'room']);
 route::get('/recreation', [RecreationController::class, 'list2']);
 route::get('/recreation_by_category/{id}', [RecreationController::class, 'recreation_by_category']);
 route::get('/recreation_detail/{id}', [RecreationController::class, 'detail_recreations']);
+route::get('/recreation_booking/{id}', [RecreationController::class, 'booking']);
+
+
 route::get('/recreation_search', [RecreationController::class, 'search']);
 
 // Health Beauty

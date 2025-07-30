@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helpers\ResponseFormatter;
 use App\Models\CategoryRecreation;
+use App\Models\City;
 use App\Models\detailTransactionRecreation;
 use App\Models\Fee;
 use App\Models\Recreation;
@@ -20,6 +21,7 @@ use App\Services\Xendit;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\Exception;
 use Throwable;
@@ -41,6 +43,7 @@ class RecreationController extends Controller
             'package_id' => 'required',
             'bintang' => 'required',
             'transaction_id' => 'required',
+            'comment' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -59,7 +62,7 @@ class RecreationController extends Controller
             'recreation_packages_id' => $request->package_id,
             'users_id'      => auth()->id(),
             'rate'          => $request->bintang,
-            'comment'       => $request->review,
+            'comment'       => $request->comment,
         ]);
 
         return ResponseFormatter::success([], 'Review Rekreasi Telah Berhasil Dikirim');
@@ -312,50 +315,149 @@ class RecreationController extends Controller
         return ResponseFormatter::success($newData, 'Data successfully loaded');
     }
 
-    public function recreation_by_category($id)
+    public function recreation_by_category(Request $request, $id)
     {
+
+        $searchCity = City::when($request->filled('city'), function ($query) use ($request) {
+            $query->where('city_name', 'like', '%' . $request->city . '%')->get();
+
+        });
+
         $category = CategoryRecreation::select('id')->findOrFail($id);
-        $recreations = Recreation::active()->where('category_recreation_id', $category->id)->with(['reviews', 'kota'])->get();
+        $recreations = Recreation::active()->select('id', 'business_name', 'city')
+            ->where('category_recreation_id', $category->id)
+            ->when($request->filled('business_name'), function ($query) use ($request) {
+                $query->where('business_name', 'like', '%' . $request->business_name . '%');
+            })
+            ->when($request->filled('city'), function ($query) use ($searchCity) {
+                $query->whereIn('city', $searchCity->pluck('city_id'));
+            })
+            ->when($request->filled('price'), function ($query) use ($request) {
+                $query->whereHas('recreationPackages', function ($query) use ($request) {
+                    $query->where('price', 'like', '%' . $request->price . '%');
+                });
+            })
+            ->get();
+
+            foreach($recreations as $recreation) {
+                $city = City::where('city_id', $recreation->city)
+                    ->first();
+                $recreation->city = $city->city_name;
+
+                $recreation['price'] = $recreation->recreationPackages()->min('price');
+                $latestPackage = $recreation->recreationPackages()
+                    ->latest()
+                    ->with(['images' => function($query) {
+                        $query->where('main', 1);
+                    }])
+                    ->first();
+
+                $recreation['image'] = optional($latestPackage->images->first())->image;
+                $recreation['rating'] = $recreation->avgRating();
+            }
             
         return ResponseFormatter::success($recreations, 'Data successfully loaded');
-        // return ResponseFormatter::error([], 'Category not found');
     }
 
-    public function detail_recreations($id)
+    public function detail_recreations($id) 
     {
-        $recreation = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
+            $recreation = Recreation::
+            // select('id', 'category_recreation_id', 'business_name', 'description', 'open', 'close', 'lat', 'ltd')
+                with([
+                    // 'recreationPackages' => function ($query) {
+                    //     $query->select('id', 'recreation_id', 'name', 'description', 'price');
+                    // },
+                    'recreationPackages.images',
+                    'reviews' => function ($query) {
+                        $query->select('id', 'recreation_id', 'users_id', 'rate', 'comment')
+                            ->with(['user' => function ($query) {
+                                $query->select('id', 'name', 'image');
+                            }]);
+                    }
+                    ])
+            ->findOrFail($id);
 
-        if ($recreation) {
-            $images = $recreation['images'];
-            $newImages = [];
-            foreach ($images as $key => $value) {
-                $img = asset('storage/' . $value['image']);
-                array_push($newImages, $img);
+            $images = $recreation->recreationPackages
+                ->flatMap(function ($package) {
+                    return $package->images->pluck('image');
+                })->values();
+            
+            $recreation['category'] = $recreation->categoryRecreation->name;
+            $recreation['city'] = City::where('city_id', $recreation->city)->value('city_name');
+            $recreation['avg_rating'] = $recreation->avgRating();
+            $recreation['image'] = $images;
+
+            // $recreation = collect($recreation)->except(['category_recreation']);
+
+            $packages = [];
+
+            foreach($recreation->recreationPackages as $package) {
+                $item = [
+                    'id' => $package->id,
+                    'name' => $package->name,
+                    'name' => $package->name,
+                    'price' => $package->price,
+                ];
+
+                array_push($packages, $item);
             }
-            $item = [
-                'recreation_id' => $recreation['id'],
-                'service' => 'recreation',
-                'category' => $recreation['category']['name'] ?? 'invalid category',
-                'user' => $recreation['user']['name'] ?? 'invalid user',
-                'name' => $recreation['business_name'],
-                'description' => $recreation['description'],
-                'buka' => $recreation['open'],
-                'tutup' => $recreation['close'],
-                'city' => $recreation['kota']['city_name'] ?? 'Kota dihapus',
-                'address' => $recreation['address'],
-                'latitude' => $recreation['lat'],
-                'longitude' => $recreation['ltd'],
-                'rating_count' => count($recreation['reviews']),
+
+            $data = [
+                'id' => $recreation->id,
+                'business_name' => $recreation->business_name,
+                'description' => $recreation->description,
+                'open' => $recreation->open,
+                'close' => $recreation->close,
+                'lat' => $recreation->lat,
+                'ltd' => $recreation->ltd,
+                'category' => $recreation->categoryRecreation->name,
+                'city' => City::where('city_id', $recreation->city)->value('city_name'),
+                'packages' => $packages,
                 'avg_rating' => $recreation->avgRating(),
-                'images' => $newImages,
-                'packages' => $recreation['recreationPackages'],
-                'comments' => $recreation['reviews']
+                'total_rating' => $recreation->reviews->count(),
+                'reviews' => $recreation->reviews,
+                'images' => $images,
             ];
 
-            return ResponseFormatter::success($item, 'Data successfully loaded');
-        } else {
-            return ResponseFormatter::error([], 'Recreation not found');
-        }
+            return ResponseFormatter::success($data, 'Data successfully loaded');
+
+        // if ($recreation) {
+        //     $images = $recreation['images'];
+        //     $newImages = [];
+        //     foreach ($images as $key => $value) {
+        //         $img = asset('storage/' . $value['image']);
+        //         array_push($newImages, $img);
+        //     }
+        //     $item = [
+        //         'recreation_id' => $recreation['id'],
+        //         'service' => 'recreation',
+        //         'category' => $recreation['category']['name'] ?? 'invalid category',
+        //         'user' => $recreation['user']['name'] ?? 'invalid user',
+        //         'name' => $recreation['business_name'],
+        //         'description' => $recreation['description'],
+        //         'buka' => $recreation['open'],
+        //         'tutup' => $recreation['close'],
+        //         'city' => $recreation['kota']['city_name'] ?? 'Kota dihapus',
+        //         'address' => $recreation['address'],
+        //         'latitude' => $recreation['lat'],
+        //         'longitude' => $recreation['ltd'],
+        //         'rating_count' => count($recreation['reviews']),
+        //         'avg_rating' => $recreation->avgRating(),
+        //         'images' => $newImages,
+        //         'packages' => $recreation['recreationPackages'],
+        //         'comments' => $recreation['reviews']
+        //     ];
+
+        //     return ResponseFormatter::success($item, 'Data successfully loaded');
+        // } else {
+        //     return ResponseFormatter::error([], 'Recreation not found');
+        // }
+    }
+
+    public function booking($id)
+    {
+        $packages = RecreationPackages::select('id', 'name', 'description', 'price')->findOrFail($id);
+        return ResponseFormatter::success($packages, 'Data successfully loaded');
     }
 
     // new list

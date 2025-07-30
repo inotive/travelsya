@@ -135,7 +135,7 @@
                         @foreach($recreation_has_packages->images as $image)
                         <div class="col-md-3 mb-3">
                             <div class="card">
-                                <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Image">
+                                <img src="{{ $image->image }}" class="card-img-top" alt="Image">
                                 <div class="card-body text-center">
                                     @if($image->main == 1)
                                         <span class="badge bg-primary">Gambar Utama</span>
