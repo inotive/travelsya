@@ -213,4 +213,10 @@
             });
         }
     });
+
+    $(document).ready(function() {
+        $('#categories_services_id').select2({
+            tags: true
+        });
+    });
 </script>

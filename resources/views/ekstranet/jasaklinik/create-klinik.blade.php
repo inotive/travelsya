@@ -41,7 +41,7 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                            <select class="form-control" name="categories_services_id" required>
+                            <select class="form-control" name="categories_services_id" id="categories_services_id" required>
                                 @foreach ($categories as $category)
                                     <option value="{{ $category->id }}" {{ old('categories_services_id') === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                                 @endforeach
@@ -188,6 +188,12 @@
             let input = $(this).val();
             let formatted = formatRupiah(input, 'Rp. ');
             $(this).val(formatted);
+        });
+
+        $(document).ready(function() {
+            $('#categories_services_id').select2({
+                tags: true
+            });
         });
     </script>
 @endpush

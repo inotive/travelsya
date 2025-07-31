@@ -7,6 +7,7 @@ use App\Models\Clinic;
 use App\Models\City;
 use App\Models\ClinicHasPackages;
 use App\Models\ClinicPackageImages;
+use App\Models\Service;
 use App\Models\Specialist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -60,11 +61,11 @@ class ClinicHasPackageController extends Controller
 
     public function store(Request $request)
     {
-        //dd($request->all());
+        dd($request);
 
         $request->validate([
             'clinic_id' => 'required|integer',
-            'categories_services_id' => 'required|integer',
+            'categories_services_id' => 'required',
             'specialist_id' => 'required|integer',
             'name' => 'required|string|max:255',
             'rules' => 'required|string|max:255',
@@ -83,6 +84,16 @@ class ClinicHasPackageController extends Controller
         DB::beginTransaction();
         try {
             $price = (int) preg_replace('/[^\d]/', '', $request->price);
+
+
+
+            if(is_string($request->categories_services_id)) {
+                $existingService  = CategoriesServices::where('name', $request->categories_services_id)->first();
+                if(!$existingService) {
+                    $newService = CategoriesServices::create(['name' => $request->categories_services_id]);
+                    $request['categories_services_id'] = $newService->id;
+                }
+            }
 
             $clinic = new ClinicHasPackages();
             $clinic->clinic_id = $request->input('clinic_id');
@@ -128,7 +139,7 @@ class ClinicHasPackageController extends Controller
 
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'Failed to add clinic service. Please try again.'])
+                ->withErrors(['error' => 'Failed to add clinic service. Please try again.', 'e' => $e->getMessage()])
                 ->withInput();
         }
 
@@ -141,7 +152,7 @@ class ClinicHasPackageController extends Controller
     {
 
         // Validasi input
-        $validatedData = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'categories_services_id' => 'required', // Memastikan kategori yang dipilih ada
             'clinic_id' => 'nullable', // Memastikan klinik yang dipilih ada
@@ -165,6 +176,14 @@ class ClinicHasPackageController extends Controller
             }
 
             $price = (int) preg_replace('/[^\d]/', '', $request->price);
+
+            if(is_string($request->categories_services_id)) {
+                $existingService  = CategoriesServices::where('name', $request->categories_services_id)->first();
+                if(!$existingService) {
+                    $newService = CategoriesServices::create(['name' => $request->categories_services_id]);
+                    $request['categories_services_id'] = $newService->id;
+                }
+            }
 
             // Update data klinik setelah validasi
             $clinic->update([
