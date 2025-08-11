@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\General;
 use App\Helpers\ResponseFormatter;
 use App\Models\BusBooked;
+use App\Models\BusCostumerHasChair;
 use App\Models\BusDeparture;
 use App\Models\BusRoute;
 use App\Models\BusTravels;
@@ -30,6 +31,53 @@ class BusTravelController extends Controller
     {
         $this->xendit = $xendit;
         $this->point = $point;
+    }
+
+    public function search_ajax(request $request){
+        $find = '%' . $request->name . '%';
+
+        $buses = BusDeparture::with('busTravel', 'from', 'to')->whereHas('busTravel', function($q) use($find) {
+            $q->whereHas('busTravel', function($b) use ($find){
+                $b->where('business_name', 'like', $find);
+            });
+        })->get();
+
+        $date = Carbon::now()->format('d-m-Y H:i');
+
+        $result = null;
+        foreach ($buses as $key => $bus) {
+            $img = isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
+            $result = $result . '<a href="' .
+                                route('bus_travel.detail', ['departure_id' => $bus['id'],
+                                    'kota_awal' => ($bus['from']['name'] ?? null),
+                                    'kota_tujuan' => ($bus['to']['name'] ?? null),
+                                    'is_pulang_pergi' => 0,
+                                    'jumlah_penumpang' => 1,
+                                    'date_pergi' => date('d-m-Y', strtotime(now())),
+                                    'date_pulang' => null]
+                                    )
+
+
+                                    .'" class="d-flex w-100 flex-stack">
+
+                                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+
+                                        <div class="flex-grow-1 me-2">
+
+                                            <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
+                                                . ($bus['from']['name'] ?? 'Invalid Route') . ' -> ' . ($bus['to']['name'] ?? 'Invalid Route') .
+                                            '</span>
+
+                                            <span class="text-muted fw-semibold d-block fs-7">
+                                                ' . ($bus['busTravel']['busTravel']['business_name'] ?? 'Invalid bus') . '
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <hr>' ;
+        }
+
+        return $result;
     }
 
     public function index()
@@ -248,12 +296,15 @@ class BusTravelController extends Controller
         $data['date_pulang'] = $date_pulang;
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
+        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->where('is_active', 1)->orderBy('kursi_pergi')->get();
+        // dd($data['departure']->busTravel->number_seats%2);
 
         return view('pagesv2.bus_travel.detail', $data);
     }
 
     public function order(Request $request)
     {
+        // dd($request);
         $user = auth()->user();
 
         if (!$user) {
@@ -268,6 +319,10 @@ class BusTravelController extends Controller
         $data['jumlah_penumpang'] = $param['jumlah_penumpang'];
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
+        $data['is_order'] = 1;
+        for ($i=1; $i <= $param['jumlah_penumpang']; $i++) {
+            $data['kursi_penumpang_'.$i] = $param['kursi_penumpang_'.$i];
+        }
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
         $data['user'] = $user;
@@ -275,12 +330,31 @@ class BusTravelController extends Controller
         $service = Service::where('name', 'bus-travel')->first();
 
         $data['service_id'] = $service->id;
+        $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $param['departure_id'])->where('date_pergi', $param['date_pergi'])->where('is_active', 1)->orderBy('kursi_pergi')->get();
+
+        // dd($data);
 
         return view('pagesv2.bus_travel.order', $data);
     }
 
     public function request_transaction(Request $request)
     {
+        for ($i=1; $i < $request->jumlah_penumpang; $i++) {
+            $data_kursi = [
+                'id_costumer' => auth()->user()->id,
+                'id_departure' => $request->ticket_pergi_id,
+                'penumpang_ke' => $i,
+                'is_pulang_pergi' => $request->is_pulang_pergi,
+                'date_pergi' => $request->date_pergi,
+                'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
+                'kursi_pergi' => $request->{"kursi_penumpang_$i"},
+                'kursi_pulang' => '',
+            ];
+
+            BusCostumerHasChair::create($data_kursi);
+        }
+
+
         $validator = Validator::make($request->all(), [
             'service' => 'required|string',
             'payment' => 'required|string',

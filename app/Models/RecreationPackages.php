@@ -28,6 +28,8 @@ class RecreationPackages extends Model
         "is_active",
         "is_refundable",
         "is_reschedule",
+        "has_weekend",
+        "weekend_price",
     ];
 
     /**

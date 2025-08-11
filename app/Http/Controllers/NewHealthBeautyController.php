@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseFormatter;
+use App\Models\CarRentalHasCars;
 use App\Models\CategoriesServices;
 use App\Models\Clinic;
 use App\Models\ClinicHasPackages;
@@ -28,6 +29,49 @@ class NewHealthBeautyController extends Controller
     {
         $this->xendit = $xendit;
         $this->point = $point;
+    }
+
+    public function search_ajax(request $request){
+        $find = '%' . $request->name . '%';
+
+        $clinics = ClinicHasPackages::with('clinic')->whereHas('clinic', function($q) use($find) {
+            $q->where('clinic_name', 'like', $find);
+        })->get();
+
+        $date = Carbon::now()->format('d-m-Y H:i');
+
+        $result = null;
+        foreach ($clinics as $key => $clinic) {
+            $img = isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
+            $result = $result . '<a href="' .
+                                    route('health_beauty.detail', [
+                                        'lokasi' => ($clinic->clinic->kota->city_name ?? '-'),
+                                        'clinic' => $clinic->clinic, 'id' => $clinic->clinic_id]
+                                        )
+
+
+                                    .'" class="d-flex w-100 flex-stack">
+
+                                    <img src="' . $img .'" class="me-4 w-50px" style="border-radius: 4px" alt="">
+
+                                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+
+                                        <div class="flex-grow-1 me-2">
+
+                                            <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
+                                                . ($clinic->name) .
+                                            '</span>
+
+                                            <span class="text-muted fw-semibold d-block fs-7">
+                                                ' . $clinic->clinic->clinic_name . ' - ' . $clinic->clinic->kota->city_name .'
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <hr>' ;
+        }
+
+        return $result;
     }
 
     public function category($id){

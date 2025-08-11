@@ -163,7 +163,7 @@
                                 <div class="card border border-dark rounded-4">
                                     <img src="{{ asset($model->carModel->image) }}" class="card-img-top-rounded"
                                         alt="..."
-                                        onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                                        onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
                                     <div class="card-body">
                                         <div class="card-content">
                                             <div class="lokasi d-flex justify-content-center">

@@ -7,33 +7,35 @@
                         data-bs-toggle="collapse" data-bs-target="#paket-collapse-2" aria-expanded="true"
                         aria-controls="paket-collapse-2">
                         <div class="d-flex flex-column">
-                            <h2 class="mb-25px text-secondary">{{ $package->description }} ({{ $weektype }})
+                            <h2 class="mb-25px text-secondary">{{ $package->name }} @if ($weektype != 'weekend')
+                                    (Weekend)
+                                @endif
                             </h2>
                             <div class="d-flex flex-column mb-25px">
                                 @if ($package->is_refundable == 1)
-                                <div class="d-flex flex-row align-items-center mb-2 fs-3">
-                                    <span class="fa-solid fa-money-bill text-secondary"></span>
-                                    <span class="ms-3 text-secondary">Bisa 100% refund dengan auransi
-                                        (Asuransi
-                                        tersedia dengan biaya tambahan)</span>
-                                </div>
+                                    <div class="d-flex flex-row align-items-center mb-2 fs-3">
+                                        <span class="fa-solid fa-money-bill text-secondary"></span>
+                                        <span class="ms-3 text-secondary">Bisa 100% refund dengan auransi
+                                            (Asuransi
+                                            tersedia dengan biaya tambahan)</span>
+                                    </div>
                                 @else
-                                <div class="d-flex flex-row align-items-center mb-2 fs-3">
-                                    <span class="fa-solid fa-money-bill text-secondary"></span>
-                                    <span class="ms-3 text-secondary">Tidak dapat di refund</span>
-                                </div>
+                                    <div class="d-flex flex-row align-items-center mb-2 fs-3">
+                                        <span class="fa-solid fa-money-bill text-secondary"></span>
+                                        <span class="ms-3 text-secondary">Tidak dapat di refund</span>
+                                    </div>
                                 @endif
 
                                 @if ($package->is_reschedule == 1)
-                                <div class="d-flex flex-row align-items-center mb-2 fs-3">
-                                    <span class="fa-solid fa-calendar text-secondary"></span>
-                                    <span class="ms-3 text-secondary">Bisa di re-schedule</span>
-                                </div>
+                                    <div class="d-flex flex-row align-items-center mb-2 fs-3">
+                                        <span class="fa-solid fa-calendar text-secondary"></span>
+                                        <span class="ms-3 text-secondary">Bisa di re-schedule</span>
+                                    </div>
                                 @else
-                                <div class="d-flex flex-row align-items-center mb-2 fs-3">
-                                    <span class="fa-solid fa-calendar text-secondary"></span>
-                                    <span class="ms-3 text-secondary">Tidak dapat di re-schedule</span>
-                                </div>
+                                    <div class="d-flex flex-row align-items-center mb-2 fs-3">
+                                        <span class="fa-solid fa-calendar text-secondary"></span>
+                                        <span class="ms-3 text-secondary">Tidak dapat di re-schedule</span>
+                                    </div>
                                 @endif
                                 <span class="text-2 text-secondary fw-bold fs-2">Detail</span>
                             </div>
@@ -47,8 +49,7 @@
             <div class="d-flex flex-row align-items-center">
                 <div class="d-flex flex-column">
 
-                    <span class="text-secondary fw-bold fs-1">IDR {{ number_format($package->price, 0, ',', '.')
-                        }}
+                    <span class="text-secondary fw-bold fs-1">IDR {{ number_format($today_price, 0, ',', '.') }}
                     </span>
                 </div>
                 <button type="submit" class="btn btn-secondary" style="margin-left: auto;"

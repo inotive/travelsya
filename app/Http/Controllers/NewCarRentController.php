@@ -29,6 +29,53 @@ class NewCarRentController extends Controller
         $this->point = $point;
     }
 
+    public function search_ajax(request $request){
+        $find = '%' . $request->name . '%';
+
+        // $carRent = CarRental::withCount('hasCars')->where('business_name', 'like', $find)->get();
+        $cars = CarRentalHasCars::with('carRental')->whereHas('carRental', function($q) use($find) {
+            $q->where('business_name', 'like', $find);
+        })->get();
+
+        $date = Carbon::now()->format('d-m-Y H:i');
+
+        $result = null;
+        foreach ($cars as $key => $car) {
+            $result = $result . '<a href="' .
+
+                                    route('car_rent.detail', [
+                                        'category' => $car->category_rent,
+                                        'lokasi' => $car->carRental->kota->city_name,
+                                        'model' => $car->car_model_id,
+                                        'provider' => $car->id,
+                                        'date' => $date,
+                                        'duration'=> 1
+                                        ])
+
+                                    .'" class="d-flex w-100 flex-stack">
+
+                                    <img src="' . asset($car->brand->image) .'" class="me-4 w-50px" style="border-radius: 4px" alt="">
+
+                                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+
+                                        <div class="flex-grow-1 me-2">
+
+                                            <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
+                                                . ($car->brand->name ?? 'deleted brand') . ' - ' . ($car->carModel->name ?? 'deleted model') .
+                                            '</span>
+
+                                            <span class="text-muted fw-semibold d-block fs-7">
+                                                ' . $car->carRental->business_name . ' - ' . $car->carRental->kota->city_name .'
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <hr>' ;
+        }
+
+        return $result;
+    }
+
     public function index()
     {
         // $car_models = CarModel::with('vendor')->limit(10)->get();
@@ -58,7 +105,7 @@ class NewCarRentController extends Controller
             ],
         ];
 
-        $near_location = CarRental::with('kota')->get()->pluck('kota.city_name', 'kota.city_name');
+        $near_location = CarRental::with('kota', 'hasCars')->whereHas('hasCars')->get()->pluck('kota.city_name', 'kota.city_name');
 
         $data['car_models'] = collect($car_models);
         $data['near_location'] = collect($near_location);
@@ -210,36 +257,30 @@ class NewCarRentController extends Controller
         $model = $request->model_id;
         $car_model = $request->car_model_id;
 
-        // First try to find the city by name to get the city_id
-        $city = null;
-        if ($location) {
-            // Use case-insensitive search for city name
-            $city = City::whereRaw('LOWER(city_name) LIKE ?', ['%' . strtolower($location) . '%'])->first();
-        }
-
-        // Get cars with their relationships
-        $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental')
-            ->when($city, function ($query) use ($city) {
-                // Filter by city_id if we found a matching city
-                $query->whereHas('carRental', function ($q) use ($city) {
-                    $q->where('city', $city['city_id']);
-                });
-            })
-            ->when($category, function ($query, $c) {
-                // Filter by category
-                $query->where('category_rent', $c);
-            })
-            ->when($model, function ($query, $m) {
-                // Filter by car model
-                $query->where('car_model_id', $m);
-            })
-            ->when($car_model, function ($query, $m) {
-                // Filter by car model (alternative field)
-                $query->where('car_model_id', $m);
+        $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
+            ->where(function ($k) use ($location, $category, $model, $car_model) {
+                $k->when($location, function ($q, $l) {
+                        $q->whereHas('carRental', function ($r) use ($l) {
+                            $r->whereHas('kota', function ($k) use ($l) {
+                                $k->where('city_name', 'like', '%' . $l . '%')
+                                    ->orWhere('city_id', $l);
+                            });
+                        });
+                    })
+                    ->when($category, function ($q, $category) {
+                        $q->where('category_rent', $category);
+                    })
+                    ->when($model, function ($q, $m) {
+                        $q->where('car_model_id', $m);
+                    })
+                    ->when($car_model, function ($q, $m) {
+                        $q->where('car_model_id', $m);
+                    })
+                ;
             })
             ->get();
 
-        // Process each car to get vendor information
+
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
             $ven = [];
@@ -261,7 +302,8 @@ class NewCarRentController extends Controller
             $c['vendor'] = $ven;
         }
 
-        // Prepare data for the view
+        $near_location = CarRental::with('kota', 'hasCars')->whereHas('hasCars')->get()->pluck('kota.city_name', 'kota.city_name');
+
         $data['cars'] = $cars;
         $data['location'] = $location;
         $data['category'] = $category;
@@ -270,7 +312,8 @@ class NewCarRentController extends Controller
         $data['date'] = $date;
         $data['time'] = $time;
         $data['duration'] = $duration;
-
+        $data['near_location'] = $near_location;
+        // $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
     }
 
@@ -283,6 +326,7 @@ class NewCarRentController extends Controller
         $data['model'] = $model;
         $data['provider'] = $provider;
         $data['duration'] = $duration;
+        $data['service_id'] = Service::where('name', 'car-rent')->first()['id'];;
 
         return view('pagesv2.car_rent.detail', $data);
     }

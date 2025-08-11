@@ -7,8 +7,8 @@
             <div class="card-body p-3">
                 <div class="row">
                     <div class="col-3">
-                        <img src="{{ asset($car->carModel->image) }}"
-                            onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
+                        <img src="{{ asset($car->brand->image) }}"
+                            onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
                             class="img-fluid rounded shadow w-100" style="object-fit: contain;" alt="...">
                     </div>
                     <div class="col-9 d-flex flex-column">
@@ -119,7 +119,7 @@
                     </h6>
                 </div>
                 <div class="d-flex flex-row align-items-center py-5">
-                    <span>Kamu akan mendapatkan XXXX Poin</span>
+                    <span>Kamu akan mendapatkan {{ \App\Helpers\General::countPoint($car->rental_price_per_day * $duration, $service_id) }} Poin</span>
                     <form action="{{ route('car_rent.order') }}" method="post" class="ms-sm-auto">
                         @csrf
                         <input type="hidden" name="provider" value="{{ $provider }}">

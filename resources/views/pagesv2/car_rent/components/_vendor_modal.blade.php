@@ -1,4 +1,4 @@
-<div class="modal fade" id="providers-{{ $car->id }}" tabindex="-1" aria-labelledby="" aria-hidden="true">
+<div class="modal fade" id="providers-{{ $car->id }}-{{ $type_transmission ?? 'semua' }}" tabindex="-1" aria-labelledby="" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="d-flex flex-column border border-bottom" style="padding: 1.75rem;">
@@ -25,9 +25,9 @@
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->category_rent }}</span>
                         </div>
                     </div>
-                    <img src="{{ asset($car->carModel->image ?? null) }}" class="" width="150px" height="100px"
+                    <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
                         alt="..."
-                        onerror="this.src='https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                        onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
                 </div>
             </div>
             <div class="modal-body">

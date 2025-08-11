@@ -62,10 +62,6 @@ class CarRentalHasCars extends Model
         return $this->belongsTo(CarRental::class);
     }
 
-    public function city(){
-        return $this->belongsTo(City::class, 'city', 'city_id');
-    }
-
     public function carRentalRate(): HasMany
     {
         return $this->hasMany(CarRentalRating::class, 'car_rental_has_car_id', 'id');

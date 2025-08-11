@@ -62,89 +62,95 @@
                                     <input type="hidden" readonly name="package_id" value="{{ $package_id }}">
                                     <input type="hidden" readonly name="point" value="{{ $point }}">
                                     <input type="hidden" readonly name="book_date" value="{{ $book_date }}">
+                                    <input type="hidden" readonly name="weekend_ticket" value="{{ $weekend_ticket }}">
                                 </div>
                             </div>
                         </div>
 
-                        {{-- <!-- Additional Safety -->
-                <div class="section-title" style="margin-bottom: 25px;">
-                    <div style="display: flex; align-items: center;">
-                        <h2 class="text-dark" style="position: relative; top: 3px;">Tambah Perlindungan Extra</h2>
-                    </div>
-                    <div class="subtitle text-capitalize mt-2">Pilih satu opsi untuk melanjutkan pemesanan</div>
-                </div>
+                        <!-- Additional Safety -->
+                        <div class="section-title" style="margin-bottom: 25px;">
+                            <div style="display: flex; align-items: center;">
+                                <h2 class="text-dark" style="position: relative; top: 3px;">Tambah Perlindungan Extra</h2>
+                            </div>
+                            <div class="subtitle text-capitalize mt-2">Pilih satu opsi untuk melanjutkan pemesanan</div>
+                        </div>
 
-                <div class="mb-25px">
-                    <div class="card rounded-4 border-1 shadow">
-                        <div class="card-body">
-                            <div class="mb-3">
-                                <div class="alert alert-primary" role="alert">
-                                    Lindungi liburanmu dari yang gak pasti
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="card rounded-4 border border-dark">
-                                    <div class="card-body d-flex flex-row align-items-center">
-                                        <span class="fa-solid fa-money-bill text-success"></span>
-                                        <div class="d-flex flex-column ms-3">
-                                            <span class="fw-bold">
-                                                100% Refund
-                                                <span class="fa-solid fa-exclamation-circle text-primary"></span>
-                                            </span>
-                                            <span>berubah pikiran di H-1 sebelum kunjuangan? Dapatkan uangmu kembali
-                                                100%!</span>
+                        <div class="mb-25px">
+                            <div class="card rounded-4 border-1 shadow">
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <div class="alert alert-primary" role="alert">
+                                            Lindungi liburanmu dari yang gak pasti
                                         </div>
-                                        <input type="radio" class="ms-sm-auto" name="safety" id="safety_100" value="100"
-                                            checked>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="card rounded-4 border border-dark">
-                                    <div class="card-body d-flex flex-row align-items-center">
-                                        <span class="fa-solid fa-money-bill text-success"></span>
-                                        <div class="d-flex flex-column ms-3">
-                                            <span class="fw-bold">
-                                                85% Refund
-                                                <span class="fa-solid fa-exclamation-circle text-primary opacity-50"></span>
-                                            </span>
-                                            <span>Menjamin refund hingga 85% harga tiket untuk pembatalan dengan alasan apa
-                                                pun</span>
+                                    <div class="mb-3">
+                                        <div class="card rounded-4 border border-dark">
+                                            <div class="card-body d-flex flex-row align-items-center">
+                                                <span class="fa-solid fa-money-bill text-success"></span>
+                                                <div class="d-flex flex-column ms-3">
+                                                    <span class="fw-bold">
+                                                        100% Refund
+                                                        <span class="fa-solid fa-exclamation-circle text-primary"></span>
+                                                    </span>
+                                                    <span>berubah pikiran di H-1 sebelum kunjuangan? Dapatkan uangmu kembali
+                                                        100%!</span>
+                                                </div>
+                                                <input type="radio" class="ms-sm-auto" name="safety" id="safety_100"
+                                                    value="100" checked>
+                                            </div>
                                         </div>
-                                        <input type="radio" class="ms-sm-auto" name="safety" id="safety_85" value="85">
                                     </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="card rounded-4 border border-dark">
-                                    <div class="card-body d-flex flex-row align-items-center">
-                                        <span class="fa-solid fa-xmark text-dark"></span>
-                                        <span class="ms-3">lanjut tanpa perlindungan</span>
-                                        <input type="radio" class="ms-sm-auto" name="safety" id="safety_85" value="85">
+                                    <div class="mb-3">
+                                        <div class="card rounded-4 border border-dark">
+                                            <div class="card-body d-flex flex-row align-items-center">
+                                                <span class="fa-solid fa-money-bill text-success"></span>
+                                                <div class="d-flex flex-column ms-3">
+                                                    <span class="fw-bold">
+                                                        85% Refund
+                                                        <span
+                                                            class="fa-solid fa-exclamation-circle text-primary opacity-50"></span>
+                                                    </span>
+                                                    <span>Menjamin refund hingga 85% harga tiket untuk pembatalan dengan
+                                                        alasan apa
+                                                        pun</span>
+                                                </div>
+                                                <input type="radio" class="ms-sm-auto" name="safety" id="safety_85"
+                                                    value="85">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="card rounded-4 border border-dark">
+                                            <div class="card-body d-flex flex-row align-items-center">
+                                                <span class="fa-solid fa-xmark text-dark"></span>
+                                                <span class="ms-3">lanjut tanpa perlindungan</span>
+                                                <input type="radio" class="ms-sm-auto" name="safety" id="safety_85"
+                                                    value="85">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="section-title" style="margin-bottom: 35px;">
-                    <div class="subtitle text-capitalize mt-2">Dengan memilih asuransi, kamu telah menyetujui <span
-                            class="text-danger">Sarat dan Ketentuan</span> yang berlaku. Biaya tambahan terkait asuaransi
-                        tertera di detail harga</div>
-                </div>
-                <!-- End Detail Pengunjung --> --}}
+                        <div class="section-title" style="margin-bottom: 35px;">
+                            <div class="subtitle text-capitalize mt-2">Dengan memilih asuransi, kamu telah menyetujui <span
+                                    class="text-danger">Sarat dan Ketentuan</span> yang berlaku. Biaya tambahan terkait
+                                asuaransi
+                                tertera di detail harga</div>
+                        </div>
+                        <!-- End Detail Pengunjung -->
 
                         <div class="mb-35px">
                             <div class="card rounded-4 border-1 shadow">
                                 <div class="card-header d-flex flex-row align-items-center">
                                     <h2 class="fw-bold">Total Pembayaran</h2>
-                                    <h2 class="fw-bold">IDR {{ number_format($package['price'] * $qty) }}</h2>
+                                    <h2 class="fw-bold">IDR {{ number_format($package_price * $qty) }}</h2>
                                 </div>
                                 <div class="card-body d-flex flex-row align-items-center">
                                     <span class="fa-solid fa-gem fs-3 text-danger"></span>
                                     <span class="ms-3">Kamu akan mendapatkan
-                                        {{ \App\Helpers\General::countPoint($package['price'] * $qty, $service_id) }}
+                                        {{ \App\Helpers\General::countPoint($package_price * $qty, $service_id) }}
                                         poin</span>
                                     <button class="text-light btn btn-danger ms-sm-auto">Lanjutkan Pemesanan</button>
                                 </div>
@@ -157,8 +163,8 @@
                         <div class="card-body p-5">
                             <div class="d-flex flex-row align-items-center">
                                 <img src="{{ asset('storage/' . $package->image->image) }}"
-                                    onerror="this.src=`{{ asset('images/not_found.jpg') }}`" alt="" width="50"
-                                    height="50" class="rounded-1">
+                                    onerror="this.src=`{{ asset('images/not_found.jpg') }}`" alt=""
+                                    width="50" height="50" class="rounded-1">
                                 <span
                                     class="fw-bold ms-3 text-wrap">{{ $package['recreation']['business_name'] ?? 'Invalid package' }}</span>
                                 <span class="text-danger ms-sm-auto">Detail Paket</span>
@@ -194,7 +200,7 @@
                             <hr class="opacity-25 my-5">
                             <div class="d-flex flex-row align-items-center">
                                 <span>Total pembayaran</span>
-                                <span class="fs-3 ms-sm-auto">IDR {{ number_format($qty * $package['price']) }}</span>
+                                <span class="fs-3 ms-sm-auto">IDR {{ number_format($qty * $package_price) }}</span>
                             </div>
                         </div>
                     </div>

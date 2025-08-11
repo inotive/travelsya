@@ -94,7 +94,7 @@
                                         <div class="card border border-1 mt-5 mb-5">
                                             @php
                                                 $hostelImage = $transaction->carRental->image; // Pastikan $hostelPict tidak null
-                                                $imagePath = $hostelImage ? asset('storage/'.$hostelImage) : 'https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+                                                $imagePath = $hostelImage ? asset('storage/'.$hostelImage) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg';
                                             @endphp
 
                                             <div
@@ -115,7 +115,7 @@
                                             <div class="m-5 d-flex align-items-center">
                                                 @php
                                                     $roomImage = $transaction->car->image_url;
-                                                    $imagePath = $transaction->car->carModel->image ? $transaction->car->carModel->image : 'https://images.unsplash.com/photo-1588440983028-d53e24fa96cc?q=80&w=3870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
+                                                    $imagePath = $transaction->car->brand->image ? $transaction->car->brand->image : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg';
                                                 @endphp
                                                 <div class="symbol symbol-75px"
                                                     style="background:url('{{ asset($imagePath) }}')">

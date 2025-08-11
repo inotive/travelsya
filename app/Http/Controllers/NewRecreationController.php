@@ -78,6 +78,53 @@ class NewRecreationController extends Controller
         return view('pagesv2.rekreasi.index', $data);
     }
 
+    public function search_ajax(request $request){
+        $find = '%' . $request->name . '%';
+
+        // $carRent = recreation::withCount('hasCars')->where('business_name', 'like', $find)->get();
+        $recreations = RecreationPackages::with(['recreation', 'category', 'image'])->whereHas('recreation', function($q) use($find) {
+            $q->where('business_name', 'like', $find);
+        })->orWhere('name', 'like', $find)->get();
+        
+
+
+        $date = Carbon::now()->format('Y-m-d');
+
+        $result = null;
+        foreach ($recreations as $key => $recreation) {
+            $result = $result . '<a href="' .
+
+                                    route('rekreasi.detail', [
+                                        'id' => $recreation->recreation->id,
+                                        'date' => $date,
+                                        ])
+
+                                    .'" class="d-flex w-100 flex-stack">
+
+                                    <img src="' . asset($recreation->image->image) .'" onerror="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max" class="me-4 w-50px" style="border-radius: 4px" alt="">
+
+                                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+
+                                        <div class="flex-grow-1 me-2">
+
+                                            <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
+                                                . ($recreation->recreation->business_name ?? 'deleted brand') . ' - ' . ($recreation->name ?? 'deleted model') .
+                                            '</span>
+
+                                            <span class="text-muted fw-semibold d-block fs-7">
+                                                ' . $recreation->name . ' - ' . $recreation->recreation->kota->city_name .'
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                                <hr>' ;
+        }
+
+        // return response()->json(['result' => $result]);
+
+        return $result;
+    }
+
     public function category($id){
         if($id !== 'all'){
             $data['packages'] = RecreationPackages::with('category')->where('category_recreation_id', $id)->get();
@@ -95,7 +142,7 @@ class NewRecreationController extends Controller
         $data['date'] = $request->date;
         $data['section_title'] = $request->lokasi;
         $loc = '%'.$request->lokasi.'%';
-        $data['packages'] = RecreationPackages::where(function($q) use($loc){
+        $data['packages'] = RecreationPackages::with(['image'])->where(function($q) use($loc){
             $q->whereHas('recreation', function($r)use($loc){
                 $r->whereHas('kota', function($k)use($loc){
                     $k->where('city_name', 'like', $loc);
@@ -104,14 +151,44 @@ class NewRecreationController extends Controller
         })
         ->get();
 
+
+
         return view('pagesv2.rekreasi.show', $data);
     }
 
     public function detail(Request $request, $id, $date){
         $data['detail'] = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
         $data['date'] = $date;
+        $data['current'] = $date;
+
+        if (\App\Helpers\General::isWeekEnd($date) == true) {
+            $data['weektype'] = 'weekend';
+            $data['is_weekend'] = true;
+        } else {
+            $data['weektype'] = 'weekday';
+            $data['is_weekend'] = false;
+        }
 
         return view('pagesv2.rekreasi.detail', $data);
+    }
+
+    public function order(Request $request){
+        if(Auth::user()){
+            $data = $request->all();
+            $data['user'] =  Auth::user();
+            $data['section_title'] =  'recreation';
+            $data['package'] = RecreationPackages::find($data['package_id']);
+            if($request->weekend_ticket == 'weekday'){
+                $data['package_price'] = $data['package']['price'];
+            }else{
+                $data['package_price'] = $data['package']['weekend_price'];
+            }
+            $data['service_id'] = Service::where('name', $data['service'])->first()['id'];
+            $data['country'] = Country::get();
+            return view('pagesv2.rekreasi.order', $data);
+        }else{
+            return redirect()->route('login');
+        }
     }
 
     public function request_transaction(Request $request){
@@ -141,7 +218,12 @@ class NewRecreationController extends Controller
         }
 
         $setting = new Setting();
-        $amount = $package->price * $data['total_ticket'];
+
+        if($request->weekend_ticket == 'weekday'){
+            $amount = $package->price * $data['total_ticket'];
+        }else{
+            $amount = $package->weekend_price * $data['total_ticket'];
+        }
 
         $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $amount);
 
@@ -244,19 +326,5 @@ class NewRecreationController extends Controller
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return redirect()->away($payoutsXendit['invoice_url']);
-    }
-
-    public function order(Request $request){
-        if(Auth::user()){
-            $data = $request->all();
-            $data['user'] =  Auth::user();
-            $data['section_title'] =  'recreation';
-            $data['package'] = RecreationPackages::find($data['package_id']);
-            $data['service_id'] = Service::where('name', $data['service'])->first()['id'];
-            $data['country'] = Country::get();
-            return view('pagesv2.rekreasi.order', $data);
-        }else{
-            return redirect()->route('login');
-        }
     }
 }

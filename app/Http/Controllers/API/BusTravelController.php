@@ -6,6 +6,7 @@ use App\Helpers\General;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BusDeparture;
+use App\Models\BusRoute;
 use App\Models\BusTravelHasBus;
 use App\Models\BusTravelRating;
 use App\Models\BusTravels;
@@ -30,6 +31,16 @@ class BusTravelController extends Controller
     {
         $this->xendit = $xendit;
         $this->point = $point;
+    }
+
+    public function city(){
+        $city = BusRoute::get()->pluck('name');
+
+        return ResponseFormatter::success(
+            $city,
+            'Load data success',
+            20,
+        );
     }
 
     public function detail_ticket(Request $request)

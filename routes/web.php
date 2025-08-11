@@ -238,6 +238,8 @@ Route::controller(RecreationController::class)->name('recreations')->prefix('rec
     Route::get('/reservasi/pembayaran', 'payment')->name('.payment');
 });
 
+Route::post('/s_recreation', [NewRecreationController::class, 'search_ajax'])->name('search_recreation');
+
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
     Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
@@ -269,6 +271,10 @@ Route::group(['prefix' => 'bus_travel'], function () {
     Route::post('/order', [BusTravelController::class, 'order'])->name('bus_travel.order');
     Route::post('/request_transaction', [BusTravelController::class, 'request_transaction'])->name('bus_travel.request_transaction');
 });
+
+Route::post('/s_car_rent', [NewCarRentController::class, 'search_ajax'])->name('search_car_rent');
+Route::post('/s_clinic', [NewHealthBeautyController::class, 'search_ajax'])->name('search_clinic');
+Route::post('/s_travel', [BusTravelController::class, 'search_ajax'])->name('search_travel');
 
 Route::group(['prefix' => 'car_rent'], function () {
     Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
