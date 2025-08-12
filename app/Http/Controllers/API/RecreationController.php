@@ -325,34 +325,44 @@ class RecreationController extends Controller
 
     public function recreation_by_category(Request $request, $id)
     {
+        // Get recreations by category with optional city filter
+        $recreations = Recreation::active()
+            ->with('reviews', 'recreationPackages', 'kota', 'image')
+            ->where('category_recreation_id', $id)
+            ->when($request->filled('city'), function ($q) use ($request) {
+                $q->whereHas('kota', function ($k) use ($request) {
+                    $k->where('city_name', 'like', '%' . $request->city . '%');
+                });
+            })
+            ->get();
 
-        $searchCity = City::when($request->filled('city'), function ($query) use ($request) {
-            $query->where('city_name', 'like', '%' . $request->city . '%')->get();
+        $recre = [];
 
-            foreach ($recreations as $key => $rec) {
-                if (count($rec['recreationPackages'])) {
-                        $img = $rec['image']['image'] ?? null;
+        foreach ($recreations as $rec) {
+            if (count($rec['recreationPackages']) > 0) {
+                $img = $rec['image']['image'] ?? null;
 
-                        if($img){
-                            $img = asset('storage/' . $rec['image']['image']);
-                        }else{
-                            $img = asset('images/not_found.jpg');
-                        }
-
-                        $item = [
-                            'name' => $rec['business_name'],
-                            'image' => $img,
-                            'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                            'price' => $rec['recreationPackages'][0]['price'],
-                            'rating_count' => count($rec['reviews']),
-                            'avg_rating' => $rec->avgRating(),
-                        ];
-
-                        array_push($recre, $item);
+                if ($img) {
+                    $img = asset('storage/' . $rec['image']['image']);
+                } else {
+                    $img = asset('images/not_found.jpg');
                 }
-            }
 
-        return ResponseFormatter::success($recreations, 'Data successfully loaded');
+                $item = [
+                    'id' => $rec['id'],
+                    'name' => $rec['business_name'],
+                    'image' => $img,
+                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'price' => $rec['recreationPackages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                    'avg_rating' => $rec->avgRating(),
+                ];
+
+                array_push($recre, $item);
+            }
+        }
+
+        return ResponseFormatter::success($recre, 'Data successfully loaded');
     }
 
     public function detail_recreations($id)
