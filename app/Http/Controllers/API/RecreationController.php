@@ -410,21 +410,23 @@ class RecreationController extends Controller
 
         $data = [
             'recreation_id' => $recreation->id,
-            'business_name' => $recreation->business_name,
-            'description' => $recreation->description,
-            'open' => $recreation->open,
-            'close' => $recreation->close,
-            'lat' => $recreation->lat,
-            'ltd' => $recreation->ltd,
+            'service' => 'recreation', // atau sesuai kebutuhan
             'category' => $recreation->categoryRecreation->name,
+            'user' => $recreation->user->name ?? null, // jika ada relasi user
+            'name' => $recreation->business_name,
+            'description' => $recreation->description,
+            'buka' => $recreation->open,
+            'tutup' => $recreation->close,
             'city' => City::where('city_id', $recreation->city)->value('city_name'),
-            'packages' => $packages,
+            'address' => $recreation->address,
+            'latitude' => $recreation->lat,
+            'longitude' => $recreation->ltd,
             'avg_rating' => $recreation->avgRating(),
-            'total_rating' => $recreation->reviews->count(),
-            'reviews' => $recreation->reviews,
+            'rating_count' => $recreation->reviews->count(),
             'images' => $images,
+            'packages' => $packages,
+            'comments' => $recreation->reviews, // atau mapping ke model comment jika perlu
         ];
-
         return ResponseFormatter::success($data, 'Data successfully loaded');
 
         // if ($recreation) {
