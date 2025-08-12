@@ -92,13 +92,13 @@ class TransactionController extends Controller
 
             if ($data != null) {
                 $hostelData = Hostel::where('id', $data->hostel_id)->first();
-                $hostelRoom = $hostelData && $data->hostel_room_id ? HostelRoom::where('hostel_id', $hostelData->id)->where('id', $data->hostel_room_id)->first()->name : null;
+                $hostelRoom = $hostelData && $data->hostel_room_id ? HostelRoom::where('hostel_id', $hostelData->id)->where('id', $data->hostel_room_id)->first()->name ?? '' : null;
 
                 $reservationEnd = Carbon::parse($data->reservation_end);
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
                 return  [
-                    'hostel_name' => $hostelData->name,
+                    'hostel_name' => $hostelData->name ?? '',
                     'room_type' => $hostelRoom,
                     'reservation_duration' => $daysDiff,
                 ];
@@ -109,8 +109,8 @@ class TransactionController extends Controller
             if ($data != null) {
                 $recreationPackage = RecreationPackages::find($data->recreationPackage_id);
                 return  [
-                    'recreation_name' => $data->recreation->business_name ?? 'Invalid recreation data',
-                    'package' => $recreationPackage->name,
+                    'recreation_name' => $data->recreation->business_name ?? '' ?? 'Invalid recreation data',
+                    'package' => $recreationPackage->name ?? '',
                     'expire_on' => Carbon::parse($data['expire_on'])->format('d M Y H:i'),
                 ];
             }
@@ -126,7 +126,7 @@ class TransactionController extends Controller
                 $car = $model . ' - ' . $brand;
 
                 return  [
-                    'business_name' => $data->carRental->business_name ?? 'Invalid car rental data',
+                    'business_name' => $data->carRental->business_name ?? '' ?? 'Invalid car rental data',
                     'car' => $car,
                     'start' => Carbon::parse($data['start'])->format('d M Y H:i'),
                     'over' => Carbon::parse($data['end'])->format('d M Y H:i'),
@@ -151,9 +151,9 @@ class TransactionController extends Controller
 
                     $item =  [
                         'id' => $d->id,
-                        'business_name' => $d->busTravel->business_name ?? 'Invalid car rental data',
-                        'from' => $d->departure->from->name ?? 'invalid data',
-                        'to' => $d->departure->to->name ?? 'invalid data',
+                        'business_name' => $d->busTravel->business_name ?? '' ?? 'Invalid car rental data',
+                        'from' => $d->departure->from->name ?? '' ?? 'invalid data',
+                        'to' => $d->departure->to->name ?? '' ?? 'invalid data',
                         'departure' => Carbon::parse($d['departure_time'] ?? now())->format('d M Y H:i'),
                         'customer_name' => $d['customer_name'],
                         'customer_phone' => $d['customer_phone'],
@@ -171,8 +171,8 @@ class TransactionController extends Controller
             if ($data != null) {
                 $clinicPackages = ClinicHasPackages::find($data->clinic_package_id);
                 return  [
-                    'clinic_name' => $data->clinic->clinic_name ?? 'Invalid clinic data',
-                    'package' => $clinicPackages->name,
+                    'clinic_name' => $data->clinic->clinic_name ?? '' ?? 'Invalid clinic data',
+                    'package' => $clinicPackages->name ?? '',
                     'expire_on' => Carbon::parse($data['expire_on'])->format('d M Y H:i'),
                 ];
             }
@@ -185,7 +185,7 @@ class TransactionController extends Controller
                 $reservationStart = Carbon::parse($data->reservation_start);
                 $daysDiff = $reservationEnd->diffInDays($reservationStart);
                 return  [
-                    'hotel_name' => $hotelData->name,
+                    'hotel_name' => $hotelData->name ?? '',
                     'room_type' => $hotelRoom,
                     'reservation_duration' => $daysDiff,
                 ];
@@ -195,7 +195,7 @@ class TransactionController extends Controller
                 $dataPulsa = DetailTransactionTopUp::where('transaction_id', $transaction_id)->first();
                 if ($dataPulsa) {
                     $nomorTelfon = $dataPulsa->nomor_telfon;
-                    $productName = Product::where('id', $dataPulsa->product_id)->first()->name;
+                    $productName = Product::where('id', $dataPulsa->product_id)->first()->name ?? '';
                     return  [
                         'product_name' => $productName,
                         'phone_number' => $nomorTelfon,
@@ -204,7 +204,7 @@ class TransactionController extends Controller
             } else {
                 $dataPPOB = DetailTransactionPPOB::where('transaction_id', $transaction_id)->first();
                 if ($dataPPOB) {
-                    $productName = Product::where('id', $dataPPOB->product_id)->first()->name;
+                    $productName = Product::where('id', $dataPPOB->product_id)->first()->name ?? '';
                     $nomorPelanggan = $dataPPOB->nomor_pelanggan;
                     return  [
                         'product_name' => $productName,
@@ -375,7 +375,7 @@ class TransactionController extends Controller
             //                });
         }
 
-        if ($service->name == 'recreation') {
+        if ($service->name ?? '' == 'recreation') {
             $recreation = $transaction->with('detailTransactionRecreation')->first();
             $detailTransaction = $recreation->detailTransactionRecreation;
 
@@ -394,11 +394,11 @@ class TransactionController extends Controller
                 'no_inv' => $recreation->no_inv,
                 'recreation_id' => $detailTransaction->recreation_id,
                 'package_id' => $detailTransaction->recreationPackage_id,
-                'recreation_name' => $detailTransaction->recreation->business_name,
-                'package_name' => $detailTransaction->package->name,
+                'recreation_name' => $detailTransaction->recreation->business_name ?? '',
+                'package_name' => $detailTransaction->package->name ?? '',
                 'booking_id' => $recreation->booking_id,
                 'guest_identity' => array([
-                    'name' => $recreation->user->name,
+                    'name' => $recreation->user->name ?? '',
                     'handphone' => $recreation->user->phone,
                     'email' => $recreation->user->email,
                 ]),
@@ -420,7 +420,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        if ($service->name == 'health-beauty') {
+        if ($service->name ?? '' == 'health-beauty') {
             $recreation = $transaction->with('detailTransactionHealthBeauty')->first();
             $detailTransaction = $recreation->detailTransactionHealthBeauty;
 
@@ -439,11 +439,11 @@ class TransactionController extends Controller
                 'no_inv' => $recreation->no_inv,
                 'clinic_id' => $detailTransaction->clinic_id,
                 'package_id' => $detailTransaction->clinic_package_id,
-                'clinic_name' => $detailTransaction->clinic->business_name,
-                'package_name' => $detailTransaction->package->name,
+                'clinic_name' => $detailTransaction->clinic->business_name ?? '',
+                'package_name' => $detailTransaction->package->name ?? '',
                 'booking_id' => $recreation->booking_id,
                 'guest_identity' => array([
-                    'name' => $recreation->user->name,
+                    'name' => $recreation->user->name ?? '',
                     'handphone' => $recreation->user->phone,
                     'email' => $recreation->user->email,
                 ]),
@@ -465,7 +465,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        if ($service->name == 'car-rent') {
+        if ($service->name ?? '' == 'car-rent') {
             $recreation = $transaction->with('detailTransactionCarRent')->first();
             $detailTransaction = $recreation->detailTransactionCarRent;
 
@@ -484,8 +484,8 @@ class TransactionController extends Controller
                 'no_inv' => $recreation->no_inv,
                 'car_rental_id' => $detailTransaction->car_rental_id,
                 'car_rental_has_car_id' => $detailTransaction->car_rental_has_car_id,
-                'car_rental_name' => $detailTransaction->carRental->business_name,
-                'car_name' => $detailTransaction->car->brand->name,
+                'car_rental_name' => $detailTransaction->carRental->business_name ?? '',
+                'car_name' => $detailTransaction->car->brand->name ?? '',
                 'booking_id' => $recreation->booking_id,
                 'guest_identity' => array([
                     'name' => $detailTransaction->customer_name,
@@ -510,7 +510,7 @@ class TransactionController extends Controller
             ]);
         }
 
-        if ($service->name == 'bus-travel') {
+        if ($service->name ?? '' == 'bus-travel') {
 
             $bus = $transaction->with('detailTransactionBus')->first();
 
@@ -537,8 +537,8 @@ class TransactionController extends Controller
                     'no_inv' => $bus->no_inv,
                     'bus_travel_id' => $d->bus_travel_id,
                     'bus_travel_has_bus_id' => $d->bus_travel_has_bus_id,
-                    'bus_name' => $d->busTravel->business_name,
-                    'bus_travel_has_bus_name' => $d->busTravelHasBus->name,
+                    'bus_name' => $d->busTravel->business_name ?? '',
+                    'bus_travel_has_bus_name' => $d->busTravelHasBus->name ?? '',
                     'booking_id' => $bus->booking_id,
                     'guest_identity' => array([
                         'name' => $d->customer_name,
