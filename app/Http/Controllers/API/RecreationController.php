@@ -410,22 +410,22 @@ class RecreationController extends Controller
 
         $data = [
             'recreation_id' => $recreation->id,
-            'service' => 'recreation', // atau sesuai kebutuhan
-            'category' => $recreation->categoryRecreation->name,
-            'user' => $recreation->user->name ?? null, // jika ada relasi user
-            'name' => $recreation->business_name,
-            'description' => $recreation->description,
-            'buka' => $recreation->open,
-            'tutup' => $recreation->close,
-            'city' => City::where('city_id', $recreation->city)->value('city_name'),
-            'address' => $recreation->address,
-            'latitude' => $recreation->lat,
-            'longitude' => $recreation->ltd,
-            'avg_rating' => $recreation->avgRating(),
-            'rating_count' => $recreation->reviews->count(),
-            'images' => $images,
-            'packages' => $packages,
-            'comments' => $recreation->reviews, // atau mapping ke model comment jika perlu
+            'service' => 'recreation',
+            'category' => $recreation->categoryRecreation->name ?? '',
+            'user' => $recreation->user->name ?? '',
+            'name' => $recreation->business_name ?? '',
+            'description' => $recreation->description ?? '',
+            'buka' => $recreation->open ?? '',
+            'tutup' => $recreation->close ?? '',
+            'city' => City::where('city_id', $recreation->city)->value('city_name') ?? '',
+            'address' => $recreation->address ?? '',
+            'latitude' => $recreation->lat ?? 0,
+            'longitude' => $recreation->ltd ?? 0,
+            'avg_rating' => $recreation->avgRating() ?? 0,
+            'rating_count' => $recreation->reviews->count() ?? 0,
+            'images' => $images ?? [],
+            'packages' => $packages ?? [],
+            'comments' => $recreation->reviews ?? [],
         ];
         return ResponseFormatter::success($data, 'Data successfully loaded');
 
