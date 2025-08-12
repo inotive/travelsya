@@ -300,9 +300,9 @@ class RecreationController extends Controller
             if (count($dat['recreationPackages']) > 0) {
                 $img = $dat['image']['image'] ?? null;
 
-                if($img){
+                if ($img) {
                     $img = asset('storage/' . $dat['image']['image']);
-                }else{
+                } else {
                     $img = asset('images/not_found.jpg');
                 }
 
@@ -367,65 +367,65 @@ class RecreationController extends Controller
 
     public function detail_recreations($id)
     {
-            $recreation = Recreation::
+        $recreation = Recreation::
             // select('id', 'category_recreation_id', 'business_name', 'description', 'open', 'close', 'lat', 'ltd')
-                with([
-                    // 'recreationPackages' => function ($query) {
-                    //     $query->select('id', 'recreation_id', 'name', 'description', 'price');
-                    // },
-                    'recreationPackages.images',
-                    'reviews' => function ($query) {
-                        $query->select('id', 'recreation_id', 'users_id', 'rate', 'comment')
-                            ->with(['user' => function ($query) {
-                                $query->select('id', 'name', 'image');
-                            }]);
-                    }
-                    ])
+            with([
+                // 'recreationPackages' => function ($query) {
+                //     $query->select('id', 'recreation_id', 'name', 'description', 'price');
+                // },
+                'recreationPackages.images',
+                'reviews' => function ($query) {
+                    $query->select('id', 'recreation_id', 'users_id', 'rate', 'comment')
+                        ->with(['user' => function ($query) {
+                            $query->select('id', 'name', 'image');
+                        }]);
+                }
+            ])
             ->findOrFail($id);
 
-            $images = $recreation->recreationPackages
-                ->flatMap(function ($package) {
-                    return $package->images->pluck('image');
-                })->values();
+        $images = $recreation->recreationPackages
+            ->flatMap(function ($package) {
+                return $package->images->pluck('image');
+            })->values();
 
-            $recreation['category'] = $recreation->categoryRecreation->name;
-            $recreation['city'] = City::where('city_id', $recreation->city)->value('city_name');
-            $recreation['avg_rating'] = $recreation->avgRating();
-            $recreation['image'] = $images;
+        $recreation['category'] = $recreation->categoryRecreation->name;
+        $recreation['city'] = City::where('city_id', $recreation->city)->value('city_name');
+        $recreation['avg_rating'] = $recreation->avgRating();
+        $recreation['image'] = $images;
 
-            // $recreation = collect($recreation)->except(['category_recreation']);
+        // $recreation = collect($recreation)->except(['category_recreation']);
 
-            $packages = [];
+        $packages = [];
 
-            foreach($recreation->recreationPackages as $package) {
-                $item = [
-                    'id' => $package->id,
-                    'name' => $package->name,
-                    'name' => $package->name,
-                    'price' => $package->price,
-                ];
-
-                array_push($packages, $item);
-            }
-
-            $data = [
-                'id' => $recreation->id,
-                'business_name' => $recreation->business_name,
-                'description' => $recreation->description,
-                'open' => $recreation->open,
-                'close' => $recreation->close,
-                'lat' => $recreation->lat,
-                'ltd' => $recreation->ltd,
-                'category' => $recreation->categoryRecreation->name,
-                'city' => City::where('city_id', $recreation->city)->value('city_name'),
-                'packages' => $packages,
-                'avg_rating' => $recreation->avgRating(),
-                'total_rating' => $recreation->reviews->count(),
-                'reviews' => $recreation->reviews,
-                'images' => $images,
+        foreach ($recreation->recreationPackages as $package) {
+            $item = [
+                'id' => $package->id,
+                'name' => $package->name,
+                'name' => $package->name,
+                'price' => $package->price,
             ];
 
-            return ResponseFormatter::success($data, 'Data successfully loaded');
+            array_push($packages, $item);
+        }
+
+        $data = [
+            'recreation_id' => $recreation->id,
+            'business_name' => $recreation->business_name,
+            'description' => $recreation->description,
+            'open' => $recreation->open,
+            'close' => $recreation->close,
+            'lat' => $recreation->lat,
+            'ltd' => $recreation->ltd,
+            'category' => $recreation->categoryRecreation->name,
+            'city' => City::where('city_id', $recreation->city)->value('city_name'),
+            'packages' => $packages,
+            'avg_rating' => $recreation->avgRating(),
+            'total_rating' => $recreation->reviews->count(),
+            'reviews' => $recreation->reviews,
+            'images' => $images,
+        ];
+
+        return ResponseFormatter::success($data, 'Data successfully loaded');
 
         // if ($recreation) {
         //     $images = $recreation['images'];
@@ -476,9 +476,9 @@ class RecreationController extends Controller
 
         foreach ($recreations as $key => $rec) {
             if (count($rec['recreationPackages']) > 0) {
-                if(!$rec['image']){
+                if (!$rec['image']) {
                     $img = asset('storage/not_found.png');
-                }else{
+                } else {
                     $img = asset('storage/' . $rec['image']['image']);
                 }
 
