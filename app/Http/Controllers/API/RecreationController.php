@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helpers\ResponseFormatter;
+use App\Http\Resources\Recretion\RecretionSearchResource;
 use App\Models\CategoryRecreation;
 use App\Models\City;
 use App\Models\detailTransactionRecreation;
@@ -275,52 +276,19 @@ class RecreationController extends Controller
     {
         $find = $request->all();
 
-        $data = [
-            [
-                "id" => 1,
-                "name" => "Tiket Trans Studio Banjarmasin",
-                "city" => "Banjarmasin",
-                "image" => asset('images/ts.jpg'),
-                "avg_rating" => "4.8",
-                "rating_count" => 2000,
-                "price" => 200000,
-                "discount" => 25,
-            ],
-        ];
+        $data = Recreation::with('kota', 'recreationPackages', 'reviews')
+            ->whereHas('recreationPackages')
+            ->when($find['location'], function ($q) use ($find) {
+                $q->whereHas('kota', function ($k) use ($find) {
+                    $k->where('city_name', 'like', '%' . $find['location'] . '%');
+                });
+            })->when($find['name'], function ($q) use ($find) {
+                $q->where('business_name', 'like', '%' . $find['name'] . '%');
+            })
+            ->get();
 
-        $data = Recreation::with('kota', 'recreationPackages', 'reviews')->when($find['location'], function ($q) use ($find) {
-            $q->whereHas('kota', function ($k) use ($find) {
-                $k->where('city_name', 'like', '%' . $find['location'] . '%');
-            });
-        })->get();
 
-        $newData = [];
-
-        foreach ($data as $key => $dat) {
-            if (count($dat['recreationPackages']) > 0) {
-                $img = $dat['image']['image'] ?? null;
-
-                if ($img) {
-                    $img = asset('storage/' . $dat['image']['image']);
-                } else {
-                    $img = asset('images/not_found.jpg');
-                }
-
-                $item = [
-                    'id' => $dat['id'],
-                    'name' => $dat['business_name'],
-                    'image' => $img,
-                    'location' => $dat['kota']['city_name'] ?? 'Kota dihapus',
-                    'price' => $dat['recreationPackages'][0]['price'],
-                    'rating_count' => count($dat['reviews']),
-                    'avg_rating' => $dat->avgRating(),
-                ];
-
-                array_push($newData, $item);
-            }
-        }
-
-        return ResponseFormatter::success($newData, 'Data successfully loaded');
+        return ResponseFormatter::success(RecretionSearchResource::collection($data), 'Data successfully loaded');
     }
 
     public function recreation_by_category(Request $request, $id)
