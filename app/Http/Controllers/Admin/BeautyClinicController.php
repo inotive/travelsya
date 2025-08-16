@@ -123,7 +123,7 @@ class BeautyClinicController extends Controller
             'city' => 'required',
             'address' => 'required',
             'is_active' => 'required',
-            'category' => 'required|in:kesehatan,kecantikan',
+            'category' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
         ]);
