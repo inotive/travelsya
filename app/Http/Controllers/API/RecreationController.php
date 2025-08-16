@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Recretion\CreateTransaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -137,136 +138,7 @@ class RecreationController extends Controller
 
         $data = $request->all();
 
-        $package = RecreationPackages::find($data['package_id']);
-
-        $now =  date('Y-m-d');
-
-        if (strTolower($package['expiry_type']) == 'hari') {
-            $expire = Carbon::parse($now)->addDays($package['expiry_date'])->addHours(23)->format('Y-m-d H:i:s');
-        } else {
-            $expire = Carbon::now()->addHours($package['expiry_date'])->format('Y-m-d H:i:s');
-        }
-
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('recreation') . '-' . time();
-
-        $service = Service::where('name', $data['service'])->first();
-
-        if (!$service) {
-            return ResponseFormatter::error([], 'Service not found', 500);
-        }
-
-        $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $package->price);
-
-
-        $amount = $package->price * $data['total_ticket'];
-
-        $kode_unik = random_int(0, 999);
-
-        $fee = Fee::where('service_id', 8)->first();
-        $fees = [
-            [
-                'type' => 'Admin',
-                'value' => $fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100,
-            ],
-            [
-                'type' => 'Kode Unik',
-                'value' => $kode_unik,
-            ],
-        ];
-
-        $saldoPointCustomer = 0;
-        // Jika user menggunakan point untuk transaksi
-        if ($request->point == 1) {
-            // history point masuk dan keluar customer
-            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-            // point masuk - point keluar
-            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
-            $saldoPointCustomer = Auth::user()->point;
-            $fees = [
-                [
-                    'type' => 'Point',
-                    'value' => $saldoPointCustomer,
-                ],
-            ];
-        }
-
-        // Create xendit
-        $payoutsXendit = $this->xendit->create([
-            'external_id' => $invoice,
-            'items' => [
-                [
-                    'product_id' => $data['package_id'],
-                    'name' => $package['name'] ?? 'Invalid recreation',
-                    'price' => $amount, // tanpa pajak
-                    'quantity' => $data['total_ticket'],
-                ],
-            ],
-            'amount' => $amount + $fees[0]['value'] + $kode_unik, // include pajak
-            'success_redirect_url' => route('redirect.succes'),
-            'failure_redirect_url' => route('redirect.fail'),
-            'invoice_duration ' => 72000,
-            'should_send_email' => true,
-            'customer' => [
-                'given_names' => Auth::user()->name,
-                'email' => Auth::user()->email,
-                'mobile_number' => Auth::user()->phone ?? '000000000000',
-            ],
-            'fees' => $fees,
-        ]);
-
-        // true buat trans
-        DB::transaction(function () use ($data, $expire, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
-            $storeTransaction = Transaction::create([
-                'no_inv' => $invoice,
-                'req_id' => 'REC-' . time(),
-                'service' => $data['service'],
-                'service_id' => $service['id'],
-                'payment' => $data['payment'],
-                'user_id' => Auth::user()->id,
-                'status' => $payoutsXendit['status'],
-                'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount + $fees[0]['value'] + $kode_unik,
-            ]);
-            // Pengurangan Point
-            if ($request->point == 1) {
-                $point = new Point();
-                $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
-            }
-
-            try {
-                // $storeDetailTransaction = DB::table('detail_transaction_recreations')->insert([
-                //     "transaction_id" => $storeTransaction->id,
-                //     "recreation_id" => $package['recreation_id'],
-                //     "recreationPackage_id" => $package['id'],
-                //     "booking_id" => Str::random(6),
-                //     "expire_on" => $expire,
-                //     "rent_price" => $package->price,
-                //     "fee_admin" => $fees[0]['value'],
-                //     "kode_unik" => $kode_unik,
-                //     "is_used" => 0,
-                //     'created_at' => Carbon::now()->timezone('Asia/Makassar'),
-                // ]);
-
-                detailTransactionRecreation::create([
-                    "transaction_id" => $storeTransaction->id,
-                    "recreation_id" => $package['recreation_id'],
-                    "recreationPackage_id" => $package['id'],
-                    "booking_id" => Str::random(6),
-                    "expire_on" => $expire,
-                    "rent_price" => $package->price,
-                    "fee_admin" => $fees[0]['value'],
-                    "total_ticket" => $data['total_ticket'],
-                    "kode_unik" => $kode_unik,
-                    "is_used" => 0,
-                ]);
-            } catch (Throwable $e) {
-                return response()->json([
-                    'status' => 'Error Store Data Transaction',
-                    'massage' => $e
-                ]);
-            }
-        });
+        $payoutsXendit = app(CreateTransaction::class)->execute($data, $request->user());
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
