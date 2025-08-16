@@ -55,7 +55,7 @@
                                     @endforeach
 
                                     <span class="badge badge-info">{{ $user->clinic->clinic_name ?? '' }}</span>
-                                    
+
                                     @foreach ($user->rentals as $rental)
                                         <span class="badge badge-info">{{ $rental->business_name }}</span>
                                     @endforeach
@@ -232,7 +232,7 @@
                     <div class="modal-footer">
                         <!--begin::Actions-->
                         <div class="text-center">
-                            <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
+                            <button type="button" id="kt_modal_new_target_cancel" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel
                             </button>
                             <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
@@ -256,7 +256,7 @@
                     new bootstrap.Modal(modal).show();
                 }
         });
-            </script>      
+            </script>
         @endif
     </div>
     <!--end::Modal - New Target-->
@@ -427,7 +427,7 @@
                     <div class="modal-footer">
                         <!--begin::Actions-->
                         <div class="text-center">
-                            <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
+                            <button type="button" id="kt_modal_new_target_cancel" class="btn btn-light me-3" data-bs-dismiss="modal">Cancel
                             </button>
                             <button type="submit" id="update" class="btn btn-primary">
                                 <span class="indicator-label">Submit</span>
@@ -449,7 +449,7 @@
 @push('add-script')
     <script>
         $(document).ready(function() {
-        
+
             $('#createModal').modal('show');
 
             // $('.btn-warning').click(function (){
@@ -494,7 +494,7 @@
                 type: "GET",
                 cache: false,
                 success: function(response) {
-                    
+
                     $('#user_id').val(response.data.id);
                     $('#edit-name').val(response.data.name);
                     $('#edit-email').val(response.data.email);
