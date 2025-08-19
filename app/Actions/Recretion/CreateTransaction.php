@@ -25,23 +25,50 @@ class CreateTransaction
 
         $invoice = $this->generateInvoice();
 
-        $service = Service::where('name', $data['service'])->firstOrFail();
+        $service = RecreationPackages::whereIn('id', array_column($data['paket'], 'paket_id'))->get();
 
-        $amount = $package->price * $data['total_ticket'];
+        // Hitung total harga berdasarkan paket yang dipilih
+        $amount = 0;
+        $totalTicket = 0;
+        foreach ($data['paket'] as $paket) {
+            $paketModel = $service->firstWhere('id', $paket['paket_id']);
+            if ($paketModel) {
+                $amount += $paketModel->price * $paket['total'];
+                $totalTicket += $paket['total'];
+            }
+
+            $xenditData[] = [
+                'id' => $paketModel->id,
+                'name'       => $paketModel->name,
+                'price'      => $paketModel->price * $paket['total'],
+                'quantity'   => $paket['total'],
+            ];
+        }
+
+
         $kodeUnik = random_int(0, 999);
 
         $fees = $this->calculateFees($data, $service, $user, $package, $amount, $kodeUnik);
 
-        $payoutsXendit = $this->createXenditInvoice($invoice, $data, $package, $amount, $fees, $kodeUnik, $user);
+        $payoutsXendit = $this->createXenditInvoice($invoice, $xenditData, $package, $amount, $fees, $kodeUnik, $user);
 
         DB::transaction(function () use (
-            $data, $expire, $kodeUnik, $invoice, $user, $payoutsXendit, $service, $amount, $fees, $package
+            $data,
+            $expire,
+            $kodeUnik,
+            $invoice,
+            $user,
+            $payoutsXendit,
+            $service,
+            $amount,
+            $fees,
+            $package
         ) {
             $transaction = Transaction::create([
                 'no_inv'     => $invoice,
                 'req_id'     => 'REC-' . time(),
-                'service'    => $data['service'],
-                'service_id' => $service->id,
+                'service'    => "Recreation",
+                'service_id' => 1,
                 'payment'    => $data['payment'],
                 'user_id'    => $user->id,
                 'status'     => $payoutsXendit['status'],
@@ -54,18 +81,20 @@ class CreateTransaction
             }
 
             try {
-                DetailTransactionRecreation::create([
-                    'transaction_id'        => $transaction->id,
-                    'recreation_id'         => $package->recreation_id,
-                    'recreationPackage_id'  => $package->id,
-                    'booking_id'            => Str::random(6),
-                    'expire_on'             => $expire,
-                    'rent_price'            => $package->price,
-                    'fee_admin'             => $fees[0]['value'],
-                    'total_ticket'          => $data['total_ticket'],
-                    'kode_unik'             => $kodeUnik,
-                    'is_used'               => 0,
-                ]);
+                foreach ($data['paket'] as $paket) {
+                    DetailTransactionRecreation::create([
+                        'transaction_id'        => $transaction->id,
+                        'recreation_id'         => $package->recreation_id,
+                        'recreationPackage_id'  => $package->id,
+                        'booking_id'            => Str::random(6),
+                        'expire_on'             => $expire,
+                        'rent_price'            => $package->price,
+                        'fee_admin'             => $fees[0]['value'],
+                        'total_ticket'          => $paket['total'],
+                        'kode_unik'             => $kodeUnik,
+                        'is_used'               => 0,
+                    ]);
+                }
             } catch (Throwable $e) {
                 // Log error or handle as needed
                 throw new \Exception('Error storing detail transaction: ' . $e->getMessage());
@@ -127,14 +156,7 @@ class CreateTransaction
     {
         return app(Xendit::class)->create([
             'external_id'           => $invoice,
-            'items'                 => [
-                [
-                    'product_id' => $data['package_id'],
-                    'name'       => $package->name ?? 'Invalid recreation',
-                    'price'      => $amount,
-                    'quantity'   => $data['total_ticket'],
-                ],
-            ],
+            'items'                 => $data,
             'amount'                => $amount + $fees[0]['value'] + $kodeUnik,
             'success_redirect_url'  => route('redirect.succes'),
             'failure_redirect_url'  => route('redirect.fail'),

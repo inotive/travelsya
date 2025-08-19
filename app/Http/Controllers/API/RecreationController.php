@@ -119,11 +119,12 @@ class RecreationController extends Controller
     public function requestTransaction(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'service' => 'required|string',
             'payment' => 'required|string',
             'package_id' => 'required',
             'point' => 'required',
-            'total_ticket' => 'required|integer',
+            'paket' => 'required|array',
+            'paket.*.paket_id' => 'required|integer',
+            'paket.*.total' => 'required|integer',
         ]);
 
         if ($validator->fails()) {

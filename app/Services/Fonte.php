@@ -73,6 +73,73 @@ class Fonte
         }
     }
 
+
+    public function sendInvoiceWhatsapp($transaction, $options = [])
+    {
+        try {
+            $curl = curl_init();
+            $user = $transaction->user;
+
+            $message = "
+            *Pemesanan Rekreasi Berhasil*
+            *No. Invoice:* " . $transaction->no_inv . "
+            *Total:* " . $transaction->total . "
+            *Tanggal:* " . $transaction->created_at->format('d-m-Y') . "
+            ";
+
+            $postFields = array_merge([
+                'target' => $user->phone,
+                'message' => $message,
+                'schedule' => $options['schedule'] ?? 0,
+                'typing' => $options['typing'] ?? false,
+                'delay' => $options['delay'] ?? '2',
+                'countryCode' => $options['countryCode'] ?? '62',
+                'followup' => $options['followup'] ?? 0,
+            ], $this->buildOptionalFields($options));
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $this->apiUrl,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => $postFields,
+                CURLOPT_HTTPHEADER => array(
+                    'Authorization: ' . $this->token
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            if (curl_errno($curl)) {
+                throw new Exception('cURL Error: ' . curl_error($curl));
+            }
+
+            curl_close($curl);
+
+            if ($httpCode !== 200) {
+                throw new Exception('HTTP Error: ' . $httpCode . ' - ' . $response);
+            }
+
+            return [
+                'success' => true,
+                'data' => json_decode($response, true),
+                'raw_response' => $response
+            ];
+
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+                'data' => null
+            ];
+        }
+    }
+
     private function buildOptionalFields($options)
     {
         $optionalFields = [];
