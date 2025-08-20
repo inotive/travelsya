@@ -8,7 +8,9 @@
 <head>
     @include('layouts.partials.head')
     <style>
-        .nav-line-tabs .nav-item .nav-link.active, .nav-line-tabs .nav-item.show .nav-link, .nav-line-tabs .nav-item .nav-link:hover:not(.disabled){
+        .nav-line-tabs .nav-item .nav-link.active,
+        .nav-line-tabs .nav-item.show .nav-link,
+        .nav-line-tabs .nav-item .nav-link:hover:not(.disabled) {
             color: #f2416c !important;
             background: #fbcfda !important;
             padding: calc(0.55rem + 1px) calc(1.25rem + 1px) !important;
@@ -17,17 +19,17 @@
             font-weight: var(--bs-btn-font-weight) !important;
         }
 
-        .nav-line-tabs .nav-item .nav-link{
+        .nav-line-tabs .nav-item .nav-link {
             padding: calc(0.55rem + 1px) calc(1.25rem + 1px) !important;
             color: #000 !important;
         }
 
-        .nav-line-tabs .nav-item a{
+        .nav-line-tabs .nav-item a {
             margin: 0 !important;
             font-weight: var(--bs-btn-font-weight) !important;
         }
 
-        .row-cols-lg-4 .tab-content{
+        .row-cols-lg-4 .tab-content {
             flex: unset !important;
             width: 100% !important;
         }
@@ -79,7 +81,7 @@
                 @yield('content')
                 <!--begin::Footer-->
                 @include('layouts.partials.footer')
-                <!--end::Container-->
+                <!--end::Footer-->
             </div>
             <!--end::Footer-->
 
