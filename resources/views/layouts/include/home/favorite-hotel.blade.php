@@ -11,33 +11,33 @@
     </div>
 
     <div class="row justify-content-between">
-        @foreach($hotel_favorite as $hotel)
-        @php
-        $imageHotel = $hotel->hotelImage->where('main',1)->first()->image ?? null;
-        $sellingPriceHotel = $hotel->hotelRoom->first()->sellingprice ?? 0;
-        @endphp
-        <div class="col-md-3 mb-5">
-            <a href="{{ route('hotels.room', ['id_hotel' => $hotel->id]) }}?location={{ $hotel->city }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=1"
-                class="card">
-                <img class="card-img-top h-200px" src="{{asset('storage/'.$imageHotel)}}">
-                <div class="card-body p-5">
-                    <span
-                        class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hotel->name}}</span>
-                    <span class="text-gray-400 fw-semibold d-block fs-6 mt-1">{{$hotel->city}}</span>
-                    <span class="text-danger text-end fw-bold fs-1 mt-2">Rp.
-                        {{number_format($sellingPriceHotel,0,',','.')}}</span>
-                    <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
-                        <span class="fa fa-star fs-4" style="color: red;"></span>
-                        <span x-html="data.rate">{{ $hotel_detail[$hotel->id]['star_rating'] }}</span>
-                        <span class="text-gray-400" x-html="data.totalRate">({{
-                            $hotel_detail[$hotel->id]['total_rating'] }} Rating)</span>
-                    </span>
-                </div>
-            </a>
-        </div>
+        @foreach ($hotel_favorite as $hotel)
+            @php
+                $imageHotel = $hotel->hotelImage->where('main', 1)->first()->image ?? null;
+                $sellingPriceHotel = $hotel->hotelRoom->first()->sellingprice ?? 0;
+            @endphp
+            <div class="col-md-3 mb-5">
+                <a href="{{ route('hotels.room', ['id_hotel' => $hotel->id]) }}?location={{ $hotel->city }}&start={{ date('d-m-Y') }}&duration=1&room=1&guest=1"
+                    class="card">
+                    <img class="card-img-top h-200px" src="{{ asset('storage/' . $imageHotel) }}">
+                    <div class="card-body p-5">
+                        <span
+                            class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{ $hotel->name }}</span>
+                        <span class="text-gray-400 fw-semibold d-block fs-6 mt-1">{{ $hotel->city }}</span>
+                        <span class="text-danger text-end fw-bold fs-1 mt-2">Rp.
+                            {{ number_format($sellingPriceHotel, 0, ',', '.') }}</span>
+                        <span class="text-gray-600 cursor-pointer d-block  mt-5 text-align-center">
+                            <span class="fa fa-star fs-4" style="color: red;"></span>
+                            <span x-html="data.rate">{{ $hotel_detail[$hotel->id]['star_rating'] }}</span>
+                            <span class="text-gray-400"
+                                x-html="data.totalRate">({{ $hotel_detail[$hotel->id]['total_rating'] }} Rating)</span>
+                        </span>
+                    </div>
+                </a>
+            </div>
         @endforeach
 
-        {{-- @foreach($hostel_favorite as $hostel)
+        {{-- @foreach ($hostel_favorite as $hostel)
         @php
         $imageHostel = $hostel->hostelImage->where('main',1)->first()->image ?? null;
         $sellingPriceHostel = $hostel->hostelRoom->first()->sellingrentprice_monthly ?? 0;
@@ -48,7 +48,7 @@
                 <img class="card-img-top h-200px" src="{{asset('storage/media/hostel/' .$imageHostel)}}">
                 <div class="card-body p-5">
                     <span
-                        class="fw-bold text-gray-800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hostel->name}}</span>
+                        class="f{{  }}800 cursor-pointer text-hover-primary fs-3 fs-xl-1">{{$hostel->name}}</span>
                     <span class="text-gray-400 fw-semibold d-block fs-6 mt-1">{{$hostel->city}}</span>
                     <span class="text-danger text-end fw-bold fs-1 mt-2">Rp.
                         {{number_format($sellingPriceHostel,0,',','.')}}</span>

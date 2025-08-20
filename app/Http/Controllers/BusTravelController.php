@@ -33,11 +33,12 @@ class BusTravelController extends Controller
         $this->point = $point;
     }
 
-    public function search_ajax(request $request){
+    public function search_ajax(request $request)
+    {
         $find = '%' . $request->name . '%';
 
-        $buses = BusDeparture::with('busTravel', 'from', 'to')->whereHas('busTravel', function($q) use($find) {
-            $q->whereHas('busTravel', function($b) use ($find){
+        $buses = BusDeparture::with('busTravel', 'from', 'to')->whereHas('busTravel', function ($q) use ($find) {
+            $q->whereHas('busTravel', function ($b) use ($find) {
                 $b->where('business_name', 'like', $find);
             });
         })->get();
@@ -48,25 +49,29 @@ class BusTravelController extends Controller
         foreach ($buses as $key => $bus) {
             $img = isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
             $result = $result . '<a href="' .
-                                route('bus_travel.detail', ['departure_id' => $bus['id'],
-                                    'kota_awal' => ($bus['from']['name'] ?? null),
-                                    'kota_tujuan' => ($bus['to']['name'] ?? null),
-                                    'is_pulang_pergi' => 0,
-                                    'jumlah_penumpang' => 1,
-                                    'date_pergi' => date('d-m-Y', strtotime(now())),
-                                    'date_pulang' => null]
-                                    )
+                route(
+                    'bus_travel.detail',
+                    [
+                        'departure_id' => $bus['id'],
+                        'kota_awal' => ($bus['from']['name'] ?? null),
+                        'kota_tujuan' => ($bus['to']['name'] ?? null),
+                        'is_pulang_pergi' => 0,
+                        'jumlah_penumpang' => 1,
+                        'date_pergi' => date('d-m-Y', strtotime(now())),
+                        'date_pulang' => null
+                    ]
+                )
 
 
-                                    .'" class="d-flex w-100 flex-stack">
+                . '" class="d-flex w-100 flex-stack">
 
                                     <div class="d-flex align-items-center flex-row-fluid flex-wrap">
 
                                         <div class="flex-grow-1 me-2">
 
                                             <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
-                                                . ($bus['from']['name'] ?? 'Invalid Route') . ' -> ' . ($bus['to']['name'] ?? 'Invalid Route') .
-                                            '</span>
+                . ($bus['from']['name'] ?? 'Invalid Route') . ' -> ' . ($bus['to']['name'] ?? 'Invalid Route') .
+                '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
                                                 ' . ($bus['busTravel']['busTravel']['business_name'] ?? 'Invalid bus') . '
@@ -74,7 +79,7 @@ class BusTravelController extends Controller
                                         </div>
                                     </div>
                                 </a>
-                                <hr>' ;
+                                <hr>';
         }
 
         return $result;
@@ -133,7 +138,6 @@ class BusTravelController extends Controller
                 });
             })
             ->get();
-        dd($pergi);
         $pulang = [];
 
         if ((int)$pp == 1) {
@@ -320,8 +324,8 @@ class BusTravelController extends Controller
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
         $data['is_order'] = 1;
-        for ($i=1; $i <= $param['jumlah_penumpang']; $i++) {
-            $data['kursi_penumpang_'.$i] = $param['kursi_penumpang_'.$i];
+        for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
+            $data['kursi_penumpang_' . $i] = $param['kursi_penumpang_' . $i];
         }
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
@@ -339,7 +343,7 @@ class BusTravelController extends Controller
 
     public function request_transaction(Request $request)
     {
-        for ($i=1; $i < $request->jumlah_penumpang; $i++) {
+        for ($i = 1; $i < $request->jumlah_penumpang; $i++) {
             $data_kursi = [
                 'id_costumer' => auth()->user()->id,
                 'id_departure' => $request->ticket_pergi_id,
