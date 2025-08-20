@@ -522,4 +522,11 @@ class RecreationController extends Controller
             return ResponseFormatter::error($th->getMessage(), 'Failed to load recreation data', 500);
         }
     }
+
+    public function city()
+    {
+
+        $cities = City::whereHas('recreations')->get();
+        return ResponseFormatter::success($cities, 'Data successfully loaded');
+    }
 }

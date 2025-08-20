@@ -161,6 +161,7 @@ Route::middleware('auth:sanctum')->group(function () {
     route::post('/hostel/rating', [RatingHostelController::class, 'submit']);
 
     // recreation order
+    route::get('recreation/city', [RecreationController::class, 'city']);
     route::post('recreation/transaction/request', [RecreationController::class, 'requestTransaction']);
     route::post('recreation/rating', [RecreationController::class, 'postRating']);
 

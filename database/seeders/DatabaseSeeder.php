@@ -65,6 +65,11 @@ class DatabaseSeeder extends Seeder
             RecreationsSeeder::class,
             RecreationHasPackagesSeeder::class,
             CarRentalHasCarsSeeder::class,
+            ClinicSeeder::class,
+            ClinicHasPackagesSeeder::class,
+            ClinicImagesSeeder::class,
+            ClinicRatingsSeeder::class,
+            ClinicPackageImagesSeeder::class,
         ]);
     }
 }
