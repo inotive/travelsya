@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\BookDate;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
+use App\Models\detailTransactionRecreation;
 use App\Models\Hostel;
 use App\Models\HotelBookDate;
+use App\Models\Recreation;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -179,4 +181,61 @@ class RiwayatBookingController extends Controller
         ];
         return view('user.order-detail.e-tiket-hostel', $data);
     }
+
+
+    public function indexRekreasi(Request $request)
+{
+    $user_id = auth()->user()->id;
+
+    // Ubah 'rekreasi' menjadi 'recreation'
+    $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction')
+        ->whereHas('transaction', function ($q) {
+            $q->where('status', 'PAID');
+        })
+        ->whereHas('recreation', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        });
+
+    $year = $request->input('year');
+    $start = $request->input('start');
+    $end = $request->input('end');
+
+    // Sesuaikan dengan nama kolom yang ada di database
+    if ($year != null) {
+        $rekreasibookdates->whereYear('book_date', $year);
+    }
+
+    if ($start != null) {
+        $rekreasibookdates = $rekreasibookdates->where('book_date', '>=', $start);
+    }
+
+    if ($end != null) {
+        $rekreasibookdates = $rekreasibookdates->where('expire_on', '<=', $end);
+    }
+
+    $rekreasibookdates = $rekreasibookdates->get();
+
+    return view('ekstranet.booking.rekreasi', compact('rekreasibookdates'));
 }
+
+public function verifikasiRekreasi($id)
+{
+    $booking = detailTransactionRecreation::findOrFail($id);
+    $booking->status = 'verified';
+    $booking->save();
+
+    return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
+}
+
+public function batalVerifikasiRekreasi($id)
+{
+    $booking = detailTransactionRecreation::findOrFail($id);
+    $booking->status = 'pending';
+    $booking->save();
+
+    return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
+}
+
+}
+
+
