@@ -392,6 +392,9 @@ class HealthBeautyController extends Controller
             ->whereHas('packages', function ($p) {
                 $p->whereColumn('unit_price', '>', 'price');
             })
+            ->when($request->name, function ($c, $cit) {
+                $c->where('clinic_name', 'like', '%' . $cit . '%');
+            })
             ->when($city, function ($c, $cit) {
                 $c->whereHas('kota', function ($k) use ($cit) {
                     $k->where('city_name', 'like', $cit);
@@ -406,7 +409,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('images/not_found.jpg'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
