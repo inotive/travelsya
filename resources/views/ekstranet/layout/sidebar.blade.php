@@ -193,6 +193,17 @@
                     <!--end:Menu link-->
                 </a>
 
+                {{-- Bisnis Health & Beauty --}}
+                <a href="{{ route('partner.health-beauty.index') }}"
+                    class="menu-item {{ Request::segment(2) == 'health-beauty' ? 'here' : '' }} menu-accordion">
+                    <span class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fas fa-spa fs-3"></i>
+                        </span>
+                        <span class="menu-title">Bisnis Health & Beauty</span>
+                    </span> 
+                </a>
+
                 <a href="{{ route('partner.daftar.kendaraan') }}"
                     class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->

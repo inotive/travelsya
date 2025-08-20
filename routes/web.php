@@ -42,6 +42,7 @@ use App\Http\Controllers\CarRentalController;
 use App\Http\Controllers\NewCarRentController;
 use App\Http\Controllers\NewHealthBeautyController;
 use App\Http\Controllers\NewRecreationController;
+use App\Http\Controllers\Partner\HealthBeautyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -446,6 +447,18 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
+// Health & Beauty Routes
+Route::prefix('health-beauty')->name('health-beauty.')->group(function () {
+        Route::get('/', [HealthBeautyController::class, 'index'])->name('index');
+        Route::get('/create', [HealthBeautyController::class, 'create'])->name('create');
+        Route::post('/', [HealthBeautyController::class, 'store'])->name('store');
+        Route::get('/{id}/detail', [HealthBeautyController::class, 'detail'])->name('detail');
+        Route::get('/{id}/edit', [HealthBeautyController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [HealthBeautyController::class, 'update'])->name('update');
+        Route::delete('/{id}', [HealthBeautyController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}/cetak-tiket', [HealthBeautyController::class, 'cetakTiket'])->name('cetak-tiket');
+    });
+
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
         Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
@@ -617,6 +630,6 @@ Route::middleware(['auth', 'role'])->group(function () {
     });
 });
 
-Auth::routes();
+
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
