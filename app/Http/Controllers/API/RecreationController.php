@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Support\Facades\DB;
-
 use App\Actions\Recretion\CreateTransaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,7 +10,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Resources\Recretion\RecretionSearchResource;
 use App\Models\CategoryRecreation;
 use App\Models\City;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\Fee;
 use App\Models\Recreation;
 use App\Models\RecreationPackages;
