@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Support\Facades\DB;
+
 use App\Actions\Recretion\CreateTransaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -138,6 +140,16 @@ class RecreationController extends Controller
         }
 
         $data = $request->all();
+
+        // Data Dummy untuk testing
+        $data['paket'] = [
+            [
+                'paket_id' => 1,
+                'total'    => 1,
+                'name'     => 'Paket Regular Weekday',
+                'price'    => 150000,
+            ]
+        ];
 
         $payoutsXendit = app(CreateTransaction::class)->execute($data, $request->user());
 
