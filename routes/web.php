@@ -448,7 +448,13 @@ Route::middleware(['auth', 'role'])->group(function () {
 Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
 Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
 Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
-        Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
+  Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
+        ->name('partner.riwayat-booking.car-rental');
+    Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
+        ->name('partner.riwayat-booking.verifikasi-car-rental');
+    Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
+        ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
+     Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
