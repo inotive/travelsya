@@ -17,6 +17,7 @@ use App\Models\detailTransactionRecreation;
 use App\Models\HistoryPoint;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Services\Fonte;
 use App\Services\Mymili;
 use App\Services\Point;
 use App\Services\Xendit;
@@ -265,7 +266,7 @@ class CallbackController extends Controller
                                     'date' => now(),
                                     'flow' => "debit"
                                 ]);
-                            } elseif ($transaction->service == "recreation" || $transaction->service == "RECREATION") {
+                            } elseif ($transaction->service == "recreation" || $transaction->service == "Recreation" || $transaction->service == "RECREATION") {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Rekreasi Berhasil";
 
@@ -297,6 +298,8 @@ class CallbackController extends Controller
                                     'date' => now(),
                                     'flow' => "debit"
                                 ]);
+
+                                app(Fonte::class)->sendInvoiceWhatsapp($transaction);
                             } elseif (strtolower($transaction->service) == "health-beauty") {
                                 $status = "Berhasil";
                                 $message = "Pemesanan Helath & Beauty Berhasil";

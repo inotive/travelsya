@@ -2,10 +2,11 @@
 
 namespace Database\Seeders;
 
-
+use App\Models\Clinic;
 use App\Models\ClinicHasPackages;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class ClinicHasPackagesSeeder extends Seeder
 {
@@ -14,8 +15,9 @@ class ClinicHasPackagesSeeder extends Seeder
      */
     public function run(): void
     {
+        $clinic = Clinic::first();
         ClinicHasPackages::create([
-            'clinic_id' => 1,
+            'clinic_id' => $clinic->id,
             'categories_services_id' => '1',
             'specialist_id' => '1',
             'name' => 'Jasa Potong Rambut',
@@ -29,7 +31,7 @@ class ClinicHasPackagesSeeder extends Seeder
         ]);
 
         ClinicHasPackages::create([
-            'clinic_id' => 2,
+            'clinic_id' => $clinic->id,
             'categories_services_id' => '3',
             'specialist_id' => '1',
             'name' => 'Jasa Manikur',
@@ -43,7 +45,7 @@ class ClinicHasPackagesSeeder extends Seeder
         ]);
 
         ClinicHasPackages::create([
-            'clinic_id' => 2,
+            'clinic_id' => $clinic->id,
             'categories_services_id' => '2',
             'specialist_id' => '1',
             'name' => 'Jasa Potong Rambut',
@@ -56,7 +58,7 @@ class ClinicHasPackagesSeeder extends Seeder
         ]);
 
         ClinicHasPackages::create([
-            'clinic_id' => 2,
+            'clinic_id' => $clinic->id,
             'categories_services_id' => '2',
             'specialist_id' => '1',
             'name' => 'Klinik manikur',
@@ -69,7 +71,7 @@ class ClinicHasPackagesSeeder extends Seeder
         ]);
 
         ClinicHasPackages::create([
-            'clinic_id' => 2,
+            'clinic_id' => $clinic->id,
             'categories_services_id' => '3',
             'specialist_id' => '1',
             'name' => 'Jasa Potong Rambut',

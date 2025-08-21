@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Recretion\CreateTransaction;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helpers\ResponseFormatter;
+use App\Http\Resources\Recretion\RecretionSearchResource;
 use App\Models\CategoryRecreation;
 use App\Models\City;
 use App\Models\detailTransactionRecreation;
@@ -117,11 +119,12 @@ class RecreationController extends Controller
     public function requestTransaction(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'service' => 'required|string',
             'payment' => 'required|string',
             'package_id' => 'required',
             'point' => 'required',
-            'total_ticket' => 'required|integer',
+            'paket' => 'required|array',
+            'paket.*.paket_id' => 'required|integer',
+            'paket.*.total' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -136,136 +139,7 @@ class RecreationController extends Controller
 
         $data = $request->all();
 
-        $package = RecreationPackages::find($data['package_id']);
-
-        $now =  date('Y-m-d');
-
-        if (strTolower($package['expiry_type']) == 'hari') {
-            $expire = Carbon::parse($now)->addDays($package['expiry_date'])->addHours(23)->format('Y-m-d H:i:s');
-        } else {
-            $expire = Carbon::now()->addHours($package['expiry_date'])->format('Y-m-d H:i:s');
-        }
-
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('recreation') . '-' . time();
-
-        $service = Service::where('name', $data['service'])->first();
-
-        if (!$service) {
-            return ResponseFormatter::error([], 'Service not found', 500);
-        }
-
-        $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $package->price);
-
-
-        $amount = $package->price * $data['total_ticket'];
-
-        $kode_unik = random_int(0, 999);
-
-        $fee = Fee::where('service_id', 8)->first();
-        $fees = [
-            [
-                'type' => 'Admin',
-                'value' => $fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100,
-            ],
-            [
-                'type' => 'Kode Unik',
-                'value' => $kode_unik,
-            ],
-        ];
-
-        $saldoPointCustomer = 0;
-        // Jika user menggunakan point untuk transaksi
-        if ($request->point == 1) {
-            // history point masuk dan keluar customer
-            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-            // point masuk - point keluar
-            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
-            $saldoPointCustomer = Auth::user()->point;
-            $fees = [
-                [
-                    'type' => 'Point',
-                    'value' => $saldoPointCustomer,
-                ],
-            ];
-        }
-
-        // Create xendit
-        $payoutsXendit = $this->xendit->create([
-            'external_id' => $invoice,
-            'items' => [
-                [
-                    'product_id' => $data['package_id'],
-                    'name' => $package['name'] ?? 'Invalid recreation',
-                    'price' => $amount, // tanpa pajak
-                    'quantity' => $data['total_ticket'],
-                ],
-            ],
-            'amount' => $amount + $fees[0]['value'] + $kode_unik, // include pajak
-            'success_redirect_url' => route('redirect.succes'),
-            'failure_redirect_url' => route('redirect.fail'),
-            'invoice_duration ' => 72000,
-            'should_send_email' => true,
-            'customer' => [
-                'given_names' => Auth::user()->name,
-                'email' => Auth::user()->email,
-                'mobile_number' => Auth::user()->phone ?? '000000000000',
-            ],
-            'fees' => $fees,
-        ]);
-
-        // true buat trans
-        DB::transaction(function () use ($data, $expire, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $package, $saldoPointCustomer) {
-            $storeTransaction = Transaction::create([
-                'no_inv' => $invoice,
-                'req_id' => 'REC-' . time(),
-                'service' => $data['service'],
-                'service_id' => $service['id'],
-                'payment' => $data['payment'],
-                'user_id' => Auth::user()->id,
-                'status' => $payoutsXendit['status'],
-                'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount + $fees[0]['value'] + $kode_unik,
-            ]);
-            // Pengurangan Point
-            if ($request->point == 1) {
-                $point = new Point();
-                $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
-            }
-
-            try {
-                // $storeDetailTransaction = DB::table('detail_transaction_recreations')->insert([
-                //     "transaction_id" => $storeTransaction->id,
-                //     "recreation_id" => $package['recreation_id'],
-                //     "recreationPackage_id" => $package['id'],
-                //     "booking_id" => Str::random(6),
-                //     "expire_on" => $expire,
-                //     "rent_price" => $package->price,
-                //     "fee_admin" => $fees[0]['value'],
-                //     "kode_unik" => $kode_unik,
-                //     "is_used" => 0,
-                //     'created_at' => Carbon::now()->timezone('Asia/Makassar'),
-                // ]);
-
-                detailTransactionRecreation::create([
-                    "transaction_id" => $storeTransaction->id,
-                    "recreation_id" => $package['recreation_id'],
-                    "recreationPackage_id" => $package['id'],
-                    "booking_id" => Str::random(6),
-                    "expire_on" => $expire,
-                    "rent_price" => $package->price,
-                    "fee_admin" => $fees[0]['value'],
-                    "total_ticket" => $data['total_ticket'],
-                    "kode_unik" => $kode_unik,
-                    "is_used" => 0,
-                ]);
-            } catch (Throwable $e) {
-                return response()->json([
-                    'status' => 'Error Store Data Transaction',
-                    'massage' => $e
-                ]);
-            }
-        });
+        $payoutsXendit = app(CreateTransaction::class)->execute($data, $request->user());
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
@@ -275,52 +149,19 @@ class RecreationController extends Controller
     {
         $find = $request->all();
 
-        $data = [
-            [
-                "id" => 1,
-                "name" => "Tiket Trans Studio Banjarmasin",
-                "city" => "Banjarmasin",
-                "image" => asset('images/ts.jpg'),
-                "avg_rating" => "4.8",
-                "rating_count" => 2000,
-                "price" => 200000,
-                "discount" => 25,
-            ],
-        ];
+        $data = Recreation::with('kota', 'recreationPackages', 'reviews')
+            ->whereHas('recreationPackages')
+            ->when($find['location'], function ($q) use ($find) {
+                $q->whereHas('kota', function ($k) use ($find) {
+                    $k->where('city_name', 'like', '%' . $find['location'] . '%');
+                });
+            })->when($find['name'], function ($q) use ($find) {
+                $q->where('business_name', 'like', '%' . $find['name'] . '%');
+            })
+            ->get();
 
-        $data = Recreation::with('kota', 'recreationPackages', 'reviews')->when($find['location'], function ($q) use ($find) {
-            $q->whereHas('kota', function ($k) use ($find) {
-                $k->where('city_name', 'like', '%' . $find['location'] . '%');
-            });
-        })->get();
 
-        $newData = [];
-
-        foreach ($data as $key => $dat) {
-            if (count($dat['recreationPackages']) > 0) {
-                $img = $dat['image']['image'] ?? null;
-
-                if ($img) {
-                    $img = asset('storage/' . $dat['image']['image']);
-                } else {
-                    $img = asset('images/not_found.jpg');
-                }
-
-                $item = [
-                    'id' => $dat['id'],
-                    'name' => $dat['business_name'],
-                    'image' => $img,
-                    'location' => $dat['kota']['city_name'] ?? 'Kota dihapus',
-                    'price' => $dat['recreationPackages'][0]['price'],
-                    'rating_count' => count($dat['reviews']),
-                    'avg_rating' => $dat->avgRating(),
-                ];
-
-                array_push($newData, $item);
-            }
-        }
-
-        return ResponseFormatter::success($newData, 'Data successfully loaded');
+        return ResponseFormatter::success(RecretionSearchResource::collection($data), 'Data successfully loaded');
     }
 
     public function recreation_by_category(Request $request, $id)
@@ -680,5 +521,12 @@ class RecreationController extends Controller
         } catch (Exception $th) {
             return ResponseFormatter::error($th->getMessage(), 'Failed to load recreation data', 500);
         }
+    }
+
+    public function city()
+    {
+
+        $cities = City::whereHas('recreations')->get();
+        return ResponseFormatter::success($cities, 'Data successfully loaded');
     }
 }

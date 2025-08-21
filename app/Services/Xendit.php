@@ -29,7 +29,7 @@ class Xendit
             $headers = $this->auth();
             $body = json_encode($data);
             // dd($body);
-            $request = new Request('POST', $this->url . 'invoices', $headers, $body);
+            $request = new Request('POST', $this->url . 'v2/invoices', $headers, $body);
             $res = $client->sendAsync($request)->wait();
             return json_decode($res->getBody(), TRUE);
         } catch (ClientException $e) {
