@@ -142,7 +142,7 @@ class RecreationController extends Controller
         // Data Dummy untuk testing
         $data['paket'] = [
             [
-                'paket_id' => 1,
+                'paket_id' => 6,
                 'total'    => 1,
                 'name'     => 'Paket Regular Weekday',
                 'price'    => 150000,
