@@ -7,10 +7,12 @@ use App\Models\BookDate;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
 use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\Hostel;
 use App\Models\HotelBookDate;
 use App\Models\Recreation;
+use App\Models\BusBooked;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
@@ -247,4 +249,80 @@ class RiwayatBookingController extends Controller
 
         return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
     }
+
+    public function indexBus(Request $request)
+    {
+        $query = DetailTransactionBus::with(['transaction.user', 'busTravel', 'busTravelHasBus', 'departure'])
+            ->whereHas('transaction', function ($q) {
+                $q->whereHas('user', function ($userQuery) {
+                    $userQuery->where('id', auth()->id());
+                });
+            });
+
+        // Filter by year if provided
+        if ($request->filled('year')) {
+            $query->whereYear('created_at', $request->year);
+        }
+
+        // Filter by date range if provided
+        if ($request->filled('start') && $request->filled('end')) {
+            $query->whereBetween('created_at', [$request->start, $request->end]);
+        }
+
+        $busbookings = $query->orderBy('created_at', 'desc')->get();
+
+        return view('ekstranet.booking.bus-travel', compact('busbookings'));
+    }
+
+    /**
+     * Verify bus booking
+     */
+    public function verifikasiBus($id)
+    {
+        try {
+            $busBooking = DetailTransactionBus::with('transaction')->findOrFail($id);
+
+            // Check if user has permission to verify this booking
+            if ($busBooking->transaction->user_id !== auth()->id()) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk verifikasi booking ini.');
+            }
+
+            // Update transaction status to verified
+            $busBooking->transaction->update([
+                'status' => 'verified'
+            ]);
+
+            return redirect()->back()->with('success', 'Booking bus travel berhasil diverifikasi.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Cancel verification of bus booking
+     */
+    public function batalVerifikasiBus($id)
+    {
+        try {
+            $busBooking = DetailTransactionBus::with('transaction')->findOrFail($id);
+
+            // Check if user has permission to cancel verification
+            if ($busBooking->transaction->user_id !== auth()->id()) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk membatalkan verifikasi booking ini.');
+            }
+
+            // Update transaction status to pending
+            $busBooking->transaction->update([
+                'status' => 'pending'
+            ]);
+
+            return redirect()->back()->with('success', 'Verifikasi booking bus travel berhasil dibatalkan.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }
+
+
