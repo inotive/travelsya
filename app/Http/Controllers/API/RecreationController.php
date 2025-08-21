@@ -122,9 +122,9 @@ class RecreationController extends Controller
             'payment' => 'required|string',
             'package_id' => 'required',
             'point' => 'required',
-            'paket' => 'required|array',
-            'paket.*.paket_id' => 'required|integer',
-            'paket.*.total' => 'required|integer',
+            // 'paket' => 'array',
+            // 'paket.*.paket_id' => 'integer',
+            // 'paket.*.total' => 'integer',
         ]);
 
         if ($validator->fails()) {
