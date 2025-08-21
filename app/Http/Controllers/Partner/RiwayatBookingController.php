@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionHealthBeauty; // ✅ taruh di sini
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
 use App\Models\Hostel;
@@ -108,6 +109,56 @@ class RiwayatBookingController extends Controller
 
         return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
     }
+
+
+public function healthBeauty(Request $request)
+{
+    $user_id = auth()->user()->id;
+
+    $query = DetailTransactionHealthBeauty::with(['transaction.user', 'package'])
+        ->whereHas('transaction', function ($q) {
+            $q->where('status', 'PAID');
+        })
+        ->whereHas('clinic', function ($q) use ($user_id) {
+            $q->where('user_id', $user_id);
+        });
+
+    // Filter tahun berdasarkan created_at
+    if ($request->year) {
+        $query->whereYear('created_at', $request->year);
+    }
+
+    // Filter tanggal
+    if ($request->start) {
+        $query->whereDate('created_at', '>=', $request->start);
+    }
+
+    if ($request->end) {
+        $query->whereDate('created_at', '<=', $request->end);
+    }
+
+    // Filter status tab
+    $now = now();
+    $tab = $request->tab ?? 'all';
+
+    if ($tab !== 'all') {
+        switch ($tab) {
+            case 'unused':
+                $query->where('expire_on', '>', $now)->where('is_used', false);
+                break;
+            case 'used':
+                $query->where('is_used', true);
+                break;
+            case 'expired':
+                $query->where('expire_on', '<=', $now)->where('is_used', false);
+                break;
+        }
+    }
+
+    $transactions = $query->orderBy('created_at', 'desc')->get();
+
+    return view('ekstranet.booking.health-beauty', compact('transactions'));
+}
 
     // public function detailroomhostel($id)
     // {
