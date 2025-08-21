@@ -191,9 +191,11 @@
         });
 
         $(document).ready(function() {
-            $('#categories_services_id').select2({
-                tags: true
-            });
+            $('#categories_services_id').select2({ tags: true });
+            $('select[name="clinic_id"]').select2({
+            placeholder: "Pilih atau ketik nama klinik...",
+            tags: true
+        });
         });
     </script>
 @endpush

@@ -12,6 +12,7 @@ use App\Models\Specialist;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ClinicHasPackageController extends Controller
 {
@@ -34,15 +35,7 @@ class ClinicHasPackageController extends Controller
         $clinics = ClinicHasPackages::with(['categoriesService', 'specialist'])
             ->whereHas('clinic', function ($query) use ($userId) {
                 $query->where('user_id', $userId);  // Filter berdasarkan user_id
-            })
-            ->get();
-        // dd($clinics);
-
-        // Ambil data kategori layanan
-        $categories = CategoriesServices::all();
-
-        // Ambil data spesialis
-        $spesialis = Specialist::all();
+            });
 
         // Return data ke view 'list-klinik'
         return view('ekstranet.jasaklinik.list-klinik', compact('spesialis', 'users', 'clinics', 'cities', 'categories'));
@@ -53,7 +46,7 @@ class ClinicHasPackageController extends Controller
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all();
 
-        $clinics = Clinic::all();
+        $clinics = Clinic::where('user_id', Auth::id())->get();
 
         return view('ekstranet.jasaklinik.create-klinik', compact('spesialis', 'categories', 'clinics'));
     }
@@ -61,7 +54,7 @@ class ClinicHasPackageController extends Controller
 
     public function store(Request $request)
     {
-        dd($request);
+        // dd($request);
 
         $request->validate([
             'clinic_id' => 'required|integer',
