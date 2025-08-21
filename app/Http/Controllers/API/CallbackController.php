@@ -13,7 +13,7 @@ use App\Models\DetailTransactionHealthBeauty;
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionPPOB;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\HistoryPoint;
 use App\Models\Transaction;
 use App\Models\User;
@@ -273,7 +273,7 @@ class CallbackController extends Controller
 
                                 //                                $detailHotel = DetailTransactionHotel::where('transaction_id', $transaction->id)->get();
                                 //
-                                detailTransactionRecreation::where('transaction_id', $transaction->id)->update([
+                                DetailTransactionRecreation::where('transaction_id', $transaction->id)->update([
                                     'updated_at' => Carbon::now()
                                 ]);
                                 //
