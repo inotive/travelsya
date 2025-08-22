@@ -135,11 +135,11 @@ class BusDepartureController extends Controller
         $departure->bus_travel_has_bus_id = $defaultBus->id;
         $departure->from_route_id = $request->from_route_id;
         $departure->to_route_id = $request->to_route_id;
-        
+
         // Combine departure date and time into a single datetime
         $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
         $departure->departure_time = $departureDateTime;
-        
+
         $departure->duration = $request->duration;
         $departure->price = $request->price;
         $departure->days = $days;
@@ -232,7 +232,7 @@ class BusDepartureController extends Controller
         // Update departure details
         // Combine departure date and time into a single datetime
         $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
-        
+
         $departure->update([
             'from_route_id' => $request->from_route_id,
             'to_route_id' => $request->to_route_id,
@@ -242,7 +242,7 @@ class BusDepartureController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('partner.bus.departures.index')
+        return redirect()->route('partner.bus.departures')
             ->with('success', 'Jadwal keberangkatan berhasil diperbarui!');
     }
 
@@ -263,19 +263,19 @@ class BusDepartureController extends Controller
         $busTravel = BusTravels::findOrFail($bus->bus_travel_id);
 
         if ($busTravel->user_id != $user->id) {
-            return redirect()->route('partner.bus.departures.index')
+            return redirect()->route('partner.bus.departures')
                 ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
         }
 
         // Check if the departure is being used in bookings
         if ($departure->booked()->count() > 0) {
-            return redirect()->route('partner.bus.departures.index')
+            return redirect()->route('partner.bus.departures')
                 ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
         }
 
         $departure->delete();
 
-        return redirect()->route('partner.bus.departures.index')
+        return redirect()->route('partner.bus.departures')
             ->with('success', 'Jadwal keberangkatan berhasil dihapus!');
     }
 }
