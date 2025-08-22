@@ -70,6 +70,7 @@ class DatabaseSeeder extends Seeder
             ClinicImagesSeeder::class,
             ClinicRatingsSeeder::class,
             ClinicPackageImagesSeeder::class,
+            HealthBeautyPackageSeeder::class,
         ]);
     }
 }

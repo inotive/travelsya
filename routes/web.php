@@ -272,6 +272,7 @@ Route::group(['prefix' => 'bus_travel'], function () {
     Route::post('/request_transaction', [BusTravelController::class, 'request_transaction'])->name('bus_travel.request_transaction');
 });
 
+
 Route::post('/s_car_rent', [NewCarRentController::class, 'search_ajax'])->name('search_car_rent');
 Route::post('/s_clinic', [NewHealthBeautyController::class, 'search_ajax'])->name('search_clinic');
 Route::post('/s_travel', [BusTravelController::class, 'search_ajax'])->name('search_travel');
@@ -286,6 +287,7 @@ Route::group(['prefix' => 'car_rent'], function () {
     Route::post('/order', [NewCarRentController::class, 'order'])->name('car_rent.order');
     Route::post('/request_transaction', [NewCarRentController::class, 'request_transaction'])->name('car_rent.request_transaction');
 });
+
 
 // Health & Beauty
 Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function () {
@@ -465,6 +467,9 @@ Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingCo
         Route::delete('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'destroy'])->name('recreation.destroy');
 
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
+
+        Route::get('riwayat-booking-health-beauty', [RiwayatBookingController::class, 'healthBeauty'])
+        ->name('partner.health-beauty.index');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
