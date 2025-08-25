@@ -114,8 +114,7 @@
                                                 data-kt-menu="true" style="">
                                                 @if($status != 'verified' && !$isExpired)
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-success">
+                                                        <a href="#" class="menu-link px-3 text-success" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
                                                             Verifikasi
                                                         </a>
                                                     </div>
@@ -265,8 +264,7 @@
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                     data-kt-menu="true" style="">
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-success">
+                                                        <a href="#" class="menu-link px-3 text-success" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
                                                             Verifikasi
                                                         </a>
                                                     </div>
@@ -353,6 +351,35 @@
             </div>
         </div>
     </div>
+
+    @foreach ($carrentalbookdates as $booking)
+        @php
+            $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
+            $status = $booking->status ?? 'pending';
+        @endphp
+        @if($status != 'verified' && !$isExpired)
+            <div class="modal fade" id="verificationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Konfirmasi Verifikasi</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin memverifikasi booking ini?</p>
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}" class="btn btn-success">Verifikasi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
 @endsection
 
 @push('add-script')
