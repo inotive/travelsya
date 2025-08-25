@@ -115,7 +115,7 @@
                     "scrollY": "500px"
                     , "scrollCollapse": true
                     , "language": {
-                        "lengthMenu": "_MENU_"
+                        "lengthMenu": "MENU"
                         , }
                     , "dom": "<'row'" +
                         "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +
