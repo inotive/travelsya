@@ -499,7 +499,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('bus-departures/bus/{busId}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures.bus');
         Route::post('bus-departures/store', [\App\Http\Controllers\Partner\BusDepartureController::class, 'store'])->name('partner.bus.departures.store');
         Route::post('bus-departures/update', [\App\Http\Controllers\Partner\BusDepartureController::class, 'update'])->name('partner.bus.departures.update');
-        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'destroy'])->name('partner.bus.departures.delete');
+        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'delete'])->name('partner.bus.departures.delete');
 
         // Keep these routes for backward compatibility
         Route::get('bus-departures/create', [\App\Http\Controllers\Partner\BusDepartureController::class, 'create'])->name('partner.bus.departures.create');

@@ -247,14 +247,22 @@ class BusDepartureController extends Controller
     }
 
     /**
-     * Remove the specified bus departure from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $id = $request->id;
+     /**
+ * Remove the specified bus departure from storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\RedirectResponse
+ */
+public function delete(Request $request): RedirectResponse
+{
+    $id = $request->id;
+
+    if (!$id) {
+        return redirect()->route('partner.bus.departures')
+            ->with('error', 'ID jadwal keberangkatan tidak valid!');
+    }
+
+    try {
         $departure = BusDeparture::findOrFail($id);
 
         // Verify ownership
@@ -267,15 +275,22 @@ class BusDepartureController extends Controller
                 ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
         }
 
-        // Check if the departure is being used in bookings
-        if ($departure->booked()->count() > 0) {
-            return redirect()->route('partner.bus.departures')
-                ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
-        }
+        // Check if the departure has any bookings
+        // You'll need to replace 'booked()' with the actual relationship name or query
+        // For example, if you have a bookings relationship:
+        // if ($departure->bookings()->count() > 0) {
+        //     return redirect()->route('partner.bus.departures')
+        //         ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
+        // }
 
         $departure->delete();
 
         return redirect()->route('partner.bus.departures')
             ->with('success', 'Jadwal keberangkatan berhasil dihapus!');
+
+    } catch (\Exception $e) {
+        return redirect()->route('partner.bus.departures')
+            ->with('error', 'Terjadi kesalahan saat menghapus jadwal keberangkatan!');
     }
+}
 }
