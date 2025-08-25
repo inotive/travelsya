@@ -126,6 +126,12 @@
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
+                                                    <div class="menu-item px-3">
+                                                        <a href="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}"
+                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            Invoice
+                                                        </a>
+                                                    </div>
                                                 @endif
                                             </div>
                                             <a href="#"
@@ -188,6 +194,12 @@
                                                         <a href="{{ route('partner.riwayat-booking.batal-verifikasi-car-rental', $booking->id) }}"
                                                             class="menu-link px-3 text-danger">
                                                             Batal Verifikasi
+                                                        </a>
+                                                    </div>
+                                                    <div class="menu-item px-3">
+                                                        <a href="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}"
+                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            Invoice
                                                         </a>
                                                     </div>
                                                 </div>
