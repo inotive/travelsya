@@ -26,34 +26,35 @@
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
                         @error('name')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                         @enderror
                     </div>
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                         <select class="form-select form-select-solid user_id-edit" id="user_id-edit">
                             @foreach ($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
                         @error('user_id')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                         @enderror
                     </div>
 
                     <div class="col-md-6">
                         <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
-                        <input type="number" class="form-control form-control-lg phone-edit" id="phone-edit" required />
+                        <input type="number" class="form-control form-control-lg phone-edit" id="phone-edit"
+                            required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
                         @error('phone')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                         @enderror
                     </div>
 
@@ -66,9 +67,9 @@
                         </select>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
                         @error('is_active')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                         @enderror
                     </div>
 
@@ -81,31 +82,29 @@
                             @endforeach
                         </select>
                         @error('city')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                         @enderror
                     </div>
 
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
-                            <label class="btn btn-outline btn-danger label-kesehatan" data-kt-button="true">
-                                <input class="btn-check category-edit" type="radio" name="category"
-                                    id="update-category-kesehatan" value="kesehatan" required />
-                                Kesehatan
-                            </label>
-                            <label class="btn btn-outline btn-danger label-kecantikan" data-kt-button="true">
-                                <input class="btn-check category-edit" type="radio" name="category"
-                                    id="update-category-kecantikan" value="kecantikan" required />
-                                Kecantikan
-                            </label>
+
+                            @foreach (App\Models\Clinic::CATEGORY as $key => $value)
+                                <label class="btn btn-outline btn-danger {{ (isset($clinic) && $clinic->category == $key) ? 'active' : '' }}" data-kt-button="true">
+                                    <input class="btn-check" type="radio" name="category" value="{{ $key }}"
+                                        {{ (isset($clinic) && $clinic->category == $key) ? 'checked' : '' }} required />
+                                    {{ $value }}
+                                </label>
+                            @endforeach
                         </div>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-category-edit"></div>
                         @error('category')
-                        <span class="text-danger mt-1" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
                         @enderror
                     </div>
 
@@ -161,12 +160,13 @@
                     $('#city-edit').val(response.data.city);
                     $('#city-edit').trigger('change');
                     $('#phone-edit').val(response.data.phone);
-                    $(`input[name="category"][value="${response.data.category}"]`).prop('checked', true);
+                    $(`input[name="category"][value="${response.data.category}"]`).prop(
+                        'checked', true);
 
                     const isKecantikan = response.data.category === 'kecantikan';
                     $('.label-kecantikan').toggleClass('active', isKecantikan);
                     $('.label-kesehatan').toggleClass('active', !isKecantikan);
-                    
+
                     // Show the modal
                     $('#modal-edit').modal('show');
                 },
@@ -195,7 +195,15 @@
             $('.alert').addClass('d-none').html('');
 
             console.log({
-                clinic_id, user_id, name, is_active, address, city, phone, token, category
+                clinic_id,
+                user_id,
+                name,
+                is_active,
+                address,
+                city,
+                phone,
+                token,
+                category
             });
 
             // AJAX request to update clinic data
@@ -225,25 +233,32 @@
                     // Check for specific error messages and display them
                     if (error.responseJSON) {
                         if (error.responseJSON.name) {
-                            $('#alert-name-edit').removeClass('d-none').html(error.responseJSON.name[0]);
+                            $('#alert-name-edit').removeClass('d-none').html(error
+                                .responseJSON.name[0]);
                         }
                         if (error.responseJSON.user_id) {
-                            $('#alert-user_id-edit').removeClass('d-none').html(error.responseJSON.user_id[0]);
+                            $('#alert-user_id-edit').removeClass('d-none').html(error
+                                .responseJSON.user_id[0]);
                         }
                         if (error.responseJSON.phone) {
-                            $('#alert-phone-edit').removeClass('d-none').html(error.responseJSON.phone[0]);
+                            $('#alert-phone-edit').removeClass('d-none').html(error
+                                .responseJSON.phone[0]);
                         }
                         if (error.responseJSON.address) {
-                            $('#alert-address-edit').removeClass('d-none').html(error.responseJSON.address[0]);
+                            $('#alert-address-edit').removeClass('d-none').html(error
+                                .responseJSON.address[0]);
                         }
                         if (error.responseJSON.city) {
-                            $('#alert-city-edit').removeClass('d-none').html(error.responseJSON.city[0]);
+                            $('#alert-city-edit').removeClass('d-none').html(error
+                                .responseJSON.city[0]);
                         }
                         if (error.responseJSON.category) {
-                            $('#alert-category-edit').removeClass('d-none').html(error.responseJSON.category[0]);
+                            $('#alert-category-edit').removeClass('d-none').html(error
+                                .responseJSON.category[0]);
                         }
                         if (error.responseJSON.image) {
-                            $('#alert-image-edit').removeClass('d-none').html(error.responseJSON.image[0]);
+                            $('#alert-image-edit').removeClass('d-none').html(error
+                                .responseJSON.image[0]);
                         }
                     }
                 }

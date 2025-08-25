@@ -1,20 +1,21 @@
-@extends('layouts.web') @section('content-web')
-@include('layouts.include.carousel')
+@extends('layouts.web')
+@section('content-web')
+    @include('layouts.include.carousel')
 
-<!-- start::Menubar -->
-@include('layouts.include.home.menu-bar')
-<!-- end::Menubar -->
+    <!-- start::Menubar -->
+    @include('layouts.include.home.menu-bar')
+    <!-- end::Menubar -->
 
-@include('layouts.include.home.favorite-hotel')
-{{-- @include('layouts.include.home.partner-hotel') --}}
-@include('layouts.include.home.explore-city')
+    @include('layouts.include.home.favorite-hotel')
+    {{-- @include('layouts.include.home.partner-hotel') --}}
+    @include('layouts.include.home.explore-city')
 @endsection
 
 @push('add-script')
-<script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
+    <script src="{{ asset('assets/js/custom/noTelp.js') }}"></script>
 
-<script>
-    var dummyMenus = [{
+    <script>
+        var dummyMenus = [{
                 id: 0,
                 isActive: true,
                 code: "hotel",
@@ -350,7 +351,7 @@
             url: "{{ route('favorite.hotel') }}",
             type: "GET",
             success: function(responseHotel) {
-               dummyFavoriteHotel = responseHotel
+                dummyFavoriteHotel = responseHotel
             },
         });
 
@@ -411,7 +412,7 @@
             email: "-",
             telp: "-",
             website: "-"
-        },]
+        }, ]
 
         var today = new Date();
         $(".js-daterangepicker").daterangepicker({
@@ -577,5 +578,5 @@
                 data: dummyPartnerHotel,
             });
         });
-</script>
+    </script>
 @endpush
