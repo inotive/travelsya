@@ -64,19 +64,19 @@
                                         {{ $booking->transaction->user->phone ?? '' }}
                                     </td>
                                     <td class="text-center">{{ $booking->booking_id }}</td>
-                                    <td class="text-center">{{ $booking->rekreasi->name }}</td>
-                                    <td class="text-center">{{ General::rp($booking->total_harga) }}</td>
-                                    <td class="text-center">{{ \Carbon\Carbon::parse($booking->tanggal_pemesanan)->format('d F Y') }}</td>
-                                    <td class="text-center">{{ \Carbon\Carbon::parse($booking->tanggal_kadaluarsa)->format('d F Y') }}</td>
+                                    <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
+                                    <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                     <td class="text-center">
-                                        <span class="badge {{ $booking->status == 'verified' ? 'badge-success' : 'badge-warning' }}">
-                                            {{ ucfirst($booking->status) }}
+                                        <span class="badge {{ $booking->is_used ? 'badge-success' : 'badge-warning' }}">
+                                            {{ $booking->is_used ? 'Verified' : 'Pending' }}
                                         </span>
                                     </td>
                                     <td class="text-center">
                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                             data-kt-menu="true" style="">
-                                            @if($booking->status != 'verified')
+                                            @if(!$booking->is_used)
                                                 <div class="menu-item px-3">
                                                     <a href="{{ route('partner.riwayat-booking.verifikasi-rekreasi', $booking->id) }}"
                                                         class="menu-link px-3 text-success">

@@ -149,7 +149,7 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction')
+        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction', 'package')
             ->whereHas('transaction', function ($q) {
                 $q->where('status', 'PAID');
             })
