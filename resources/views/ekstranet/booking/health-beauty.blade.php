@@ -5,33 +5,28 @@
         <div class="card-body">
             <form action="#" method="get">
                 <div class="row">
-                    <div class="col-3">
-                        <select class="form-select" name="year">
-                            <option value="" disabled selected>Pilih Tahun</option>
-                            @php
-                                $currentYear = date('Y');
-                                $startYear = 2020; // Tahun awal yang diinginkan
-                            @endphp
-                            @for ($i = $currentYear; $i >= $startYear; $i--)
-                                <option value="{{ $i }}"
-                                    {{ isset($_GET['year']) && $_GET['year'] == $i ? 'selected' : '' }}>
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="start" placeholder="Tanggal Mulai"
-                            value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
-                    </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="end" placeholder="Tanggal Selesai"
-                            value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
-                    </div>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary w-100">Cari Data</button>
-                    </div>
-                </div>
+    <div class="col-2">
+        <select class="form-select" name="year">
+            <option value="" disabled selected>Pilih Tahun</option>
+            @for ($i = date('Y'); $i >= 2020; $i--)
+                <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>{{ $i }}</option>
+            @endfor
+        </select>
+    </div>
+    <div class="col-2">
+        <input type="date" class="form-control" name="start" value="{{ request('start') }}">
+    </div>
+    <div class="col-2">
+        <input type="date" class="form-control" name="end" value="{{ request('end') }}">
+    </div>
+    <div class="col-3">
+        <input type="text" class="form-control" name="keyword" placeholder="Cari Nama, Kode Booking, atau Paket"
+            value="{{ request('keyword') }}">
+    </div>
+    <div class="col-3">
+        <button type="submit" class="btn btn-primary w-100">Cari Data</button>
+    </div>
+</div>
                 <!-- Hidden input for tab status -->
                 <input type="hidden" name="tab" id="tab_input" value="{{ request('tab', 'all') }}">
             </form>
@@ -114,35 +109,7 @@
                                     }
                                 @endphp
                                 
-                                @php
-                                    $showRow = true;
-                                    $currentTab = request('tab', 'all');
-                                    
-                                    if ($currentTab !== 'all') {
-                                        $showRow = false;
-                                        switch($currentTab) {
-                                            case 'unused':
-                                                if ($booking->transaction->payment_status == 'paid' && $expiryDate->gt($now)) {
-                                                    // Add your logic to check if package is unused
-                                                    $showRow = true;
-                                                }
-                                                break;
-                                            case 'used':
-                                                if ($booking->transaction->payment_status == 'paid' && $expiryDate->gt($now)) {
-                                                    // Add your logic to check if package is used
-                                                    // $showRow = ($booking->is_used == true);
-                                                }
-                                                break;
-                                            case 'expired':
-                                                if ($booking->transaction->payment_status == 'paid' && $expiryDate->lte($now)) {
-                                                    $showRow = true;
-                                                }
-                                                break;
-                                        }
-                                    }
-                                @endphp
-                                
-                                @if ($showRow)
+                                @if (true)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td class="text-center">
@@ -162,7 +129,7 @@
                                             data-kt-menu="true" style="">
                                             <!--begin::Menu item-->
                                             <div class="menu-item px-3">
-                                                <a href="{{ route('partner.health-beauty.detail', $booking->id) }}"
+                                                <a href="{{ route('partner.riwayat-booking.detailhealthbeauty', $booking->id) }}"
                                                     class="menu-link px-3 text-warning" id="" data-id="">
                                                     Detail Booking
                                                 </a>

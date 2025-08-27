@@ -81,6 +81,13 @@ class RiwayatBookingController extends Controller
         return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
     }
 
+    public function detailHealthBeauty($id)
+    {
+        $healthbeautybookdates = DetailTransactionHealthBeauty::with('transaction')->findOrFail($id);
+
+        return view('ekstranet.booking.detail-book-health-beauty', compact('healthbeautybookdates'));
+    }
+
 
     public function healthBeauty(Request $request)
     {
@@ -126,7 +133,20 @@ class RiwayatBookingController extends Controller
             }
         }
 
-        $transactions = $query->orderBy('created_at', 'desc')->get();
+
+
+        $transactions = $query
+
+            ->when($request->keyword, function ($q) use ($request) {
+                $keyword = $request->keyword;
+                $q->where(function ($sub) use ($keyword) {
+                    $sub->whereHas('transaction.user', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                        ->orWhere('booking_id', 'like', "%{$keyword}%")
+                        ->orWhereHas('package', fn($q) => $q->where('name', 'like', "%{$keyword}%"));
+                });
+            })
+
+            ->orderBy('created_at', 'desc')->get();
 
         return view('ekstranet.booking.health-beauty', compact('transactions'));
     }

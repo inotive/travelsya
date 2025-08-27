@@ -110,6 +110,7 @@ Route::get('/e-tiket/{hotel}/hotel', [RiwayatBookingController::class, 'cetakHot
 
 // Ini Route Hostel-eBooking
 Route::get('/e-tiket/{hostel}/hostel', [RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel')->middleware('auth');
+Route::get('/e-tiket/{id}/health-beauty', [RiwayatBookingController::class, 'cetakHealthBeauty'])->name('e-tiket.health-beauty')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'home'])->name('home')->middleware(['isUser']);
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
@@ -446,6 +447,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
         Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
+        Route::get('riwayat-booking/detail-booking/health-beauty/{id}', [RiwayatBookingController::class, 'detailHealthBeauty'])->name('partner.riwayat-booking.detailhealthbeauty');
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRecreation'])->name('partner.riwayat-booking.recreation');
 Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
 Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
