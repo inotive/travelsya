@@ -71,6 +71,7 @@ class DatabaseSeeder extends Seeder
             ClinicRatingsSeeder::class,
             ClinicPackageImagesSeeder::class,
             HealthBeautyPackageSeeder::class,
+            BookingSeeder::class,
         ]);
     }
 }
