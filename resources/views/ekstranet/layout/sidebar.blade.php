@@ -9,11 +9,6 @@
         margin: 0.2rem 0;
     }
 
-    /* .menu-item.menu-accordion.hover .show {
-        background-color: white;
-    } */
-
-
     .active-link {
         color: white;
     }
@@ -27,6 +22,45 @@
     .menu-item.here .menu-title.custom,
     .menu-item.here .menu-arrow {
         color: gray !important;
+    }
+
+    /* --- Custom styles for Pemesanan dropdown (Full Red Theme) --- */
+
+    /* Dropdown container background */
+    .menu-item.pemesanan-menu .menu-sub-accordion {
+        background-color: #C02425 !important; /* Red background */
+        padding: 0;
+    }
+
+    /* Default state for all links within the dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link {
+        background-color: transparent !important;
+    }
+
+    /* Default state for text and bullets in dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-title {
+        color: #f8f9fa; /* A light, off-white color for inactive items */
+    }
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-bullet .bullet-dot {
+        background-color: #f8f9fa; /* Matching off-white */
+    }
+
+    /* Hover state for links in dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-title {
+        color: white !important;
+    }
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-bullet .bullet-dot {
+        background-color: white !important;
+    }
+
+    /* Active state for a link in the dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-title {
+        color: white !important;
+        font-weight: bold; /* Make it stand out more */
+    }
+
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-bullet .bullet-dot {
+        background-color: white !important;
     }
 </style>
 
@@ -43,14 +77,6 @@
         </a>
         <!--end::Logo image-->
         <!--begin::Sidebar toggle-->
-        <!--begin::Minimized sidebar setup:
-            if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_state"] === "on") {
-                1. "src/js/layout/sidebar.js" adds "sidebar_minimize_state" cookie value to save the sidebar minimize state.
-                2. Set data-kt-app-sidebar-minimize="on" attribute for body tag.
-                3. Set data-kt-toggle-state="active" attribute to the toggle element with "kt_app_sidebar_toggle" id.
-                4. Add "active" class to to sidebar toggle element with "kt_app_sidebar_toggle" id.
-            }
-        -->
         <div id="kt_app_sidebar_toggle"
             class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
             data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
@@ -172,11 +198,12 @@
                         ->count();
                     
                     $totalPemesanan = $bookingHotel + $bookingHostel + $bookingCarRental + $bookingRecreation + $bookingBus + $bookingClinic;
+                    $isPemesananActive = in_array(Request::segment(2), ['riwayat-booking', 'riwayat-booking-recreation', 'riwayat-booking-car-rental']);
                 @endphp
                 
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ Request::segment(2) == 'riwayat-booking' ? 'here show' : '' }}">
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion pemesanan-menu {{ $isPemesananActive ? 'here show' : '' }}">
                     <!--begin:Menu link-->
-                    <span class="menu-link">
+                    <span class="menu-link {{ $isPemesananActive ? 'main-accordion' : '' }}">
                         <span class="menu-icon">
                             <i class="far fa-calendar fs-3"></i>
                         </span>
@@ -188,7 +215,7 @@
                         @if (count($hotel) > 0 || count($hostel) > 0)
                             <!--begin:Menu item-->
                             <div class="menu-item">
-                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' && !request()->has('type') ? 'active' : '' }}"
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' ? 'active' : '' }}"
                                     href="{{ route('partner.riwayat-booking') }}">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
@@ -201,7 +228,7 @@
                         @if (count($recreations) > 0)
                             <!--begin:Menu item-->
                             <div class="menu-item">
-                                <a class="menu-link {{ request()->routeIs('partner.riwayat-booking.recreation') ? 'active' : '' }}"
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-recreation' ? 'active' : '' }}"
                                     href="{{ route('partner.riwayat-booking.recreation') }}">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
@@ -214,7 +241,7 @@
                         @if (count($carRentals) > 0)
                             <!--begin:Menu item-->
                             <div class="menu-item">
-                                <a class="menu-link {{ request()->routeIs('partner.riwayat-booking.car-rental') ? 'active' : '' }}"
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-car-rental' ? 'active' : '' }}"
                                     href="{{ route('partner.riwayat-booking.car-rental') }}">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
