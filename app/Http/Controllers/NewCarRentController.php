@@ -351,17 +351,12 @@ class NewCarRentController extends Controller
             $c['vendor'] = $ven;
         }
 
-        // Query konsisten untuk near_location - tampilkan semua kota yang memiliki rental mobil
-        // Debug query untuk melihat apa yang terjadi
-        \Log::info('Checking cities with car rentals...');
-        
-        // Query yang lebih fleksibel untuk menangani inkonsistensi data
-        // Mengambil semua kota untuk memastikan data ditampilkan
+        // Query konsisten untuk near_location - tampilkan semua kota
+        // Menggunakan query yang lebih sederhana untuk memastikan semua kota ditampilkan
         $near_location = City::orderBy('city_name')->pluck('city_name', 'city_name');
         
         // Log jumlah kota yang ditampilkan
         \Log::info('Near location count: ' . $near_location->count());
-        \Log::info('Near locations: ' . json_encode($near_location->toArray()));
 
         $data['cars'] = $cars;
         $data['location'] = $location;
