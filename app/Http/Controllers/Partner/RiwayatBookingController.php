@@ -147,11 +147,29 @@ class RiwayatBookingController extends Controller
         return view('user.order-detail.e-tiket-hostel', $data);
     }
 
+    public function cetakCarRental($id)
+    {
+        $carRentalBooking = DetailTransactionCarRental::findOrFail($id);
+        $data = [
+            'data' => $carRentalBooking->load('carRental', 'car.brand', 'car.carModel', 'transaction.user')
+        ];
+        return view('user.order-detail.e-tiket-car-rental', $data); // Assuming a new blade for car rental invoice
+    }
+
+    public function cetakRekreasi($id)
+    {
+        $recreationBooking = detailTransactionRecreation::findOrFail($id);
+        $data = [
+            'data' => $recreationBooking->load('recreation', 'package', 'transaction.user')
+        ];
+        return view('user.order-detail.e-tiket-recreation', $data); // Assuming a new blade for recreation invoice
+    }
+
     public function indexRekreasi(Request $request)
     {
         $user_id = auth()->user()->id;
 
-        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction')
+        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction', 'package')
             ->whereHas('transaction', function ($q) {
                 $q->where('status', 'PAID');
             })
@@ -183,7 +201,7 @@ class RiwayatBookingController extends Controller
     public function verifikasiRekreasi($id)
     {
         $booking = detailTransactionRecreation::findOrFail($id);
-        $booking->status = 'verified';
+        $booking->is_used = true;
         $booking->save();
 
         return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
@@ -192,7 +210,7 @@ class RiwayatBookingController extends Controller
     public function batalVerifikasiRekreasi($id)
     {
         $booking = detailTransactionRecreation::findOrFail($id);
-        $booking->status = 'pending';
+        $booking->is_used = false;
         $booking->save();
 
         return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
