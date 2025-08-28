@@ -56,11 +56,11 @@
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#verified"
                             type="button" role="tab" aria-controls="verified" aria-selected="false">
-                        Sudah Diverifikasi
+                        Sudah Dipakai
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#pending"
                             type="button" role="tab" aria-controls="pending" aria-selected="false">
-                        Belum Diverifikasi
+                        Belum Dipakai
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#expired"
                             type="button" role="tab" aria-controls="expired" aria-selected="false">
@@ -113,9 +113,9 @@
                                             @if($isExpired && $status != 'verified')
                                                 <span class="badge badge-danger">Kadaluarsa</span>
                                             @elseif($status == 'verified')
-                                                <span class="badge badge-success">Verified</span>
+                                                <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -135,7 +135,7 @@
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
                                                             Invoice
                                                         </a>
                                                     </div>
@@ -192,7 +192,7 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-success">Verified</span>
+                                                <span class="badge badge-success">Sudah Dipakai</span>
                                             </td>
                                             <td class="text-center">
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
@@ -204,7 +204,7 @@
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
                                                             Invoice
                                                         </a>
                                                     </div>
@@ -265,7 +265,7 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">Belum Dipakai</span>
                                             </td>
                                             <td class="text-center">
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
@@ -371,18 +371,18 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Konfirmasi Verifikasi</h5>
+                            <h5 class="modal-title">Konfirmasi Penggunaan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Apakah Anda yakin ingin memverifikasi booking ini?</p>
+                            <p>Apakah Anda yakin ingin menandai booking ini sebagai sudah digunakan?</p>
                             <div class="text-center">
                                 <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}" class="btn btn-success">Verifikasi</a>
+                            <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}" class="btn btn-success">Sudah Dipakai</a>
                         </div>
                     </div>
                 </div>
@@ -395,18 +395,18 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Konfirmasi Pembatalan Verifikasi</h5>
+                            <h5 class="modal-title">Konfirmasi Pembatalan Penggunaan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Apakah Anda yakin ingin membatalkan verifikasi booking ini?</p>
+                            <p>Apakah Anda yakin ingin membatalkan tanda sudah digunakan untuk booking ini?</p>
                             <div class="text-center">
                                 <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-car-rental', $booking->id) }}" class="btn btn-danger">Ya, Batalkan Verifikasi</a>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-car-rental', $booking->id) }}" class="btn btn-danger">Ya, Belum Dipakai</a>
                         </div>
                     </div>
                 </div>
