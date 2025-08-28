@@ -488,6 +488,11 @@
         margin: 35px 25px;
     }
 
+    /* Memposisikan tombol scrolltop sedikit lebih ke kiri agar tidak tumpang tindih */
+    #kt_scrolltop {
+        right: 150px !important;
+    }
+
     .floating-container:hover {
         height: 300px;
     }
