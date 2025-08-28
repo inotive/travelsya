@@ -42,23 +42,12 @@
             </form>
         </div>
 
-        {{-- <div class="p-5 mb-25px d-flex flex-row align-items-center">
-            <button class="btn btn-sm rounded-pill bg-danger bg-opacity-25 text-danger">Semua</button>
-            <button class="btn btn-sm rounded-pill">Otomatis</button>
-            <button class="btn btn-sm rounded-pill">Manual</button>
-        </div> --}}
-
-        <ul class="nav nav-tabs nav-line-tabs p-5 mb-25px d-flex flex-row align-items-center rounded-pill">
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" href="#semua">Semua</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#otomatis">Otomatis</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#manual">Manual</a>
-            </li>
-        </ul>
+        <div class="d-flex justify-content-between align-items-center p-5 mb-25px">
+            <div>
+                <h4>Hasil Pencarian</h4>
+                <p class="text-muted">{{ $cars->count() }} mobil ditemukan</p>
+            </div>
+        </div>
 
         <div class="card shadow-sm rounded-4 overflow-hidden"
             style="background: linear-gradient(to right, rgba(255, 150, 150, 0.5), white)">
@@ -69,136 +58,57 @@
                 style="width:25px; height:25px; top: 35px; right: -10px;">
             </div>
             <div class="card-body d-flex flex-column justify-content-start" style="z-index: 10;">
-                <span class="card-title fw-bold my-2">Paket Ruguler</span>
+                <span class="card-title fw-bold my-2">Paket Reguler</span>
                 <span>Cari tau mudahnya cara memesan Sewa mobil di Travelsya</span>
             </div>
         </div>
 
         <div class="p-5 my-3">
             <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6" id="car_brands">
-                <div class="tab-content" id="myTabContent">
-                    <div class="tab-pane fade show active" id="semua" role="tabpanel">
-                        @foreach ($cars as $car)
-                        <div class="card shadow mb-1 w-100">
-                            <div class="card-body d-flex flex-row">
-                                <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
-                                    alt="..."
-                                    onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
-                                <div class="d-flex flex-column ms-5">
-                                    <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
-                                    <div class="d-flex flex-row align-items-center">
-                                        <span class="fa-solid fa-user-group ms-5"></span>
-                                        <span class="ms-2">{{ $car->number_seats }} Penumpang</span>
-                                        <span class="fa-solid fa-gears ms-5"></span>
-                                        <span class="ms-2">{{ $car->category }}</span>
-                                        @if (strtolower($car->category_rent) == 'dengan driver')
-                                        <span class="fa-solid fa-user ms-5"></span>
-                                        @else
-                                        <span class="fa-solid fa-user-slash ms-5"></span>
-                                        @endif
-                                        <span class="ms-2" id="passage_number">{{ $car->category_rent }}</span>
-                                        <span class="fa-solid fa-building ms-5"></span>
-                                        <span class="ms-2">{{ count($car->vendor) }} Penyedia</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column align-items-end ms-sm-auto">
-                                    <span class="mb-3">Mulai dari</span>
-                                    <span class="mb-2"><span class="text-danger fs-5 fw-bold">IDR
-                                            {{ number_format($car->rental_price_per_day, 0, ',', '.') }}</span> /
-                                        hari</span>
-                                    <!-- name, luggage, seats, id_brand, id_city -->
-                                    <button class="btn btn-danger py-1" id="provider_button-{{ $car->id }}"
-                                        data-bs-toggle="modal" data-bs-target="#providers-{{ $car->id }}-semua">Pilih
-                                        Mobil</button>
-                                </div>
+                @forelse ($cars as $car)
+                <div class="card shadow mb-1 w-100">
+                    <div class="card-body d-flex flex-row">
+                        <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
+                            alt="..."
+                            onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                        <div class="d-flex flex-column ms-5">
+                            <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
+                            <div class="d-flex flex-row align-items-center">
+                                <span class="fa-solid fa-user-group ms-5"></span>
+                                <span class="ms-2">{{ $car->number_seats }} Penumpang</span>
+                                <span class="fa-solid fa-gears ms-5"></span>
+                                <span class="ms-2">{{ $car->category }}</span>
+                                @if (strtolower($car->category_rent) == 'dengan driver')
+                                <span class="fa-solid fa-user ms-5"></span>
+                                @else
+                                <span class="fa-solid fa-user-slash ms-5"></span>
+                                @endif
+                                <span class="ms-2" id="passage_number">{{ $car->category_rent }}</span>
+                                <span class="fa-solid fa-building ms-5"></span>
+                                <span class="ms-2">{{ count($car->vendor) }} Penyedia</span>
                             </div>
                         </div>
-                        @include('pagesv2.car_rent.components._vendor_modal', [$type_transmission = 'semua'])
-                        @endforeach
-                    </div>
-                    <div class="tab-pane fade" id="otomatis" role="tabpanel">
-                        @foreach ($cars as $car)
-                            @if ($car->category == 'automatic')
-                                <div class="card shadow mb-1 w-100">
-                                    <div class="card-body d-flex flex-row">
-                                        <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
-                                            alt="..."
-                                            onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
-                                        <div class="d-flex flex-column ms-5">
-                                            <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <span class="fa-solid fa-user-group ms-5"></span>
-                                                <span class="ms-2">{{ $car->number_seats }} Penumpang</span>
-                                                <span class="fa-solid fa-gears ms-5"></span>
-                                                <span class="ms-2">{{ $car->category }}</span>
-                                                @if (strtolower($car->category_rent) == 'dengan driver')
-                                                <span class="fa-solid fa-user ms-5"></span>
-                                                @else
-                                                <span class="fa-solid fa-user-slash ms-5"></span>
-                                                @endif
-                                                <span class="ms-2" id="passage_number">{{ $car->category_rent }}</span>
-                                                <span class="fa-solid fa-building ms-5"></span>
-                                                <span class="ms-2">{{ count($car->vendor) }} Penyedia</span>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-end ms-sm-auto">
-                                            <span class="mb-3">Mulai dari</span>
-                                            <span class="mb-2"><span class="text-danger fs-5 fw-bold">IDR
-                                                    {{ number_format($car->rental_price_per_day, 0, ',', '.') }}</span> /
-                                                hari</span>
-                                            <!-- name, luggage, seats, id_brand, id_city -->
-                                            <button class="btn btn-danger py-1" id="provider_button-{{ $car->id }}"
-                                                data-bs-toggle="modal" data-bs-target="#providers-{{ $car->id }}-automatic">Pilih
-                                                Mobil</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                            @include('pagesv2.car_rent.components._vendor_modal', [$type_transmission = 'automatic'])
-                        @endforeach
-                    </div>
-                    <div class="tab-pane fade" id="manual" role="tabpanel">
-                        @foreach ($cars as $car)
-                            @if ($car->category == 'manual')
-                                <div class="card shadow mb-1 w-100">
-                                    <div class="card-body d-flex flex-row">
-                                        <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
-                                            alt="..."
-                                            onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
-                                        <div class="d-flex flex-column ms-5">
-                                            <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
-                                            <div class="d-flex flex-row align-items-center">
-                                                <span class="fa-solid fa-user-group ms-5"></span>
-                                                <span class="ms-2">{{ $car->number_seats }} Penumpang</span>
-                                                <span class="fa-solid fa-gears ms-5"></span>
-                                                <span class="ms-2">{{ $car->category }}</span>
-                                                @if (strtolower($car->category_rent) == 'dengan driver')
-                                                <span class="fa-solid fa-user ms-5"></span>
-                                                @else
-                                                <span class="fa-solid fa-user-slash ms-5"></span>
-                                                @endif
-                                                <span class="ms-2" id="passage_number">{{ $car->category_rent }}</span>
-                                                <span class="fa-solid fa-building ms-5"></span>
-                                                <span class="ms-2">{{ count($car->vendor) }} Penyedia</span>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex flex-column align-items-end ms-sm-auto">
-                                            <span class="mb-3">Mulai dari</span>
-                                            <span class="mb-2"><span class="text-danger fs-5 fw-bold">IDR
-                                                    {{ number_format($car->rental_price_per_day, 0, ',', '.') }}</span> /
-                                                hari</span>
-                                            <!-- name, luggage, seats, id_brand, id_city -->
-                                            <button class="btn btn-danger py-1" id="provider_button-{{ $car->id }}"
-                                                data-bs-toggle="modal" data-bs-target="#providers-{{ $car->id }}-manual">Pilih
-                                                Mobil</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endif
-                            @include('pagesv2.car_rent.components._vendor_modal', [$type_transmission = 'manual'])
-                        @endforeach
+                        <div class="d-flex flex-column align-items-end ms-sm-auto">
+                            <span class="mb-3">Mulai dari</span>
+                            <span class="mb-2"><span class="text-danger fs-5 fw-bold">IDR
+                                    {{ number_format($car->rental_price_per_day, 0, ',', '.') }}</span> /
+                                hari</span>
+                            <!-- name, luggage, seats, id_brand, id_city -->
+                            <button class="btn btn-danger py-1" id="provider_button-{{ $car->id }}"
+                                data-bs-toggle="modal" data-bs-target="#providers-{{ $car->id }}-{{ strtolower(str_replace(' ', '_', $category ?? 'semua')) }}">Pilih
+                                Mobil</button>
+                        </div>
                     </div>
                 </div>
+                @include('pagesv2.car_rent.components._vendor_modal', ['car' => $car, 'type_transmission' => strtolower(str_replace(' ', '_', $category ?? 'semua')), 'category' => $category, 'lokasi' => $location, 'model' => $car->car_model_id ?? '', 'date' => $date.' '.$time, 'duration' => $duration])
+                @empty
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <h4>Tidak ada mobil yang tersedia</h4>
+                        <p>Silakan coba ubah kriteria pencarian Anda</p>
+                    </div>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>

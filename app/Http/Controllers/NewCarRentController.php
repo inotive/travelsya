@@ -290,54 +290,59 @@ class NewCarRentController extends Controller
                 ->get();
         } else {
             // Query konsisten untuk semua jenis pencarian
-            $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
-                ->where(function ($query) use ($location, $category, $model, $car_model) {
-                    // Filter berdasarkan lokasi
-                    if ($location) {
-                        $query->whereHas('carRental', function ($subQuery) use ($location) {
-                            $subQuery->whereHas('kota', function ($kotaQuery) use ($location) {
-                                $kotaQuery->where('city_name', 'like', '%' . $location . '%');
-                            });
-                        });
-                    }
-                    
-                    // Filter berdasarkan kategori/cara rental
-                    if ($category) {
-                        // Konversi nilai dari form ke format yang sesuai di database
-                        $dbCategory = $category;
-                        if ($category == 'Dengan Driver' || $category == 'dengan driver') {
-                            $dbCategory = 'Dengan Driver';
-                        } elseif ($category == 'Lepas Kunci' || $category == 'Tidak Dengan Driver') {
-                            $dbCategory = 'Lepas Kunci';
-                        }
-                        
-                        $query->where('category_rent', $dbCategory);
-                    }
-                    
-                    // Filter berdasarkan model mobil
-                    if ($model) {
-                        $query->where('car_model_id', $model);
-                    }
-                    
-                    // Filter berdasarkan car_model_id (untuk favorite cars)
-                    if ($car_model) {
-                        $query->where('car_model_id', $car_model);
-                    }
-                })
-                ->get();
+            $carsQuery = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota');
+            
+            // Filter berdasarkan lokasi
+            if ($location) {
+                $carsQuery->whereHas('carRental', function ($subQuery) use ($location) {
+                    $subQuery->whereHas('kota', function ($kotaQuery) use ($location) {
+                        // Gunakan pencocokan parsial untuk lokasi
+                        $kotaQuery->where('city_name', 'like', '%' . $location . '%');
+                    });
+                });
+            }
+            
+            // Filter berdasarkan kategori/cara rental
+            if ($category) {
+                // Konversi nilai dari form ke format yang sesuai di database
+                $dbCategory = $category;
+                if ($category == 'Dengan Driver' || $category == 'dengan driver') {
+                    $dbCategory = 'Dengan Driver';
+                } elseif ($category == 'Lepas Kunci' || $category == 'Tidak Dengan Driver' || $category == 'lepas kunci') {
+                    $dbCategory = 'Lepas Kunci';
+                }
+                
+                $carsQuery->where('category_rent', $dbCategory);
+            }
+            
+            // Filter berdasarkan model mobil
+            if ($model) {
+                $carsQuery->where('car_model_id', $model);
+            }
+            
+            // Filter berdasarkan car_model_id (untuk favorite cars)
+            if ($car_model) {
+                $carsQuery->where('car_model_id', $car_model);
+            }
+            
+            $cars = $carsQuery->get();
         }
 
         // Log jumlah hasil
         \Log::info('Jumlah mobil ditemukan: ' . $cars->count());
 
         foreach ($cars as $key => $c) {
-            $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
+            // Perbaiki pengambilan vendor - filter berdasarkan brand_id dan car_model_id yang sama
+            $vendor = CarRentalHasCars::with('carRental', 'carRental.kota', 'carRental.reviews')
+                ->where('brand_id', $c['brand_id'])
+                ->where('car_model_id', $c['car_model_id'])
+                ->get();
             $ven = [];
             foreach ($vendor as $key => $v) {
                 $item = [
                     'car_id' => $v['id'],
                     'vendor_id' => $v['car_rental_id'],
-                    'business_name' => $v['carRental']['business_name'],
+                    'business_name' => $v['carRental']['business_name'] ?? 'Unknown Vendor',
                     'brand_id' => $v['brand_id'],
                     'location' => $v['carRental']['kota']['city_name'] ?? '',
                     'reviews' => $v['carRental']->reviews()->count(),

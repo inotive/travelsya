@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="modal-body">
-                                @foreach ($car->vendor as $v)
+                @forelse ($car->vendor as $v)
                 <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
                         <div class="d-flex flex-column">
@@ -121,7 +121,11 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="alert alert-info text-center">
+                    <h4>Tidak ada penyedia rental untuk mobil ini</h4>
+                </div>
+                @endforelse
             </div>
         </div>
     </div>
