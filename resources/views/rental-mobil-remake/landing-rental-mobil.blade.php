@@ -100,7 +100,7 @@
 
         <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 30px;">
             <div style="width: 78%; background-color: #ffffff; padding: 20px; border-radius: 10px;">
-                <h1 style="text-align:left; margin-bottom: 20px;">Ketentuan Umum Sewa Mobil</h1>
+                <h1 style="text-align:left; margin-bottom: 20px;">Syarat Rental Mobil</h1>
 
                 <div class="container d-flex flex-wrap justify-content-between ">
                     <div class="card mr-2 mb-3" style="margin-left: -10px;">
@@ -233,7 +233,7 @@
 
         <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 30px;">
             <div style="width: 78%; background-color: #ffffff; padding: 20px; border-radius: 10px;">
-                <h1 style="text-align: left;">Kendaraan Favorit Rental Mobil di Travelsya</h1>
+                <h1 style="text-align: left;">Kota Populer</h1>
 
                     <div class="d-flex flex-wrap justify-content-between">
                             <div class="city-card" style="position: relative; width: 23%; height: 200px;">

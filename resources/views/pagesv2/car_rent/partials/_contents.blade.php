@@ -93,7 +93,7 @@
     <section class="without_cheuffeur" style="margin-bottom: 60px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Lepas Kunci</h2>
+                <h2 class="text-dark" style="position: relative; top: 3px;">Syarat Rental Mobil</h2>
             </div>
         </div>
         <div class="row">
@@ -116,7 +116,7 @@
                         <div class="extra-content">
                             <p>Detail tambahan yang di-hidden sebelumnya bisa ditambahkan di sini.</p>
                         </div>
-                        <button class="btn btn-link text-danger mt-sm-auto toggle-button">Baca Lebih Banyak <span
+                        <button class="btn btn-link text-danger mt-sm-auto toggle-button d-none">Baca Lebih Banyak <span
                                 class="fa-solid fa-chevron-down fw-bold" id="rotatable_icon"></span></button>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                         </ul>
                         <span>Tidak Termasuk</span><br>
                         <span>Bensin, pengambilan/pengembalian di luar kota, dan klaim asuransi</span>
-                        <button class="btn btn-link text-danger mt-sm-auto">Baca Lebih Banyak <span
+                        <button class="btn btn-link text-danger mt-sm-auto toggle-button-lepas-kunci d-none">Baca Lebih Banyak <span
                                 class="fa-solid fa-chevron-down fw-bold" id="rotatable_icon"></span></button>
                     </div>
                 </div>
