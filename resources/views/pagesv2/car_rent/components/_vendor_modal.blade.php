@@ -31,19 +31,18 @@
                 </div>
             </div>
             <div class="modal-body">
-                @foreach ($car->vendor as $v)
-                {{-- {{ dd($v) }} --}}
-                <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] }}">
+                                @foreach ($car->vendor as $v)
+                <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
                         <div class="d-flex flex-column">
-                            <span class="fw-bold mb-5">{{ $v['business_name'] }}</span>
+                            <span class="fw-bold mb-5">{{ $v['business_name'] ?? $v->carRental->business_name ?? 'Unknown Vendor' }}</span>
                             <div class="rating d-flex align-items-center mb-1">
                                 <span class="bintang text-warning fa fa-star checked me-2"></span>
                                 <span class="rating-number fw-bold">{{
-                                    \App\Helpers\General::getCarRentalRate($v['car_id']) }}
+                                    \App\Helpers\General::getCarRentalRate($v['car_id'] ?? $v->id ?? 0) }}
                                     / <small>5</small> <a href="#"
                                         class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{
-                                        number_format($v['reviews']) }}
+                                        number_format($v['reviews'] ?? 0) }}
                                         Ulasan)</a>
                                 </span>
                                 <span class="rating-number custom-dot-before">{{ number_format($car->booked()->count())
@@ -60,14 +59,42 @@
                         </div>
                         <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
                             <span class="mb-2"><span class="text-danger fw-bold">IDR
-                                    {{ number_format($v['price'], '0', ',', '.') }}</span> /
+                                    {{ number_format($v['price'] ?? $v->rental_price_per_day ?? 0, '0', ',', '.') }}</span> /
                                 hari</span>
+                            @php
+                                // Menentukan lokasi dengan berbagai fallback - memastikan selalu ada nilai
+                                $lokasi = 'jakarta'; // Default value
+                                
+                                // Coba dapatkan dari array
+                                if (isset($v['location']) && !empty($v['location'])) {
+                                    $lokasi = $v['location'];
+                                } 
+                                // Coba dapatkan dari object relationship
+                                elseif (isset($v->carRental) && isset($v->carRental->kota) && isset($v->carRental->kota->city_name) && !empty($v->carRental->kota->city_name)) {
+                                    $lokasi = $v->carRental->kota->city_name;
+                                } 
+                                // Coba dapatkan dari variable location
+                                elseif (isset($location) && !empty($location)) {
+                                    $lokasi = $location;
+                                }
+                                         
+                                // Menentukan provider dengan berbagai fallback
+                                $provider = 'default_provider'; // Default value
+                                if (!empty($v['car_id'])) {
+                                    $provider = $v['car_id'];
+                                } elseif (!empty($v->id)) {
+                                    $provider = $v->id;
+                                }
+                                           
+                                // Menentukan tanggal dengan format yang benar
+                                $tanggal = urlencode(trim(($date ?? date('Y-m-d')) . ' ' . ($time ?? '08:00')));
+                            @endphp
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan driver',
-                                'lokasi' => $v['location'] ?? 'jakarta',
+                                'lokasi' => $lokasi,
                                 'model' => $model ?? $car->car_model_id,
-                                'provider' => !empty($v['car_id']) ? $v['car_id'] : 'default_provider',
-                                'date' => trim(($date ?? '') . ' ' . ($time ?? '')),
+                                'provider' => $provider,
+                                'date' => $tanggal,
                                 'duration'=> $duration ?? 1
                             ]) }}">
 
