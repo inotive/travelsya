@@ -1,47 +1,49 @@
 @extends('ekstranet.layout', ['title' => 'Riwayat Booking Rekreasi', 'url' => '#'])
 
 @section('content-admin')
+<form action="#" method="get">
+    <div class="card mb-2">
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Tahun</label>
+                    <select class="form-select" name="year">
+                        <option value="">Pilih Tahun</option>
+                        @php
+                            $currentYear = date('Y');
+                            $startYear = 2020;
+                        @endphp
+                        @for ($i = $currentYear; $i >= $startYear; $i--)
+                            <option value="{{ $i }}"
+                                {{ request()->get('year') == $i ? 'selected' : '' }}>
+                                {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Dari Tanggal</label>
+                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sampai Tanggal</label>
+                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-body">
-            <!-- Filter and Search Form -->
-            <form action="#" method="get" class="mb-5">
-                <div class="row g-3 align-items-end">
-                    <!-- Date Filters -->
-                    <div class="col-md-2">
-                        <label class="form-label">Tahun</label>
-                        <select class="form-select" name="year">
-                            <option value="">Pilih Tahun</option>
-                            @php
-                                $currentYear = date('Y');
-                                $startYear = 2020;
-                            @endphp
-                            @for ($i = $currentYear; $i >= $startYear; $i--)
-                                <option value="{{ $i }}"
-                                    {{ request()->get('year') == $i ? 'selected' : '' }}>
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Dari Tanggal</label>
-                        <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Sampai Tanggal</label>
-                        <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
-                    </div>
-                    <!-- Keyword Search -->
-                    <div class="col-md-4">
-                        <label class="form-label">Kata Kunci</label>
-                        <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Paket" value="{{ request()->get('keyword') }}">
-                    </div>
-                    <!-- Submit Button -->
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Cari</button>
-                    </div>
+            <div class="row g-3 align-items-end mb-5">
+                <div class="col-md-10">
+                    <label class="form-label">Kata Kunci</label>
+                    <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Paket" value="{{ request()->get('keyword') }}">
                 </div>
-            </form>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Cari</button>
+                </div>
+            </div>
 
             <!-- Navigasi Tab Simple -->
             <div class="mb-4">
@@ -120,8 +122,7 @@
                                                     </div>
                                                 @elseif($booking->is_used)
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-danger">
+                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
@@ -186,8 +187,7 @@
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                     data-kt-menu="true" style="">
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-danger">
+                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
@@ -333,6 +333,7 @@
             </div>
         </div>
     </div>
+</form>
 
     @foreach ($rekreasibookdates as $booking)
         @php
@@ -355,6 +356,29 @@
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                             <a href="{{ route('partner.riwayat-booking.verifikasi-rekreasi', $booking->id) }}" class="btn btn-success">Verifikasi</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        
+        @if($booking->is_used)
+            <div class="modal fade" id="cancellationModalRekreasi{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Konfirmasi Pembatalan Verifikasi</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin membatalkan verifikasi tiket ini?</p>
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Ya, Batalkan Verifikasi</a>
                         </div>
                     </div>
                 </div>
