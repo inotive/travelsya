@@ -33,44 +33,58 @@ class NewCarRentController extends Controller
         $find = '%' . $request->name . '%';
 
         // $carRent = CarRental::withCount('hasCars')->where('business_name', 'like', $find)->get();
-        $cars = CarRentalHasCars::with('carRental')->whereHas('carRental', function($q) use($find) {
-            $q->where('business_name', 'like', $find);
-        })->get();
+        $cars = CarRentalHasCars::with('carRental', 'carRental.kota', 'brand', 'carModel')
+            ->whereHas('carRental', function($q) use($find) {
+                $q->where('business_name', 'like', $find);
+            })
+            ->get();
 
-        $date = Carbon::now()->format('d-m-Y H:i');
+        $date = Carbon::now()->format('Y-m-d H:i');
 
-        $result = null;
+        $result = '';
         foreach ($cars as $key => $car) {
-            $result = $result . '<a href="' .
+            // Memastikan semua parameter tersedia
+            $category = $car->category_rent ?? 'dengan driver';
+            $lokasi = $car->carRental->kota->city_name ?? 'jakarta';
+            $model = $car->car_model_id ?? 1;
+            $provider = $car->id ?? 1;
+            $duration = 1;
+            
+            // Membuat URL dengan parameter yang aman
+            try {
+                $url = route('car_rent.detail', [
+                    'category' => $category,
+                    'lokasi' => $lokasi,
+                    'model' => $model,
+                    'provider' => $provider,
+                    'date' => $date,
+                    'duration'=> $duration
+                ]);
+            } catch (\Exception $e) {
+                // Jika ada error dalam membuat route, gunakan URL default
+                $url = '#';
+                \Log::error('Error creating car_rent.detail route: ' . $e->getMessage());
+            }
+            
+            $result .= '<a href="' . $url . '" class="d-flex w-100 flex-stack">
+                            <img src="' . asset($car->brand->image ?? 'images/default.jpg') .'" class="me-4 w-50px" style="border-radius: 4px" alt="">
+                            <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                                <div class="flex-grow-1 me-2">
+                                    <span class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">' .
+                                        ($car->brand->name ?? 'deleted brand') . ' - ' . ($car->carModel->name ?? 'deleted model') .
+                                    '</span>
+                                    <span class="text-muted fw-semibold d-block fs-7">' . 
+                                        ($car->carRental->business_name ?? 'Unknown Rental') . ' - ' . ($car->carRental->kota->city_name ?? 'Unknown Location') .
+                                    '</span>
+                                </div>
+                            </div>
+                        </a>
+                        <hr>';
+        }
 
-                                    route('car_rent.detail', [
-                                        'category' => $car->category_rent,
-                                        'lokasi' => $car->carRental->kota->city_name,
-                                        'model' => $car->car_model_id,
-                                        'provider' => $car->id,
-                                        'date' => $date,
-                                        'duration'=> 1
-                                        ])
-
-                                    .'" class="d-flex w-100 flex-stack">
-
-                                    <img src="' . asset($car->brand->image) .'" class="me-4 w-50px" style="border-radius: 4px" alt="">
-
-                                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
-
-                                        <div class="flex-grow-1 me-2">
-
-                                            <span  class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
-                                                . ($car->brand->name ?? 'deleted brand') . ' - ' . ($car->carModel->name ?? 'deleted model') .
-                                            '</span>
-
-                                            <span class="text-muted fw-semibold d-block fs-7">
-                                                ' . $car->carRental->business_name . ' - ' . $car->carRental->kota->city_name .'
-                                            </span>
-                                        </div>
-                                    </div>
-                                </a>
-                                <hr>' ;
+        // Jika tidak ada hasil, tampilkan pesan
+        if (empty($result)) {
+            $result = '<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Tidak ada data</div>';
         }
 
         return $result;
@@ -256,30 +270,65 @@ class NewCarRentController extends Controller
         $duration = $request->duration;
         $model = $request->model_id;
         $car_model = $request->car_model_id;
+        $search = $request->search;
 
-        $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
-            ->where(function ($k) use ($location, $category, $model, $car_model) {
-                $k->when($location, function ($q, $l) {
-                        $q->whereHas('carRental', function ($r) use ($l) {
-                            $r->whereHas('kota', function ($k) use ($l) {
-                                $k->where('city_name', 'like', '%' . $l . '%')
-                                    ->orWhere('city_id', $l);
+        // Log request untuk debugging
+        \Log::info('Car Rent Show Request:', [
+            'category' => $category,
+            'location' => $location,
+            'model' => $model,
+            'car_model' => $car_model,
+            'search' => $search
+        ]);
+
+        // Jika ada parameter pencarian, cari berdasarkan nama bisnis
+        if ($search) {
+            $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
+                ->whereHas('carRental', function($q) use($search) {
+                    $q->where('business_name', 'like', '%' . $search . '%');
+                })
+                ->get();
+        } else {
+            // Query konsisten untuk semua jenis pencarian
+            $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
+                ->where(function ($query) use ($location, $category, $model, $car_model) {
+                    // Filter berdasarkan lokasi
+                    if ($location) {
+                        $query->whereHas('carRental', function ($subQuery) use ($location) {
+                            $subQuery->whereHas('kota', function ($kotaQuery) use ($location) {
+                                $kotaQuery->where('city_name', 'like', '%' . $location . '%');
                             });
                         });
-                    })
-                    ->when($category, function ($q, $category) {
-                        $q->where('category_rent', $category);
-                    })
-                    ->when($model, function ($q, $m) {
-                        $q->where('car_model_id', $m);
-                    })
-                    ->when($car_model, function ($q, $m) {
-                        $q->where('car_model_id', $m);
-                    })
-                ;
-            })
-            ->get();
+                    }
+                    
+                    // Filter berdasarkan kategori/cara rental
+                    if ($category) {
+                        // Konversi nilai dari form ke format yang sesuai di database
+                        $dbCategory = $category;
+                        if ($category == 'Dengan Driver' || $category == 'dengan driver') {
+                            $dbCategory = 'Dengan Driver';
+                        } elseif ($category == 'Lepas Kunci' || $category == 'Tidak Dengan Driver') {
+                            $dbCategory = 'Lepas Kunci';
+                        }
+                        
+                        $query->where('category_rent', $dbCategory);
+                    }
+                    
+                    // Filter berdasarkan model mobil
+                    if ($model) {
+                        $query->where('car_model_id', $model);
+                    }
+                    
+                    // Filter berdasarkan car_model_id (untuk favorite cars)
+                    if ($car_model) {
+                        $query->where('car_model_id', $car_model);
+                    }
+                })
+                ->get();
+        }
 
+        // Log jumlah hasil
+        \Log::info('Jumlah mobil ditemukan: ' . $cars->count());
 
         foreach ($cars as $key => $c) {
             $vendor = CarRentalHasCars::where('brand_id', $c['brand_id'])->get();
@@ -302,7 +351,17 @@ class NewCarRentController extends Controller
             $c['vendor'] = $ven;
         }
 
-        $near_location = CarRental::with('kota', 'hasCars')->whereHas('hasCars')->get()->pluck('kota.city_name', 'kota.city_name');
+        // Query konsisten untuk near_location - tampilkan semua kota yang memiliki rental mobil
+        // Debug query untuk melihat apa yang terjadi
+        \Log::info('Checking cities with car rentals...');
+        
+        // Query yang lebih fleksibel untuk menangani inkonsistensi data
+        // Mengambil semua kota untuk memastikan data ditampilkan
+        $near_location = City::orderBy('city_name')->pluck('city_name', 'city_name');
+        
+        // Log jumlah kota yang ditampilkan
+        \Log::info('Near location count: ' . $near_location->count());
+        \Log::info('Near locations: ' . json_encode($near_location->toArray()));
 
         $data['cars'] = $cars;
         $data['location'] = $location;
@@ -313,7 +372,6 @@ class NewCarRentController extends Controller
         $data['time'] = $time;
         $data['duration'] = $duration;
         $data['near_location'] = $near_location;
-        // $data['providers'] = collect($providers);
         return view('pagesv2.car_rent.show', $data);
     }
 

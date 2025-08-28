@@ -3,9 +3,6 @@
         <div class="card border mb-5">
             <form action="{{ route('car_rent.show') }}" method="post">
                 @csrf
-                @if ($model)
-                <input type="hidden" value="{{ $model }}">
-                @endif
                 <div class="card-body d-flex flex-row align-items-center">
                     <div class="input-group d-flex flex-row align-items-center border-0" style="width: 75%;">
                         <span class="input-group-text border-none bg-light">
@@ -13,22 +10,21 @@
                         </span>
                         <select name="category" id="category"
                             class="form-control border-none border-right-2 max-w-200 py-0">
+                            <option value="">Semua Cara Rental</option>
                             <option @if ($category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver
                             </option>
-                            <option @if ($category=='Tidak Dengan Driver' ) selected @endif value="Tidak Dengan Driver">Lepas Kunci
+                            <option @if ($category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci
                             </option>
                         </select>
                         <select name="location" id="location" class="form-control border-none max-w-200 py-0"
                                     data-placeholder="Pilih Lokasi" autocomplete="on">
                                 @foreach($near_location as $city)
-                                    <option value="{{ $city }}">{{ $city }}</option>
+                                    <option value="{{ $city }}" @if ($location==$city) selected @endif>{{ $city }}</option>
                                 @endforeach
                             </select>
-                        {{-- <input type="text" name="location" class="form-control border-none max-w-150" id="location"
-                            value="{{ $location }}" placeholder="lokasi anda"> --}}
                         <input type="text" name="date" id="date" onfocus="(this.type='date')"
                             class="form-control border-none border-left-2  max-w-200 py-0"
-                            value="{{ $date != '' ? $date : date('d/m/Y', strtotime(now())) }}"
+                            value="{{ $date != '' ? $date : date('Y-m-d') }}"
                             placeholder="tanggal sewa">
                         <span class="input-group-text border-none bg-light">
                             <i class="fa-solid fa-dot-circle fs-8"></i>

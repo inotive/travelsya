@@ -184,7 +184,12 @@
                     <form action="{{ route('car_rent.show') }}" method="post"
                         id="form_favorite_car{{ $model->id }}">
                         @csrf
-                        <input type="hidden" name="model_id" value="{{ $model->car_model_id }}">
+                        <input type="hidden" name="car_model_id" value="{{ $model->car_model_id }}">
+                        <input type="hidden" name="category" value="">
+                        <input type="hidden" name="location" value="">
+                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                        <input type="hidden" name="time" value="08:00">
+                        <input type="hidden" name="duration" value="1">
                         <div class="col p-3">
                             <a href="javascript:" class="text-decoration-none text-dark"
                                 id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
@@ -231,6 +236,10 @@
                         id="form_location{{ \App\Helpers\General::getSlug($location) }}">
                         @csrf
                         <input type="hidden" name="location" value="{{ $location }}">
+                        <input type="hidden" name="category" value="">
+                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                        <input type="hidden" name="time" value="08:00">
+                        <input type="hidden" name="duration" value="1">
                         <a href="javascript:" class="text-decoration-none text-dark"
                             id="location_button{{ \App\Helpers\General::getSlug($location) }}"
                             onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
@@ -319,11 +328,15 @@
     </script>
     <script>
         function submit(val) {
+            // Tambahkan logging untuk debugging
+            console.log('Submitting favorite car form:', val);
             $("form#form_favorite_car" + val).submit();
             return false;
         };
 
         function submit_location(val) {
+            // Tambahkan logging untuk debugging
+            console.log('Submitting location form:', val);
             $("form#form_location" + val).submit();
             return false;
         };
