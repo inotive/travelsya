@@ -11,9 +11,9 @@
 
     <!--begin::Header Logo-->
     <div class="header-logo me-5 me-md-10 flex-grow-1 flex-lg-grow-0 mt-3 mb-3">
-        <a href="{{ route('home') }}" style="background: #F7F6F8; border-radius: 5px; padding: 5px;">
-            <img alt="Logo" src="{{ asset('assets/media/logos/new-logo-1.png') }}" class="logo-default h-40px" />
-            <img alt="Logo" src="{{ asset('assets/media/logos/new-logo-1.png') }}" class="logo-sticky h-40px" />
+        <a href="{{ route('home') }}">
+            <img alt="Logo" src="{{ asset('assets/media/logos/logonew.png') }}" class="logo-default h-40px" />
+            <img alt="Logo" src="{{ asset('assets/media/logos/logonew.png') }}" class="logo-sticky h-40px" />
         </a>
     </div>
     <!--end::Header Logo-->

@@ -445,9 +445,9 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRecreation'])->name('partner.riwayat-booking.recreation');
-Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
-Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
-Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
+        Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
+        Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
+        Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
   Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
         ->name('partner.riwayat-booking.car-rental');
     Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
@@ -484,6 +484,10 @@ Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingCo
         Route::post('daftar-bus-travel/edit/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'update'])->name('partner.update.bus-travel');
         Route::delete('bus-travel-delete/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'destroy'])->name('partner.delete.bus-travel');
 
+        Route::get('riwayat-booking-bus', [RiwayatBookingController::class, 'indexBus'])->name('partner.riwayat-booking.bus');
+        Route::get('riwayat-booking-bus/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiBus'])->name('partner.riwayat-booking.verifikasi-bus');
+        Route::get('riwayat-booking-bus/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiBus'])->name('partner.riwayat-booking.batal-verifikasi-bus');
+
         // Bus routes management
         // Route::get('bus-routes', [\App\Http\Controllers\Partner\BusRouteController::class, 'index'])->name('partner.bus.routes');
         // Route::get('bus-routes/create', [\App\Http\Controllers\Partner\BusRouteController::class, 'create'])->name('partner.bus.routes.create');
@@ -497,7 +501,7 @@ Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingCo
         Route::get('bus-departures/bus/{busId}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures.bus');
         Route::post('bus-departures/store', [\App\Http\Controllers\Partner\BusDepartureController::class, 'store'])->name('partner.bus.departures.store');
         Route::post('bus-departures/update', [\App\Http\Controllers\Partner\BusDepartureController::class, 'update'])->name('partner.bus.departures.update');
-        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'destroy'])->name('partner.bus.departures.delete');
+        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'delete'])->name('partner.bus.departures.delete');
 
         // Keep these routes for backward compatibility
         Route::get('bus-departures/create', [\App\Http\Controllers\Partner\BusDepartureController::class, 'create'])->name('partner.bus.departures.create');
