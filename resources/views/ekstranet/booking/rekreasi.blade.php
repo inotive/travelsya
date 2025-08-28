@@ -1,43 +1,48 @@
 @extends('ekstranet.layout', ['title' => 'Riwayat Booking Rekreasi', 'url' => '#'])
 
 @section('content-admin')
-    <div class="card mb-2">
+    <div class="card">
         <div class="card-body">
-            <form action="#" method="get">
-                <div class="row">
-                    <div class="col-3">
+            <!-- Filter and Search Form -->
+            <form action="#" method="get" class="mb-5">
+                <div class="row g-3 align-items-end">
+                    <!-- Date Filters -->
+                    <div class="col-md-2">
+                        <label class="form-label">Tahun</label>
                         <select class="form-select" name="year">
-                            <option value="" disabled selected>Pilih Tahun</option>
+                            <option value="">Pilih Tahun</option>
                             @php
                                 $currentYear = date('Y');
                                 $startYear = 2020;
                             @endphp
                             @for ($i = $currentYear; $i >= $startYear; $i--)
                                 <option value="{{ $i }}"
-                                    {{ isset($_GET['year']) && $_GET['year'] == $i ? 'selected' : '' }}>
+                                    {{ request()->get('year') == $i ? 'selected' : '' }}>
                                     {{ $i }}
                                 </option>
                             @endfor
                         </select>
                     </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="start" placeholder="Tanggal Mulai"
-                            value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
+                    <div class="col-md-2">
+                        <label class="form-label">Dari Tanggal</label>
+                        <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
                     </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="end" placeholder="Tanggal Selesai"
-                            value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
+                    <div class="col-md-2">
+                        <label class="form-label">Sampai Tanggal</label>
+                        <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
                     </div>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary w-100">Cari Data</button>
+                    <!-- Keyword Search -->
+                    <div class="col-md-4">
+                        <label class="form-label">Kata Kunci</label>
+                        <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Paket" value="{{ request()->get('keyword') }}">
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Cari</button>
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
 
-    <div class="card">
-        <div class="card-body">
             <!-- Navigasi Tab Simple -->
             <div class="mb-4">
                 <div class="d-flex gap-4 border-bottom">
