@@ -198,7 +198,7 @@
                         ->count();
                     
                     $totalPemesanan = $bookingHotel + $bookingHostel + $bookingCarRental + $bookingRecreation + $bookingBus + $bookingClinic;
-                    $isPemesananActive = in_array(Request::segment(2), ['riwayat-booking', 'riwayat-booking-recreation', 'riwayat-booking-car-rental']);
+                    $isPemesananActive = in_array(Request::segment(2), ['riwayat-booking', 'riwayat-booking-recreation', 'riwayat-booking-car-rental', 'riwayat-booking-bus-travel']);
                 @endphp
                 
                 <div data-kt-menu-trigger="click" class="menu-item menu-accordion pemesanan-menu {{ $isPemesananActive ? 'here show' : '' }}">
@@ -251,7 +251,19 @@
                             </div>
                             <!--end:Menu item-->
                         @endif
-                        {{-- Add other business types here when their booking history pages are ready --}}
+                        @if (count($busTravels) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-bus-travel' ? 'active' : '' }}"
+                                    href="{{ route('partner.riwayat-booking.bus-travel') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Bus & Travel</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
                     </div>
                 </div>
                 <a href="{{ route('partner.review') }}"

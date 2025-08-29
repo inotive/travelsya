@@ -484,9 +484,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('daftar-bus-travel/edit/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'update'])->name('partner.update.bus-travel');
         Route::delete('bus-travel-delete/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'destroy'])->name('partner.delete.bus-travel');
 
-        Route::get('riwayat-booking-bus', [RiwayatBookingController::class, 'indexBus'])->name('partner.riwayat-booking.bus');
-        Route::get('riwayat-booking-bus/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiBus'])->name('partner.riwayat-booking.verifikasi-bus');
-        Route::get('riwayat-booking-bus/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiBus'])->name('partner.riwayat-booking.batal-verifikasi-bus');
+        Route::get('riwayat-booking-bus-travel', [RiwayatBookingController::class, 'indexBus'])->name('partner.riwayat-booking.bus-travel');
+        Route::get('riwayat-booking-bus-travel/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiBus'])->name('partner.riwayat-booking.verifikasi-bus');
+        Route::get('riwayat-booking-bus-travel/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiBus'])->name('partner.riwayat-booking.batal-verifikasi-bus');
+        Route::get('riwayat-booking-bus-travel/cetak-invoice/{id}', [RiwayatBookingController::class, 'cetakBus'])->name('partner.riwayat-booking.cetak-invoice-bus');
 
         // Bus routes management
         // Route::get('bus-routes', [\App\Http\Controllers\Partner\BusRouteController::class, 'index'])->name('partner.bus.routes');
