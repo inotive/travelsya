@@ -47,7 +47,7 @@ class AuthController extends Controller
             }
             if ($user->role == 0) {
                 Log::info('Admin user redirecting to admin dashboard', ['user_id' => $user->id]);
-                return redirect()->intended('admin/dashboard');
+                return redirect()->route('admin.dashboard');
             }
         }
 

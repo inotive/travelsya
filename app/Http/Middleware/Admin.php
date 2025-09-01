@@ -16,6 +16,8 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
+        \Log::info('User attempting admin access: ' . auth()->user()?->email . ' with role: ' . auth()->user()?->role . ' (type: ' . gettype(auth()->user()?->role) . ')');
+
         $user = Auth::user();
 
         if ($user->role === 0) {
