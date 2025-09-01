@@ -1,174 +1,219 @@
 @extends('ekstranet.layout', ['title' => 'Riwayat Booking', 'url' => '#'])
 
 @section('content-admin')
-<div class="row g-5">
-    <div class="col-lg-8">
-        <div class="card mb-4 flex-fill">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Detail Reservasi</h3>
-                    <hr class="mt-2 mb-4">
-                </div>
+<style>
+    .e-ticket-container {
+        max-width: 800px;
+        margin: 20px auto;
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    .e-ticket-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eee;
+    }
+    .e-ticket-header h1 {
+        color: #c02425;
+        margin: 0;
+        font-size: 2.8em;
+        font-weight: 700;
+    }
+    .e-ticket-header p {
+        color: #666;
+        font-size: 1.2em;
+        margin-top: 5px;
+    }
+    .e-ticket-main-info {
+        background-color: #fdfdfd;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        border: 1px solid #eee;
+    }
+    .e-ticket-main-info h2 {
+        color: #212121;
+        font-size: 2.2em;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+    .e-ticket-main-info p {
+        color: #666;
+        font-size: 1.1em;
+        margin-bottom: 25px;
+    }
+    .e-ticket-date-block {
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .e-ticket-date-item {
+        flex: 1;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin: 0 10px;
+    }
+    .e-ticket-date-item:first-child { margin-left: 0; }
+    .e-ticket-date-item:last-child { margin-right: 0; }
+    .e-ticket-date-item .label {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #c02425;
+        margin-bottom: 5px;
+    }
+    .e-ticket-date-item .value {
+        font-size: 1.05em;
+        color: #c02425;
+    }
+    .e-ticket-section-title {
+        color: #c02425;
+        font-size: 1.6em;
+        margin-top: 35px;
+        margin-bottom: 20px;
+        border-bottom: 3px solid #c02425;
+        padding-bottom: 8px;
+        font-weight: 600;
+    }
+    .e-ticket-info-block {
+        background-color: #fdfdfd;
+        border-radius: 8px;
+        padding: 15px 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+    .e-ticket-info-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px dashed #eee;
+        align-items: center;
+    }
+    .e-ticket-info-row:last-child {
+        border-bottom: none;
+    }
+    .e-ticket-info-label {
+        font-weight: 600;
+        color: #555;
+        flex-basis: 45%;
+    }
+    .e-ticket-info-value {
+        color: #333;
+        text-align: right;
+        flex-basis: 50%;
+    }
+    .e-ticket-info-row.total .e-ticket-info-label,
+    .e-ticket-info-row.total .e-ticket-info-value {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #c02425;
+    }
+</style>
 
-                <div class="d-flex flex-wrap flex-sm-nowrap p-3 m-5 mt-4">
-                    <div class="flex-grow-1">
-                        <div class="d-flex justify-content-between align-items-start flex-wrap mb-5">
-                            <div class="d-flex flex-column">
-                                <div class="d-flex align-items-center mb-2 mt-2">
-                                    <h2 class="text-gray-900 text-hover-primary fs-3 fw-bold me-1">Nama Pelanggan</h2>
-                                </div>
-                                <div class="d-flex flex-wrap fw-semibold fs-3 mb-1 pe-1">
-                                    <h1 class="d-flex align-items-center me-5 mb-2">
-                                        {{ $healthbeautybookdates->transaction->user->name }}
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                        @php
-                        $orderDate = \Carbon\Carbon::parse($healthbeautybookdates->created_at);
-                        $expireDate = \Carbon\Carbon::parse($healthbeautybookdates->expire_on);
-                        $orderDates = $orderDate->Format('d F Y');
-                        $expireDates = $expireDate->Format('d F Y');
-                        @endphp
-                        <div class="d-flex flex-wrap flex-stack">
-                            <div class="d-flex flex-column flex-grow-1 pe-12 ">
-                                <div class="d-flex flex-wrap ">
-                                    <p href="#" class="fw-medium">
-                                        Tanggal Pemesanan
-                                    </p>
-                                </div>
-                                <div class="d-flex flex-wrap">
-                                    <p  class="fw-bold">
-                                        {{ $orderDates}}
-                                    </p>
-                                </div>
-                            </div>
+<div class="e-ticket-container">
+    <div class="e-ticket-header">
+        <h1>Travelsya Wisata Indonesia</h1>
+        <p>Health & Beauty Booking Detail</p>
+    </div>
 
-                            <div class="d-flex flex-column flex-grow-1 pe-8 ">
-                                <div class="d-flex flex-wrap ">
-                                    <p href="#" class="fw-medium">
-                                        Tanggal Kedaluwarsa
-                                    </p>
-                                </div>
-                                <div class="d-flex flex-wrap mt-1">
-                                    <p href="#" class="fw-bold">
-                                        {{ $expireDates}}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+    <div class="e-ticket-main-info">
+        <h2>{{ $healthbeautybookdates->clinic->clinic_name ?? 'Clinic Name' }}</h2>
+        <p>{{ $healthbeautybookdates->clinic->address ?? 'Clinic Address' }}</p>
 
-                        <div class="d-flex flex-wrap flex-stack mt-5 ">
-                            <div class="d-flex flex-column flex-grow-1">
-                                <div class="d-flex flex-wrap ">
-                                    <p class="fw-medium">
-                                        Jumlah Tiket
-                                    </p>
-                                </div>
-                                <div class="d-flex flex-wrap ">
-                                    <p class="fw-bold">
-                                        {{ $healthbeautybookdates->total_ticket }} Tiket
-                                    </p>
-                                </div>
-                            </div>
+        @php
+        $orderDate = \Carbon\Carbon::parse($healthbeautybookdates->created_at);
+        $expireDate = \Carbon\Carbon::parse($healthbeautybookdates->expire_on);
+        $orderDates = $orderDate->Format('d F Y');
+        $expireDates = $expireDate->Format('d F Y');
+        @endphp
 
-                            <div class="d-flex flex-column flex-grow-1 pe-8">
-                                <div class="d-flex flex-wrap ">
-                                    <p class="fw-medium">Paket</p>
-                                </div>
-                                <div class="d-flex flex-wrap mt-1">
-                                    <p class="fw-bold">
-                                        {{$healthbeautybookdates->package->name}}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="e-ticket-date-block">
+            <div class="e-ticket-date-item">
+                <div class="label">Tanggal Pemesanan</div>
+                <div class="value">{{ $orderDates }}</div>
+            </div>
+            <div class="e-ticket-date-item">
+                <div class="label">Tanggal Kadaluarsa</div>
+                <div class="value">{{ $expireDates }}</div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4">
-        <div class="card mb-4">
-            <div class="card-body w-100 p-0">
-                <div class="card-header">
-                    <h3 class="card-title">Informasi Pembayaran</h3>
-                    <hr class="mt-2 mb-4">
-                </div>
-                <div class="card-body my-3">
-                    <div class="row mb-5">
-                        <div class="col-md-6">
-                            <div class="d-flex flex-column mb-2">
-                                <p class="fw-medium mb-2">
-                                    {{$healthbeautybookdates->package->name}}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 text-end">
-                            <div class="d-flex flex-column mb-2">
-                                <h5 class="fw-bold">
-                                    {{  General::rp($healthbeautybookdates->rent_price) }}
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="d-flex flex-column mb-2">
-                                <p  class="fw-medium mb-2">
-                                    Biaya Admin</p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 text-end">
-                            <div class="d-flex flex-column mb-2">
-                                <h5 class="fw-bold ">
-                                    {{ General::rp($healthbeautybookdates->fee_admin) }}
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <hr style="color: #191717; background-color: #191717; height: 1px; border: none;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="d-flex flex-column mb-2">
-                                <p  class="fw-medium mb-2">
-                                    Total Diterima
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 text-end">
-                            <div class="d-flex flex-column">
-                                <h5 class="fw-bold">
-                                    {{ General::rp($healthbeautybookdates->transaction->total) }}
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <hr style="color: #191717; background-color: #191717; height: 1px; border: none;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="d-flex flex-column mb-2">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-7 fw-bold me-1 mb-2">Metode
-                                    Pembayaran</a>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 text-end">
-                            <div class="d-flex flex-column">
-                                <a href="#" class="text-gray-900 text-hover-primary fs-7 fw-bold me-1">
-                                    {{ ucwords($healthbeautybookdates->transaction->payment) }}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <div class="e-ticket-section-title">Informasi Booking</div>
+    <div class="e-ticket-info-block">
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Kode Booking</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->booking_id }}</span>
         </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Booking Dilakukan Pada</span>
+            <span class="e-ticket-info-value">{{ $orderDate->translatedFormat('d F Y H:i') }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Nama Paket</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->package->name ?? 'Paket tidak ditemukan' }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Jumlah Tiket</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->total_ticket }} Tiket</span>
+        </div>
+    </div>
+
+    <div class="e-ticket-section-title">Informasi Tamu</div>
+    <div class="e-ticket-info-block">
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Nama Pemesan</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->transaction->user->name ?? '-' }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Nomor Telepon</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->transaction->user->phone ?? '-' }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Alamat Email</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->transaction->user->email ?? '-' }}</span>
+        </div>
+    </div>
+
+    <div class="e-ticket-section-title">Rincian Pembayaran</div>
+    <div class="e-ticket-info-block">
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Status Transaksi</span>
+            <span class="e-ticket-info-value" style="color: {{ $healthbeautybookdates->transaction->status == 'PAID' ? 'green' : 'red' }};">
+                {{ $healthbeautybookdates->transaction->status }}
+            </span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Tanggal Transaksi</span>
+            <span class="e-ticket-info-value">{{ $orderDate->translatedFormat('d F Y H:i') }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Metode Pembayaran</span>
+            <span class="e-ticket-info-value">{{ $healthbeautybookdates->transaction->payment }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Biaya Paket</span>
+            <span class="e-ticket-info-value">{{ General::rp($healthbeautybookdates->rent_price) }}</span>
+        </div>
+        <div class="e-ticket-info-row">
+            <span class="e-ticket-info-label">Biaya Admin</span>
+            <span class="e-ticket-info-value">{{ General::rp($healthbeautybookdates->fee_admin) }}</span>
+        </div>
+        <div class="e-ticket-info-row total">
+            <span class="e-ticket-info-label">Total Pembayaran</span>
+            <span class="e-ticket-info-value">{{ General::rp($healthbeautybookdates->transaction->total) }}</span>
+        </div>
+    </div>
+    
+    <div class="mt-4">
+        <a href="{{ route('e-tiket.health-beauty', $healthbeautybookdates->id) }}" target="_blank" class="btn btn-primary">
+            <i class="fas fa-print"></i> Cetak E-Tiket
+        </a>
     </div>
 </div>
 @endsection

@@ -92,6 +92,10 @@ class RiwayatBookingController extends Controller
     public function healthBeauty(Request $request)
     {
         $user_id = auth()->user()->id;
+        $now = now();
+
+        // Tidak perlu update database karena status "Kedaluwarsa" ditentukan secara dinamis
+        // berdasarkan perbandingan tanggal kedaluwarsa dengan tanggal saat ini
 
         $query = DetailTransactionHealthBeauty::with(['transaction.user', 'package'])
             ->whereHas('transaction', function ($q) {
@@ -116,7 +120,6 @@ class RiwayatBookingController extends Controller
         }
 
         // Filter status tab
-        $now = now();
         $tab = $request->tab ?? 'all';
 
         if ($tab !== 'all') {
@@ -133,8 +136,6 @@ class RiwayatBookingController extends Controller
             }
         }
 
-
-
         $transactions = $query
 
             ->when($request->keyword, function ($q) use ($request) {
@@ -149,6 +150,49 @@ class RiwayatBookingController extends Controller
             ->orderBy('created_at', 'desc')->get();
 
         return view('ekstranet.booking.health-beauty', compact('transactions'));
+    }
+
+    public function cetakHealthBeauty($id)
+    {
+        $healthbeautybookdates = DetailTransactionHealthBeauty::with('transaction', 'package', 'clinic')->findOrFail($id);
+        $data = [
+            'data' => $healthbeautybookdates
+        ];
+        return view('user.order-detail.e-tiket-health-beauty', $data);
+    }
+
+    public function verifikasiHealthBeauty($id)
+    {
+        $booking = DetailTransactionHealthBeauty::findOrFail($id);
+        $booking->is_used = true;
+        $booking->save();
+
+        // Return JSON response for AJAX requests
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Booking berhasil diverifikasi'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
+    }
+
+    public function batalVerifikasiHealthBeauty($id)
+    {
+        $booking = DetailTransactionHealthBeauty::findOrFail($id);
+        $booking->is_used = false;
+        $booking->save();
+
+        // Return JSON response for AJAX requests
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Verifikasi booking dibatalkan'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
     }
 
     // public function detailroomhostel($id)

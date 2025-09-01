@@ -474,6 +474,12 @@ Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingCo
 
         Route::get('riwayat-booking-health-beauty', [RiwayatBookingController::class, 'healthBeauty'])
         ->name('partner.health-beauty.index');
+        
+    // Health Beauty Booking Verification Routes
+    Route::post('riwayat-booking-health-beauty/{id}/verify', [RiwayatBookingController::class, 'verifikasiHealthBeauty'])
+        ->name('partner.health-beauty.verify');
+    Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
+        ->name('partner.health-beauty.cancel-verify');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
