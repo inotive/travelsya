@@ -75,11 +75,11 @@
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center mt-auto">
                                                     <h4 style="color: rgb(255, 0, 0);">
-                                                        Rp.{{ number_format($list['recreationPackages'][0]->price ?? 0) }}
+                                                        Rp.{{ number_format(isset($list->recreationPackages[0]) ? $list->recreationPackages[0]->price : 0) }}
 
-                                                        @if (count($list['recreationPackages']) > 1)
+                                                        @if (isset($list->recreationPackages) && count($list->recreationPackages) > 1)
                                                             -
-                                                            {{ number_format($list['recreationPackages'][count($list['recreationPackages']) - 1]->price ?? 0) }}
+                                                            {{ number_format(isset($list->recreationPackages[count($list->recreationPackages) - 1]) ? $list->recreationPackages[count($list->recreationPackages) - 1]->price : 0) }}
                                                         @endif
                                                     </h4>
                                                     <span class="card-text" style="color: rgb(255, 0, 0);">

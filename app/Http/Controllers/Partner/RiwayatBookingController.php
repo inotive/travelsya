@@ -227,28 +227,47 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction', 'package')
-            ->whereHas('transaction', function ($q) {
-                $q->where('status', 'PAID');
-            })
+        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction.user', 'package')
             ->whereHas('recreation', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
+            })
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
             });
 
         $year = $request->input('year');
         $start = $request->input('start');
         $end = $request->input('end');
+        $keyword = $request->input('keyword');
 
-        if ($year != null) {
-            $rekreasibookdates->whereYear('book_date', $year);
+        if ($year) {
+            $rekreasibookdates->whereHas('transaction', function ($q) use ($year) {
+                $q->whereYear('created_at', $year);
+            });
         }
 
-        if ($start != null) {
-            $rekreasibookdates = $rekreasibookdates->where('book_date', '>=', $start);
+        if ($start) {
+            $rekreasibookdates->whereHas('transaction', function ($q) use ($start) {
+                $q->whereDate('created_at', '>=', $start);
+            });
         }
 
-        if ($end != null) {
-            $rekreasibookdates = $rekreasibookdates->where('expire_on', '<=', $end);
+        if ($end) {
+            $rekreasibookdates->whereHas('transaction', function ($q) use ($end) {
+                $q->whereDate('created_at', '<=', $end);
+            });
+        }
+
+        if ($keyword) {
+            $rekreasibookdates->where(function ($query) use ($keyword) {
+                $query->where('booking_id', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('transaction.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhereHas('package', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
         }
 
         $rekreasibookdates = $rekreasibookdates->get();
@@ -279,28 +298,45 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $carrentalbookdates = DetailTransactionCarRental::with('carRental', 'car.brand', 'car.carModel', 'transaction')
-            ->whereHas('transaction', function ($q) {
-                $q->where('status', 'PAID');
-            })
+        $carrentalbookdates = DetailTransactionCarRental::with('carRental', 'car.brand', 'car.carModel', 'transaction.user')
             ->whereHas('carRental', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
+            })
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
             });
 
         $year = $request->input('year');
         $start = $request->input('start');
         $end = $request->input('end');
+        $keyword = $request->input('keyword');
 
-        if ($year != null) {
-            $carrentalbookdates->whereYear('start', $year)->orWhereYear('end', $year);
+        if ($year) {
+            $carrentalbookdates->whereHas('transaction', function ($q) use ($year) {
+                $q->whereYear('created_at', $year);
+            });
         }
 
-        if ($start != null) {
-            $carrentalbookdates = $carrentalbookdates->where('start', '>=', $start);
+        if ($start) {
+            $carrentalbookdates->whereHas('transaction', function ($q) use ($start) {
+                $q->whereDate('created_at', '>=', $start);
+            });
         }
 
-        if ($end != null) {
-            $carrentalbookdates = $carrentalbookdates->where('end', '<=', $end);
+        if ($end) {
+            $carrentalbookdates->whereHas('transaction', function ($q) use ($end) {
+                $q->whereDate('created_at', '<=', $end);
+            });
+        }
+
+        if ($keyword) {
+            $carrentalbookdates->where(function ($query) use ($keyword) {
+                $query->where('booking_id', 'like', '%' . $keyword . '%')
+                    ->orWhere('customer_name', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('transaction.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
         }
 
         $carrentalbookdates = $carrentalbookdates->get();

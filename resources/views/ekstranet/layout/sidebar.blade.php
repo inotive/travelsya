@@ -9,11 +9,6 @@
         margin: 0.2rem 0;
     }
 
-    /* .menu-item.menu-accordion.hover .show {
-        background-color: white;
-    } */
-
-
     .active-link {
         color: white;
     }
@@ -27,6 +22,45 @@
     .menu-item.here .menu-title.custom,
     .menu-item.here .menu-arrow {
         color: gray !important;
+    }
+
+    /* --- Custom styles for Pemesanan dropdown (Full Red Theme) --- */
+
+    /* Dropdown container background */
+    .menu-item.pemesanan-menu .menu-sub-accordion {
+        background-color: #C02425 !important; /* Red background */
+        padding: 0;
+    }
+
+    /* Default state for all links within the dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link {
+        background-color: transparent !important;
+    }
+
+    /* Default state for text and bullets in dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-title {
+        color: #f8f9fa; /* A light, off-white color for inactive items */
+    }
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-bullet .bullet-dot {
+        background-color: #f8f9fa; /* Matching off-white */
+    }
+
+    /* Hover state for links in dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-title {
+        color: white !important;
+    }
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-bullet .bullet-dot {
+        background-color: white !important;
+    }
+
+    /* Active state for a link in the dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-title {
+        color: white !important;
+        font-weight: bold; /* Make it stand out more */
+    }
+
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-bullet .bullet-dot {
+        background-color: white !important;
     }
 </style>
 
@@ -43,14 +77,6 @@
         </a>
         <!--end::Logo image-->
         <!--begin::Sidebar toggle-->
-        <!--begin::Minimized sidebar setup:
-            if (isset($_COOKIE["sidebar_minimize_state"]) && $_COOKIE["sidebar_minimize_state"] === "on") {
-                1. "src/js/layout/sidebar.js" adds "sidebar_minimize_state" cookie value to save the sidebar minimize state.
-                2. Set data-kt-app-sidebar-minimize="on" attribute for body tag.
-                3. Set data-kt-toggle-state="active" attribute to the toggle element with "kt_app_sidebar_toggle" id.
-                4. Add "active" class to to sidebar toggle element with "kt_app_sidebar_toggle" id.
-            }
-        -->
         <div id="kt_app_sidebar_toggle"
             class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate"
             data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body"
@@ -103,38 +129,131 @@
 
 
                 <!--end:Menu item-->
-                <a href="{{ route('partner.riwayat-booking') }}"
-                    class="menu-item {{ Request::segment(2) == 'riwayat-booking' ? 'here' : '' }} menu-accordion">
+                @php
+                    use App\Models\CarRental;
+                    use App\Models\Recreation;
+                    use App\Models\BusTravels;
+                    use App\Models\DetailTransactionCarRental;
+                    use App\Models\detailTransactionRecreation;
+                    use App\Models\DetailTransactionBus;
+                    use App\Models\DetailTransactionHealthBeauty;
+                    
+                    $clinic = Clinic::where('user_id', Auth::id())->get();
+                    $hotel = Hotel::where('user_id', Auth::id())->get();
+                    $hostel = Hostel::where('user_id', Auth::id())->get();
+                    $carRentals = CarRental::where('user_id', Auth::id())->get();
+                    $recreations = Recreation::where('user_id', Auth::id())->get();
+                    $busTravels = BusTravels::where('user_id', Auth::id())->get();
+                    
+                    $bookingHotel = DetailTransactionHotel::with('transaction')
+                        ->whereHas('transaction', function ($q) {
+                            $q->where('status', 'PAID');
+                        })
+                        ->whereIn('hotel_id', $hotel->pluck('id'))
+                        ->where('detail_transaction_hotel.reservation_end', '>=', Carbon::now())
+                        ->count();
+                    
+                    $bookingHostel = DetailTransactionHostel::with('transaction')
+                        ->whereIn('hostel_id', $hostel->pluck('id'))
+                        ->whereHas('transaction', function ($q) {
+                            $q->where('status', 'PAID');
+                        })
+                        ->where('detail_transaction_hostel.reservation_end', '>=', Carbon::now())
+                        ->count();
+                    
+                    $bookingCarRental = DetailTransactionCarRental::with('transaction')
+                        ->whereHas('transaction', function ($q) {
+                            $q->where('status', 'PAID');
+                        })
+                        ->whereIn('car_rental_id', $carRentals->pluck('id'))
+                        ->where('end', '>=', Carbon::now())
+                        ->count();
+                    
+                    $bookingRecreation = detailTransactionRecreation::with('transaction')
+                        ->whereHas('transaction', function ($q) {
+                            $q->where('status', 'PAID');
+                        })
+                        ->whereIn('recreation_id', $recreations->pluck('id'))
+                        ->where('expire_on', '>=', Carbon::now())
+                        ->count();
+                    
+                    // Assuming there's a DetailTransactionBus model and similar logic
+                    $bookingBus = 0;
+                    if (class_exists(DetailTransactionBus::class)) {
+                        $bookingBus = DetailTransactionBus::with('transaction')
+                            ->whereHas('transaction', function ($q) {
+                                $q->where('status', 'PAID');
+                            })
+                            ->whereIn('bus_travel_id', $busTravels->pluck('id'))
+                            // Add appropriate date condition for bus bookings
+                            ->count();
+                    }
+                    
+                    $bookingClinic = DetailTransactionHealthBeauty::with('transaction')
+                        ->whereHas('transaction', function ($q) {
+                            $q->where('status', 'PAID');
+                        })
+                        ->whereIn('clinic_id', $clinic->pluck('id'))
+                        // Add appropriate date condition for clinic bookings
+                        ->count();
+                    
+                    $totalPemesanan = $bookingHotel + $bookingHostel + $bookingCarRental + $bookingRecreation + $bookingBus + $bookingClinic;
+                    $isPemesananActive = in_array(Request::segment(2), ['riwayat-booking', 'riwayat-booking-recreation', 'riwayat-booking-car-rental']);
+                @endphp
+                
+                <div data-kt-menu-trigger="click" class="menu-item menu-accordion pemesanan-menu {{ $isPemesananActive ? 'here show' : '' }}">
                     <!--begin:Menu link-->
-                    <span class="menu-link">
+                    <span class="menu-link {{ $isPemesananActive ? 'main-accordion' : '' }}">
                         <span class="menu-icon">
                             <i class="far fa-calendar fs-3"></i>
                         </span>
-                        @php
-
-                            $clinic = Clinic::where('user_id', Auth::id())->get();
-                            $hotel = Hotel::where('user_id', Auth::id())->get();
-                            $hostel = Hostel::where('user_id', Auth::id())->get();
-                            $bookingHotel = DetailTransactionHotel::with('transaction')
-                                ->whereHas('transaction', function ($q) {
-                                    $q->where('status', 'PAID');
-                                })
-                                ->whereIn('hotel_id', $hotel->pluck('id'))
-                                ->where('detail_transaction_hotel.reservation_end', '>=', Carbon::now())
-                                ->count();
-                            $bookingHostel = DetailTransactionHostel::with('transaction')
-                                ->whereIn('hostel_id', $hostel->pluck('id'))
-                                ->whereHas('transaction', function ($q) {
-                                    $q->where('status', 'PAID');
-                                })
-                                ->where('detail_transaction_hostel.reservation_end', '>=', Carbon::now())
-                                ->count();
-                            $totalPemesanan = $bookingHotel + $bookingHostel;
-                        @endphp
                         <span class="menu-title">Pemesanan ({{ $totalPemesanan }})</span>
+                        <span class="menu-arrow"></span>
                     </span>
                     <!--end:Menu link-->
-                </a>
+                    <div class="menu-sub menu-sub-accordion">
+                        @if (count($hotel) > 0 || count($hostel) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' ? 'active' : '' }}"
+                                    href="{{ route('partner.riwayat-booking') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Hotel & Hostel</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
+                        @if (count($recreations) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-recreation' ? 'active' : '' }}"
+                                    href="{{ route('partner.riwayat-booking.recreation') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Rekreasi</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
+                        @if (count($carRentals) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-car-rental' ? 'active' : '' }}"
+                                    href="{{ route('partner.riwayat-booking.car-rental') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Sewa Mobil</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
+                        {{-- Add other business types here when their booking history pages are ready --}}
+                    </div>
+                </div>
                 <a href="{{ route('partner.review') }}"
                     class="menu-item {{ Request::segment(2) == 'review' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->

@@ -5,17 +5,16 @@
             margin-top: 16px;
             color: #555;
             max-height: 0;
-            /* Sembunyikan konten yang terpotong */
-            transition: max-height 0.75s ease-in-out;
-            /* Animasi smooth */
-            padding: 0;
-            /* Awalnya padding diset ke 0 */
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out;
+            opacity: 0;
+            padding: 0 15px;
         }
 
         .extra-content.show {
             display: block;
-            max-height: 2000px;
-            /* Atur sesuai dengan tinggi maksimal konten */
+            max-height: 1000px;
+            opacity: 1;
         }
 
         .toggle-button {
@@ -24,6 +23,32 @@
             color: #007bff;
             cursor: pointer;
             font-size: 14px;
+            padding: 5px 0;
+            margin-top: auto;
+        }
+
+        /* Definisi class d-none yang lebih kuat */
+        .d-none {
+            display: none !important;
+            visibility: hidden !important;
+        }
+
+        .min-h-350 {
+            min-height: 350px;
+        }
+
+        .card-body {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-body > *:not(.extra-content):not(.toggle-button) {
+            flex-shrink: 0;
+        }
+
+        .extra-content {
+            flex-shrink: 0;
         }
     </style>
 @endpush
@@ -93,13 +118,13 @@
     <section class="without_cheuffeur" style="margin-bottom: 60px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Lepas Kunci</h2>
+                <h2 class="text-dark" style="position: relative; top: 3px;">Syarat Rental Mobil</h2>
             </div>
         </div>
         <div class="row">
             <div class="col-6">
                 <div class="card border border-dark min-h-350">
-                    <div class="card-body d-flex flex-column align-items-start">
+                    <div class="card-body d-flex flex-column">
                         <span class="title">Syarat Sewa Mobil Dengan Supir</span>
                         <hr>
                         <span>Sudah Termasuk</span>
@@ -114,16 +139,16 @@
                             <li>Penggunaan diluar kota (biaya tambahan berlaku)</li>
                         </ul>
                         <div class="extra-content">
-                            <p>Detail tambahan yang di-hidden sebelumnya bisa ditambahkan di sini.</p>
+                            {{-- jika ingin menambah extra content taruh di dalam sini --}}
                         </div>
-                        <button class="btn btn-link text-danger mt-sm-auto toggle-button">Baca Lebih Banyak <span
-                                class="fa-solid fa-chevron-down fw-bold" id="rotatable_icon"></span></button>
+                        <button class="btn btn-link text-danger mt-auto toggle-button d-none">Baca Lebih Banyak <span
+                                class="fa-solid fa-chevron-down fw-bold"></span></button>
                     </div>
                 </div>
             </div>
             <div class="col-6">
                 <div class="card border border-dark min-h-350">
-                    <div class="card-body d-flex flex-column align-items-start">
+                    <div class="card-body d-flex flex-column">
                         <span class="title">Syarat Sewa Mobil Lepas Kunci</span>
                         <hr>
                         <span>Sudah Termasuk</span>
@@ -133,8 +158,11 @@
                         </ul>
                         <span>Tidak Termasuk</span><br>
                         <span>Bensin, pengambilan/pengembalian di luar kota, dan klaim asuransi</span>
-                        <button class="btn btn-link text-danger mt-sm-auto">Baca Lebih Banyak <span
-                                class="fa-solid fa-chevron-down fw-bold" id="rotatable_icon"></span></button>
+                        <div class="extra-content">
+                            {{-- jika ingin menambah extra content taruh di dalam sini --}}
+                        </div>
+                        <button class="btn btn-link text-danger mt-auto toggle-button d-none">Baca Lebih Banyak <span
+                                class="fa-solid fa-chevron-down fw-bold"></span></button>
                     </div>
                 </div>
             </div>
@@ -156,7 +184,12 @@
                     <form action="{{ route('car_rent.show') }}" method="post"
                         id="form_favorite_car{{ $model->id }}">
                         @csrf
-                        <input type="hidden" name="model_id" value="{{ $model->car_model_id }}">
+                        <input type="hidden" name="car_model_id" value="{{ $model->car_model_id }}">
+                        <input type="hidden" name="category" value="">
+                        <input type="hidden" name="location" value="">
+                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                        <input type="hidden" name="time" value="08:00">
+                        <input type="hidden" name="duration" value="1">
                         <div class="col p-3">
                             <a href="javascript:" class="text-decoration-none text-dark"
                                 id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
@@ -203,6 +236,10 @@
                         id="form_location{{ \App\Helpers\General::getSlug($location) }}">
                         @csrf
                         <input type="hidden" name="location" value="{{ $location }}">
+                        <input type="hidden" name="category" value="">
+                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                        <input type="hidden" name="time" value="08:00">
+                        <input type="hidden" name="duration" value="1">
                         <a href="javascript:" class="text-decoration-none text-dark"
                             id="location_button{{ \App\Helpers\General::getSlug($location) }}"
                             onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
@@ -226,31 +263,81 @@
 
 @push('js')
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const toggleButton = document.querySelector(".toggle-button");
-            const extraContent = document.querySelector(".extra-content");
+        // Fungsi untuk mengatur visibilitas tombol berdasarkan jumlah konten
+        function checkContentHeight() {
+            const cardSections = document.querySelectorAll('.without_cheuffeur .col-6');
 
-            toggleButton.addEventListener("click", function() {
-                if (extraContent.classList.contains("show")) {
-                    extraContent.classList.remove("show");
-                    toggleButton.textContent = "Baca lebih banyak";
-                } else {
-                    extraContent.classList.add("show");
-                    toggleButton.textContent = "Baca lebih sedikit";
+            cardSections.forEach((section, index) => {
+                const extraContent = section.querySelector('.extra-content');
+                const toggleButton = section.querySelector('.toggle-button');
+
+                if (extraContent && toggleButton) {
+                    // Hitung jumlah karakter dalam konten tambahan
+                    const contentText = extraContent.textContent || extraContent.innerText;
+                    const contentLength = contentText.length;
+
+                    // Tampilkan tombol jika konten melebihi batas karakter
+                    if (contentLength > 200) {
+                        toggleButton.classList.remove('d-none');
+                    } else {
+                        toggleButton.classList.add('d-none');
+                    }
                 }
             });
+        }
+
+        // Fungsi untuk memastikan fungsi checkContentHeight() dipanggil beberapa kali
+        function ensureCheckContentHeight() {
+            // Panggil fungsi dengan beberapa delay berbeda
+            setTimeout(checkContentHeight, 100);
+            setTimeout(checkContentHeight, 500);
+            setTimeout(checkContentHeight, 1000);
+            setTimeout(checkContentHeight, 2000);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            ensureCheckContentHeight();
+
+            // Tambahkan event listener untuk tombol toggle
+            const toggleButtons = document.querySelectorAll(".toggle-button");
+
+            toggleButtons.forEach((button) => {
+                button.addEventListener("click", function() {
+                    const extraContent = this.closest('.card-body').querySelector(".extra-content");
+
+                    if (extraContent.classList.contains("show")) {
+                        extraContent.classList.remove("show");
+                        button.innerHTML = 'Baca Lebih Banyak <span class="fa-solid fa-chevron-down fw-bold"></span>';
+                    } else {
+                        extraContent.classList.add("show");
+                        button.innerHTML = 'Baca Lebih Sedikit <span class="fa-solid fa-chevron-up fw-bold"></span>';
+                    }
+                });
+            });
+        });
+
+        // Panggil fungsi setelah window load untuk memastikan layout sudah stabil
+        window.addEventListener('load', function() {
+            ensureCheckContentHeight();
+        });
+
+        // Panggil fungsi saat window resized
+        window.addEventListener('resize', function() {
+            setTimeout(checkContentHeight, 100);
         });
     </script>
     <script>
         function submit(val) {
+            // Tambahkan logging untuk debugging
+            console.log('Submitting favorite car form:', val);
             $("form#form_favorite_car" + val).submit();
-            e.preventDefault();
             return false;
         };
 
         function submit_location(val) {
+            // Tambahkan logging untuk debugging
+            console.log('Submitting location form:', val);
             $("form#form_location" + val).submit();
-            e.preventDefault();
             return false;
         };
     </script>

@@ -91,7 +91,7 @@
             </div>
         </div>
 
-        <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 30px;">
+      <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 30px;">
             <div style="width: 78%; background-color: #ffffff; padding: 20px; border-radius: 10px;">
                 <h1 style="text-align:left; margin-bottom: 20px;">Rental Mobil Lepas Kunci</h1>
                 <p style="text-align: justify; font-size: 16px;">Memilih kendaraan yang tepat saat ingin bepergian adalah hal wajib. Jika Anda berencana keliling keluar kota dengan keluarga atau rombongan, persewaan mobil atau carter mobil di luar kota menjadi pilihan terbaik. Kini, perkembangan teknologi memudahkan Anda untuk persewaan mobil di manapun hanya dengan Travelsya. Anda dapat menemukan pilihan mobil terbaik, rental mobil terdekat dari lokasi anda yang sesuai dengan kebutuhan. Kemudahan ini akan menjadikan perjalanan Anda lebih nyaman dan hemat waktu.</p>
@@ -100,7 +100,7 @@
 
         <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 30px;">
             <div style="width: 78%; background-color: #ffffff; padding: 20px; border-radius: 10px;">
-                <h1 style="text-align:left; margin-bottom: 20px;">Ketentuan Umum Sewa Mobil</h1>
+                <h1 style="text-align:left; margin-bottom: 20px;">Syarat Rental Mobil</h1>
 
                 <div class="container d-flex flex-wrap justify-content-between ">
                     <div class="card mr-2 mb-3" style="margin-left: -10px;">
@@ -140,7 +140,7 @@
                         </button>
                     </div>
                 </div>
-                
+
             </div>
         </div>
 
@@ -225,15 +225,15 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                 </div>
-                
+
             </div>
         </div>
 
         <div style="display: flex; justify-content: center; margin-top: 30px; margin-bottom: 30px;">
             <div style="width: 78%; background-color: #ffffff; padding: 20px; border-radius: 10px;">
-                <h1 style="text-align: left;">Kendaraan Favorit Rental Mobil di Travelsya</h1>
+                <h1 style="text-align: left;">Kota Populer</h1>
 
                     <div class="d-flex flex-wrap justify-content-between">
                             <div class="city-card" style="position: relative; width: 23%; height: 200px;">
@@ -280,7 +280,7 @@
                                     Bandung
                                 </span>
                             </div>
-                            
+
                             <div class="city-card" style="position: relative; width: 23%; height: 200px; margin-top: -10px;">
                                 <img alt="gambar kota"
                                     src="https://storage.googleapis.com/a1aa/image/7hfHYVNAmvwMTSHWl8q2zfsJfhcfk3fz0h8S5DNMrn6Y8LKdC.jpg"
@@ -308,13 +308,13 @@
                                 </span>
                             </div>
                     </div>
-                
+
             </div>
         </div>
 
     </main>
 
-    
+
     @include('layouts.include.home.script-rental-mobil-landing')
 
     <script>
@@ -350,5 +350,5 @@
             document.getElementById("tanggalwaktu").value = hariarray[hari] + " " + tanggal + " " + bulanarray[bulan] + "                    |         " + ("" + jam).slice(-8) + ":" + menit
         }, 1000);
     </script>
-    
+
 @endsection
