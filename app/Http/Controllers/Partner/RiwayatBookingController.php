@@ -364,35 +364,58 @@ class RiwayatBookingController extends Controller
 
     public function indexBus(Request $request)
     {
-        $query = DetailTransactionBus::with(['transaction.user', 'busTravel', 'busTravelHasBus', 'departure'])
+        $user_id = auth()->user()->id;
+
+        $busbookings = DetailTransactionBus::with('busTravel', 'busTravelHasBus', 'departure', 'transaction')
             ->whereHas('transaction', function ($q) {
-                $q->whereHas('user', function ($userQuery) {
-                    $userQuery->where('id', auth()->id());
-                });
+                $q->where('status', 'PAID');
+            })
+            ->whereHas('busTravel', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
             });
 
-        // Filter by year if provided
-        if ($request->filled('year')) {
-            $query->whereYear('created_at', $request->year);
+        $year = $request->input('year');
+        $start = $request->input('start');
+        $end = $request->input('end');
+        $keyword = $request->input('keyword');
+
+        if ($year != null) {
+            $busbookings->whereYear('departure_time', $year);
         }
 
-        // Filter by date range if provided
-        if ($request->filled('start') && $request->filled('end')) {
-            $query->whereBetween('created_at', [$request->start, $request->end]);
+        if ($start != null) {
+            $busbookings = $busbookings->where('departure_time', '>=', $start);
         }
 
-        $busbookings = $query->orderBy('created_at', 'desc')->get();
+        if ($end != null) {
+            $busbookings = $busbookings->where('departure_time', '<=', $end);
+        }
+
+        if ($keyword) {
+            $busbookings->where(function ($query) use ($keyword) {
+                $query->where('booking_id', 'like', '%' . $keyword . '%')
+                    ->orWhere('customer_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('customer_phone', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('transaction.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%')
+                          ->orWhere('phone', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhereHas('busTravel', function ($q) use ($keyword) {
+                        $q->where('business_name', 'like', '%' . $keyword . '%');
+                    });
+            });
+        }
+
+        $busbookings = $busbookings->get();
 
         return view('ekstranet.booking.bus-travel', compact('busbookings'));
     }
 
-    /**
-     * Verify bus booking
-     */
     public function verifikasiBus($id)
     {
-        try {
-            $busBooking = DetailTransactionBus::with('transaction')->findOrFail($id);
+        $booking = DetailTransactionBus::findOrFail($id);
+        $booking->status = 'verified';
+        $booking->save();
 
             // Check if user has permission to verify this booking
             if ($busBooking->transaction->user_id !== auth()->id()) {
@@ -410,27 +433,33 @@ class RiwayatBookingController extends Controller
         }
     }
 
-    /**
-     * Cancel verification of bus booking
-     */
     public function batalVerifikasiBus($id)
     {
-        try {
-            $busBooking = DetailTransactionBus::with('transaction')->findOrFail($id);
+        $booking = DetailTransactionBus::findOrFail($id);
+        $booking->status = 'pending';
+        $booking->save();
 
-            // Check if user has permission to cancel verification
-            if ($busBooking->transaction->user_id !== auth()->id()) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk membatalkan verifikasi booking ini.');
-            }
+        return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
+    }
 
-            // Update transaction status to pending
-            $busBooking->transaction->update([
-                'status' => 'pending'
-            ]);
+    public function cetakBus($id, Request $request)
+    {
+        $busBooking = DetailTransactionBus::findOrFail($id);
+        $data = [
+            'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+        ];
 
             return redirect()->back()->with('success', 'Verifikasi booking bus travel berhasil dibatalkan.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+
+        // For modal display, return partial view without full HTML structure
+        if ($request->ajax() || $request->expectsJson()) {
+            return view('user.order-detail.e-tiket-bus-modal', $data);
+        }
+
+        // Regular view for direct access
+        return view('user.order-detail.e-tiket-bus', $data);
     }
 }

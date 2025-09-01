@@ -92,7 +92,7 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <div class="card">
-                                    <img src="{{ Storage::url('buses/' . $bus->image) }}" class="card-img-top" alt="Image">
+                                    <img src="{{ asset('storage/buses/' . $bus->image) }}" class="card-img-top" alt="Image">
                                 </div>
                             </div>
                         </div>

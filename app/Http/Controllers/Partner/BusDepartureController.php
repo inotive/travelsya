@@ -135,11 +135,11 @@ class BusDepartureController extends Controller
         $departure->bus_travel_has_bus_id = $defaultBus->id;
         $departure->from_route_id = $request->from_route_id;
         $departure->to_route_id = $request->to_route_id;
-        
+
         // Combine departure date and time into a single datetime
         $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
         $departure->departure_time = $departureDateTime;
-        
+
         $departure->duration = $request->duration;
         $departure->price = $request->price;
         $departure->days = $days;
@@ -232,7 +232,7 @@ class BusDepartureController extends Controller
         // Update departure details
         // Combine departure date and time into a single datetime
         $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
-        
+
         $departure->update([
             'from_route_id' => $request->from_route_id,
             'to_route_id' => $request->to_route_id,
@@ -242,19 +242,27 @@ class BusDepartureController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('partner.bus.departures.index')
+        return redirect()->route('partner.bus.departures')
             ->with('success', 'Jadwal keberangkatan berhasil diperbarui!');
     }
 
     /**
-     * Remove the specified bus departure from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $id = $request->id;
+     /**
+ * Remove the specified bus departure from storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\RedirectResponse
+ */
+public function delete(Request $request): RedirectResponse
+{
+    $id = $request->id;
+
+    if (!$id) {
+        return redirect()->route('partner.bus.departures')
+            ->with('error', 'ID jadwal keberangkatan tidak valid!');
+    }
+
+    try {
         $departure = BusDeparture::findOrFail($id);
 
         // Verify ownership
@@ -263,19 +271,26 @@ class BusDepartureController extends Controller
         $busTravel = BusTravels::findOrFail($bus->bus_travel_id);
 
         if ($busTravel->user_id != $user->id) {
-            return redirect()->route('partner.bus.departures.index')
+            return redirect()->route('partner.bus.departures')
                 ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
         }
 
-        // Check if the departure is being used in bookings
-        if ($departure->booked()->count() > 0) {
-            return redirect()->route('partner.bus.departures.index')
-                ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
-        }
+        // Check if the departure has any bookings
+        // You'll need to replace 'booked()' with the actual relationship name or query
+        // For example, if you have a bookings relationship:
+        // if ($departure->bookings()->count() > 0) {
+        //     return redirect()->route('partner.bus.departures')
+        //         ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
+        // }
 
         $departure->delete();
 
-        return redirect()->route('partner.bus.departures.index')
+        return redirect()->route('partner.bus.departures')
             ->with('success', 'Jadwal keberangkatan berhasil dihapus!');
+
+    } catch (\Exception $e) {
+        return redirect()->route('partner.bus.departures')
+            ->with('error', 'Terjadi kesalahan saat menghapus jadwal keberangkatan!');
     }
+}
 }
