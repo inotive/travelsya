@@ -3,6 +3,13 @@
 @php use App\Models\Hostel; @endphp
 @php use App\Models\DetailTransactionHotel; @endphp
 @php use App\Models\DetailTransactionHostel; @endphp
+@php use App\Models\DetailTransactionRecreation; @endphp
+@php use App\Models\DetailTransactionCarRental; @endphp
+@php use App\Models\DetailTransactionBus; @endphp
+@php use App\Models\DetailTransactionHealthBeauty; @endphp
+@php use App\Models\BusTravels; @endphp
+@php use App\Models\Recreation; @endphp
+@php use App\Models\CarRental; @endphp
 @php use Carbon\Carbon; @endphp
 <style>
     .menu-item {
@@ -210,6 +217,7 @@ $totalPemesanan =
     $bookingRecreation +
     $bookingBus +
     $bookingClinic;
+
 $isPemesananActive = in_array(Request::segment(2), [
     'riwayat-booking',
     'riwayat-booking-recreation',
