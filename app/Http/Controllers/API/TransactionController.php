@@ -376,8 +376,8 @@ class TransactionController extends Controller
         }
         // UNTUK RECREATION
         if ($transaction->first()->service_id == 13) {
-            $recreation = $transaction->with('DetailTransactionRecreation')->first();
-            $detailTransaction = $recreation->DetailTransactionRecreation;
+            $recreation = $transaction->with('detailTransactionRecreation')->first();
+            $detailTransaction = $recreation->detailTransactionRecreation;
 
 
             $allRatings = RecreationRatings::where('transaction_id', $recreation->id)->get();

@@ -449,9 +449,9 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
         Route::get('riwayat-booking/detail-booking/health-beauty/{id}', [RiwayatBookingController::class, 'detailHealthBeauty'])->name('partner.riwayat-booking.detailhealthbeauty');
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRecreation'])->name('partner.riwayat-booking.recreation');
-Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
-Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
-Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
+        Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
+        Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
+        Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
   Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
         ->name('partner.riwayat-booking.car-rental');
     Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
@@ -496,6 +496,10 @@ Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingCo
         Route::get('daftar-bus-travel/show/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'show'])->name('partner.show.bus-travel');
         Route::post('daftar-bus-travel/edit/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'update'])->name('partner.update.bus-travel');
         Route::delete('bus-travel-delete/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'destroy'])->name('partner.delete.bus-travel');
+
+        Route::get('riwayat-booking-bus', [RiwayatBookingController::class, 'indexBus'])->name('partner.riwayat-booking.bus');
+        Route::get('riwayat-booking-bus/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiBus'])->name('partner.riwayat-booking.verifikasi-bus');
+        Route::get('riwayat-booking-bus/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiBus'])->name('partner.riwayat-booking.batal-verifikasi-bus');
 
         // Bus routes management
         // Route::get('bus-routes', [\App\Http\Controllers\Partner\BusRouteController::class, 'index'])->name('partner.bus.routes');
