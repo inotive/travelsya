@@ -83,6 +83,13 @@ class RiwayatBookingController extends Controller
         return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
     }
 
+    public function detailHealthBeauty($id)
+    {
+        $healthbeautybookdates = DetailTransactionHealthBeauty::with('transaction')->findOrFail($id);
+
+        return view('ekstranet.booking.detail-book-health-beauty', compact('healthbeautybookdates'));
+    }
+
 
     public function healthBeauty(Request $request)
     {
@@ -128,7 +135,20 @@ class RiwayatBookingController extends Controller
             }
         }
 
-        $transactions = $query->orderBy('created_at', 'desc')->get();
+
+
+        $transactions = $query
+
+            ->when($request->keyword, function ($q) use ($request) {
+                $keyword = $request->keyword;
+                $q->where(function ($sub) use ($keyword) {
+                    $sub->whereHas('transaction.user', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                        ->orWhere('booking_id', 'like', "%{$keyword}%")
+                        ->orWhereHas('package', fn($q) => $q->where('name', 'like', "%{$keyword}%"));
+                });
+            })
+
+            ->orderBy('created_at', 'desc')->get();
 
         return view('ekstranet.booking.health-beauty', compact('transactions'));
     }
@@ -398,7 +418,7 @@ class RiwayatBookingController extends Controller
                     ->orWhere('customer_phone', 'like', '%' . $keyword . '%')
                     ->orWhereHas('transaction.user', function ($q) use ($keyword) {
                         $q->where('name', 'like', '%' . $keyword . '%')
-                          ->orWhere('phone', 'like', '%' . $keyword . '%');
+                            ->orWhere('phone', 'like', '%' . $keyword . '%');
                     })
                     ->orWhereHas('busTravel', function ($q) use ($keyword) {
                         $q->where('business_name', 'like', '%' . $keyword . '%');
@@ -413,19 +433,10 @@ class RiwayatBookingController extends Controller
 
     public function verifikasiBus($id)
     {
-        $booking = DetailTransactionBus::findOrFail($id);
-        $booking->status = 'verified';
-        $booking->save();
-
-            // Check if user has permission to verify this booking
-            if ($busBooking->transaction->user_id !== auth()->id()) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk verifikasi booking ini.');
-            }
-
-            // Update transaction status to verified
-            $busBooking->transaction->update([
-                'status' => 'verified'
-            ]);
+        try {
+            $booking = DetailTransactionBus::findOrFail($id);
+            $booking->status = 'verified';
+            $booking->save();
 
             return redirect()->back()->with('success', 'Booking bus travel berhasil diverifikasi.');
         } catch (\Exception $e) {
@@ -444,22 +455,21 @@ class RiwayatBookingController extends Controller
 
     public function cetakBus($id, Request $request)
     {
-        $busBooking = DetailTransactionBus::findOrFail($id);
-        $data = [
-            'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
-        ];
+        try {
+            $busBooking = DetailTransactionBus::findOrFail($id);
+            $data = [
+                'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+            ];
 
-            return redirect()->back()->with('success', 'Verifikasi booking bus travel berhasil dibatalkan.');
+            // For modal display, return partial view without full HTML structure
+            if ($request->ajax() || $request->expectsJson()) {
+                return view('user.order-detail.e-tiket-bus-modal', $data);
+            }
+
+            // Regular view for direct access
+            return view('user.order-detail.e-tiket-bus', $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        // For modal display, return partial view without full HTML structure
-        if ($request->ajax() || $request->expectsJson()) {
-            return view('user.order-detail.e-tiket-bus-modal', $data);
-        }
-
-        // Regular view for direct access
-        return view('user.order-detail.e-tiket-bus', $data);
     }
 }

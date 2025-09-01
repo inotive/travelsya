@@ -52,6 +52,8 @@ class ClinicHasPackageController extends Controller
 
     public function store(Request $request)
     {
+     
+
         $validator = Validator::make($request->all(), [
             'clinic_id' => 'required|integer|exists:clinics,id',
             'categories_services_id' => 'required',
