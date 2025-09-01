@@ -23,21 +23,38 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
+        Log::info('Admin authentication attempt', [
+            'email' => $credentials['email'],
+            'ip' => $request->ip(),
+            'user_agent' => $request->userAgent()
+        ]);
+
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Debug logging
-            \Log::info('User authenticated: ' . auth()->user()->email . ' with role: ' . auth()->user()->role);
+            $user = auth()->user();
 
-            if (auth()->user()->role == 1) {
-                \Log::info('Redirecting to partner dashboard');
+            Log::info('Admin authentication successful', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+                'ip' => $request->ip()
+            ]);
+
+            if ($user->role == 1) {
+                Log::info('Admin user redirecting to partner dashboard', ['user_id' => $user->id]);
                 return redirect()->route('partner.dashboard');
             }
-            if (auth()->user()->role == 2) {
-                \Log::info('Redirecting to admin dashboard');
+            if ($user->role == 0) {
+                Log::info('Admin user redirecting to admin dashboard', ['user_id' => $user->id]);
                 return redirect()->intended('admin/dashboard');
             }
         }
+
+        Log::warning('Admin authentication failed', [
+            'email' => $credentials['email'],
+            'ip' => $request->ip()
+        ]);
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',

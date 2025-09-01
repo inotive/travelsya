@@ -143,13 +143,6 @@
 
                 <!--end:Menu item-->
                 @php
-                    use App\Models\CarRental;
-                    use App\Models\Recreation;
-                    use App\Models\BusTravels;
-                    use App\Models\DetailTransactionCarRental;
-                    use App\Models\detailTransactionRecreation;
-                    use App\Models\DetailTransactionBus;
-                    use App\Models\DetailTransactionHealthBeauty;
 
                     $clinic = Clinic::where('user_id', Auth::id())->get();
                     $hotel = Hotel::where('user_id', Auth::id())->get();

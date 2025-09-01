@@ -452,15 +452,15 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
         Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
         Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
-  Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
-        ->name('partner.riwayat-booking.car-rental');
-    Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
-        ->name('partner.riwayat-booking.verifikasi-car-rental');
-    Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
-        ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
-    Route::get('riwayat-booking/cetak-invoice-car-rental/{id}', [RiwayatBookingController::class, 'cetakCarRental'])->name('partner.riwayat-booking.cetak-invoice-car-rental');
-    Route::get('riwayat-booking/cetak-invoice-rekreasi/{id}', [RiwayatBookingController::class, 'cetakRekreasi'])->name('partner.riwayat-booking.cetak-invoice-rekreasi');
-     Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
+        Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
+            ->name('partner.riwayat-booking.car-rental');
+        Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
+            ->name('partner.riwayat-booking.verifikasi-car-rental');
+        Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
+            ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
+        Route::get('riwayat-booking/cetak-invoice-car-rental/{id}', [RiwayatBookingController::class, 'cetakCarRental'])->name('partner.riwayat-booking.cetak-invoice-car-rental');
+        Route::get('riwayat-booking/cetak-invoice-rekreasi/{id}', [RiwayatBookingController::class, 'cetakRekreasi'])->name('partner.riwayat-booking.cetak-invoice-rekreasi');
+        Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
@@ -473,7 +473,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
         Route::get('riwayat-booking-health-beauty', [RiwayatBookingController::class, 'healthBeauty'])
-        ->name('partner.health-beauty.index');
+            ->name('partner.health-beauty.index');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
