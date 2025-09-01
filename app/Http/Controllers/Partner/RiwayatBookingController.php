@@ -391,7 +391,7 @@ class RiwayatBookingController extends Controller
         }
 
         // Regular view for direct access
-        return view('user.order-detail.e-tiket-bus', $data);
+        return view('user.order-detail.e-tiket-bus-modal', $data);
     }
 }
 

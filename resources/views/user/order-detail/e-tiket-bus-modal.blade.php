@@ -8,7 +8,7 @@
                         <div class="d-flex align-items-center">
                             <img src="/assets/media/logos/logo.png" style="max-height: 40px;" alt="Logo" class="me-3">
                             <div class="text-white">
-                                <h5 class="mb-0 fw-bold">TRAVELSYA</h5>
+                                <h5 class="mb-0 fw-bold" style="color: white">TRAVELSYA</h5>
                                 <small>Bus Travel e-Ticket</small>
                             </div>
                         </div>
@@ -165,7 +165,7 @@
             <div class="card">
                 <div class="card-header" style="background: #fff3cd;">
                     <h6 class="mb-0 fw-bold text-warning">
-                        <i class="fas fa-exclamation-triangle me-2"></i>Catatan Penting
+                        <i class="fas fa-exclamation-triangle me-2" style="color:  #e3bc3f"></i>Catatan Penting
                     </h6>
                 </div>
                 <div class="card-body">
@@ -192,15 +192,15 @@
             <div class="text-center mt-4 p-3" style="background: linear-gradient(135deg, #c02425 0%, #e74c3c 100%); border-radius: 15px;">
                 <div class="row text-white">
                     <div class="col-md-4">
-                        <i class="fab fa-whatsapp fs-4 mb-2"></i>
+                        <i class="fab fa-whatsapp fs-4 mb-2" style="color: white"></i>
                         <div>085247213909</div>
                     </div>
                     <div class="col-md-4">
-                        <i class="fas fa-envelope fs-4 mb-2"></i>
+                        <i class="fas fa-envelope fs-4 mb-2" style="color: white"></i>
                         <div>travelsyawisataindonesia@gmail.com</div>
                     </div>
                     <div class="col-md-4">
-                        <i class="fas fa-globe fs-4 mb-2"></i>
+                        <i class="fas fa-globe fs-4 mb-2" style="color: white"></i>
                         <div>www.travelsya.com</div>
                     </div>
                 </div>
