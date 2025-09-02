@@ -7,7 +7,7 @@ use App\Models\BookDate;
 use App\Models\DetailTransactionHealthBeauty; // ✅ taruh di sini
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation; // ✅ Perbaikan disini
 use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\Hostel;
@@ -280,7 +280,7 @@ class RiwayatBookingController extends Controller
 
     public function cetakRekreasi($id)
     {
-        $recreationBooking = detailTransactionRecreation::findOrFail($id);
+        $recreationBooking = DetailTransactionRecreation::findOrFail($id);
         $data = [
             'data' => $recreationBooking->load('recreation', 'package', 'transaction.user')
         ];
@@ -291,7 +291,7 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction.user', 'package')
+        $rekreasibookdates = DetailTransactionRecreation::with('recreation', 'transaction.user', 'package')
             ->whereHas('recreation', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             })
@@ -341,7 +341,7 @@ class RiwayatBookingController extends Controller
 
     public function verifikasiRekreasi($id)
     {
-        $booking = detailTransactionRecreation::findOrFail($id);
+        $booking = DetailTransactionRecreation::findOrFail($id);
         $booking->is_used = true;
         $booking->save();
 
@@ -350,7 +350,7 @@ class RiwayatBookingController extends Controller
 
     public function batalVerifikasiRekreasi($id)
     {
-        $booking = detailTransactionRecreation::findOrFail($id);
+        $booking = DetailTransactionRecreation::findOrFail($id);
         $booking->is_used = false;
         $booking->save();
 
