@@ -20,7 +20,8 @@ class Admin
 
         $user = Auth::user();
 
-        if ($user->role === 0) {
+        // Use loose comparison (==) instead of strict (===) to handle string/integer type differences
+        if ($user->role == 0) {
             return $next($request);
         }
         abort(403);
