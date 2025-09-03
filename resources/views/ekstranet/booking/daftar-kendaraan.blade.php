@@ -1,40 +1,49 @@
 @extends('ekstranet.layout', ['title' => 'Riwayat Booking Car Rental', 'url' => '#'])
 
 @section('content-admin')
+<form action="#" method="get">
     <div class="card mb-2">
         <div class="card-body">
-            <form action="#" method="get">
-                <div class="row">
-                    <div class="col-3">
-                        <select class="form-select" name="year">
-                            <option value="" disabled selected>Pilih Tahun</option>
-                            @php
-                                $currentYear = date('Y');
-                                $startYear = 2020;
-                            @endphp
-                            @for ($i = $currentYear; $i >= $startYear; $i--)
-                                <option value="{{ $i }}"
-                                    {{ isset($_GET['year']) && $_GET['year'] == $i ? 'selected' : '' }}>
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="start" placeholder="Tanggal Mulai"
-                            value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
-                    </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="end" placeholder="Tanggal Selesai"
-                            value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
-                    </div>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary w-100">Cari Data</button>
-                    </div>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Tahun</label>
+                    <select class="form-select" name="year">
+                        <option value="">Pilih Tahun</option>
+                        @php
+                            $currentYear = date('Y');
+                            $startYear = 2020;
+                        @endphp
+                        @for ($i = $currentYear; $i >= $startYear; $i--)
+                            <option value="{{ $i }}"
+                                {{ request()->get('year') == $i ? 'selected' : '' }}>
+                                {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
                 </div>
-            </form>
+                <div class="col-md-4">
+                    <label class="form-label">Dari Tanggal</label>
+                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sampai Tanggal</label>
+                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
+                </div>
+            </div>
         </div>
     </div>
+
+              <div class="card">
+        <div class="card-body">
+            <div class="row g-3 align-items-end mb-5">
+                <div class="col-md-10">
+                    <label class="form-label">Kata Kunci</label>
+                    <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Paket" value="{{ request()->get('keyword') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Cari</button>
+                </div>
+            </div>
 
     <div class="card">
         <div class="card-body">
@@ -47,11 +56,11 @@
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#verified"
                             type="button" role="tab" aria-controls="verified" aria-selected="false">
-                        Sudah Diverifikasi
+                        Sudah Dipakai
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#pending"
                             type="button" role="tab" aria-controls="pending" aria-selected="false">
-                        Belum Diverifikasi
+                        Belum Dipakai
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#expired"
                             type="button" role="tab" aria-controls="expired" aria-selected="false">
@@ -104,9 +113,9 @@
                                             @if($isExpired && $status != 'verified')
                                                 <span class="badge badge-danger">Kadaluarsa</span>
                                             @elseif($status == 'verified')
-                                                <span class="badge badge-success">Verified</span>
+                                                <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -120,14 +129,13 @@
                                                     </div>
                                                 @elseif($status == 'verified')
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-danger">
+                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
                                                             Invoice
                                                         </a>
                                                     </div>
@@ -184,20 +192,19 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-success">Verified</span>
+                                                <span class="badge badge-success">Sudah Dipakai</span>
                                             </td>
                                             <td class="text-center">
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                     data-kt-menu="true" style="">
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-danger">
+                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
                                                             Invoice
                                                         </a>
                                                     </div>
@@ -258,7 +265,7 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">Belum Dipakai</span>
                                             </td>
                                             <td class="text-center">
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
@@ -357,23 +364,49 @@
             $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
             $status = $booking->status ?? 'pending';
         @endphp
+        
+        {{-- Modal for verification --}}
         @if($status != 'verified' && !$isExpired)
             <div class="modal fade" id="verificationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Konfirmasi Verifikasi</h5>
+                            <h5 class="modal-title">Konfirmasi Penggunaan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Apakah Anda yakin ingin memverifikasi booking ini?</p>
+                            <p>Apakah Anda yakin ingin menandai booking ini sebagai sudah digunakan?</p>
                             <div class="text-center">
                                 <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}" class="btn btn-success">Verifikasi</a>
+                            <a href="{{ route('partner.riwayat-booking.verifikasi-car-rental', $booking->id) }}" class="btn btn-success">Sudah Dipakai</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        
+        {{-- Modal for cancellation verification --}}
+        @if($status == 'verified')
+            <div class="modal fade" id="cancellationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Konfirmasi Pembatalan Penggunaan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin membatalkan tanda sudah digunakan untuk booking ini?</p>
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-car-rental', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-car-rental', $booking->id) }}" class="btn btn-danger">Ya, Belum Dipakai</a>
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ use App\Models\BookDate;
 use App\Models\DetailTransactionHealthBeauty; // ✅ taruh di sini
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation; // ✅ Perbaikan disini
 use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\Hostel;
@@ -280,7 +280,7 @@ class RiwayatBookingController extends Controller
 
     public function cetakRekreasi($id)
     {
-        $recreationBooking = detailTransactionRecreation::findOrFail($id);
+        $recreationBooking = DetailTransactionRecreation::findOrFail($id);
         $data = [
             'data' => $recreationBooking->load('recreation', 'package', 'transaction.user')
         ];
@@ -291,28 +291,47 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction', 'package')
-            ->whereHas('transaction', function ($q) {
-                $q->where('status', 'PAID');
-            })
+        $rekreasibookdates = DetailTransactionRecreation::with('recreation', 'transaction.user', 'package')
             ->whereHas('recreation', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
+            })
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
             });
 
         $year = $request->input('year');
         $start = $request->input('start');
         $end = $request->input('end');
+        $keyword = $request->input('keyword');
 
-        if ($year != null) {
-            $rekreasibookdates->whereYear('book_date', $year);
+        if ($year) {
+            $rekreasibookdates->whereHas('transaction', function ($q) use ($year) {
+                $q->whereYear('created_at', $year);
+            });
         }
 
-        if ($start != null) {
-            $rekreasibookdates = $rekreasibookdates->where('book_date', '>=', $start);
+        if ($start) {
+            $rekreasibookdates->whereHas('transaction', function ($q) use ($start) {
+                $q->whereDate('created_at', '>=', $start);
+            });
         }
 
-        if ($end != null) {
-            $rekreasibookdates = $rekreasibookdates->where('expire_on', '<=', $end);
+        if ($end) {
+            $rekreasibookdates->whereHas('transaction', function ($q) use ($end) {
+                $q->whereDate('created_at', '<=', $end);
+            });
+        }
+
+        if ($keyword) {
+            $rekreasibookdates->where(function ($query) use ($keyword) {
+                $query->where('booking_id', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('transaction.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhereHas('package', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
         }
 
         $rekreasibookdates = $rekreasibookdates->get();
@@ -322,7 +341,7 @@ class RiwayatBookingController extends Controller
 
     public function verifikasiRekreasi($id)
     {
-        $booking = detailTransactionRecreation::findOrFail($id);
+        $booking = DetailTransactionRecreation::findOrFail($id);
         $booking->is_used = true;
         $booking->save();
 
@@ -331,7 +350,7 @@ class RiwayatBookingController extends Controller
 
     public function batalVerifikasiRekreasi($id)
     {
-        $booking = detailTransactionRecreation::findOrFail($id);
+        $booking = DetailTransactionRecreation::findOrFail($id);
         $booking->is_used = false;
         $booking->save();
 
@@ -343,28 +362,45 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $carrentalbookdates = DetailTransactionCarRental::with('carRental', 'car.brand', 'car.carModel', 'transaction')
-            ->whereHas('transaction', function ($q) {
-                $q->where('status', 'PAID');
-            })
+        $carrentalbookdates = DetailTransactionCarRental::with('carRental', 'car.brand', 'car.carModel', 'transaction.user')
             ->whereHas('carRental', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
+            })
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
             });
 
         $year = $request->input('year');
         $start = $request->input('start');
         $end = $request->input('end');
+        $keyword = $request->input('keyword');
 
-        if ($year != null) {
-            $carrentalbookdates->whereYear('start', $year)->orWhereYear('end', $year);
+        if ($year) {
+            $carrentalbookdates->whereHas('transaction', function ($q) use ($year) {
+                $q->whereYear('created_at', $year);
+            });
         }
 
-        if ($start != null) {
-            $carrentalbookdates = $carrentalbookdates->where('start', '>=', $start);
+        if ($start) {
+            $carrentalbookdates->whereHas('transaction', function ($q) use ($start) {
+                $q->whereDate('created_at', '>=', $start);
+            });
         }
 
-        if ($end != null) {
-            $carrentalbookdates = $carrentalbookdates->where('end', '<=', $end);
+        if ($end) {
+            $carrentalbookdates->whereHas('transaction', function ($q) use ($end) {
+                $q->whereDate('created_at', '<=', $end);
+            });
+        }
+
+        if ($keyword) {
+            $carrentalbookdates->where(function ($query) use ($keyword) {
+                $query->where('booking_id', 'like', '%' . $keyword . '%')
+                    ->orWhere('customer_name', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('transaction.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%');
+                    });
+            });
         }
 
         $carrentalbookdates = $carrentalbookdates->get();
@@ -392,45 +428,59 @@ class RiwayatBookingController extends Controller
 
     public function indexBus(Request $request)
     {
-        $query = DetailTransactionBus::with(['transaction.user', 'busTravel', 'busTravelHasBus', 'departure'])
+        $user_id = auth()->user()->id;
+
+        $busbookings = DetailTransactionBus::with('busTravel', 'busTravelHasBus', 'departure', 'transaction')
             ->whereHas('transaction', function ($q) {
-                $q->whereHas('user', function ($userQuery) {
-                    $userQuery->where('id', auth()->id());
-                });
+                $q->where('status', 'PAID');
+            })
+            ->whereHas('busTravel', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
             });
 
-        // Filter by year if provided
-        if ($request->filled('year')) {
-            $query->whereYear('created_at', $request->year);
+        $year = $request->input('year');
+        $start = $request->input('start');
+        $end = $request->input('end');
+        $keyword = $request->input('keyword');
+
+        if ($year != null) {
+            $busbookings->whereYear('departure_time', $year);
         }
 
-        // Filter by date range if provided
-        if ($request->filled('start') && $request->filled('end')) {
-            $query->whereBetween('created_at', [$request->start, $request->end]);
+        if ($start != null) {
+            $busbookings = $busbookings->where('departure_time', '>=', $start);
         }
 
-        $busbookings = $query->orderBy('created_at', 'desc')->get();
+        if ($end != null) {
+            $busbookings = $busbookings->where('departure_time', '<=', $end);
+        }
+
+        if ($keyword) {
+            $busbookings->where(function ($query) use ($keyword) {
+                $query->where('booking_id', 'like', '%' . $keyword . '%')
+                    ->orWhere('customer_name', 'like', '%' . $keyword . '%')
+                    ->orWhere('customer_phone', 'like', '%' . $keyword . '%')
+                    ->orWhereHas('transaction.user', function ($q) use ($keyword) {
+                        $q->where('name', 'like', '%' . $keyword . '%')
+                            ->orWhere('phone', 'like', '%' . $keyword . '%');
+                    })
+                    ->orWhereHas('busTravel', function ($q) use ($keyword) {
+                        $q->where('business_name', 'like', '%' . $keyword . '%');
+                    });
+            });
+        }
+
+        $busbookings = $busbookings->get();
 
         return view('ekstranet.booking.bus-travel', compact('busbookings'));
     }
 
-    /**
-     * Verify bus booking
-     */
     public function verifikasiBus($id)
     {
         try {
-            $busBooking = DetailTransactionBus::with('transaction')->findOrFail($id);
-
-            // Check if user has permission to verify this booking
-            if ($busBooking->transaction->user_id !== auth()->id()) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk verifikasi booking ini.');
-            }
-
-            // Update transaction status to verified
-            $busBooking->transaction->update([
-                'status' => 'verified'
-            ]);
+            $booking = DetailTransactionBus::findOrFail($id);
+            $booking->status = 'verified';
+            $booking->save();
 
             return redirect()->back()->with('success', 'Booking bus travel berhasil diverifikasi.');
         } catch (\Exception $e) {
@@ -438,25 +488,30 @@ class RiwayatBookingController extends Controller
         }
     }
 
-    /**
-     * Cancel verification of bus booking
-     */
     public function batalVerifikasiBus($id)
     {
-        try {
-            $busBooking = DetailTransactionBus::with('transaction')->findOrFail($id);
+        $booking = DetailTransactionBus::findOrFail($id);
+        $booking->status = 'pending';
+        $booking->save();
 
-            // Check if user has permission to cancel verification
-            if ($busBooking->transaction->user_id !== auth()->id()) {
-                return redirect()->back()->with('error', 'Anda tidak memiliki akses untuk membatalkan verifikasi booking ini.');
+        return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
+    }
+
+    public function cetakBus($id, Request $request)
+    {
+        try {
+            $busBooking = DetailTransactionBus::findOrFail($id);
+            $data = [
+                'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+            ];
+
+            // For modal display, return partial view without full HTML structure
+            if ($request->ajax() || $request->expectsJson()) {
+                return view('user.order-detail.e-tiket-bus-modal', $data);
             }
 
-            // Update transaction status to pending
-            $busBooking->transaction->update([
-                'status' => 'pending'
-            ]);
-
-            return redirect()->back()->with('success', 'Verifikasi booking bus travel berhasil dibatalkan.');
+            // Regular view for direct access
+            return view('user.order-detail.e-tiket-bus', $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }

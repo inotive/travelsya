@@ -1,43 +1,50 @@
 @extends('ekstranet.layout', ['title' => 'Riwayat Booking Rekreasi', 'url' => '#'])
 
 @section('content-admin')
+<form action="#" method="get">
     <div class="card mb-2">
         <div class="card-body">
-            <form action="#" method="get">
-                <div class="row">
-                    <div class="col-3">
-                        <select class="form-select" name="year">
-                            <option value="" disabled selected>Pilih Tahun</option>
-                            @php
-                                $currentYear = date('Y');
-                                $startYear = 2020;
-                            @endphp
-                            @for ($i = $currentYear; $i >= $startYear; $i--)
-                                <option value="{{ $i }}"
-                                    {{ isset($_GET['year']) && $_GET['year'] == $i ? 'selected' : '' }}>
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="start" placeholder="Tanggal Mulai"
-                            value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
-                    </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" name="end" placeholder="Tanggal Selesai"
-                            value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
-                    </div>
-                    <div class="col-3">
-                        <button type="submit" class="btn btn-primary w-100">Cari Data</button>
-                    </div>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Tahun</label>
+                    <select class="form-select" name="year">
+                        <option value="">Pilih Tahun</option>
+                        @php
+                            $currentYear = date('Y');
+                            $startYear = 2020;
+                        @endphp
+                        @for ($i = $currentYear; $i >= $startYear; $i--)
+                            <option value="{{ $i }}"
+                                {{ request()->get('year') == $i ? 'selected' : '' }}>
+                                {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
                 </div>
-            </form>
+                <div class="col-md-4">
+                    <label class="form-label">Dari Tanggal</label>
+                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Sampai Tanggal</label>
+                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-body">
+            <div class="row g-3 align-items-end mb-5">
+                <div class="col-md-10">
+                    <label class="form-label">Kata Kunci</label>
+                    <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Paket" value="{{ request()->get('keyword') }}">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Cari</button>
+                </div>
+            </div>
+
             <!-- Navigasi Tab Simple -->
             <div class="mb-4">
                 <div class="d-flex gap-4 border-bottom">
@@ -99,9 +106,9 @@
                                             @if($isExpired)
                                                 <span class="badge badge-danger">Kadaluarsa</span>
                                             @elseif($booking->is_used)
-                                                <span class="badge badge-success">Verified</span>
+                                                <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -115,14 +122,13 @@
                                                     </div>
                                                 @elseif($booking->is_used)
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-danger">
+                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
                                                             Invoice
                                                         </a>
                                                     </div>
@@ -175,20 +181,19 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-success">Verified</span>
+                                                <span class="badge badge-success">Sudah Dipakai</span>
                                             </td>
                                             <td class="text-center">
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                                     data-kt-menu="true" style="">
                                                     <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-danger">
+                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                             Batal Verifikasi
                                                         </a>
                                                     </div>
                                                     <div class="menu-item px-3">
                                                         <a href="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary" target="_blank">
+                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
                                                             Invoice
                                                         </a>
                                                     </div>
@@ -242,7 +247,7 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-warning">Pending</span>
+                                                <span class="badge badge-warning">Belum Dipakai</span>
                                             </td>
                                             <td class="text-center">
                                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
@@ -328,6 +333,7 @@
             </div>
         </div>
     </div>
+</form>
 
     @foreach ($rekreasibookdates as $booking)
         @php
@@ -338,18 +344,41 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Konfirmasi Verifikasi</h5>
+                            <h5 class="modal-title">Konfirmasi Penggunaan</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Apakah Anda yakin ingin memverifikasi tiket ini?</p>
+                            <p>Apakah Anda yakin ingin menandai tiket ini sebagai sudah digunakan?</p>
                             <div class="text-center">
                                 <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.verifikasi-rekreasi', $booking->id) }}" class="btn btn-success">Verifikasi</a>
+                            <a href="{{ route('partner.riwayat-booking.verifikasi-rekreasi', $booking->id) }}" class="btn btn-success">Sudah Dipakai</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+        
+        @if($booking->is_used)
+            <div class="modal fade" id="cancellationModalRekreasi{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Konfirmasi Pembatalan Penggunaan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin membatalkan tanda sudah digunakan untuk tiket ini?</p>
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Ya, Belum Dipakai</a>
                         </div>
                     </div>
                 </div>

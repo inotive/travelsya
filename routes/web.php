@@ -303,7 +303,7 @@ Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clini
 // rental mobil
 Route::controller(CarRentalController::class)->name('rental')->prefix('rental')->group(function () {
     Route::get('/', 'index')->name('.index');
-    Route::get('halaman-list-rental', 'halamanRental')->name('.halaman-list-rental');
+    Route::get('list-rental-mobil', 'halamanRental')->name('.list-rental-mobil');
     Route::get('/{id}/mobil/', 'show')->name('.mobil');
     Route::get('/reservasi', 'reservation')->name('.reservasi');
 });
@@ -452,15 +452,15 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
         Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
         Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
-  Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
-        ->name('partner.riwayat-booking.car-rental');
-    Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
-        ->name('partner.riwayat-booking.verifikasi-car-rental');
-    Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
-        ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
-    Route::get('riwayat-booking/cetak-invoice-car-rental/{id}', [RiwayatBookingController::class, 'cetakCarRental'])->name('partner.riwayat-booking.cetak-invoice-car-rental');
-    Route::get('riwayat-booking/cetak-invoice-rekreasi/{id}', [RiwayatBookingController::class, 'cetakRekreasi'])->name('partner.riwayat-booking.cetak-invoice-rekreasi');
-     Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
+        Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
+            ->name('partner.riwayat-booking.car-rental');
+        Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
+            ->name('partner.riwayat-booking.verifikasi-car-rental');
+        Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
+            ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
+        Route::get('riwayat-booking/cetak-invoice-car-rental/{id}', [RiwayatBookingController::class, 'cetakCarRental'])->name('partner.riwayat-booking.cetak-invoice-car-rental');
+        Route::get('riwayat-booking/cetak-invoice-rekreasi/{id}', [RiwayatBookingController::class, 'cetakRekreasi'])->name('partner.riwayat-booking.cetak-invoice-rekreasi');
+        Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
@@ -473,13 +473,13 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
 
         Route::get('riwayat-booking-health-beauty', [RiwayatBookingController::class, 'healthBeauty'])
-        ->name('partner.health-beauty.index');
-        
-    // Health Beauty Booking Verification Routes
-    Route::post('riwayat-booking-health-beauty/{id}/verify', [RiwayatBookingController::class, 'verifikasiHealthBeauty'])
-        ->name('partner.health-beauty.verify');
-    Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
-        ->name('partner.health-beauty.cancel-verify');
+            ->name('partner.health-beauty.index');
+
+        // Health Beauty Booking Verification Routes
+        Route::post('riwayat-booking-health-beauty/{id}/verify', [RiwayatBookingController::class, 'verifikasiHealthBeauty'])
+            ->name('partner.health-beauty.verify');
+        Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
+            ->name('partner.health-beauty.cancel-verify');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
@@ -497,9 +497,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('daftar-bus-travel/edit/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'update'])->name('partner.update.bus-travel');
         Route::delete('bus-travel-delete/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'destroy'])->name('partner.delete.bus-travel');
 
-        Route::get('riwayat-booking-bus', [RiwayatBookingController::class, 'indexBus'])->name('partner.riwayat-booking.bus');
-        Route::get('riwayat-booking-bus/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiBus'])->name('partner.riwayat-booking.verifikasi-bus');
-        Route::get('riwayat-booking-bus/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiBus'])->name('partner.riwayat-booking.batal-verifikasi-bus');
+        Route::get('riwayat-booking-bus-travel', [RiwayatBookingController::class, 'indexBus'])->name('partner.riwayat-booking.bus-travel');
+        Route::get('riwayat-booking-bus-travel/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiBus'])->name('partner.riwayat-booking.verifikasi-bus');
+        Route::get('riwayat-booking-bus-travel/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiBus'])->name('partner.riwayat-booking.batal-verifikasi-bus');
+        Route::get('riwayat-booking-bus-travel/cetak-invoice/{id}', [RiwayatBookingController::class, 'cetakBus'])->name('partner.riwayat-booking.cetak-invoice-bus');
 
         // Bus routes management
         // Route::get('bus-routes', [\App\Http\Controllers\Partner\BusRouteController::class, 'index'])->name('partner.bus.routes');
@@ -514,7 +515,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('bus-departures/bus/{busId}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures.bus');
         Route::post('bus-departures/store', [\App\Http\Controllers\Partner\BusDepartureController::class, 'store'])->name('partner.bus.departures.store');
         Route::post('bus-departures/update', [\App\Http\Controllers\Partner\BusDepartureController::class, 'update'])->name('partner.bus.departures.update');
-        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'destroy'])->name('partner.bus.departures.delete');
+        Route::post('bus-departures/delete', [\App\Http\Controllers\Partner\BusDepartureController::class, 'delete'])->name('partner.bus.departures.delete');
 
         // Keep these routes for backward compatibility
         Route::get('bus-departures/create', [\App\Http\Controllers\Partner\BusDepartureController::class, 'create'])->name('partner.bus.departures.create');

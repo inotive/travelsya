@@ -11,14 +11,21 @@
                     </h4>
                 </a>
             </div>
-            <div class="ms-sm-auto position-relative">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
-                        <i class="fa-solid fa-search"></i>
-                    </span>
-                    <input type="text" onkeyup="findData()" id="find" class="form-control search-input"
-                        placeholder="Cari tempat rental mobil langganan kamu disini" />
-                </div>
+            <div class="ms-sm-auto position-relative" style="width: 50%;">
+                <form id="search-form" action="{{ route('car_rent.show') }}" method="POST" style="display: flex;">
+                    @csrf
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" name="search" id="find" class="form-control search-input"
+                            placeholder="Cari tempat rental mobil langganan kamu disini" 
+                            onkeyup="findData()" />
+                        <button type="submit" class="btn btn-danger" style="border-radius: 0 50px 50px 0;">
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </form>
                 <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result"
                     style="z-index: 9999">
                     <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
@@ -32,22 +39,32 @@
 </div>
 @push('js')
 <script>
-    const password = document.querySelector('input[id="find"]');
-        password.addEventListener("focus", (event) => {
-            $('#card_result').removeClass('d-none');
-        });
+    const searchInput = document.querySelector('input[id="find"]');
+    
+    // Handle focus event
+    searchInput.addEventListener("focus", (event) => {
+        $('#card_result').removeClass('d-none');
+    });
 
-        password.addEventListener("blur", (event) => {
-            $("#card_result").delay(500).queue(function() {
-                $('#card_result').addClass('d-none');
-                $('#search-wrapper').empty();
-                $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>');
-            });
+    // Handle blur event
+    searchInput.addEventListener("blur", (event) => {
+        $("#card_result").delay(500).queue(function() {
+            $('#card_result').addClass('d-none');
+            $('#search-wrapper').empty();
+            $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>');
         });
+    });
+
     function findData(){
         var val = $('#find').val();
 
         if(val.length > 1){
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            
             $.ajax({
                 url: "{{ route('search_car_rent') }}",
                 type: "POST",
@@ -58,12 +75,17 @@
                     if($res){
                         $('#search-wrapper').empty();
                         $('#search-wrapper').append($res);
-                        // $('#card_result').removeClass('d-none');
                     }else{
                         $('#search-wrapper').empty();
                         $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Tidak ada data</div>');
                     }
 
+                },
+                error: function(xhr, status, error) {
+                    console.log('AJAX Error: ' + error);
+                    console.log('Response: ', xhr.responseText);
+                    $('#search-wrapper').empty();
+                    $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Terjadi kesalahan saat mencari data</div>');
                 }
             });
         }

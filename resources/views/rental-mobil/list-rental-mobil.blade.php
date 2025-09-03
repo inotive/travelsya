@@ -16,7 +16,7 @@
     </a>
 
     <div class="container mt-5">
-        <h1 class="mb-4">Hasil Pencarian Rental Mobil</h1>
+        <h1 class="mb-4">Syarat Rental Mobil</h1>
 
         <div class="search-result">
             <i class="fa fa-calendar" aria-hidden="true"></i>

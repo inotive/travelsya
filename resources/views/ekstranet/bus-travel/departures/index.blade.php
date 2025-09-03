@@ -118,79 +118,70 @@
             </table>
         </div>
     </div>
-    @include('ekstranet.bus-travel.departures.modals')
+        @include('ekstranet.bus-travel.departures.modals')
 @endsection
 
 
 
 @section('scripts')
     <script>
-        $(document).ready(function() {
-            // Search functionality
-            $("#searchInput").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $("#departuresTable tbody tr").filter(function() {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
+        //dikomen karena dipindah menjadi inline di modals.blade.php
+        // // Edit modal data population
+        // $('#editDepartureModal').on('show.bs.modal', function(event) {
+        //     var button = $(event.relatedTarget);
+        //     var id = button.data('id');
+        //     var from = button.data('from');
+        //     var to = button.data('to');
+        //     var datetime = button.data('time');
+        //     var duration = button.data('duration');
+        //     var price = button.data('price');
+        //     var days = button.data('days');
 
-            // Edit modal data population
-            $('#editDepartureModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                var from = button.data('from');
-                var to = button.data('to');
-                var datetime = button.data('time');
-                var duration = button.data('duration');
-                var price = button.data('price');
-                var days = button.data('days');
-                
-                // Split datetime into date and time parts
-                var datetimeParts = datetime.split(' ');
-                var datePart = '';
-                var timePart = '';
-                
-                if (datetimeParts.length > 1) {
-                    datePart = datetimeParts[0]; // YYYY-MM-DD
-                    timePart = datetimeParts[1]; // HH:MM:SS
-                } else {
-                    // If only time is available (legacy data)
-                    timePart = datetime;
-                    // Set today's date as default
-                    var today = new Date();
-                    datePart = today.getFullYear() + '-' + 
-                              String(today.getMonth() + 1).padStart(2, '0') + '-' + 
-                              String(today.getDate()).padStart(2, '0');
-                }
+        //     // Split datetime into date and time parts
+        //     var datetimeParts = datetime.split(' ');
+        //     var datePart = '';
+        //     var timePart = '';
 
-                var modal = $(this);
-                modal.find('#edit_departure_id').val(id);
-                modal.find('#edit_from_route_id').val(from);
-                modal.find('#edit_to_route_id').val(to);
-                modal.find('#edit_departure_date').val(datePart);
-                modal.find('#edit_departure_time').val(timePart);
-                modal.find('#edit_duration').val(duration);
-                modal.find('#edit_price').val(price);
+        //     if (datetimeParts.length > 1) {
+        //         datePart = datetimeParts[0]; // YYYY-MM-DD
+        //         timePart = datetimeParts[1]; // HH:MM:SS
+        //     } else {
+        //         // If only time is available (legacy data)
+        //         timePart = datetime;
+        //         // Set today's date as default
+        //         var today = new Date();
+        //         datePart = today.getFullYear() + '-' +
+        //                 String(today.getMonth() + 1).padStart(2, '0') + '-' +
+        //                 String(today.getDate()).padStart(2, '0');
+        //     }
 
-                // Reset all checkboxes first
-                modal.find('.edit-day').prop('checked', false);
+        //     var modal = $(this);
+        //     modal.find('#edit_departure_id').val(id);
+        //     modal.find('#edit_from_route_id').val(from);
+        //     modal.find('#edit_to_route_id').val(to);
+        //     modal.find('#edit_departure_date').val(datePart);
+        //     modal.find('#edit_departure_time').val(timePart);
+        //     modal.find('#edit_duration').val(duration);
+        //     modal.find('#edit_price').val(price);
 
-                // Check the appropriate day checkboxes
-                if (days) {
-                    var daysArray = days.split(',');
-                    daysArray.forEach(function(day) {
-                        modal.find('#edit_day' + day).prop('checked', true);
-                    });
-                }
-            });
+        //     // Reset all checkboxes first
+        //     modal.find('.edit-day').prop('checked', false);
 
-            // Delete modal data population
-            $('#deleteDepartureModal').on('show.bs.modal', function(event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                var modal = $(this);
-                modal.find('#delete_departure_id').val(id);
-            });
+        //     // Check the appropriate day checkboxes
+        //     if (days) {
+        //         var daysArray = days.split(',');
+        //         daysArray.forEach(function(day) {
+        //             modal.find('#edit_day' + day).prop('checked', true);
+        //         });
+        //     }
+        // });
+
+        // Delete modal data population
+        $('#deleteDepartureModal').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget);
+            var id = button.data('id');
+            var modal = $(this);
+            modal.find('#delete_departure_id').val(id);
         });
     </script>
 @endsection
