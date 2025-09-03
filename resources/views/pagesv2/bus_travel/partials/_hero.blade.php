@@ -48,8 +48,8 @@
                             </div>
                             <hr class="hr-line my-0">
                             <div class="d-flex wrapper-search">
-                                <button type="button" onclick="swapCities()" class="input-group-text bg-white">
-                                    <i class="fa-solid fa-repeat" style="transform: rotate(90deg);"></i>
+                                <button type="button" onclick="swapCities()" class="input-group-text bg-white" id="myButton">
+                                    <i class="bi bi-arrow-down-up" id="myIcon"></i>
                                 </button>
                             </div>
 
@@ -92,16 +92,31 @@
     </div>
 </section>
 
+<style>
+    #myIcon {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    #myIcon.rotated {
+        transform: rotate(180deg);
+    }
+
+</style>
+
 <script>
-function swapCities() {
-    const kotaAwal = document.getElementById('kota_awal');
-    const kotaTujuan = document.getElementById('kota_tujuan');
+    function swapCities() {
+        const kotaAwal = document.getElementById('kota_awal');
+        const kotaTujuan = document.getElementById('kota_tujuan');
 
-    // Store the current values
-    const tempValue = kotaAwal.value;
+        // Store the current values
+        const tempValue = kotaAwal.value;
 
-    // Swap the values
-    kotaAwal.value = kotaTujuan.value;
-    kotaTujuan.value = tempValue;
-}
+        // Swap the values
+        kotaAwal.value = kotaTujuan.value;
+        kotaTujuan.value = tempValue;
+    }
+
+    document.getElementById('myButton').addEventListener('click', function() {
+    document.getElementById('myIcon').classList.toggle('rotated');
+    });
 </script>
