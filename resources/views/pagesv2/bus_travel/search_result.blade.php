@@ -6,7 +6,7 @@
     <div class="container my-5 mb-50">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <form action="{{ route('bus_travel.search') }}" method="POST">
+                <form id="mainSearchForm" action="{{ route('bus_travel.search') }}" method="POST">
                     @csrf
                     <div class="row justify-content-between">
                         <div class="col-12 col-md-10">

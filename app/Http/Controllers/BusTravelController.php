@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Validator;
 class BusTravelController extends Controller
 {
     protected $xendit, $point;
-    
+
     public function __construct(Xendit $xendit, Point $point)
     {
         $this->xendit = $xendit;
@@ -323,7 +323,7 @@ class BusTravelController extends Controller
         return array_unique($matchedTerms);
     }
 
-    
+
 
     /**
      * Highlight search term in text (case insensitive)
@@ -348,13 +348,13 @@ class BusTravelController extends Controller
     {
         $date = $request->date_pergi ?? now()->format('Y-m-d');
         $date_pulang = $request->date_pulang ?? null;
-        $qty = $request->jumlah_penumpang ? $request->jumlah_penumpang : 1;
+        $qty = $request->jumlah_penumpang ?: 1;
         $pp = $request->is_pulang_pergi ?? 0;
         $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
 
-        // Enhanced filters
+        // --- Price parsing ---
         $price = null;
-        if ($request->has('price') && is_numeric($request->price)) {
+        if ($request->has('price') && is_numeric(str_replace(['k', 'K', '.'], '', $request->price))) {
             $cleanInput = str_replace(['k', 'K', '.', ','], '', $request->price);
             $price = (int) $cleanInput;
             if (stripos($request->price, 'k') !== false) {
@@ -362,122 +362,107 @@ class BusTravelController extends Controller
             }
         }
 
+        // --- Time range parsing ---
         $timeRange = null;
         if ($request->has('time') && $this->isTimeSearch($request->time)) {
             $timeRange = $this->calculateTimeRange($request->time);
         }
 
+        // --- Facility search terms ---
         $facilityTerms = [];
         if ($request->has('facility') && $this->isFacilitySearch($request->facility)) {
             $facilityTerms = $this->getFacilitySearchTerms($request->facility);
         }
 
-        $pergi = BusDeparture::with('busTravel', 'from', 'to')
+        // --- Query Departures (Pergi) ---
+        $pergi = BusDeparture::with('busTravel.busTravel', 'from', 'to')
             ->has('busTravel')
-            ->when($request->kota_awal, function ($q) use ($request) {
-                $from = '%' . $request->kota_awal . '%';
-                $q->whereHas('from', function ($f) use ($from) {
-                    $f->where('name', 'like', $from);
-                });
-            })
-            ->when($request->kota_tujuan, function ($q) use ($request) {
-                $to = '%' . $request->kota_tujuan . '%';
-                $q->whereHas('to', function ($t) use ($to) {
-                    $t->where('name', 'like', $to);
-                });
-            })
+            ->when($request->kota_awal, fn($q) =>
+                $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_awal . '%'))
+            )
+            ->when($request->kota_tujuan, fn($q) =>
+                $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_tujuan . '%'))
+            )
             ->when($selected_agent, function ($q, $a) {
-                $q->whereHas('busTravel', function ($b) use ($a) {
-                    $b->whereHas('busTravel', function ($b2) use ($a) {
-                        $b2->where('business_name', 'like', $a);
-                    });
-                });
+                $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a));
             })
-            // Add price filter
-            ->when($price, function ($q) use ($price) {
-                $q->where('price', '<=', $price);
-            })
-            // Add time range filter
-            ->when($timeRange, function ($q) use ($timeRange) {
+            ->when($price, fn($q) => $q->where('price', '<=', $price))
+            ->when($timeRange, fn($q) =>
                 $q->whereTime('departure_time', '>=', $timeRange['start'])
-                  ->whereTime('departure_time', '<=', $timeRange['end']);
-            })
-            // Add facility filter
+                ->whereTime('departure_time', '<=', $timeRange['end'])
+            )
             ->when(!empty($facilityTerms), function ($q) use ($facilityTerms) {
-                $q->whereHas('busTravel', function ($b) use ($facilityTerms) {
+                $q->whereHas('busTravel', function ($bus) use ($facilityTerms) {
                     foreach ($facilityTerms as $term) {
-                        $b->where('facilities', 'like', '%' . $term . '%')
-                          ->orWhere('description', 'like', '%' . $term . '%')
-                          ->orWhere('class', 'like', '%' . $term . '%');
+                        $bus->where('facilities', 'like', '%' . $term . '%')
+                            ->orWhere('description', 'like', '%' . $term . '%')
+                            ->orWhere('class', 'like', '%' . $term . '%');
                     }
                 });
             })
             ->get();
 
+        // --- Query Departures (Pulang) ---
         $pulang = [];
-
-        if ((int)$pp == 1) {
-            $pulang = BusDeparture::with('busTravel', 'from', 'to')
+        if ((int)$pp === 1) {
+            $pulang = BusDeparture::with('busTravel.busTravel', 'from', 'to')
                 ->has('busTravel')
-                ->when($request->kota_awal, function ($q) use ($request) {
-                    $to = '%' . $request->kota_awal . '%';
-                    $q->whereHas('to', function ($t) use ($to) {
-                        $t->where('name', 'like', $to);
-                    });
-                })
-                ->when($request->kota_tujuan, function ($q) use ($request) {
-                    $from = '%' . $request->kota_tujuan . '%';
-                    $q->whereHas('from', function ($f) use ($from) {
-                        $f->where('name', 'like', $from);
-                    });
-                })
+                ->when($request->kota_awal, fn($q) =>
+                    $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_awal . '%'))
+                )
+                ->when($request->kota_tujuan, fn($q) =>
+                    $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_tujuan . '%'))
+                )
                 ->when($selected_agent, function ($q, $a) {
-                    $q->whereHas('busTravel', function ($b) use ($a) {
-                        $b->whereHas('busTravel', function ($b2) use ($a) {
-                            $b2->where('business_name', 'like', $a);
-                        });
-                    });
+                    $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a));
                 })
-                // Add price filter for return trip
-                ->when($price, function ($q) use ($price) {
-                    $q->where('price', '<=', $price);
-                })
-                // Add time range filter for return trip
-                ->when($timeRange, function ($q) use ($timeRange) {
+                ->when($price, fn($q) => $q->where('price', '<=', $price))
+                ->when($timeRange, fn($q) =>
                     $q->whereTime('departure_time', '>=', $timeRange['start'])
-                      ->whereTime('departure_time', '<=', $timeRange['end']);
-                })
-                // Add facility filter for return trip
+                    ->whereTime('departure_time', '<=', $timeRange['end'])
+                )
                 ->when(!empty($facilityTerms), function ($q) use ($facilityTerms) {
-                    $q->whereHas('busTravel', function ($b) use ($facilityTerms) {
+                    $q->whereHas('busTravel', function ($bus) use ($facilityTerms) {
                         foreach ($facilityTerms as $term) {
-                            $b->where('facilities', 'like', '%' . $term . '%')
-                              ->orWhere('description', 'like', '%' . $term . '%')
-                              ->orWhere('class', 'like', '%' . $term . '%');
+                            $bus->where('facilities', 'like', '%' . $term . '%')
+                                ->orWhere('description', 'like', '%' . $term . '%')
+                                ->orWhere('class', 'like', '%' . $term . '%');
                         }
                     });
                 })
                 ->get();
         }
 
-        $newData['agent'] = BusTravels::Active()->get();
-        $newData['selected_agent'] = $request->agent ?? null;
-        $newData['selected_price_range'] = $request->price ?? null;
-        $newData['selected_time_range'] = $request->time ?? null;
-        $newData['selected_facility'] = $request->facility ?? null;
+        // --- Get only agents that actually have departures matching filters ---
+        $availableAgentIds = $pergi->pluck('busTravel.busTravel.id')
+            ->merge(collect($pulang)->pluck('busTravel.busTravel.id'))
+            ->unique()
+            ->filter();
 
-        $newData['is_pulang_pergi'] = $pp;
-        $newData['kota_awal'] = $request->kota_awal;
-        $newData['kota_tujuan'] = $request->kota_tujuan;
-        $newData['date_pergi'] = $request->date_pergi;
-        $newData['date_pulang'] = $request->date_pulang;
-        $newData['jumlah_penumpang'] = $qty;
-        $newData['pergi'] = $this->formatBus($pergi, $date);
-        $newData['pulang'] = $this->formatBus($pulang, $date_pulang);
-        $newData['city'] = BusRoute::get()->pluck('name', 'name');
+        $agents = BusTravels::Active()
+            ->when($availableAgentIds->isNotEmpty(), fn($q) => $q->whereIn('id', $availableAgentIds))
+            ->get();
+
+        $newData = [
+            'agent' => $agents,
+            'selected_agent' => $request->agent ?? null,
+            'selected_price_range' => $request->price ?? null,
+            'selected_time_range' => $request->time ?? null,
+            'selected_facility' => $request->facility ?? null,
+            'is_pulang_pergi' => $pp,
+            'kota_awal' => $request->kota_awal,
+            'kota_tujuan' => $request->kota_tujuan,
+            'date_pergi' => $request->date_pergi,
+            'date_pulang' => $request->date_pulang,
+            'jumlah_penumpang' => $qty,
+            'pergi' => $this->formatBus($pergi, $date),
+            'pulang' => $this->formatBus($pulang, $date_pulang),
+            'city' => BusRoute::pluck('name', 'name'),
+        ];
 
         return view('pagesv2.bus_travel.search_result', $newData);
     }
+
 
     public function findByRoute($kota_awal, $kota_tujuan)
     {
@@ -498,10 +483,8 @@ class BusTravelController extends Controller
                 $t->where('name', 'like', $to);
             })
             ->when($selected_agent, function ($q, $a) {
-                $q->whereHas('busTravel', function ($b) use ($a) {
-                    $b->whereHas('busTravel', function ($b2) use ($a) {
-                        $b2->where('business_name', 'like', $a);
-                    });
+                $q->whereHas('busTravel.busTravel', function ($b2) use ($a) {
+                    $b2->where('business_name', 'like', $a);
                 });
             })
             ->get();
