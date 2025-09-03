@@ -26,11 +26,38 @@ use Illuminate\Support\Facades\Validator;
 class BusTravelController extends Controller
 {
     protected $xendit, $point;
-
+    
     public function __construct(Xendit $xendit, Point $point)
     {
         $this->xendit = $xendit;
         $this->point = $point;
+    }
+
+    public function index()
+    {
+        $data['city'] = BusRoute::get()->pluck('name', 'name');
+
+        $route = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+
+        $data['route'] = $route->map(function ($r) {
+            $r['from'] = $r->departure->from->name ?? '-';
+            $r['to'] = $r->departure->to->name ?? '-';
+
+            return $r;
+        });
+
+        $route_travel = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+
+        $data['route_travel'] = $route_travel->map(function ($r) {
+            $r['from'] = $r->departure->from->name ?? '-';
+            $r['to'] = $r->departure->to->name ?? '-';
+
+            return $r;
+        });
+
+        $data['popular'] = BusTravels::withCount('booked')->orderBy('booked_count', 'desc')->limit(8)->get();
+
+        return view('pagesv2.bus_travel.index', $data);
     }
 
     /**
@@ -49,12 +76,16 @@ class BusTravelController extends Controller
         $isTimeSearch = $this->isTimeSearch($searchTerm);
         $isFacilitySearch = $this->isFacilitySearch($searchTerm);
 
-        $priceRange = null;
+        $price = null;
         $timeRange = null;
         $facilityTerms = [];
 
         if ($isNumericSearch && !$isTimeSearch) {
-            $priceRange = $this->calculatePriceRange($searchTerm);
+            $cleanInput = str_replace(['k', 'K', '.', ','], '', $searchTerm);
+            $price = (int) $cleanInput;
+            if (stripos($searchTerm, 'k') !== false) {
+                $price *= 1000;
+            }
         } elseif ($isTimeSearch) {
             $timeRange = $this->calculateTimeRange($searchTerm);
         } elseif ($isFacilitySearch) {
@@ -62,7 +93,7 @@ class BusTravelController extends Controller
         }
 
         $buses = BusDeparture::with('busTravel', 'from', 'to')
-            ->whereHas('busTravel', function ($q) use ($find, $priceRange, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
+            ->whereHas('busTravel', function ($q) use ($find, $price, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
                 $q->whereHas('busTravel', function ($b) use ($find, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
                     // Search by business name if not numeric/time/facility
                     if (!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch) {
@@ -79,9 +110,9 @@ class BusTravelController extends Controller
                     }
                 });
 
-                // Add price range filter if numeric search
-                if ($isNumericSearch && $priceRange && !$isTimeSearch) {
-                    $q->whereBetween('price', [$priceRange['min'], $priceRange['max']]);
+                // Add price filter if numeric search
+                if ($isNumericSearch && $price && !$isTimeSearch) {
+                    $q->where('price', '<=', $price);
                 }
             })
             // Add route name search if not numeric/time/facility
@@ -92,9 +123,9 @@ class BusTravelController extends Controller
                     $t->where('name', 'like', $find);
                 });
             })
-            // Add price range search for main departure table
-            ->when($isNumericSearch && $priceRange && !$isTimeSearch, function ($query) use ($priceRange) {
-                $query->orWhereBetween('price', [$priceRange['min'], $priceRange['max']]);
+            // Add price search for main departure table
+            ->when($isNumericSearch && $price && !$isTimeSearch, function ($query) use ($price) {
+                $query->orWhere('price', '<=', $price);
             })
             // Add time range search
             ->when($isTimeSearch && $timeRange, function ($query) use ($timeRange) {
@@ -292,34 +323,7 @@ class BusTravelController extends Controller
         return array_unique($matchedTerms);
     }
 
-    /**
-     * Calculate price range based on input
-     * Every 100K increment (0-100K, 100K-200K, etc.)
-     */
-    private function calculatePriceRange($input)
-    {
-        // Clean the input - remove K, k, dots, commas
-        $cleanInput = str_replace(['k', 'K', '.', ','], '', $input);
-
-        if (!is_numeric($cleanInput)) {
-            return null;
-        }
-
-        $price = (int) $cleanInput;
-
-        // Handle K notation (e.g., 75K = 75000)
-        if (stripos($input, 'k') !== false) {
-            $price = $price * 1000;
-        }
-
-        // Calculate which 100K range this falls into
-        $rangeIndex = floor($price / 100000);
-
-        return [
-            'min' => $rangeIndex * 100000,
-            'max' => ($rangeIndex + 1) * 100000
-        ];
-    }
+    
 
     /**
      * Highlight search term in text (case insensitive)
@@ -342,8 +346,6 @@ class BusTravelController extends Controller
      */
     public function search(Request $request, $agent = null)
     {
-        $from = '%' . $request->kota_awal . '%';
-        $to = '%' . $request->kota_tujuan . '%';
         $date = $request->date_pergi ?? now()->format('Y-m-d');
         $date_pulang = $request->date_pulang ?? null;
         $qty = $request->jumlah_penumpang ? $request->jumlah_penumpang : 1;
@@ -351,9 +353,13 @@ class BusTravelController extends Controller
         $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
 
         // Enhanced filters
-        $priceRange = null;
+        $price = null;
         if ($request->has('price') && is_numeric($request->price)) {
-            $priceRange = $this->calculatePriceRange($request->price);
+            $cleanInput = str_replace(['k', 'K', '.', ','], '', $request->price);
+            $price = (int) $cleanInput;
+            if (stripos($request->price, 'k') !== false) {
+                $price *= 1000;
+            }
         }
 
         $timeRange = null;
@@ -368,11 +374,17 @@ class BusTravelController extends Controller
 
         $pergi = BusDeparture::with('busTravel', 'from', 'to')
             ->has('busTravel')
-            ->whereHas('from', function ($f) use ($from) {
-                $f->where('name', 'like', $from);
+            ->when($request->kota_awal, function ($q) use ($request) {
+                $from = '%' . $request->kota_awal . '%';
+                $q->whereHas('from', function ($f) use ($from) {
+                    $f->where('name', 'like', $from);
+                });
             })
-            ->whereHas('to', function ($t) use ($to) {
-                $t->where('name', 'like', $to);
+            ->when($request->kota_tujuan, function ($q) use ($request) {
+                $to = '%' . $request->kota_tujuan . '%';
+                $q->whereHas('to', function ($t) use ($to) {
+                    $t->where('name', 'like', $to);
+                });
             })
             ->when($selected_agent, function ($q, $a) {
                 $q->whereHas('busTravel', function ($b) use ($a) {
@@ -381,9 +393,9 @@ class BusTravelController extends Controller
                     });
                 });
             })
-            // Add price range filter
-            ->when($priceRange, function ($q) use ($priceRange) {
-                $q->whereBetween('price', [$priceRange['min'], $priceRange['max']]);
+            // Add price filter
+            ->when($price, function ($q) use ($price) {
+                $q->where('price', '<=', $price);
             })
             // Add time range filter
             ->when($timeRange, function ($q) use ($timeRange) {
@@ -407,11 +419,17 @@ class BusTravelController extends Controller
         if ((int)$pp == 1) {
             $pulang = BusDeparture::with('busTravel', 'from', 'to')
                 ->has('busTravel')
-                ->whereHas('to', function ($f) use ($from) {
-                    $f->where('name', 'like', $from);
+                ->when($request->kota_awal, function ($q) use ($request) {
+                    $to = '%' . $request->kota_awal . '%';
+                    $q->whereHas('to', function ($t) use ($to) {
+                        $t->where('name', 'like', $to);
+                    });
                 })
-                ->whereHas('from', function ($t) use ($to) {
-                    $t->where('name', 'like', $to);
+                ->when($request->kota_tujuan, function ($q) use ($request) {
+                    $from = '%' . $request->kota_tujuan . '%';
+                    $q->whereHas('from', function ($f) use ($from) {
+                        $f->where('name', 'like', $from);
+                    });
                 })
                 ->when($selected_agent, function ($q, $a) {
                     $q->whereHas('busTravel', function ($b) use ($a) {
@@ -420,9 +438,9 @@ class BusTravelController extends Controller
                         });
                     });
                 })
-                // Add price range filter for return trip
-                ->when($priceRange, function ($q) use ($priceRange) {
-                    $q->whereBetween('price', [$priceRange['min'], $priceRange['max']]);
+                // Add price filter for return trip
+                ->when($price, function ($q) use ($price) {
+                    $q->where('price', '<=', $price);
                 })
                 // Add time range filter for return trip
                 ->when($timeRange, function ($q) use ($timeRange) {
