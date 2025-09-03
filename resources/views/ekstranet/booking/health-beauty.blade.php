@@ -29,10 +29,10 @@
         </div>
     </div>
 
-    <!-- Status Tabs -->
-    <div class="card mb-2">
-        <div class="card-body py-3">
-            <div class="d-flex flex-wrap gap-4">
+    <div class="card">
+        <div class="card-body">
+            <!-- Status Tabs -->
+            <div class="d-flex flex-wrap gap-4 mb-5">
                 <button type="button" class="status-tab {{ request('tab', 'all') === 'all' ? 'active' : '' }}" 
                         data-tab="all">
                     Semua Pemesanan
@@ -50,11 +50,7 @@
                     Kedaluwarsa
                 </button>
             </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-body">
+            
             <div class="row">
                 <div class="table-responsive">
                     <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
