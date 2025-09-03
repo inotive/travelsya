@@ -22,6 +22,17 @@
 
         <div class="card">
             <div class="card-body">
+                <!-- Tambahkan CSS khusus untuk memperbaiki tampilan dropdown Select2 -->
+                <style>
+                    .select2-container--open .select2-dropdown {
+                        z-index: 9999 !important;
+                        min-width: 200px !important;
+                    }
+                    .select2-dropdown {
+                        z-index: 9999 !important;
+                    }
+                </style>
+                
                 <form id="clinic-form" action="{{ route('clinics.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!--begin::Input group-->
@@ -35,7 +46,8 @@
                                 @endphp
                                 @foreach ($userClinics as $clinic)
                                     <option value="{{ $clinic->id }}" 
-                                        {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}>
+                                        {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}
+                                        data-category="{{ $clinic->category }}">
                                         {{ $clinic->clinic_name }}
                                     </option>
                                 @endforeach
@@ -62,12 +74,30 @@
                             <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                             <select class="form-control" name="categories_services_id" id="categories_services_id" required>
                                 <option value="">Pilih Kategori</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }}
-                                    </option>
-                                @endforeach
+                                <optgroup label="Service">
+                                    @foreach ($categories->where('name', 'Service') as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                                <optgroup label="Product">
+                                    @foreach ($categories->where('name', 'Product') as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                                <optgroup label="Lainnya">
+                                    @foreach ($categories->whereNotIn('name', ['Service', 'Product']) as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             </select>
                             @error('categories_services_id')
                                 <span class="text-danger mt-1" role="alert">
@@ -230,43 +260,164 @@
 @push('add-script')
     <script>
         function formatRupiah(angka, prefix) {
-            angka = angka.toString().replace(/[^\d]/g, '');
-            const number = parseInt(angka);
-            
-            if (isNaN(number)) return '';
-            
-            return 'Rp ' + number.toLocaleString('id-ID');
+            // Hapus semua karakter selain angka
+            let number_string = angka.toString().replace(/[^,\d]/g, '');
+            let split = number_string.split(',');
+            let sisa = split[0].length % 3;
+            let rupiah = split[0].substr(0, sisa);
+            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+            // Tambahkan titik jika ribuan ada
+            if (ribuan) {
+                let separator = sisa ? '.' : '';
+                rupiah += separator + ribuan.join('.');
+            }
+
+            rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+            return prefix === undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
 
         function parseRupiah(rupiah) {
+            // Hapus semua karakter selain angka
             return parseInt(rupiah.replace(/[^\d]/g, ''));
         }
 
         // Format harga saat input
         $('#harga').on('input', function() {
             let input = $(this).val();
+            // Simpan posisi kursor
+            let start = this.selectionStart;
+            let end = this.selectionEnd;
+            
+            // Format nilai
             let formatted = formatRupiah(input);
             $(this).val(formatted);
+            
+            // Pertahankan posisi kursor
+            this.setSelectionRange(start, end);
         });
 
         // Format harga saat halaman dimuat jika ada nilai old
         @if(old('price'))
-            $('#harga').val(formatRupiah('{{ old('price') }}'));
+            $('#harga').val(formatRupiah('{{ old('price') }}', 'Rp '));
         @endif
 
         $(document).ready(function() {
-            // Inisialisasi Select2 untuk kategori
-            $('#categories_services_id').select2({
-                placeholder: "Pilih atau ketik kategori baru...",
-                tags: true,
-                allowClear: true
-            });
             
             // Inisialisasi Select2 untuk klinik
             $('#clinic_id').select2({
                 placeholder: "Pilih klinik...",
                 allowClear: true
+            }).on('change', function() {
+                // Saat klinik dipilih, muat kategori yang sesuai
+                let selectedOption = $(this).find('option:selected');
+                let businessCategory = selectedOption.data('category');
+                
+                if (businessCategory) {
+                    loadCategoriesByBusinessCategory(businessCategory);
+                } else {
+                    // Jika tidak ada kategori bisnis, muat semua kategori
+                    loadCategoriesByBusinessCategory(null);
+                }
             });
+
+            // Fungsi untuk memuat kategori berdasarkan jenis bisnis
+            function loadCategoriesByBusinessCategory(businessCategory) {
+                $.ajax({
+                    url: '{{ route('get.categories.by.clinic') }}',
+                    type: 'GET',
+                    data: {
+                        business_category: businessCategory
+                    },
+                    success: function(data) {
+                        console.log("Categories Data:", data);
+                        $('#categories_services_id').empty();
+                        if (data.length > 0) {
+                            $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+                            
+                            // Kelompokkan kategori berdasarkan tipe
+                            const clinicCategories = data.filter(category => category.name === 'Clinic');
+                            const serviceCategories = data.filter(category => category.name === 'Service');
+                            const productCategories = data.filter(category => category.name === 'Product');
+                            const otherCategories = data.filter(category => 
+                                category.name !== 'Clinic' && 
+                                category.name !== 'Service' && 
+                                category.name !== 'Product'
+                            );
+                            
+                            // Tambahkan optgroup untuk Clinic
+                            if (clinicCategories.length > 0) {
+                                const clinicGroup = $('<optgroup label="Clinic"></optgroup>');
+                                $.each(clinicCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    clinicGroup.append(option);
+                                });
+                                $('#categories_services_id').append(clinicGroup);
+                            }
+                            
+                            // Tambahkan optgroup untuk Service
+                            if (serviceCategories.length > 0) {
+                                const serviceGroup = $('<optgroup label="Service"></optgroup>');
+                                $.each(serviceCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    serviceGroup.append(option);
+                                });
+                                $('#categories_services_id').append(serviceGroup);
+                            }
+                            
+                            // Tambahkan optgroup untuk Product
+                            if (productCategories.length > 0) {
+                                const productGroup = $('<optgroup label="Product"></optgroup>');
+                                $.each(productCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    productGroup.append(option);
+                                });
+                                $('#categories_services_id').append(productGroup);
+                            }
+                            
+                            // Tambahkan optgroup untuk kategori lainnya
+                            if (otherCategories.length > 0) {
+                                const otherGroup = $('<optgroup label="Lainnya"></optgroup>');
+                                $.each(otherCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    otherGroup.append(option);
+                                });
+                                $('#categories_services_id').append(otherGroup);
+                            }
+                        // Inisialisasi ulang Select2 setelah memuat opsi
+                            $('#categories_services_id').select2({
+                                placeholder: "Pilih atau ketik kategori baru...",
+                                tags: true,
+                                allowClear: true,
+                                dropdownParent: $('#categories_services_id').parent()
+                            });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading categories:", error);
+                        $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
+                        
+                        // Inisialisasi ulang Select2 meskipun terjadi error
+                        $('#categories_services_id').select2({
+                            placeholder: "Pilih atau ketik kategori baru...",
+                            tags: true,
+                            allowClear: true,
+                            dropdownParent: $('#categories_services_id').parent()
+                        });
+                    }
+                });
+            }
 
             // Inisialisasi Select2 untuk spesialis
             $('#specialist_id').select2({

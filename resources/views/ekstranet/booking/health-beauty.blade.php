@@ -1,4 +1,4 @@
-@extends('ekstranet.layout', ['title' => 'Health & Beauty', 'url' => '#'])
+@extends('ekstranet.layout', ['title' => 'Health & Beauty', 'url' => '#', 'subTitle' => 'Pemesanan', 'breadcrumb' => ['Health & Beauty']])
 
 @section('content-admin')
     <div class="card mb-2">

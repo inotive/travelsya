@@ -216,6 +216,7 @@ $isPemesananActive = in_array(Request::segment(2), [
     'riwayat-booking-recreation',
     'riwayat-booking-car-rental',
     'riwayat-booking-bus-travel',
+    'riwayat-booking-health-beauty'
                     ]);
                 @endphp
 
@@ -283,7 +284,21 @@ $isPemesananActive = in_array(Request::segment(2), [
                             </div>
                             <!--end:Menu item-->
                         @endif
+                        @if (count($clinic) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-health-beauty' ? 'active' : '' }}"
+                                    href="{{ route('partner.health-beauty.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Bisnis Health & Beauty</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
                     </div>
+                    
                 </div>
                 <a href="{{ route('partner.review') }}"
                     class="menu-item {{ Request::segment(2) == 'review' ? 'here' : '' }} menu-accordion">
@@ -343,16 +358,6 @@ $isPemesananActive = in_array(Request::segment(2), [
                     <!--end:Menu link-->
                 </a>
 
-                {{-- Bisnis Health & Beauty --}}
-                <a href="{{ route('partner.health-beauty.index') }}"
-                    class="menu-item {{ Request::segment(2) == 'health-beauty' ? 'here' : '' }} menu-accordion">
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="fas fa-spa fs-3"></i>
-                        </span>
-                        <span class="menu-title">Bisnis Health & Beauty</span>
-                    </span>
-                </a>
 
                 <a href="{{ route('partner.daftar.kendaraan') }}"
                     class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">

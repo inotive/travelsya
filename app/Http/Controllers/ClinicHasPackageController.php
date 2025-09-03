@@ -162,6 +162,7 @@ class ClinicHasPackageController extends Controller
             'price' => 'required', // Validasi harga minimal 0
             'is_active' => 'required',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi untuk multiple images
+            'delete_images.*' => 'nullable|integer|exists:clinic_package_images,id', // Validasi untuk delete images
         ]);
 
         DB::beginTransaction();
@@ -197,21 +198,49 @@ class ClinicHasPackageController extends Controller
                 'is_active' => $request->input('is_active'),
             ]);
             
-            // Handle multiple image uploads
-            if ($request->hasFile('images')) {
-                if(count($clinic->images) > 0) {
-                    foreach($clinic->images as $image) {
-                        Storage::delete($image->image);
-                        $image->delete();
+            // Handle multiple image uploads and deletions
+            // Hapus gambar yang dipilih
+            if ($request->has('delete_images')) {
+                $imagesToDelete = ClinicPackageImages::whereIn('id', $request->delete_images)
+                    ->where('clinic_package_id', $clinic->id)
+                    ->get();
+                
+                $mainImageDeleted = false;
+                foreach ($imagesToDelete as $image) {
+                    if ($image->main == 1) {
+                        $mainImageDeleted = true;
+                    }
+                    Storage::delete($image->image);
+                    $image->delete();
+                }
+                
+                // Jika gambar utama dihapus dan masih ada gambar lain, tentukan gambar utama baru
+                if ($mainImageDeleted) {
+                    $remainingImage = ClinicPackageImages::where('clinic_package_id', $clinic->id)->first();
+                    if ($remainingImage) {
+                        $remainingImage->update(['main' => 1]);
                     }
                 }
+            }
 
+            // Upload gambar baru
+            if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $key => $image) {
                     $imagePath = $image->store('images/clinic_package_images', 'public');
                     
                     // Set the first image as main image if no main image exists
                     $clinicId = $clinic->id ?? null; // Get the ID explicitly with null fallback
-                    $isMain = ($key === 0 && $clinicId && !ClinicPackageImages::where('clinic_package_id', $clinicId)->where('main', 1)->exists()) ? 1 : 0;
+                    $isMain = 0; // Default bukan gambar utama
+                    
+                    // Cek apakah sudah ada gambar utama (termasuk yang baru diupload)
+                    $hasMainImage = ClinicPackageImages::where('clinic_package_id', $clinicId)
+                        ->where('main', 1)
+                        ->exists();
+                    
+                    // Jika belum ada gambar utama, set gambar pertama sebagai utama
+                    if (!$hasMainImage && $key === 0) {
+                        $isMain = 1;
+                    }
                     
                     ClinicPackageImages::create([
                         'clinic_package_id' => $clinicId,
@@ -253,7 +282,7 @@ class ClinicHasPackageController extends Controller
 
     public function edit($id)
     {
-        $clinic = ClinicHasPackages::find($id); // Ambil data klinik berdasarkan ID
+        $clinic = ClinicHasPackages::with('clinic')->find($id); // Ambil data klinik berdasarkan ID dengan relasi clinic
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all();
         $clinics = Clinic::all(); // Ambil semua klinik
@@ -265,14 +294,45 @@ class ClinicHasPackageController extends Controller
             return redirect()->back()->withErrors('Klinik tidak ditemukan.');
         }
 
-        return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories', 'clinics', 'clinicImages'));
+        // Tambahkan informasi jenis bisnis
+        $businessCategory = $clinic->clinic ? $clinic->clinic->category : null;
+
+        return view('ekstranet.jasaklinik.edit-klinik', compact('clinic', 'spesialis', 'categories', 'clinics', 'clinicImages', 'businessCategory'));
     }
 
     public function getCategoriesByClinic(Request $request)
     {
         // Ambil semua kategori tanpa filter clinic_id
         $categories = CategoriesServices::all();
-
+        
+        // Filter kategori berdasarkan jenis bisnis jika parameter dikirim
+        if ($request->has('business_category')) {
+            $businessCategory = $request->input('business_category');
+            
+            // Tentukan kategori yang sesuai berdasarkan jenis bisnis
+            switch ($businessCategory) {
+                case 'kesehatan': // Health
+                    // Untuk kategori Health, sertakan Clinic dan kategori lainnya
+                    $allowedCategories = ['Clinic', 'Threadlift', 'Peeling', 'Injection'];
+                    $categories = $categories->filter(function ($category) use ($allowedCategories) {
+                        return in_array($category->name, $allowedCategories);
+                    });
+                    break;
+                case 'kecantikan': // Beauty
+                    // Untuk kategori Beauty, sertakan Service, Product dan kategori lainnya
+                    $allowedCategories = ['Service', 'Product', 'Threadlift', 'Peeling', 'Injection'];
+                    $categories = $categories->filter(function ($category) use ($allowedCategories) {
+                        return in_array($category->name, $allowedCategories);
+                    });
+                    break;
+                case 'spa dan kecantikan': // Spa & Beauty
+                    // Untuk kategori Spa & Beauty, sertakan semua kategori
+                    break;
+                default:
+                    // Default behavior - sertakan semua kategori
+                    break;
+            }
+        }
 
         return response()->json($categories);
     }
