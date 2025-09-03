@@ -54,7 +54,7 @@
                         <i class="fa-solid fa-filter me-2"></i>
                         Filter
                     </a>
-                </div> --}}
+                </div>
                 <div class="ms-4">
                     <a href="javascript:" class="badge badge-pills badge-outline badge-secondary round fs-6 p-3">
                         <i class="fa-solid fa-money-bill me-2"></i>
@@ -66,7 +66,7 @@
                         <i class="fa-solid fa-arrow-up-wide-short me-2"></i>
                         Urutkan
                     </a>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
