@@ -114,8 +114,8 @@
                                                     Kelola Invoice
                                                 </a>
                                             @else
-                                                <button class="btn btn-sm action-btn expired-btn" disabled>
-                                                    Kadaluwarsa
+                                                <button class="btn btn-sm action-btn expired-btn" data-bs-toggle="modal" data-bs-target="#infoModalExpired{{ $booking->id }}">
+                                                    Informasi
                                                 </button>
                                             @endif
                                         </td>
@@ -248,8 +248,8 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
-                                                <button class="btn btn-sm action-btn expired-btn" disabled>
-                                                    Kadaluwarsa
+                                                <button class="btn btn-sm action-btn expired-btn" data-bs-toggle="modal" data-bs-target="#infoModalExpired{{ $booking->id }}">
+                                                    Informasi
                                                 </button>
                                             </td>
                                         </tr>
@@ -373,7 +373,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* Tombol Verifikasi - Menggunakan warna hijau seperti badge-success untuk konsistensi */
+        /* Tombol Verifikasi - Hijau yang tidak terlalu terang */
         .verify-btn {
             background-color: #28a745;
             color: white;
@@ -386,7 +386,7 @@
             box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
         
-        /* Tombol Kelola Invoice - Menggunakan warna biru seperti btn-primary untuk konsistensi */
+        /* Tombol Kelola Invoice - Biru yang tidak terlalu terang */
         .manage-btn {
             background-color: #007bff;
             color: white;
@@ -462,4 +462,29 @@
             };
         }
     </script>
+    
+    <!-- Modal Informasi untuk Booking Kadaluwarsa -->
+    @foreach ($rekreasibookdates as $booking)
+        @php
+            $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast();
+        @endphp
+        @if($isExpired)
+        <div class="modal fade" id="infoModalExpired{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Informasi Booking</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center">
+                            <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                        </div>
+                    </div>
+                    <!-- Tidak ada tombol footer untuk booking kadaluwarsa -->
+                </div>
+            </div>
+        </div>
+        @endif
+    @endforeach
 @endpush
