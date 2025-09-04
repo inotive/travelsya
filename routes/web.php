@@ -110,6 +110,7 @@ Route::get('/e-tiket/{hotel}/hotel', [RiwayatBookingController::class, 'cetakHot
 
 // Ini Route Hostel-eBooking
 Route::get('/e-tiket/{hostel}/hostel', [RiwayatBookingController::class, 'cetakHostel'])->name('e-tiket.hostel')->middleware('auth');
+Route::get('/e-tiket/{id}/health-beauty', [RiwayatBookingController::class, 'cetakHealthBeauty'])->name('e-tiket.health-beauty')->middleware('auth');
 
 Route::get('/', [HomeController::class, 'home'])->name('home')->middleware(['isUser']);
 Route::get('/partner-hotel', [PartnerHotelController::class, 'index'])->name('partner.hotel');
@@ -272,6 +273,7 @@ Route::group(['prefix' => 'bus_travel'], function () {
     Route::post('/request_transaction', [BusTravelController::class, 'request_transaction'])->name('bus_travel.request_transaction');
 });
 
+
 Route::post('/s_car_rent', [NewCarRentController::class, 'search_ajax'])->name('search_car_rent');
 Route::post('/s_clinic', [NewHealthBeautyController::class, 'search_ajax'])->name('search_clinic');
 Route::post('/s_travel', [BusTravelController::class, 'search_ajax'])->name('search_travel');
@@ -286,6 +288,7 @@ Route::group(['prefix' => 'car_rent'], function () {
     Route::post('/order', [NewCarRentController::class, 'order'])->name('car_rent.order');
     Route::post('/request_transaction', [NewCarRentController::class, 'request_transaction'])->name('car_rent.request_transaction');
 });
+
 
 // Health & Beauty
 Route::controller(BeautyClinicController::class)->name('clinics')->prefix('clinics')->group(function () {
@@ -444,19 +447,20 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('riwayat-booking', [RiwayatBookingController::class, 'index'])->name('partner.riwayat-booking');
         Route::get('riwayat-booking/detail-booking/hotel/{id}', [RiwayatBookingController::class, 'detailhotelbookdate'])->name('partner.riwayat-booking.detailhotel');
         Route::get('riwayat-booking/detail-booking/hostel/{id}', [RiwayatBookingController::class, 'detailhostelbookdate'])->name('partner.riwayat-booking.detailhostel');
+        Route::get('riwayat-booking/detail-booking/health-beauty/{id}', [RiwayatBookingController::class, 'detailHealthBeauty'])->name('partner.riwayat-booking.detailhealthbeauty');
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRecreation'])->name('partner.riwayat-booking.recreation');
         Route::get('riwayat-booking-recreation', [RiwayatBookingController::class, 'indexRekreasi'])->name('partner.riwayat-booking.recreation');
         Route::get('riwayat-booking-recreation/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiRekreasi'])->name('partner.riwayat-booking.verifikasi-rekreasi');
         Route::get('riwayat-booking-recreation/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiRekreasi'])->name('partner.riwayat-booking.batal-verifikasi-rekreasi');
-  Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
-        ->name('partner.riwayat-booking.car-rental');
-    Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
-        ->name('partner.riwayat-booking.verifikasi-car-rental');
-    Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
-        ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
-    Route::get('riwayat-booking/cetak-invoice-car-rental/{id}', [RiwayatBookingController::class, 'cetakCarRental'])->name('partner.riwayat-booking.cetak-invoice-car-rental');
-    Route::get('riwayat-booking/cetak-invoice-rekreasi/{id}', [RiwayatBookingController::class, 'cetakRekreasi'])->name('partner.riwayat-booking.cetak-invoice-rekreasi');
-     Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
+        Route::get('riwayat-booking-car-rental', [RiwayatBookingController::class, 'indexCarRental'])
+            ->name('partner.riwayat-booking.car-rental');
+        Route::get('riwayat-booking-car-rental/verifikasi/{id}', [RiwayatBookingController::class, 'verifikasiCarRental'])
+            ->name('partner.riwayat-booking.verifikasi-car-rental');
+        Route::get('riwayat-booking-car-rental/batal-verifikasi/{id}', [RiwayatBookingController::class, 'batalVerifikasiCarRental'])
+            ->name('partner.riwayat-booking.batal-verifikasi-car-rental');
+        Route::get('riwayat-booking/cetak-invoice-car-rental/{id}', [RiwayatBookingController::class, 'cetakCarRental'])->name('partner.riwayat-booking.cetak-invoice-car-rental');
+        Route::get('riwayat-booking/cetak-invoice-rekreasi/{id}', [RiwayatBookingController::class, 'cetakRekreasi'])->name('partner.riwayat-booking.cetak-invoice-rekreasi');
+        Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
@@ -467,6 +471,15 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::delete('/recreation/{id}', [\App\Http\Controllers\RecreationController::class, 'destroy'])->name('recreation.destroy');
 
         Route::get('review', [ReviewController::class, 'index'])->name('partner.review');
+
+        Route::get('riwayat-booking-health-beauty', [RiwayatBookingController::class, 'healthBeauty'])
+            ->name('partner.health-beauty.index');
+
+        // Health Beauty Booking Verification Routes
+        Route::post('riwayat-booking-health-beauty/{id}/verify', [RiwayatBookingController::class, 'verifikasiHealthBeauty'])
+            ->name('partner.health-beauty.verify');
+        Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
+            ->name('partner.health-beauty.cancel-verify');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');

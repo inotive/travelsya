@@ -31,7 +31,7 @@ use App\Models\DetailTransactionPPOB;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionTopUp;
 use App\Models\DetailTransactionHostel;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\Recreation;
 use App\Models\RecreationPackages;
 use App\Models\RecreationRatings;
@@ -104,7 +104,7 @@ class TransactionController extends Controller
                 ];
             }
         } elseif ($service['name'] == 'recreation') {
-            $data = detailTransactionRecreation::where('transaction_id', $transaction_id)->first();
+            $data = DetailTransactionRecreation::where('transaction_id', $transaction_id)->first();
 
             if ($data != null) {
                 $recreationPackage = RecreationPackages::find($data->recreationPackage_id);

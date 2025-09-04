@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\BookDate;
+use App\Models\DetailTransactionHealthBeauty; // ✅ taruh di sini
 use App\Models\DetailTransactionHostel;
 use App\Models\DetailTransactionHotel;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation; // ✅ Perbaikan disini
 use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\Hostel;
@@ -26,21 +27,21 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $hotelbookdates = DetailTransactionHotel::with('hotelRoom', 'hotel','transaction')
+        $hotelbookdates = DetailTransactionHotel::with('hotelRoom', 'hotel', 'transaction')
             ->whereHas('transaction', function ($q) {
                 $q->where('status', 'PAID');
             })
-        ->whereHas('hotel', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
-        });
+            ->whereHas('hotel', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            });
 
-    $hostelbookdates = DetailTransactionHostel::with('hostelRoom', 'hostel','transaction')
-        ->whereHas('transaction', function ($q) {
-            $q->where('status', 'PAID');
-        })
-        ->whereHas('hostel', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
-        });
+        $hostelbookdates = DetailTransactionHostel::with('hostelRoom', 'hostel', 'transaction')
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
+            })
+            ->whereHas('hostel', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            });
 
 
         $year = $request->input('year');
@@ -81,6 +82,127 @@ class RiwayatBookingController extends Controller
 
         return view('ekstranet.booking.detail-book-hostel', compact('hostelbookdates'));
     }
+
+    public function detailHealthBeauty($id)
+    {
+        $healthbeautybookdates = DetailTransactionHealthBeauty::with('transaction')->findOrFail($id);
+
+        return view('ekstranet.booking.detail-book-health-beauty', compact('healthbeautybookdates'));
+    }
+
+
+    public function healthBeauty(Request $request)
+    {
+        $user_id = auth()->user()->id;
+        $now = now();
+
+        // Tidak perlu update database karena status "Kedaluwarsa" ditentukan secara dinamis
+        // berdasarkan perbandingan tanggal kedaluwarsa dengan tanggal saat ini
+
+        $query = DetailTransactionHealthBeauty::with(['transaction.user', 'package'])
+            ->whereHas('transaction', function ($q) {
+                $q->where('status', 'PAID');
+            })
+            ->whereHas('clinic', function ($q) use ($user_id) {
+                $q->where('user_id', $user_id);
+            });
+
+        // Filter tahun berdasarkan created_at
+        if ($request->year) {
+            $query->whereYear('created_at', $request->year);
+        }
+
+        // Filter tanggal
+        if ($request->start) {
+            $query->whereDate('created_at', '>=', $request->start);
+        }
+
+        if ($request->end) {
+            $query->whereDate('created_at', '<=', $request->end);
+        }
+
+        // Filter status tab
+        $tab = $request->tab ?? 'all';
+
+        if ($tab !== 'all') {
+            switch ($tab) {
+                case 'unused':
+                    $query->where('expire_on', '>', $now)->where('is_used', false);
+                    break;
+                case 'used':
+                    $query->where('is_used', true);
+                    break;
+                case 'expired':
+                    $query->where('expire_on', '<=', $now)->where('is_used', false);
+                    break;
+            }
+        }
+
+        $transactions = $query
+
+            ->when($request->keyword, function ($q) use ($request) {
+                $keyword = $request->keyword;
+                $q->where(function ($sub) use ($keyword) {
+                    $sub->whereHas('transaction.user', fn($q) => $q->where('name', 'like', "%{$keyword}%"))
+                        ->orWhere('booking_id', 'like', "%{$keyword}%")
+                        ->orWhereHas('package', fn($q) => $q->where('name', 'like', "%{$keyword}%"));
+                });
+            })
+
+            ->orderBy('created_at', 'desc')->get();
+
+        return view('ekstranet.booking.health-beauty', compact('transactions'));
+    }
+
+    public function cetakHealthBeauty($id)
+    {
+        $healthbeautybookdates = DetailTransactionHealthBeauty::with('transaction', 'package', 'clinic')->findOrFail($id);
+        $data = [
+            'data' => $healthbeautybookdates
+        ];
+        return view('user.order-detail.e-tiket-health-beauty', $data);
+    }
+
+    public function verifikasiHealthBeauty($id)
+    {
+        $booking = DetailTransactionHealthBeauty::findOrFail($id);
+        $booking->is_used = true;
+        $booking->save();
+
+        // Return JSON response for AJAX requests
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Booking berhasil diverifikasi'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
+    }
+
+    public function batalVerifikasiHealthBeauty($id)
+    {
+        $booking = DetailTransactionHealthBeauty::findOrFail($id);
+        $booking->is_used = false;
+        $booking->save();
+
+        // Return JSON response for AJAX requests
+        if (request()->ajax()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Verifikasi booking dibatalkan'
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
+    }
+
+    // public function detailroomhostel($id)
+    // {
+
+
+    //     return view('ekstranet.management-room.detail-room-hostel', compact('hostelrooms'));
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -158,7 +280,7 @@ class RiwayatBookingController extends Controller
 
     public function cetakRekreasi($id)
     {
-        $recreationBooking = detailTransactionRecreation::findOrFail($id);
+        $recreationBooking = DetailTransactionRecreation::findOrFail($id);
         $data = [
             'data' => $recreationBooking->load('recreation', 'package', 'transaction.user')
         ];
@@ -169,7 +291,7 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
-        $rekreasibookdates = detailTransactionRecreation::with('recreation', 'transaction.user', 'package')
+        $rekreasibookdates = DetailTransactionRecreation::with('recreation', 'transaction.user', 'package')
             ->whereHas('recreation', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
             })
@@ -219,7 +341,7 @@ class RiwayatBookingController extends Controller
 
     public function verifikasiRekreasi($id)
     {
-        $booking = detailTransactionRecreation::findOrFail($id);
+        $booking = DetailTransactionRecreation::findOrFail($id);
         $booking->is_used = true;
         $booking->save();
 
@@ -228,7 +350,7 @@ class RiwayatBookingController extends Controller
 
     public function batalVerifikasiRekreasi($id)
     {
-        $booking = detailTransactionRecreation::findOrFail($id);
+        $booking = DetailTransactionRecreation::findOrFail($id);
         $booking->is_used = false;
         $booking->save();
 
@@ -340,7 +462,7 @@ class RiwayatBookingController extends Controller
                     ->orWhere('customer_phone', 'like', '%' . $keyword . '%')
                     ->orWhereHas('transaction.user', function ($q) use ($keyword) {
                         $q->where('name', 'like', '%' . $keyword . '%')
-                          ->orWhere('phone', 'like', '%' . $keyword . '%');
+                            ->orWhere('phone', 'like', '%' . $keyword . '%');
                     })
                     ->orWhereHas('busTravel', function ($q) use ($keyword) {
                         $q->where('business_name', 'like', '%' . $keyword . '%');
@@ -355,11 +477,15 @@ class RiwayatBookingController extends Controller
 
     public function verifikasiBus($id)
     {
-        $booking = DetailTransactionBus::findOrFail($id);
-        $booking->status = 'verified';
-        $booking->save();
+        try {
+            $booking = DetailTransactionBus::findOrFail($id);
+            $booking->status = 'verified';
+            $booking->save();
 
-        return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
+            return redirect()->back()->with('success', 'Booking bus travel berhasil diverifikasi.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function batalVerifikasiBus($id)
@@ -373,16 +499,21 @@ class RiwayatBookingController extends Controller
 
     public function cetakBus($id, Request $request)
     {
-        $busBooking = DetailTransactionBus::findOrFail($id);
-        $data = [
-            'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
-        ];
+        try {
+            $busBooking = DetailTransactionBus::findOrFail($id);
+            $data = [
+                'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+            ];
 
-        // Check if this is a PDF download request
-        if ($request->has('download') && $request->download === 'pdf') {
-            $pdf = Pdf::loadView('user.order-detail.e-tiket-bus-pdf', $data);
-            $filename = 'invoice-bus-' . $busBooking->booking_id . '.pdf';
-            return $pdf->download($filename);
+            // For modal display, return partial view without full HTML structure
+            if ($request->ajax() || $request->expectsJson()) {
+                return view('user.order-detail.e-tiket-bus-modal', $data);
+            }
+
+            // Regular view for direct access
+            return view('user.order-detail.e-tiket-bus', $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
 
         // For modal display, return partial view without full HTML structure
@@ -394,5 +525,3 @@ class RiwayatBookingController extends Controller
         return view('user.order-detail.e-tiket-bus-modal', $data);
     }
 }
-
-

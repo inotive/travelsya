@@ -2,22 +2,54 @@
 
 @section('content-admin')
     <div class="container">
+        <!-- Tampilkan error validasi -->
+        @if($errors->any())
+            <div class="alert alert-danger">
+                <h4>Terjadi Kesalahan:</h4>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
         <div class="card">
-
             <div class="card-body">
+                <!-- Tambahkan CSS khusus untuk memperbaiki tampilan dropdown Select2 -->
+                <style>
+                    .select2-container--open .select2-dropdown {
+                        z-index: 9999 !important;
+                        min-width: 200px !important;
+                    }
+                    .select2-dropdown {
+                        z-index: 9999 !important;
+                    }
+                </style>
+                
                 <form id="clinic-form" action="{{ route('clinics.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Klinik</label>
-                            <select class="form-control" name="clinic_id" required>
+                            <select class="form-control" name="clinic_id" id="clinic_id" required>
+                                <option value="">Pilih Klinik</option>
                                 @php
                                     $userClinics = \App\Models\Clinic::where('user_id', Auth::id())->get();
                                 @endphp
                                 @foreach ($userClinics as $clinic)
-                                    <option value="{{ $clinic->id }}" {{ old('clinic_id') === $clinic->id ? 'selected' : '' }} >{{ $clinic->clinic_name }}</option>
+                                    <option value="{{ $clinic->id }}" 
+                                        {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}
+                                        data-category="{{ $clinic->category }}">
+                                        {{ $clinic->clinic_name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('clinic_id')
@@ -29,8 +61,8 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Nama Jasa</label>
-                            <input class="form-control form-control-lg" placeholder="Masukan nama jasa" name="name" value="{{ old('name') }}"
-                                required />
+                            <input class="form-control form-control-lg" placeholder="Masukan nama jasa" name="name"
+                                value="{{ old('name') }}" required />
                             @error('name')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -38,13 +70,34 @@
                             @enderror
                         </div>
 
-
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                             <select class="form-control" name="categories_services_id" id="categories_services_id" required>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}" {{ old('categories_services_id') === $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                                @endforeach
+                                <option value="">Pilih Kategori</option>
+                                <optgroup label="Service">
+                                    @foreach ($categories->where('name', 'Service') as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                                <optgroup label="Product">
+                                    @foreach ($categories->where('name', 'Product') as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                                <optgroup label="Lainnya">
+                                    @foreach ($categories->whereNotIn('name', ['Service', 'Product']) as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('categories_services_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             </select>
                             @error('categories_services_id')
                                 <span class="text-danger mt-1" role="alert">
@@ -53,14 +106,13 @@
                             @enderror
                         </div>
 
-
-
-
-
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Biaya</label>
-                            <input id="harga" class="form-control form-control-lg" placeholder="Masukan biaya" name="price" value="{{ old('price') }}"
-                                required />
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input id="harga" class="form-control form-control-lg" placeholder="Masukan biaya"
+                                    name="price" value="{{ old('price') }}" required />
+                            </div>
                             @error('price')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -70,8 +122,8 @@
 
                         <div class="col-md-3">
                             <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                            <input class="form-control form-control-lg" placeholder="Masukan durasi" name="duration" value="{{ old('duration') }}"
-                                required />
+                            <input type="number" class="form-control form-control-lg" placeholder="Masukan durasi" 
+                                name="duration" value="{{ old('duration') }}" min="1" required />
                             @error('duration')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -82,8 +134,8 @@
                         <div class="col-md-3">
                             <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                             <select class="form-control form-control-lg" name="duration_type" required>
-                                <option value="menit" {{ old('duration_type') === 'menit' ? 'selected' : '' }}>Menit</option>
-                                <option value="jam" {{ old('duration_type') === 'jam' ? 'selected' : '' }}>Jam</option>
+                                <option value="menit" {{ old('duration_type', 'menit') == 'menit' ? 'selected' : '' }}>Menit</option>
+                                <option value="jam" {{ old('duration_type') == 'jam' ? 'selected' : '' }}>Jam</option>
                             </select>
                             @error('duration_type')
                                 <span class="text-danger mt-1" role="alert">
@@ -92,10 +144,10 @@
                             @enderror
                         </div>
 
-
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Masa Berlaku (hari)</label>
-                            <input type="number" class="form-control" name="expiry_date" value="{{ old('expiry_date') }}" required />
+                            <input type="number" class="form-control" name="expiry_date" 
+                                value="{{ old('expiry_date', 30) }}" min="1" required />
                             @error('expiry_date')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -103,38 +155,79 @@
                             @enderror
                         </div>
 
-
-                        <input type="hidden" name="specialist_id" value="1">
-
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Spesialis</label>
+                            <select class="form-control" name="specialist_id" id="specialist_id" required>
+                                <option value="">Pilih Spesialis</option>
+                                @foreach ($spesialis as $specialist)
+                                    <option value="{{ $specialist->id }}"
+                                        {{ old('specialist_id', 1) == $specialist->id ? 'selected' : '' }}>
+                                        {{ $specialist->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('specialist_id')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Gambar (Multiple)</label>
-                            <input type="file" class="form-control form-control-lg" name="images[]" value="{{ old('images') }}" multiple accept="image/*" />
-                            <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus</small>
-                            <div class="mt-1">
-                                @error('images')
-                                    <span class="text-danger" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-
-                            </div>
+                            <input type="file" class="form-control form-control-lg" name="images[]" 
+                                multiple accept="image/*" id="images" required />
+                            <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus (maks. 5MB per gambar)</small>
+                            
+                            <div id="image-preview" class="mt-2"></div>
+                            
+                            @if($errors->has('images'))
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $errors->first('images') }}</strong>
+                                </span>
+                            @endif
+                            
+                            @if($errors->has('images.*'))
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>Terjadi kesalahan dengan salah satu gambar</strong>
+                                </span>
+                            @endif
                         </div>
-
 
                         <div class="col-12">
                             <label for="description" class="required form-label">Deskripsi</label>
-                            <textarea name="description" cols="30" rows="3" class="form-control" required>{{ old('description') }}</textarea>
+                            <textarea name="description" cols="30" rows="3" class="form-control" 
+                                required>{{ old('description') }}</textarea>
+                            @error('description')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <div class="col-12">
                             <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
-                            <textarea name="rules" cols="30" rows="2" class="form-control" required>{{ old('rules') }}</textarea>
+                            <textarea name="rules" cols="30" rows="2" class="form-control" 
+                                required>{{ old('rules') }}</textarea>
+                            @error('rules')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
-                        <input type="hidden" name="is_active" value="1">
-
-                        <!-- Clinic ID is now selected from dropdown -->
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Status</label>
+                            <select class="form-control" name="is_active" required>
+                                <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('is_active') == 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                            </select>
+                            @error('is_active')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
                         <input type="hidden" name="unit_price" value="unit_price">
                     </div>
@@ -147,7 +240,6 @@
                                 <a href="{{ route('clinics.list') }}" class="btn btn-light w-100 me-3">
                                     <span class="indicator-label">Batal</span>
                                 </a>
-                                {{-- <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button> --}}
                             </div>
                             <div class="col-6">
                                 <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">
@@ -168,31 +260,194 @@
 @push('add-script')
     <script>
         function formatRupiah(angka, prefix) {
-            angka = angka.toString().replace(/[^,\d]/g, '');
-            const split = angka.split(',');
-            const sisa = split[0].length % 3;
+            // Hapus semua karakter selain angka
+            let number_string = angka.toString().replace(/[^,\d]/g, '');
+            let split = number_string.split(',');
+            let sisa = split[0].length % 3;
             let rupiah = split[0].substr(0, sisa);
-            const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+            let ribuan = split[0].substr(sisa).match(/\d{3}/gi);
 
+            // Tambahkan titik jika ribuan ada
             if (ribuan) {
-                const separator = sisa ? '.' : '';
+                let separator = sisa ? '.' : '';
                 rupiah += separator + ribuan.join('.');
             }
 
             rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix !== undefined ? prefix + rupiah : rupiah;
+            return prefix === undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
         }
 
+        function parseRupiah(rupiah) {
+            // Hapus semua karakter selain angka
+            return parseInt(rupiah.replace(/[^\d]/g, ''));
+        }
 
-        $('#harga').on('input', function () {
+        // Format harga saat input
+        $('#harga').on('input', function() {
             let input = $(this).val();
-            let formatted = formatRupiah(input, 'Rp. ');
+            // Simpan posisi kursor
+            let start = this.selectionStart;
+            let end = this.selectionEnd;
+            
+            // Format nilai
+            let formatted = formatRupiah(input);
             $(this).val(formatted);
+            
+            // Pertahankan posisi kursor
+            this.setSelectionRange(start, end);
         });
 
+        // Format harga saat halaman dimuat jika ada nilai old
+        @if(old('price'))
+            $('#harga').val(formatRupiah('{{ old('price') }}', 'Rp '));
+        @endif
+
         $(document).ready(function() {
-            $('#categories_services_id').select2({
-                tags: true
+            
+            // Inisialisasi Select2 untuk klinik
+            $('#clinic_id').select2({
+                placeholder: "Pilih klinik...",
+                allowClear: true
+            }).on('change', function() {
+                // Saat klinik dipilih, muat kategori yang sesuai
+                let selectedOption = $(this).find('option:selected');
+                let businessCategory = selectedOption.data('category');
+                
+                if (businessCategory) {
+                    loadCategoriesByBusinessCategory(businessCategory);
+                } else {
+                    // Jika tidak ada kategori bisnis, muat semua kategori
+                    loadCategoriesByBusinessCategory(null);
+                }
+            });
+
+            // Fungsi untuk memuat kategori berdasarkan jenis bisnis
+            function loadCategoriesByBusinessCategory(businessCategory) {
+                $.ajax({
+                    url: '{{ route('get.categories.by.clinic') }}',
+                    type: 'GET',
+                    data: {
+                        business_category: businessCategory
+                    },
+                    success: function(data) {
+                        console.log("Categories Data:", data);
+                        $('#categories_services_id').empty();
+                        if (data.length > 0) {
+                            $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+                            
+                            // Kelompokkan kategori berdasarkan tipe
+                            const clinicCategories = data.filter(category => category.name === 'Clinic');
+                            const serviceCategories = data.filter(category => category.name === 'Service');
+                            const productCategories = data.filter(category => category.name === 'Product');
+                            const otherCategories = data.filter(category => 
+                                category.name !== 'Clinic' && 
+                                category.name !== 'Service' && 
+                                category.name !== 'Product'
+                            );
+                            
+                            // Tambahkan optgroup untuk Clinic
+                            if (clinicCategories.length > 0) {
+                                const clinicGroup = $('<optgroup label="Clinic"></optgroup>');
+                                $.each(clinicCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    clinicGroup.append(option);
+                                });
+                                $('#categories_services_id').append(clinicGroup);
+                            }
+                            
+                            // Tambahkan optgroup untuk Service
+                            if (serviceCategories.length > 0) {
+                                const serviceGroup = $('<optgroup label="Service"></optgroup>');
+                                $.each(serviceCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    serviceGroup.append(option);
+                                });
+                                $('#categories_services_id').append(serviceGroup);
+                            }
+                            
+                            // Tambahkan optgroup untuk Product
+                            if (productCategories.length > 0) {
+                                const productGroup = $('<optgroup label="Product"></optgroup>');
+                                $.each(productCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    productGroup.append(option);
+                                });
+                                $('#categories_services_id').append(productGroup);
+                            }
+                            
+                            // Tambahkan optgroup untuk kategori lainnya
+                            if (otherCategories.length > 0) {
+                                const otherGroup = $('<optgroup label="Lainnya"></optgroup>');
+                                $.each(otherCategories, function(key, category) {
+                                    let option = $("<option>", {
+                                        value: category.id,
+                                        text: category.name
+                                    });
+                                    otherGroup.append(option);
+                                });
+                                $('#categories_services_id').append(otherGroup);
+                            }
+                        // Inisialisasi ulang Select2 setelah memuat opsi
+                            $('#categories_services_id').select2({
+                                placeholder: "Pilih atau ketik kategori baru...",
+                                tags: true,
+                                allowClear: true,
+                                dropdownParent: $('#categories_services_id').parent()
+                            });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error loading categories:", error);
+                        $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
+                        
+                        // Inisialisasi ulang Select2 meskipun terjadi error
+                        $('#categories_services_id').select2({
+                            placeholder: "Pilih atau ketik kategori baru...",
+                            tags: true,
+                            allowClear: true,
+                            dropdownParent: $('#categories_services_id').parent()
+                        });
+                    }
+                });
+            }
+
+            // Inisialisasi Select2 untuk spesialis
+            $('#specialist_id').select2({
+                placeholder: "Pilih spesialis...",
+                allowClear: true
+            });
+            
+            // Preview gambar
+            $('#images').on('change', function() {
+                $('#image-preview').empty();
+                var files = this.files;
+                
+                for (var i = 0; i < files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#image-preview').append(
+                            '<div class="image-preview-item d-inline-block m-1">' +
+                            '<img src="' + e.target.result + '" class="img-thumbnail" width="100">' +
+                            '</div>'
+                        );
+                    }
+                    reader.readAsDataURL(files[i]);
+                }
+            });
+
+            // Validasi form sebelum submit
+            $('#clinic-form').on('submit', function() {
+                // Parse harga sebelum submit
+                let harga = parseRupiah($('#harga').val());
+                $('#harga').val(harga);
             });
         });
     </script>

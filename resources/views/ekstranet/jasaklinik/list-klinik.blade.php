@@ -49,10 +49,10 @@
                                 <td class="text-center">{{ $clinic->expiry_date }} Hari</td>
                                 <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }} / <span class="text-capitalize">{{ $clinic->duration_type }}</span></td>
                                 <td class="text-center">
-                                    @if ($clinic->is_active === 1)
-                                        <span class="badge badge-success">Aktif</span>
-                                    @elseif ($clinic->is_active === 0)
-                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                    @if ($clinic->is_active === true || $clinic->is_active === 1)
+                                        <span class="badge bg-success">Aktif</span>
+                                    @elseif ($clinic->is_active === false || $clinic->is_active === 0)
+                                        <span class="badge bg-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
                                 <td>
@@ -115,7 +115,7 @@
                     "scrollY": "500px"
                     , "scrollCollapse": true
                     , "language": {
-                        "lengthMenu": "_MENU_"
+                        "lengthMenu": "MENU"
                         , }
                     , "dom": "<'row'" +
                         "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +

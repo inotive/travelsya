@@ -3,6 +3,13 @@
 @php use App\Models\Hostel; @endphp
 @php use App\Models\DetailTransactionHotel; @endphp
 @php use App\Models\DetailTransactionHostel; @endphp
+@php use App\Models\DetailTransactionRecreation; @endphp
+@php use App\Models\DetailTransactionCarRental; @endphp
+@php use App\Models\DetailTransactionBus; @endphp
+@php use App\Models\DetailTransactionHealthBeauty; @endphp
+@php use App\Models\BusTravels; @endphp
+@php use App\Models\Recreation; @endphp
+@php use App\Models\CarRental; @endphp
 @php use Carbon\Carbon; @endphp
 <style>
     .menu-item {
@@ -28,7 +35,8 @@
 
     /* Dropdown container background */
     .menu-item.pemesanan-menu .menu-sub-accordion {
-        background-color: #C02425 !important; /* Red background */
+        background-color: #C02425 !important;
+        /* Red background */
         padding: 0;
     }
 
@@ -39,16 +47,20 @@
 
     /* Default state for text and bullets in dropdown */
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-title {
-        color: #f8f9fa; /* A light, off-white color for inactive items */
+        color: #f8f9fa;
+        /* A light, off-white color for inactive items */
     }
+
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-bullet .bullet-dot {
-        background-color: #f8f9fa; /* Matching off-white */
+        background-color: #f8f9fa;
+        /* Matching off-white */
     }
 
     /* Hover state for links in dropdown */
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-title {
         color: white !important;
     }
+
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-bullet .bullet-dot {
         background-color: white !important;
     }
@@ -56,7 +68,8 @@
     /* Active state for a link in the dropdown */
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-title {
         color: white !important;
-        font-weight: bold; /* Make it stand out more */
+        font-weight: bold;
+        /* Make it stand out more */
     }
 
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-bullet .bullet-dot {
@@ -130,21 +143,14 @@
 
                 <!--end:Menu item-->
                 @php
-                    use App\Models\CarRental;
-                    use App\Models\Recreation;
-                    use App\Models\BusTravels;
-                    use App\Models\DetailTransactionCarRental;
-                    use App\Models\detailTransactionRecreation;
-                    use App\Models\DetailTransactionBus;
-                    use App\Models\DetailTransactionHealthBeauty;
-                    
+
                     $clinic = Clinic::where('user_id', Auth::id())->get();
                     $hotel = Hotel::where('user_id', Auth::id())->get();
                     $hostel = Hostel::where('user_id', Auth::id())->get();
                     $carRentals = CarRental::where('user_id', Auth::id())->get();
                     $recreations = Recreation::where('user_id', Auth::id())->get();
                     $busTravels = BusTravels::where('user_id', Auth::id())->get();
-                    
+
                     $bookingHotel = DetailTransactionHotel::with('transaction')
                         ->whereHas('transaction', function ($q) {
                             $q->where('status', 'PAID');
@@ -152,7 +158,7 @@
                         ->whereIn('hotel_id', $hotel->pluck('id'))
                         ->where('detail_transaction_hotel.reservation_end', '>=', Carbon::now())
                         ->count();
-                    
+
                     $bookingHostel = DetailTransactionHostel::with('transaction')
                         ->whereIn('hostel_id', $hostel->pluck('id'))
                         ->whereHas('transaction', function ($q) {
@@ -160,7 +166,7 @@
                         })
                         ->where('detail_transaction_hostel.reservation_end', '>=', Carbon::now())
                         ->count();
-                    
+
                     $bookingCarRental = DetailTransactionCarRental::with('transaction')
                         ->whereHas('transaction', function ($q) {
                             $q->where('status', 'PAID');
@@ -168,40 +174,54 @@
                         ->whereIn('car_rental_id', $carRentals->pluck('id'))
                         ->where('end', '>=', Carbon::now())
                         ->count();
-                    
-                    $bookingRecreation = detailTransactionRecreation::with('transaction')
+
+                    $bookingRecreation = DetailTransactionRecreation::with('transaction')
                         ->whereHas('transaction', function ($q) {
                             $q->where('status', 'PAID');
                         })
                         ->whereIn('recreation_id', $recreations->pluck('id'))
                         ->where('expire_on', '>=', Carbon::now())
                         ->count();
-                    
+
                     // Assuming there's a DetailTransactionBus model and similar logic
-                    $bookingBus = 0;
-                    if (class_exists(DetailTransactionBus::class)) {
-                        $bookingBus = DetailTransactionBus::with('transaction')
-                            ->whereHas('transaction', function ($q) {
-                                $q->where('status', 'PAID');
-                            })
-                            ->whereIn('bus_travel_id', $busTravels->pluck('id'))
-                            // Add appropriate date condition for bus bookings
-                            ->count();
-                    }
-                    
-                    $bookingClinic = DetailTransactionHealthBeauty::with('transaction')
-                        ->whereHas('transaction', function ($q) {
-                            $q->where('status', 'PAID');
-                        })
-                        ->whereIn('clinic_id', $clinic->pluck('id'))
-                        // Add appropriate date condition for clinic bookings
-                        ->count();
-                    
-                    $totalPemesanan = $bookingHotel + $bookingHostel + $bookingCarRental + $bookingRecreation + $bookingBus + $bookingClinic;
-                    $isPemesananActive = in_array(Request::segment(2), ['riwayat-booking', 'riwayat-booking-recreation', 'riwayat-booking-car-rental', 'riwayat-booking-bus-travel']);
+$bookingBus = 0;
+if (class_exists(DetailTransactionBus::class)) {
+    $bookingBus = DetailTransactionBus::with('transaction')
+        ->whereHas('transaction', function ($q) {
+            $q->where('status', 'PAID');
+        })
+        ->whereIn('bus_travel_id', $busTravels->pluck('id'))
+        // Add appropriate date condition for bus bookings
+        ->count();
+}
+
+$bookingClinic = DetailTransactionHealthBeauty::with('transaction')
+    ->whereHas('transaction', function ($q) {
+        $q->where('status', 'PAID');
+    })
+    ->whereIn('clinic_id', $clinic->pluck('id'))
+    // Add appropriate date condition for clinic bookings
+    ->count();
+
+$totalPemesanan =
+    $bookingHotel +
+    $bookingHostel +
+    $bookingCarRental +
+    $bookingRecreation +
+    $bookingBus +
+    $bookingClinic;
+
+$isPemesananActive = in_array(Request::segment(2), [
+    'riwayat-booking',
+    'riwayat-booking-recreation',
+    'riwayat-booking-car-rental',
+    'riwayat-booking-bus-travel',
+    'riwayat-booking-health-beauty'
+                    ]);
                 @endphp
-                
-                <div data-kt-menu-trigger="click" class="menu-item menu-accordion pemesanan-menu {{ $isPemesananActive ? 'here show' : '' }}">
+
+                <div data-kt-menu-trigger="click"
+                    class="menu-item menu-accordion pemesanan-menu {{ $isPemesananActive ? 'here show' : '' }}">
                     <!--begin:Menu link-->
                     <span class="menu-link {{ $isPemesananActive ? 'main-accordion' : '' }}">
                         <span class="menu-icon">
@@ -264,7 +284,21 @@
                             </div>
                             <!--end:Menu item-->
                         @endif
+                        @if (count($clinic) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-health-beauty' ? 'active' : '' }}"
+                                    href="{{ route('partner.health-beauty.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Bisnis Health & Beauty</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
                     </div>
+                    
                 </div>
                 <a href="{{ route('partner.review') }}"
                     class="menu-item {{ Request::segment(2) == 'review' ? 'here' : '' }} menu-accordion">
@@ -323,6 +357,7 @@
                     </span>
                     <!--end:Menu link-->
                 </a>
+
 
                 <a href="{{ route('partner.daftar.kendaraan') }}"
                     class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">

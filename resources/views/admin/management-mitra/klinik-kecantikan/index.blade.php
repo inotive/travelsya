@@ -193,7 +193,7 @@
                                 <div class="image-input-wrapper w-125px h-125px" style="background-image: url('')">
                                 </div>
                                 <!--end::Image preview wrapper-->
-    
+
                                 <!--begin::Edit button-->
                                 <label
                                     class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -201,14 +201,14 @@
                                     title="Change image">
                                     <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
                                             class="path2"></span></i>
-    
+
                                     <!--begin::Inputs-->
                                     <input type="file" name="image" accept=".png, .jpg, .jpeg" />
                                     <input type="hidden" name="image_remove" />
                                     <!--end::Inputs-->
                                 </label>
                                 <!--end::Edit button-->
-    
+
                                 <!--begin::Cancel button-->
                                 <span
                                     class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -217,7 +217,7 @@
                                     <i class="ki-outline ki-cross fs-3"></i>
                                 </span>
                                 <!--end::Cancel button-->
-    
+
                                 <!--begin::Remove button-->
                                 <span
                                     class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
@@ -296,17 +296,12 @@
                         <!--begin::Radio group-->
                         <div class="btn-group w-60" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
                             <!--begin::Radio-->
+                            @foreach (App\Models\Clinic::CATEGORY as $key => $value)
                             <label class="btn btn-outline btn-danger" data-kt-button="true">
-                                <input class="btn-check" type="radio" name="category" value="kesehatan" required />
-                                Kesehatan
+                                <input class="btn-check" type="radio" name="category" value="{{ $key }}" required />
+                                {{ $value }}
                             </label>
-                            <!--end::Radio-->
-
-                            <!--begin::Radio-->
-                            <label class="btn btn-outline btn-danger active" data-kt-button="true">
-                                <input class="btn-check" type="radio" name="category" value="kecantikan" checked required />
-                                Kecantikan
-                            </label>
+                            @endforeach
                             <!--end::Radio-->
                         </div>
 
