@@ -4,11 +4,10 @@
 <form action="{{ route('partner.riwayat-booking.bus-travel') }}" method="get">
     <div class="card mb-2">
         <div class="card-body">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label">Tahun</label>
+            <div class="row">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
                     <select class="form-select" name="year">
-                        <option value="">Pilih Tahun</option>
+                        <option value="" disabled selected>Pilih Tahun</option>
                         @php
                             $currentYear = date('Y');
                             $startYear = 2020;
@@ -21,30 +20,24 @@
                         @endfor
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Dari Tanggal</label>
-                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}" placeholder="Tanggal Mulai">
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Sampai Tanggal</label>
-                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}" placeholder="Tanggal Akhir">
+                </div>
+                <div class="col-12 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Cari Data</button>
                 </div>
             </div>
+            <!-- Hidden input for tab status -->
+            <input type="hidden" name="tab" id="tab_input" value="{{ request('tab', 'all') }}">
         </div>
     </div>
 
+    <!-- Card untuk navigasi dan tabel -->
     <div class="card">
         <div class="card-body">
-            <div class="row g-3 align-items-end mb-5">
-                <div class="col-md-10">
-                    <label class="form-label">Kata Kunci</label>
-                    <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Nama Travel" value="{{ request()->get('keyword') }}">
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Cari</button>
-                </div>
-            </div>
-
             <!-- Navigasi Tab Simple -->
             <div class="mb-4">
                 <div class="d-flex gap-4 border-bottom">
@@ -62,7 +55,7 @@
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#expired"
                             type="button" role="tab" aria-controls="expired" aria-selected="false">
-                        Kadaluarsa
+                        Kadaluwarsa
                     </button>
                 </div>
             </div>
@@ -70,7 +63,7 @@
             <!-- Konten Tab -->
             <div class="tab-content" id="bus-travel-tab-content">
                 <div class="tab-pane fade show active" id="semua" role="tabpanel" aria-labelledby="semua-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_semua">
                             <thead>
@@ -105,7 +98,7 @@
                                                 $status = $booking->status ?? 'pending';
                                             @endphp
                                             @if($isDeparted && $status != 'verified')
-                                                <span class="badge badge-danger">Kadaluarsa</span>
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
                                             @elseif($status == 'verified')
                                                 <span class="badge badge-success">Verified</span>
                                             @else
@@ -113,42 +106,19 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Actions
-                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                            @if($status != 'verified' && !$isDeparted)
+                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalBus{{ $booking->id }}">
+                                                    Verifikasi
+                                                </a>
+                                            @elseif($status == 'verified')
+                                                <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalBus{{ $booking->id }}">
+                                                    Kelola Invoice
+                                                </a>
+                                            @else
+                                                <button class="btn btn-sm action-btn expired-btn" data-bs-toggle="modal" data-bs-target="#infoModalExpiredBus{{ $booking->id }}">
+                                                    Informasi
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    @if($status != 'verified' && !$isDeparted)
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-success btn-verify-modal"
-                                                                data-booking-id="{{ $booking->id }}"
-                                                                data-customer-name="{{ $booking->transaction->user->name ?? $booking->customer_name }}"
-                                                                data-booking-code="{{ $booking->booking_id }}">
-                                                                Verifikasi
-                                                            </button>
-                                                        </li>
-                                                    @elseif($status == 'verified')
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-danger btn-cancel-verify-modal"
-                                                                data-booking-id="{{ $booking->id }}"
-                                                                data-customer-name="{{ $booking->transaction->user->name ?? $booking->customer_name }}"
-                                                                data-booking-code="{{ $booking->booking_id }}">
-                                                                Batal Verifikasi
-                                                            </button>
-                                                        </li>
-                                                    @endif
-                                                    @if($status == 'verified' || ($status != 'verified' && !$isDeparted))
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-primary btn-invoice-modal"
-                                                                data-booking-id="{{ $booking->id }}">
-                                                                Invoice
-                                                            </button>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -158,7 +128,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="verified" role="tabpanel" aria-labelledby="verified-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_verified">
                             <thead>
@@ -170,7 +140,6 @@
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
-                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -190,32 +159,9 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-success">Verified</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Actions
-                                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-danger btn-cancel-verify-modal"
-                                                                data-booking-id="{{ $booking->id }}"
-                                                                data-customer-name="{{ $booking->transaction->user->name ?? $booking->customer_name }}"
-                                                                data-booking-code="{{ $booking->booking_id }}">
-                                                                Batal Verifikasi
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-primary btn-invoice-modal"
-                                                                data-booking-id="{{ $booking->id }}">
-                                                                Invoice
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalBus{{ $booking->id }}">
+                                                    Kelola Invoice
+                                                </a>
                                             </td>
                                         </tr>
                                     @endif
@@ -226,7 +172,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="pending" role="tabpanel" aria-labelledby="pending-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_pending">
                             <thead>
@@ -238,7 +184,6 @@
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
-                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -262,32 +207,9 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-warning">Pending</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                                        Actions
-                                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                    </button>
-                                                    <ul class="dropdown-menu">
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-success btn-verify-modal"
-                                                                data-booking-id="{{ $booking->id }}"
-                                                                data-customer-name="{{ $booking->transaction->user->name ?? $booking->customer_name }}"
-                                                                data-booking-code="{{ $booking->booking_id }}">
-                                                                Verifikasi
-                                                            </button>
-                                                        </li>
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-primary btn-invoice-modal"
-                                                                data-booking-id="{{ $booking->id }}">
-                                                                Invoice
-                                                            </button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalBus{{ $booking->id }}">
+                                                    Verifikasi
+                                                </a>
                                             </td>
                                         </tr>
                                     @endif
@@ -298,7 +220,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="expired-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_expired">
                             <thead>
@@ -310,7 +232,6 @@
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
-                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -334,15 +255,9 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-danger">Kadaluarsa</span>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="dropdown">
-                                                    <button class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary disabled">
-                                                        Actions
-                                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                    </button>
-                                                </div>
+                                                <button class="btn btn-sm action-btn expired-btn" data-bs-toggle="modal" data-bs-target="#infoModalExpiredBus{{ $booking->id }}">
+                                                    Informasi
+                                                </button>
                                             </td>
                                         </tr>
                                     @endif
@@ -356,80 +271,103 @@
     </div>
 </form>
 
-    <!-- Verification Modal -->
-    <div class="modal fade" id="verifyModal" tabindex="-1" aria-labelledby="verifyModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content" style="border-radius: 15px;">
-                <div class="modal-header border-0 pb-0">
-                    <h4 class="fw-bold mb-2">Verifikasi Tiket</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body px-5 pb-5">
-                    <p class="text-muted mb-4 text-center">Apakah kamu yakin ingin melakukan verifikasi tiket di bawah ini?</p>
-
-                    <div id="verify-invoice-content">
-                        <!-- Invoice content will be loaded here -->
+    @foreach ($busbookings as $booking)
+        @php
+            $isDeparted = \Carbon\Carbon::parse($booking->departure_time)->isPast();
+            $status = $booking->status ?? 'pending';
+        @endphp
+        @if($status != 'verified' && !$isDeparted)
+            <div class="modal fade" id="verificationModalBus{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Verifikasi Booking</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Apakah Anda yakin ingin memverifikasi booking ini?</p>
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-bus', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.verifikasi-bus', $booking->id) }}" class="btn btn-success">Verifikasi</a>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light flex-fill" data-bs-dismiss="modal">Tidak jadi</button>
-                    <button type="button" class="btn btn-success flex-fill" id="confirmVerifyBtn">Ya Verifikasi</button>
-                </div>
             </div>
-        </div>
-    </div>
+        @endif
 
-    <!-- Cancel Verification Modal -->
-    <div class="modal fade" id="cancelVerifyModal" tabindex="-1" aria-labelledby="cancelVerifyModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content" style="border-radius: 15px;">
-                <div class="modal-header border-0 pb-0">
-                     <h4 class="fw-bold mb-2">Batalkan Verifikasi</h4>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body px-5 pb-5">
-                    <p class="text-muted mb-4 text-center">Apakah kamu yakin ingin membatalkan verifikasi tiket di bawah ini?</p>
-
-                     <div id="cancel-invoice-content">
-                        <!-- Invoice content will be loaded here -->
+        @if($status == 'verified')
+            <div class="modal fade" id="cancellationModalBus{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Kelola Invoice</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-bus', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                            <button type="button" class="btn btn-primary" onclick="printInvoice('{{ route('partner.riwayat-booking.cetak-invoice-bus', $booking->id) }}')">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmCancelModalBus{{ $booking->id }}">Batal Verifikasi</button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light flex-fill" data-bs-dismiss="modal">Tidak jadi</button>
-                    <button type="button" class="btn btn-danger flex-fill" id="confirmCancelVerifyBtn">Ya Batalkan</button>
-                </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Invoice Modal -->
-    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="invoiceModalLabel">Invoice Bus Travel</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0">
-                    <div id="invoice-content">
-                        <!-- Invoice content will be loaded here -->
+            
+            <!-- Modal Konfirmasi Pembatalan -->
+            <div class="modal fade" id="confirmCancelModalBus{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Konfirmasi Pembatalan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Yakin, ingin membatalkan Verifikasi?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-bus', $booking->id) }}" class="btn btn-danger">Ya, Batalkan Verifikasi</a>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-primary" id="downloadInvoiceBtn">
-                        <i class="fas fa-download me-2"></i>Download PDF
-                    </button>
-                    <button type="button" class="btn btn-info" id="printInvoiceBtn">
-                        <i class="fas fa-print me-2"></i>Print
-                    </button>
+            </div>
+        @endif
+        
+        @if($isDeparted && $status != 'verified')
+            <div class="modal fade" id="infoModalExpiredBus{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Informasi Booking</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-bus', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <!-- Tidak ada tombol footer untuk booking kadaluwarsa -->
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
+        @endif
+    @endforeach
 @endsection
 
 @push('add-script')
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         .nav-tab-simple {
             background: none;
@@ -451,9 +389,47 @@
             color: #dc3545;
             border-bottom-color: #dc3545;
         }
-
-        .modal-content {
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        
+        /* Custom style untuk tombol aksi yang menarik */
+        .action-btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 6px 12px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Tombol Verifikasi - Hijau yang tidak terlalu terang */
+        .verify-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .verify-btn:hover {
+            background-color: #218838;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Tombol Kelola Invoice - Biru yang tidak terlalu terang */
+        .manage-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .manage-btn:hover {
+            background-color: #0069d9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* Tombol Kadaluwarsa - Abu-abu */
+        .expired-btn {
+            background-color: #6c757d;
+            color: white;
         }
     </style>
 
@@ -484,17 +460,16 @@
             $('#kt_datatable_expired').DataTable(dataTableConfig);
 
             // Custom tab functionality
-            $('.nav-tab-simple').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
+            $('.nav-tab-simple').on('click', function() {
                 // Remove active class from all tabs
                 $('.nav-tab-simple').removeClass('active');
+
                 // Add active class to clicked tab
                 $(this).addClass('active');
 
                 // Hide all tab panes
                 $('.tab-pane').removeClass('show active');
+
                 // Show target tab pane
                 const target = $(this).data('bs-target');
                 $(target).addClass('show active');
@@ -504,197 +479,14 @@
                     $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
                 }, 100);
             });
-
-            // Verification Modal
-            $('.btn-verify-modal').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const bookingId = $(this).data('booking-id');
-                $('#confirmVerifyBtn').data('booking-id', bookingId);
-
-                // Show loading
-                $('#verify-invoice-content').html(`
-                    <div class="text-center p-5">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Memuat invoice...</p>
-                    </div>
-                `);
-
-                $('#verifyModal').modal('show');
-
-                // Load invoice content
-                $.ajax({
-                    url: `{{ route('partner.riwayat-booking.cetak-invoice-bus', ['id' => ':id']) }}`.replace(':id', bookingId),
-                    method: 'GET',
-                    success: function(response) {
-                        $('#verify-invoice-content').html(response);
-                    },
-                    error: function() {
-                        $('#verify-invoice-content').html(`
-                            <div class="text-center p-5">
-                                <div class="text-danger">
-                                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                                    <p>Gagal memuat invoice. Silakan coba lagi.</p>
-                                </div>
-                            </div>
-                        `);
-                    }
-                });
-            });
-
-            // Cancel Verification Modal
-            $('.btn-cancel-verify-modal').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const bookingId = $(this).data('booking-id');
-                $('#confirmCancelVerifyBtn').data('booking-id', bookingId);
-
-                // Show loading
-                $('#cancel-invoice-content').html(`
-                    <div class="text-center p-5">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Memuat invoice...</p>
-                    </div>
-                `);
-
-                $('#cancelVerifyModal').modal('show');
-
-                // Load invoice content
-                $.ajax({
-                    url: `{{ route('partner.riwayat-booking.cetak-invoice-bus', ['id' => ':id']) }}`.replace(':id', bookingId),
-                    method: 'GET',
-                    success: function(response) {
-                        $('#cancel-invoice-content').html(response);
-                    },
-                    error: function() {
-                        $('#cancel-invoice-content').html(`
-                            <div class="text-center p-5">
-                                <div class="text-danger">
-                                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                                    <p>Gagal memuat invoice. Silakan coba lagi.</p>
-                                </div>
-                            </div>
-                        `);
-                    }
-                });
-            });
-
-            // Confirm Verify
-            $('#confirmVerifyBtn').on('click', function() {
-                const bookingId = $(this).data('booking-id');
-                window.location.href = `{{ route('partner.riwayat-booking.verifikasi-bus', ['id' => ':id']) }}`.replace(':id', bookingId);
-            });
-
-            // Confirm Cancel Verify
-            $('#confirmCancelVerifyBtn').on('click', function() {
-                const bookingId = $(this).data('booking-id');
-                window.location.href = `{{ route('partner.riwayat-booking.batal-verifikasi-bus', ['id' => ':id']) }}`.replace(':id', bookingId);
-            });
-
-            // Invoice Modal
-            $('.btn-invoice-modal').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const bookingId = $(this).data('booking-id');
-
-                // Show loading
-                $('#invoice-content').html(`
-                    <div class="text-center p-5">
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                        <p class="mt-2">Memuat invoice...</p>
-                    </div>
-                `);
-
-                $('#invoiceModal').modal('show');
-
-                // Load invoice content
-                $.ajax({
-                    url: `{{ route('partner.riwayat-booking.cetak-invoice-bus', ['id' => ':id']) }}`.replace(':id', bookingId),
-                    method: 'GET',
-                    success: function(response) {
-                        $('#invoice-content').html(response);
-                        $('#downloadInvoiceBtn').data('booking-id', bookingId);
-                        $('#printInvoiceBtn').data('booking-id', bookingId);
-                    },
-                    error: function() {
-                        $('#invoice-content').html(`
-                            <div class="text-center p-5">
-                                <div class="text-danger">
-                                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
-                                    <p>Gagal memuat invoice. Silakan coba lagi.</p>
-                                </div>
-                            </div>
-                        `);
-                    }
-                });
-            });
-
-            // Print Invoice
-            $('#printInvoiceBtn').on('click', function() {
-                const invoiceContent = document.getElementById('invoice-content').innerHTML;
-                const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Invoice Bus Travel</title>
-                        <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
-                        <link href="/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-                        <style>
-                            @media print {
-                                body { margin: 0; }
-                                .no-print { display: none !important; }
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        ${invoiceContent}
-                    </body>
-                    </html>
-                `);
-                printWindow.document.close();
-                printWindow.focus();
-
-                setTimeout(() => {
-                    printWindow.print();
-                    printWindow.close();
-                }, 500);
-            });
-
-            // Download Invoice as PDF
-            $('#downloadInvoiceBtn').on('click', function() {
-                const bookingId = $(this).data('booking-id');
-                // Create a temporary form to download PDF
-                const form = document.createElement('form');
-                form.method = 'GET';
-                form.action = `{{ route('partner.riwayat-booking.cetak-invoice-bus', ['id' => ':id']) }}`.replace(':id', bookingId) + '?download=pdf';
-                form.target = '_blank';
-                document.body.appendChild(form);
-                form.submit();
-                document.body.removeChild(form);
-            });
-
-            // Prevent dropdown from closing when clicking inside
-            $(document).on('click', '.dropdown-menu', function(e) {
-                e.stopPropagation();
-            });
-
-            // Ensure modals don't interfere with tabs
-            $('.modal').on('show.bs.modal', function() {
-                $('body').addClass('modal-open');
-            }).on('hidden.bs.modal', function() {
-                $('body').removeClass('modal-open');
-            });
         });
+        
+        // Fungsi untuk mencetak invoice
+        function printInvoice(url) {
+            var printWindow = window.open(url, '_blank');
+            printWindow.onload = function() {
+                printWindow.print();
+            };
+        }
     </script>
 @endpush

@@ -100,8 +100,8 @@ class BookingSeeder extends Seeder
             ]
         );
 
-        // Create 5 car rental bookings
-        foreach ($customers as $key => $customer) {
+        // Create 5 car rental bookings that are not yet verified (pending)
+        foreach (array_slice($customers, 0, 5) as $key => $customer) {
             $booking_id = 'BOOK-CAR-' . Str::random(8);
             $transaction = Transaction::firstOrCreate(
                 ['no_inv' => 'TRX-CAR-' . $booking_id],
@@ -131,7 +131,7 @@ class BookingSeeder extends Seeder
                     'customer_name' => $customer->name,
                     'customer_email' => $customer->email,
                     'customer_phone' => $customer->phone,
-                    'status' => 'pending',
+                    'status' => 'pending', // Not yet verified
                 ]
             );
 
@@ -141,6 +141,54 @@ class BookingSeeder extends Seeder
                     'car_rental_has_car_id' => $car->id,
                     'start' => Carbon::now()->addDays($key + 1),
                     'end' => Carbon::now()->addDays($key + 3),
+                ]
+            );
+        }
+        
+        // Create 5 car rental bookings that are expired
+        foreach (array_slice($customers, 5, 5) as $key => $customer) {
+            // Adjust key to start from 0 for the slice
+            $adjustedKey = $key - 5;
+            
+            $booking_id = 'BOOK-CAR-EXP-' . Str::random(8);
+            $transaction = Transaction::firstOrCreate(
+                ['no_inv' => 'TRX-CAR-EXP-' . $booking_id],
+                [
+                    'user_id' => $customer->id,
+                    'service' => 'Car',
+                    'service_id' => 1,
+                    'payment' => 'onthespot',
+                    'total' => 350000,
+                    'status' => 'PAID',
+                ]
+            );
+
+            DetailTransactionCarRental::firstOrCreate(
+                ['booking_id' => $booking_id],
+                [
+                    'transaction_id' => $transaction->id,
+                    'car_rental_id' => $carRental->id,
+                    'car_rental_has_car_id' => $car->id,
+                    'location' => $carRental->city,
+                    'start' => Carbon::now()->subDays(30 + $adjustedKey), // Expired 30+ days ago
+                    'end' => Carbon::now()->subDays(28 + $adjustedKey), // Expired 28+ days ago
+                    'rent_price' => 300000,
+                    'fee_admin' => 50000,
+                    'duration' => '2 Hari',
+                    'kode_unik' => rand(100, 999),
+                    'customer_name' => $customer->name,
+                    'customer_email' => $customer->email,
+                    'customer_phone' => $customer->phone,
+                    'status' => 'expired', // Expired status
+                ]
+            );
+
+            CarBookDate::create(
+                [
+                    'transaction_id' => $transaction->id,
+                    'car_rental_has_car_id' => $car->id,
+                    'start' => Carbon::now()->subDays(30 + $adjustedKey),
+                    'end' => Carbon::now()->subDays(28 + $adjustedKey),
                 ]
             );
         }
