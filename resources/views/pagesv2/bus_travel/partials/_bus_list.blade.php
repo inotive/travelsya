@@ -84,9 +84,9 @@
                             <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
                             <input type="hidden" name="date_pulang" value="{{ $date_pulang }}"> --}}
                             <a
-                                href="{{ route('bus_travel.detail', ['departure_id' => $p['id'], 'kota_awal' => $kota_awal, 'kota_tujuan' => $kota_tujuan, 'is_pulang_pergi' => $is_pulang_pergi, 'jumlah_penumpang' => $jumlah_penumpang, 'date_pergi' => $date_pergi ?? date('d-m-Y', strtotime(now())), 'date_pulang' => $date_pulang]) }}">
+                                href="{{ route('bus_travel.detail', ['departure_id' => $p['id'], 'kota_awal' => $p['departure_point'], 'kota_tujuan' => $p['arrival_point'], 'is_pulang_pergi' => $is_pulang_pergi, 'jumlah_penumpang' => $jumlah_penumpang, 'date_pergi' => $date_pergi ?? date('d-m-Y', strtotime(now())), 'date_pulang' => $date_pulang]) }}">
                                 <button class="btn btn-danger mt-2 bg-main" style="margin-left: auto;">Pilih
-                                    Mobil</button>
+                                    </button>
                             </a>
                             {{--
                         </form> --}}

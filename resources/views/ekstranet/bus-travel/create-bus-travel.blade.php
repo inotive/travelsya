@@ -74,7 +74,7 @@
 
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
-                        <input class="form-control form-control-lg" id="number_seats" placeholder="Masukkan Jumlah Kursi"
+                        <input type="number" class="form-control form-control-lg" id="number_seats" placeholder="Masukkan Jumlah Kursi"
                             name="number_seats" value="{{ old('number_seats') }}" />
 
                         @error('number_seats')
@@ -99,9 +99,19 @@
                     </div>
                 </div>
 
-                <div class="button-group">
-                    <button type="reset" class="btn btn-secondary">Kembali</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                <div class="row">
+                    <div class="col">
+                        <input
+                            class="btn btn-secondary"
+                            action="action"
+                            onclick="window.history.go(-1); return false;"
+                            type="submit"
+                            value="Kembali"
+                        />
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary w-100">Simpan</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -177,3 +187,9 @@
         color: white;
     }
 </style>
+
+<script>
+      document.getElementById('backButton').addEventListener('click', function() {
+        window.history.back();
+      });
+</script>

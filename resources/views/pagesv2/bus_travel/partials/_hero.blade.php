@@ -39,7 +39,7 @@
                                     class="input-group-text bg-transparent border-radius-bottom-left-none border-bottom-none">
                                     <i class="fa-solid fa-bus"></i>
                                 </span>
-                                <select name="kota_awal" class="form-control border-bottom-none border-left-none" required>
+                                <select name="kota_awal" id="kota_awal" class="form-control border-bottom-none border-left-none" required>
                                     <option value="">Pilih kota berangkat</option>
                                     @foreach ($city as $c)
                                     <option value="{{ $c }}">{{ $c }}</option>
@@ -48,16 +48,17 @@
                             </div>
                             <hr class="hr-line my-0">
                             <div class="d-flex wrapper-search">
-                                <span class="input-group-text bg-white">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </span>
+                                <button type="button" onclick="swapCities()" class="input-group-text bg-white">
+                                    <i class="fa-solid fa-repeat" style="transform: rotate(90deg);"></i>
+                                </button>
                             </div>
+
                             <div class="input-group mb-3">
                                 <span
                                     class="input-group-text bg-transparent border-radius-top-left-none border-top-none">
                                     <i class="fa-solid fa-location-dot"></i>
                                 </span>
-                                <select name="kota_tujuan" class="form-control border-left-none border-top-none" required>
+                                <select name="kota_tujuan" id="kota_tujuan" class="form-control border-left-none border-top-none" required>
                                     <option value="">Pilih kota tujuan</option>
                                     @foreach ($city as $c)
                                     <option value="{{ $c }}">{{ $c }}</option>
@@ -90,3 +91,17 @@
         </div>
     </div>
 </section>
+
+<script>
+function swapCities() {
+    const kotaAwal = document.getElementById('kota_awal');
+    const kotaTujuan = document.getElementById('kota_tujuan');
+
+    // Store the current values
+    const tempValue = kotaAwal.value;
+
+    // Swap the values
+    kotaAwal.value = kotaTujuan.value;
+    kotaTujuan.value = tempValue;
+}
+</script>

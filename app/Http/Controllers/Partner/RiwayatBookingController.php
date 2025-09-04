@@ -515,5 +515,13 @@ class RiwayatBookingController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+
+        // For modal display, return partial view without full HTML structure
+        if ($request->ajax() || $request->expectsJson()) {
+            return view('user.order-detail.e-tiket-bus-modal', $data);
+        }
+
+        // Regular view for direct access
+        return view('user.order-detail.e-tiket-bus-modal', $data);
     }
 }
