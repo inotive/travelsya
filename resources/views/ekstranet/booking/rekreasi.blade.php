@@ -4,11 +4,10 @@
 <form action="#" method="get">
     <div class="card mb-2">
         <div class="card-body">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label">Tahun</label>
+            <div class="row">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
                     <select class="form-select" name="year">
-                        <option value="">Pilih Tahun</option>
+                        <option value="" disabled selected>Pilih Tahun</option>
                         @php
                             $currentYear = date('Y');
                             $startYear = 2020;
@@ -21,58 +20,52 @@
                         @endfor
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Dari Tanggal</label>
-                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}" placeholder="Tanggal Mulai">
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Sampai Tanggal</label>
-                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}" placeholder="Tanggal Akhir">
+                </div>
+                <div class="col-12 col-md-3">
+                    <button type="submit" class="btn btn-primary w-100">Cari Data</button>
                 </div>
             </div>
+            <!-- Hidden input for tab status -->
+            <input type="hidden" name="tab" id="tab_input" value="{{ request('tab', 'all') }}">
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="row g-3 align-items-end mb-5">
-                <div class="col-md-10">
-                    <label class="form-label">Kata Kunci</label>
-                    <input type="text" class="form-control" name="keyword" placeholder="Cari Customer, Kode Booking, Paket" value="{{ request()->get('keyword') }}">
-                </div>
-                <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Cari</button>
-                </div>
-            </div>
+            <!-- Card untuk navigasi dan tabel -->
+            <div class="card">
+                <div class="card-body">
+                    <!-- Navigasi Tab Simple -->
+                    <div class="mb-4">
+                        <div class="d-flex gap-4 border-bottom">
+                            <button class="nav-tab-simple active" data-bs-toggle="pill" data-bs-target="#semua"
+                                    type="button" role="tab" aria-controls="semua" aria-selected="true">
+                                Semua Pesanan
+                            </button>
+                            <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#dipakai"
+                                    type="button" role="tab" aria-controls="dipakai" aria-selected="false">
+                                Sudah Dipakai
+                            </button>
+                            <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#belum-dipakai"
+                                    type="button" role="tab" aria-controls="belum-dipakai" aria-selected="false">
+                                Belum Dipakai
+                            </button>
+                            <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#kadaluarsa"
+                                    type="button" role="tab" aria-controls="kadaluarsa" aria-selected="false">
+                                Kadaluwarsa
+                            </button>
+                        </div>
+                    </div>
 
-            <!-- Navigasi Tab Simple -->
-            <div class="mb-4">
-                <div class="d-flex gap-4 border-bottom">
-                    <button class="nav-tab-simple active" data-bs-toggle="pill" data-bs-target="#semua"
-                            type="button" role="tab" aria-controls="semua" aria-selected="true">
-                        Semua Pesanan
-                    </button>
-                    <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#dipakai"
-                            type="button" role="tab" aria-controls="dipakai" aria-selected="false">
-                        Sudah Dipakai
-                    </button>
-                    <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#belum-dipakai"
-                            type="button" role="tab" aria-controls="belum-dipakai" aria-selected="false">
-                        Belum Dipakai
-                    </button>
-                    <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#kadaluarsa"
-                            type="button" role="tab" aria-controls="kadaluarsa" aria-selected="false">
-                        Kadaluarsa
-                    </button>
-                </div>
-            </div>
-
-            <!-- Konten Tab -->
-            <div class="tab-content" id="booking-tab-content">
-                <div class="tab-pane fade show active" id="semua" role="tabpanel" aria-labelledby="semua-tab">
-                    <div class="table-responsive">
-                        <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
-                            id="kt_datatable_semua">
+                    <!-- Konten Tab -->
+                    <div class="tab-content" id="booking-tab-content">
+                        <div class="tab-pane fade show active" id="semua" role="tabpanel" aria-labelledby="semua-tab">
+                            <div class="table-responsive bg-white p-4 rounded">
+                                <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
+                                    id="kt_datatable_semua">
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
@@ -81,7 +74,7 @@
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
-                                    <th class="text-center">Tanggal Kadaluarsa</th>
+                                    <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
@@ -104,7 +97,7 @@
                                                 $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast();
                                             @endphp
                                             @if($isExpired)
-                                                <span class="badge badge-danger">Kadaluarsa</span>
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
                                             @elseif($booking->is_used)
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
@@ -112,34 +105,19 @@
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                data-kt-menu="true" style="">
-                                                @if(!$booking->is_used && !$isExpired)
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3 text-success" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
-                                                            Verifikasi
-                                                        </a>
-                                                    </div>
-                                                @elseif($booking->is_used)
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
-                                                            Batal Verifikasi
-                                                        </a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
-                                                            Invoice
-                                                        </a>
-                                                    </div>
-                                                @endif
-                                            </div>
-                                            <a href="#"
-                                                class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                Actions
-                                                <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                            </a>
+                                            @if(!$booking->is_used && !$isExpired)
+                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
+                                                    Verifikasi
+                                                </a>
+                                            @elseif($booking->is_used)
+                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
+                                                    Kelola Invoice
+                                                </a>
+                                            @else
+                                                <button class="btn btn-sm btn-outline-secondary custom-btn" disabled>
+                                                    Kadaluwarsa
+                                                </button>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -149,7 +127,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="dipakai" role="tabpanel" aria-labelledby="dipakai-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_dipakai">
                             <thead>
@@ -160,7 +138,7 @@
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
-                                    <th class="text-center">Tanggal Kadaluarsa</th>
+                                    <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
@@ -184,25 +162,8 @@
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                    data-kt-menu="true" style="">
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
-                                                            Batal Verifikasi
-                                                        </a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a href="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}"
-                                                            class="menu-link px-3 text-primary d-flex justify-content-center" target="_blank">
-                                                            Invoice
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <a href="#"
-                                                    class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                    Actions
-                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
+                                                    Kelola Invoice
                                                 </a>
                                             </td>
                                         </tr>
@@ -214,7 +175,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="belum-dipakai" role="tabpanel" aria-labelledby="belum-dipakai-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_belum_dipakai">
                             <thead>
@@ -225,7 +186,7 @@
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
-                                    <th class="text-center">Tanggal Kadaluarsa</th>
+                                    <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
@@ -250,19 +211,8 @@
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                    data-kt-menu="true" style="">
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" class="menu-link px-3 text-success" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
-                                                            Verifikasi
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <a href="#"
-                                                    class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                    Actions
-                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
+                                                    Verifikasi
                                                 </a>
                                             </td>
                                         </tr>
@@ -274,7 +224,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="kadaluarsa" role="tabpanel" aria-labelledby="kadaluarsa-tab">
-                    <div class="table-responsive">
+                    <div class="table-responsive bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_kadaluarsa">
                             <thead>
@@ -285,7 +235,7 @@
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
-                                    <th class="text-center">Tanggal Kadaluarsa</th>
+                                    <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
@@ -307,21 +257,12 @@
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
-                                                <span class="badge badge-danger">Kadaluarsa</span>
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                                    data-kt-menu="true" style="">
-                                                    <div class="menu-item px-3">
-                                                        <span class="menu-link px-3 text-muted">Tidak ada aksi</span>
-                                                    </div>
-                                                </div>
-                                                <a href="#"
-                                                    class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                                    Actions
-                                                    <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                                </a>
+                                                <button class="btn btn-sm btn-outline-secondary custom-btn" disabled>
+                                                    Kadaluwarsa
+                                                </button>
                                             </td>
                                         </tr>
                                     @endif
@@ -344,41 +285,40 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Konfirmasi Penggunaan</h5>
+                            <h5 class="modal-title">Verifikasi Booking</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Apakah Anda yakin ingin menandai tiket ini sebagai sudah digunakan?</p>
+                            <p>Apakah Anda yakin ingin memverifikasi booking ini?</p>
                             <div class="text-center">
                                 <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.verifikasi-rekreasi', $booking->id) }}" class="btn btn-success">Sudah Dipakai</a>
+                            <a href="{{ route('partner.riwayat-booking.verifikasi-rekreasi', $booking->id) }}" class="btn btn-success">Verifikasi</a>
                         </div>
                     </div>
                 </div>
             </div>
         @endif
-        
+
         @if($booking->is_used)
             <div class="modal fade" id="cancellationModalRekreasi{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Konfirmasi Pembatalan Penggunaan</h5>
+                            <h5 class="modal-title">Kelola Invoice</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <p>Apakah Anda yakin ingin membatalkan tanda sudah digunakan untuk tiket ini?</p>
                             <div class="text-center">
                                 <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Ya, Belum Dipakai</a>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Batal Verifikasi</a>
                         </div>
                     </div>
                 </div>
@@ -408,6 +348,40 @@
         .nav-tab-simple.active {
             color: #dc3545;
             border-bottom-color: #dc3545;
+        }
+        
+        /* Custom style untuk tombol aksi */
+        .custom-btn {
+            transition: none;
+            color: #000000;
+        }
+        
+        .custom-btn:hover {
+            transition: none;
+            color: #000000;
+        }
+        
+        .btn-outline-primary.custom-btn {
+            border-color: #0d6efd;
+            background-color: transparent;
+        }
+        
+        .btn-outline-primary.custom-btn:hover {
+            border-color: #0d6efd;
+            background-color: transparent;
+            color: #000000;
+        }
+        
+        .btn-outline-secondary.custom-btn {
+            border-color: #6c757d;
+            background-color: transparent;
+            color: #000000;
+        }
+        
+        .btn-outline-secondary.custom-btn:hover {
+            border-color: #6c757d;
+            background-color: transparent;
+            color: #000000;
         }
     </style>
 
