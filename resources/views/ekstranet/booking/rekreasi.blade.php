@@ -106,15 +106,15 @@
                                         </td>
                                         <td class="text-center">
                                             @if(!$booking->is_used && !$isExpired)
-                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
+                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
                                                     Verifikasi
                                                 </a>
                                             @elseif($booking->is_used)
-                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
+                                                <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
                                             @else
-                                                <button class="btn btn-sm btn-outline-secondary custom-btn" disabled>
+                                                <button class="btn btn-sm action-btn expired-btn" disabled>
                                                     Kadaluwarsa
                                                 </button>
                                             @endif
@@ -162,7 +162,7 @@
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
+                                                <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
                                             </td>
@@ -211,7 +211,7 @@
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="#" class="btn btn-sm btn-outline-primary custom-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
+                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
                                                     Verifikasi
                                                 </a>
                                             </td>
@@ -260,7 +260,7 @@
                                                 <span class="badge badge-danger">Kadaluwarsa</span>
                                             </td>
                                             <td class="text-center">
-                                                <button class="btn btn-sm btn-outline-secondary custom-btn" disabled>
+                                                <button class="btn btn-sm action-btn expired-btn" disabled>
                                                     Kadaluwarsa
                                                 </button>
                                             </td>
@@ -317,17 +317,42 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Batal Verifikasi</a>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kembali</button>
+                            <button type="button" class="btn btn-primary" onclick="printInvoice('{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}')">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmCancelModal{{ $booking->id }}">Batal Verifikasi</button>
                         </div>
                     </div>
                 </div>
             </div>
         @endif
+        
+        <!-- Modal Konfirmasi Pembatalan -->
+        <div class="modal fade" id="confirmCancelModal{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Konfirmasi Pembatalan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Yakin, ingin membatalkan Verifikasi?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Ya, Batalkan Verifikasi</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     @endforeach
 @endsection
 
 @push('add-script')
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         .nav-tab-simple {
             background: none;
@@ -350,38 +375,46 @@
             border-bottom-color: #dc3545;
         }
         
-        /* Custom style untuk tombol aksi */
-        .custom-btn {
-            transition: none;
-            color: #000000;
+        /* Custom style untuk tombol aksi yang menarik */
+        .action-btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 6px 12px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        .custom-btn:hover {
-            transition: none;
-            color: #000000;
+        /* Tombol Verifikasi - Hijau */
+        .verify-btn {
+            background-color: #28a745;
+            color: white;
         }
         
-        .btn-outline-primary.custom-btn {
-            border-color: #0d6efd;
-            background-color: transparent;
+        .verify-btn:hover {
+            background-color: #218838;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
         
-        .btn-outline-primary.custom-btn:hover {
-            border-color: #0d6efd;
-            background-color: transparent;
-            color: #000000;
+        /* Tombol Kelola Invoice - Biru */
+        .manage-btn {
+            background-color: #007bff;
+            color: white;
         }
         
-        .btn-outline-secondary.custom-btn {
-            border-color: #6c757d;
-            background-color: transparent;
-            color: #000000;
+        .manage-btn:hover {
+            background-color: #0069d9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
         }
         
-        .btn-outline-secondary.custom-btn:hover {
-            border-color: #6c757d;
-            background-color: transparent;
-            color: #000000;
+        /* Tombol Kadaluwarsa - Abu-abu */
+        .expired-btn {
+            background-color: #6c757d;
+            color: white;
         }
     </style>
 
@@ -432,5 +465,13 @@
                 }, 100);
             });
         });
+        
+        // Fungsi untuk mencetak invoice
+        function printInvoice(url) {
+            var printWindow = window.open(url, '_blank');
+            printWindow.onload = function() {
+                printWindow.print();
+            };
+        }
     </script>
 @endpush
