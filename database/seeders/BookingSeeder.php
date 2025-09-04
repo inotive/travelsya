@@ -39,9 +39,9 @@ class BookingSeeder extends Seeder
             ]
         );
 
-        // 2. Create or find 5 customer users
+        // 2. Create or find 10 customer users (5 regular + 5 expired)
         $customers = [];
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 10; $i++) {
             $customers[] = User::firstOrCreate(
                 ['email' => 'customer' . ($i + 1) . '@example.com'],
                 [
@@ -162,7 +162,7 @@ class BookingSeeder extends Seeder
         );
 
         // Create 5 recreation bookings
-        foreach ($customers as $key => $customer) {
+        foreach (array_slice($customers, 0, 5) as $key => $customer) {
             $booking_id = 'BOOK-REC-' . Str::random(8);
             $transaction = Transaction::firstOrCreate(
                 ['no_inv' => 'TRX-REC-' . $booking_id],
@@ -183,6 +183,48 @@ class BookingSeeder extends Seeder
                     'recreation_id' => $recreation->id,
                     'recreationPackage_id' => 1,
                     'expire_on' => Carbon::now()->addDays(30 + $key),
+                    'rent_price' => '100000',
+                    'fee_admin' => '5000',
+                    'kode_unik' => rand(100, 999),
+                    'is_used' => 0,
+                ]
+            );
+        }
+        
+        // Create 5 expired recreation bookings
+        for ($i = 0; $i < 5; $i++) {
+            $expiredCustomer = User::firstOrCreate(
+                ['email' => 'expiredcustomer' . ($i + 1) . '@example.com'],
+                [
+                    'name' => 'Expired Customer ' . ($i + 1),
+                    'password' => Hash::make('password'),
+                    'phone' => '08123456788' . $i,
+                    'point' => 0,
+                    'role' => 2, // Role for Customer
+                    'is_active' => 1,
+                ]
+            );
+            
+            $booking_id = 'BOOK-REC-EXP-' . Str::random(8);
+            $transaction = Transaction::firstOrCreate(
+                ['no_inv' => 'TRX-REC-EXP-' . $booking_id],
+                [
+                    'user_id' => $expiredCustomer->id,
+                    'service' => 'Recreation',
+                    'service_id' => 2,
+                    'payment' => 'onthespot',
+                    'total' => 105000,
+                    'status' => 'PAID',
+                ]
+            );
+
+            detailTransactionRecreation::firstOrCreate(
+                ['booking_id' => $booking_id],
+                [
+                    'transaction_id' => $transaction->id,
+                    'recreation_id' => $recreation->id,
+                    'recreationPackage_id' => 1,
+                    'expire_on' => Carbon::now()->subDays(rand(1, 30)), // Expired 1-30 days ago
                     'rent_price' => '100000',
                     'fee_admin' => '5000',
                     'kode_unik' => rand(100, 999),

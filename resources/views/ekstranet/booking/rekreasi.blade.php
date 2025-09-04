@@ -139,7 +139,6 @@
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
-                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -158,9 +157,6 @@
                                             <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
-                                            <td class="text-center">
-                                                <span class="badge badge-success">Sudah Dipakai</span>
-                                            </td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                     Kelola Invoice
@@ -187,7 +183,6 @@
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
-                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -207,9 +202,6 @@
                                             <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
-                                            <td class="text-center">
-                                                <span class="badge badge-warning">Belum Dipakai</span>
-                                            </td>
                                             <td class="text-center">
                                                 <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
                                                     Verifikasi
@@ -236,7 +228,6 @@
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
-                                    <th class="text-center">Status</th>
                                     <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -256,9 +247,6 @@
                                             <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
-                                            <td class="text-center">
-                                                <span class="badge badge-danger">Kadaluwarsa</span>
-                                            </td>
                                             <td class="text-center">
                                                 <button class="btn btn-sm action-btn expired-btn" disabled>
                                                     Kadaluwarsa
