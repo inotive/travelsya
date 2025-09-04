@@ -8,7 +8,7 @@ use App\Models\CarModel;
 use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
 use App\Models\DetailTransactionCarRental;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\Recreation;
 use App\Models\Transaction;
 use App\Models\User;
@@ -176,7 +176,7 @@ class BookingSeeder extends Seeder
                 ]
             );
 
-            detailTransactionRecreation::firstOrCreate(
+            DetailTransactionRecreation::firstOrCreate(
                 ['booking_id' => $booking_id],
                 [
                     'transaction_id' => $transaction->id,
@@ -218,7 +218,7 @@ class BookingSeeder extends Seeder
                 ]
             );
 
-            detailTransactionRecreation::firstOrCreate(
+            DetailTransactionRecreation::firstOrCreate(
                 ['booking_id' => $booking_id],
                 [
                     'transaction_id' => $transaction->id,

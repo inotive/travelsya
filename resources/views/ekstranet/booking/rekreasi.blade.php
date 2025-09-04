@@ -373,7 +373,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
-        /* Tombol Verifikasi - Hijau */
+        /* Tombol Verifikasi - Menggunakan warna hijau seperti badge-success untuk konsistensi */
         .verify-btn {
             background-color: #28a745;
             color: white;
@@ -386,7 +386,7 @@
             box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
         
-        /* Tombol Kelola Invoice - Biru */
+        /* Tombol Kelola Invoice - Menggunakan warna biru seperti btn-primary untuk konsistensi */
         .manage-btn {
             background-color: #007bff;
             color: white;
