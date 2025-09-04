@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusFacility;
 use App\Models\BusTravelHasBus;
+use App\Models\BusTravelHasFacility;
 use App\Models\BusTravels;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +23,7 @@ class BusTravelController extends Controller
 
         $bus_travel_id = BusTravels::where('user_id', $user->id)->pluck('id')->first();
 
-        $buses = BusTravelHasBus::with('busTravel')
+        $buses = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
             ->where('bus_travel_id', $bus_travel_id)
             ->get();
 
@@ -36,9 +38,11 @@ class BusTravelController extends Controller
     public function create()
     {
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
+        $facilities = BusFacility::all();
 
         $view = [
             'bus_travel' => $bus_travel,
+            'facilities' => $facilities
         ];
 
         return view('ekstranet.bus-travel.create-bus-travel', $view);
@@ -53,6 +57,8 @@ class BusTravelController extends Controller
             'is_active' => 'required',
             'number_seats' => 'required',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'facilities' => 'nullable|array',
+            'facilities.*' => 'exists:bus_facilities,id'
         ]);
 
         if ($validator->fails()) {
@@ -95,21 +101,32 @@ class BusTravelController extends Controller
 
         Log::info($request->all());
 
-        DB::table('bus_travel_has_buses')->insert($data);
+        $bus_has_travel = DB::table('bus_travel_has_buses')->insertGetId($data);
+
+        if ($request->has('facilities')) {
+            foreach ($request->facilities as $facility) {
+                BusTravelHasFacility::create([
+                    'bus_travel_has_bus_id' => $bus_has_travel,
+                    'bus_facility_id' => $facility
+                ]);
+            }
+        }
 
         return redirect()->route('partner.daftar.bus-travel')->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function show($id)
     {
-        $bus = BusTravelHasBus::with('busTravel')
+        $bus = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
             ->where('id', $id)
             ->first();
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
+        $facilities = BusFacility::all();
 
         $view = [
             'bus' => $bus,
-            'bus_travel' =>  $bus_travel
+            'bus_travel' =>  $bus_travel,
+            'facilities' => $facilities
         ];
 
         return view('ekstranet.bus-travel.update', $view);
@@ -125,6 +142,8 @@ class BusTravelController extends Controller
             'is_active' => 'required',
             'number_seats' => 'required',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'facilities' => 'nullable|array',
+            'facilities.*' => 'exists:bus_facilities,id'
         ]);
 
         if ($validator->fails()) {
@@ -149,6 +168,16 @@ class BusTravelController extends Controller
         $bus->number_seats = $request->number_seats;
         $bus->image = $imageName;
         $bus->save();
+
+        if ($request->has('facilities')) {
+            BusTravelHasFacility::where('bus_travel_has_bus_id', $id)->delete();
+            foreach ($request->facilities as $facility) {
+                BusTravelHasFacility::create([
+                    'bus_travel_has_bus_id' => $id,
+                    'bus_facility_id' => $facility
+                ]);
+            }
+        }
 
         return redirect()->route('partner.daftar.bus-travel')->with('update', 'Data berhasil diupdate!');
     }

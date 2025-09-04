@@ -375,7 +375,7 @@ class BusTravelController extends Controller
         }
 
         // --- Query Departures (Pergi) ---
-        $pergi = BusDeparture::with('busTravel.busTravel', 'from', 'to')
+        $pergi = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
             ->has('busTravel')
             ->when($request->kota_awal, fn($q) =>
                 $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_awal . '%'))
@@ -405,7 +405,7 @@ class BusTravelController extends Controller
         // --- Query Departures (Pulang) ---
         $pulang = [];
         if ((int)$pp === 1) {
-            $pulang = BusDeparture::with('busTravel.busTravel', 'from', 'to')
+            $pulang = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
                 ->has('busTravel')
                 ->when($request->kota_awal, fn($q) =>
                     $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_awal . '%'))
@@ -564,6 +564,7 @@ class BusTravelController extends Controller
                 'avgRating' => $val->busTravel->avgRating(),
                 'reviews' => $val->busTravel->reviews,
                 'available_tickets' => $available,
+                'facilities' => $val->busTravel->facilities,
             ];
 
             array_push($newTicket, $item);
@@ -584,7 +585,7 @@ class BusTravelController extends Controller
         $data['date_pergi'] = $date_pergi;
         $data['date_pulang'] = $date_pulang;
 
-        $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
+        $data['departure'] = BusDeparture::with(['busTravel.busTravel', 'busTravel.facilities.facility', 'from', 'to'])->find($param['departure_id']);
         $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->where('is_active', 1)->orderBy('kursi_pergi')->get();
         // dd($data['departure']->busTravel->number_seats%2);
 

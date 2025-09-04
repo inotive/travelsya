@@ -1,3 +1,31 @@
+@php
+    $facilityIcons = [
+        'colokan usb' => ['type' => 'image', 'src' => asset('images/icon/usb.png')],
+        'full ac' => ['type' => 'image', 'src' => asset('images/icon/ac.png')],
+        'kursi recliner' => ['type' => 'image', 'src' => asset('images/icon/chair.png')],
+        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-dark'],
+        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-dark'],
+        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-dark'],
+    ];
+
+    // Small inline function to render the HTML
+    $renderIcon = function ($name) use ($facilityIcons) {
+        $key = strtolower(trim($name));
+
+        if (!isset($facilityIcons[$key])) {
+            return '<i class="fa-regular fa-circle-question text-muted"></i>'; // fallback
+        }
+
+        $icon = $facilityIcons[$key];
+
+        if ($icon['type'] === 'image') {
+            return '<img src="' . e($icon['src']) . '" height="15" alt="' . e($name) . '">';
+        }
+
+        return '<i class="' . e($icon['class']) . '"></i>';
+    };
+@endphp
+
 <div class="container">
     @foreach ($pergi as $p)
     <div class="card shadow-sm mb-4">
@@ -51,19 +79,15 @@
                                 <strong>{{ $p['arrival_point'] }}</strong>
                             </div>
                         </div>
-                        <div class="d-flex text-secondary-strong mt-3">
-                            <span>
-                                <img src="{{ asset('images/icon/ac.png') }}" height="15px" alt="">
-                                <span>Full AC</span>
-                            </span>
-                            <span class="ms-3">
-                                <img src="{{ asset('images/icon/chair.png') }}" height="15px" alt="">
-                                <span>Kursi Recliner</span>
-                            </span>
-                            <span class="ms-3">
-                                <img src="{{ asset('images/icon/usb.png') }}" height="15px" alt="">
-                                <span>Colokan USB</span>
-                            </span>
+                        <div class="d-flex text-secondary-strong mt-3 flex-wrap">
+                            @if(!empty($p['facilities']))
+                                @foreach ($p['facilities'] as $facility)
+                                    <span class="ms-3 d-flex align-items-center">
+                                        {!! $renderIcon($facility->facility->name) !!}
+                                        <span class="ms-1">{{ $facility->facility->name }}</span>
+                                    </span>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
                     <div class="col-12 col-md-4 d-flex flex-column justify-content-end align-items-end">

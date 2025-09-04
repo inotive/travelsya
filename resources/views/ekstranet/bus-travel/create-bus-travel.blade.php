@@ -99,7 +99,30 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="form-group">
+                    <label class="fs-6 fw-semibold mb-2">Fasilitas Bus</label>
+                    <div class="row">
+                        @foreach ($facilities as $facility)
+                            <div class="col-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="facilities[]"
+                                        value="{{ $facility->id }}" id="facility{{ $facility->id }}">
+                                    <label class="form-check-label" for="facility{{ $facility->id }}">
+                                        {{ $facility->name }}
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    @error('facilities')
+                        <span class="text-danger mt-1" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
+                <br>
+
+                <div class="row mt-5">
                     <div class="col">
                         <input
                             class="btn btn-secondary"
