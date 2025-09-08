@@ -45,13 +45,13 @@
                                     type="button" role="tab" aria-controls="semua" aria-selected="true">
                                 Semua Pesanan
                             </button>
-                            <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#dipakai"
-                                    type="button" role="tab" aria-controls="dipakai" aria-selected="false">
-                                Sudah Dipakai
-                            </button>
                             <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#belum-dipakai"
                                     type="button" role="tab" aria-controls="belum-dipakai" aria-selected="false">
                                 Belum Dipakai
+                            </button>
+                            <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#dipakai"
+                                    type="button" role="tab" aria-controls="dipakai" aria-selected="false">
+                                Sudah Dipakai
                             </button>
                             <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#kadaluarsa"
                                     type="button" role="tab" aria-controls="kadaluarsa" aria-selected="false">
