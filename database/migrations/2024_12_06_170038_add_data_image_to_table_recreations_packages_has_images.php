@@ -28,29 +28,41 @@ return new class extends Migration
             ]);
         }
 
-        $satu =  RecreationPackagesImages::where('recreation_package_id', 1)->first();
-        $satu->main = 1;
-        $satu->save();
+        $satu = RecreationPackagesImages::where('recreation_package_id', 1)->first();
+        if ($satu) {
+            $satu->main = 1;
+            $satu->save();
+        }
 
-        $dua =  RecreationPackagesImages::where('recreation_package_id', 2)->first();
-        $dua->main = 1;
-        $dua->save();
+        $dua = RecreationPackagesImages::where('recreation_package_id', 2)->first();
+        if ($dua) {
+            $dua->main = 1;
+            $dua->save();
+        }
 
-        $tiga =  RecreationPackagesImages::where('recreation_package_id', 3)->first();
-        $tiga->main = 1;
-        $tiga->save();
+        $tiga = RecreationPackagesImages::where('recreation_package_id', 3)->first();
+        if ($tiga) {
+            $tiga->main = 1;
+            $tiga->save();
+        }
 
-        $empat =  RecreationPackagesImages::where('recreation_package_id', 4)->first();
-        $empat->main = 1;
-        $empat->save();
+        $empat = RecreationPackagesImages::where('recreation_package_id', 4)->first();
+        if ($empat) {
+            $empat->main = 1;
+            $empat->save();
+        }
 
-        $lima =  RecreationPackagesImages::where('recreation_package_id', 5)->first();
-        $lima->main = 1;
-        $lima->save();
+        $lima = RecreationPackagesImages::where('recreation_package_id', 5)->first();
+        if ($lima) {
+            $lima->main = 1;
+            $lima->save();
+        }
 
-        $enam =  RecreationPackagesImages::where('recreation_package_id', 6)->first();
-        $enam->main = 1;
-        $enam->save();
+        $enam = RecreationPackagesImages::where('recreation_package_id', 6)->first();
+        if ($enam) {
+            $enam->main = 1;
+            $enam->save();
+        }
     }
 
     /**
