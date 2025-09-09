@@ -196,49 +196,85 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            @foreach ($car_models->take(4) as $model)
-                <div class="col-12 col-md-4 col-xl-3 mb-4">
-                    <form action="{{ route('car_rent.show') }}" method="post"
-                        id="form_favorite_car{{ $model->id }}">
-                        @csrf
-                        <input type="hidden" name="car_model_id" value="{{ $model->car_model_id }}">
-                        <input type="hidden" name="category" value="">
-                        <input type="hidden" name="location" value="">
-                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
-                        <input type="hidden" name="time" value="08:00">
-                        <input type="hidden" name="duration" value="1">
-                        <div class="col p-3">
-                            <a href="javascript:" class="text-decoration-none text-dark"
-                                id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
-                                <div class="card border border-dark rounded-4 h-100">
-                                    <div class="card-img-container">
-                                        <img src="{{ asset($model->carModel->image) }}"
-                                             class="card-img-top card-img-aspect"
-                                             alt="{{ $model->carModel->name ?? 'Car Model' }}"
-                                             onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
-                                    </div>
-                                    <div class="card-body d-flex flex-column">
-                                        <div class="card-content flex-grow-1">
-                                            <div class="lokasi d-flex justify-content-center">
-                                                <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }}
-                                                    {{ $model->brand->name ?? 'Invalid Brand' }}</span>
-                                            </div>
-
-                                            <div
-                                                class="price mt-7 d-flex flex-row align-items-center justify-content-center">
-                                                <span class="fa-solid fa-suitcase"></span>
-                                                <span class="ms-1">{{ $model->koper }}</span>
-                                                <span class="fa-solid fa-user ms-5"></span>
-                                                <span class="ms-1">{{ $model->number_seats }}</span>
+            @if(isset($popular_brands) && $popular_brands->isNotEmpty())
+                @foreach ($popular_brands as $brand)
+                    <div class="col-12 col-md-4 col-xl-3 mb-4">
+                        <form action="{{ route('car_rent.show') }}" method="post"
+                            id="form_favorite_brand{{ $brand->id }}">
+                            @csrf
+                            <input type="hidden" name="brand_id" value="{{ $brand->id }}">
+                            <input type="hidden" name="category" value="">
+                            <input type="hidden" name="location" value="">
+                            <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                            <input type="hidden" name="time" value="08:00">
+                            <input type="hidden" name="duration" value="1">
+                            <div class="col p-3">
+                                <a href="javascript:" class="text-decoration-none text-dark"
+                                    id="provider_button_brand{{ $brand->id }}" onclick="submit_brand({{ $brand->id }})">
+                                    <div class="card border border-dark rounded-4 h-100">
+                                        <div class="card-img-container" style="overflow: hidden;">
+                                            <img src="{{ asset($brand->image) }}"
+                                                 class="card-img-top card-img-aspect"
+                                                 alt="{{ $brand->name ?? 'Car Brand' }}"
+                                                 onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                                        </div>
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="card-content flex-grow-1">
+                                                <div class="lokasi d-flex justify-content-center">
+                                                    <span class="fw-bold">{{ $brand->name ?? 'Invalid Brand' }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            @endforeach
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                @endforeach
+            @else
+                @foreach ($car_models->take(4) as $model)
+                    <div class="col-12 col-md-4 col-xl-3 mb-4">
+                        <form action="{{ route('car_rent.show') }}" method="post"
+                            id="form_favorite_car{{ $model->id }}">
+                            @csrf
+                            <input type="hidden" name="car_model_id" value="{{ $model->car_model_id }}">
+                            <input type="hidden" name="category" value="">
+                            <input type="hidden" name="location" value="">
+                            <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                            <input type="hidden" name="time" value="08:00">
+                            <input type="hidden" name="duration" value="1">
+                            <div class="col p-3">
+                                <a href="javascript:" class="text-decoration-none text-dark"
+                                    id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
+                                    <div class="card border border-dark rounded-4 h-100">
+                                        <div class="card-img-container" style="overflow: hidden;">
+                                            <img src="{{ asset($model->carModel->image) }}"
+                                                 class="card-img-top card-img-aspect"
+                                                 alt="{{ $model->carModel->name ?? 'Car Model' }}"
+                                                 onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                                        </div>
+                                        <div class="card-body d-flex flex-column">
+                                            <div class="card-content flex-grow-1">
+                                                <div class="lokasi d-flex justify-content-center">
+                                                    <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }}</span>
+                                                </div>
+
+                                                <div
+                                                    class="price mt-7 d-flex flex-row align-items-center justify-content-center">
+                                                    <span class="fa-solid fa-suitcase"></span>
+                                                    <span class="ms-1">{{ $model->koper }}</span>
+                                                    <span class="fa-solid fa-user ms-5"></span>
+                                                    <span class="ms-1">{{ $model->number_seats }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                @endforeach
+            @endif
         </div>
     </section>
 
@@ -351,6 +387,13 @@
             // Tambahkan logging untuk debugging
             console.log('Submitting favorite car form:', val);
             $("form#form_favorite_car" + val).submit();
+            return false;
+        };
+
+        function submit_brand(val) {
+            // Tambahkan logging untuk debugging
+            console.log('Submitting favorite brand form:', val);
+            $("form#form_favorite_brand" + val).submit();
             return false;
         };
 

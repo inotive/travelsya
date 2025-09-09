@@ -205,7 +205,7 @@
 
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
-                            <div class="card-img-container" style="width: 50px; height: 50px;">
+                            <div class="card-img-container" style="width: 50px; height: 50px; overflow: hidden;">
                                 <img src="{{ asset($car->brand->image ?? null) }}"
                                     onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
                                     alt="{{ $car->brand->name ?? 'Car Brand' }}" class="card-img-aspect rounded-1">

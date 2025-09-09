@@ -25,9 +25,9 @@
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->category_rent }}</span>
                         </div>
                     </div>
-                    <div class="card-img-container" style="width: 150px; height: 100px;">
+                    <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
                         <img src="{{ asset($car->brand->image ?? null) }}" 
-                             class="card-img-aspect"
+                             class="card-img-aspect card-img-top"
                              alt="{{ $car->brand->name ?? 'Car Brand' }}"
                              onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
                     </div>

@@ -7,7 +7,7 @@
             <div class="card-body p-3">
                 <div class="row">
                     <div class="col-3">
-                        <div class="card-img-container">
+                        <div class="card-img-container" style="overflow: hidden;">
                             <img src="{{ asset($car->brand->image) }}"
                                 onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
                                 class="card-img-aspect img-fluid rounded shadow" alt="{{ $car->brand->name }}">
