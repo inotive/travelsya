@@ -50,7 +50,7 @@
         .extra-content {
             flex-shrink: 0;
         }
-        
+
         /* CSS for 3:2 aspect ratio images */
         .card-img-container {
             position: relative;
@@ -58,7 +58,7 @@
             padding-top: 66.67%; /* 3:2 aspect ratio (2/3 = 0.6667) */
             overflow: hidden;
         }
-        
+
         .card-img-aspect {
             position: absolute;
             top: 0;
@@ -191,7 +191,7 @@
     <section class="favorite_car" id="favorite_car" style="margin-bottom: 100px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Kendaraan Favorite Rental Mobil di Travelsya
+                <h2 class="text-dark" style="position: relative; top: 3px;">Kendaraan Favorit Rental Mobil di Travelsya
                 </h2>
             </div>
         </div>
@@ -212,7 +212,7 @@
                                 id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
                                 <div class="card border border-dark rounded-4 h-100">
                                     <div class="card-img-container">
-                                        <img src="{{ asset($model->carModel->image) }}" 
+                                        <img src="{{ asset($model->carModel->image) }}"
                                              class="card-img-top card-img-aspect"
                                              alt="{{ $model->carModel->name ?? 'Car Model' }}"
                                              onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
@@ -245,7 +245,7 @@
     <section class="near_location" style="margin-bottom: 100px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekata di Kota Lainnya
+                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekat di Kota Lainnya
                 </h2>
             </div>
         </div>
