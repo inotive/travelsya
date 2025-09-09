@@ -7,9 +7,11 @@
             <div class="card-body p-3">
                 <div class="row">
                     <div class="col-3">
-                        <img src="{{ asset($car->brand->image) }}"
-                            onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
-                            class="img-fluid rounded shadow w-100" style="object-fit: contain;" alt="...">
+                        <div class="card-img-container">
+                            <img src="{{ asset($car->brand->image) }}"
+                                onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
+                                class="card-img-aspect img-fluid rounded shadow" alt="{{ $car->brand->name }}">
+                        </div>
                     </div>
                     <div class="col-9 d-flex flex-column">
                         <h5 class="mb-3">{{ $car->brand->name }}</h5>

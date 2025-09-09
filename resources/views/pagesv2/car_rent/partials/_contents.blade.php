@@ -50,6 +50,24 @@
         .extra-content {
             flex-shrink: 0;
         }
+        
+        /* CSS for 3:2 aspect ratio images */
+        .card-img-container {
+            position: relative;
+            width: 100%;
+            padding-top: 66.67%; /* 3:2 aspect ratio (2/3 = 0.6667) */
+            overflow: hidden;
+        }
+        
+        .card-img-aspect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
     </style>
 @endpush
 <div class="container mb-5">
@@ -178,9 +196,8 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            @foreach ($car_models as $model)
-            {{-- {{ dd($model) }} --}}
-                <div class="col-12 col-md-4 col-xl-3">
+            @foreach ($car_models->take(4) as $model)
+                <div class="col-12 col-md-4 col-xl-3 mb-4">
                     <form action="{{ route('car_rent.show') }}" method="post"
                         id="form_favorite_car{{ $model->id }}">
                         @csrf
@@ -193,12 +210,15 @@
                         <div class="col p-3">
                             <a href="javascript:" class="text-decoration-none text-dark"
                                 id="provider_button{{ $model->id }}" onclick="submit({{ $model->id }})">
-                                <div class="card border border-dark rounded-4">
-                                    <img src="{{ asset($model->carModel->image) }}" class="card-img-top-rounded"
-                                        alt="..."
-                                        onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
-                                    <div class="card-body">
-                                        <div class="card-content">
+                                <div class="card border border-dark rounded-4 h-100">
+                                    <div class="card-img-container">
+                                        <img src="{{ asset($model->carModel->image) }}" 
+                                             class="card-img-top card-img-aspect"
+                                             alt="{{ $model->carModel->name ?? 'Car Model' }}"
+                                             onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="card-content flex-grow-1">
                                             <div class="lokasi d-flex justify-content-center">
                                                 <span class="fw-bold">{{ $model->carModel->name ?? 'Invalid Model' }}
                                                     {{ $model->brand->name ?? 'Invalid Brand' }}</span>
