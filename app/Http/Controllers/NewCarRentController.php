@@ -143,11 +143,20 @@ class NewCarRentController extends Controller
             ],
         ];
 
-        $near_location = CarRental::with('kota', 'hasCars')->whereHas('hasCars')->get()->pluck('kota.city_name', 'kota.city_name');
+        // Memastikan near_location selalu memiliki data yang valid
+        $near_location = CarRental::with('kota', 'hasCars')
+            ->whereHas('hasCars')
+            ->get()
+            ->pluck('kota.city_name', 'kota.city_name')
+            ->unique()
+            ->sort();
+            
+        // Menambahkan opsi default
+        $near_location = collect(['' => 'Pilih Lokasi'])->merge($near_location);
 
         $data['car_models'] = collect($car_models);
         $data['popular_brands'] = $popular_brands;
-        $data['near_location'] = collect($near_location);
+        $data['near_location'] = $near_location;
         return view('pagesv2.car_rent.index', $data);
     }
 
@@ -305,6 +314,11 @@ class NewCarRentController extends Controller
             'car_model' => $car_model,
             'search' => $search
         ]);
+
+        // Validasi lokasi
+        if (!$location && !$search) {
+            return redirect()->back()->with('error', 'Silakan pilih lokasi terlebih dahulu');
+        }
 
         // Jika ada parameter pencarian, cari berdasarkan nama bisnis
         if ($search) {

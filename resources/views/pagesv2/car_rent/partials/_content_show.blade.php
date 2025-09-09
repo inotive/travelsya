@@ -17,7 +17,8 @@
                             </option>
                         </select>
                         <select name="location" id="location" class="form-control border-none max-w-200 py-0"
-                                    data-placeholder="Pilih Lokasi" autocomplete="on">
+                                    data-placeholder="Pilih Lokasi" autocomplete="on" required>
+                                <option value="">Pilih Lokasi</option>
                                 @foreach($near_location as $city)
                                     <option value="{{ $city }}" @if ($location==$city) selected @endif>{{ $city }}</option>
                                 @endforeach
@@ -119,3 +120,35 @@
 
 
 </div>
+
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Reset dropdown location ketika halaman dimuat
+        const locationSelect = document.getElementById('location');
+        if (locationSelect && !locationSelect.value) {
+            locationSelect.selectedIndex = 0;
+        }
+        
+        // Tambahkan event listener untuk form submit
+        const searchForm = document.querySelector('form[action="{{ route('car_rent.show') }}"]');
+        const searchButton = searchForm ? searchForm.querySelector('button[type="submit"]') : null;
+        
+        if (searchForm && searchButton) {
+            searchForm.addEventListener('submit', function(e) {
+                // Validasi field kota
+                if (!locationSelect.value) {
+                    e.preventDefault();
+                    alert('Silakan pilih lokasi terlebih dahulu');
+                    locationSelect.focus();
+                    return false;
+                }
+                
+                // Nonaktifkan tombol selama proses submit
+                searchButton.disabled = true;
+                searchButton.innerHTML = 'Mencari...';
+            });
+        }
+    });
+</script>
+@endpush
