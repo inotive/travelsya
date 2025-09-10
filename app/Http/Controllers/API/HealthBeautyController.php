@@ -308,11 +308,11 @@ class HealthBeautyController extends Controller
             // ->whereHas('packages', function ($p) {
             //     $p->whereColumn('unit_price', '>', 'price');
             // })
-            ->when($city, function ($c, $cit) {
-                $c->whereHas('kota', function ($k) use ($cit) {
-                    $k->where('city_name', 'like', $cit);
-                });
-            })
+            // ->when($city, function ($c, $cit) {
+            //     $c->whereHas('kota', function ($k) use ($cit) {
+            //         $k->where('city_name', 'like', $cit);
+            //     });
+            // })
             ->limit(10)
             ->get();
 
@@ -323,7 +323,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
@@ -347,9 +347,9 @@ class HealthBeautyController extends Controller
     public function beautyHome(Request $request)
     {
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
             // ->when($city, function ($c, $cit) {
             //     $c->whereHas('kota', function ($k) use ($cit) {
             //         $k->where('city_name', 'like', $cit);
