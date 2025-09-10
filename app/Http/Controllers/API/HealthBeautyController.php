@@ -63,7 +63,7 @@ class HealthBeautyController extends Controller
                 'latitude' => $clinic['lat'],
                 'longitude' => $clinic['ltd'],
                 'images' => $newImages,
-                'main_image' => isset($clinic['image']['image']) ? asset('storage/' . $clinic['image']['image']) : asset('images/not_found.jpg'),
+                'main_image' => isset($clinic['image']['image']) ? asset('storage/images/clinic_package_images/' . $clinic['image']['image']) : asset('images/not_found.jpg'),
                 'packages' => $clinic['packages'],
                 'rating_count' => count($clinic['reviews']),
                 'avg_rating' => $clinic->avgRating(),
@@ -79,7 +79,7 @@ class HealthBeautyController extends Controller
                     $new = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image']) : asset('not_found.png'),
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
@@ -317,13 +317,13 @@ class HealthBeautyController extends Controller
             ->get();
 
         $cantik = [];
-
+        // return $special;
         foreach ($special as $key => $rec) {
             if (count($rec['packages']) > 0) {
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
@@ -365,7 +365,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
@@ -406,7 +406,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
@@ -446,7 +446,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
@@ -485,7 +485,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
@@ -527,7 +527,7 @@ class HealthBeautyController extends Controller
                     $item = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
@@ -541,7 +541,7 @@ class HealthBeautyController extends Controller
                     $item2 = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('not_found.png'),
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
