@@ -305,14 +305,14 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
-            // ->when($city, function ($c, $cit) {
-            //     $c->whereHas('kota', function ($k) use ($cit) {
-            //         $k->where('city_name', 'like', $cit);
-            //     });
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
             // })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
             ->limit(10)
             ->get();
 
@@ -393,11 +393,11 @@ class HealthBeautyController extends Controller
             // ->whereHas('packages', function ($p) {
             //     $p->whereColumn('unit_price', '>', 'price');
             // })
-            // ->when($city, function ($c, $cit) {
-            //     $c->whereHas('kota', function ($k) use ($cit) {
-            //         $k->where('city_name', 'like', $cit);
-            //     });
-            // })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
             ->get();
         $cantik = [];
 
@@ -431,11 +431,11 @@ class HealthBeautyController extends Controller
             // ->whereHas('packages', function ($p) {
             //     $p->whereColumn('unit_price', '>', 'price');
             // })
-            // ->when($city, function ($c, $cit) {
-            //     $c->whereHas('kota', function ($k) use ($cit) {
-            //         $k->where('city_name', 'like', $cit);
-            //     });
-            // })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
             ->get();
 
         $cantik = [];
