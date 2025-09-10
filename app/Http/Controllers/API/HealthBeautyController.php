@@ -8,6 +8,7 @@ use App\Models\CategoriesServices;
 use App\Models\Clinic;
 use App\Models\ClinicHasPackages;
 use App\Models\ClinicRating;
+use App\Models\City;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\Fee;
 use App\Models\Service;
@@ -389,16 +390,15 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
-            ->when($city, function ($c, $cit) {
-                $c->whereHas('kota', function ($k) use ($cit) {
-                    $k->where('city_name', 'like', $cit);
-                });
-            })
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
+            // ->when($city, function ($c, $cit) {
+            //     $c->whereHas('kota', function ($k) use ($cit) {
+            //         $k->where('city_name', 'like', $cit);
+            //     });
+            // })
             ->get();
-
         $cantik = [];
 
         foreach ($special as $key => $rec) {
@@ -406,7 +406,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => null,
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
@@ -428,14 +428,14 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
-            ->when($city, function ($c, $cit) {
-                $c->whereHas('kota', function ($k) use ($cit) {
-                    $k->where('city_name', 'like', $cit);
-                });
-            })
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
+            // ->when($city, function ($c, $cit) {
+            //     $c->whereHas('kota', function ($k) use ($cit) {
+            //         $k->where('city_name', 'like', $cit);
+            //     });
+            // })
             ->get();
 
         $cantik = [];
@@ -445,7 +445,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => null,
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
@@ -461,6 +461,18 @@ class HealthBeautyController extends Controller
         $data['clinic'] = $cantik;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
+    }
+
+    public function clinicCity()
+    {
+        $cityIds = Clinic::distinct()->pluck('city')->filter();
+        $hostelCity = City::whereIn('city_id', $cityIds)->pluck('city_name');
+
+        if ($hostelCity->isEmpty()) {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+
+        return ResponseFormatter::success($hostelCity, 'Data successfully loaded');
     }
 
     public function list()
