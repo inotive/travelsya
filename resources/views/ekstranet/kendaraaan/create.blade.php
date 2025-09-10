@@ -101,6 +101,7 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Durasi</label>
                             <input type="text" class="form-control" id="duration" name="duration" placeholder="Durasi" required>
+                            <small class="form-text text-muted">Durasi dihitung per hari</small>
                             @error('duration')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -156,7 +157,8 @@
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" required></textarea>
+                            <small class="form-text text-muted">Maksimal 2000 karakter</small>
                             @error('description')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -167,11 +169,12 @@
                         <div class="col-md-12 mt-4">
                             <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
                             <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="image" accept="image/*" required>
-                                {{-- <label class="input-group-text bg-primary text-white">Gambar Utama</label> --}}
+                                <input type="file" class="form-control" name="images[]" accept="image/*" required>
+                                <input type="hidden" name="main_image[]" value="1">
+                                <label class="input-group-text bg-primary text-white">Gambar Utama</label>
                             </div>
-                            {{-- <div id="additional-images"></div>
-                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button> --}}
+                            <div id="additional-images"></div>
+                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
                         </div>
                     </div>
                     <!--end::Input group-->
@@ -203,6 +206,7 @@
 
             if (brand_id) {
                 $('#car_model_id').prop('disabled', false);
+                $('#car_model_id').empty().append('<option value="">Memuat model...</option>');
 
                 $.ajax({
                     url: '{{ url('/partner/get-model-kendaraan') }}',
@@ -216,7 +220,7 @@
                         $('#car_model_id').append(
                             '<option selected disabled value="">Pilih Model</option>');
 
-                        if (response.models.length > 0) {
+                        if (response.models && response.models.length > 0) {
                             $.each(response.models, function(index, model) {
                                 $('#car_model_id').append('<option value="' + model.id + '">' +
                                     model.name + '</option>');
@@ -225,8 +229,10 @@
                             $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
                         }
                     },
-                    error: function() {
-                        alert("Terjadi kesalahan saat mengambil data model.");
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching models:", error);
+                        $('#car_model_id').empty().append('<option selected disabled value="">Error memuat model</option>');
+                        toastr.error("Terjadi kesalahan saat mengambil data model. Silakan coba lagi.");
                     }
                 });
             } else {
@@ -241,7 +247,9 @@
             $('#additional-images').append(`
                 <div class="input-group mb-3">
                     <input type="file" class="form-control" name="images[]" accept="image/*">
+                    <input type="hidden" name="main_image[]" value="0" class="main-image-flag">
                     <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                    <button type="button" class="btn btn-primary set-main-image">Jadikan Utama</button>
                     <button type="button" class="btn btn-danger remove-image">Hapus</button>
                 </div>
             `);
@@ -250,6 +258,17 @@
         // Handle removing additional images
         $(document).on('click', '.remove-image', function() {
             $(this).closest('.input-group').remove();
+        });
+        
+        // Handle setting main image
+        $(document).on('click', '.set-main-image', function() {
+            // Reset all flags to 0
+            $('.main-image-flag').val('0');
+            $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
+            
+            // Set current flag to 1
+            $(this).closest('.input-group').find('.main-image-flag').val('1');
+            $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
         });
 
         function formatRupiah(amount) {
@@ -337,5 +356,14 @@
     .primary {
         background: #007bff;
         color: white;
+    }
+    
+    .set-main-image, .set-existing-main-image {
+        border-radius: 0 !important;
+        border: none;
+    }
+    
+    .set-main-image:hover, .set-existing-main-image:hover {
+        opacity: 0.9;
     }
 </style>
