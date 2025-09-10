@@ -80,7 +80,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($rekreasibookdates as $booking)
+                                @foreach ($rekreasibookdates->reverse() as $booking)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
                                         <td class="text-center">
@@ -144,7 +144,7 @@
                             </thead>
                             <tbody>
                                 @php $counter = 1; @endphp
-                                @foreach ($rekreasibookdates as $booking)
+                                @foreach ($rekreasibookdates->reverse() as $booking)
                                     @if($booking->is_used)
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
@@ -188,7 +188,7 @@
                             </thead>
                             <tbody>
                                 @php $counter = 1; @endphp
-                                @foreach ($rekreasibookdates as $booking)
+                                @foreach ($rekreasibookdates->reverse() as $booking)
                                     @php $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast(); @endphp
                                     @if(!$booking->is_used && !$isExpired)
                                         <tr>
@@ -233,7 +233,7 @@
                             </thead>
                             <tbody>
                                 @php $counter = 1; @endphp
-                                @foreach ($rekreasibookdates as $booking)
+                                @foreach ($rekreasibookdates->reverse() as $booking)
                                     @php $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast(); @endphp
                                     @if($isExpired)
                                         <tr>

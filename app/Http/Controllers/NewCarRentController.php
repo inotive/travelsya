@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseFormatter;
+use App\Models\Brand;
 use App\Models\CarModel;
 use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
@@ -101,6 +102,29 @@ class NewCarRentController extends Controller
             ->limit(10)
             ->get();
 
+        // Mengambil 4 merek mobil terpopuler berdasarkan jumlah pemesanan
+        $brand_bookings = DB::table('car_book_dates')
+            ->join('car_rental_has_cars', 'car_book_dates.car_rental_has_car_id', '=', 'car_rental_has_cars.id')
+            ->join('brands', 'car_rental_has_cars.brand_id', '=', 'brands.id')
+            ->where('car_rental_has_cars.status', 1)
+            ->select('brands.id', 'brands.name', 'brands.image', DB::raw('COUNT(car_book_dates.id) as total_booked'))
+            ->groupBy('brands.id', 'brands.name', 'brands.image')
+            ->orderBy('total_booked', 'desc')
+            ->limit(4)
+            ->get();
+
+        // Mengambil objek Brand lengkap berdasarkan ID
+        $brandIds = $brand_bookings->pluck('id');
+        $popular_brands = Brand::whereIn('id', $brandIds)->get();
+
+        // Menambahkan jumlah pemesanan ke setiap brand
+        $popular_brands->each(function ($brand) use ($brand_bookings) {
+            $booking_data = $brand_bookings->firstWhere('id', $brand->id);
+            if ($booking_data) {
+                $brand->total_booked = $booking_data->total_booked;
+            }
+        });
+
         $data['rule'] = [
             [
                 'icon' => 'fa-solid fa-car',
@@ -119,10 +143,20 @@ class NewCarRentController extends Controller
             ],
         ];
 
-        $near_location = CarRental::with('kota', 'hasCars')->whereHas('hasCars')->get()->pluck('kota.city_name', 'kota.city_name');
+        // Memastikan near_location selalu memiliki data yang valid
+        $near_location = CarRental::with('kota', 'hasCars')
+            ->whereHas('hasCars')
+            ->get()
+            ->pluck('kota.city_name', 'kota.city_name')
+            ->unique()
+            ->sort();
+            
+        // Menambahkan opsi default
+        $near_location = collect(['' => 'Pilih Lokasi'])->merge($near_location);
 
         $data['car_models'] = collect($car_models);
-        $data['near_location'] = collect($near_location);
+        $data['popular_brands'] = $popular_brands;
+        $data['near_location'] = $near_location;
         return view('pagesv2.car_rent.index', $data);
     }
 
@@ -281,6 +315,11 @@ class NewCarRentController extends Controller
             'search' => $search
         ]);
 
+        // Validasi lokasi
+        if (!$location && !$search) {
+            return redirect()->back()->with('error', 'Silakan pilih lokasi terlebih dahulu');
+        }
+
         // Jika ada parameter pencarian, cari berdasarkan nama bisnis
         if ($search) {
             $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
@@ -323,6 +362,11 @@ class NewCarRentController extends Controller
             // Filter berdasarkan car_model_id (untuk favorite cars)
             if ($car_model) {
                 $carsQuery->where('car_model_id', $car_model);
+            }
+            
+            // Filter berdasarkan brand_id (untuk favorite brands)
+            if ($request->brand_id) {
+                $carsQuery->where('brand_id', $request->brand_id);
             }
             
             $cars = $carsQuery->get();

@@ -342,6 +342,17 @@ class RecreationController extends Controller
         DB::beginTransaction();
         try {
             $recreationPackage = RecreationPackages::with('images')->findOrFail($id);
+            
+            // Check if the package is related to any transactions
+            $relatedTransactions = DB::table('detail_transaction_recreations')
+                ->where('recreationPackage_id', $id)
+                ->whereNull('deleted_at')
+                ->exists();
+            
+            if ($relatedTransactions) {
+                DB::rollBack();
+                return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan transaksi.']);
+            }
         
             if(count($recreationPackage->images) > 0) {
                 foreach($recreationPackage->images as $image) {
@@ -356,7 +367,7 @@ class RecreationController extends Controller
             return response()->json(['success' => 'Recreation package deleted successfully']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Failed to delete recreation package']);
+            return response()->json(['error' => 'Failed to delete recreation package: ' . $e->getMessage()]);
         }
         
 

@@ -17,7 +17,8 @@
                             </option>
                         </select>
                         <select name="location" id="location" class="form-control border-none max-w-200 py-0"
-                                    data-placeholder="Pilih Lokasi" autocomplete="on">
+                                    data-placeholder="Pilih Lokasi" autocomplete="on" required>
+                                <option value="">Pilih Lokasi</option>
                                 @foreach($near_location as $city)
                                     <option value="{{ $city }}" @if ($location==$city) selected @endif>{{ $city }}</option>
                                 @endforeach
@@ -68,9 +69,12 @@
                 @forelse ($cars as $car)
                 <div class="card shadow mb-1 w-100">
                     <div class="card-body d-flex flex-row">
-                        <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
-                            alt="..."
-                            onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                        <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
+                            <img src="{{ asset($car->brand->image ?? null) }}" 
+                                 class="card-img-aspect card-img-top"
+                                 alt="{{ $car->brand->name }}"
+                                 onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                        </div>
                         <div class="d-flex flex-column ms-5">
                             <span class="fw-bold mb-3">{{ $car->brand->name }}</span>
                             <div class="d-flex flex-row align-items-center">
@@ -116,3 +120,35 @@
 
 
 </div>
+
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Reset dropdown location ketika halaman dimuat
+        const locationSelect = document.getElementById('location');
+        if (locationSelect && !locationSelect.value) {
+            locationSelect.selectedIndex = 0;
+        }
+        
+        // Tambahkan event listener untuk form submit
+        const searchForm = document.querySelector('form[action="{{ route('car_rent.show') }}"]');
+        const searchButton = searchForm ? searchForm.querySelector('button[type="submit"]') : null;
+        
+        if (searchForm && searchButton) {
+            searchForm.addEventListener('submit', function(e) {
+                // Validasi field kota
+                if (!locationSelect.value) {
+                    e.preventDefault();
+                    alert('Silakan pilih lokasi terlebih dahulu');
+                    locationSelect.focus();
+                    return false;
+                }
+                
+                // Nonaktifkan tombol selama proses submit
+                searchButton.disabled = true;
+                searchButton.innerHTML = 'Mencari...';
+            });
+        }
+    });
+</script>
+@endpush

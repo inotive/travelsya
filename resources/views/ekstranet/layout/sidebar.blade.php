@@ -328,13 +328,17 @@ $isPemesananActive = in_array(Request::segment(2), [
                     <!--end:Menu link-->
                 </a>
                 <!--begin:Menu item-->
+                @if(count($recreations) > 0 || count($clinic) > 0 || count($carRentals) > 0 || count($busTravels) > 0 || count($hotel) > 0 || count($hostel) > 0)
                 <div class="menu-item pt-5">
                     <!--begin:Menu content-->
                     <div class="menu-content">
                         <span class="menu-heading fw-bold text-uppercase fs-7">Konfigurasi</span>
                     </div>
                 </div>
+                @endif
+                
                 {{-- Daftar Rekreasi --}}
+                @if (count($recreations) > 0)
                 <a href="{{ route('partner.daftar-rekreasi') }}"
                     class="menu-item {{ Request::segment(2) == 'daftar-rekreasi' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
@@ -346,6 +350,9 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
 
                 </a>
+                @endif
+                
+                @if (count($clinic) > 0)
                 <a href="{{ route('clinics.list') }}"
                     class="menu-item {{ Request::segment(2) == 'clinics' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
@@ -357,8 +364,9 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
                     <!--end:Menu link-->
                 </a>
+                @endif
 
-
+                @if (count($carRentals) > 0)
                 <a href="{{ route('partner.daftar.kendaraan') }}"
                     class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
@@ -370,7 +378,9 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
                     <!--end:Menu link-->
                 </a>
+                @endif
 
+                @if (count($busTravels) > 0)
                 <a href="{{ route('partner.daftar.bus-travel') }}"
                     class="menu-item {{ Request::segment(2) == 'daftar-bus-travel' ? 'here' : '' }} menu-accordion">
                     <!--begin:Menu link-->
@@ -382,6 +392,7 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
                     <!--end:Menu link-->
                 </a>
+                @endif
 
 
                 @if (count($hotel) > 0)
