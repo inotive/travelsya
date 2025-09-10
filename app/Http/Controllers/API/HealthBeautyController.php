@@ -466,7 +466,6 @@ class HealthBeautyController extends Controller
     public function list()
     {
         $datas = Clinic::active()->with('reviews', 'packages', 'kota')->get();
-
         $kesehatan = [];
         $cantik = [];
 
@@ -476,7 +475,7 @@ class HealthBeautyController extends Controller
                     $item = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                        'image' => null,
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
@@ -490,7 +489,7 @@ class HealthBeautyController extends Controller
                     $item2 = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                        'image' => null,
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
