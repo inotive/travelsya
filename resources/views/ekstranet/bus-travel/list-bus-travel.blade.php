@@ -17,6 +17,7 @@
                             <th>No</th>
                             <th>Gambar</th>
                             <th>Nama</th>
+                            <th>Peraturan atau Ketentuan</th>
                             {{-- <th class="text-center px-2">Class</th> --}}
                             <th>Jumlah Seat</th>
                             <th>Fasilitas</th>
@@ -34,14 +35,18 @@
                             <tr id="index_{{ $bus->id }}">
                                 <td>{{ $no++ }}</td>
                                 <td>
-                                    @if ($bus->image)
-                                        <img src="{{ asset('storage/buses/' . $bus->image) }}"
+                                    @php
+                                        $images = json_decode($bus->image, true);
+                                    @endphp
+                                    @if (!empty($images))
+                                        <img src="{{ asset('storage/buses/' . $images[0]) }}"
                                             style="width: 130px; height: 100px; object-fit: contain;">
                                     @else
                                         Tidak Ada Gambar
                                     @endif
                                 </td>
                                 <td>{{ $bus->name ?? '' }}</td>
+                                <td>{{ $bus->tos ?? '' }}</td>
                                 <td>{{ $bus->number_seats ?? '0' }}</td>
                                 <td style="max-width: 200px">
                                     @foreach ($bus->facilities as $facility)

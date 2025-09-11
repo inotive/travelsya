@@ -88,14 +88,19 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="fs-6 fw-semibold mb-2">Gambar</label>
-                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                        <input
+                            type="file"
+                            class="form-control"
+                            id="images"
+                            name="images[]"
+                            accept="image/*"
+                            multiple>
 
                         @error('image')
                             <span class="text-danger mt-1" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
-                        <input type="hidden" value="1">
                     </div>
                 </div>
 
@@ -121,14 +126,19 @@
                     @enderror
                 </div>
                 <br>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Peraturan atau Ketentuan</label>
+                    <textarea class="form-control" id="tos" name="tos" rows="3" placeholder="Masukkan Peraturan atau Ketentuan"></textarea>
+                </div>
 
                 <div class="row mt-5">
                     <div class="col">
                         <input
+                            id="backButton"
                             class="btn btn-secondary"
                             action="action"
                             onclick="window.history.go(-1); return false;"
-                            type="submit"
+                            type="button"
                             value="Kembali"
                         />
                     </div>

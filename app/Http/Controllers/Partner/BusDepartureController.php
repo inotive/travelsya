@@ -54,6 +54,36 @@ class BusDepartureController extends Controller
         return view('ekstranet.bus-travel.departures.index', compact('departures', 'routes', 'defaultBusId', 'allBuses'));
     }
 
+    public function index2($busId = null): View|Factory
+    {
+        $user = Auth::user();
+        $busTravelIds = BusTravels::where('user_id', $user->id)->pluck('id');
+        $busesQuery = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->with('busTravel');
+        $allBuses = $busesQuery->get()->mapWithKeys(fn($bus) =>
+            [$bus->id => $bus->busTravel->business_name . ' - ' . $bus->name]
+        );
+
+        if ($busId) {
+            $busesQuery->where('id', $busId);
+        }
+
+        $busIds = $busesQuery->pluck('id');
+
+        $departures = BusDeparture::whereIn('bus_travel_has_bus_id', $busIds)
+            ->with(['busTravel', 'from', 'to'])
+            ->orderBy('departure_time')
+            ->get();
+
+        $routes = BusRoute::orderBy('name', 'asc')->pluck('name', 'id');
+
+        return view('ekstranet.bus-travel.departures.index2', [
+            'departures'   => $departures,
+            'routes'       => $routes,
+            'defaultBusId' => $busId ?: $allBuses->keys()->first(),
+            'allBuses'     => $allBuses
+        ]);
+    }
+
 
     /**
      * Show the form for creating a new bus departure.

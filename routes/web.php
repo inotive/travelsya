@@ -511,7 +511,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         // Route::delete('bus-routes/delete/{id}', [\App\Http\Controllers\Partner\BusRouteController::class, 'destroy'])->name('partner.bus.routes.delete');
 
         // Bus departures management
-        Route::get('bus-departures', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures');
+        Route::get('bus-departures', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index2'])->name('partner.bus.departures');
         Route::get('bus-departures/bus/{busId}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures.bus');
         Route::post('bus-departures/store', [\App\Http\Controllers\Partner\BusDepartureController::class, 'store'])->name('partner.bus.departures.store');
         Route::post('bus-departures/update', [\App\Http\Controllers\Partner\BusDepartureController::class, 'update'])->name('partner.bus.departures.update');

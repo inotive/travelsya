@@ -298,7 +298,7 @@ $isPemesananActive = in_array(Request::segment(2), [
                             <!--end:Menu item-->
                         @endif
                     </div>
-                    
+
                 </div>
                 <a href="{{ route('partner.review') }}"
                     class="menu-item {{ Request::segment(2) == 'review' ? 'here' : '' }} menu-accordion">
@@ -371,18 +371,72 @@ $isPemesananActive = in_array(Request::segment(2), [
                     <!--end:Menu link-->
                 </a>
 
-                <a href="{{ route('partner.daftar.bus-travel') }}"
-                    class="menu-item {{ Request::segment(2) == 'daftar-bus-travel' ? 'here' : '' }} menu-accordion">
-                    <!--begin:Menu link-->
-                    <span class="menu-link">
-                        <span class="menu-icon">
-                            <i class="fas fa-bus fs-3"></i>
-                        </span>
-                        <span class="menu-title">Bus & Travel</span>
-                    </span>
-                    <!--end:Menu link-->
-                </a>
+                @php
+                    $isBusTravelActive = in_array(Request::segment(2), ['daftar-bus-travel', 'bus-departures']);
+                @endphp
 
+                @if (count($busTravels) > 0)
+                    @if ($isBusTravelActive)
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion here show" style="background-color: white;">
+                    @else
+                        <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+                    @endif
+
+                        <span class="menu-link {{ $isBusTravelActive ? 'main-accordion' : '' }}">
+                            <span class="menu-icon {{ $isBusTravelActive ? 'main-accordion' : '' }}">
+                                <i class="fas fa-bus fs-3"></i>
+                            </span>
+
+                            @if ($isBusTravelActive)
+                                <span class="menu-title main-accordion" style="color: white !important;">Bus & Travels</span>
+                            @else
+                                <span class="menu-title custom">Bus & Travels</span>
+                            @endif
+
+                            <span class="menu-arrow {{ $isBusTravelActive ? 'main-accordion' : '' }}"></span>
+                        </span>
+
+                        <div class="menu-sub menu-sub-accordion">
+                            <!-- Menu item: Bus -->
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'daftar-bus-travel')
+                                    <a class="menu-link" href="{{ route('partner.daftar.bus-travel') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Bus</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.daftar.bus-travel') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Daftar Bus & Travels</span>
+                                    </a>
+                                @endif
+                            </div>
+
+                            <!-- Menu item: Bus Departures -->
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'bus-departures')
+                                    <a class="menu-link" href="{{ route('partner.bus.departures') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Bus Departures</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.bus.departures') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Jadwal Keberangkatan</span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
 
                 @if (count($hotel) > 0)
                     @if (Request::segment(2) === 'management-hotel' || request()->query('category') === 'hotel')
