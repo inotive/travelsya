@@ -14,14 +14,14 @@
                     id="kt_datatable_zero_configuration">
                     <thead class="fw-bold">
                         <tr>
-                            <th>No</th>
-                            <th>Gambar</th>
-                            <th>Nama</th>
-                            <th>Peraturan atau Ketentuan</th>
+                            <th style="width: 50px">No</th>
+                            <th style=": 150px">Gambar</th>
+                            <th style=": 150px">Nama</th>
+                            {{-- <th style=": 250px">Peraturan atau Ketentuan</th> --}}
                             {{-- <th class="text-center px-2">Class</th> --}}
-                            <th>Jumlah Seat</th>
-                            <th>Fasilitas</th>
-                            <th>Status</th>
+                            <th style=": 100px">Jumlah Seat</th>
+                            <th style=": 180px">Fasilitas</th>
+                            <th style=": 70px">Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -46,7 +46,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $bus->name ?? '' }}</td>
-                                <td>{{ $bus->tos ?? '' }}</td>
+                                {{-- <td class="text-truncate" style="max-width: 250px">{{ $bus->tos ?? '' }}</td> --}}
                                 <td>{{ $bus->number_seats ?? '0' }}</td>
                                 <td style="max-width: 200px">
                                     @foreach ($bus->facilities as $facility)
@@ -176,6 +176,7 @@
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
                 "scrollY": "500px",
+                // "scrollX": true,
                 "scrollCollapse": true,
                 "language": {
                     "lengthMenu": "Show _MENU_",
@@ -278,5 +279,21 @@
             background: transparent;
             border: none;
         }
+
+        /* .dataTables_scrollHead {
+            overflow: hidden !important;
+        }
+
+        .dataTables_scrollBody {
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+        }
+
+        /* Prevent header misalignment when scrollbar shows */
+        /* table.dataTable {
+            width: 100% !important;
+            border-collapse: collapse;
+            table-layout: fixed; /* prevents column shift
+        } */
     </style>
 @endpush

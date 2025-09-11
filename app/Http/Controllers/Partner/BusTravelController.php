@@ -130,10 +130,13 @@ class BusTravelController extends Controller
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
         $facilities = BusFacility::all();
 
+        $selectedFacilities = $bus->facilities->pluck('bus_facility_id')->toArray();
+
         $view = [
             'bus' => $bus,
             'bus_travel' =>  $bus_travel,
-            'facilities' => $facilities
+            'facilities' => $facilities,
+            'selectedFacilities' => $selectedFacilities
         ];
 
         return view('ekstranet.bus-travel.update', $view);
@@ -164,13 +167,17 @@ class BusTravelController extends Controller
 
         $imageNames = json_decode($bus->image, true) ?? [];
 
-        if ($request->hasFile('images')) {
-            // Optional: delete old images if you want fresh ones
-            foreach ($imageNames as $old) {
-                Storage::disk('public')->delete('buses/' . $old);
-            }
-            $imageNames = []; // reset
+        if ($request->filled('removed_images')) {
+            $removedImages = json_decode($request->removed_images, true) ?? [];
 
+            foreach ($removedImages as $removed) {
+                Storage::disk('public')->delete('buses/' . $removed);
+
+                $imageNames = array_values(array_diff($imageNames, [$removed]));
+            }
+        }
+
+        if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('buses', $imageName, 'public');
