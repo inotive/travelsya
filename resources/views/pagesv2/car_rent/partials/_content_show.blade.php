@@ -1,3 +1,51 @@
+@push('css')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    /* Custom styling untuk Select2 agar sesuai dengan gaya halaman */
+    .select2-container--default .select2-selection--single {
+        border: none;
+        border-radius: 0;
+        height: calc(1.5em + 0.75rem + 2px);
+        padding: 0.375rem 0.75rem;
+        background-color: #fff;
+        max-width: 200px;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 1.5;
+        padding-left: 0;
+        padding-right: 0;
+        color: #212529;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: calc(1.5em + 0.75rem + 2px);
+        top: 0;
+    }
+    
+    /* Gaya khusus untuk dropdown lokasi */
+    #location + .select2-container {
+        max-width: 200px;
+    }
+    
+    /* Gaya untuk hasil pencarian Select2 */
+    .select2-results__option {
+        padding: 0.375rem 0.75rem;
+    }
+    
+    /* Gaya untuk opsi yang dipilih */
+    .select2-container--default .select2-results__option--selected {
+        background-color: #f8f9fa;
+    }
+    
+    /* Gaya untuk opsi yang dihover */
+    .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+        background-color: #f2416c;
+        color: white;
+    }
+</style>
+@endpush
+
 <div class="container mb-5">
     <section class="cars mt-5">
         <div class="card border mb-5">
@@ -122,8 +170,16 @@
 </div>
 
 @push('js')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Inisialisasi Select2 pada dropdown lokasi
+        $('#location').select2({
+            placeholder: "Pilih Lokasi",
+            allowClear: true,
+            width: '100%'
+        });
+        
         // Reset dropdown location ketika halaman dimuat
         const locationSelect = document.getElementById('location');
         if (locationSelect && !locationSelect.value) {
