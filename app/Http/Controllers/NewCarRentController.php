@@ -408,9 +408,12 @@ class NewCarRentController extends Controller
             $c['vendor'] = $ven;
         }
 
-        // Query konsisten untuk near_location - tampilkan semua kota
-        // Menggunakan query yang lebih sederhana untuk memastikan semua kota ditampilkan
-        $near_location = City::orderBy('city_name')->pluck('city_name', 'city_name');
+        $near_location = CarRental::with('kota', 'hasCars')
+            ->whereHas('hasCars')
+            ->get()
+            ->pluck('kota.city_name', 'kota.city_name')
+            ->unique()
+            ->sort();
         
         // Log jumlah kota yang ditampilkan
         \Log::info('Near location count: ' . $near_location->count());
