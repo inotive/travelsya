@@ -218,11 +218,14 @@ class NewCarRentController extends Controller
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-            // history point masuk dan keluar customer
-            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-            // point masuk - point keluar
-            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
-            $saldoPointCustomer = Auth::user()->point;
+            $totalPointUser = Auth::user()->point;
+            // Hitung 10% dari total poin yang dimiliki user, dan pastikan nilainya integer
+            $pointsToUse = floor($totalPointUser * 0.10);
+
+            // Poin yang digunakan tidak boleh melebihi total harga transaksi
+            $pointsToUse = min($pointsToUse, $amount);
+
+            $saldoPointCustomer = $pointsToUse;
             $fees = [
                 [
                     'type' => 'Point',
