@@ -23,12 +23,12 @@ class BusTravelController extends Controller
         $bus_travel_ids = BusTravels::where('user_id', $user->id)->pluck('id');
 
         // Get all bus travels for this user (used in view)
-        $bus_travel = BusTravels::whereIn('id', $bus_travel_ids)->latest()->get();
+        $bus_travel = BusTravels::whereIn('id', $bus_travel_ids)->orderBy('id', 'desc')->get();
 
         // Get all buses for ALL of the user's bus travels
         $buses = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
             ->whereIn('bus_travel_id', $bus_travel_ids)
-            ->latest()
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('ekstranet.bus-travel.list-bus-travel', [

@@ -27,13 +27,9 @@
                     </thead>
 
                     <tbody id="table-posts">
-                        @php
-                            $no = 1;
-                        @endphp
-
                         @foreach ($buses as $bus)
                             <tr id="index_{{ $bus->id }}">
-                                <td>{{ $no++ }}</td>
+                                <td></td>
                                 <td>
                                     @php
                                         $images = json_decode($bus->image, true);
@@ -174,7 +170,8 @@
 @push('add-script')
     <script>
         $(document).ready(function() {
-            $('#kt_datatable_zero_configuration').DataTable({
+            var table = $('#kt_datatable_zero_configuration').DataTable({
+                "order": [],
                 "scrollY": "500px",
                 // "scrollX": true,
                 "scrollCollapse": true,
@@ -193,6 +190,14 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
+
+            table.on('order.dt search.dt', function () {
+                let i = 1;
+ 
+                table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                    this.data(i++);
+                });
+            }).draw();
         });
 
         document.addEventListener('DOMContentLoaded', function() {
