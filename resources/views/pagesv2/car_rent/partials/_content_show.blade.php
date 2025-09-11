@@ -8,7 +8,6 @@
         height: calc(1.5em + 0.75rem + 2px);
         padding: 0.375rem 0.75rem;
         background-color: #fff;
-        max-width: 200px;
     }
     
     .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -25,7 +24,6 @@
     
     /* Gaya khusus untuk dropdown lokasi */
     #location + .select2-container {
-        max-width: 200px;
     }
     
     /* Gaya untuk hasil pencarian Select2 */
@@ -49,47 +47,33 @@
 <div class="container mb-5">
     <section class="cars mt-5">
         <div class="card border mb-5">
-            <form action="{{ route('car_rent.show') }}" method="post">
-                @csrf
-                <div class="card-body d-flex flex-row align-items-center">
-                    <div class="input-group d-flex flex-row align-items-center border-0" style="width: 75%;">
-                        <span class="input-group-text border-none bg-light">
-                            <i class="fa-solid fa-search"></i>
-                        </span>
-                        <select name="category" id="category"
-                            class="form-control border-none border-right-2 max-w-200 py-0">
-                            <option value="">Semua Cara Rental</option>
-                            <option @if ($category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver
-                            </option>
-                            <option @if ($category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci
-                            </option>
-                        </select>
-                        <select name="location" id="location" class="form-control border-none max-w-200 py-0"
-                                    data-placeholder="Pilih Lokasi" autocomplete="on" required>
-                                <option value="">Pilih Lokasi</option>
-                                @foreach($near_location as $city)
-                                    <option value="{{ $city }}" @if ($location==$city) selected @endif>{{ $city }}</option>
-                                @endforeach
-                            </select>
-                        <input type="text" name="date" id="date" onfocus="(this.type='date')"
-                            class="form-control border-none border-left-2  max-w-200 py-0"
-                            value="{{ $date != '' ? $date : date('Y-m-d') }}"
-                            placeholder="tanggal sewa">
-                        <span class="input-group-text border-none bg-light">
-                            <i class="fa-solid fa-dot-circle fs-8"></i>
-                        </span>
-                        <input type="time" name="time" id="time"
-                            class="form-control border-none border-right-2 max-w-150 py-0"
-                            value="{{ $time != '' ? $time : date('H:i', strtotime(now())) }}">
-                        <input type="number" name="duration" class="form-control border-none py-0 max-w-50 pe-0"
-                            id="duration" value="{{ $duration ? $duration : 1 }}" size="5" placeholder="durasi">
-                        <div class="d-flex align-items-center">Hari</div>
-                    </div>
-                    <button type="submit"
-                        class="bg-danger bg-opacity-25 text-danger btn btn-outline-danger ms-sm-auto">Cari</button>
-                </div>
-            </form>
+    <form action="{{ route('car_rent.show') }}" method="post">
+        @csrf
+        <div class="card-body d-flex align-items-center">
+            <div class="input-group flex-grow-1 flex-nowrap bg-light rounded">
+                <span class="input-group-text bg-transparent border-0">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <select name="category" id="category" class="form-select bg-transparent border-0 shadow-none" style="width: 200px; flex-shrink: 0;">
+                    <option value="">Semua Cara Rental</option>
+                    <option @if ($category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver</option>
+                    <option @if ($category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci</option>
+                </select>
+                <select name="location" id="location" class="form-select bg-transparent border-0 shadow-none" style="max-width: 220px;" data-placeholder="Pilih Lokasi" autocomplete="on" required>
+                    <option value="">Pilih Lokasi</option>
+                    @foreach($near_location as $city)
+                        <option value="{{ $city }}" @if ($location==$city) selected @endif>{{ $city }}</option>
+                    @endforeach
+                </select>
+                <input type="text" name="date" id="date" onfocus="(this.type='date')" class="form-control bg-transparent border-0 shadow-none" value="{{ $date != '' ? $date : date('Y-m-d') }}" placeholder="tanggal sewa">
+                <input type="time" name="time" id="time" class="form-control bg-transparent border-0 shadow-none" value="{{ $time != '' ? $time : date('H:i', strtotime(now())) }}" style="width: 140px; flex-shrink: 0;">
+                <input type="number" name="duration" class="form-control bg-transparent border-0 shadow-none" id="duration" value="{{ $duration ? $duration : 1 }}" placeholder="durasi" style="width: 90px; flex-shrink: 0;">
+                <span class="input-group-text bg-transparent border-0">Hari</span>
+            </div>
+            <button type="submit" class="btn btn-danger ms-3">Cari</button>
         </div>
+    </form>
+</div>
 
         <div class="d-flex justify-content-between align-items-center p-5 mb-25px">
             <div>
