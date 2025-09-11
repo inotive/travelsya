@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Partner;
 
 use App\Http\Controllers\Controller;
 use App\Models\BusDeparture;
-use App\Models\BusRoute;
+use App\Models\City;
 use App\Models\BusTravelHasBus;
 use App\Models\BusTravels;
 use Illuminate\Http\Request;
@@ -47,11 +47,11 @@ class BusDepartureController extends Controller
             ->orderBy('departure_time', 'asc')
             ->get();
 
-        $routes = BusRoute::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
         $defaultBusId = $busId ?: ($allBuses->keys()->first());
 
-        return view('ekstranet.bus-travel.departures.index', compact('departures', 'routes', 'defaultBusId', 'allBuses'));
+        return view('ekstranet.bus-travel.departures.index', compact('departures', 'cities', 'defaultBusId', 'allBuses'));
     }
 
     public function index2($busId = null): View|Factory
@@ -74,11 +74,11 @@ class BusDepartureController extends Controller
             ->orderBy('departure_time')
             ->get();
 
-        $routes = BusRoute::orderBy('name', 'asc')->pluck('name', 'id');
+        $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id');
 
         return view('ekstranet.bus-travel.departures.index2', [
             'departures'   => $departures,
-            'routes'       => $routes,
+            'cities'       => $cities,
             'defaultBusId' => $busId ?: $allBuses->keys()->first(),
             'allBuses'     => $allBuses
         ]);
@@ -109,10 +109,10 @@ class BusDepartureController extends Controller
             }
         }
 
-        // Get all routes
-        $routes = BusRoute::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        // Get all cities
+        $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
-        return view('ekstranet.bus-travel.departures.create', compact('buses', 'routes'));
+        return view('ekstranet.bus-travel.departures.create', compact('buses', 'cities'));
     }
 
     /**
@@ -125,8 +125,10 @@ class BusDepartureController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'bus_travel_has_bus_id' => 'required|exists:bus_travel_has_buses,id',
-            'from_route_id' => 'required|exists:bus_routes,id',
-            'to_route_id' => 'required|exists:bus_routes,id|different:from_route_id',
+            'from_city_id' => 'required|exists:cities,id',
+            'to_city_id' => 'required|exists:cities,id|different:from_city_id',
+            'titik_naik' => 'required|string',
+            'titik_turun' => 'required|string',
             'departure_date' => 'required|date',
             'departure_time' => 'required',
             'duration' => 'required|integer|min:1',
@@ -157,8 +159,10 @@ class BusDepartureController extends Controller
 
         BusDeparture::create([
             'bus_travel_has_bus_id' => $request->bus_travel_has_bus_id,
-            'from_route_id' => $request->from_route_id,
-            'to_route_id' => $request->to_route_id,
+            'from_city_id' => $request->from_city_id,
+            'to_city_id' => $request->to_city_id,
+            'titik_naik' => $request->titik_naik,
+            'titik_turun' => $request->titik_turun,
             'departure_time' => $departureDateTime,
             'duration' => $request->duration,
             'price' => $request->price,
@@ -203,10 +207,10 @@ class BusDepartureController extends Controller
             }
         }
 
-        // Get all routes
-        $routes = BusRoute::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
+        // Get all cities
+        $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
-        return view('ekstranet.bus-travel.departures.edit', compact('departure', 'buses', 'routes'));
+        return view('ekstranet.bus-travel.departures.edit', compact('departure', 'buses', 'cities'));
     }
 
     /**
@@ -220,8 +224,10 @@ class BusDepartureController extends Controller
         $validator = Validator::make($request->all(), [
             'id' => 'required|exists:bus_departures,id',
             'bus_travel_has_bus_id' => 'required|exists:bus_travel_has_buses,id',
-            'from_route_id' => 'required|exists:bus_routes,id',
-            'to_route_id' => 'required|exists:bus_routes,id|different:from_route_id',
+            'from_city_id' => 'required|exists:cities,id',
+            'to_city_id' => 'required|exists:cities,id|different:from_city_id',
+            'titik_naik' => 'required|string',
+            'titik_turun' => 'required|string',
             'departure_date' => 'required|date',
             'departure_time' => 'required',
             'duration' => 'required|integer|min:1',
@@ -261,8 +267,10 @@ class BusDepartureController extends Controller
 
         $departure->update([
             'bus_travel_has_bus_id' => $request->bus_travel_has_bus_id,
-            'from_route_id' => $request->from_route_id,
-            'to_route_id' => $request->to_route_id,
+            'from_city_id' => $request->from_city_id,
+            'to_city_id' => $request->to_city_id,
+            'titik_naik' => $request->titik_naik,
+            'titik_turun' => $request->titik_turun,
             'departure_time' => $departureDateTime,
             'duration' => $request->duration,
             'price' => $request->price,
