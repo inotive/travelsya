@@ -52,12 +52,8 @@
                                     }} order</span>
                             </div>
                             <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                <span class="rating-number">Air Mineral</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-user checked me-2"></span>
-                                <span class="rating-number">Supir bisa bahasa inggris</span>
+                                <span class="bintang fa-solid fa-location-dot checked me-2"></span>
+                                <span class="rating-number">{{ $v['location'] ?? ($v->carRental->kota->city_name ?? 'Lokasi tidak diketahui') }}</span>
                             </div>
                         </div>
                         <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">

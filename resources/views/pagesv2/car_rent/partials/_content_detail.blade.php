@@ -29,8 +29,8 @@
                             </tr>
                             <tr style="border-top: 2px dashed black;">
                                 <td>
-                                    <span class="fa-solid fa-suitcase"></span>
-                                    <span class="ms-2">Air Mineral</span>
+                                    <span class="fa-solid fa-location-dot"></span>
+                                    <span class="ms-2">{{ $car->carRental->kota->city_name ?? 'Lokasi Tidak Diketahui' }}</span>
                                 </td>
                                 <td>
                                     <span class="fa-solid fa-user"></span>
