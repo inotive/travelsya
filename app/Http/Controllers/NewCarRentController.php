@@ -35,8 +35,16 @@ class NewCarRentController extends Controller
 
         // $carRent = CarRental::withCount('hasCars')->where('business_name', 'like', $find)->get();
         $cars = CarRentalHasCars::with('carRental', 'carRental.kota', 'brand', 'carModel')
-            ->whereHas('carRental', function($q) use($find) {
-                $q->where('business_name', 'like', $find);
+            ->where(function ($query) use ($find) {
+                $query->whereHas('carRental', function($q) use($find) {
+                    $q->where('business_name', 'like', $find);
+                })
+                ->orWhereHas('brand', function($q) use($find) {
+                    $q->where('name', 'like', $find);
+                })
+                ->orWhereHas('carModel', function($q) use($find) {
+                    $q->where('name', 'like', $find);
+                });
             })
             ->get();
 

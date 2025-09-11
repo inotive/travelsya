@@ -19,7 +19,7 @@
                             <i class="fa-solid fa-search"></i>
                         </span>
                         <input type="text" name="search" id="find" class="form-control search-input"
-                            placeholder="Cari tempat rental mobil langganan kamu disini" 
+                            placeholder="Cari rental, merk, atau model mobil" 
                             onkeyup="findData()" />
                         <button type="submit" class="btn btn-danger" style="border-radius: 0 50px 50px 0;">
                             <i class="fa-solid fa-arrow-right"></i>
@@ -39,20 +39,27 @@
 </div>
 @push('js')
 <script>
-    const searchInput = document.querySelector('input[id="find"]');
-    
-    // Handle focus event
-    searchInput.addEventListener("focus", (event) => {
-        $('#card_result').removeClass('d-none');
-    });
+    $(document).ready(function() {
+        const searchInput = document.querySelector('input[id="find"]');
+        const searchForm = document.getElementById('search-form');
+        
+        if (searchInput) {
+            searchInput.addEventListener("focus", (event) => {
+                $('#card_result').removeClass('d-none');
+            });
 
-    // Handle blur event
-    searchInput.addEventListener("blur", (event) => {
-        $("#card_result").delay(500).queue(function() {
-            $('#card_result').addClass('d-none');
-            $('#search-wrapper').empty();
-            $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>');
-        });
+            searchInput.addEventListener("blur", (event) => {
+                setTimeout(function() {
+                    $('#card_result').addClass('d-none');
+                }, 250);
+            });
+        }
+
+        if (searchForm) {
+            searchForm.addEventListener('submit', function() {
+                $('#card_result').addClass('d-none');
+            });
+        }
     });
 
     function findData(){
@@ -71,15 +78,14 @@
                 data: {
                     name : val
                 },
-                success : function($res){
-                    if($res){
+                success : function(res){
+                    if(res){
                         $('#search-wrapper').empty();
-                        $('#search-wrapper').append($res);
+                        $('#search-wrapper').append(res);
                     }else{
                         $('#search-wrapper').empty();
                         $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Tidak ada data</div>');
                     }
-
                 },
                 error: function(xhr, status, error) {
                     console.log('AJAX Error: ' + error);
@@ -88,8 +94,10 @@
                     $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Terjadi kesalahan saat mencari data</div>');
                 }
             });
+        } else {
+            $('#search-wrapper').empty();
+            $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>');
         }
-
     }
 </script>
 @endpush
