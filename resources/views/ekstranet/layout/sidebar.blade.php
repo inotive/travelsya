@@ -423,7 +423,7 @@ $isPemesananActive = in_array(Request::segment(2), [
                                         <span class="menu-bullet">
                                             <span class="bullet bullet-dot" style="background-color: white !important;"></span>
                                         </span>
-                                        <span class="menu-title" style="color: white !important;">Bus Departures</span>
+                                        <span class="menu-title" style="color: white !important;">Jadwal Keberangkatan</span>
                                     </a>
                                 @else
                                     <a class="menu-link" href="{{ route('partner.bus.departures') }}">

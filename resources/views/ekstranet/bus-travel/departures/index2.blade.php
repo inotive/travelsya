@@ -6,39 +6,50 @@
 
 @section('content-admin')
     <div class="card">
-        <div class="card-header border-0 pt-6">
-            <div class="card-title">
-                <div class="d-flex align-items-center position-relative my-1">
-                    <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-                            <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
-                                transform="rotate(45 17.0365 15.1223)" fill="black" />
-                            <path
-                                d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
-                                fill="black" />
-                        </svg>
-                    </span>
-                    <input type="text" id="searchInput" class="form-control form-control-solid w-250px ps-14"
-                        placeholder="Cari Jadwal" />
-                </div>
-            </div>
-            <div class="card-toolbar">
-                <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#createDepartureModal">
-                        <span class="svg-icon svg-icon-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none">
-                                <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
-                                    transform="rotate(-90 11.364 20.364)" fill="black" />
-                                <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="black" />
+        <form id="filterForm" action="{{ route('partner.bus.departures') }}" method="GET">
+            <div class="card-header border-0 pt-6">
+                <div class="card-title">
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <select id="busFilter" name="bus_id" class="form-select form-select-solid w-250px me-5">
+                            <option value="all">Semua Bus & Travel</option>
+                            @foreach($allBuses as $id => $name)
+                                <option value="{{ $id }}" {{ (isset($defaultBusId) && $defaultBusId == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="d-flex align-items-center position-relative my-1">
+                        <span class="svg-icon svg-icon-1 position-absolute ms-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1"
+                                    transform="rotate(45 17.0365 15.1223)" fill="black" />
+                                <path
+                                    d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z"
+                                    fill="black" />
                             </svg>
                         </span>
-                        Tambah Jadwal Baru
-                    </button>
+                        <input type="text" id="searchInput" name="search" class="form-control form-control-solid w-250px ps-14"
+                            placeholder="Cari Dari, Tujuan, Titik..." value="{{ $search ?? '' }}" />
+                    </div>
+                </div>
+                <div class="card-toolbar">
+                    <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#createDepartureModal">
+                            <span class="svg-icon svg-icon-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none">
+                                    <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1"
+                                        transform="rotate(-90 11.364 20.364)" fill="black" />
+                                    <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="black" />
+                                </svg>
+                            </span>
+                            Tambah Jadwal Baru
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </form>
 
         <div class="card-body pt-0">
             @if ($errors->any())
@@ -67,6 +78,7 @@
                     <thead class="sticky-top bg-light">
                         <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                             <th class="col-no">No</th>
+                            <th class="col-bus">Nama Bus & Travel</th>
                             <th class="col-from">Dari</th>
                             <th class="col-to">Tujuan</th>
                             <th class="col-pickup">Titik Naik</th>
@@ -78,38 +90,45 @@
                         </tr>
                     </thead>
                     <tbody class="text-gray-600 fw-bold">
-                        @foreach ($departures as $key => $departure)
+                        @forelse ($departures as $key => $departure)
                             <tr>
                                 <td class="col-no">{{ $key + 1 }}</td>
+                                <td class="col-bus" title="{{ $departure->busTravel->name ?? 'N/A' }}">
+                                    <div class="text-truncate">{{ $departure->busTravel->name ?? 'N/A' }}</div>
+                                </td>
                                 <td class="col-from" title="{{ $departure->from->city_name ?? 'N/A' }}">
                                     <div class="text-truncate">{{ $departure->from->city_name ?? 'N/A' }}</div>
                                 </td>
                                 <td class="col-to" title="{{ $departure->to->city_name ?? 'N/A' }}">
                                     <div class="text-truncate">{{ $departure->to->city_name ?? 'N/A' }}</div>
                                 </td>
-                                <td class="col-pickup" title="{{ $departure->titik_naik }}">
-                                    <div class="text-truncate">{{ $departure->titik_naik }}</div>
+                                <td class="col-pickup" title="{{ $departure->titik_naik ?? 'N/A' }}">
+                                    <div class="text-truncate" style="max-width: 100px">{{ $departure->titik_naik ?? 'N/A' }}</div>
                                 </td>
-                                <td class="col-dropoff" title="{{ $departure->titik_turun }}">
-                                    <div class="text-truncate">{{ $departure->titik_turun }}</div>
+                                <td class="col-dropoff" title="{{ $departure->titik_turun ?? 'N/A' }}">
+                                    <div class="text-truncate" style="max-width: 100px">{{ $departure->titik_turun ?? 'N/A' }}</div>
                                 </td>
                                 <td class="col-time">
-                                    <div class="text-nowrap">{{ $departure->departure_time }}</div>
+                                    <div class="text-nowrap">{{ $departure->departure_time ?? 'N/A' }}</div>
                                 </td>
-                                <td class="col-duration text-center">{{ $departure->duration }}</td>
+                                <td class="col-duration text-center">{{ $departure->duration ?? 'N/A' }}</td>
                                 <td class="col-price">
-                                    <div class="text-nowrap">Rp {{ number_format($departure->price, 0, ',', '.') }}</div>
+                                    <div class="text-nowrap">Rp {{ number_format($departure->price ?? 0, 0, ',', '.') }}</div>
                                 </td>
                                 <td class="col-actions">
                                     <div class="d-flex gap-1">
                                         <button type="button"
                                             class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
                                             data-bs-toggle="modal" data-bs-target="#editDepartureModal"
-                                            data-id="{{ $departure->id }}" data-bus="{{ $departure->bus_travel_has_bus_id }}"
-                                            data-from="{{ $departure->from_city_id }}" data-to="{{ $departure->to_city_id }}"
-                                            data-titik-naik="{{ $departure->titik_naik }}" data-titik-turun="{{ $departure->titik_turun }}"
+                                            data-id="{{ $departure->id }}"
+                                            data-bus="{{ $departure->bus_travel_has_bus_id }}"
+                                            data-from="{{ $departure->from_city_id }}"
+                                            data-to="{{ $departure->to_city_id }}"
+                                            data-titik-naik="{{ $departure->titik_naik }}"
+                                            data-titik-turun="{{ $departure->titik_turun }}"
                                             data-time="{{ $departure->departure_time }}"
-                                            data-duration="{{ $departure->duration }}" data-price="{{ $departure->price }}"
+                                            data-duration="{{ $departure->duration }}"
+                                            data-price="{{ $departure->price }}"
                                             data-days="{{ $departure->days }}"
                                             title="Edit">
                                             <span class="svg-icon svg-icon-3">
@@ -146,13 +165,23 @@
                                     </div>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="10" class="text-center py-4">
+                                    <div class="text-muted">Tidak ada data jadwal keberangkatan</div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    {{-- Include modals if they exist --}}
+    @if(view()->exists('ekstranet.bus-travel.departures.modals'))
         @include('ekstranet.bus-travel.departures.modals')
+    @endif
 @endsection
 
 @section('styles')
@@ -164,41 +193,16 @@
 }
 
 /* Column width definitions */
-.table-fixed .col-no {
-    width: 60px;
-}
-
-.table-fixed .col-from {
-    width: 120px;
-}
-
-.table-fixed .col-to {
-    width: 120px;
-}
-
-.table-fixed .col-pickup {
-    width: 100px;
-}
-
-.table-fixed .col-dropoff {
-    width: 100px;
-}
-
-.table-fixed .col-time {
-    width: 140px;
-}
-
-.table-fixed .col-duration {
-    width: 100px;
-}
-
-.table-fixed .col-price {
-    width: 120px;
-}
-
-.table-fixed .col-actions {
-    width: 100px;
-}
+.table-fixed .col-no { width: 60px; }
+.table-fixed .col-bus { width: 120px; }
+.table-fixed .col-from { width: 120px; }
+.table-fixed .col-to { width: 120px; }
+.table-fixed .col-pickup { width: 100px; }
+.table-fixed .col-dropoff { width: 100px; }
+.table-fixed .col-time { width: 140px; }
+.table-fixed .col-duration { width: 100px; }
+.table-fixed .col-price { width: 120px; }
+.table-fixed .col-actions { width: 100px; }
 
 /* Text truncation for long content */
 .text-truncate {
@@ -279,27 +283,90 @@
 @endsection
 
 @section('scripts')
-    <script>
-        @if($errors->any())
-            var createModal = new bootstrap.Modal(document.getElementById('createDepartureModal'), {});
+<script>
+$(document).ready(function() {
+    // Auto-submit when bus filter changes
+    $('#busFilter').on('input change', function() {
+        $('#filterForm').submit();
+    });
+
+    // Debounced search submit (refresh after typing stops)
+    let searchTimer;
+    $('#searchInput').on('input', function() {
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            $('#filterForm').submit();
+        }, 500); // adjust delay (ms) if needed
+    });
+
+    @if($errors->any())
+    try {
+        const createModal = new bootstrap.Modal(document.getElementById('createDepartureModal'));
+        if (createModal) {
             createModal.show();
-        @endif
+        }
+    } catch (error) {
+        console.error('Error showing create modal:', error);
+    }
+    @endif
 
-        // Delete modal data population
-        $('#deleteDepartureModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget);
-            var id = button.data('id');
-            var modal = $(this);
-            modal.find('#delete_departure_id').val(id);
-        });
+    $('#deleteDepartureModal').on('show.bs.modal', function(event) {
+        try {
+            const button = $(event.relatedTarget);
+            const id = button.data('id');
+            const modal = $(this);
 
-        // Add tooltip functionality for truncated text
-        $(document).ready(function() {
-            // Initialize tooltips for truncated content
+            if (id) {
+                modal.find('#delete_departure_id').val(id);
+            }
+        } catch (error) {
+            console.error('Error setting up delete modal:', error);
+        }
+    });
+
+    $('#editDepartureModal').on('show.bs.modal', function(event) {
+        try {
+            const button = $(event.relatedTarget);
+            const modal = $(this);
+
+            modal.find('#edit_departure_id').val(button.data('id'));
+            modal.find('#edit_bus_travel_has_bus_id').val(button.data('bus'));
+            modal.find('#edit_from_city_id').val(button.data('from'));
+            modal.find('#edit_to_city_id').val(button.data('to'));
+            modal.find('#edit_titik_naik').val(button.data('titik-naik'));
+            modal.find('#edit_titik_turun').val(button.data('titik-turun'));
+            modal.find('#edit_duration').val(button.data('duration'));
+            modal.find('#edit_price').val(button.data('price'));
+
+            const timeData = button.data('time');
+            if (timeData) {
+                const [date, time] = timeData.split(' ');
+                modal.find('#edit_departure_date').val(date);
+                modal.find('#edit_departure_time').val(time);
+            }
+
+            const daysData = button.data('days');
+            if (daysData) {
+                const daysArray = daysData.split(',');
+                modal.find('input[name="days[]"]').each(function() {
+                    $(this).prop('checked', daysArray.includes($(this).val()));
+                });
+            }
+        } catch (error) {
+            console.error('Error setting up edit modal:', error);
+        }
+    });
+
+    try {
+        if (typeof $().tooltip === 'function') {
             $('[title]').tooltip({
                 placement: 'top',
                 trigger: 'hover'
             });
-        });
-    </script>
+        }
+    } catch (error) {
+        console.error('Error initializing tooltips:', error);
+    }
+});
+</script>
 @endsection

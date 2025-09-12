@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Partner;
 use App\Http\Controllers\Controller;
 use App\Models\BusDeparture;
 use App\Models\City;
+use App\Models\BusRoute;
 use App\Models\BusTravelHasBus;
 use App\Models\BusTravels;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class BusDepartureController extends Controller
      * @param int|null $busId Optional bus ID to filter departures
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index($busId = null): View|Factory
+    public function index(Request $request, $busId = null): View|Factory
     {
         $user = Auth::user();
         $busTravels = BusTravels::where('user_id', $user->id)->get();
@@ -42,45 +43,85 @@ class BusDepartureController extends Controller
 
         $busIds = $busesQuery->pluck('id')->toArray();
 
-        $departures = BusDeparture::whereIn('bus_travel_has_bus_id', $busIds)
-            ->with(['busTravel', 'from', 'to'])
-            ->orderBy('departure_time', 'asc')
-            ->get();
+        $departuresQuery = BusDeparture::whereIn('bus_travel_has_bus_id', $busIds)
+            ->with(['busTravel', 'from', 'to']);
+
+        $search = $request->input('search');
+        if ($search) {
+            $departuresQuery->where(function ($query) use ($search) {
+                $query->where('titik_naik', 'like', '%' . $search . '%')
+                    ->orWhere('titik_turun', 'like', '%' . $search . '%')
+                    ->orWhereHas('from', function ($q) use ($search) {
+                        $q->where('city_name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('to', function ($q) use ($search) {
+                        $q->where('city_name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
+
+        $departures = $departuresQuery->orderBy('departure_time', 'asc')->get();
 
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
         $defaultBusId = $busId ?: ($allBuses->keys()->first());
 
-        return view('ekstranet.bus-travel.departures.index', compact('departures', 'cities', 'defaultBusId', 'allBuses'));
+        return view('ekstranet.bus-travel.departures.index', compact('departures', 'cities', 'defaultBusId', 'allBuses', 'search'));
     }
 
-    public function index2($busId = null): View|Factory
+    public function index2(Request $request)
     {
         $user = Auth::user();
         $busTravelIds = BusTravels::where('user_id', $user->id)->pluck('id');
+
+        // Base query for buses
         $busesQuery = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->with('busTravel');
+
+        // Get all buses for the filter dropdown
         $allBuses = $busesQuery->get()->mapWithKeys(fn($bus) =>
             [$bus->id => $bus->busTravel->business_name . ' - ' . $bus->name]
         );
 
-        if ($busId) {
-            $busesQuery->where('id', $busId);
+        // Get selected bus from request for filtering
+        $selectedBusId = $request->input('bus_id');
+
+        // Start building the departures query
+        $departuresQuery = BusDeparture::query()->with(['busTravel', 'from', 'to']);
+
+        // Filter by selected bus if a specific bus is chosen
+        if ($selectedBusId && $selectedBusId !== 'all') {
+            $departuresQuery->where('bus_travel_has_bus_id', $selectedBusId);
+        } else {
+            // If "All" is selected or no specific bus, get all departures for the user's travels
+            $userBusIds = $busesQuery->pluck('id');
+            $departuresQuery->whereIn('bus_travel_has_bus_id', $userBusIds);
         }
 
-        $busIds = $busesQuery->pluck('id');
+        // Handle search query
+        $search = $request->input('search');
+        if ($search) {
+            $departuresQuery->where(function ($query) use ($search) {
+                $query->where('titik_naik', 'like', '%' . $search . '%')
+                    ->orWhere('titik_turun', 'like', '%' . $search . '%')
+                    ->orWhereHas('from', function ($q) use ($search) {
+                        $q->where('city_name', 'like', '%' . $search . '%');
+                    })
+                    ->orWhereHas('to', function ($q) use ($search) {
+                        $q->where('city_name', 'like', '%' . $search . '%');
+                    });
+            });
+        }
 
-        $departures = BusDeparture::whereIn('bus_travel_has_bus_id', $busIds)
-            ->with(['busTravel', 'from', 'to'])
-            ->orderBy('departure_time')
-            ->get();
+        $departures = $departuresQuery->orderBy('departure_time')->get();
 
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id');
 
         return view('ekstranet.bus-travel.departures.index2', [
             'departures'   => $departures,
             'cities'       => $cities,
-            'defaultBusId' => $busId ?: $allBuses->keys()->first(),
-            'allBuses'     => $allBuses
+            'defaultBusId' => $selectedBusId, // Pass selected bus to the view
+            'allBuses'     => $allBuses,
+            'search'       => $search, // Pass search term to the view
         ]);
     }
 
@@ -108,7 +149,6 @@ class BusDepartureController extends Controller
                 $buses[$bus->id] = $busTravel->business_name . ' - ' . $bus->name;
             }
         }
-
         // Get all cities
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
@@ -139,6 +179,20 @@ class BusDepartureController extends Controller
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
+        }
+
+        $from_city_id = $request->input('from_city_id');
+        $to_city_id = $request->input('to_city_id');
+
+        $from_city = City::find($from_city_id);
+        $to_city = City::find($to_city_id);
+
+        if ($from_city) {
+            BusRoute::firstOrCreate(['name' => $from_city->city_name]);
+        }
+
+        if ($to_city) {
+            BusRoute::firstOrCreate(['name' => $to_city->city_name]);
         }
 
         $user = Auth::user();
@@ -238,6 +292,20 @@ class BusDepartureController extends Controller
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput();
+        }
+
+        $from_city_id = $request->input('from_city_id');
+        $to_city_id = $request->input('to_city_id');
+
+        $from_city = City::find($from_city_id);
+        $to_city = City::find($to_city_id);
+
+        if ($from_city) {
+            BusRoute::firstOrCreate(['name' => $from_city->city_name]);
+        }
+
+        if ($to_city) {
+            BusRoute::firstOrCreate(['name' => $to_city->city_name]);
         }
 
         $departure = BusDeparture::findOrFail($request->id);
