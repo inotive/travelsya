@@ -47,16 +47,20 @@
 
     /* Default state for text and bullets in dropdown */
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-title {
-        color: #f8f9fa;
+        color: #f8f9fa !important;
         /* A light, off-white color for inactive items */
     }
 
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link .menu-bullet .bullet-dot {
-        background-color: #f8f9fa;
+        background-color: #f8f9fa !important;
         /* Matching off-white */
     }
 
     /* Hover state for links in dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link:hover .menu-title {
         color: white !important;
     }
@@ -66,6 +70,10 @@
     }
 
     /* Active state for a link in the dropdown */
+    .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active {
+        background-color: rgba(255, 255, 255, 0.15) !important;
+    }
+    
     .menu-item.pemesanan-menu .menu-sub-accordion .menu-item .menu-link.active .menu-title {
         color: white !important;
         font-weight: bold;
