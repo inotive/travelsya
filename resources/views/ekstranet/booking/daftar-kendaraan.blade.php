@@ -81,9 +81,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $counter++ }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                             {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -98,23 +99,25 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
                                             @php
-                                                $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
-                                                $status = $booking->status ?? 'pending';
+                                                $status = $booking->status;
                                             @endphp
-                                            @if($isExpired && $status != 'verified')
+                                            @if($status == 'kedaluwarsa')
                                                 <span class="badge badge-danger">Kadaluarsa</span>
-                                            @elseif($status == 'verified')
+                                            @elseif($status == 'sudah_dipakai')
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($status != 'verified' && !$isExpired)
+                                            @php
+                                                $status = $booking->status;
+                                            @endphp
+                                            @if($status == 'belum_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
                                                     Verifikasi
                                                 </a>
-                                            @elseif($status == 'verified')
+                                            @elseif($status == 'sudah_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
@@ -151,7 +154,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @if(($booking->status ?? 'pending') == 'verified')
+                                    @if($booking->status == 'sudah_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">
@@ -199,11 +202,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @php
-                                        $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
-                                        $status = $booking->status ?? 'pending';
-                                    @endphp
-                                    @if($status != 'verified' && !$isExpired)
+                                    @if($booking->status == 'belum_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">
@@ -251,11 +250,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @php
-                                        $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
-                                        $status = $booking->status ?? 'pending';
-                                    @endphp
-                                    @if($isExpired && $status != 'verified')
+                                    @if($booking->status == 'kedaluwarsa')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">
@@ -289,12 +284,11 @@
 
     @foreach ($carrentalbookdates as $booking)
         @php
-            $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
-            $status = $booking->status ?? 'pending';
+            $status = $booking->status;
         @endphp
         
         {{-- Modal for verification --}}
-        @if($status != 'verified' && !$isExpired)
+        @if($status == 'belum_dipakai')
             <div class="modal fade" id="verificationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -318,7 +312,7 @@
         @endif
         
         {{-- Modal for cancellation verification --}}
-        @if($status == 'verified')
+        @if($status == 'sudah_dipakai')
             <div class="modal fade" id="cancellationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -363,7 +357,7 @@
         @endif
         
         {{-- Modal for expired bookings --}}
-        @if($isExpired && $status != 'verified')
+        @if($status == 'kedaluwarsa')
             <div class="modal fade" id="infoModalExpiredCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
