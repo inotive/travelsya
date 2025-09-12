@@ -7,10 +7,22 @@
             <div class="card-body p-3">
                 <div class="row">
                     <div class="col-3">
-                        <div class="card-img-container" style="overflow: hidden;">
-                            <img src="{{ asset($car->brand->image) }}"
-                                onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
-                                class="card-img-aspect img-fluid rounded shadow" alt="{{ $car->brand->name }}">
+                        <!-- Gambar Utama -->
+                        <div class="position-relative">
+                            <div class="card-img-container" style="overflow: hidden;">
+                                <img id="main-car-image"
+                                    src="{{ asset($car->brand->image) }}"
+                                    onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
+                                    class="card-img-aspect img-fluid rounded shadow" alt="{{ $car->brand->name }}">
+                            </div>
+                            
+                            <!-- Tombol untuk membuka modal gambar, jika ada lebih dari 1 gambar -->
+                            @if(isset($car->images) && $car->images->count() > 1)
+                            <button type="button" class="btn btn-sm btn-outline-light position-absolute bottom-0 end-0 m-2"
+                                data-bs-toggle="modal" data-bs-target="#carImagesModal">
+                                <i class="fas fa-images"></i> Lihat Semua Gambar
+                            </button>
+                            @endif
                         </div>
                     </div>
                     <div class="col-9 d-flex flex-column">
@@ -42,6 +54,61 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal untuk Semua Gambar Mobil -->
+        @if(isset($car->images) && $car->images->count() > 0)
+        <div class="modal fade" id="carImagesModal" tabindex="-1" aria-labelledby="carImagesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="carImagesModalLabel">Semua Gambar {{ $car->brand->name }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Carousel untuk Gambar -->
+                        <div id="carImagesCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach ($car->images as $index => $image)
+                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                        <div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
+                                            <img src="{{ asset($image->url ?? $image) }}" 
+                                                 class="d-block mw-100 mh-100" 
+                                                 style="object-fit: contain; max-height: 70vh;"
+                                                 alt="Gambar {{ $car->brand->name }} {{ $index + 1 }}"
+                                                 onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carImagesCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+                        <!-- Thumbnail Scrollable -->
+                        <div class="d-flex overflow-auto mt-3 py-2" style="gap: 10px;">
+                            @foreach ($car->images as $index => $image)
+                                <div class="flex-shrink-0">
+                                    <img src="{{ asset($image->url ?? $image) }}" 
+                                         class="img-thumbnail" 
+                                         style="width: 100px; height: 75px; object-fit: cover; cursor: pointer;"
+                                         alt="Thumbnail {{ $car->brand->name }} {{ $index + 1 }}"
+                                         data-bs-target="#carImagesCarousel" 
+                                         data-bs-slide-to="{{ $index }}"
+                                         onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
         <div class="card bg-danger bg-opacity-25 mb-35px">
             <div class="card-body d-flex flex-column">
