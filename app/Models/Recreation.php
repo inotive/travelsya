@@ -38,7 +38,7 @@ class Recreation extends Model
      */
     public function booked(): HasMany
     {
-        return $this->hasMany(detailTransactionRecreation::class, 'recreation_id', 'id');
+        return $this->hasMany(DetailTransactionRecreation::class, 'recreation_id', 'id');
     }
 
     /**
@@ -100,7 +100,7 @@ class Recreation extends Model
     public function categoryRecreation()
     {
         return $this->belongsTo(CategoryRecreation::class);
-    }       
+    }
 
     public function avgRating()
     {
