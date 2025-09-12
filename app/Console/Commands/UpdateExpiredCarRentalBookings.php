@@ -20,7 +20,7 @@ class UpdateExpiredCarRentalBookings extends Command
      *
      * @var string
      */
-    protected $description = 'Update status of expired car rental bookings to "kedaluwarsa"';
+    protected $description = 'Update status of car rental bookings to "kedaluwarsa" if start time is more than 6 hours ago';
 
     /**
      * Execute the console command.
@@ -29,9 +29,12 @@ class UpdateExpiredCarRentalBookings extends Command
     {
         $this->info('Updating expired car rental bookings...');
         
-        // Ambil semua booking dengan status 'belum_dipakai' dan end_date sudah lewat
+        // Hitung waktu 6 jam yang lalu
+        $sixHoursAgo = Carbon::now()->subHours(6);
+        
+        // Ambil semua booking dengan status 'belum_dipakai' dan start_date sudah lewat 6 jam
         $expiredBookings = DetailTransactionCarRental::where('status', 'belum_dipakai')
-            ->where('end', '<', Carbon::now())
+            ->where('start', '<', $sixHoursAgo)
             ->get();
             
         $count = $expiredBookings->count();

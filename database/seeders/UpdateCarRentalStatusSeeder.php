@@ -20,9 +20,12 @@ class UpdateCarRentalStatusSeeder extends Seeder
         // Update semua booking dengan status 'verified' tetap menjadi 'sudah_dipakai' (jika sudah ada)
         // Tidak perlu diubah karena sudah sesuai
         
-        // Update semua booking dengan end_date sudah lewat dan status 'belum_dipakai' menjadi 'kedaluwarsa'
+        // Hitung waktu 6 jam yang lalu
+        $sixHoursAgo = Carbon::now()->subHours(6);
+        
+        // Update semua booking dengan start_date sudah lewat 6 jam dan status 'belum_dipakai' menjadi 'kedaluwarsa'
         DetailTransactionCarRental::where('status', 'belum_dipakai')
-            ->where('end', '<', Carbon::now())
+            ->where('start', '<', $sixHoursAgo)
             ->update(['status' => 'kedaluwarsa']);
     }
 }
