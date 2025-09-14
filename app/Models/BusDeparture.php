@@ -13,6 +13,7 @@ class BusDeparture extends Model
     protected $fillable = [
         "bus_travel_has_bus_id",
         "departure_time",
+        "departure_date",
         "from_city_id",
         "to_city_id",
         "titik_naik",

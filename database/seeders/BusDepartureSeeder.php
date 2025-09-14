@@ -36,6 +36,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 1,
                 'departure_time' => '05:30',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 2,
                 'to_city_id' => 1,
                 'duration' => null,
@@ -47,6 +48,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 1,
                 'departure_time' => '10:00',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 1,
                 'to_city_id' => 2,
                 'duration' => null,
@@ -58,6 +60,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 2,
                 'departure_time' => '06:00',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 3,
                 'to_city_id' => 4,
                 'duration' => null,
@@ -69,6 +72,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 2,
                 'departure_time' => '13:00',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 4,
                 'to_city_id' => 3,
                 'duration' => null,
@@ -80,6 +84,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 3,
                 'departure_time' => '05:00',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 2,
                 'to_city_id' => 1,
                 'duration' => null,
@@ -91,6 +96,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 3,
                 'departure_time' => '08:30',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 1,
                 'to_city_id' => 2,
                 'duration' => null,
@@ -102,6 +108,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 4,
                 'departure_time' => '08:30',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 3,
                 'to_city_id' => 4,
                 'duration' => null,
@@ -113,6 +120,7 @@ class BusDepartureSeeder extends Seeder
             [
                 'bus_travel_has_bus_id' => 4,
                 'departure_time' => '15:00',
+                'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 4,
                 'to_city_id' => 3,
                 'duration' => null,

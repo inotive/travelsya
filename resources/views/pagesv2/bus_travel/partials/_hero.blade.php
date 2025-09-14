@@ -9,7 +9,7 @@
         <div class="col-12 col-md-6 banner-search">
             <div class="search-banner-wrapper w-500px">
                 <div class="card card-body p-3">
-                    <form action="{{ route('bus_travel.search') }}" method="post">
+                    <form action="{{ route('bus_travel.search') }}" method="post" id="heroSearchForm">
                         @csrf
 
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
@@ -71,22 +71,21 @@
                                 <i class="fa-solid fa-calendar-days"></i>
                             </span>
                             <input type="text" name="date_pergi" onfocus="(this.type='date')" class="form-control"
-                                placeholder="Tanggal reservasi" />
+                                placeholder="Tanggal reservasi" required />
                         </div>
                         <div class="input-group mb-4">
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-chair"></i>
                             </span>
                             <input type="number" name="jumlah_penumpang" class="form-control"
-                                placeholder="Jumlah Kursi" />
+                                placeholder="Jumlah Kursi" required />
                         </div>
                         <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</button>
-                    </div>
 
-                {{-- <a href="{{ route('register') }}" class="btn btn-danger w-100 fw-semibold bg-main">Cari
-                    Sekarang</a> --}}
+                    {{-- <a href="{{ route('register') }}" class="btn btn-danger w-100 fw-semibold bg-main">Cari
+                        Sekarang</a> --}}
 
-                </form>
+                    </form>
             </div>
         </div>
     </div>

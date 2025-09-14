@@ -373,6 +373,12 @@ class BusTravelController extends Controller
      */
     public function search(Request $request, $agent = null)
     {
+        // Log that we've reached the search method
+        \Log::info('BusTravelController@search called', [
+            'method' => $request->method(),
+            'all_inputs' => $request->all()
+        ]);
+
         // Validate required fields
         $request->validate([
             'kota_awal' => 'required|string',
@@ -455,6 +461,8 @@ class BusTravelController extends Controller
             ->when($request->kota_tujuan, fn($q) =>
                 $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
             )
+            // Filter by departure date
+            ->when($date, fn($q) => $q->whereDate('departure_time', $date))
             // Filter by day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
             ->when($date, function ($q) use ($date) {
                 $dayOfWeek = date('w', strtotime($date)); // 0 = Sunday, 1 = Monday, etc.
@@ -492,6 +500,8 @@ class BusTravelController extends Controller
                 ->when($request->kota_tujuan, fn($q) =>
                     $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
                 )
+                // Filter by return date
+                ->when($date_pulang, fn($q) => $q->whereDate('departure_time', $date_pulang))
                 // Filter by day of week for return date
                 ->when($date_pulang, function ($q) use ($date_pulang) {
                     $dayOfWeek = date('w', strtotime($date_pulang)); // 0 = Sunday, 1 = Monday, etc.
@@ -519,6 +529,24 @@ class BusTravelController extends Controller
                 ->get();
         }
 
+        // Format the bus data
+        $formattedPergi = $this->formatBus($pergi, $date);
+        $formattedPulang = $this->formatBus($pulang, $date_pulang);
+
+        // Check if there are no departures for the selected date but the route exists
+        $noDeparturesFound = false;
+        if (empty($formattedPergi) && $request->kota_awal && $request->kota_tujuan && $date) {
+            // Check if there are any departures for this route at all (regardless of date)
+            $anyRouteDepartures = BusDeparture::with('from', 'to')
+                ->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%'))
+                ->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
+                ->exists();
+            
+            if ($anyRouteDepartures) {
+                $noDeparturesFound = true;
+            }
+        }
+
         // --- Get only agents that actually have departures matching filters ---
         $availableAgentIds = $pergi->pluck('busTravel.busTravel.id')
             ->merge(collect($pulang)->pluck('busTravel.busTravel.id'))
@@ -541,10 +569,11 @@ class BusTravelController extends Controller
             'date_pergi' => $request->date_pergi,
             'date_pulang' => $request->date_pulang,
             'jumlah_penumpang' => $qty,
-            'pergi' => $this->formatBus($pergi, $date),
-            'pulang' => $this->formatBus($pulang, $date_pulang),
+            'pergi' => $formattedPergi,
+            'pulang' => $formattedPulang,
             'city' => BusRoute::pluck('name', 'name'),
             'routeData' => $routeData,
+            'noDeparturesFound' => $noDeparturesFound,
         ];
 
         return view('pagesv2.bus_travel.search_result', $newData);
