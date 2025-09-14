@@ -104,6 +104,9 @@
 </style>
 
 <script>
+    // Pass route data from PHP to JavaScript
+    const routeData = @json($routeData ?? []);
+
     function swapCities() {
         const kotaAwal = document.getElementById('kota_awal');
         const kotaTujuan = document.getElementById('kota_tujuan');
@@ -114,9 +117,81 @@
         // Swap the values
         kotaAwal.value = kotaTujuan.value;
         kotaTujuan.value = tempValue;
+
+        // Update dropdowns after swap
+        updateDestinationDropdown();
+        updateDepartureDropdown();
     }
 
+    function updateDestinationDropdown() {
+        const kotaAwal = document.getElementById('kota_awal');
+        const kotaTujuan = document.getElementById('kota_tujuan');
+        const selectedDeparture = kotaAwal.value;
+
+        // Store current destination value
+        const currentDestination = kotaTujuan.value;
+
+        // Clear destination options
+        kotaTujuan.innerHTML = '<option value="">Pilih kota tujuan</option>';
+
+        // If no departure selected, show all cities
+        if (!selectedDeparture || !routeData.departures || !routeData.departures[selectedDeparture]) {
+            @foreach ($city as $c)
+                kotaTujuan.innerHTML += '<option value="{{ $c }}"' + (currentDestination === "{{ $c }}" ? ' selected' : '') + '>{{ $c }}</option>';
+            @endforeach
+            return;
+        }
+
+        // Add only valid destinations for the selected departure
+        const validDestinations = routeData.departures[selectedDeparture];
+        kotaTujuan.innerHTML += '<option value="">Pilih kota tujuan</option>';
+        validDestinations.forEach(destination => {
+            kotaTujuan.innerHTML += '<option value="' + destination + '"' + (currentDestination === destination ? ' selected' : '') + '>' + destination + '</option>';
+        });
+    }
+
+    function updateDepartureDropdown() {
+        const kotaAwal = document.getElementById('kota_awal');
+        const kotaTujuan = document.getElementById('kota_tujuan');
+        const selectedDestination = kotaTujuan.value;
+
+        // Store current departure value
+        const currentDeparture = kotaAwal.value;
+
+        // Clear departure options
+        kotaAwal.innerHTML = '<option value="">Pilih kota berangkat</option>';
+
+        // If no destination selected, show all cities
+        if (!selectedDestination || !routeData.destinations || !routeData.destinations[selectedDestination]) {
+            @foreach ($city as $c)
+                kotaAwal.innerHTML += '<option value="{{ $c }}"' + (currentDeparture === "{{ $c }}" ? ' selected' : '') + '>{{ $c }}</option>';
+            @endforeach
+            return;
+        }
+
+        // Add only valid departures for the selected destination
+        const validDepartures = routeData.destinations[selectedDestination];
+        kotaAwal.innerHTML += '<option value="">Pilih kota berangkat</option>';
+        validDepartures.forEach(departure => {
+            kotaAwal.innerHTML += '<option value="' + departure + '"' + (currentDeparture === departure ? ' selected' : '') + '>' + departure + '</option>';
+        });
+    }
+
+    // Add event listeners when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        const kotaAwal = document.getElementById('kota_awal');
+        const kotaTujuan = document.getElementById('kota_tujuan');
+
+        if (kotaAwal) {
+            kotaAwal.addEventListener('change', updateDestinationDropdown);
+        }
+
+        if (kotaTujuan) {
+            kotaTujuan.addEventListener('change', updateDepartureDropdown);
+        }
+    });
+
     document.getElementById('myButton').addEventListener('click', function() {
-    document.getElementById('myIcon').classList.toggle('rotated');
+        document.getElementById('myIcon').classList.toggle('rotated');
     });
 </script>

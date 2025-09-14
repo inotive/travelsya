@@ -37,11 +37,38 @@ class BusTravelController extends Controller
     {
         $data['city'] = BusRoute::get()->pluck('name', 'name');
 
+        // Get route relationships for filtering
+        $routes = BusDeparture::with('from', 'to')->get();
+        $routeData = [];
+        foreach ($routes as $route) {
+            $from = $route->from->city_name ?? '';
+            $to = $route->to->city_name ?? '';
+            
+            if ($from && $to) {
+                // Add to departure routes (from city -> to cities)
+                if (!isset($routeData['departures'][$from])) {
+                    $routeData['departures'][$from] = [];
+                }
+                if (!in_array($to, $routeData['departures'][$from])) {
+                    $routeData['departures'][$from][] = $to;
+                }
+                
+                // Add to destination routes (to city <- from cities)
+                if (!isset($routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to] = [];
+                }
+                if (!in_array($from, $routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to][] = $from;
+                }
+            }
+        }
+        $data['routeData'] = $routeData;
+
         $route = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
 
         $data['route'] = $route->map(function ($r) {
-            $r['from'] = $r->departure->from->name ?? '-';
-            $r['to'] = $r->departure->to->name ?? '-';
+            $r['from'] = $r->departure->from->city_name ?? '-';
+            $r['to'] = $r->departure->to->city_name ?? '-';
 
             return $r;
         });
@@ -49,8 +76,8 @@ class BusTravelController extends Controller
         $route_travel = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
 
         $data['route_travel'] = $route_travel->map(function ($r) {
-            $r['from'] = $r->departure->from->name ?? '-';
-            $r['to'] = $r->departure->to->name ?? '-';
+            $r['from'] = $r->departure->from->city_name ?? '-';
+            $r['to'] = $r->departure->to->city_name ?? '-';
 
             return $r;
         });
@@ -346,15 +373,60 @@ class BusTravelController extends Controller
      */
     public function search(Request $request, $agent = null)
     {
+        // Validate required fields
+        $request->validate([
+            'kota_awal' => 'required|string',
+            'kota_tujuan' => 'required|string',
+            'date_pergi' => 'required|date',
+            'jumlah_penumpang' => 'required|integer|min:1',
+            'is_pulang_pergi' => 'required|in:0,1'
+        ], [
+            'kota_awal.required' => 'Kota awal wajib diisi.',
+            'kota_tujuan.required' => 'Kota tujuan wajib diisi.',
+            'date_pergi.required' => 'Tanggal pergi wajib diisi.',
+            'date_pergi.date' => 'Format tanggal pergi tidak valid.',
+            'jumlah_penumpang.required' => 'Jumlah penumpang wajib diisi.',
+            'jumlah_penumpang.integer' => 'Jumlah penumpang harus berupa angka.',
+            'jumlah_penumpang.min' => 'Jumlah penumpang minimal 1.',
+            'is_pulang_pergi.required' => 'Pilihan pulang pergi wajib diisi.',
+            'is_pulang_pergi.in' => 'Pilihan pulang pergi tidak valid.'
+        ]);
+
         $date = $request->date_pergi ?? now()->format('Y-m-d');
         $date_pulang = $request->date_pulang ?? null;
         $qty = $request->jumlah_penumpang ?: 1;
         $pp = $request->is_pulang_pergi ?? 0;
         $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
 
-        // --- Price parsing ---
+        // Get route relationships for filtering
+        $routes = BusDeparture::with('from', 'to')->get();
+        $routeData = [];
+        foreach ($routes as $route) {
+            $from = $route->from->city_name ?? '';
+            $to = $route->to->city_name ?? '';
+            
+            if ($from && $to) {
+                // Add to departure routes (from city -> to cities)
+                if (!isset($routeData['departures'][$from])) {
+                    $routeData['departures'][$from] = [];
+                }
+                if (!in_array($to, $routeData['departures'][$from])) {
+                    $routeData['departures'][$from][] = $to;
+                }
+                
+                // Add to destination routes (to city <- from cities)
+                if (!isset($routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to] = [];
+                }
+                if (!in_array($from, $routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to][] = $from;
+                }
+            }
+        }
+
+        // Parse price if provided (convert "100k" to 100000)
         $price = null;
-        if ($request->has('price') && is_numeric(str_replace(['k', 'K', '.'], '', $request->price))) {
+        if ($request->price) {
             $cleanInput = str_replace(['k', 'K', '.', ','], '', $request->price);
             $price = (int) $cleanInput;
             if (stripos($request->price, 'k') !== false) {
@@ -362,15 +434,15 @@ class BusTravelController extends Controller
             }
         }
 
-        // --- Time range parsing ---
+        // Parse time range if provided
         $timeRange = null;
-        if ($request->has('time') && $this->isTimeSearch($request->time)) {
+        if ($request->time) {
             $timeRange = $this->calculateTimeRange($request->time);
         }
 
-        // --- Facility search terms ---
+        // Parse facility search terms
         $facilityTerms = [];
-        if ($request->has('facility') && $this->isFacilitySearch($request->facility)) {
+        if ($request->facility) {
             $facilityTerms = $this->getFacilitySearchTerms($request->facility);
         }
 
@@ -378,11 +450,18 @@ class BusTravelController extends Controller
         $pergi = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
             ->has('busTravel')
             ->when($request->kota_awal, fn($q) =>
-                $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_awal . '%'))
+                $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%'))
             )
             ->when($request->kota_tujuan, fn($q) =>
-                $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_tujuan . '%'))
+                $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
             )
+            // Filter by day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+            ->when($date, function ($q) use ($date) {
+                $dayOfWeek = date('w', strtotime($date)); // 0 = Sunday, 1 = Monday, etc.
+                $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+                $dayName = $dayNames[$dayOfWeek];
+                $q->where('days', 'like', '%' . $dayName . '%');
+            })
             ->when($selected_agent, function ($q, $a) {
                 $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a));
             })
@@ -408,11 +487,18 @@ class BusTravelController extends Controller
             $pulang = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
                 ->has('busTravel')
                 ->when($request->kota_awal, fn($q) =>
-                    $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_awal . '%'))
+                    $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_awal . '%'))
                 )
                 ->when($request->kota_tujuan, fn($q) =>
-                    $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_tujuan . '%'))
+                    $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
                 )
+                // Filter by day of week for return date
+                ->when($date_pulang, function ($q) use ($date_pulang) {
+                    $dayOfWeek = date('w', strtotime($date_pulang)); // 0 = Sunday, 1 = Monday, etc.
+                    $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+                    $dayName = $dayNames[$dayOfWeek];
+                    $q->where('days', 'like', '%' . $dayName . '%');
+                })
                 ->when($selected_agent, function ($q, $a) {
                     $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a));
                 })
@@ -458,6 +544,7 @@ class BusTravelController extends Controller
             'pergi' => $this->formatBus($pergi, $date),
             'pulang' => $this->formatBus($pulang, $date_pulang),
             'city' => BusRoute::pluck('name', 'name'),
+            'routeData' => $routeData,
         ];
 
         return view('pagesv2.bus_travel.search_result', $newData);
@@ -477,10 +564,10 @@ class BusTravelController extends Controller
         $pergi = BusDeparture::with('busTravel', 'from', 'to')
             ->has('busTravel')
             ->whereHas('from', function ($f) use ($from) {
-                $f->where('name', 'like', $from);
+                $f->where('city_name', 'like', $from);
             })
             ->whereHas('to', function ($t) use ($to) {
-                $t->where('name', 'like', $to);
+                $t->where('city_name', 'like', $to);
             })
             ->when($selected_agent, function ($q, $a) {
                 $q->whereHas('busTravel.busTravel', function ($b2) use ($a) {
@@ -495,10 +582,10 @@ class BusTravelController extends Controller
             $pulang = BusDeparture::with('busTravel', 'from', 'to')
                 ->has('busTravel')
                 ->whereHas('to', function ($f) use ($from) {
-                    $f->where('name', 'like', $from);
+                    $f->where('city_name', 'like', $from);
                 })
                 ->whereHas('from', function ($t) use ($to) {
-                    $t->where('name', 'like', $to);
+                    $t->where('city_name', 'like', $to);
                 })
                 ->when($selected_agent, function ($q, $a) {
                     $q->whereHas('busTravel', function ($b) use ($a) {
@@ -555,9 +642,9 @@ class BusTravelController extends Controller
                 'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
                 'name' => $val['busTravel']['name'] ?? 'Deleted business',
                 'class' => $val['busTravel']['class'],
-                'departure_point' => $val['from']['name'] ?? 'Deleted point',
+                'departure_point' => $val['from']['city_name'] ?? 'Deleted point',
                 'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
-                'arrival_point' => $val['to']['name'] ?? 'Deleted point',
+                'arrival_point' => $val['to']['city_name'] ?? 'Deleted point',
                 'arrival_time' => Carbon::parse($val['departure_time'])->addHours($val['duration'] ?? 1)->format('H:i'),
                 'price' => $val['price'],
                 'duration' => $val['duration'],

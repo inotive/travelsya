@@ -111,12 +111,65 @@
 </div>
 
 <script>
+// Pass route data from PHP to JavaScript
+const routeDataFilter = @json($routeData ?? []);
+
 document.addEventListener('DOMContentLoaded', function () {
     const mainForm = document.getElementById('mainSearchForm');
     const naik = document.getElementById('naikSelect');
     const turun = document.getElementById('turunSelect');
 
     if (!naik || !turun) return;
+
+    function updateDestinationDropdown() {
+        const selectedDeparture = naik.value;
+
+        // Store current destination value
+        const currentDestination = turun.value;
+
+        // Clear destination options
+        turun.innerHTML = '<option value="">Turun dimana?</option>';
+
+        // If no departure selected, show all cities
+        if (!selectedDeparture || !routeDataFilter.departures || !routeDataFilter.departures[selectedDeparture]) {
+            @foreach ($city as $c)
+                turun.innerHTML += '<option value="{{ $c }}"' + (currentDestination === "{{ $c }}" ? ' selected' : '') + '>{{ $c }}</option>';
+            @endforeach
+            return;
+        }
+
+        // Add only valid destinations for the selected departure
+        const validDestinations = routeDataFilter.departures[selectedDeparture];
+        turun.innerHTML += '<option value="">Turun dimana?</option>';
+        validDestinations.forEach(destination => {
+            turun.innerHTML += '<option value="' + destination + '"' + (currentDestination === destination ? ' selected' : '') + '>' + destination + '</option>';
+        });
+    }
+
+    function updateDepartureDropdown() {
+        const selectedDestination = turun.value;
+
+        // Store current departure value
+        const currentDeparture = naik.value;
+
+        // Clear departure options
+        naik.innerHTML = '<option value="">Naik dari mana?</option>';
+
+        // If no destination selected, show all cities
+        if (!selectedDestination || !routeDataFilter.destinations || !routeDataFilter.destinations[selectedDestination]) {
+            @foreach ($city as $c)
+                naik.innerHTML += '<option value="{{ $c }}"' + (currentDeparture === "{{ $c }}" ? ' selected' : '') + '>{{ $c }}</option>';
+            @endforeach
+            return;
+        }
+
+        // Add only valid departures for the selected destination
+        const validDepartures = routeDataFilter.destinations[selectedDestination];
+        naik.innerHTML += '<option value="">Naik dari mana?</option>';
+        validDepartures.forEach(departure => {
+            naik.innerHTML += '<option value="' + departure + '"' + (currentDeparture === departure ? ' selected' : '') + '>' + departure + '</option>';
+        });
+    }
 
     function submitWithSync() {
         if (mainForm) {
@@ -155,8 +208,20 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = url;
     }
 
-    naik.addEventListener('change', submitWithSync);
-    turun.addEventListener('change', submitWithSync);
+    // Add event listeners
+    naik.addEventListener('change', function() {
+        updateDestinationDropdown();
+        submitWithSync();
+    });
+    
+    turun.addEventListener('change', function() {
+        updateDepartureDropdown();
+        submitWithSync();
+    });
+
+    // Initialize dropdowns on page load
+    updateDestinationDropdown();
+    updateDepartureDropdown();
 });
 </script>
 

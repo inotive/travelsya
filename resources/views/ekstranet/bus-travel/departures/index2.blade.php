@@ -17,7 +17,7 @@
                             @endforeach
                         </select>
                     </div>
-                    
+
                     <div class="d-flex align-items-center position-relative my-1">
                         <span class="svg-icon svg-icon-1 position-absolute ms-6">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -35,7 +35,7 @@
                 <div class="card-toolbar">
                     <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#createDepartureModal">
+                            data-bs-target="#createDepartureModalIndex2">
                             <span class="svg-icon svg-icon-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none">
@@ -119,7 +119,7 @@
                                     <div class="d-flex gap-1">
                                         <button type="button"
                                             class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm"
-                                            data-bs-toggle="modal" data-bs-target="#editDepartureModal"
+                                            data-bs-toggle="modal" data-bs-target="#editDepartureModalIndex2"
                                             data-id="{{ $departure->id }}"
                                             data-bus="{{ $departure->bus_travel_has_bus_id }}"
                                             data-from="{{ $departure->from_city_id }}"

@@ -29,7 +29,7 @@
                                     placeholder="Kota Tujuan">
                                     <option value="">Kota Tujuan</option>
                                     @foreach ($city as $c)
-                                        <option value="{{ $c }}" value="{{ $c }}"
+                                        <option value="{{ $c }}"
                                             {{ $kota_tujuan == $c ? 'selected' : '' }}>{{ $c }}</option>
                                     @endforeach
                                 </select>
