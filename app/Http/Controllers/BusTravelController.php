@@ -64,23 +64,18 @@ class BusTravelController extends Controller
         }
         $data['routeData'] = $routeData;
 
-        $route = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+        $popularRoutes = DetailTransactionBus::query()
+            ->select('from', 'to', DB::raw('COUNT(*) as orders_count'))
+            ->whereNotNull('from')
+            ->whereNotNull('to')
+            ->groupBy('from', 'to')
+            ->orderByDesc('orders_count')
+            ->limit(12)
+            ->get();
 
-        $data['route'] = $route->map(function ($r) {
-            $r['from'] = $r->departure->from->city_name ?? '-';
-            $r['to'] = $r->departure->to->city_name ?? '-';
+        $data['route'] = $popularRoutes;
 
-            return $r;
-        });
-
-        $route_travel = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
-
-        $data['route_travel'] = $route_travel->map(function ($r) {
-            $r['from'] = $r->departure->from->city_name ?? '-';
-            $r['to'] = $r->departure->to->city_name ?? '-';
-
-            return $r;
-        });
+        $data['route_travel'] = BusDeparture::with(['from', 'to'])->latest()->limit(12)->get();
 
         $data['popular'] = BusTravels::withCount('booked')->orderBy('booked_count', 'desc')->limit(8)->get();
 
@@ -381,8 +376,8 @@ class BusTravelController extends Controller
 
         // Validate required fields
         $request->validate([
-            'kota_awal' => 'required|string',
-            'kota_tujuan' => 'required|string',
+            'kota_awal' => 'nullable|string',
+            'kota_tujuan' => 'nullable|string',
             'date_pergi' => 'required|date',
             'jumlah_penumpang' => 'required|integer|min:1',
             'is_pulang_pergi' => 'required|in:0,1'

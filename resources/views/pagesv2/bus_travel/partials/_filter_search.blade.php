@@ -1,55 +1,50 @@
-<style>
-.scrollable-tabs::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
-}
-.scrollable-tabs {
-    -ms-overflow-style: none;  /* for Internet Explorer and Edge */
-    scrollbar-width: none;  /* for Firefox */
-}
-</style>
 <div class="container mb-50">
     <div class="row justify-content-between">
         <div class="col-md-8">
-            <div class="card d-flex flex-row align-items-center p-3">
-                <div class="pe-3">
+            <div class="card d-flex flex-row">
+                <div class="d-flex align-items-center">
                     <span class="fs-5">Berdasarkan Agen</span>
                 </div>
-                <div class="d-flex flex-row scrollable-tabs" style="overflow-x: auto; white-space: nowrap;">
-                    <div class="me-2">
-                        <form action="{{ route('bus_travel.search') }}" method="POST" class="d-inline-block">
-                            @csrf
-                            <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                            <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                            <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                            <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
-                            <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                            <button type="submit"
-                                class="badge badge-pills badge-outline {{ $selected_agent ==  null ? 'badge-danger' : 'badge-secondary' }} round fs-6 p-3">Semua
-                                Agent</button>
-                        </form>
-                    </div>
-                    @if($agent->isNotEmpty())
-                        @foreach ($agent as $a)
-                            <div class="me-2">
-                                <form action="{{ route('bus_travel.search') }}" method="POST" class="d-inline-block">
-                                    @csrf
-                                    <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                                    <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                                    <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                                    <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
-                                    <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                                    <input type="hidden" name="agent" value="{{ $a->business_name }}">
-                                    <button type="submit"
-                                        class="badge badge-pills badge-outline {{ $selected_agent == $a->business_name ? 'badge-danger' : 'badge-secondary' }} fs-6 round p-3">
-                                        {{ $a->business_name }}
-                                    </button>
-                                </form>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="ms-4 text-muted">Tidak ada agen untuk rute ini</div>
-                    @endif
+                <div class="ms-4">
+                    <form action="{{ route('bus_travel.search') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                        <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                        <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                        <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                        <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                        <button type="submit"
+                            class="badge badge-pills badge-outline {{ $selected_agent ==  null ? 'badge-danger' : 'badge-secondary' }} round fs-6 p-3">Semua
+                            Agent</button>
+                    </form>
                 </div>
+                @if($agent->isNotEmpty())
+                    @foreach ($agent->take(3) as $a)
+                        <div class="ms-4">
+                            <form action="{{ route('bus_travel.search') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                                <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                                <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                                <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                                <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                                <input type="hidden" name="agent" value="{{ $a->business_name }}">
+                                <button type="submit"
+                                    class="badge badge-pills badge-outline {{ $selected_agent == $a->business_name ? 'badge-danger' : 'badge-secondary' }} fs-6 round p-3">
+                                    {{ $a->business_name }}
+                                </button>
+                            </form>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="ms-4 text-muted">Tidak ada agen untuk rute ini</div>
+                @endif
+
+                {{-- <div class="ms-4">
+                    <a href="javascript:"
+                        class="badge badge-pills badge-outline badge-secondary bg-secondary round fs-6 p-3">+ 8
+                        Lainnya</a>
+                </div> --}}
             </div>
         </div>
         <div class="col-md-4">
@@ -218,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function () {
         updateDestinationDropdown();
         submitWithSync();
     });
-    
+
     turun.addEventListener('change', function() {
         updateDepartureDropdown();
         submitWithSync();

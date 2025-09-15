@@ -14,17 +14,17 @@ class BusRouteSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('bus_routes')->insert([
-            'name' => 'PADANG'
-        ]);
-        DB::table('bus_routes')->insert([
-            'name' => 'BUKITTINGGI'
-        ]);
-        DB::table('bus_routes')->insert([
-            'name' => 'JAKARTA'
-        ]);
-        DB::table('bus_routes')->insert([
-            'name' => 'BANDUNG'
-        ]);
+        // DB::table('bus_routes')->insert([
+        //     'name' => 'PADANG'
+        // ]);
+        // DB::table('bus_routes')->insert([
+        //     'name' => 'BUKITTINGGI'
+        // ]);
+        // DB::table('bus_routes')->insert([
+        //     'name' => 'JAKARTA'
+        // ]);
+        // DB::table('bus_routes')->insert([
+        //     'name' => 'BANDUNG'
+        // ]);
     }
 }

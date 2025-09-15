@@ -10,26 +10,15 @@ use App\Models\BusRoute;
 
 class BusDepartureSeeder extends Seeder
 {
+    private $cities;
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
         // Get all cities to check against
-        $cities = City::pluck('city_name', 'id')->toArray();
-        
-        // Function to ensure city exists in bus_route table
-        $ensureCityInBusRoute = function($cityId) use ($cities) {
-            if (isset($cities[$cityId])) {
-                $cityName = $cities[$cityId];
-                // Check if city already exists in bus_route
-                $existingRoute = BusRoute::where('name', $cityName)->first();
-                if (!$existingRoute) {
-                    // Add city to bus_route if it doesn't exist
-                    BusRoute::create(['name' => $cityName]);
-                }
-            }
-        };
+        $this->cities = City::pluck('city_name', 'id')->toArray();
 
         // Sample departure data
         $departures = [
@@ -134,11 +123,26 @@ class BusDepartureSeeder extends Seeder
         // Insert departures and ensure cities are in bus_route
         foreach ($departures as $departure) {
             // Ensure both from and to cities exist in bus_route
-            $ensureCityInBusRoute($departure['from_city_id']);
-            $ensureCityInBusRoute($departure['to_city_id']);
+            $this->ensureCityInBusRoute($departure['from_city_id']);
+            $this->ensureCityInBusRoute($departure['to_city_id']);
             
             // Insert the departure
             DB::table('bus_departures')->insert($departure);
+        }
+    }
+
+    /**
+     * Ensures that a city exists in the bus_route table.
+     *
+     * @param int $cityId
+     * @return void
+     */
+    private function ensureCityInBusRoute(int $cityId): void
+    {
+        if (isset($this->cities[$cityId])) {
+            $cityName = $this->cities[$cityId];
+            // Find the route by name or create it if it doesn't exist.
+            BusRoute::firstOrCreate(['name' => $cityName]);
         }
     }
 }
