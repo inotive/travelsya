@@ -353,6 +353,16 @@ class RecreationController extends Controller
                 DB::rollBack();
                 return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan transaksi.']);
             }
+            
+            // Check if the package is related to any ratings/reviews
+            $relatedRatings = DB::table('recreation_ratings')
+                ->where('recreation_packages_id', $id)
+                ->exists();
+            
+            if ($relatedRatings) {
+                DB::rollBack();
+                return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan rating atau ulasan.']);
+            }
         
             if(count($recreationPackage->images) > 0) {
                 foreach($recreationPackage->images as $image) {
