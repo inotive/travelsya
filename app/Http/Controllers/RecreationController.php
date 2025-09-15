@@ -76,8 +76,8 @@ class RecreationController extends Controller
                                             <h4 class="card-title text-capitalize">' . $fil['business_name'] . '</h4>
                                             <p class="card-text flex-grow-1 text-capitalize">' . ($fil['kota']['city_name'] ?? 'Deleted city') . '</p>
                                             <div class="d-flex justify-content-between align-items-center mt-auto">
-                                                <h4 style="color: rgb(255, 0, 0);">Rp. ' . number_format($fil['recreationPackages'][0]['price']) . $untill_price .
-                    '</h4>
+                                                <h4 style="color: rgb(255, 0, 0);">Rp. ' . number_format($fil['recreationPackages'][0]['price']) . $untill_price . '
+                    </h4>
                                                 <span class="card-text" style="color: rgb(255, 0, 0);">
                                                     <i class="fa fa-star"></i>&nbsp;(5)
                                                 </span>
@@ -167,7 +167,7 @@ class RecreationController extends Controller
         $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
 
         preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
-        $expiryTypes = explode("','", $matches[1]);
+        $expiryTypes = explode(",'", $matches[1]);
 
         return view('ekstranet.rekreasi.create', [
             'data' => $data,
@@ -204,7 +204,7 @@ class RecreationController extends Controller
                 ->where('id', $recreationId)
                 ->first();
             
-            $price = (int) preg_replace('/[^\d]/', '', $request->price);
+            $price = (int) preg_replace('/[^\\d]/', '', $request->price);
 
             $request['category_recreation_id'] = $categoryRecreation->id;
             $request['price'] = $price;
@@ -259,7 +259,7 @@ class RecreationController extends Controller
 
         $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
         preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
-        $expiryTypes = explode("','", $matches[1]);
+        $expiryTypes = explode(",'", $matches[1]);
 
         $category = DB::table('category_recreations')->get();
 
@@ -284,36 +284,73 @@ class RecreationController extends Controller
             'price' => 'required',
             'is_active' => 'required|boolean',
             'recreation_id' => 'required|exists:recreations,id',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'deleted_images' => 'nullable|array',
+            'deleted_images.*' => 'integer|exists:recreation_packages_images,id'
         ]);
 
         DB::beginTransaction();
 
         try {
-            $recreationPackage = RecreationPackages::with('images')->findOrFail($id);
-            // Handle multiple image uploads
-            if ($request->hasFile('images')) {
-                if(count($recreationPackage->images) > 0) {
-                    foreach($recreationPackage->images as $image) {
-                        Storage::delete($image->image);
+            $recreationPackage = RecreationPackages::findOrFail($id);
+
+            // 1. Handle Image Deletion
+            if ($request->has('deleted_images')) {
+                foreach ($request->deleted_images as $imageId) {
+                    $image = RecreationPackagesImages::find($imageId);
+                    if ($image) {
+                        Storage::disk('public')->delete($image->image);
                         $image->delete();
                     }
                 }
-                foreach ($request->file('images') as $key => $image) {
+            }
+
+            // 2. Handle Main Image Upload
+            if ($request->hasFile('main_image')) {
+                // Delete old main image if it exists
+                $oldMainImage = $recreationPackage->images()->where('main', 1)->first();
+                if ($oldMainImage) {
+                    Storage::disk('public')->delete($oldMainImage->image);
+                    $oldMainImage->delete();
+                }
+
+                // Store new main image
+                $imagePath = $request->file('main_image')->store('images/recreation_package_images', 'public');
+                RecreationPackagesImages::create([
+                    'recreation_package_id' => $recreationPackage->id,
+                    'image' => $imagePath,
+                    'main' => 1
+                ]);
+            }
+
+            // 3. Handle Additional Images Upload
+            if ($request->hasFile('additional_images')) {
+                foreach ($request->file('additional_images') as $image) {
                     $imagePath = $image->store('images/recreation_package_images', 'public');
-                        
-                    // Set the first image as main image
-                    $isMain = ($key === 0) ? 1 : 0;
-                        
                     RecreationPackagesImages::create([
-                        'recreation_package_id' => $id,
+                        'recreation_package_id' => $recreationPackage->id,
                         'image' => $imagePath,
-                        'main' => $isMain
+                        'main' => 0
                     ]);
                 }
             }
-            $price = (int) preg_replace('/[^\d]/', '', $request->price);
-            $request['price'] = $price;
-            $recreationPackage->update($request->all());
+
+            // 4. Update Package Details
+            $price = (int) preg_replace('/[^\\d]/', '', $request->price);
+            
+            $recreationPackage->update([
+                'name' => $request->name,
+                'rules' => $request->rules,
+                'description' => $request->description,
+                'duration' => $request->duration,
+                'expiry_date' => $request->expiry,
+                'expiry_type' => $request->expiry_type,
+                'unit_price' => $request->unit_price,
+                'price' => $price,
+                'is_active' => $request->is_active,
+                'recreation_id' => $request->recreation_id,
+            ]);
 
             DB::commit();
             return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
@@ -321,7 +358,7 @@ class RecreationController extends Controller
             DB::rollBack();
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'Gagal mengubah rekreasi!'])
+                ->withErrors(['error' => 'Gagal mengubah rekreasi! ' . $e->getMessage()])
                 ->withInput();
         }
     }
