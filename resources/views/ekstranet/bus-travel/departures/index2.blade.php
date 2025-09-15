@@ -83,6 +83,7 @@
                             <th class="col-to">Tujuan</th>
                             <th class="col-pickup">Titik Naik</th>
                             <th class="col-dropoff">Titik Turun</th>
+                            <th class="col-date">Tanggal Keberangkatan</th>
                             <th class="col-time">Waktu Berangkat</th>
                             <th class="col-duration">Durasi (Jam)</th>
                             <th class="col-price">Harga</th>
@@ -108,6 +109,9 @@
                                 <td class="col-dropoff" title="{{ $departure->titik_turun ?? 'N/A' }}">
                                     <div class="text-truncate" style="max-width: 100px">{{ $departure->titik_turun ?? 'N/A' }}</div>
                                 </td>
+                                <td class="col-date">
+                                    <div class="text-nowrap">{{ $departure->departure_date ?? 'N/A' }}</div>
+                                </td>
                                 <td class="col-time">
                                     <div class="text-nowrap">{{ $departure->departure_time ?? 'N/A' }}</div>
                                 </td>
@@ -127,6 +131,7 @@
                                             data-titik-naik="{{ $departure->titik_naik }}"
                                             data-titik-turun="{{ $departure->titik_turun }}"
                                             data-time="{{ $departure->departure_time }}"
+                                            data-tanggal="{{ $departure->departure_date}}"
                                             data-duration="{{ $departure->duration }}"
                                             data-price="{{ $departure->price }}"
                                             data-days="{{ $departure->days }}"

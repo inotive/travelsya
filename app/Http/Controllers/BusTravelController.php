@@ -43,7 +43,7 @@ class BusTravelController extends Controller
         foreach ($routes as $route) {
             $from = $route->from->city_name ?? '';
             $to = $route->to->city_name ?? '';
-            
+
             if ($from && $to) {
                 // Add to departure routes (from city -> to cities)
                 if (!isset($routeData['departures'][$from])) {
@@ -52,7 +52,7 @@ class BusTravelController extends Controller
                 if (!in_array($to, $routeData['departures'][$from])) {
                     $routeData['departures'][$from][] = $to;
                 }
-                
+
                 // Add to destination routes (to city <- from cities)
                 if (!isset($routeData['destinations'][$to])) {
                     $routeData['destinations'][$to] = [];
@@ -410,7 +410,7 @@ class BusTravelController extends Controller
         foreach ($routes as $route) {
             $from = $route->from->city_name ?? '';
             $to = $route->to->city_name ?? '';
-            
+
             if ($from && $to) {
                 // Add to departure routes (from city -> to cities)
                 if (!isset($routeData['departures'][$from])) {
@@ -419,7 +419,7 @@ class BusTravelController extends Controller
                 if (!in_array($to, $routeData['departures'][$from])) {
                     $routeData['departures'][$from][] = $to;
                 }
-                
+
                 // Add to destination routes (to city <- from cities)
                 if (!isset($routeData['destinations'][$to])) {
                     $routeData['destinations'][$to] = [];
@@ -541,7 +541,7 @@ class BusTravelController extends Controller
                 ->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%'))
                 ->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
                 ->exists();
-            
+
             if ($anyRouteDepartures) {
                 $noDeparturesFound = true;
             }
@@ -672,8 +672,10 @@ class BusTravelController extends Controller
                 'name' => $val['busTravel']['name'] ?? 'Deleted business',
                 'class' => $val['busTravel']['class'],
                 'departure_point' => $val['from']['city_name'] ?? 'Deleted point',
+                'titik_naik' => $val['titik_naik'],
                 'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
                 'arrival_point' => $val['to']['city_name'] ?? 'Deleted point',
+                'titik_turun' => $val['titik_turun'],
                 'arrival_time' => Carbon::parse($val['departure_time'])->addHours($val['duration'] ?? 1)->format('H:i'),
                 'price' => $val['price'],
                 'duration' => $val['duration'],

@@ -102,8 +102,8 @@
                                     <i class="fa-solid fa-circle mb-1"></i>
                                 </div>
                                 <div class="d-flex ms-3 flex-column justify-content-between">
-                                    <strong>{{ $p['departure_point'] }}</strong>
-                                    <strong>{{ $p['arrival_point'] }}</strong>
+                                    <strong class="text-truncate" style="max-width: 500px;">{{ $p['departure_point'] }} | {{ $p['titik_naik'] }}</strong>
+                                    <strong class="text-truncate" style="max-width: 500px;">{{ $p['arrival_point'] }} | {{ $p['titik_turun'] }}</strong>
                                 </div>
                             </div>
                             <div class="d-flex text-secondary-strong mt-3 flex-wrap">

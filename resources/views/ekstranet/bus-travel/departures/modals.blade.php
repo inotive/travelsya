@@ -10,13 +10,18 @@
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="bus_travel_has_bus_id" class="form-label required">Bus</label>
-                        <select class="form-select" name="bus_travel_has_bus_id" id="bus_travel_has_bus_id" required>
-                            <option value="">Pilih Bus</option>
-                            @foreach ($allBuses as $id => $name)
-                                <option value="{{ $id }}" {{ $id == $defaultBusId ? 'selected' : '' }}>{{ $name }}</option>
-                            @endforeach
-                        </select>
+                        <label class="form-label required">Bus</label>
+                        @if($defaultBusId && isset($allBuses[$defaultBusId]))
+                            <p class="form-control-plaintext fw-bolder">{{ $allBuses[$defaultBusId] }}</p>
+                            <input type="hidden" name="bus_travel_has_bus_id" id="bus_travel_has_bus_id" value="{{ $defaultBusId }}">
+                        @else
+                            <select class="form-select" name="bus_travel_has_bus_id" id="bus_travel_has_bus_id" required>
+                                <option value="" selected>Pilih Bus</option>
+                                @foreach ($allBuses as $id => $name)
+                                    <option value="{{ $id }}">{{ $name }}</option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -30,22 +35,32 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="from_route_id" class="form-label required">Dari</label>
-                            <select class="form-select" name="from_route_id" id="from_route_id" required>
-                                <option value="">Pilih Rute Asal</option>
+                            <label for="from_city_id" class="form-label required">Dari</label>
+                            <select class="form-select" name="from_city_id" id="from_city_id" required>
+                                <option value="">Pilih Kota Asal</option>
                                 @foreach ($cities as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="to_route_id" class="form-label required">Tujuan</label>
-                            <select class="form-select" name="to_route_id" id="to_route_id" required>
-                                <option value="">Pilih Rute Tujuan</option>
+                            <label for="to_city_id" class="form-label required">Tujuan</label>
+                            <select class="form-select" name="to_city_id" id="to_city_id" required>
+                                <option value="">Pilih Kota Tujuan</option>
                                 @foreach ($cities as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="titik_naik" class="form-label required">Titik Naik</label>
+                            <input type="text" class="form-control" name="titik_naik" id="titik_naik" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="titik_turun" class="form-label required">Titik Turun</label>
+                            <input type="text" class="form-control" name="titik_turun" id="titik_turun" required>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -116,13 +131,9 @@
                 <input type="hidden" name="id" id="edit_departure_id">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="edit_bus_travel_has_bus_id" class="form-label required">Bus</label>
-                        <select class="form-select" name="bus_travel_has_bus_id" id="edit_bus_travel_has_bus_id" required>
-                            <option value="">Pilih Bus</option>
-                            @foreach ($allBuses as $id => $name)
-                                <option value="{{ $id }}">{{ $name }}</option>
-                            @endforeach
-                        </select>
+                        <label class="form-label required">Bus</label>
+                        <p id="edit_bus_name" class="form-control-plaintext fw-bolder"></p>
+                        <input type="hidden" name="bus_travel_has_bus_id" id="edit_bus_travel_has_bus_id">
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -136,22 +147,32 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="edit_from_route_id" class="form-label required">Dari</label>
-                            <select class="form-select" name="from_route_id" id="edit_from_route_id" required>
-                                <option value="">Pilih Rute Asal</option>
+                            <label for="edit_from_city_id" class="form-label required">Dari</label>
+                            <select class="form-select" name="from_city_id" id="edit_from_city_id" required>
+                                <option value="">Pilih Kota Asal</option>
                                 @foreach ($cities as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="edit_to_route_id" class="form-label required">Tujuan</label>
-                            <select class="form-select" name="to_route_id" id="edit_to_route_id" required>
-                                <option value="">Pilih Rute Tujuan</option>
+                            <label for="edit_to_city_id" class="form-label required">Tujuan</label>
+                            <select class="form-select" name="to_city_id" id="edit_to_city_id" required>
+                                <option value="">Pilih Kota Tujuan</option>
                                 @foreach ($cities as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="edit_titik_naik" class="form-label required">Titik Naik</label>
+                            <input type="text" class="form-control" name="titik_naik" id="edit_titik_naik" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_titik_turun" class="form-label required">Titik Turun</label>
+                            <input type="text" class="form-control" name="titik_turun" id="edit_titik_turun" required>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -397,6 +418,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Modal script loaded');
+    const allBuses = @json($allBuses);
 
     // Edit Modal Handler
     const editModal = document.getElementById('editDepartureModal');
@@ -412,6 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const toCityId = button.getAttribute('data-to');
                 const titikNaik = button.getAttribute('data-titik-naik');
                 const titikTurun = button.getAttribute('data-titik-turun');
+                const departureDate = button.getAttribute('data-tanggal');
                 const departureTime = button.getAttribute('data-time');
                 const duration = button.getAttribute('data-duration');
                 const price = button.getAttribute('data-price');
@@ -421,7 +444,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Set form values
                 document.getElementById('edit_departure_id').value = id || '';
+                const busName = allBuses[busId];
                 document.getElementById('edit_bus_travel_has_bus_id').value = busId || '';
+                document.getElementById('edit_bus_name').textContent = busName || 'Bus tidak ditemukan';
                 document.getElementById('edit_from_city_id').value = fromCityId || '';
                 document.getElementById('edit_to_city_id').value = toCityId || '';
                 document.getElementById('edit_titik_naik').value = titikNaik || '';
@@ -521,12 +546,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const createForm = document.querySelector('#createDepartureModal form');
     if (createForm) {
         createForm.addEventListener('submit', function(e) {
-            const fromRoute = document.getElementById('from_route_id').value;
-            const toRoute = document.getElementById('to_route_id').value;
+            const fromCity = document.getElementById('from_city_id').value;
+            const toCity = document.getElementById('to_city_id').value;
 
-            if (fromRoute === toRoute && fromRoute !== '') {
+            if (fromCity === toCity && fromCity !== '') {
                 e.preventDefault();
-                alert('Rute asal dan tujuan tidak boleh sama!');
+                alert('Kota asal dan tujuan tidak boleh sama!');
                 return false;
             }
         });
@@ -536,12 +561,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const editForm = document.querySelector('#editDepartureModal form');
     if (editForm) {
         editForm.addEventListener('submit', function(e) {
-            const fromRoute = document.getElementById('edit_from_route_id').value;
-            const toRoute = document.getElementById('edit_to_route_id').value;
+            const fromCity = document.getElementById('edit_from_city_id').value;
+            const toCity = document.getElementById('edit_to_city_id').value;
 
-            if (fromRoute === toRoute && fromRoute !== '') {
+            if (fromCity === toCity && fromCity !== '') {
                 e.preventDefault();
-                alert('Rute asal dan tujuan tidak boleh sama!');
+                alert('Kota asal dan tujuan tidak boleh sama!');
                 return false;
             }
         });
@@ -564,6 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const toCityId = button.getAttribute('data-to');
                 const titikNaik = button.getAttribute('data-titik-naik');
                 const titikTurun = button.getAttribute('data-titik-turun');
+                const departureDate = button.getAttribute('data-tanggal');
                 const departureTime = button.getAttribute('data-time');
                 const duration = button.getAttribute('data-duration');
                 const price = button.getAttribute('data-price');
@@ -653,12 +679,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (fromCity === toCity && fromCity !== '') {
                 e.preventDefault();
                 alert('Kota asal dan tujuan tidak boleh sama!');
-                return false;
-            }
-        });
-    }
-});
-                alert('Rute asal dan tujuan tidak boleh sama!');
                 return false;
             }
         });
