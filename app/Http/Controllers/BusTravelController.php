@@ -763,7 +763,8 @@ class BusTravelController extends Controller
 
     public function request_transaction(Request $request)
     {
-        for ($i = 1; $i < $request->jumlah_penumpang; $i++) {
+        // Fix the loop condition - should be <= not <
+        for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
             $data_kursi = [
                 'id_costumer' => auth()->user()->id,
                 'id_departure' => $request->ticket_pergi_id,
@@ -771,7 +772,7 @@ class BusTravelController extends Controller
                 'is_pulang_pergi' => $request->is_pulang_pergi,
                 'date_pergi' => $request->date_pergi,
                 'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
-                'kursi_pergi' => $request->{"kursi_penumpang_$i"},
+                'kursi_pergi' => $request->{"kursi_penumpang_$i"} ?? null,
                 'kursi_pulang' => '',
             ];
 
@@ -842,7 +843,12 @@ class BusTravelController extends Controller
                 );
             }
 
-            $pulang = BusDeparture::with('busTravel', 'from', 'to')->find($data['ticket_pulang_id']);
+            // Ensure proper relationship loading
+            $pulang = BusDeparture::with([
+                'busTravel.busTravel', 
+                'from:id,city_name', 
+                'to:id,city_name'
+            ])->find($data['ticket_pulang_id']);
 
             if (!$pulang) {
                 return ResponseFormatter::error(
@@ -854,20 +860,35 @@ class BusTravelController extends Controller
                 );
             }
 
-            $dateTimePulang = $data['date_pulang'] . ' ' . $pulang['departure_time'];
+            $dateTimePulang = $data['date_pulang'] . ' ' . $pulang->departure_time;
 
             $berangkatPulang =  Carbon::parse($dateTimePulang)->format('Y-m-d H:i');
 
-            $total += $pulang['price'];
+            $total += $pulang->price;
         } else {
             $berangkatPulang = null;
         }
 
         $data = $request->all();
 
-        $pergi = BusDeparture::with('busTravel', 'from', 'to')->find($data['ticket_pergi_id']);
-        $dateTimePergi = $data['date_pergi'] . ' ' . $pergi['departure_time'];
-
+        // Ensure proper relationship loading with specific columns
+        $pergi = BusDeparture::with([
+            'busTravel.busTravel:id,business_name', 
+            'from:id,city_name', 
+            'to:id,city_name'
+        ])->find($data['ticket_pergi_id']);
+        
+        if (!$pergi) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Paket tiket pergi tidak ditemukan',
+                ],
+                'Bus & Travel process failed',
+                500,
+            );
+        }
+        
+        $dateTimePergi = $data['date_pergi'] . ' ' . $pergi->departure_time;
         $berangkat =  Carbon::parse($dateTimePergi)->format('Y-m-d H:i');
 
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('bus_travel') . '-' . time();
@@ -883,8 +904,7 @@ class BusTravelController extends Controller
 
         $kali = (int)$data['is_pulang_pergi'] == 1 ? 2 : 1;
 
-        $total += $pergi['price'];
-
+        $total += $pergi->price;
 
         $amount = $total * $data['jumlah_penumpang'];
 
@@ -917,9 +937,12 @@ class BusTravelController extends Controller
             ];
         }
 
-        $business = $pergi['busTravel']['busTravel']['business_name'] ?? 'Deleted business';
-
-        $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $pergi['from']['name'] . ' - ' . $pergi['to']['name'] . ' untuk tanggal ' . $berangkat;
+        // Safely access relationship data
+        $business = $pergi->busTravel->busTravel->business_name ?? 'Deleted business';
+        $fromCity = $pergi->from->city_name ?? 'Unknown';
+        $toCity = $pergi->to->city_name ?? 'Unknown';
+        
+        $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $fromCity . ' - ' . $toCity . ' untuk tanggal ' . $berangkat;
 
         // Create xendit
         $payoutsXendit = $this->xendit->create([
@@ -946,7 +969,7 @@ class BusTravelController extends Controller
         ]);
 
         // true buat trans
-        DB::transaction(function () use ($data, $berangkat, $berangkatPulang, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $pergi, $pulang, $saldoPointCustomer) {
+        DB::transaction(function () use ($data, $berangkat, $berangkatPulang, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $pergi, $pulang, $saldoPointCustomer, $fromCity, $toCity) {
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'BNT-' . time(),
@@ -967,48 +990,52 @@ class BusTravelController extends Controller
             $booking_id = \Illuminate\Support\Str::random(6);
 
             for ($i = 1; $i <= $data['jumlah_penumpang']; $i++) {
+                // Safely access relationship data
+                $pergiFrom = $pergi->from->city_name ?? 'Unknown';
+                $pergiTo = $pergi->to->city_name ?? 'Unknown';
 
                 DetailTransactionBus::create([
                     "transaction_id" => $storeTransaction->id,
-                    "bus_travel_id" => $pergi['busTravel']['busTravel']['id'],
-                    "bus_travel_has_bus_id" => $pergi['busTravel']['id'],
-                    "bus_departure_id" => $pergi['id'],
+                    "bus_travel_id" => $pergi->busTravel->busTravel->id,
+                    "bus_travel_has_bus_id" => $pergi->busTravel->id,
+                    "bus_departure_id" => $pergi->id,
                     "booking_id" => $booking_id,
                     "departure_time" => $berangkat,
-                    "from" => $pergi['from']['name'],
-                    "to" => $pergi['to']['name'],
-                    "price" => $pergi['price'],
+                    "from" => $pergiFrom,
+                    "to" => $pergiTo,
+                    "price" => $pergi->price,
                     "fee_admin" => $fees[0]['value'] / $data['jumlah_penumpang'],
                     "kode_unik" => $kode_unik,
-                    "customer_name" => $request['customer_call_' . $i] . ' ' . $request['customer_name_' . $i] ?? '-',
-                    "customer_phone" => $request['customer_phone_' . $i] ?? '-',
-                    "customer_email" => $request['customer_email_' . $i] ?? '-',
+                    "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
+                    "customer_phone" => $request['customer_phone_' . $i] ?? '',
+                    "customer_email" => $request['customer_email_' . $i] ?? '',
                 ]);
 
                 if ((int)$data['is_pulang_pergi'] == 1) {
+                    // Safely access relationship data for pulang
+                    $pulangFrom = $pulang->from->city_name ?? 'Unknown';
+                    $pulangTo = $pulang->to->city_name ?? 'Unknown';
+                    
                     DetailTransactionBus::create([
                         "transaction_id" => $storeTransaction->id,
-                        "bus_travel_id" => $pulang['busTravel']['busTravel']['id'],
-                        "bus_travel_has_bus_id" => $pulang['busTravel']['id'],
-                        "bus_departure_id" => $pulang['id'],
+                        "bus_travel_id" => $pulang->busTravel->busTravel->id,
+                        "bus_travel_has_bus_id" => $pulang->busTravel->id,
+                        "bus_departure_id" => $pulang->id,
                         "booking_id" => $booking_id,
                         "departure_time" => $berangkatPulang,
-                        "from" => $pulang['from']['name'],
-                        "to" => $pulang['to']['name'],
-                        "price" => $pulang['price'],
+                        "from" => $pulangFrom,
+                        "to" => $pulangTo,
+                        "price" => $pulang->price,
                         "fee_admin" => 0,
-                        // "duration" => $data['duration'],
                         "kode_unik" => $kode_unik,
-                        "customer_name" => $request['customer_call_' . $i] . ' ' . $request['customer_name_' . $i] ?? '-',
-                        "customer_phone" => $request['customer_phone_' . $i] ?? '-',
-                        "customer_email" => $request['customer_email_' . $i] ?? '-',
+                        "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
+                        "customer_phone" => $request['customer_phone_' . $i] ?? '',
+                        "customer_email" => $request['customer_email_' . $i] ?? '',
                     ]);
                 }
             }
         });
 
-        // return ResponseFormatter::success($hotel, 'Payment successfully created');
-        // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         return redirect()->away($payoutsXendit['invoice_url']);
     }
 }
