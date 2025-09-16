@@ -1,50 +1,46 @@
 <div class="container mb-50">
     <div class="row justify-content-between">
         <div class="col-md-8">
-            <div class="card d-flex flex-row">
-                <div class="d-flex align-items-center">
+            <div class="card d-flex flex-row align-items-center">
+                <div>
                     <span class="fs-5">Berdasarkan Agen</span>
                 </div>
-                <div class="ms-4">
-                    <form action="{{ route('bus_travel.search') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                        <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                        <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                        <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
-                        <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                        <button type="submit"
-                            class="badge badge-pills badge-outline {{ $selected_agent ==  null ? 'badge-danger' : 'badge-secondary' }} round fs-6 p-3">Semua
-                            Agent</button>
-                    </form>
+                <div class="d-flex flex-nowrap ms-4" style="overflow-x: auto;">
+                    <div class="me-2">
+                        <form action="{{ route('bus_travel.search') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                            <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                            <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                            <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                            <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                            <button type="submit"
+                                class="badge badge-pills badge-outline {{ $selected_agent == null ? 'badge-danger' : 'badge-secondary' }} round fs-6 p-3 text-nowrap">Semua
+                                Agent</button>
+                        </form>
+                    </div>
+                    @if ($agent->isNotEmpty())
+                        @foreach ($agent as $a)
+                            <div class="me-2">
+                                <form action="{{ route('bus_travel.search') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                                    <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                                    <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                                    <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                                    <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                                    <input type="hidden" name="agent" value="{{ $a->business_name }}">
+                                    <button type="submit"
+                                        class="badge badge-pills badge-outline {{ $selected_agent == $a->business_name ? 'badge-danger' : 'badge-secondary' }} fs-6 round p-3 text-nowrap">
+                                        {{ $a->business_name }}
+                                    </button>
+                                </form>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="ms-4 text-muted">Tidak ada agen untuk rute ini</div>
+                    @endif
                 </div>
-                @if($agent->isNotEmpty())
-                    @foreach ($agent->take(3) as $a)
-                        <div class="ms-4">
-                            <form action="{{ route('bus_travel.search') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                                <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                                <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                                <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
-                                <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                                <input type="hidden" name="agent" value="{{ $a->business_name }}">
-                                <button type="submit"
-                                    class="badge badge-pills badge-outline {{ $selected_agent == $a->business_name ? 'badge-danger' : 'badge-secondary' }} fs-6 round p-3">
-                                    {{ $a->business_name }}
-                                </button>
-                            </form>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="ms-4 text-muted">Tidak ada agen untuk rute ini</div>
-                @endif
-
-                {{-- <div class="ms-4">
-                    <a href="javascript:"
-                        class="badge badge-pills badge-outline badge-secondary bg-secondary round fs-6 p-3">+ 8
-                        Lainnya</a>
-                </div> --}}
             </div>
         </div>
         <div class="col-md-4">
@@ -111,118 +107,121 @@
 </div>
 
 <script>
-// Pass route data from PHP to JavaScript
-const routeDataFilter = @json($routeData ?? []);
-
-document.addEventListener('DOMContentLoaded', function () {
-    const mainForm = document.getElementById('mainSearchForm');
+function initBusFilter() {
+    console.log('Filter script loaded');
+    
     const naik = document.getElementById('naikSelect');
     const turun = document.getElementById('turunSelect');
+    
+    // Get references to the main form and its elements
+    const mainForm = document.getElementById('mainSearchForm');
+    const mainFormKotaAwal = document.getElementById('kota_awal');
+    const mainFormKotaTujuan = document.getElementById('kota_tujuan');
+    const mainFormDatePergi = document.querySelector('input[name="date_pergi"]');
+    const mainFormJumlahPenumpang = document.querySelector('input[name="jumlah_penumpang"]');
 
-    if (!naik || !turun) return;
+    console.log('Elements found:', {
+        naik: !!naik,
+        turun: !!turun,
+        mainForm: !!mainForm,
+        mainFormKotaAwal: !!mainFormKotaAwal,
+        mainFormKotaTujuan: !!mainFormKotaTujuan
+    });
 
-    function updateDestinationDropdown() {
-        const selectedDeparture = naik.value;
-
-        // Store current destination value
-        const currentDestination = turun.value;
-
-        // Clear destination options
-        turun.innerHTML = '<option value="">Turun dimana?</option>';
-
-        // If no departure selected, show all cities
-        if (!selectedDeparture || !routeDataFilter.departures || !routeDataFilter.departures[selectedDeparture]) {
-            @foreach ($city as $c)
-                turun.innerHTML += '<option value="{{ $c }}"' + (currentDestination === "{{ $c }}" ? ' selected' : '') + '>{{ $c }}</option>';
-            @endforeach
-            return;
-        }
-
-        // Add only valid destinations for the selected departure
-        const validDestinations = routeDataFilter.departures[selectedDeparture];
-        turun.innerHTML += '<option value="">Turun dimana?</option>';
-        validDestinations.forEach(destination => {
-            turun.innerHTML += '<option value="' + destination + '"' + (currentDestination === destination ? ' selected' : '') + '>' + destination + '</option>';
-        });
+    if (!naik || !turun) {
+        console.log('Filter select elements not found');
+        return;
     }
 
-    function updateDepartureDropdown() {
-        const selectedDestination = turun.value;
-
-        // Store current departure value
-        const currentDeparture = naik.value;
-
-        // Clear departure options
-        naik.innerHTML = '<option value="">Naik dari mana?</option>';
-
-        // If no destination selected, show all cities
-        if (!selectedDestination || !routeDataFilter.destinations || !routeDataFilter.destinations[selectedDestination]) {
-            @foreach ($city as $c)
-                naik.innerHTML += '<option value="{{ $c }}"' + (currentDeparture === "{{ $c }}" ? ' selected' : '') + '>{{ $c }}</option>';
-            @endforeach
+    // Function to submit using fetch
+    function submitWithFetch() {
+        console.log('Submitting with fetch');
+        
+        // Get CSRF token
+        const csrfToken = document.querySelector('meta[name="csrf-token"]');
+        if (!csrfToken) {
+            console.log('CSRF token not found');
             return;
         }
-
-        // Add only valid departures for the selected destination
-        const validDepartures = routeDataFilter.destinations[selectedDestination];
-        naik.innerHTML += '<option value="">Naik dari mana?</option>';
-        validDepartures.forEach(departure => {
-            naik.innerHTML += '<option value="' + departure + '"' + (currentDeparture === departure ? ' selected' : '') + '>' + departure + '</option>';
+        
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('_token', csrfToken.getAttribute('content'));
+        formData.append('kota_awal', naik.value);
+        formData.append('kota_tujuan', turun.value);
+        
+        // Copy other required fields from main form if they exist
+        if (mainFormDatePergi) {
+            formData.append('date_pergi', mainFormDatePergi.value);
+        }
+        
+        if (mainFormJumlahPenumpang) {
+            formData.append('jumlah_penumpang', mainFormJumlahPenumpang.value);
+        }
+        
+        // Add other required fields with default values if needed
+        formData.append('is_pulang_pergi', '0'); // Default value
+        
+        // Submit using fetch
+        fetch("{{ route('bus_travel.search') }}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            console.log('Fetch response:', response);
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(data => {
+            if (data) {
+                // If we got HTML content, we need to replace the current page
+                document.open();
+                document.write(data);
+                document.close();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
         });
-    }
-
-    function submitWithSync() {
-        if (mainForm) {
-            // find the existing inputs inside main form and set their values
-            const inputKotaAwal = mainForm.querySelector('[name="kota_awal"]');
-            const inputKotaTujuan = mainForm.querySelector('[name="kota_tujuan"]');
-
-            if (inputKotaAwal) inputKotaAwal.value = naik.value;
-            else {
-                // if not present, create a hidden input
-                const h = document.createElement('input');
-                h.type = 'hidden';
-                h.name = 'kota_awal';
-                h.value = naik.value;
-                mainForm.appendChild(h);
-            }
-
-            if (inputKotaTujuan) inputKotaTujuan.value = turun.value;
-            else {
-                const h2 = document.createElement('input');
-                h2.type = 'hidden';
-                h2.name = 'kota_tujuan';
-                h2.value = turun.value;
-                mainForm.appendChild(h2);
-            }
-
-            mainForm.submit();
-            return;
-        }
-
-        // fallback: redirect with query (only used if mainForm is missing)
-        const params = new URLSearchParams();
-        if (naik.value) params.set('kota_awal', naik.value);
-        if (turun.value) params.set('kota_tujuan', turun.value);
-        const url = @json(route('bus_travel.search')) + '?' + params.toString();
-        window.location.href = url;
     }
 
     // Add event listeners
     naik.addEventListener('change', function() {
-        updateDestinationDropdown();
-        submitWithSync();
+        console.log('Naik select changed to:', naik.value);
+        submitWithFetch();
     });
 
     turun.addEventListener('change', function() {
-        updateDepartureDropdown();
-        submitWithSync();
+        console.log('Turun select changed to:', turun.value);
+        submitWithFetch();
     });
+    
+    // Set initial values if main form elements exist
+    if (mainFormKotaAwal && mainFormKotaTujuan) {
+        naik.value = mainFormKotaAwal.value;
+        turun.value = mainFormKotaTujuan.value;
+        
+        console.log('Initial values set:', {
+            naik: naik.value,
+            turun: turun.value
+        });
+    }
+    
+    console.log('Event listeners attached');
+}
 
-    // Initialize dropdowns on page load
-    updateDestinationDropdown();
-    updateDepartureDropdown();
-});
+// Try to run immediately, and also on DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initBusFilter);
+} else {
+    initBusFilter();
+}
 </script>
 
 

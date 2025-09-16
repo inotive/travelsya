@@ -10,10 +10,8 @@
             <div class="row">
                 @foreach ($popular->take(12) as $p)
                 <div class="col-md-3 col-12 p-3">
-                    <form action="{{ route('bus_travel.search') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="agent" value="{{ $p->business_name ?? '' }}">
-                        <button type="submit" class="card shadow-sm w-100 text-start p-0" style="border:none;background:none;">
+                    <a href="{{ route('bus_travel.popular_search', ['id' => $p->id]) }}" style="text-decoration: none; color: inherit;">
+                        <div class="card shadow-sm w-100 text-start p-0">
                             <div class="card-body">
                                 <img src="{{ asset('storage/' . ($p->image ?? 'default.png')) }}"
                                     onerror="this.src='https://png.pngtree.com/png-clipart/20230822/original/pngtree-bus-logo-vector-public-picnic-picture-image_8176238.png'"
@@ -22,8 +20,8 @@
                                     <small class="text-muted">{{ $p->business_name ?? 'Bus Travel' }}</small>
                                 </div>
                             </div>
-                        </button>
-                    </form>
+                        </div>
+                    </a>
                 </div>
                 @endforeach
             </div>

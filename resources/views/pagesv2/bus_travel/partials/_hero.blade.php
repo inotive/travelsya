@@ -111,15 +111,20 @@
         const kotaTujuan = document.getElementById('kota_tujuan');
 
         // Store the current values
-        const tempValue = kotaAwal.value;
+        const kotaAwalValue = kotaAwal.value;
+        const kotaTujuanValue = kotaTujuan.value;
 
-        // Swap the values
-        kotaAwal.value = kotaTujuan.value;
-        kotaTujuan.value = tempValue;
+        // Temporarily set to empty to force re-population of all cities
+        kotaAwal.value = "";
+        kotaTujuan.value = "";
 
-        // Update dropdowns after swap
+        // Update both dropdowns to show all cities
         updateDestinationDropdown();
         updateDepartureDropdown();
+
+        // Set the swapped values
+        kotaAwal.value = kotaTujuanValue;
+        kotaTujuan.value = kotaAwalValue;
     }
 
     function updateDestinationDropdown() {
