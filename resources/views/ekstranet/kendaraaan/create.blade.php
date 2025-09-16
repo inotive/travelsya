@@ -99,17 +99,6 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                            <input type="text" class="form-control" id="duration" name="duration" placeholder="Durasi" required>
-                            <small class="form-text text-muted">Durasi dihitung per hari</small>
-                            @error('duration')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tahun</label>
                             <select class="form-control" id="years" name="years" required>
                                 <option value="">Pilih Tahun</option>
@@ -135,6 +124,16 @@
                             <input type="number" class="form-control" id="number_seats" name="number_seats"
                                 placeholder="Jumlah Kursi" required>
                             @error('number_seats')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Tempat Mengambil Mobil</label>
+                            <input type="text" class="form-control" id="pickup_location" name="pickup_location" placeholder="Tempat Mengambil Mobil" required>
+                            @error('pickup_location')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>

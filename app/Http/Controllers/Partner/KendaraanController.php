@@ -52,19 +52,20 @@ class KendaraanController extends Controller
             'category' => 'required',
             'category_rent' => 'required',
             'rental_price_per_day' => 'required',
-            'duration' => 'required',
+            'pickup_location' => 'required|string|max:255',
             'description' => 'required',
             // 'policy_id' => 'nullable',
             'years' => 'required',
             'number_seats' => 'required',
             'status' => 'required',
-            'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images' => 'required|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // Validation has already been done above
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         if ($request->hasFile('image')) {
@@ -84,7 +85,7 @@ class KendaraanController extends Controller
             'category' => $request->category,
             'category_rent' => $request->category_rent,
             'rental_price_per_day' => $price,
-            'duration' => $request->duration,
+            'pickup_location' => $request->pickup_location,
             'description' => $request->description,
             // 'policy_id' => $request->policy_id,
             'years' => $request->years,
@@ -123,19 +124,19 @@ class KendaraanController extends Controller
             'category' => 'required',
             'category_rent' => 'required',
             'rental_price_per_day' => 'required',
-            'duration' => 'required',
+            'pickup_location' => 'required|string|max:255',
             'description' => 'required',
             // 'policy_id' => 'nullable',
             'years' => 'required',
             'number_seats' => 'required',
             'status' => 'required',
-            'image_url' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         // dd($validator);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         if ($request->hasFile('image')) {
@@ -153,7 +154,7 @@ class KendaraanController extends Controller
         $car->category = $request->category;
         $car->category_rent = $request->category_rent;
         $car->rental_price_per_day = $request->rental_price_per_day;
-        $car->duration = $request->duration;
+        $car->pickup_location = $request->pickup_location;
         $car->description = $request->description;
         // $car->policy_id = $request->policy_id;
         $car->years = $request->years;
