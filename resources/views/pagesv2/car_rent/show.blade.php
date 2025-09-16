@@ -10,5 +10,7 @@
 @endif
 @include('pagesv2.car_rent.partials._content_show', [
 'type' => 'Health',
+'brands' => $brands,
+'brand_id' => $brand_id,
 ])
 @endsection

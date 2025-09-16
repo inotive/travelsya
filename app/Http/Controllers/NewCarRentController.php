@@ -161,10 +161,16 @@ class NewCarRentController extends Controller
             
         // Menambahkan opsi default
         $near_location = collect(['' => 'Pilih Lokasi'])->merge($near_location);
+        
+        // Mendapatkan daftar merek mobil yang tersedia
+        $brands = Brand::whereHas('vendor', function($query) {
+            $query->where('status', 1);
+        })->orderBy('name', 'asc')->get();
 
         $data['car_models'] = collect($car_models);
         $data['popular_brands'] = $popular_brands;
         $data['near_location'] = $near_location;
+        $data['brands'] = $brands;
         return view('pagesv2.car_rent.index', $data);
     }
 
@@ -418,6 +424,11 @@ class NewCarRentController extends Controller
             ->unique()
             ->sort();
         
+        // Mendapatkan daftar merek mobil yang tersedia
+        $brands = Brand::whereHas('vendor', function($query) {
+            $query->where('status', 1);
+        })->orderBy('name', 'asc')->get();
+        
         // Log jumlah kota yang ditampilkan
         \Log::info('Near location count: ' . $near_location->count());
 
@@ -430,6 +441,8 @@ class NewCarRentController extends Controller
         $data['time'] = $time;
         $data['duration'] = $duration;
         $data['near_location'] = $near_location;
+        $data['brands'] = $brands;
+        $data['brand_id'] = $request->brand_id;
         return view('pagesv2.car_rent.show', $data);
     }
 

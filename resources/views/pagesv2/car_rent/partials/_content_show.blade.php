@@ -56,18 +56,28 @@
                 </span>
                 <select name="category" id="category" class="form-select bg-transparent border-0 shadow-none" style="width: 200px; flex-shrink: 0;">
                     <option value="">Semua Cara Rental</option>
-                    <option @if ($category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver</option>
-                    <option @if ($category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci</option>
+                    <option @if (isset($category) && $category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver</option>
+                    <option @if (isset($category) && $category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci</option>
                 </select>
                 <select name="location" id="location" class="form-select bg-transparent border-0 shadow-none" style="max-width: 220px;" data-placeholder="Pilih Lokasi" autocomplete="on" required>
                     <option value="">Pilih Lokasi</option>
-                    @foreach($near_location as $city)
-                        <option value="{{ $city }}" @if ($location==$city) selected @endif>{{ $city }}</option>
+                    @if(isset($near_location))
+                        @foreach($near_location as $city)
+                            <option value="{{ $city }}" @if (isset($location) && $location==$city) selected @endif>{{ $city }}</option>
+                        @endforeach
+                    @endif
+                </select>
+                @if(isset($brands) && $brands->count() > 0)
+                <select name="brand_id" id="brand_id" class="form-select bg-transparent border-0 shadow-none" style="max-width: 220px;" data-placeholder="Pilih Merek">
+                    <option value="">Semua Merek</option>
+                    @foreach($brands as $brand)
+                        <option value="{{ $brand->id }}" @if (isset($brand_id) && $brand_id==$brand->id) selected @endif>{{ $brand->name }}</option>
                     @endforeach
                 </select>
-                <input type="text" name="date" id="date" onfocus="(this.type='date')" class="form-control bg-transparent border-0 shadow-none" value="{{ $date != '' ? $date : date('Y-m-d') }}" placeholder="tanggal sewa">
-                <input type="time" name="time" id="time" class="form-control bg-transparent border-0 shadow-none" value="{{ $time != '' ? $time : date('H:i', strtotime(now())) }}" style="width: 140px; flex-shrink: 0;">
-                <input type="number" name="duration" class="form-control bg-transparent border-0 shadow-none" id="duration" value="{{ $duration ? $duration : 1 }}" placeholder="durasi" style="width: 90px; flex-shrink: 0;">
+                @endif
+                <input type="text" name="date" id="date" onfocus="(this.type='date')" class="form-control bg-transparent border-0 shadow-none" value="{{ isset($date) && $date != '' ? $date : date('Y-m-d') }}" placeholder="tanggal sewa">
+                <input type="time" name="time" id="time" class="form-control bg-transparent border-0 shadow-none" value="{{ isset($time) && $time != '' ? $time : date('H:i', strtotime(now())) }}" style="width: 140px; flex-shrink: 0;">
+                <input type="number" name="duration" class="form-control bg-transparent border-0 shadow-none" id="duration" value="{{ isset($duration) ? $duration : 1 }}" placeholder="durasi" style="width: 90px; flex-shrink: 0;">
                 <span class="input-group-text bg-transparent border-0">Hari</span>
             </div>
             <button type="submit" class="btn btn-danger ms-3">Cari</button>
@@ -160,6 +170,13 @@
         // Inisialisasi Select2 pada dropdown lokasi
         $('#location').select2({
             placeholder: "Pilih Lokasi",
+            allowClear: true,
+            width: '100%'
+        });
+        
+        // Inisialisasi Select2 pada dropdown merek
+        $('#brand_id').select2({
+            placeholder: "Pilih Merek",
             allowClear: true,
             width: '100%'
         });

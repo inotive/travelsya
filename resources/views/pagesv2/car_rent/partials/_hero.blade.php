@@ -81,12 +81,28 @@
     //         showMeridian: false
     //     });
     // });
-    
+
     document.addEventListener('DOMContentLoaded', function() {
         const searchForm = document.querySelector('form[action="{{ route('car_rent.show') }}"]');
         const searchButton = document.getElementById('search-button');
         const locationSelect = document.getElementById('location');
-        
+
+        // Inisialisasi Select2
+        $('#location').select2({
+            placeholder: "Pilih Lokasi",
+            allowClear: true,
+            width: '100%'
+        });
+
+        // Inisialisasi Select2 untuk brand jika ada
+        if ($('#brand_id_hero').length > 0) {
+            $('#brand_id_hero').select2({
+                placeholder: "Pilih Merek",
+                allowClear: true,
+                width: '100%'
+            });
+        }
+
         // Reset dropdown location ketika halaman dimuat untuk mencegah pemilihan otomatis
         if (locationSelect) {
             // Hapus atribut selected dari semua option
@@ -94,11 +110,11 @@
             options.forEach(option => {
                 option.removeAttribute('selected');
             });
-            
+
             // Set selectedIndex ke 0 (option pertama yaitu "Pilih Lokasi")
             locationSelect.selectedIndex = 0;
         }
-        
+
         if (searchForm && searchButton && locationSelect) {
             searchForm.addEventListener('submit', function(e) {
                 // Validasi field kota
@@ -108,7 +124,7 @@
                     locationSelect.focus();
                     return false;
                 }
-                
+
                 // Nonaktifkan tombol selama proses submit
                 searchButton.disabled = true;
                 searchButton.innerHTML = 'Mencari...';
