@@ -15,7 +15,7 @@
                                     onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
                                     class="card-img-aspect img-fluid rounded shadow" alt="{{ $car->brand->name }}">
                             </div>
-                            
+
                             <!-- Tombol untuk membuka modal gambar, jika ada lebih dari 1 gambar -->
                             @if(isset($car->images) && $car->images->count() > 1)
                             <button type="button" class="btn btn-sm btn-outline-light position-absolute bottom-0 end-0 m-2"
@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
+                                    <div class="d-flex align-items-start ps-3">
                                         <i class="fa-solid fa-map-location-dot mt-1 me-3" style="color: black;"></i>
                                         <div>
                                             <strong>Alamat Agent</strong><br>
@@ -96,8 +96,8 @@
                                 @foreach ($car->images as $index => $image)
                                     <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
                                         <div style="display: flex; justify-content: center; align-items: center; height: 70vh;">
-                                            <img src="{{ asset($image->url ?? $image) }}" 
-                                                 class="d-block mw-100 mh-100" 
+                                            <img src="{{ asset($image->url ?? $image) }}"
+                                                 class="d-block mw-100 mh-100"
                                                  style="object-fit: contain; max-height: 70vh;"
                                                  alt="Gambar {{ $car->brand->name }} {{ $index + 1 }}"
                                                  onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
@@ -119,11 +119,11 @@
                         <div class="d-flex overflow-auto mt-3 py-2" style="gap: 10px;">
                             @foreach ($car->images as $index => $image)
                                 <div class="flex-shrink-0">
-                                    <img src="{{ asset($image->url ?? $image) }}" 
-                                         class="img-thumbnail" 
+                                    <img src="{{ asset($image->url ?? $image) }}"
+                                         class="img-thumbnail"
                                          style="width: 100px; height: 75px; object-fit: cover; cursor: pointer;"
                                          alt="Thumbnail {{ $car->brand->name }} {{ $index + 1 }}"
-                                         data-bs-target="#carImagesCarousel" 
+                                         data-bs-target="#carImagesCarousel"
                                          data-bs-slide-to="{{ $index }}"
                                          onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
                                 </div>
