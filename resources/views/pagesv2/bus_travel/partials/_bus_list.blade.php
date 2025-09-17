@@ -37,11 +37,11 @@
                 <p class="mb-4">
                     Tidak ada keberangkatan dari <strong>{{ $kota_awal }}</strong> ke <strong>{{ $kota_tujuan }}</strong> pada <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d F Y') }}</strong>
                 </p>
-                <form id="refreshForm" action="{{ route('bus_travel.search') }}" method="POST">
-                    @csrf
+                <form id="refreshForm" action="{{ route('bus_travel.index') }}" method="GET">
                     <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
                     <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
                     <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+                    <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
                     <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
                     @if($date_pulang)
                         <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">

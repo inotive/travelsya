@@ -123,127 +123,123 @@ class BusTravelController extends Controller
     }
 
     /**
+     /**
      * Enhanced search method that supports:
      * - Business name search
      * - Route name search (from city -> to city)
      * - Price range search (100K intervals)
      */
- public function search_ajax(Request $request)
+    public function search_ajax(Request $request)
     {
         $searchTerm = trim($request->name);
+
+        // Basic validation
+        if (strlen($searchTerm) < 2) {
+            return '<div class="text-center text-muted p-3">Ketik minimal 2 karakter</div>';
+        }
+
         $find = '%' . $searchTerm . '%';
 
-        // Check search type
+        // --- Search Type Detection ---
         $isNumericSearch = is_numeric(str_replace(['k', 'K', '.', ','], '', $searchTerm));
         $isTimeSearch = $this->isTimeSearch($searchTerm);
         $isFacilitySearch = $this->isFacilitySearch($searchTerm);
 
-        $price = null;
-        $timeRange = null;
-        $facilityTerms = [];
+        // --- Query Builder ---
+        $query = BusDeparture::with(['busTravel.busTravel', 'from', 'to']);
 
         if ($isNumericSearch && !$isTimeSearch) {
+            // --- Price Search ---
             $cleanInput = str_replace(['k', 'K', '.', ','], '', $searchTerm);
             $price = (int) $cleanInput;
             if (stripos($searchTerm, 'k') !== false) {
                 $price *= 1000;
             }
+            $query->where('price', '<=', $price);
+
         } elseif ($isTimeSearch) {
+            // --- Time Search ---
             $timeRange = $this->calculateTimeRange($searchTerm);
+            if ($timeRange) {
+                $query->whereTime('departure_time', '>=', $timeRange['start'])
+                    ->whereTime('departure_time', '<=', $timeRange['end']);
+            }
         } elseif ($isFacilitySearch) {
+            // --- Facility Search ---
             $facilityTerms = $this->getFacilitySearchTerms($searchTerm);
+            if (!empty($facilityTerms)) {
+                $query->whereHas('busTravel', function ($q) use ($facilityTerms) {
+                    $q->where(function ($q2) use ($facilityTerms) {
+                        foreach ($facilityTerms as $facility) {
+                            // Assuming 'facilities' is a JSON column or a text column on bus_travel_has_bus table
+                            $q2->orWhere('facilities', 'like', '%' . $facility . '%')
+                                ->orWhere('description', 'like', '%' . $facility . '%')
+                                ->orWhere('class', 'like', '%' . $facility . '%');
+                        }
+                    });
+                });
+            }
+        } else {
+            // --- General Search (Business Name or Route) ---
+            $query->where(function ($q) use ($find) {
+                $q->whereHas('busTravel.busTravel', function ($b) use ($find) {
+                    $b->where('business_name', 'like', $find);
+                })->orWhereHas('from', function ($f) use ($find) {
+                    $f->where('city_name', 'like', $find); // Corrected from 'name' to 'city_name'
+                })->orWhereHas('to', function ($t) use ($find) {
+                    $t->where('city_name', 'like', $find); // Corrected from 'name' to 'city_name'
+                });
+            });
         }
 
-        $buses = BusDeparture::with('busTravel', 'from', 'to')
-            ->whereHas('busTravel', function ($q) use ($find, $price, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
-                $q->whereHas('busTravel', function ($b) use ($find, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
-                    // Search by business name if not numeric/time/facility
-                    if (!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch) {
-                        $b->where('business_name', 'like', $find);
-                    }
+        $buses = $query->limit(10)->get();
 
-                    // Search by facilities
-                    if ($isFacilitySearch && !empty($facilityTerms)) {
-                        foreach ($facilityTerms as $facility) {
-                            $b->orWhere('facilities', 'like', '%' . $facility . '%')
-                              ->orWhere('description', 'like', '%' . $facility . '%')
-                              ->orWhere('class', 'like', '%' . $facility . '%');
-                        }
-                    }
-                });
-
-                // Add price filter if numeric search
-                if ($isNumericSearch && $price && !$isTimeSearch) {
-                    $q->where('price', '<=', $price);
-                }
-            })
-            // Add route name search if not numeric/time/facility
-            ->when(!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch, function ($query) use ($find) {
-                $query->orWhereHas('from', function ($f) use ($find) {
-                    $f->where('name', 'like', $find);
-                })->orWhereHas('to', function ($t) use ($find) {
-                    $t->where('name', 'like', $find);
-                });
-            })
-            // Add price search for main departure table
-            ->when($isNumericSearch && $price && !$isTimeSearch, function ($query) use ($price) {
-                $query->orWhere('price', '<=', $price);
-            })
-            // Add time range search
-            ->when($isTimeSearch && $timeRange, function ($query) use ($timeRange) {
-                $query->orWhereTime('departure_time', '>=', $timeRange['start'])
-                      ->whereTime('departure_time', '<=', $timeRange['end']);
-            })
-            ->limit(10)
-            ->get();
-
-        $result = '';
-
+        // --- Result Rendering ---
         if ($buses->isEmpty()) {
             return '<div class="text-center text-muted p-3">Tidak ada hasil ditemukan</div>';
         }
 
+        $result = '';
         foreach ($buses as $bus) {
-            $businessName = $bus['busTravel']['busTravel']['business_name'] ?? 'Invalid bus';
-            $fromCity = $bus['from']['name'] ?? 'Invalid Route';
-            $toCityName = $bus['to']['name'] ?? 'Invalid Route';
-            $price = number_format($bus['price'] ?? 0, 0, ',', '.');
+            $businessName = $bus->busTravel->busTravel->business_name ?? 'Invalid bus';
+            $fromCity = $bus->from->city_name ?? 'Invalid Route'; // Corrected from 'name'
+            $toCityName = $bus->to->city_name ?? 'Invalid Route'; // Corrected from 'name'
+            $priceFormatted = number_format($bus->price ?? 0, 0, ',', '.');
 
-            // Highlight search term in results if not numeric
-            if (!$isNumericSearch) {
+            // Highlight search term
+            if (!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch) {
                 $businessName = $this->highlightSearchTerm($businessName, $searchTerm);
                 $fromCity = $this->highlightSearchTerm($fromCity, $searchTerm);
                 $toCityName = $this->highlightSearchTerm($toCityName, $searchTerm);
             }
 
-            $result .= '<a href="' .
-                route(
-                    'bus_travel.detail',
-                    [
-                        'departure_id' => $bus['id'],
-                        'kota_awal' => ($bus['from']['name'] ?? null),
-                        'kota_tujuan' => ($bus['to']['name'] ?? null),
-                        'is_pulang_pergi' => 0,
-                        'jumlah_penumpang' => 1,
-                        'date_pergi' => date('d-m-Y', strtotime(now())),
-                        'date_pulang' => null
-                    ]
-                ) . '" class="d-flex w-100 flex-stack">
-                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
-                        <div class="flex-grow-1 me-2">
-                            <span class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
-                . $fromCity . ' → ' . $toCityName .
-                '</span>
-                            <span class="text-muted fw-semibold d-block fs-7">
-                                ' . $businessName . '
-                            </span>
-                            <span class="text-success fw-bold d-block fs-8">
-                                Rp ' . $price . '
-                            </span>
-                        </div>
-                    </div>
-                </a>
-                <hr>';
+            $detailUrl = route('bus_travel.detail', [
+                'departure_id' => $bus->id,
+                'kota_awal' => $bus->from->city_name ?? null, // Corrected from 'name'
+                'kota_tujuan' => $bus->to->city_name ?? null, // Corrected from 'name'
+                'is_pulang_pergi' => 0,
+                'jumlah_penumpang' => 1,
+                'date_pergi' => now()->format('d-m-Y'),
+                'date_pulang' => null
+            ]);
+
+            $result .= <<<HTML
+        <a href="{$detailUrl}" class="d-flex w-100 flex-stack p-3 border-bottom">
+            <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                <div class="flex-grow-1 me-2">
+                    <span class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">
+                        {$fromCity} → {$toCityName}
+                    </span>
+                    <span class="text-muted fw-semibold d-block fs-7">
+                        {$businessName}
+                    </span>
+                    <span class="text-success fw-bold d-block fs-8">
+                        Rp {$priceFormatted}
+                    </span>
+                </div>
+            </div>
+        </a>
+HTML;
         }
 
         return $result;

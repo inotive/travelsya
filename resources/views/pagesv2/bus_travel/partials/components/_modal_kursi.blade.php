@@ -25,7 +25,7 @@
                 <small class="mb-20px">{{ $departure->busTravel->class }}</small>
                 <span class="mb-20px">{{ \App\Helpers\General::getDayDateShortMonth($date_pergi) }} -
                     {{ date('h:i', strtotime($departure->departure_time)) }} -
-                    {{ $departure->duration }}j</span>
+                    {{ $departure->duration }} Jam</span>
 
                 <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6" id="list_penumpang">
                     @for ($i = 1; $i <= $jumlah_penumpang; $i++) <div class="col p-3">

@@ -11,22 +11,24 @@
                     </h4>
                 </a>
             </div>
-            <div class="ms-sm-auto position-relative">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
-                        <i class="fa-solid fa-search"></i>
-                    </span>
-                    <input type="text" onkeyup="findData()" id="find" class="form-control search-input"
-                        placeholder="Pencarian . . ." />
-                </div>
-                <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result" style="z-index: 9999">
-                    <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
-                        <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">
-                            <small class="text-muted">• Pencarian......</small>
+            @if (!Route::is('bus_travel.index') && !request()->is('*detail*'))
+                <div class="ms-sm-auto position-relative">
+                    <div class="input-group">
+                        <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" onkeyup="findData()" id="find" class="form-control search-input"
+                            placeholder="Ketikan Minimal 2 karakter" />
+                    </div>
+                    <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result" style="z-index: 9999">
+                        <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
+                            <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">
+                                <small class="text-muted">Ketikan Minimal 2 karakter</small>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 </div>
