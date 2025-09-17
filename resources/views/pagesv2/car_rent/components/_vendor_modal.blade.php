@@ -2,12 +2,9 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="d-flex flex-column border border-bottom" style="padding: 1.75rem;">
-                <div class="d-flex flex-row align-items-center mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="title fw-bold fs-5">Pilih Penyedia Rental</span>
-                    <button class="btn btn-outline-light close ms-sm-auto p-0" id="close_modal" data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true" class="fs-1">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <div class="d-flex flex-column">
@@ -33,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
                 @forelse ($car->vendor as $v)
                 <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
