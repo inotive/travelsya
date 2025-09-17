@@ -33,7 +33,7 @@
                                 <td>
                                     <span class="fa-solid fa-key"></span>
                                     <span class="ms-2"><strong>Titik Pengambilan</strong><br>
-                                    {{ $car->carRental->pickup_point ?? 'Sama dengan alamat agent.' }}</span>
+                                    {{ $car->pickup_location ?? 'Sama dengan alamat agent.' }}</span>
                                 </td>
                                 <td>
                                     <span class="fa-solid fa-map-location-dot"></span>
