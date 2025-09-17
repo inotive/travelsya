@@ -28,32 +28,19 @@
                     <div class="col-9 d-flex flex-column">
                         <h5 class="mb-3">{{ $car->brand->name }}</h5>
                         <span class="text-danger mb-3">{{ $car->carRental->business_name }}</span>
-
-                        <div class="mb-3" style="border-top: 2px dashed black; padding-top: 1rem;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="fa-solid fa-key mt-1 me-3" style="color: black;"></i>
-                                        <div>
-                                            <strong>Titik Pengambilan</strong><br>
-                                            {{ $car->carRental->pickup_point ?? 'Sama dengan alamat agent. Mohon konfirmasi kembali dengan penyedia.' }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start ps-3">
-                                        <i class="fa-solid fa-map-location-dot mt-1 me-3" style="color: black;"></i>
-                                        <div>
-                                            <strong>Alamat Agent</strong><br>
-                                            {{ $car->carRental->address ?? 'Alamat detail tidak tersedia.' }}<br>
-                                            <small>{{ $car->carRental->kota->city_name ?? '' }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <table class="table borderless">
+                            <tr style="border-top: 2px dashed black; vertical-align: top;">
+                                <td>
+                                    <span class="fa-solid fa-key"></span>
+                                    <span class="ms-2"><strong>Titik Pengambilan</strong><br>
+                                    {{ $car->carRental->pickup_point ?? 'Sama dengan alamat agent.' }}</span>
+                                </td>
+                                <td>
+                                    <span class="fa-solid fa-map-location-dot"></span>
+                                    <span class="ms-2"><strong>Alamat Agent</strong><br>
+                                    {{ $car->carRental->address ?? 'Alamat detail tidak tersedia.' }}</span>
+                                </td>
+                            </tr>
                             <tr style="border-top: 2px dashed black;">
                                 <td>
                                     <span class="fa-solid fa-user-group"></span>
@@ -66,7 +53,7 @@
                             </tr>
                             <tr style="border-top: 2px dashed black;">
                                 <td>
-                                    <span class="fa-solid fa-location-dot"></span>
+                                    <span class="fa-solid fa-building"></span>
                                     <span class="ms-2">{{ $car->carRental->kota->city_name ?? 'Lokasi Tidak Diketahui' }}</span>
                                 </td>
                                 <td>
