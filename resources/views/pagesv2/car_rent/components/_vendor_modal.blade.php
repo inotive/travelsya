@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
-                @forelse ($car->vendor as $v)
+                @forelse (collect($car->vendor)->sortBy(function($item) { return $item['price'] ?? $item->rental_price_per_day ?? 0; }) as $v)
                 <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
                         <div class="d-flex flex-column">
