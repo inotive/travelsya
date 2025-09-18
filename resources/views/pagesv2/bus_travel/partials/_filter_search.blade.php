@@ -109,10 +109,10 @@
 <script>
 function initBusFilter() {
     console.log('Filter script loaded');
-    
+
     const naik = document.getElementById('naikSelect');
     const turun = document.getElementById('turunSelect');
-    
+
     // Get references to the main form and its elements
     const mainForm = document.getElementById('mainSearchForm');
     const mainFormKotaAwal = document.getElementById('kota_awal');
@@ -136,32 +136,32 @@ function initBusFilter() {
     // Function to submit using fetch
     function submitWithFetch() {
         console.log('Submitting with fetch');
-        
+
         // Get CSRF token
         const csrfToken = document.querySelector('meta[name="csrf-token"]');
         if (!csrfToken) {
             console.log('CSRF token not found');
             return;
         }
-        
+
         // Prepare form data
         const formData = new FormData();
         formData.append('_token', csrfToken.getAttribute('content'));
         formData.append('kota_awal', naik.value);
         formData.append('kota_tujuan', turun.value);
-        
+
         // Copy other required fields from main form if they exist
         if (mainFormDatePergi) {
             formData.append('date_pergi', mainFormDatePergi.value);
         }
-        
+
         if (mainFormJumlahPenumpang) {
             formData.append('jumlah_penumpang', mainFormJumlahPenumpang.value);
         }
-        
+
         // Add other required fields with default values if needed
         formData.append('is_pulang_pergi', '0'); // Default value
-        
+
         // Submit using fetch
         fetch("{{ route('bus_travel.search') }}", {
             method: 'POST',
@@ -201,18 +201,18 @@ function initBusFilter() {
         console.log('Turun select changed to:', turun.value);
         submitWithFetch();
     });
-    
+
     // Set initial values if main form elements exist
     if (mainFormKotaAwal && mainFormKotaTujuan) {
         naik.value = mainFormKotaAwal.value;
         turun.value = mainFormKotaTujuan.value;
-        
+
         console.log('Initial values set:', {
             naik: naik.value,
             turun: turun.value
         });
     }
-    
+
     console.log('Event listeners attached');
 }
 
@@ -223,5 +223,3 @@ if (document.readyState === 'loading') {
     initBusFilter();
 }
 </script>
-
-

@@ -490,8 +490,15 @@ HTML;
                 ->has('busTravel')
                 ->when($request->kota_awal, fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%')))
                 ->when($request->kota_tujuan, fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                ->when($date, fn($q) => $q->whereDate('departure_time', $date))
-                ->when($dayOfWeekPergi !== null, fn($q) => $q->where('days', 'like', '%' . $dayNames[$dayOfWeekPergi] . '%'));
+                ->when($date, function ($q) use ($date, $dayOfWeekPergi, $dayNames) {
+                    $q->where(function ($query) use ($date, $dayOfWeekPergi, $dayNames) {
+                        $query->where('departure_date', $date)
+                            ->orWhere(function ($subQuery) use ($dayOfWeekPergi, $dayNames) {
+                                $subQuery->whereNull('departure_date')
+                                    ->where('days', 'like', '%' . $dayNames[$dayOfWeekPergi] . '%');
+                            });
+                    });
+                });
 
             $pulangQuery = null;
             if ((int)$pp === 1) {
@@ -499,8 +506,15 @@ HTML;
                     ->has('busTravel')
                     ->when($request->kota_awal, fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_awal . '%')))
                     ->when($request->kota_tujuan, fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                    ->when($date_pulang, fn($q) => $q->whereDate('departure_time', $date_pulang))
-                    ->when($dayOfWeekPulang !== null, fn($q) => $q->where('days', 'like', '%' . $dayNames[$dayOfWeekPulang] . '%'));
+                    ->when($date_pulang, function ($q) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
+                        $q->where(function ($query) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
+                            $query->where('departure_date', $date_pulang)
+                                ->orWhere(function ($subQuery) use ($dayOfWeekPulang, $dayNames) {
+                                    $subQuery->whereNull('departure_date')
+                                        ->where('days', 'like', '%' . $dayNames[$dayOfWeekPulang] . '%');
+                                });
+                        });
+                    });
             }
             return [$pergiQuery, $pulangQuery];
         };
@@ -841,8 +855,8 @@ HTML;
 
             // Ensure proper relationship loading
             $pulang = BusDeparture::with([
-                'busTravel.busTravel', 
-                'from:id,city_name', 
+                'busTravel.busTravel',
+                'from:id,city_name',
                 'to:id,city_name'
             ])->find($data['ticket_pulang_id']);
 
@@ -869,11 +883,11 @@ HTML;
 
         // Ensure proper relationship loading with specific columns
         $pergi = BusDeparture::with([
-            'busTravel.busTravel:id,business_name', 
-            'from:id,city_name', 
+            'busTravel.busTravel:id,business_name',
+            'from:id,city_name',
             'to:id,city_name'
         ])->find($data['ticket_pergi_id']);
-        
+
         if (!$pergi) {
             return ResponseFormatter::error(
                 [
@@ -883,7 +897,7 @@ HTML;
                 500,
             );
         }
-        
+
         $dateTimePergi = $data['date_pergi'] . ' ' . $pergi->departure_time;
         $berangkat =  Carbon::parse($dateTimePergi)->format('Y-m-d H:i');
 
@@ -937,7 +951,7 @@ HTML;
         $business = $pergi->busTravel->busTravel->business_name ?? 'Deleted business';
         $fromCity = $pergi->from->city_name ?? 'Unknown';
         $toCity = $pergi->to->city_name ?? 'Unknown';
-        
+
         $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $fromCity . ' - ' . $toCity . ' untuk tanggal ' . $berangkat;
 
         // Create xendit
@@ -1011,7 +1025,7 @@ HTML;
                     // Safely access relationship data for pulang
                     $pulangFrom = $pulang->from->city_name ?? 'Unknown';
                     $pulangTo = $pulang->to->city_name ?? 'Unknown';
-                    
+
                     DetailTransactionBus::create([
                         "transaction_id" => $storeTransaction->id,
                         "bus_travel_id" => $pulang->busTravel->busTravel->id,

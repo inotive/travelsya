@@ -52,9 +52,16 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                <img src="{{ asset('storage/' . $departure->busTravel->busTravel->image) }}"
-                                    class="object-fit-contain w-100" alt="{{ $departure->busTravel->name }}"
-                                    onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                                @if (!empty($departure->busTravel->image) && is_array($departure->busTravel->image))
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                        <img src="{{ asset('storage/buses/' . $departure->busTravel->image[0]) }}"
+                                            class="object-fit-contain w-100" alt="{{ $departure->busTravel->name }}"
+                                            onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+                                    </a>
+                                @else
+                                    <img src="https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                        class="object-fit-contain w-100" alt="Default Bus Image">
+                                @endif
                             </div>
                             <div class="col-8 d-flex flex-column">
                                 <div class="d-flex flex-row align-items-center">
@@ -195,4 +202,75 @@
 
         @include('pagesv2.bus_travel.partials.components._modal_kursi')
     </div>
+
+    @if (!empty($departure->busTravel->image) && is_array($departure->busTravel->image))
+    <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 shadow-lg">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold">
+                        {{ $departure->busTravel->busTravel->business_name }} – Galeri Foto
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+                <div class="modal-body">
+                    {{-- Main preview --}}
+                    <div class="text-center mb-4">
+                        <img id="mainGalleryImage"
+                            src="{{ asset('storage/buses/' . $departure->busTravel->image[0]) }}"
+                            class="img-fluid rounded-3 shadow-sm"
+                            alt="Preview Bus"
+                            style="max-height: 350px; object-fit: contain;">
+                    </div>
+
+                    {{-- Thumbnail grid --}}
+                    <div class="row g-2">
+                        @foreach ($departure->busTravel->image as $key => $image)
+                            <div class="col-3">
+                                <img src="{{ asset('storage/buses/' . $image) }}"
+                                    class="img-fluid rounded-2 shadow-sm gallery-thumb {{ $key == 0 ? 'active-thumb' : '' }}"
+                                    alt="Thumbnail {{ $key+1 }}"
+                                    data-src="{{ asset('storage/buses/' . $image) }}"
+                                    style="cursor: pointer; height: 90px; object-fit: cover; width: 100%;">
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+    <style>
+        .gallery-thumb {
+            opacity: 0.7;
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
+        }
+        .gallery-thumb:hover {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        .active-thumb {
+            opacity: 1;
+            border: 2px solid #dc3545; /* highlight selected thumb */
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const mainImage = document.getElementById("mainGalleryImage");
+            const thumbs = document.querySelectorAll(".gallery-thumb");
+
+            thumbs.forEach(thumb => {
+                thumb.addEventListener("click", function () {
+                    // Update main image
+                    mainImage.src = this.dataset.src;
+
+                    // Update active state
+                    thumbs.forEach(t => t.classList.remove("active-thumb"));
+                    this.classList.add("active-thumb");
+                });
+            });
+        });
+    </script>
 @endsection
