@@ -173,7 +173,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.rekreasi.store') }}">
+                        action="{{ route('admin.rekreasi.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -189,7 +189,7 @@
                                 <label class="required fs-6 fw-semibold mb-2">Nama Bisnis</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
                                     id="name" value="{{ old('name') }}" placeholder="Masukan nama bisnis"
-                                    name="name"/ required>
+                                    name="name" required>
 
                                 @error('name')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
@@ -294,8 +294,35 @@
                             <div class="col-12">
                                 <label for="" class="required form-label">Alamat</label>
                                 <textarea name="address" id="address" cols="30" rows="5"
-                                    class="form-control @error('category_recreation_id') is-invalid @enderror" required>{{ old('category_recreation_id') }}</textarea>
+                                    class="form-control @error('address') is-invalid @enderror" required>{{ old('address') }}</textarea>
                                 @error('address')
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-12">
+                                <label for="" class="required form-label">Deskripsi</label>
+                                <textarea name="description" id="description" cols="30" rows="5"
+                                    class="form-control @error('description') is-invalid @enderror" required>{{ old('description') }}</textarea>
+                                @error('description')
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
+                                <input type="time" class="form-control form-control-lg @error('open') is-invalid @enderror"
+                                    value="{{ old('open') }}" id="open" name="open" required>
+                                @error('open')
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                                <input type="time" class="form-control form-control-lg @error('close') is-invalid @enderror"
+                                    value="{{ old('close') }}" id="close" name="close" required>
+                                @error('close')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>

@@ -99,6 +99,24 @@
                         <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
+                    <div class="col-12">
+                        <label for="" class="required form-label">Deskripsi</label>
+                        <textarea id="description-edit" cols="30" rows="5" class="form-control description-edit" required></textarea>
+                        <div class="alert alert-danger mt-1 d-none"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
+                        <input type="time" class="form-control form-control-lg open-edit" id="open-edit" required />
+                        <div class="alert alert-danger mt-1 d-none"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                        <input type="time" class="form-control form-control-lg close-edit" id="close-edit" required />
+                        <div class="alert alert-danger mt-1 d-none"></div>
+                    </div>
+
                 </div>
                 <!--end::Input group-->
                 <!--begin::Actions-->
@@ -140,6 +158,9 @@
                     $('#user_id-edit').val(response.data.user_id);
                     $('#is_active-edit').val(response.data.is_active);
                     $('#address-edit').val(response.data.address);
+                    $('#description-edit').val(response.data.description);
+                    $('#open-edit').val(response.data.open);
+                    $('#close-edit').val(response.data.close);
                     $('#city-edit').val(response.data.city);
                     $('#city-edit').trigger('change');
                     $('#phone-edit').val(response.data.phone);
@@ -161,6 +182,9 @@
             let name = $('#name-edit').val();
             let is_active = $('#is_active-edit').val();
             let address = $('#address-edit').val();
+            let description = $('#description-edit').val();
+            let open = $('#open-edit').val();
+            let close = $('#close-edit').val();
             let city = $('#city-edit').val();
             let phone = $('#phone-edit').val();
             let lat = $('#lat-edit').val();
@@ -178,6 +202,9 @@
                     , "user_id": user_id
                     , "is_active": is_active
                     , "address": address
+                    , "description": description
+                    , "open": open
+                    , "close": close
                     , "city": city
                     , "lat": lat
                     , "ltd": ltd

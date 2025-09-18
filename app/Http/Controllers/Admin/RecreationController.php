@@ -70,6 +70,9 @@ class RecreationController extends Controller
             'city' => 'required',
             'category_recreation_id' => 'required',
             'address' => 'required',
+            'description' => 'required',
+            'open' => 'required',
+            'close' => 'required',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -92,6 +95,9 @@ class RecreationController extends Controller
                 'lat' => $request->lat,
                 'ltd' => $request->ltd,
                 'address' => $request->address,
+                'description' => $request->description,
+                'open' => $request->open,
+                'close' => $request->close,
                 'is_active' => 1,
             ]);
 
@@ -117,7 +123,7 @@ class RecreationController extends Controller
                 ->withInput();
         }
 
-        
+
     }
 
     /**
@@ -156,6 +162,9 @@ class RecreationController extends Controller
             'ltd' => 'nullable',
             'city' => 'required',
             'address' => 'required',
+            'description' => 'required',
+            'open' => 'required',
+            'close' => 'required',
             'is_active' => 'required',
             'category_recreation_id' => 'required|exists:category_recreations,id',
         ]);
@@ -174,6 +183,9 @@ class RecreationController extends Controller
             'ltd' => $request->ltd,
             'phone' => $request->phone,
             'address' => $request->address,
+            'description' => $request->description,
+            'open' => $request->open,
+            'close' => $request->close,
             'is_active' => $request->is_active,
         ]);
 
