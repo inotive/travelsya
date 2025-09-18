@@ -113,6 +113,42 @@
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
                     </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
+                        <input type="time" class="form-control form-control-lg open-edit" id="open-edit" required />
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-open-edit"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                        <input type="time" class="form-control form-control-lg close-edit" id="close-edit" required />
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-close-edit"></div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="" class="required form-label">Deskripsi</label>
+                        <textarea id="description-edit" cols="30" rows="5" class="form-control description-edit"></textarea>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-description-edit"></div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="" class="required form-label">Highlight</label>
+                        <textarea id="highlight-edit" cols="30" rows="3" class="form-control highlight-edit"></textarea>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-highlight-edit"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Latitude</label>
+                        <input type="number" class="form-control form-control-lg lat-edit" id="lat-edit" required />
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-lat-edit"></div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="required fs-6 fw-semibold mb-2">Longitude</label>
+                        <input type="number" class="form-control form-control-lg ltd-edit" id="ltd-edit" required />
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-ltd-edit"></div>
+                    </div>
                 </div>
                 <!--end::Input group-->
                 <!--begin::Actions-->
@@ -160,6 +196,12 @@
                     $('#city-edit').val(response.data.city);
                     $('#city-edit').trigger('change');
                     $('#phone-edit').val(response.data.phone);
+                    $('#open-edit').val(response.data.open);
+                    $('#close-edit').val(response.data.close);
+                    $('#description-edit').val(response.data.description);
+                    $('#highlight-edit').val(response.data.highlight);
+                    $('#lat-edit').val(response.data.lat);
+                    $('#ltd-edit').val(response.data.ltd);
                     $(`input[name="category"][value="${response.data.category}"]`).prop(
                         'checked', true);
 
@@ -188,6 +230,12 @@
             let address = $('#address-edit').val();
             let city = $('#city-edit').val();
             let phone = $('#phone-edit').val();
+            let open = $('#open-edit').val();
+            let close = $('#close-edit').val();
+            let description = $('#description-edit').val();
+            let highlight = $('#highlight-edit').val();
+            let lat = $('#lat-edit').val();
+            let ltd = $('#ltd-edit').val();
             let token = $("meta[name='csrf-token']").attr("content");
             let category = $('input[name="category"]:checked').val();
             let image = $('#image-edit').val();
@@ -202,6 +250,12 @@
                 address,
                 city,
                 phone,
+                open,
+                close,
+                description,
+                highlight,
+                lat,
+                ltd,
                 token,
                 category
             });
@@ -218,6 +272,12 @@
                     "address": address,
                     "city": city,
                     "phone": phone,
+                    "open": open,
+                    "close": close,
+                    "description": description,
+                    "highlight": highlight,
+                    "lat": lat,
+                    "ltd": ltd,
                     "_token": token,
                     "category": category,
                     "image": image
@@ -259,6 +319,30 @@
                         if (error.responseJSON.image) {
                             $('#alert-image-edit').removeClass('d-none').html(error
                                 .responseJSON.image[0]);
+                        }
+                        if (error.responseJSON.open) {
+                            $('#alert-open-edit').removeClass('d-none').html(error
+                                .responseJSON.open[0]);
+                        }
+                        if (error.responseJSON.close) {
+                            $('#alert-close-edit').removeClass('d-none').html(error
+                                .responseJSON.close[0]);
+                        }
+                        if (error.responseJSON.description) {
+                            $('#alert-description-edit').removeClass('d-none').html(error
+                                .responseJSON.description[0]);
+                        }
+                        if (error.responseJSON.highlight) {
+                            $('#alert-highlight-edit').removeClass('d-none').html(error
+                                .responseJSON.highlight[0]);
+                        }
+                        if (error.responseJSON.lat) {
+                            $('#alert-lat-edit').removeClass('d-none').html(error
+                                .responseJSON.lat[0]);
+                        }
+                        if (error.responseJSON.ltd) {
+                            $('#alert-ltd-edit').removeClass('d-none').html(error
+                                .responseJSON.ltd[0]);
                         }
                     }
                 }
