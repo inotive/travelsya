@@ -35,23 +35,23 @@
                       @foreach ($car_rentals as $rental)
                           <tr>
                               <td>{{ $loop->iteration }}</td>
-                            
+
                               <td class="text-center">
                                 <img src="{{ $rental->image != null && $rental->image != "-" ? asset('storage/' . $rental->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}" alt=""
                                 style="width: 25px; height: 25px;">
                                 {{ $rental->name }}
                               </td>
                               <td class="text-center">
-                             
-                            
+
+
                                 {{ $rental->business_name }}</td>
                               <td class="text-center">{{ $rental->city_name }}</td>
-                            
+
                               <td class="text-center">{{ $rental->address }}</td>
 
-                              
+
                               <td class="text-center">{{ $rental->car_rental_phone }}</td>
-                             
+
                               <td class="text-center">
                                 {{-- {{dd($rental->is_active)}} --}}
                                   @if ($rental->car_rentals_is_active === 1)
@@ -124,7 +124,7 @@
                       @endforeach
                       @include('admin.management-mitra.rental-mobil.edit')
 
-          
+
                   </tbody>
                 </table>
 
@@ -137,7 +137,7 @@
     <!--end::Tables Widget 11-->
 
 
- 
+
 
     <!--begin::Modal - New Target-->
     <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
@@ -211,8 +211,8 @@
                                 </span>
                             @enderror
                           </div>
-  
-                          
+
+
 
 
                             <div class="col-md-12">
@@ -233,7 +233,7 @@
                             </div>
 
 
-                         
+
 
 
                         <div class="col-12">
@@ -274,7 +274,7 @@
     </div>
     <!--end::Modal - New Target-->
 
-   
+
 
     @push('add-script')
         <script>

@@ -67,9 +67,9 @@
                                 <td class="text-center">{{ $clinic->clinic_phone }}</td>
 
                                 <td class="text-center">
-                                    @if ($clinic->clinic_active == 1)
+                                    @if ($clinic->clinic_active)
                                         <span class="badge badge-success">Aktif</span>
-                                    @elseif ($clinic->clinic_active == 0)
+                                    @else
                                         <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
