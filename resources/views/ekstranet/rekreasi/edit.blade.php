@@ -15,10 +15,21 @@
             <!--end::Heading-->
 
             <div class="row g-9 mb-8">
+                
+                <!-- Display Validation Errors -->
+                @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Nama Paket</label>
-                    <input type="text" class="form-control form-control-lg" value="{{ $recreation_has_packages->name }}" placeholder="Nama Paket" name="name" required>
+                    <input type="text" class="form-control form-control-lg" value="{{ old('name', $recreation_has_packages->name) }}" placeholder="Nama Paket" name="name" required>
                     @error('name')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -28,7 +39,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation_has_packages->price }}" type="text" id="harga" placeholder="Rp." name="price" required />
+                    <input class="form-control form-control-lg" value="{{ old('price', $recreation_has_packages->price) }}" type="text" id="harga" placeholder="Rp." name="price" required />
                     @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -42,7 +53,7 @@
                         <option value="">Pilih Bisnis</option>
                         @foreach($recreations as $recreation)
                             <option value="{{ $recreation->id }}"
-                                @if($recreation_has_packages->recreation_id == $recreation->id) selected @endif>
+                                @if(old('recreation_id', $recreation_has_packages->recreation_id) == $recreation->id) selected @endif>
                                 {{ $recreation->business_name }}
                             </option>
                         @endforeach
@@ -51,7 +62,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                    <input class="form-control form-control-lg" value="{{ $recreation_has_packages->duration }}" type="number" name="duration" required />
+                    <input class="form-control form-control-lg" value="{{ old('duration', $recreation_has_packages->duration) }}" type="number" name="duration" required />
                     @error('duration')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -62,14 +73,14 @@
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                     <select class="form-select" name="unit_price" aria-label="Default select example" required>
-                        <option value="Menit" {{ $recreation_has_packages->unit_price == 'Menit' ? 'selected' : '' }}>Menit</option>
-                        <option value="Jam" {{ $recreation_has_packages->unit_price == 'Jam' ? 'selected' : '' }}>Jam</option>
+                        <option value="Menit" {{ old('unit_price', $recreation_has_packages->unit_price) == 'Menit' ? 'selected' : '' }}>Menit</option>
+                        <option value="Jam" {{ old('unit_price', $recreation_has_packages->unit_price) == 'Jam' ? 'selected' : '' }}>Jam</option>
                     </select>
                 </div>
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
-                    <input class="form-control form-control-lg" id="expiry" type="number" value="{{ $recreation_has_packages->expiry_date }}" name="expiry_date" required />
+                    <input class="form-control form-control-lg" id="expiry" type="number" value="{{ old('expiry_date', $recreation_has_packages->expiry_date) }}" name="expiry_date" required />
                     @error('expiry_date')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -81,14 +92,14 @@
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                     <select class="form-select" name="expiry_type" aria-label="Default select example" required>
                         @foreach ($expiryTypes as $type)
-                            <option value="{{ $type }}" {{ $recreation_has_packages->expiry_type == $type ? 'selected' : '' }}>{{ $type }}</option>
+                            <option value="{{ $type }}" {{ old('expiry_type', $recreation_has_packages->expiry_type) == $type ? 'selected' : '' }}>{{ $type }}</option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                    <textarea class="form-control form-control-lg" name="description" required>{{ $recreation_has_packages->description }}</textarea>
+                    <textarea class="form-control form-control-lg" name="description" required>{{ old('description', $recreation_has_packages->description) }}</textarea>
                     @error('description')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -98,7 +109,7 @@
 
                 <div class="col-md-12">
                     <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
-                    <textarea class="form-control form-control-lg" name="rules" required>{{ $recreation_has_packages->rules }}</textarea>
+                    <textarea class="form-control form-control-lg" name="rules" required>{{ old('rules', $recreation_has_packages->rules) }}</textarea>
                     @error('rules')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -112,11 +123,11 @@
                     <label class="required fs-6 fw-semibold mb-2">Status</label>
                     <div class="d-flex align-items-center mt-4">
                         <div class="form-check me-3">
-                            <input class="form-check-input" type="radio" name="is_active" id="active" value="1" {{ $recreation_has_packages->is_active == 1 ? 'checked' : '' }} required>
+                            <input class="form-check-input" type="radio" name="is_active" id="active" value="1" {{ old('is_active', $recreation_has_packages->is_active) == 1 ? 'checked' : '' }} required>
                             <label class="form-check-label fw-bold" for="active">Active</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="is_active" id="inactive" value="0" {{ $recreation_has_packages->is_active == 0 ? 'checked' : '' }} required>
+                            <input class="form-check-input" type="radio" name="is_active" id="inactive" value="0" {{ old('is_active', $recreation_has_packages->is_active) == 0 ? 'checked' : '' }} required>
                             <label class="form-check-label fw-bold" for="inactive">Inactive</label>
                         </div>
                     </div>
@@ -206,6 +217,14 @@
 <script>
     document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
         event.preventDefault();
+        
+        // Show loading indicator
+        const submitButton = this;
+        submitButton.disabled = true;
+        const indicatorLabel = submitButton.querySelector('.indicator-label');
+        const indicatorProgress = submitButton.querySelector('.indicator-progress');
+        indicatorLabel.style.display = 'none';
+        indicatorProgress.style.display = 'inline-block';
 
         Swal.fire({
             title: "Apa kamu yakin ingin menyimpan perubahan?",
@@ -226,6 +245,11 @@
                     hargaInput.value = cleanPrice;
                 }
                 document.getElementById('kt_modal_new_target_form').submit();
+            } else {
+                // Re-enable button if cancelled
+                submitButton.disabled = false;
+                indicatorLabel.style.display = 'inline-block';
+                indicatorProgress.style.display = 'none';
             }
         });
     });

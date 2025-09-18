@@ -164,10 +164,10 @@ class RecreationController extends Controller
             ->select('recreation_has_packages.*', 'category_recreations.name as category_name')
             ->get();
 
+        // Get actual enum values for expiry_type
         $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
-
-        preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
-        $expiryTypes = explode(",'", $matches[1]);
+        preg_match("/^enum\('(.*)'\)$/", $enumValues, $matches);
+        $expiryTypes = explode("','", str_replace("'", "", $matches[1]));
 
         return view('ekstranet.rekreasi.create', [
             'data' => $data,
@@ -181,17 +181,38 @@ class RecreationController extends Controller
     {
         $request->merge(['is_active' => $request->input('is_active', 1)]);
 
+        // Get the actual enum values from database
+        $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
+        preg_match("/^enum\('(.*)'\)$/", $enumValues, $matches);
+        $allowedExpiryTypes = explode("','", str_replace("'", "", $matches[1]));
+
         $request->validate([
             'recreation_id' => 'required|exists:recreations,id',
             'name' => 'required|string|max:255',
             'rules' => 'required|string',
             'description' => 'required|string',
-            'duration' => 'required|string|max:255',
+            'duration' => 'required|numeric',
             'unit_price' => 'required|string|max:255',
             'expiry_date' => 'required|numeric',
-            'expiry_type' => 'required|string|in:Hari,Jam',
-            'price' => 'required',
+            'expiry_type' => 'required|string|in:' . implode(',', $allowedExpiryTypes),
+            'price' => 'required|numeric',
             'is_active' => 'required|boolean',
+        ], [
+            'recreation_id.required' => 'Bisnis harus dipilih.',
+            'recreation_id.exists' => 'Bisnis yang dipilih tidak valid.',
+            'name.required' => 'Nama paket harus diisi.',
+            'rules.required' => 'Peraturan harus diisi.',
+            'description.required' => 'Deskripsi harus diisi.',
+            'duration.required' => 'Durasi harus diisi.',
+            'duration.numeric' => 'Durasi harus berupa angka.',
+            'unit_price.required' => 'Tipe durasi harus dipilih.',
+            'expiry_date.required' => 'Masa berlaku harus diisi.',
+            'expiry_date.numeric' => 'Masa berlaku harus berupa angka.',
+            'expiry_type.required' => 'Tipe masa berlaku harus dipilih.',
+            'expiry_type.in' => 'Tipe masa berlaku yang dipilih tidak valid.',
+            'price.required' => 'Harga harus diisi.',
+            'price.numeric' => 'Harga harus berupa angka.',
+            'is_active.required' => 'Status harus dipilih.'
         ]);
 
         DB::beginTransaction();
@@ -204,7 +225,7 @@ class RecreationController extends Controller
                 return redirect()->back()->withErrors(['error' => 'Bisnis rekreasi yang dipilih tidak valid.'])->withInput();
             }
 
-            $price = (int) preg_replace('/[^\\d]/', '', $request->price);
+            $price = (int) $request->price;
 
             $packageData = $request->all();
             $packageData['category_recreation_id'] = $recreationBusiness->category_recreation_id;
@@ -243,9 +264,10 @@ class RecreationController extends Controller
                 ->with('success', 'Berhasil menambahkan rekreasi!');
         } catch (\Throwable $e) {
             DB::rollBack();
+            \Log::error('Store Recreation Package Error: ' . $e->getMessage());
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'Gagal menambah rekreasi!'])
+                ->withErrors(['error' => 'Gagal menambah rekreasi! ' . $e->getMessage()])
                 ->withInput();
         }
         
@@ -258,42 +280,59 @@ class RecreationController extends Controller
         $recreation_has_packages = RecreationPackages::with('images')
             ->findOrFail($id);
 
-        // DB::table('recreation_has_packages')->where('id', $id)->first();
-        if (!$recreation_has_packages) {
-            return redirect()->route('rekreasi.index')->with('error', 'Rekreasi tidak ditemukan.');
-        }
-
+        // Get actual enum values for expiry_type
         $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
-        preg_match("/^enum\(\'(.*)\'\)$/", $enumValues, $matches);
-        $expiryTypes = explode(",'", $matches[1]);
+        preg_match("/^enum\('(.*)'\)$/", $enumValues, $matches);
+        $expiryTypes = explode("','", $matches[1]);
 
         $category = DB::table('category_recreations')->get();
 
         $recreations = DB::table('recreations')
             ->where('user_id', Auth::id())
             ->get();
-        // dd($recreation_has_packages->images);
+            
         return view('ekstranet.rekreasi.edit', compact('recreation_has_packages', 'category', 'expiryTypes', 'recreations'));
     }
 
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        // Get the actual enum values from database
+        $enumValues = DB::select('SHOW COLUMNS FROM recreation_has_packages WHERE Field = "expiry_type"')[0]->Type;
+        preg_match("/^enum\\(\\'(.*)\\'\\)$/", $enumValues, $matches);
+        $allowedExpiryTypes = explode("','", str_replace("'", "", $matches[1]));
+        
+        $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'rules' => 'required|string',
             'description' => 'required|string',
-            'duration' => 'required|string|max:255',
+            'duration' => 'required|numeric',
             'expiry_date' => 'required|numeric',
-            'expiry_type' => 'required|string|in:Hari,Jam',
+            'expiry_type' => 'required|string|in:' . implode(',', $allowedExpiryTypes),
             'unit_price' => 'required|string',
-            'price' => 'required',
+            'price' => 'required|numeric',
             'is_active' => 'required|boolean',
             'recreation_id' => 'required|exists:recreations,id',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'deleted_images' => 'nullable|array',
             'deleted_images.*' => 'integer|exists:recreation_packages_images,id'
+        ], [
+            'name.required' => 'Nama paket harus diisi.',
+            'rules.required' => 'Peraturan harus diisi.',
+            'description.required' => 'Deskripsi harus diisi.',
+            'duration.required' => 'Durasi harus diisi.',
+            'duration.numeric' => 'Durasi harus berupa angka.',
+            'expiry_date.required' => 'Masa berlaku harus diisi.',
+            'expiry_date.numeric' => 'Masa berlaku harus berupa angka.',
+            'expiry_type.required' => 'Tipe masa berlaku harus dipilih.',
+            'expiry_type.in' => 'Tipe masa berlaku yang dipilih tidak valid.',
+            'unit_price.required' => 'Tipe durasi harus dipilih.',
+            'price.required' => 'Harga harus diisi.',
+            'price.numeric' => 'Harga harus berupa angka.',
+            'is_active.required' => 'Status harus dipilih.',
+            'recreation_id.required' => 'Bisnis harus dipilih.',
+            'recreation_id.exists' => 'Bisnis yang dipilih tidak valid.'
         ]);
 
         DB::beginTransaction();
@@ -345,25 +384,15 @@ class RecreationController extends Controller
             }
 
             // 4. Update Package Details
-            $price = (int) preg_replace('/[^\\d]/', '', $request->price);
+            $validatedData['price'] = (int) $validatedData['price'];
             
-            $recreationPackage->update([
-                'name' => $request->name,
-                'rules' => $request->rules,
-                'description' => $request->description,
-                'duration' => $request->duration,
-                'expiry_date' => $request->expiry_date,
-                'expiry_type' => $request->expiry_type,
-                'unit_price' => $request->unit_price,
-                'price' => $price,
-                'is_active' => $request->is_active,
-                'recreation_id' => $request->recreation_id,
-            ]);
+            $recreationPackage->update($validatedData);
 
             DB::commit();
             return redirect()->route('partner.daftar-rekreasi')->with('success_update', 'Data berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Update Recreation Package Error: ' . $e->getMessage());
             return redirect()
                 ->back()
                 ->withErrors(['error' => 'Gagal mengubah rekreasi! ' . $e->getMessage()])
