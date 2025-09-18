@@ -131,8 +131,7 @@ class RecreationController extends Controller
      */
     public function show(string $id)
     {
-        $recreation = Recreation::findOrFail($id);
-
+        $recreation = Recreation::with('image')->findOrFail($id);
 
         return response()->json([
             'success' => true,
@@ -167,6 +166,7 @@ class RecreationController extends Controller
             'close' => 'required',
             'is_active' => 'required',
             'category_recreation_id' => 'required|exists:category_recreations,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -189,6 +189,18 @@ class RecreationController extends Controller
             'is_active' => $request->is_active,
         ]);
 
+        // Handle image upload if provided
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imgName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('recreation', $imgName, 'public');
+
+            // Update or create recreation image
+            recreationImages::updateOrCreate(
+                ['recreation_id' => $recreation->id, 'main' => 1],
+                ['image' => $imgName]
+            );
+        }
 
         toast('Mitra has been updated', 'success');
         return response()->json([

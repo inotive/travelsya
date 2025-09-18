@@ -117,6 +117,17 @@
                         <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
+                    <div class="col-12">
+                        <label class="fs-6 fw-semibold mb-2">Gambar</label>
+                        <div id="current-image-preview" class="mb-2" style="display: none;">
+                            <img id="current-image" src="" alt="Current Image" style="max-width: 200px; max-height: 150px; border-radius: 5px;">
+                            <p class="text-muted small mt-1">Gambar saat ini</p>
+                        </div>
+                        <input type="file" class="form-control image-edit" id="image-edit" name="image" accept="image/*">
+                        <div class="alert alert-danger mt-1 d-none"></div>
+                        <small class="text-muted">Kosongkan jika tidak ingin mengubah gambar</small>
+                    </div>
+
                 </div>
                 <!--end::Input group-->
                 <!--begin::Actions-->
@@ -168,6 +179,14 @@
                     $('#ltd-edit').val(response.data.ltd);
                     $('#category-edit').val(response.data.category_recreation_id);
 
+                    // Show current image if exists
+                    if(response.data.image && response.data.image.image) {
+                        $('#current-image').attr('src', '/storage/recreation/' + response.data.image.image);
+                        $('#current-image-preview').show();
+                    } else {
+                        $('#current-image-preview').hide();
+                    }
+
                     $('#modal-edit').modal('show');
                 }
             });
@@ -192,26 +211,37 @@
             let category_recreation_id = $('#category-edit').val();
             let token = $("meta[name='csrf-token']").attr("content");
 
+            // Create FormData for file upload
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('user_id', user_id);
+            formData.append('is_active', is_active);
+            formData.append('address', address);
+            formData.append('description', description);
+            formData.append('open', open);
+            formData.append('close', close);
+            formData.append('city', city);
+            formData.append('lat', lat);
+            formData.append('ltd', ltd);
+            formData.append('phone', phone);
+            formData.append('category_recreation_id', category_recreation_id);
+            formData.append('_token', token);
+            formData.append('_method', 'PUT');
+
+            // Add image file if selected
+            let imageFile = $('#image-edit')[0].files[0];
+            if (imageFile) {
+                formData.append('image', imageFile);
+            }
+
             // AJAX
             $.ajax({
                 url: `/admin/management-mitra/rekreasi/${recreation_id}`
-                , type: "PUT"
+                , type: "POST"
                 , cache: false
-                , data: {
-                    "name": name
-                    , "user_id": user_id
-                    , "is_active": is_active
-                    , "address": address
-                    , "description": description
-                    , "open": open
-                    , "close": close
-                    , "city": city
-                    , "lat": lat
-                    , "ltd": ltd
-                    , "phone": phone
-                    , "category_recreation_id": category_recreation_id
-                    , "_token": token
-                }
+                , data: formData
+                , processData: false
+                , contentType: false
                 , success: function(response) {
                     $('#modal-edit').modal('hide');
                     location.reload();
@@ -219,7 +249,7 @@
                 , error: function(errors) {
                     const messages = errors.responseJSON;
                     $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
-                        
+
                     if(messages) {
                         for (const key in messages) {
                             $(`#${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
