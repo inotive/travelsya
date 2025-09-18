@@ -333,12 +333,14 @@ class RecreationController extends Controller
             // 3. Handle Additional Images Upload
             if ($request->hasFile('additional_images')) {
                 foreach ($request->file('additional_images') as $image) {
-                    $imagePath = $image->store('images/recreation_package_images', 'public');
-                    RecreationPackagesImages::create([
-                        'recreation_package_id' => $recreationPackage->id,
-                        'image' => $imagePath,
-                        'main' => 0
-                    ]);
+                    if ($image) {
+                        $imagePath = $image->store('images/recreation_package_images', 'public');
+                        RecreationPackagesImages::create([
+                            'recreation_package_id' => $recreationPackage->id,
+                            'image' => $imagePath,
+                            'main' => 0
+                        ]);
+                    }
                 }
             }
 

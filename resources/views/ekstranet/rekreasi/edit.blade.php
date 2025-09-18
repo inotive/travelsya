@@ -28,7 +28,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Harga</label>
-                    <input class="form-control form-control-lg" value="@currency($recreation_has_packages->price)" type="text" id="harga" placeholder="Rp." name="price" required />
+                    <input class="form-control form-control-lg" value="{{ $recreation_has_packages->price }}" type="text" id="harga" placeholder="Rp." name="price" required />
                     @error('price')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
@@ -62,15 +62,15 @@
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                     <select class="form-select" name="unit_price" aria-label="Default select example" required>
-                        <option value="Menit">Menit</option>
-                        <option value="Jam">Jam</option>
+                        <option value="Menit" {{ $recreation_has_packages->unit_price == 'Menit' ? 'selected' : '' }}>Menit</option>
+                        <option value="Jam" {{ $recreation_has_packages->unit_price == 'Jam' ? 'selected' : '' }}>Jam</option>
                     </select>
                 </div>
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Masa Berlaku</label>
-                    <input class="form-control form-control-lg" id="expiry" type="number" value="{{ $recreation_has_packages->expiry_date }}" name="expiry" required />
-                    @error('expiry')
+                    <input class="form-control form-control-lg" id="expiry" type="number" value="{{ $recreation_has_packages->expiry_date }}" name="expiry_date" required />
+                    @error('expiry_date')
                     <span class="text-danger mt-1" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -81,7 +81,7 @@
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                     <select class="form-select" name="expiry_type" aria-label="Default select example" required>
                         @foreach ($expiryTypes as $type)
-                            <option value="{{ $type }}">{{ $type }}</option>
+                            <option value="{{ $type }}" {{ $recreation_has_packages->expiry_type == $type ? 'selected' : '' }}>{{ $type }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -135,7 +135,7 @@
                         @foreach($recreation_has_packages->images as $image)
                         <div class="col-md-3 mb-3">
                             <div class="card">
-                                <img src="{{ $image->image }}" class="card-img-top" alt="Image">
+                                <img src="{{ asset('storage/' . $image->image) }}" class="card-img-top" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
                                 <div class="card-body text-center">
                                     @if($image->main == 1)
                                         <span class="badge bg-primary">Gambar Utama</span>
@@ -156,7 +156,8 @@
                 
                 <!-- Image Upload Section -->
                 <div class="col-md-12 mt-4">
-                    <label class="fs-6 fw-semibold mb-2">Tambah Gambar Baru</label>
+                    <label class="fs-6 fw-semibold mb-2">Unggah Gambar Baru (Opsional)</label>
+                    <div class="form-text mb-4">Biarkan kolom di bawah ini kosong jika Anda tidak ingin menambah atau mengganti gambar.</div>
                     
                     <!-- Main Image Upload -->
                     <div class="mb-4">
@@ -207,16 +208,23 @@
         event.preventDefault();
 
         Swal.fire({
-            title: "Apa kamu yakin ingin menyimpan perubahan?"
-            , icon: "question"
-            , showCancelButton: true
-            , cancelButtonText: `Tidak jadi`
-            , cancelButtonColor: '#d33'
-            , confirmButtonText: "Ya"
-            , confirmButtonColor: '#3085d6'
-            , reverseButtons: true
+            title: "Apa kamu yakin ingin menyimpan perubahan?",
+            icon: "question",
+            showCancelButton: true,
+            cancelButtonText: "Tidak jadi",
+            cancelButtonColor: '#d33',
+            confirmButtonText: "Ya",
+            confirmButtonColor: '#3085d6',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
+                // Format the price value before submitting
+                let hargaInput = document.getElementById('harga');
+                if (hargaInput) {
+                    // Remove formatting characters (Rp., commas, dots) to get clean number
+                    let cleanPrice = hargaInput.value.replace(/[^\d]/g, '');
+                    hargaInput.value = cleanPrice;
+                }
                 document.getElementById('kt_modal_new_target_form').submit();
             }
         });
