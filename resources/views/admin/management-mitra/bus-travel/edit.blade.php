@@ -31,6 +31,20 @@
                 <div class="g-9 mb-8 row">
                     <input type="hidden" id="bus_travel_id" value="">
                     <div class="col-md-12">
+                        <label class="required fs-6 fw-semibold mb-2">Logo</label>
+                        <input type="file" class="form-control form-control-lg logo-edit" id="logo-edit"
+                            name="logo" accept="image/jpeg,image/jpg,image/png" />
+                        <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
+                        <div class="mt-2" id="current-logo-preview"></div>
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-logo-edit"></div>
+
+                        @error('logo')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                    <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
@@ -156,6 +170,19 @@
 
                     $('#phone-edit').val(response.data.phone);
 
+                    // Show current logo if exists
+                    if (response.data.image && response.data.image !== '-') {
+                        $('#current-logo-preview').html(`
+                            <div class="d-flex align-items-center">
+                                <img src="/storage/${response.data.image}" alt="Current Logo"
+                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="me-2">
+                                <span class="text-muted">Logo saat ini</span>
+                            </div>
+                        `);
+                    } else {
+                        $('#current-logo-preview').html('<span class="text-muted">Belum ada logo</span>');
+                    }
+
                     $('#modal-edit').modal('show');
 
                 }
@@ -172,24 +199,32 @@
             let address = $('#address-edit').val();
             let city = $('#city-edit').val();
             let phone = $('#phone-edit').val();
+            let logo = $('#logo-edit')[0].files[0];
             let token = $("meta[name='csrf-token']").attr("content");
 
+            // Create FormData for file upload
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('user_id', user_id);
+            formData.append('is_active', is_active);
+            formData.append('address', address);
+            formData.append('city', city);
+            formData.append('phone', phone);
+            formData.append('_token', token);
+            formData.append('_method', 'PUT');
 
+            if (logo) {
+                formData.append('logo', logo);
+            }
 
             //ajax
             $.ajax({
                 url: `/admin/management-mitra/bus-travel/${bus_travel_id}`,
-                type: "PUT",
+                type: "POST",
                 cache: false,
-                data: {
-                    "name": name,
-                    "user_id": user_id,
-                    "is_active": is_active,
-                    "address": address,
-                    "city": city,
-                    "phone": phone,
-                    "_token": token
-                },
+                data: formData,
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     $('#modal-edit').modal('hide');
                     location.reload();
@@ -228,6 +263,11 @@
                     if (error.responseJSON.city) {
                         $('#alert-city-edit').removeClass('d-none').addClass('d-block');
                         $('#alert-city-edit').html(error.responseJSON.city[0]);
+                    }
+
+                    if (error.responseJSON.logo) {
+                        $('#alert-logo-edit').removeClass('d-none').addClass('d-block');
+                        $('#alert-logo-edit').html(error.responseJSON.logo[0]);
                     }
                 }
             });

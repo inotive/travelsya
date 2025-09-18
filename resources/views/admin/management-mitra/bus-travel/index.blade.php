@@ -160,7 +160,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.bus-travel.store') }}">
+                        action="{{ route('admin.bus-travel.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -172,6 +172,18 @@
                         <!--end::Heading-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
+                            <div class="col-md-12">
+                                <label class="required fs-6 fw-semibold mb-2">Logo</label>
+                                <input type="file" class="form-control form-control-lg" id="logo"
+                                    name="logo" accept="image/jpeg,image/jpg,image/png" required />
+                                <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
+
+                                @error('logo')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>
                                 <input class="form-control form-control-lg" id="name"
