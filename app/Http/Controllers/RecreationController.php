@@ -198,35 +198,41 @@ class RecreationController extends Controller
 
         try {
 
-            $recreationId = $request->input('recreation_id');
+            // Find the recreation business to get the category ID
+            $recreationBusiness = Recreation::find($request->input('recreation_id'));
+            if (!$recreationBusiness) {
+                return redirect()->back()->withErrors(['error' => 'Bisnis rekreasi yang dipilih tidak valid.'])->withInput();
+            }
 
-            $categoryRecreation = DB::table('category_recreations')
-                ->where('id', $recreationId)
-                ->first();
-            
             $price = (int) preg_replace('/[^\\d]/', '', $request->price);
 
-            $request['category_recreation_id'] = $categoryRecreation->id;
-            $request['price'] = $price;
+            $packageData = $request->all();
+            $packageData['category_recreation_id'] = $recreationBusiness->category_recreation_id;
+            $packageData['price'] = $price;
 
-            $recreation = RecreationPackages::create($request->all());
+            $recreation = RecreationPackages::create($packageData);
 
-            // Handle multiple image uploads
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $key => $image) {
-                    $imagePath = $image->store('images/recreation_package_images', 'public');
-                    
-                    // Set the first image as main image
-                    $isMain = ($key === 0) ? 1 : 0;
-                    
-                    // Get the ID explicitly to avoid undefined property error
-                    $recreationId = $recreation->id ?? null;
-                    
-                    RecreationPackagesImages::create([
-                        'recreation_package_id' => $recreationId,
-                        'image' => $imagePath,
-                        'main' => $isMain
-                    ]);
+            // Handle Main Image Upload
+            if ($request->hasFile('main_image')) {
+                $imagePath = $request->file('main_image')->store('images/recreation_package_images', 'public');
+                RecreationPackagesImages::create([
+                    'recreation_package_id' => $recreation->id,
+                    'image' => $imagePath,
+                    'main' => 1
+                ]);
+            }
+
+            // Handle Additional Images Upload
+            if ($request->hasFile('additional_images')) {
+                foreach ($request->file('additional_images') as $image) {
+                    if ($image) { // Check if a file was actually uploaded
+                        $imagePath = $image->store('images/recreation_package_images', 'public');
+                        RecreationPackagesImages::create([
+                            'recreation_package_id' => $recreation->id,
+                            'image' => $imagePath,
+                            'main' => 0
+                        ]);
+                    }
                 }
             }
 
@@ -278,7 +284,7 @@ class RecreationController extends Controller
             'rules' => 'required|string',
             'description' => 'required|string',
             'duration' => 'required|string|max:255',
-            'expiry' => 'required|numeric',
+            'expiry_date' => 'required|numeric',
             'expiry_type' => 'required|string|in:Hari,Jam',
             'unit_price' => 'required|string',
             'price' => 'required',
@@ -344,7 +350,7 @@ class RecreationController extends Controller
                 'rules' => $request->rules,
                 'description' => $request->description,
                 'duration' => $request->duration,
-                'expiry_date' => $request->expiry,
+                'expiry_date' => $request->expiry_date,
                 'expiry_type' => $request->expiry_type,
                 'unit_price' => $request->unit_price,
                 'price' => $price,
@@ -388,7 +394,7 @@ class RecreationController extends Controller
             
             if ($relatedTransactions) {
                 DB::rollBack();
-                return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan transaksi.']);
+                return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan transaksi.'], 422);
             }
             
             // Check if the package is related to any ratings/reviews
@@ -398,7 +404,7 @@ class RecreationController extends Controller
             
             if ($relatedRatings) {
                 DB::rollBack();
-                return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan rating atau ulasan.']);
+                return response()->json(['error' => 'Tidak dapat menghapus paket yang masih terhubung dengan rating atau ulasan.'], 422);
             }
         
             if(count($recreationPackage->images) > 0) {
@@ -414,7 +420,7 @@ class RecreationController extends Controller
             return response()->json(['success' => 'Recreation package deleted successfully']);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => 'Failed to delete recreation package: ' . $e->getMessage()]);
+            return response()->json(['error' => 'Failed to delete recreation package: ' . $e->getMessage()], 500);
         }
         
 

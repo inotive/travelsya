@@ -95,6 +95,25 @@
                     </span>
                     @enderror
                 </div>
+
+                <div class="col-md-6">
+                    <label class="required fs-6 fw-semibold mb-2">Status</label>
+                    <div class="d-flex align-items-center mt-4">
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="radio" name="is_active" id="active" value="1" checked required>
+                            <label class="form-check-label fw-bold" for="active">Active</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="is_active" id="inactive" value="0" required>
+                            <label class="form-check-label fw-bold" for="inactive">Inactive</label>
+                        </div>
+                    </div>
+                    @error('status')
+                    <span class="text-danger mt-1" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                    @enderror
+                </div>
                 
                 <!-- Image Upload Section -->
                 <div class="col-md-12 mt-4">
