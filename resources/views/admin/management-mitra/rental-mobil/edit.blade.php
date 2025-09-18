@@ -19,7 +19,7 @@
           <!--begin::Modal body-->
           <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
 
-             
+
               <!--begin::Heading-->
               <div class="mb-13 text-center">
                   <!--begin::Title-->
@@ -33,7 +33,7 @@
                   <div class="col-md-12">
                       <label class="required fs-6 fw-semibold mb-2">Nama</label>
                       <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
-                      <div class="alert alert-danger mt-1 d-none"></div>              
+                      <div class="alert alert-danger mt-1 d-none"></div>
                   </div>
                   <div class="col-md-6">
                       <label class="required fs-6 fw-semibold mb-2">Mitra</label>
@@ -75,9 +75,15 @@
                       <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
                       <div class="alert alert-danger mt-1 d-none"></div>
                   </div>
-                 
-                 
-              
+
+                  <div class="col-12">
+                      <label for="" class="required form-label">Kebijakan Rental Mobil</label>
+                      <textarea id="kebijakan_rental_mobil-edit" cols="30" rows="5" class="form-control kebijakan_rental_mobil-edit" placeholder="Masukkan kebijakan rental mobil..."></textarea>
+                      <div class="alert alert-danger mt-1 d-none"></div>
+                  </div>
+
+
+
               </div>
               <!--end::Input group-->
               <!--begin::Actions-->
@@ -112,7 +118,7 @@ $(document).ready(function() {
     $('body').on('click', '#btn-edit-rental', function() {
         let rental_id = $(this).data('id');
         $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
-    
+
         $.ajax({
             url: `/admin/management-mitra/rental-mobil/${rental_id}`,
             type: "GET",
@@ -123,12 +129,13 @@ $(document).ready(function() {
                 $('#user_id-edit').val(response.data.user_id);
                 $('#is_active-edit').val(response.data.is_active);
                 $('#address-edit').val(response.data.address);
+                $('#kebijakan_rental_mobil-edit').val(response.data.kebijakan_rental_mobil);
 
                 $('#city-edit').val(response.data.city);
                 $('#city-edit').trigger('change');
 
                 $('#phone-edit').val(response.data.phone);
-            
+
                 $('#modal-edit').modal('show');
 
             }
@@ -139,17 +146,18 @@ $(document).ready(function() {
 
     e.preventDefault();
 
-    
+
     //define variable
     let rental_id = $('#rental_id').val();
     let user_id = $('#user_id-edit').val();
     let name = $('#name-edit').val();
     let is_active = $('#is_active-edit').val();
     let address = $('#address-edit').val();
+    let kebijakan_rental_mobil = $('#kebijakan_rental_mobil-edit').val();
     let city = $('#city-edit').val();
     let phone = $('#phone-edit').val();
     let token   = $("meta[name='csrf-token']").attr("content");
-    
+
 
 
     //ajax
@@ -162,6 +170,7 @@ $(document).ready(function() {
             "user_id": user_id,
             "is_active": is_active,
             "address": address,
+            "kebijakan_rental_mobil": kebijakan_rental_mobil,
             "city": city,
             "phone": phone,
             "_token": token
@@ -176,7 +185,7 @@ $(document).ready(function() {
 
             const messages = errors.responseJSON;
             $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
-                
+
             if(messages) {
                 for (const key in messages) {
                     $(`.${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);

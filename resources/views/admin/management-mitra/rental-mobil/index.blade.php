@@ -26,6 +26,7 @@
                             <th class="text-center">Nama Rental Mobil</th>
                             <th class="text-center">Kota/Kabupaten</th>
                             <th class="text-center">Alamat</th>
+                            <th class="text-center">Kebijakan Rental</th>
                             <th class="text-center">Nomor Telepon</th>
                             <th class="text-center">Status</th>
                             <th class="text-center">Aksi</th>
@@ -47,6 +48,13 @@
 
                                 <td class="text-center">{{ $rental->address }}</td>
 
+                                <td class="text-center">
+                                    @if($rental->kebijakan_rental_mobil)
+                                        {{ Str::limit($rental->kebijakan_rental_mobil, 50) }}
+                                    @else
+                                        <span class="text-muted">-</span>
+                                    @endif
+                                </td>
 
                                 <td class="text-center">{{ $rental->car_rental_phone }}</td>
 
@@ -239,6 +247,16 @@
                             <div class="col-12">
                                 <label for="" class="required form-label">Alamat</label>
                                 <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="" class="required form-label">Kebijakan Rental Mobil</label>
+                                <textarea name="kebijakan_rental_mobil" id="kebijakan_rental_mobil" cols="30" rows="5" class="form-control" required placeholder="Masukkan kebijakan rental mobil..."></textarea>
+                                @error('kebijakan_rental_mobil')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
 
                         </div>
