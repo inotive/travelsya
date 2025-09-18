@@ -65,7 +65,7 @@
                 <div class="col-md-12 mt-4">
                     <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
                     <div class="d-flex flex-wrap gap-3" id="existing-images-container">
-                        @foreach(json_decode($bus->image, true) ?? [] as $index => $img)
+                        @foreach((is_array($bus->image) ? $bus->image : json_decode($bus->image, true)) ?? [] as $index => $img)
                             <div class="existing-image-card" data-image="{{ $img }}">
                                 <div class="image-wrapper">
                                     <img src="{{ asset('storage/buses/'.$img) }}" class="existing-image" alt="Bus Image">

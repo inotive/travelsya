@@ -165,7 +165,7 @@ class BusTravelController extends Controller
                 ->withInput();
         }
 
-        $imageNames = json_decode($bus->image, true) ?? [];
+        $imageNames = is_array($bus->image) ? $bus->image : json_decode($bus->image, true) ?? [];
 
         if ($request->filled('removed_images')) {
             $removedImages = json_decode($request->removed_images, true) ?? [];
@@ -210,8 +210,8 @@ class BusTravelController extends Controller
     {
         $bus = BusTravelHasBus::find($id);
 
-        $images = json_decode($bus->image, true);
-        if (!empty($images)) {
+        $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
+        if (!empty($images) && is_array($images)) {
             foreach ($images as $image) {
                 Storage::disk('public')->delete('buses/' . $image);
             }

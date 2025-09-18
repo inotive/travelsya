@@ -32,9 +32,9 @@
                                 <td></td>
                                 <td>
                                     @php
-                                        $images = json_decode($bus->image, true);
+                                        $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
                                     @endphp
-                                    @if (!empty($images))
+                                    @if (!empty($images) && is_array($images))
                                         <img src="{{ asset('storage/buses/' . $images[0]) }}"
                                             style="width: 130px; height: 100px; object-fit: contain;">
                                     @else
