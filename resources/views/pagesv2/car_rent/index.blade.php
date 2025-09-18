@@ -6,5 +6,6 @@
 @include('pagesv2.car_rent.partials._contents', [
 'car_models' => $car_models,
 'near_location' => $near_location,
+'brands' => $brands,
 ])
 @endsection

@@ -2,12 +2,9 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="d-flex flex-column border border-bottom" style="padding: 1.75rem;">
-                <div class="d-flex flex-row align-items-center mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="title fw-bold fs-5">Pilih Penyedia Rental</span>
-                    <button class="btn btn-outline-light close ms-sm-auto p-0" id="close_modal" data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true" class="fs-1">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <div class="d-flex flex-column">
@@ -25,49 +22,75 @@
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->category_rent }}</span>
                         </div>
                     </div>
-                    <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
-                        alt="..."
-                        onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                    <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
+                        <img src="{{ asset($car->brand->image ?? null) }}" 
+                             class="card-img-aspect card-img-top"
+                             alt="{{ $car->brand->name ?? 'Car Brand' }}"
+                             onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                    </div>
                 </div>
             </div>
-            <div class="modal-body">
-                @foreach ($car->vendor as $v)
-                {{-- {{ dd($v) }} --}}
-                <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] }}">
+            <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
+                @forelse (collect($car->vendor)->sortBy(function($item) { return $item['price'] ?? $item->rental_price_per_day ?? 0; }) as $v)
+                <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
                         <div class="d-flex flex-column">
-                            <span class="fw-bold mb-5">{{ $v['business_name'] }}</span>
+                            <span class="fw-bold mb-5">{{ $v['business_name'] ?? $v->carRental->business_name ?? 'Unknown Vendor' }}</span>
                             <div class="rating d-flex align-items-center mb-1">
                                 <span class="bintang text-warning fa fa-star checked me-2"></span>
                                 <span class="rating-number fw-bold">{{
-                                    \App\Helpers\General::getCarRentalRate($v['car_id']) }}
+                                    \App\Helpers\General::getCarRentalRate($v['car_id'] ?? $v->id ?? 0) }}
                                     / <small>5</small> <a href="#"
                                         class="text-decoration-none text-dark opacity-50 text-capitalize">(Lihat {{
-                                        number_format($v['reviews']) }}
+                                        number_format($v['reviews'] ?? 0) }}
                                         Ulasan)</a>
                                 </span>
                                 <span class="rating-number custom-dot-before">{{ number_format($car->booked()->count())
                                     }} order</span>
                             </div>
                             <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                <span class="rating-number">Air Mineral</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-user checked me-2"></span>
-                                <span class="rating-number">Supir bisa bahasa inggris</span>
+                                <span class="bintang fa-solid fa-location-dot checked me-2"></span>
+                                <span class="rating-number">{{ $v['location'] ?? ($v->carRental->kota->city_name ?? 'Lokasi tidak diketahui') }}</span>
                             </div>
                         </div>
                         <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">
                             <span class="mb-2"><span class="text-danger fw-bold">IDR
-                                    {{ number_format($v['price'], '0', ',', '.') }}</span> /
+                                    {{ number_format($v['price'] ?? $v->rental_price_per_day ?? 0, '0', ',', '.') }}</span> /
                                 hari</span>
+                            @php
+                                // Menentukan lokasi dengan berbagai fallback - memastikan selalu ada nilai
+                                $lokasi = 'jakarta'; // Default value
+                                
+                                // Coba dapatkan dari array
+                                if (isset($v['location']) && !empty($v['location'])) {
+                                    $lokasi = $v['location'];
+                                } 
+                                // Coba dapatkan dari object relationship
+                                elseif (isset($v->carRental) && isset($v->carRental->kota) && isset($v->carRental->kota->city_name) && !empty($v->carRental->kota->city_name)) {
+                                    $lokasi = $v->carRental->kota->city_name;
+                                } 
+                                // Coba dapatkan dari variable location
+                                elseif (isset($location) && !empty($location)) {
+                                    $lokasi = $location;
+                                }
+                                         
+                                // Menentukan provider dengan berbagai fallback
+                                $provider = 'default_provider'; // Default value
+                                if (!empty($v['car_id'])) {
+                                    $provider = $v['car_id'];
+                                } elseif (!empty($v->id)) {
+                                    $provider = $v->id;
+                                }
+                                           
+                                // Menentukan tanggal dengan format yang benar
+                                $tanggal = urlencode(trim(($date ?? date('Y-m-d')) . ' ' . ($time ?? '08:00')));
+                            @endphp
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan driver',
-                                'lokasi' => $v['location'] ?? 'jakarta',
+                                'lokasi' => $lokasi,
                                 'model' => $model ?? $car->car_model_id,
-                                'provider' => !empty($v['car_id']) ? $v['car_id'] : 'default_provider',
-                                'date' => trim(($date ?? '') . ' ' . ($time ?? '')),
+                                'provider' => $provider,
+                                'date' => $tanggal,
                                 'duration'=> $duration ?? 1
                             ]) }}">
 
@@ -94,7 +117,11 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="alert alert-info text-center">
+                    <h4>Tidak ada penyedia rental untuk mobil ini</h4>
+                </div>
+                @endforelse
             </div>
         </div>
     </div>

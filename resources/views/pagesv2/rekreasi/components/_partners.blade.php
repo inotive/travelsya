@@ -46,7 +46,7 @@
                             <div class="rating d-flex align-items-center text-start">
                                 <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
                                 <span class="rating-number" style="position: relative; top: 1px;">{{ $partner['rate'] }}
-                                    ({{ number_format($partner['rating_count']) }}
+                                    ({{ number_format((float) $partner['rating_count']) }}
                                     ulasan)
                                 </span>
                             </div>
@@ -55,9 +55,9 @@
                                 <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
                                     {{-- {{ number_format($partner['origin_price'], 0, ',', '.') }}</span> --}}
                                     {{-- {{ dd($partner['origin_price']) }} --}}
-                                    {{ number_format($partner['origin_price'] ?? 0) }}</span>
+                                    {{ number_format((float) ($partner['origin_price'] ?? 0), 0, ',', '.') }}</span>
                                 <span class="text-danger text-bold">IDR
-                                    {{ number_format($partner['cut_price'] ?? 0, 0, ',', '.') }}</span>
+                                    {{ number_format((float) ($partner['cut_price'] ?? 0), 0, ',', '.') }}</span>
                             </div>
                         </div>
                     </div>

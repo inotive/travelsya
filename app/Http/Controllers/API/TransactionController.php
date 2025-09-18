@@ -31,7 +31,7 @@ use App\Models\DetailTransactionPPOB;
 use App\Models\DetailTransactionHotel;
 use App\Models\DetailTransactionTopUp;
 use App\Models\DetailTransactionHostel;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\Recreation;
 use App\Models\RecreationPackages;
 use App\Models\RecreationRatings;
@@ -104,7 +104,7 @@ class TransactionController extends Controller
                 ];
             }
         } elseif ($service['name'] == 'recreation') {
-            $data = detailTransactionRecreation::where('transaction_id', $transaction_id)->first();
+            $data = DetailTransactionRecreation::where('transaction_id', $transaction_id)->first();
 
             if ($data != null) {
                 $recreationPackage = RecreationPackages::find($data->recreationPackage_id);
@@ -318,7 +318,7 @@ class TransactionController extends Controller
             //                });
         }
         // UNTUK HOTEL
-        if (in_array($transaction->first()->service_id, [8])) {
+        if ($transaction->first()->service_id == 8) {
             $detailTransaction = Transaction::join('detail_transaction_hotel', 'detail_transaction_hotel.transaction_id', '=', 'transactions.id')
                 ->join('hotels', 'hotels.id', '=', 'detail_transaction_hotel.hotel_id')
                 ->join('hotel_rooms', 'hotel_rooms.id', '=', 'detail_transaction_hotel.hotel_room_id')
@@ -374,8 +374,8 @@ class TransactionController extends Controller
             //                    ];
             //                });
         }
-
-        if ($service->name ?? '' == 'recreation') {
+        // UNTUK RECREATION
+        if ($transaction->first()->service_id == 13) {
             $recreation = $transaction->with('detailTransactionRecreation')->first();
             $detailTransaction = $recreation->detailTransactionRecreation;
 
@@ -419,8 +419,8 @@ class TransactionController extends Controller
 
             ]);
         }
-
-        if ($service->name ?? '' == 'health-beauty') {
+        // UNTUK HEALTH BEAUTY
+        if ($transaction->first()->service_id == 14) {
             $recreation = $transaction->with('detailTransactionHealthBeauty')->first();
             $detailTransaction = $recreation->detailTransactionHealthBeauty;
 
@@ -464,8 +464,8 @@ class TransactionController extends Controller
 
             ]);
         }
-
-        if ($service->name ?? '' == 'car-rent') {
+        // UNTUK CAR RENTAL
+        if ($transaction->first()->service_id == 15) {
             $recreation = $transaction->with('detailTransactionCarRent')->first();
             $detailTransaction = $recreation->detailTransactionCarRent;
 
@@ -509,8 +509,8 @@ class TransactionController extends Controller
 
             ]);
         }
-
-        if ($service->name ?? '' == 'bus-travel') {
+        // UNTUK BUS TRAVEL
+        if ($transaction->first()->service_id == 16) {
 
             $bus = $transaction->with('detailTransactionBus')->first();
 
@@ -566,7 +566,7 @@ class TransactionController extends Controller
         }
 
         // UNTUK HOSTEL
-        if (in_array($transaction->first()->service_id, [7])) {
+        if ($transaction->first()->service_id == 7) {
             $detailTransaction = Transaction::join('detail_transaction_hostel', 'detail_transaction_hostel.transaction_id', '=', 'transactions.id')
                 ->join('hostels', 'hostels.id', '=', 'detail_transaction_hostel.hostel_id')
                 ->join('hostel_rooms', 'hostel_rooms.id', '=', 'detail_transaction_hostel.hostel_room_id')

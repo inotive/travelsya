@@ -63,9 +63,9 @@ class NewRecreationController extends Controller
                     'business_name' => $rec['business_name'],
                     'rate' => $rec->avgRating(),
                     'category' => $rec['category'],
-                    // 'origin_price' => (int)$rec['packages'][0]['unit_price'],
-                    'origin_price' => $rec['recreationPackages'][0]['unit_price'],
-                    'cut_price' => $rec['recreationPackages'][0]['price'],
+                    // Memeriksa apakah recreationPackages ada dan memiliki elemen
+                    'origin_price' => isset($rec['recreationPackages']) && count($rec['recreationPackages']) > 0 ? $rec['recreationPackages'][0]['unit_price'] : 0,
+                    'cut_price' => isset($rec['recreationPackages']) && count($rec['recreationPackages']) > 0 ? $rec['recreationPackages'][0]['price'] : 0,
                     'rating_count' => count($rec['reviews']),
                 ];
 

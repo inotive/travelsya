@@ -19,6 +19,7 @@
                             <th>Nama</th>
                             {{-- <th class="text-center px-2">Class</th> --}}
                             <th>Jumlah Seat</th>
+                            <th>Fasilitas</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -42,6 +43,11 @@
                                 </td>
                                 <td>{{ $bus->name ?? '' }}</td>
                                 <td>{{ $bus->number_seats ?? '0' }}</td>
+                                <td style="max-width: 200px">
+                                    @foreach ($bus->facilities as $facility)
+                                        <span class="badge badge-info">{{ $facility->facility->name }}</span>
+                                    @endforeach
+                                </td>
                                 <td class="text-center">
                                     @if ($bus->is_active == '1')
                                         <span class="badge badge-success">Aktif</span>
@@ -63,35 +69,6 @@
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </a>
                                     </div>
-
-                                    {{-- <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                        data-kt-menu="true" style="">
-                                        <a href="{{ route('partner.bus.departures.bus', $bus->id) }}" type="button"
-                                            class="menu-link px-3 text-warning" id="btn-edit-bus"
-                                            data-id="{{ $bus->id }}">
-                                            Setting Jadwal
-                                        </a>
-                                        <div class="menu-item px-3">
-                                            <a href="{{ route('partner.show.bus-travel', $bus->id) }}" type="button"
-                                                class="menu-link px-3 text-warning" id="btn-edit-bus"
-                                                data-id="{{ $bus->id }}">
-                                                Edit
-                                            </a>
-                                        </div>
-                                        <div class="menu-item px-3">
-                                            <a type="button" class="menu-link px-3 text-danger" data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal" data-id="{{ $bus->id }}">
-                                                Hapus
-                                            </a>
-                                        </div>
-                                    </div> --}}
-
-                                    {{-- <a href="#"
-                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        Aksi
-                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                    </a> --}}
                                 </td>
                             </tr>
                         @endforeach
@@ -116,7 +93,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form action="{{ route('partner.delete.bus-travel', $bus->id) }}" method="POST" id="form-delete">
+                    <form action="" method="POST" id="form-delete">
                         @method('delete')
                         @csrf
                         <button type="submit" class="btn btn-danger">Hapus</button>

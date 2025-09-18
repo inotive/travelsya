@@ -1,3 +1,31 @@
+@php
+    $facilityIcons = [
+        'colokan usb' => ['type' => 'image', 'src' => asset('images/icon/usb.png')],
+        'full ac' => ['type' => 'image', 'src' => asset('images/icon/ac.png')],
+        'kursi recliner' => ['type' => 'image', 'src' => asset('images/icon/chair.png')],
+        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-dark'],
+        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-dark'],
+        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-dark'],
+    ];
+
+    // Small inline function to render the HTML
+    $renderIcon = function ($name) use ($facilityIcons) {
+        $key = strtolower(trim($name));
+
+        if (!isset($facilityIcons[$key])) {
+            return '<i class="fa-regular fa-circle-question text-muted"></i>'; // fallback
+        }
+
+        $icon = $facilityIcons[$key];
+
+        if ($icon['type'] === 'image') {
+            return '<img src="' . e($icon['src']) . '" height="15" alt="' . e($name) . '">';
+        }
+
+        return '<i class="' . e($icon['class']) . '"></i>';
+    };
+@endphp
+
 @extends('layouts.app_v2')
 
 @push('add-style')
@@ -98,15 +126,16 @@
                     </div>
                     <hr>
                     <div class="row p-2">
-                        <div class="col-3">
+                        <div class="col-3 mb-4">
                             <span><i class="fa-solid fa-suitcase"></i></span>
                             <span class="ms-2">Kapasitas {{ number_format($departure->busTravel->number_seats) }}
                                 Kursi</span>
                         </div>
+                    <hr>
                         {{-- @if (isset($departure->busTravel->facilitites)) --}}
                         @foreach ($departure->busTravel->facilities as $f)
                         <div class="col-3">
-                            <span><i class="{{ $f->facility->icon }}"></i></span>
+                            {!! $renderIcon($f->facility->name) !!}
                             <span class="ms-2">{{ $f->facility->name }}</span>
                         </div>
                         @endforeach
@@ -130,13 +159,13 @@
             <div class="card-body p-5">
                 <div class="d-flex mt-3">
                     <div class="d-flex flex-column">
-                        <strong>08:00</strong>
-                        <span>12 Des</span>
+                        <strong>{{ date('H:i', strtotime($departure->departure_time)) }}</strong>
+                        <span>{{ date('d M', strtotime($date_pergi)) }}</span>
                         <div class="text-secondary-strong my-5">
-                            3 Jam
+                            {{ $departure->duration }} Jam
                         </div>
-                        <strong>11:05</strong>
-                        <span>12 Des</span>
+                        <strong>{{ date('H:i', strtotime($departure->departure_time . ' + ' . $departure->duration . ' hours')) }}</strong>
+                        <span>{{ date('d M', strtotime($date_pergi)) }}</span>
                     </div>
                     <div class="d-flex ms-3 flex-column justify-content-between lined">
                         <i class="fa-solid fa-circle-dot text-danger mt-1 z-index-1"></i>

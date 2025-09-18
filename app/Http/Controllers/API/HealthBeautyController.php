@@ -8,6 +8,7 @@ use App\Models\CategoriesServices;
 use App\Models\Clinic;
 use App\Models\ClinicHasPackages;
 use App\Models\ClinicRating;
+use App\Models\City;
 use App\Models\DetailTransactionHealthBeauty;
 use App\Models\Fee;
 use App\Models\Service;
@@ -62,7 +63,7 @@ class HealthBeautyController extends Controller
                 'latitude' => $clinic['lat'],
                 'longitude' => $clinic['ltd'],
                 'images' => $newImages,
-                'main_image' => asset('storage/' . $clinic['image']['image'] ?? 'images/not_found.jpg'),
+                'main_image' => isset($clinic['image']['image']) ? asset('storage/images/clinic_package_images/' . $clinic['image']['image']) : asset('images/not_found.jpg'),
                 'packages' => $clinic['packages'],
                 'rating_count' => count($clinic['reviews']),
                 'avg_rating' => $clinic->avgRating(),
@@ -78,7 +79,7 @@ class HealthBeautyController extends Controller
                     $new = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image']) : asset('not_found.png'),
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
@@ -304,9 +305,9 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
             // ->when($city, function ($c, $cit) {
             //     $c->whereHas('kota', function ($k) use ($cit) {
             //         $k->where('city_name', 'like', $cit);
@@ -316,13 +317,13 @@ class HealthBeautyController extends Controller
             ->get();
 
         $cantik = [];
-
+        // return $special;
         foreach ($special as $key => $rec) {
             if (count($rec['packages']) > 0) {
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
@@ -346,9 +347,9 @@ class HealthBeautyController extends Controller
     public function beautyHome(Request $request)
     {
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
             // ->when($city, function ($c, $cit) {
             //     $c->whereHas('kota', function ($k) use ($cit) {
             //         $k->where('city_name', 'like', $cit);
@@ -364,7 +365,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
@@ -377,6 +378,46 @@ class HealthBeautyController extends Controller
             }
         }
 
+        $category = CategoriesServices::select('id', 'name')->get();
+
+        $data['categories'] = $category;
+        $data['special_deals'] = $cantik;
+
+        return ResponseFormatter::success($data, 'Data successfully loaded');
+    }
+
+    public function spaHome(Request $request)
+    {
+        $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'spa dan kecantikan')
+            // ->whereHas('packages', function ($p) {
+            //     $p->whereColumn('unit_price', '>', 'price');
+            // })
+            // ->when($city, function ($c, $cit) {
+            //     $c->whereHas('kota', function ($k) use ($cit) {
+            //         $k->where('city_name', 'like', $cit);
+            //     });
+            // })
+            ->limit(10)
+            ->get();
+
+        $cantik = [];
+        foreach ($special as $key => $rec) {
+            if (count($rec['packages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'name' => $rec['clinic_name'],
+                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
+                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'category' => $rec['category'],
+                    'unit_price' => (int)$rec['packages'][0]['unit_price'],
+                    'price' => $rec['packages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                    'avg_rating' => $rec->avgRating(),
+                ];
+
+                array_push($cantik, $item);
+            }
+        }
         $category = CategoriesServices::select('id', 'name')->get();
 
         $data['categories'] = $category;
@@ -401,7 +442,6 @@ class HealthBeautyController extends Controller
                 });
             })
             ->get();
-
         $cantik = [];
 
         foreach ($special as $key => $rec) {
@@ -471,10 +511,21 @@ class HealthBeautyController extends Controller
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }
 
+    public function clinicCity()
+    {
+        $cityIds = Clinic::distinct()->pluck('city')->filter();
+        $hostelCity = City::whereIn('city_id', $cityIds)->pluck('city_name');
+
+        if ($hostelCity->isEmpty()) {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+
+        return ResponseFormatter::success($hostelCity, 'Data successfully loaded');
+    }
+
     public function list()
     {
         $datas = Clinic::active()->with('reviews', 'packages', 'kota')->get();
-
         $kesehatan = [];
         $cantik = [];
 
@@ -484,7 +535,7 @@ class HealthBeautyController extends Controller
                     $item = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],
@@ -498,7 +549,7 @@ class HealthBeautyController extends Controller
                     $item2 = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
-                        'image' => asset('storage/' . $rec['image']['image'] ?? 'not_found.png'),
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                         'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                         'category' => $rec['category'],
                         'unit_price' => $rec['packages'][0]['unit_price'],

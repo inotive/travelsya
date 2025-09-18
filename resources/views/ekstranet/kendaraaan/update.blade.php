@@ -110,16 +110,6 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                            <input type="text" class="form-control" id="duration" name="duration" placeholder="Durasi" value="{{ $car->duration }}" required>
-                            @error('duration')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tahun</label>
                             <select class="form-control" id="years" name="years" required>
                                 @php
@@ -151,6 +141,16 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Tempat Mengambil Mobil</label>
+                            <input type="text" class="form-control" id="pickup_location" name="pickup_location" value="{{ old('pickup_location', $car->pickup_location ?? '') }}" placeholder="Tempat Mengambil Mobil" required>
+                            @error('pickup_location')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Status</label>
                             <select class="form-control" id="status" name="status" required>
                                 <option value="1" {{ $car->status === 1 ? 'selected' : '' }}>Aktif</option>
@@ -165,7 +165,8 @@
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                            <textarea class="form-control" id="description" name="description" rows="3" required>{{ $car->description }}</textarea>
+                            <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" required>{{ $car->description }}</textarea>
+                            <small class="form-text text-muted">Maksimal 2000 karakter</small>
                             @error('description')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -174,27 +175,37 @@
                         </div>
 
                         <!-- Existing Images -->
-                        @if($car->image_url)
+                        @if($car->images && $car->images->count() > 0)
                             <div class="col-md-12 mt-4">
                                 <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
                                 <div class="row">
-                                    <div class="col-md-3 mb-3">
-                                        <div class="card">
-                                            <img src="{{ Storage::url('cars/' . $car->image_url) }}" class="card-img-top" alt="Image">
+                                    @foreach($car->images as $image)
+                                        <div class="col-md-3 mb-3">
+                                            <div class="card">
+                                                <img src="{{ Storage::url('cars/' . $image->image_url) }}" class="card-img-top" alt="Image" style="height: 150px; object-fit: cover;">
+                                                <div class="card-body p-2">
+                                                    <input type="hidden" name="existing_images[]" value="{{ $image->id }}">
+                                                    <input type="hidden" name="existing_main_image[]" value="{{ $image->is_main ? '1' : '0' }}" class="existing-main-image-flag">
+                                                    <button type="button" class="btn btn-sm {{ $image->is_main ? 'btn-success' : 'btn-primary' }} w-100 set-existing-main-image">
+                                                        {{ $image->is_main ? 'Gambar Utama' : 'Jadikan Utama' }}
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         @endif
 
                         <div class="col-md-12 mt-4">
-                            <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
+                            <label class="fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
                             <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="image" accept="image/*" required>
-                                {{-- <label class="input-group-text bg-primary text-white">Gambar Utama</label> --}}
+                                <input type="file" class="form-control" name="images[]" accept="image/*">
+                                <input type="hidden" name="main_image[]" value="1">
+                                <label class="input-group-text bg-primary text-white">Gambar Utama</label>
                             </div>
-                            {{-- <div id="additional-images"></div>
-                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button> --}}
+                            <div id="additional-images"></div>
+                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
                         </div>
                     </div>
                     <!--end::Input group-->
@@ -225,16 +236,61 @@
         $(document).ready(function() {
             var selectedBrandId = $('#brand_id').val();
             if (selectedBrandId) {
-                $('#brand_id').trigger('change');
+                loadCarModels(selectedBrandId);
             }
             
+            $('#brand_id').on('change', function() {
+                var brand_id = $(this).val();
+                loadCarModels(brand_id);
+            });
+            
+            function loadCarModels(brand_id) {
+                if (brand_id) {
+                    $('#car_model_id').prop('disabled', false);
+                    $('#car_model_id').empty().append('<option value="">Memuat model...</option>');
+
+                    $.ajax({
+                        url: '{{ url('/partner/get-model-kendaraan') }}',
+                        type: 'GET',
+                        data: {
+                            brand_id: brand_id
+                        },
+                        success: function(response) {
+                            $('#car_model_id').empty();
+
+                            $('#car_model_id').append(
+                                '<option selected disabled value="">Pilih Model</option>');
+
+                            if (response.models && response.models.length > 0) {
+                                $.each(response.models, function(index, model) {
+                                    $('#car_model_id').append('<option value="' + model.id + '">' +
+                                        model.name + '</option>');
+                                });
+                            } else {
+                                $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching models:", error);
+                            $('#car_model_id').empty().append('<option selected disabled value="">Error memuat model</option>');
+                            toastr.error("Terjadi kesalahan saat mengambil data model. Silakan coba lagi.");
+                        }
+                    });
+                } else {
+                    $('#car_model_id').prop('disabled', true);
+                    $('#car_model_id').empty();
+                    $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+                }
+            }
+
             // Handle adding additional images
             $('#add-more-images').click(function() {
                 $('#additional-images').append(`
                     <div class="input-group mb-3">
                         <input type="file" class="form-control" name="images[]" accept="image/*">
-                        <input type="hidden" name="main_image[]" value="0">
+                        <input type="hidden" name="main_image[]" value="0" class="main-image-flag">
                         <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                        <button type="button" class="btn btn-primary set-main-image">Jadikan Utama</button>
                         <button type="button" class="btn btn-danger remove-image">Hapus</button>
                     </div>
                 `);
@@ -243,6 +299,30 @@
             // Handle removing additional images
             $(document).on('click', '.remove-image', function() {
                 $(this).closest('.input-group').remove();
+            });
+            
+            // Handle setting main image
+            $(document).on('click', '.set-main-image', function() {
+                // Reset all flags to 0
+                $('.main-image-flag').val('0');
+                $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
+                
+                // Set current flag to 1
+                $(this).closest('.input-group').find('.main-image-flag').val('1');
+                $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
+            });
+            
+            // Handle setting existing image as main
+            $(document).on('click', '.set-existing-main-image', function() {
+                // Reset all flags to 0
+                $('.main-image-flag').val('0');
+                $('.existing-main-image-flag').val('0');
+                $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
+                $('.set-existing-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
+                
+                // Set current flag to 1
+                $(this).closest('.card-body').find('.existing-main-image-flag').val('1');
+                $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
             });
         });
 
@@ -338,5 +418,19 @@
     .primary {
         background: #007bff;
         color: white;
+    }
+    
+    .set-main-image, .set-existing-main-image {
+        border-radius: 0 !important;
+        border: none;
+    }
+    
+    .set-main-image:hover, .set-existing-main-image:hover {
+        opacity: 0.9;
+    }
+    
+    .card-img-top {
+        height: 150px;
+        object-fit: cover;
     }
 </style>

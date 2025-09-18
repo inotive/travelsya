@@ -9,9 +9,13 @@
         <div class="card-body p-0">
             <div class="row">
                 @foreach ($route_travel as $r)
-                <a href="{{ route('bus_travel.findroute', ['kota_awal' => $r['from'], 'kota_tujuan' => $r['to']]) }}" class="col-md-3 col-12 p-3">
-                    <span class="fs-5 text-dark text-capitalize">Travel {{ strToLower($r['from']) }} {{ strToLower($r['to']) }}</span>
-                </a>
+                    @if (isset($r['from']) && isset($r['to']))
+                        <a href="{{ route('bus_travel.findroute', ['kota_awal' => $r['from'], 'kota_tujuan' => $r['to']]) }}"
+                            class="col-md-3 col-12 p-3">
+                            <span class="fs-5 text-dark text-capitalize">Travel {{ strToLower($r['from']) }}
+                                {{ strToLower($r['to']) }}</span>
+                        </a>
+                    @endif
                 @endforeach
             </div>
         </div>

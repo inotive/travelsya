@@ -10,7 +10,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Resources\Recretion\RecretionSearchResource;
 use App\Models\CategoryRecreation;
 use App\Models\City;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\Fee;
 use App\Models\Recreation;
 use App\Models\RecreationPackages;
@@ -122,9 +122,9 @@ class RecreationController extends Controller
             'payment' => 'required|string',
             'package_id' => 'required',
             'point' => 'required',
-            'paket' => 'required|array',
-            'paket.*.paket_id' => 'required|integer',
-            'paket.*.total' => 'required|integer',
+            // 'paket' => 'array',
+            // 'paket.*.paket_id' => 'integer',
+            // 'paket.*.total' => 'integer',
         ]);
 
         if ($validator->fails()) {
@@ -138,6 +138,16 @@ class RecreationController extends Controller
         }
 
         $data = $request->all();
+
+        // Data Dummy untuk testing
+        $data['paket'] = [
+            [
+                'paket_id' => 6,
+                'total'    => 1,
+                'name'     => 'Paket Regular Weekday',
+                'price'    => 150000,
+            ]
+        ];
 
         $payoutsXendit = app(CreateTransaction::class)->execute($data, $request->user());
 

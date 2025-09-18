@@ -19,11 +19,20 @@ class CreateTransaction
 
     public function execute(array $data, $user)
     {
+        \Log::info('CreateTransaction execute started', [
+            'user_id' => $user->id,
+            'package_id' => $data['package_id'],
+            'paket_data' => $data['paket']
+        ]);
+
         $package = RecreationPackages::findOrFail($data['package_id']);
+        \Log::info('Package found', ['package_id' => $package->id, 'package_name' => $package->name]);
 
         $expire = $this->calculateExpiry($package);
+        \Log::info('Expiry calculated', ['expire_date' => $expire]);
 
         $invoice = $this->generateInvoice();
+        \Log::info('Invoice generated', ['invoice' => $invoice]);
 
         $service = RecreationPackages::whereIn('id', array_column($data['paket'], 'paket_id'))->get();
 
@@ -45,12 +54,16 @@ class CreateTransaction
             ];
         }
 
+        \Log::info('Amount calculated', ['total_amount' => $amount, 'total_tickets' => $totalTicket]);
 
         $kodeUnik = random_int(0, 999);
+        \Log::info('Unique code generated', ['kode_unik' => $kodeUnik]);
 
         $fees = $this->calculateFees($data, $service, $user, $package, $amount, $kodeUnik);
+        \Log::info('Fees calculated', ['fees' => $fees]);
 
         $payoutsXendit = $this->createXenditInvoice($invoice, $xenditData, $package, $amount, $fees, $kodeUnik, $user);
+        \Log::info('Xendit invoice created', ['xendit_response' => $payoutsXendit]);
 
         DB::transaction(function () use (
             $data,
@@ -64,6 +77,8 @@ class CreateTransaction
             $fees,
             $package
         ) {
+            \Log::info('Starting database transaction');
+
             $transaction = Transaction::create([
                 'no_inv'     => $invoice,
                 'req_id'     => 'REC-' . time(),
@@ -76,13 +91,16 @@ class CreateTransaction
                 'total'      => $amount + $fees[0]['value'] + $kodeUnik,
             ]);
 
+            \Log::info('Transaction created', ['transaction_id' => $transaction->id]);
+
             if ($data['point'] == 1) {
+                \Log::info('Deducting points', ['user_id' => $user->id, 'points' => $user->point]);
                 (new Point())->deductPoint($user->id, $user->point, $transaction->id);
             }
 
             try {
                 foreach ($data['paket'] as $paket) {
-                    DetailTransactionRecreation::create([
+                    $detailTransaction = DetailTransactionRecreation::create([
                         'transaction_id'        => $transaction->id,
                         'recreation_id'         => $package->recreation_id,
                         'recreationPackage_id'  => $package->id,
@@ -94,14 +112,24 @@ class CreateTransaction
                         'kode_unik'             => $kodeUnik,
                         'is_used'               => 0,
                     ]);
+
+                    \Log::info('Detail transaction created', [
+                        'detail_id' => $detailTransaction->id,
+                        'booking_id' => $detailTransaction->booking_id
+                    ]);
                 }
             } catch (Throwable $e) {
-                // Log error or handle as needed
+                \Log::error('Error storing detail transaction', [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
                 throw new \Exception('Error storing detail transaction: ' . $e->getMessage());
             }
+
+            \Log::info('Database transaction completed successfully');
         });
 
-
+        \Log::info('CreateTransaction execute completed successfully', ['invoice' => $invoice]);
         return $payoutsXendit;
     }
 

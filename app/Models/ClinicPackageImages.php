@@ -20,4 +20,6 @@ class ClinicPackageImages extends Model
     {
         return $this->belongsTo(ClinicHasPackages::class, 'clinic_package_id', 'id');
     }
+
+    
 }

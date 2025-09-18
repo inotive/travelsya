@@ -18,9 +18,9 @@
             <!-- Card -->
             <a href="{{ route('car_rent.detail', ['id' => $model['id']]) }}" class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
-                    <div class="position-relative">
+                    <div class="position-relative card-img-container" style="overflow: hidden;">
                         <img src="{{ $model['img'] != '' ? asset($model['img']) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
-                            class="card-img-top" alt="{{ $model['name'] }}"
+                            class="card-img-top card-img-aspect" alt="{{ $model['name'] }}"
                             onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
                             style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal

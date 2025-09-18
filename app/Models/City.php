@@ -34,4 +34,25 @@ class City extends Model
     {
         return $this->hasManyThrough(CarRentalHasCars::class, CarRental::class, 'city', 'car_rental_id', 'city_id', 'id');
     }
+    
+    /**
+     * Get all of the car rentals for the City
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function carRentals(): HasMany
+    {
+        return $this->hasMany(CarRental::class, 'city', 'city_id');
+    }
+    
+    /**
+     * Scope a query to only include cities that have car rentals
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeHasCarRentals($query)
+    {
+        return $query->whereHas('carRentals');
+    }
 }

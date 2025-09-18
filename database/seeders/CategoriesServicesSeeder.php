@@ -13,17 +13,12 @@ class CategoriesServicesSeeder extends Seeder
      */
     public function run(): void
     {
-        CategoriesServices::create([
-            'name' => 'Threadlift'
-        ]);
-
-        CategoriesServices::create([
-            'name' => 'Peeling'
-        ]);
-
-        CategoriesServices::create([
-            'name' => 'Injection'
-        ]);
-
+        $categories = ['Threadlift', 'Peeling', 'Injection', 'Clinic'];
+        
+        foreach ($categories as $category) {
+            CategoriesServices::firstOrCreate([
+                'name' => $category
+            ]);
+        }
     }
 }

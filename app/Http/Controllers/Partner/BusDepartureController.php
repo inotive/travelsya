@@ -23,32 +23,37 @@ class BusDepartureController extends Controller
      * @param int|null $busId Optional bus ID to filter departures
      * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
      */
-    public function index(): View|Factory
+    public function index($busId = null): View|Factory
     {
         $user = Auth::user();
-
-        // Get all bus travel businesses owned by the user
         $busTravels = BusTravels::where('user_id', $user->id)->get();
         $busTravelIds = $busTravels->pluck('id')->toArray();
 
-        // Get all buses associated with these businesses
-        $busIds = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->pluck('id')->toArray();
+        $busesQuery = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->with('busTravel');
 
-        // Get all departures for these buses
+        // Clone the query before filtering for the list of all buses
+        $allBuses = $busesQuery->clone()->get()->mapWithKeys(function ($bus) {
+            return [$bus->id => $bus->busTravel->business_name . ' - ' . $bus->name];
+        });
+
+        if ($busId) {
+            $busesQuery->where('id', $busId);
+        }
+
+        $busIds = $busesQuery->pluck('id')->toArray();
+
         $departures = BusDeparture::whereIn('bus_travel_has_bus_id', $busIds)
             ->with(['busTravel', 'from', 'to'])
             ->orderBy('departure_time', 'asc')
             ->get();
 
-        // Get all routes for dropdowns in modals
         $routes = BusRoute::orderBy('name', 'asc')->pluck('name', 'id')->toArray();
 
-        // Get the default bus for new departures (first bus of the user)
-        $defaultBus = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->first();
-        $defaultBusId = $defaultBus ? $defaultBus->id : null;
+        $defaultBusId = $busId ?: ($allBuses->keys()->first());
 
-        return view('ekstranet.bus-travel.departures.index', compact('departures', 'routes', 'defaultBusId'));
+        return view('ekstranet.bus-travel.departures.index', compact('departures', 'routes', 'defaultBusId', 'allBuses'));
     }
+
 
     /**
      * Show the form for creating a new bus departure.
@@ -88,24 +93,8 @@ class BusDepartureController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Process days array into comma-separated string if it's an array
-        $days = $request->days;
-        if (is_array($days)) {
-            $days = implode(',', $days);
-        }
-
-        // Get the user's default bus if not provided
-        $user = Auth::user();
-        $busTravelIds = BusTravels::where('user_id', $user->id)->pluck('id')->toArray();
-        $defaultBus = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->first();
-
-        if (!$defaultBus) {
-            return redirect()->back()
-                ->with('error', 'Anda belum memiliki bus yang terdaftar!')
-                ->withInput();
-        }
-
         $validator = Validator::make($request->all(), [
+            'bus_travel_has_bus_id' => 'required|exists:bus_travel_has_buses,id',
             'from_route_id' => 'required|exists:bus_routes,id',
             'to_route_id' => 'required|exists:bus_routes,id|different:from_route_id',
             'departure_date' => 'required|date',
@@ -120,34 +109,36 @@ class BusDepartureController extends Controller
                 ->withInput();
         }
 
-        // Get the bus travel associated with the default bus
-        $busTravel = BusTravels::findOrFail($defaultBus->bus_travel_id);
+        $user = Auth::user();
+        $bus = BusTravelHasBus::with('busTravel')->findOrFail($request->bus_travel_has_bus_id);
 
-        // Verify ownership
-        if ($busTravel->user_id != $user->id) {
+        if ($bus->busTravel->user_id != $user->id) {
             return redirect()->back()
                 ->with('error', 'Anda tidak memiliki akses ke bus ini!')
                 ->withInput();
         }
 
-        // Create new departure
-        $departure = new BusDeparture();
-        $departure->bus_travel_has_bus_id = $defaultBus->id;
-        $departure->from_route_id = $request->from_route_id;
-        $departure->to_route_id = $request->to_route_id;
-        
-        // Combine departure date and time into a single datetime
-        $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
-        $departure->departure_time = $departureDateTime;
-        
-        $departure->duration = $request->duration;
-        $departure->price = $request->price;
-        $departure->days = $days;
-        $departure->save();
+        $days = $request->days;
+        if (is_array($days)) {
+            $days = implode(',', $days);
+        }
 
-        return redirect()->route('partner.bus.departures')
+        $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
+
+        BusDeparture::create([
+            'bus_travel_has_bus_id' => $request->bus_travel_has_bus_id,
+            'from_route_id' => $request->from_route_id,
+            'to_route_id' => $request->to_route_id,
+            'departure_time' => $departureDateTime,
+            'duration' => $request->duration,
+            'price' => $request->price,
+            'days' => $days,
+        ]);
+
+        return redirect()->route('partner.bus.departures.bus', ['busId' => $request->bus_travel_has_bus_id])
             ->with('success', 'Jadwal keberangkatan berhasil ditambahkan!');
     }
+
 
     /**
      * Show the form for editing the specified bus departure.
@@ -196,25 +187,9 @@ class BusDepartureController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
-        $departure = BusDeparture::findOrFail($request->id);
-
-        // Verify ownership
-        $user = Auth::user();
-        $bus = BusTravelHasBus::findOrFail($departure->bus_travel_has_bus_id);
-        $busTravel = BusTravels::findOrFail($bus->bus_travel_id);
-
-        if ($busTravel->user_id != $user->id) {
-            return redirect()->route('partner.bus.departures.index')
-                ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
-        }
-
-        // Process days array into comma-separated string if it's an array
-        $days = $request->days;
-        if (is_array($days)) {
-            $days = implode(',', $days);
-        }
-
         $validator = Validator::make($request->all(), [
+            'id' => 'required|exists:bus_departures,id',
+            'bus_travel_has_bus_id' => 'required|exists:bus_travel_has_buses,id',
             'from_route_id' => 'required|exists:bus_routes,id',
             'to_route_id' => 'required|exists:bus_routes,id|different:from_route_id',
             'departure_date' => 'required|date',
@@ -229,11 +204,33 @@ class BusDepartureController extends Controller
                 ->withInput();
         }
 
-        // Update departure details
-        // Combine departure date and time into a single datetime
+        $departure = BusDeparture::findOrFail($request->id);
+        $user = Auth::user();
+
+        // Verify ownership of the original departure
+        $oldBus = BusTravelHasBus::with('busTravel')->findOrFail($departure->bus_travel_has_bus_id);
+        if ($oldBus->busTravel->user_id != $user->id) {
+            return redirect()->route('partner.bus.departures')
+                ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
+        }
+
+        // Verify ownership of the new bus
+        $newBus = BusTravelHasBus::with('busTravel')->findOrFail($request->bus_travel_has_bus_id);
+        if ($newBus->busTravel->user_id != $user->id) {
+            return redirect()->back()
+                ->with('error', 'Anda tidak memiliki akses ke bus yang dipilih!')
+                ->withInput();
+        }
+
+        $days = $request->days;
+        if (is_array($days)) {
+            $days = implode(',', $days);
+        }
+
         $departureDateTime = $request->departure_date . ' ' . $request->departure_time;
-        
+
         $departure->update([
+            'bus_travel_has_bus_id' => $request->bus_travel_has_bus_id,
             'from_route_id' => $request->from_route_id,
             'to_route_id' => $request->to_route_id,
             'departure_time' => $departureDateTime,
@@ -242,19 +239,28 @@ class BusDepartureController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('partner.bus.departures.index')
+        return redirect()->route('partner.bus.departures.bus', ['busId' => $request->bus_travel_has_bus_id])
             ->with('success', 'Jadwal keberangkatan berhasil diperbarui!');
     }
 
+
     /**
-     * Remove the specified bus departure from storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $id = $request->id;
+     /**
+ * Remove the specified bus departure from storage.
+ *
+ * @param  \Illuminate\Http\Request  $request
+ * @return \Illuminate\Http\RedirectResponse
+ */
+public function delete(Request $request): RedirectResponse
+{
+    $id = $request->id;
+
+    if (!$id) {
+        return redirect()->route('partner.bus.departures')
+            ->with('error', 'ID jadwal keberangkatan tidak valid!');
+    }
+
+    try {
         $departure = BusDeparture::findOrFail($id);
 
         // Verify ownership
@@ -263,19 +269,26 @@ class BusDepartureController extends Controller
         $busTravel = BusTravels::findOrFail($bus->bus_travel_id);
 
         if ($busTravel->user_id != $user->id) {
-            return redirect()->route('partner.bus.departures.index')
+            return redirect()->route('partner.bus.departures')
                 ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
         }
 
-        // Check if the departure is being used in bookings
-        if ($departure->booked()->count() > 0) {
-            return redirect()->route('partner.bus.departures.index')
-                ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
-        }
+        // Check if the departure has any bookings
+        // You'll need to replace 'booked()' with the actual relationship name or query
+        // For example, if you have a bookings relationship:
+        // if ($departure->bookings()->count() > 0) {
+        //     return redirect()->route('partner.bus.departures')
+        //         ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
+        // }
 
         $departure->delete();
 
-        return redirect()->route('partner.bus.departures.index')
+        return redirect()->route('partner.bus.departures')
             ->with('success', 'Jadwal keberangkatan berhasil dihapus!');
+
+    } catch (\Exception $e) {
+        return redirect()->route('partner.bus.departures')
+            ->with('error', 'Terjadi kesalahan saat menghapus jadwal keberangkatan!');
     }
+}
 }

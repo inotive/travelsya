@@ -23,6 +23,7 @@
 		<!--begin::Vendor Stylesheets(used for this page only)-->
 		<link href="{{asset('admin/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<link href="{{asset('admin/assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 		<!--end::Vendor Stylesheets-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
 		<link href="{{asset('admin/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -218,6 +219,7 @@
 		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
 		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script> --}}
 		<script src="{{asset('admin/assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used for this page only)-->
 		<script src="{{asset('admin/assets/js/custom/utilities/search/horizontal.js')}}"></script>
@@ -233,6 +235,43 @@
 
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
+		
+		<script>
+			@if(Session::has('success'))
+				toastr.success("{{ Session::get('success') }}");
+			@endif
+			
+			@if(Session::has('error'))
+				toastr.error("{{ Session::get('error') }}");
+			@endif
+			
+			@if(Session::has('info'))
+				toastr.info("{{ Session::get('info') }}");
+			@endif
+			
+			@if(Session::has('warning'))
+				toastr.warning("{{ Session::get('warning') }}");
+			@endif
+			
+			// Toastr configuration
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			}
+		</script>
 
 		@stack("add-script")
 	</body>

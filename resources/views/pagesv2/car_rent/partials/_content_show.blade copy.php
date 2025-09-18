@@ -13,9 +13,9 @@
                         </span>
                         <select name="category" id="category"
                             class="form-control border-none border-right-2 max-w-120 py-0">
-                            <option @if ($category == 'supir') selected @endif value="supir">Dengan Supir
+                            <option @if ($category == 'Dengan Driver') selected @endif value="Dengan Driver">Dengan Supir
                             </option>
-                            <option @if ($category == 'lepas') selected @endif value="tidak dengan driver">Lepas
+                            <option @if ($category == 'Lepas Kunci') selected @endif value="Lepas Kunci">Lepas
                                 Kunci
                             </option>
                         </select>

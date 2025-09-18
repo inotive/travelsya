@@ -51,8 +51,9 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    <form action="{{ route('partner.bus.departures.update', $departure->id) }}" method="POST">
+                    <form action="{{ route('partner.bus.departures.update') }}" method="POST">
                         @csrf
+                        <input type="hidden" name="id" value="{{ $departure->id }}">
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Bus</label>
                             <div class="col-lg-8 fv-row">
@@ -87,9 +88,15 @@
                             </div>
                         </div>
                         <div class="row mb-6">
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Tanggal Keberangkatan</label>
+                            <div class="col-lg-8 fv-row">
+                                <input type="date" name="departure_date" class="form-control form-control-lg form-control-solid" value="{{ old('departure_date', \Carbon\Carbon::parse($departure->departure_time)->format('Y-m-d')) }}" required />
+                            </div>
+                        </div>
+                        <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Waktu Keberangkatan</label>
                             <div class="col-lg-8 fv-row">
-                                <input type="time" name="departure_time" class="form-control form-control-lg form-control-solid" value="{{ old('departure_time', $departure->departure_time) }}" required />
+                                <input type="time" name="departure_time" class="form-control form-control-lg form-control-solid" value="{{ old('departure_time', \Carbon\Carbon::parse($departure->departure_time)->format('H:i')) }}" required />
                             </div>
                         </div>
                         <div class="row mb-6">
@@ -107,16 +114,37 @@
                         <div class="row mb-6">
                             <label class="col-lg-4 col-form-label required fw-bold fs-6">Hari Operasional</label>
                             <div class="col-lg-8 fv-row">
-                                <select name="days" class="form-select form-select-solid form-select-lg" required>
-                                    <option value="">Pilih Hari Operasional</option>
-                                    <option value="1" {{ old('days', $departure->days) == 1 ? 'selected' : '' }}>Senin</option>
-                                    <option value="2" {{ old('days', $departure->days) == 2 ? 'selected' : '' }}>Selasa</option>
-                                    <option value="3" {{ old('days', $departure->days) == 3 ? 'selected' : '' }}>Rabu</option>
-                                    <option value="4" {{ old('days', $departure->days) == 4 ? 'selected' : '' }}>Kamis</option>
-                                    <option value="5" {{ old('days', $departure->days) == 5 ? 'selected' : '' }}>Jumat</option>
-                                    <option value="6" {{ old('days', $departure->days) == 6 ? 'selected' : '' }}>Sabtu</option>
-                                    <option value="7" {{ old('days', $departure->days) == 7 ? 'selected' : '' }}>Minggu</option>
-                                </select>
+                                <div class="d-flex flex-wrap">
+                                    @php $departureDays = explode(',', $departure->days); @endphp
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="0" id="day0" {{ in_array('0', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day0">Minggu</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="1" id="day1" {{ in_array('1', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day1">Senin</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="2" id="day2" {{ in_array('2', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day2">Selasa</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="3" id="day3" {{ in_array('3', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day3">Rabu</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="4" id="day4" {{ in_array('4', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day4">Kamis</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="5" id="day5" {{ in_array('5', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day5">Jumat</label>
+                                    </div>
+                                    <div class="form-check form-check-custom form-check-solid me-5 mb-2">
+                                        <input class="form-check-input" type="checkbox" name="days[]" value="6" id="day6" {{ in_array('6', $departureDays) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="day6">Sabtu</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-6">
