@@ -30,6 +30,7 @@ class BusTravelController extends Controller
             'bus_travels.id as bus_travel_id',
             'bus_travels.phone as bus_travel_phone',
             'bus_travels.*',
+            'bus_travels.is_active as bus_travel_is_active',
             'users.id as user_id',
             'users.*',
             'cities.city_id as city_id',
@@ -37,6 +38,8 @@ class BusTravelController extends Controller
             'cities.*'
         )
         ->get();
+
+        // dd($bus_travels->toArray());
 
         $cities = City::all();
 

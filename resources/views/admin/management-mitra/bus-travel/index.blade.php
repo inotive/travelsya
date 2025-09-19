@@ -53,7 +53,7 @@
                               <td class="text-center">{{ $bus_travel->bus_travel_phone }}</td>
 
                               <td class="text-center">
-                                  @if ($bus_travel->is_active)
+                                  @if ($bus_travel->bus_travel_is_active)
                                       <span class="badge badge-success">Aktif</span>
                                   @else
                                       <span class="badge badge-danger">Tidak Aktif</span>
