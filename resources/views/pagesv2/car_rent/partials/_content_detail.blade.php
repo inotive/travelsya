@@ -124,10 +124,10 @@
 
         <div class="card bg-danger bg-opacity-25 mb-35px">
             <div class="card-body d-flex flex-column">
-                <h3 class="mb-3">Kebijakan Rental</h3>
+                <h3 class="mb-3">Deskripsi</h3>
                 <div class="d-flex flex-row">
                     <div>
-                        {!! $car->policy?->description ?? 'Kebijakan tidak tersedia.' !!}
+                        {!! $car->description ?? 'Deskripsi tidak tersedia.' !!}
                     </div>
                 </div>
             </div>
