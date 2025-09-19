@@ -6,7 +6,9 @@ use App\Helpers\ResponseFormatter;
 use PHPUnit\Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
+use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
+use App\Models\City;
 use App\Models\CarRentalRating;
 use App\Models\DetailTransactionCarRental;
 use App\Models\Fee;
@@ -30,6 +32,18 @@ class CarRentalController extends Controller
     {
         $this->xendit = $xendit;
         $this->point = $point;
+    }
+
+    public function carRentalCity()
+    {
+        $cityIds = CarRental::distinct()->pluck('city')->filter();
+        $cities = City::whereIn('city_id', $cityIds)->pluck('city_name');
+
+        if ($cities->isEmpty()) {
+            return ResponseFormatter::error(null, 'Data not found');
+        }
+
+        return ResponseFormatter::success($cities, 'Data successfully loaded');
     }
 
     public function index(Request $request)

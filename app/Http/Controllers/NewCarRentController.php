@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ResponseFormatter;
+use App\Models\Brand;
 use App\Models\CarModel;
 use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
@@ -34,8 +35,16 @@ class NewCarRentController extends Controller
 
         // $carRent = CarRental::withCount('hasCars')->where('business_name', 'like', $find)->get();
         $cars = CarRentalHasCars::with('carRental', 'carRental.kota', 'brand', 'carModel')
-            ->whereHas('carRental', function($q) use($find) {
-                $q->where('business_name', 'like', $find);
+            ->where(function ($query) use ($find) {
+                $query->whereHas('carRental', function($q) use($find) {
+                    $q->where('business_name', 'like', $find);
+                })
+                ->orWhereHas('brand', function($q) use($find) {
+                    $q->where('name', 'like', $find);
+                })
+                ->orWhereHas('carModel', function($q) use($find) {
+                    $q->where('name', 'like', $find);
+                });
             })
             ->get();
 
@@ -101,6 +110,29 @@ class NewCarRentController extends Controller
             ->limit(10)
             ->get();
 
+        // Mengambil 4 merek mobil terpopuler berdasarkan jumlah pemesanan
+        $brand_bookings = DB::table('car_book_dates')
+            ->join('car_rental_has_cars', 'car_book_dates.car_rental_has_car_id', '=', 'car_rental_has_cars.id')
+            ->join('brands', 'car_rental_has_cars.brand_id', '=', 'brands.id')
+            ->where('car_rental_has_cars.status', 1)
+            ->select('brands.id', 'brands.name', 'brands.image', DB::raw('COUNT(car_book_dates.id) as total_booked'))
+            ->groupBy('brands.id', 'brands.name', 'brands.image')
+            ->orderBy('total_booked', 'desc')
+            ->limit(4)
+            ->get();
+
+        // Mengambil objek Brand lengkap berdasarkan ID
+        $brandIds = $brand_bookings->pluck('id');
+        $popular_brands = Brand::whereIn('id', $brandIds)->get();
+
+        // Menambahkan jumlah pemesanan ke setiap brand
+        $popular_brands->each(function ($brand) use ($brand_bookings) {
+            $booking_data = $brand_bookings->firstWhere('id', $brand->id);
+            if ($booking_data) {
+                $brand->total_booked = $booking_data->total_booked;
+            }
+        });
+
         $data['rule'] = [
             [
                 'icon' => 'fa-solid fa-car',
@@ -119,10 +151,26 @@ class NewCarRentController extends Controller
             ],
         ];
 
-        $near_location = CarRental::with('kota', 'hasCars')->whereHas('hasCars')->get()->pluck('kota.city_name', 'kota.city_name');
+        // Memastikan near_location selalu memiliki data yang valid
+        $near_location = CarRental::with('kota', 'hasCars')
+            ->whereHas('hasCars')
+            ->get()
+            ->pluck('kota.city_name', 'kota.city_name')
+            ->unique()
+            ->sort();
+            
+        // Menambahkan opsi default
+        $near_location = collect(['' => 'Pilih Lokasi'])->merge($near_location);
+        
+        // Mendapatkan daftar merek mobil yang tersedia
+        $brands = Brand::whereHas('vendor', function($query) {
+            $query->where('status', 1);
+        })->orderBy('name', 'asc')->get();
 
         $data['car_models'] = collect($car_models);
-        $data['near_location'] = collect($near_location);
+        $data['popular_brands'] = $popular_brands;
+        $data['near_location'] = $near_location;
+        $data['brands'] = $brands;
         return view('pagesv2.car_rent.index', $data);
     }
 
@@ -176,11 +224,14 @@ class NewCarRentController extends Controller
         $saldoPointCustomer = 0;
         // Jika user menggunakan point untuk transaksi
         if ($request->point == 1) {
-            // history point masuk dan keluar customer
-            //            $pointCustomer = HistoryPoint::where('user_id', Auth::user()->id)->first();
-            // point masuk - point keluar
-            //            $saldoPointCustomer = $pointCustomer->where('flow', '=', 'debit')->sum('point') - $pointCustomer->where('flow', '=', 'credit')->sum('point') ?? 0;
-            $saldoPointCustomer = Auth::user()->point;
+            $totalPointUser = Auth::user()->point;
+            // Hitung 10% dari total poin yang dimiliki user, dan pastikan nilainya integer
+            $pointsToUse = floor($totalPointUser * 0.10);
+
+            // Poin yang digunakan tidak boleh melebihi total harga transaksi
+            $pointsToUse = min($pointsToUse, $amount);
+
+            $saldoPointCustomer = $pointsToUse;
             $fees = [
                 [
                     'type' => 'Point',
@@ -281,6 +332,11 @@ class NewCarRentController extends Controller
             'search' => $search
         ]);
 
+        // Validasi lokasi
+        if (!$location && !$search) {
+            return redirect()->back()->with('error', 'Silakan pilih lokasi terlebih dahulu');
+        }
+
         // Jika ada parameter pencarian, cari berdasarkan nama bisnis
         if ($search) {
             $cars = CarRentalHasCars::with('brand', 'carModel', 'booked', 'carRental', 'carRental.kota')
@@ -325,6 +381,11 @@ class NewCarRentController extends Controller
                 $carsQuery->where('car_model_id', $car_model);
             }
             
+            // Filter berdasarkan brand_id (untuk favorite brands)
+            if ($request->brand_id) {
+                $carsQuery->where('brand_id', $request->brand_id);
+            }
+            
             $cars = $carsQuery->get();
         }
 
@@ -356,9 +417,17 @@ class NewCarRentController extends Controller
             $c['vendor'] = $ven;
         }
 
-        // Query konsisten untuk near_location - tampilkan semua kota
-        // Menggunakan query yang lebih sederhana untuk memastikan semua kota ditampilkan
-        $near_location = City::orderBy('city_name')->pluck('city_name', 'city_name');
+        $near_location = CarRental::with('kota', 'hasCars')
+            ->whereHas('hasCars')
+            ->get()
+            ->pluck('kota.city_name', 'kota.city_name')
+            ->unique()
+            ->sort();
+        
+        // Mendapatkan daftar merek mobil yang tersedia
+        $brands = Brand::whereHas('vendor', function($query) {
+            $query->where('status', 1);
+        })->orderBy('name', 'asc')->get();
         
         // Log jumlah kota yang ditampilkan
         \Log::info('Near location count: ' . $near_location->count());
@@ -372,6 +441,8 @@ class NewCarRentController extends Controller
         $data['time'] = $time;
         $data['duration'] = $duration;
         $data['near_location'] = $near_location;
+        $data['brands'] = $brands;
+        $data['brand_id'] = $request->brand_id;
         return view('pagesv2.car_rent.show', $data);
     }
 

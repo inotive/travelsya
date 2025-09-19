@@ -193,12 +193,21 @@
                             location.reload();
                         });
                     }
-                    , error: function(response) {
-                        swalWithBootstrapButtons.fire(
-                            'Error!'
-                            , 'Terjadi error saat menghapus data.'
-                            , 'error'
-                        );
+                    , error: function(xhr) {
+                        // Check if the error response contains a specific message
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            swalWithBootstrapButtons.fire(
+                                'Gagal Dihapus!'
+                                , xhr.responseJSON.error
+                                , 'error'
+                            );
+                        } else {
+                            swalWithBootstrapButtons.fire(
+                                'Error!'
+                                , 'Terjadi error saat menghapus data.'
+                                , 'error'
+                            );
+                        }
                     }
                 });
             }

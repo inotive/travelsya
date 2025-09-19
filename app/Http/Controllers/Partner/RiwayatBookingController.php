@@ -411,7 +411,7 @@ class RiwayatBookingController extends Controller
     public function verifikasiCarRental($id)
     {
         $booking = DetailTransactionCarRental::findOrFail($id);
-        $booking->status = 'verified';
+        $booking->status = 'sudah_dipakai';
         $booking->save();
 
         return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
@@ -420,7 +420,7 @@ class RiwayatBookingController extends Controller
     public function batalVerifikasiCarRental($id)
     {
         $booking = DetailTransactionCarRental::findOrFail($id);
-        $booking->status = 'pending';
+        $booking->status = 'belum_dipakai';
         $booking->save();
 
         return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');

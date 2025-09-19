@@ -142,6 +142,10 @@
                                     @else
                                         <span class="badge bg-secondary">Gambar Tambahan</span>
                                     @endif
+                                    <!-- Hidden input to track existing images -->
+                                    <input type="hidden" name="existing_images[]" value="{{ $image->id }}">
+                                    <!-- Delete button for existing images -->
+                                    <button type="button" class="btn btn-sm btn-danger mt-2 delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
                                 </div>
                             </div>
                         </div>
@@ -150,17 +154,32 @@
                 </div>
                 @endif
                 
-                <!-- Multiple Image Upload -->
+                <!-- Image Upload Section -->
                 <div class="col-md-12 mt-4">
                     <label class="fs-6 fw-semibold mb-2">Tambah Gambar Baru</label>
-                    <div class="input-group mb-3">
-                        <input type="file" class="form-control" name="images[]" accept="image/*">
-                        <input type="hidden" name="main_image[]" value="1">
-                        <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                    
+                    <!-- Main Image Upload -->
+                    <div class="mb-4">
+                        <h6>Gambar Utama</h6>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" name="main_image" accept="image/*">
+                            <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                        </div>
+                        <div class="form-text">Mengunggah gambar utama baru akan menggantikan gambar utama lama.</div>
                     </div>
-                    <div id="additional-images"></div>
-                    <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
-                    <div class="form-text">Unggah gambar baru akan menambahkan ke gambar yang sudah ada. Gambar utama baru akan menggantikan gambar utama lama.</div>
+                    
+                    <!-- Additional Images Upload -->
+                    <div>
+                        <h6>Gambar Tambahan</h6>
+                        <div id="additional-images-container">
+                            <div class="input-group mb-3">
+                                <input type="file" class="form-control" name="additional_images[]" accept="image/*">
+                                <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                                <button type="button" class="btn btn-danger remove-additional-image">Hapus</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">+ Tambah Gambar Tambahan</button>
+                    </div>
                 </div>
 
             </div>
@@ -209,20 +228,48 @@
 <script>
     $(document).ready(function() {
         // Handle adding additional images
-        $('#add-more-images').click(function() {
-            $('#additional-images').append(`
+        $('#add-more-additional-images').click(function() {
+            $('#additional-images-container').append(`
                 <div class="input-group mb-3">
-                    <input type="file" class="form-control" name="images[]" accept="image/*">
-                    <input type="hidden" name="main_image[]" value="0">
+                    <input type="file" class="form-control" name="additional_images[]" accept="image/*">
                     <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
-                    <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                    <button type="button" class="btn btn-danger remove-additional-image">Hapus</button>
                 </div>
             `);
         });
         
         // Handle removing additional images
-        $(document).on('click', '.remove-image', function() {
-            $(this).closest('.input-group').remove();
+        $(document).on('click', '.remove-additional-image', function() {
+            // Make sure at least one additional image field remains
+            if ($('#additional-images-container .input-group').length > 1) {
+                $(this).closest('.input-group').remove();
+            } else {
+                // Clear the file input if it's the last one
+                $(this).closest('.input-group').find('input[type="file"]').val('');
+            }
+        });
+        
+        // Handle deleting existing images
+        $(document).on('click', '.delete-existing-image', function() {
+            const imageId = $(this).data('image-id');
+            const card = $(this).closest('.col-md-3');
+            
+            Swal.fire({
+                title: "Apakah kamu yakin ingin menghapus gambar ini?",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonText: "Batal",
+                confirmButtonText: "Ya, Hapus",
+                confirmButtonColor: '#d33',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Add hidden input to mark image for deletion
+                    $('#kt_modal_new_target_form').append(`<input type="hidden" name="deleted_images[]" value="${imageId}">`);
+                    // Remove the card from UI
+                    card.remove();
+                }
+            });
         });
 
         function formatRupiah(angka, prefix) {

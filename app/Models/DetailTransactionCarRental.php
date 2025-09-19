@@ -26,7 +26,8 @@ class DetailTransactionCarRental extends Model
         'updated_at',
         'customer_name',
         'customer_email',
-        'customer_phone'
+        'customer_phone',
+        'status'
     ];
 
     public function transaction(): BelongsTo

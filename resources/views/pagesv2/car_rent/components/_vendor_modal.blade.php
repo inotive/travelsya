@@ -2,12 +2,9 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="d-flex flex-column border border-bottom" style="padding: 1.75rem;">
-                <div class="d-flex flex-row align-items-center mb-2">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
                     <span class="title fw-bold fs-5">Pilih Penyedia Rental</span>
-                    <button class="btn btn-outline-light close ms-sm-auto p-0" id="close_modal" data-dismiss="modal"
-                        aria-label="Close">
-                        <span aria-hidden="true" class="fs-1">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="d-flex flex-row justify-content-between">
                     <div class="d-flex flex-column">
@@ -25,13 +22,16 @@
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->category_rent }}</span>
                         </div>
                     </div>
-                    <img src="{{ asset($car->brand->image ?? null) }}" class="" width="150px" height="100px"
-                        alt="..."
-                        onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                    <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
+                        <img src="{{ asset($car->brand->image ?? null) }}" 
+                             class="card-img-aspect card-img-top"
+                             alt="{{ $car->brand->name ?? 'Car Brand' }}"
+                             onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                    </div>
                 </div>
             </div>
-            <div class="modal-body">
-                @forelse ($car->vendor as $v)
+            <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
+                @forelse (collect($car->vendor)->sortBy(function($item) { return $item['price'] ?? $item->rental_price_per_day ?? 0; }) as $v)
                 <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
                         <div class="d-flex flex-column">
@@ -49,12 +49,8 @@
                                     }} order</span>
                             </div>
                             <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-suitcase checked me-2"></span>
-                                <span class="rating-number">Air Mineral</span>
-                            </div>
-                            <div class="rating d-flex align-items-center mb-1">
-                                <span class="bintang fa-solid fa-user checked me-2"></span>
-                                <span class="rating-number">Supir bisa bahasa inggris</span>
+                                <span class="bintang fa-solid fa-location-dot checked me-2"></span>
+                                <span class="rating-number">{{ $v['location'] ?? ($v->carRental->kota->city_name ?? 'Lokasi tidak diketahui') }}</span>
                             </div>
                         </div>
                         <div class="d-flex flex-column ms-sm-auto align-items-end justify-content-end">

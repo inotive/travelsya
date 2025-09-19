@@ -70,6 +70,7 @@ route::get('/recreation', [RecreationController::class, 'list2']);
 route::get('/recreation_by_category/{id}', [RecreationController::class, 'recreation_by_category']);
 route::get('/recreation_detail/{id}', [RecreationController::class, 'detail_recreations']);
 route::get('/recreation_booking/{id}', [RecreationController::class, 'booking']);
+route::get('/recreation/city', [RecreationController::class, 'city']);
 
 
 route::get('/recreation_search', [RecreationController::class, 'search']);
@@ -78,15 +79,17 @@ route::get('/recreation_search', [RecreationController::class, 'search']);
 route::get('/health_beauty', [HealthBeautyController::class, 'list']);
 route::get('/health_home', [HealthBeautyController::class, 'healthHome']);
 route::get('/health_search', [HealthBeautyController::class, 'search']);
+route::get('/health-beauty/city', [HealthBeautyController::class, 'clinicCity']);
 
 route::get('/beauty_home', [HealthBeautyController::class, 'beautyHome']);
+route::get('/spa_home', [HealthBeautyController::class, 'spaHome']);
 route::get('/beauty_search', [HealthBeautyController::class, 'beauty_search']);
-
 route::get('/clinic_detail/{id}', [HealthBeautyController::class, 'detail']);
 
 // Car Rental
 route::post('/find_car', [CarRentalController::class, 'cari2']);
 route::get('/detail_car/{id}', [CarRentalController::class, 'detail_car']);
+route::get('/car-rent/city', [CarRentalController::class, 'carRentalCity']);
 
 // Bus & Travel
 route::get('/bus_city', [BusTravelController::class, 'city']);

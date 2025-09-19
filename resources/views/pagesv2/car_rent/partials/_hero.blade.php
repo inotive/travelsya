@@ -34,12 +34,9 @@
 
                         </div>
                         <div class="input-group mb-3">
-                            {{-- @php
-                                $cities = \App\Models\CarRental::pluck('city')->toArray(); // Ubah ke array
-                                $cityList = \App\Models\City::whereIn('city_id', $cities)->get(); // Query data sesuai ID
-                            @endphp --}}
                             <select name="location" id="location" class="form-select select" data-control="select2"
-                                    data-placeholder="Pilih Lokasi" autocomplete="on">
+                                    data-placeholder="Pilih Lokasi" autocomplete="on" required>
+                                <option value="">Pilih Lokasi</option>
                                 @foreach($near_location as $city)
                                     <option value="{{ $city }}">{{ $city }}</option>
                                 @endforeach
@@ -63,7 +60,7 @@
                                 aria-label="date" aria-describedby="basic-addon1" />
                             <span class="input-group-text bg-transparent text-secondary">Durasi sewa 12 jam/hari</span>
                         </div>
-                        <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</button>
+                        <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main" id="search-button">Cari Sekarang</button>
 
                         {{-- <a href="{{ route('register') }}" class="btn btn-danger w-100 fw-semibold bg-main">Cari
                             Sekarang</a> --}}
@@ -84,5 +81,55 @@
     //         showMeridian: false
     //     });
     // });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.querySelector('form[action="{{ route('car_rent.show') }}"]');
+        const searchButton = document.getElementById('search-button');
+        const locationSelect = document.getElementById('location');
+
+        // Inisialisasi Select2
+        $('#location').select2({
+            placeholder: "Pilih Lokasi",
+            allowClear: true,
+            width: '100%'
+        });
+
+        // Inisialisasi Select2 untuk brand jika ada
+        if ($('#brand_id_hero').length > 0) {
+            $('#brand_id_hero').select2({
+                placeholder: "Pilih Merek",
+                allowClear: true,
+                width: '100%'
+            });
+        }
+
+        // Reset dropdown location ketika halaman dimuat untuk mencegah pemilihan otomatis
+        if (locationSelect) {
+            // Hapus atribut selected dari semua option
+            const options = locationSelect.querySelectorAll('option');
+            options.forEach(option => {
+                option.removeAttribute('selected');
+            });
+
+            // Set selectedIndex ke 0 (option pertama yaitu "Pilih Lokasi")
+            locationSelect.selectedIndex = 0;
+        }
+
+        if (searchForm && searchButton && locationSelect) {
+            searchForm.addEventListener('submit', function(e) {
+                // Validasi field kota
+                if (!locationSelect.value) {
+                    e.preventDefault();
+                    alert('Silakan pilih lokasi terlebih dahulu');
+                    locationSelect.focus();
+                    return false;
+                }
+
+                // Nonaktifkan tombol selama proses submit
+                searchButton.disabled = true;
+                searchButton.innerHTML = 'Mencari...';
+            });
+        }
+    });
 </script>
 @endpush

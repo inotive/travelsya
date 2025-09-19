@@ -182,6 +182,15 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
+
+            $('#deleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);
+                var id = button.data('id');
+                var form = $('#form-delete');
+                var url = "{{ route('partner.kendaraan.delete', ':id') }}";
+                url = url.replace(':id', id);
+                form.attr('action', url);
+            });
         });
 
         document.addEventListener('DOMContentLoaded', function() {
