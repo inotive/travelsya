@@ -51,6 +51,7 @@ class KendaraanController extends Controller
             'years' => 'required|digits:4',
             'number_seats' => 'required|integer',
             'status' => 'required|boolean',
+            'duration' => 'required|integer|min:1',
             'main_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -136,6 +137,7 @@ class KendaraanController extends Controller
             'years' => 'required|digits:4',
             'number_seats' => 'required|integer',
             'status' => 'required|boolean',
+            'duration' => 'required|integer|min:1',
             'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'deleted_images.*' => 'nullable|integer|exists:car_images,id',
