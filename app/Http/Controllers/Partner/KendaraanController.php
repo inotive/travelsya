@@ -25,28 +25,43 @@ class KendaraanController extends Controller
         $brands = Brand::all();
         $policies = Policy::all();
         $car_models = CarModel::all();
-        $car_rental = CarRental::all();
 
-        $car_rental_id = CarRental::where('user_id', $user->id)->pluck('id')->first();
+        // Get all car rentals for the user
+        $car_rentals = CarRental::where('user_id', $user->id)->get();
+        
+        \Log::info('User accessing index: ' . $user->id . ' (' . $user->name . ') with role: ' . $user->role);
+        \Log::info('Car Rentals found: ' . $car_rentals->count());
 
-        $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')
-            ->where('car_rental_id', $car_rental_id)
-            ->get();
+        if ($car_rentals->count() > 0) {
+            // Get all car rental IDs
+            $car_rental_ids = $car_rentals->pluck('id')->toArray();
+            
+            $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')
+                ->whereIn('car_rental_id', $car_rental_ids)
+                ->get();
+            
+            \Log::info('Cars count for car_rental_ids ' . implode(',', $car_rental_ids) . ': ' . $cars->count());
+            foreach($cars as $car) {
+                \Log::info('Car ID: ' . $car->id . ', Brand: ' . ($car->brand ? $car->brand->name : 'null') . ', Model: ' . ($car->carModel ? $car->carModel->name : 'null'));
+            }
+        } else {
+            $cars = collect(); // Return empty collection if no car rental found
+            \Log::info('No car rental found for user ID: ' . $user->id);
+        }
 
-        return view('ekstranet.kendaraaan.list-kendaraan', compact('cars', 'brands', 'car_models', 'policies', 'car_rental'));
+        // For create form, we still need a single car_rental
+        $car_rental = $car_rentals->first();
+
+        return view('ekstranet.kendaraaan.list-kendaraan', compact('cars', 'brands', 'car_models', 'policies', 'car_rental', 'car_rentals'));
     }
 
     public function store(Request $request)
     {
         // dd($request->all());
 
-        $brands = Brand::all();
-        $policies = Policy::all();
-        $car_models = CarModel::all();
-        $cars = CarRentalHasCars::all();
-
         // Validasi input
         $validator = Validator::make($request->all(), [
+            'car_rental_id' => 'required|exists:car_rentals,id',
             'brand_id' => 'required',
             'car_model_id' => 'required',
             'category' => 'required',
@@ -68,33 +83,54 @@ class KendaraanController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('cars', $imageName, 'public');
-        } else {
-            $imageName = NULL;
+        // Validasi bahwa user memiliki akses ke car_rental_id yang dipilih
+        $user = auth()->user();
+        $carRental = CarRental::where('user_id', $user->id)->where('id', $request->car_rental_id)->first();
+        
+        \Log::info('User attempting to create car: ' . $user->id . ' (' . $user->name . ')');
+        \Log::info('Selected car_rental_id: ' . $request->car_rental_id);
+        \Log::info('Car rental found for user: ' . ($carRental ? 'yes' : 'no'));
+
+        if (!$carRental) {
+            return redirect()->back()->withErrors(['car_rental_id' => 'Anda tidak memiliki akses ke rental mobil ini.'])->withInput();
+        }
+
+        // Proses upload gambar
+        $imageNames = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                if ($image && $image->isValid()) {
+                    $imageName = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
+                    $image->storeAs('cars', $imageName, 'public');
+                    $imageNames[] = $imageName;
+                }
+            }
         }
 
         $price = (int) preg_replace('/[^\d]/', '', $request->rental_price_per_day);
 
-        $data = [
-            'car_rental_id' => $request->car_rental_id,
-            'brand_id' => $request->brand_id,
-            'car_model_id' => $request->car_model_id,
-            'category' => $request->category,
-            'category_rent' => $request->category_rent,
-            'rental_price_per_day' => $price,
-            'pickup_location' => $request->pickup_location,
-            'description' => $request->description,
-            // 'policy_id' => $request->policy_id,
-            'years' => $request->years,
-            'number_seats' => $request->number_seats,
-            'status' => $request->status,
-            'image_url' => $imageName,
-        ];
-
-        DB::table('car_rental_has_cars')->insert($data);
+        // Simpan data kendaraan
+        $car = new CarRentalHasCars();
+        $car->car_rental_id = $request->car_rental_id;
+        $car->brand_id = $request->brand_id;
+        $car->car_model_id = $request->car_model_id;
+        $car->category = $request->category;
+        $car->category_rent = $request->category_rent;
+        $car->rental_price_per_day = $price;
+        $car->pickup_location = $request->pickup_location;
+        $car->description = $request->description;
+        // $car->policy_id = $request->policy_id;
+        $car->years = $request->years;
+        $car->number_seats = $request->number_seats;
+        $car->status = $request->status;
+        // Gambar utama adalah gambar pertama
+        $car->image_url = !empty($imageNames) ? $imageNames[0] : null;
+        $car->save();
+        
+        // Logging untuk debugging
+        \Log::info('Car created with ID: ' . $car->id);
+        \Log::info('Car rental ID: ' . $car->car_rental_id);
+        \Log::info('User ID: ' . $user->id);
 
         return redirect()->route('partner.daftar.kendaraan')->with('success', 'Data berhasil ditambahkan!');
     }
@@ -119,6 +155,7 @@ class KendaraanController extends Controller
         $car_models = CarModel::all();
 
         $validator = Validator::make($request->all(), [
+            'car_rental_id' => 'required|exists:car_rentals,id',
             'brand_id' => 'required',
             'car_model_id' => 'required',
             'category' => 'required',
@@ -139,16 +176,31 @@ class KendaraanController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if ($request->hasFile('image')) {
-            $oldImage = $car->image_url;
-            if($oldImage) Storage::delete('cars/' . $car->image_url);
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('cars', $imageName, 'public');
-        } else {
-            $imageName = $car->image_url;
+        // Validasi bahwa user memiliki akses ke car_rental_id yang dipilih
+        $user = auth()->user();
+        $carRental = CarRental::where('user_id', $user->id)->where('id', $request->car_rental_id)->first();
+        
+        if (!$carRental) {
+            return redirect()->back()->withErrors(['car_rental_id' => 'Anda tidak memiliki akses ke rental mobil ini.'])->withInput();
         }
 
+        // Proses upload gambar baru jika ada
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $index => $image) {
+                if ($image && $image->isValid()) {
+                    $imageName = time() . '_' . $index . '.' . $image->getClientOriginalExtension();
+                    $image->storeAs('cars', $imageName, 'public');
+                    // Gambar pertama akan menjadi gambar utama
+                    if ($index == 0) {
+                        // Hapus gambar lama jika ada
+                        if($car->image_url) Storage::disk('public')->delete('cars/' . $car->image_url);
+                        $car->image_url = $imageName;
+                    }
+                }
+            }
+        }
+
+        $car->car_rental_id = $request->car_rental_id;
         $car->brand_id = $request->brand_id;
         $car->car_model_id = $request->car_model_id;
         $car->category = $request->category;
@@ -160,7 +212,6 @@ class KendaraanController extends Controller
         $car->years = $request->years;
         $car->number_seats = $request->number_seats;
         $car->status = $request->status;
-        $car->image_url = $imageName;
         $car->save();
 
         return redirect()->route('partner.daftar.kendaraan')->with('update', 'Data berhasil diupdate!');

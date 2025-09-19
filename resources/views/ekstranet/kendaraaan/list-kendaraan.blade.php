@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header pt-5">
             <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="halaman-create">
+                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.halaman.create') }}">
                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Data Mobil</a>
             </div>
         </div>
@@ -40,6 +40,8 @@
                                 @if ($car->image_url)
                                     <img src="{{ asset('storage/cars/' . $car->image_url) }}"
                                          style="width: 130px; height: 100px; object-fit: contain;">
+                                @else
+                                    <span class="text-muted">Tidak ada gambar</span>
                                 @endif
                             </td>
                             <td>{{ $car->brand->name ?? '' }}</td>

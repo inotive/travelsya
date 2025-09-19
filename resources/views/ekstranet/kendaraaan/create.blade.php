@@ -14,7 +14,7 @@
                             <select class="form-control" name="car_rental_id" id="car_rental_id" required>
                                 <option value="">-- Pilih Bisnis --</option>
                                 @foreach ($car_rentals as $car_rental)
-                                    <option value="{{ $car_rental->id }}">{{ $car_rental->business_name }}</option>
+                                    <option value="{{ $car_rental->id }}" {{ old('car_rental_id') == $car_rental->id ? 'selected' : '' }}>{{ $car_rental->business_name }}</option>
                                 @endforeach
                             </select>
                             @error('car_rental_id')
@@ -29,7 +29,7 @@
                             <select class="form-control" id="brand_id" name="brand_id" required>
                                 <option value="">Pilih Merk</option>
                                 @foreach ($brands as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                                 @endforeach
                             </select>
                             @error('brand_id')
@@ -44,7 +44,7 @@
                             <select class="form-control" id="car_model_id" name="car_model_id" required>
                                 <option value="">Pilih Model</option>
                                 @foreach ($car_models as $car_model)
-                                    <option value="{{ $car_model->id }}">{{ $car_model->name }}</option>
+                                    <option value="{{ $car_model->id }}" {{ old('car_model_id') == $car_model->id ? 'selected' : '' }}>{{ $car_model->name }}</option>
                                 @endforeach
                             </select>
                             @error('car_model_id')
@@ -58,8 +58,8 @@
                             <label class="required fs-6 fw-semibold mb-2">Tipe</label>
                             <select class="form-control" id="category" name="category" required>
                                 <option value="">Pilih Tipe</option>
-                                <option value="manual">Manual</option>
-                                <option value="automatic">Matic</option>
+                                <option value="manual" {{ old('category') == 'manual' ? 'selected' : '' }}>Manual</option>
+                                <option value="automatic" {{ old('category') == 'automatic' ? 'selected' : '' }}>Matic</option>
                             </select>
                             @error('category')
                                 <span class="text-danger mt-1" role="alert">
@@ -72,8 +72,8 @@
                             <label class="required fs-6 fw-semibold mb-2">Kategori Rental</label>
                             <select class="form-control" id="category_rent" name="category_rent" required>
                                 <option value="">Pilih Kategori</option>
-                                <option value="Lepas Kunci">Lepas Kunci</option>
-                                <option value="Dengan Supir">Dengan Supir</option>
+                                <option value="Lepas Kunci" {{ old('category_rent') == 'Lepas Kunci' ? 'selected' : '' }}>Lepas Kunci</option>
+                                <option value="Dengan Supir" {{ old('category_rent') == 'Dengan Supir' ? 'selected' : '' }}>Dengan Supir</option>
                             </select>
                             @error('category_rent')
                                 <span class="text-danger mt-1" role="alert">
@@ -88,8 +88,8 @@
                                 <span class="input-group-text" id="basic-addon1">Rp</span>
                                 <input type="text" class="form-control" id="rental_price_per_day_display"
                                     placeholder="Biaya Sewa" aria-label="rental_price_per_day_display"
-                                    aria-describedby="basic-addon1" required>
-                                <input type="hidden" id="rental_price_per_day" name="rental_price_per_day">
+                                    aria-describedby="basic-addon1" value="{{ old('rental_price_per_day_display') }}" required>
+                                <input type="hidden" id="rental_price_per_day" name="rental_price_per_day" value="{{ old('rental_price_per_day') }}">
                             </div>
                             @error('rental_price_per_day')
                                 <span class="text-danger mt-1" role="alert">
@@ -109,7 +109,7 @@
                                 @endphp
 
                                 @for ($year = $endYear; $year >= $startYear; $year--)
-                                    <option value="{{ $year }}">{{ $year }}</option>
+                                    <option value="{{ $year }}" {{ old('years') == $year ? 'selected' : '' }}>{{ $year }}</option>
                                 @endfor
                             </select>
                             @error('years')
@@ -122,7 +122,7 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
                             <input type="number" class="form-control" id="number_seats" name="number_seats"
-                                placeholder="Jumlah Kursi" required>
+                                placeholder="Jumlah Kursi" value="{{ old('number_seats') }}" required>
                             @error('number_seats')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -132,7 +132,7 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tempat Mengambil Mobil</label>
-                            <input type="text" class="form-control" id="pickup_location" name="pickup_location" placeholder="Tempat Mengambil Mobil" required>
+                            <input type="text" class="form-control" id="pickup_location" name="pickup_location" placeholder="Tempat Mengambil Mobil" value="{{ old('pickup_location') }}" required>
                             @error('pickup_location')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -144,8 +144,8 @@
                             <label class="required fs-6 fw-semibold mb-2">Status</label>
                             <select class="form-control" id="status" name="status" required>
                                 <option value="">Pilih Status</option>
-                                <option value="1">Aktif</option>
-                                <option value="0">Tidak Aktif</option>
+                                <option value="1" {{ old('status') == '1' ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('status') == '0' ? 'selected' : '' }}>Tidak Aktif</option>
                             </select>
                             @error('status')
                                 <span class="text-danger mt-1" role="alert">
@@ -156,7 +156,7 @@
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                            <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" required></textarea>
+                            <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" required>{{ old('description') }}</textarea>
                             <small class="form-text text-muted">Maksimal 2000 karakter</small>
                             @error('description')
                                 <span class="text-danger mt-1" role="alert">
@@ -169,8 +169,7 @@
                             <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
                             <div class="input-group mb-3">
                                 <input type="file" class="form-control" name="images[]" accept="image/*" required>
-                                <input type="hidden" name="main_image[]" value="1">
-                                <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                                <label class="input-group-text bg-primary text-white">Gambar</label>
                             </div>
                             <div id="additional-images"></div>
                             <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
@@ -246,9 +245,7 @@
             $('#additional-images').append(`
                 <div class="input-group mb-3">
                     <input type="file" class="form-control" name="images[]" accept="image/*">
-                    <input type="hidden" name="main_image[]" value="0" class="main-image-flag">
-                    <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
-                    <button type="button" class="btn btn-primary set-main-image">Jadikan Utama</button>
+                    <label class="input-group-text bg-secondary text-white">Gambar</label>
                     <button type="button" class="btn btn-danger remove-image">Hapus</button>
                 </div>
             `);
@@ -257,17 +254,6 @@
         // Handle removing additional images
         $(document).on('click', '.remove-image', function() {
             $(this).closest('.input-group').remove();
-        });
-        
-        // Handle setting main image
-        $(document).on('click', '.set-main-image', function() {
-            // Reset all flags to 0
-            $('.main-image-flag').val('0');
-            $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
-            
-            // Set current flag to 1
-            $(this).closest('.input-group').find('.main-image-flag').val('1');
-            $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
         });
 
         function formatRupiah(amount) {
