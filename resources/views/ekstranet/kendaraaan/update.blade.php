@@ -246,7 +246,7 @@
                     <div class="text-center">
                         <div class="row">
                             <div class="col-6 mb-2">
-                                <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button>
+                                <a href="{{ route('partner.daftar.kendaraan') }}" class="btn btn-light w-100">Batal</a>
                             </div>
                             <div class="col-6">
                                 <button type="submit" class="btn btn-primary w-100">
