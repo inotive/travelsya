@@ -68,11 +68,10 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
+                    <label class="required fs-6 fw-semibold mb-2">Tipe Masa Berlaku</label>
                     <select class="form-select" name="expiry_type" aria-label="Default select example" required>
-                        @foreach ($expiryTypes as $type)
-                            <option value="{{ $type }}">{{ $type }}</option>
-                        @endforeach
+                        <option value="Hari">Hari</option>
+                        <option value="Jam">Jam</option>
                     </select>
                 </div>
 
@@ -220,7 +219,14 @@
             $(this).val(formatted);
         });
 
-
+        // Add submit handler to clean price
+        $('#kt_modal_new_target_form').on('submit', function() {
+            let hargaInput = $('#harga');
+            if (hargaInput.length) {
+                let cleanPrice = hargaInput.val().replace(/[^\d]/g, '');
+                hargaInput.val(cleanPrice);
+            }
+        });
     });
 </script>
 @endsection

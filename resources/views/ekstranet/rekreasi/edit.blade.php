@@ -89,11 +89,10 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
+                    <label class="required fs-6 fw-semibold mb-2">Tipe Masa Berlaku</label>
                     <select class="form-select" name="expiry_type" aria-label="Default select example" required>
-                        @foreach ($expiryTypes as $type)
-                            <option value="{{ $type }}" {{ old('expiry_type', $recreation_has_packages->expiry_type) == $type ? 'selected' : '' }}>{{ $type }}</option>
-                        @endforeach
+                        <option value="Hari" {{ old('expiry_type', $recreation_has_packages->expiry_type) == 'Hari' ? 'selected' : '' }}>Hari</option>
+                        <option value="Jam" {{ old('expiry_type', $recreation_has_packages->expiry_type) == 'Jam' ? 'selected' : '' }}>Jam</option>
                     </select>
                 </div>
 
@@ -138,57 +137,65 @@
                     @enderror
                 </div>
 
-                <!-- Existing Images -->
-                @if(isset($recreation_has_packages->images) && count($recreation_has_packages->images) > 0)
+                <!-- Kelola Gambar -->
                 <div class="col-md-12 mt-4">
-                    <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                    <div class="row">
-                        @foreach($recreation_has_packages->images as $image)
-                        <div class="col-md-3 mb-3">
-                            <div class="card">
-                                <img src="{{ asset('storage/' . $image->image) }}" class="card-img-top" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
-                                <div class="card-body text-center">
-                                    @if($image->main == 1)
-                                        <span class="badge bg-primary">Gambar Utama</span>
-                                    @else
-                                        <span class="badge bg-secondary">Gambar Tambahan</span>
-                                    @endif
-                                    <!-- Hidden input to track existing images -->
-                                    <input type="hidden" name="existing_images[]" value="{{ $image->id }}">
-                                    <!-- Delete button for existing images -->
-                                    <button type="button" class="btn btn-sm btn-danger mt-2 delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
+                    <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
+                    
+                    @php
+                        $mainImage = $recreation_has_packages->images->firstWhere('main', 1);
+                        $additionalImages = $recreation_has_packages->images->where('main', 0);
+                    @endphp
+
+                    <!-- Main Image Section -->
+                    <div class="mb-5 p-4 border rounded">
+                        <h6 class="mb-3">Gambar Utama</h6>
+                        @if($mainImage)
+                            <div class="d-flex flex-wrap align-items-start">
+                                <div class="me-4 mb-2">
+                                    <img src="{{ asset($mainImage->image) }}" class="rounded" style="width: 150px; height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                    <div class="text-muted text-truncate mt-1" style="max-width: 150px;">{{ basename($mainImage->image) }}</div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <label class="form-label">Ganti Gambar Utama</label>
+                                    <input type="file" class="form-control" name="main_image" accept="image/*">
+                                    <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
                                 </div>
                             </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-                
-                <!-- Image Upload Section -->
-                <div class="col-md-12 mt-4">
-                    <label class="fs-6 fw-semibold mb-2">Unggah Gambar Baru (Opsional)</label>
-                    <div class="form-text mb-4">Biarkan kolom di bawah ini kosong jika Anda tidak ingin menambah atau mengganti gambar.</div>
-                    
-                    <!-- Main Image Upload -->
-                    <div class="mb-4">
-                        <h6>Gambar Utama</h6>
-                        <div class="input-group mb-3">
+                        @else
+                            <p>Belum ada gambar utama. Silakan unggah.</p>
                             <input type="file" class="form-control" name="main_image" accept="image/*">
-                            <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                        @endif
+                    </div>
+
+                    <!-- Additional Images Section -->
+                    <div class="mb-5 p-4 border rounded">
+                        <h6 class="mb-3">Gambar Tambahan</h6>
+                        <div class="row">
+                            @if(count($additionalImages) > 0)
+                                @foreach($additionalImages as $image)
+                                    <div class="col-md-4 col-sm-6 mb-4">
+                                        <div class="card h-100">
+                                            <img src="{{ asset($image->image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                            <div class="card-body text-center p-3">
+                                                <p class="card-text text-muted text-truncate" title="{{ basename($image->image) }}">{{ basename($image->image) }}</p>
+                                                <button type="button" class="btn btn-sm btn-danger delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="col-12">
+                                    <p class="text-muted">Tidak ada gambar tambahan.</p>
+                                </div>
+                            @endif
                         </div>
-                        <div class="form-text">Mengunggah gambar utama baru akan menggantikan gambar utama lama.</div>
                     </div>
                     
-                    <!-- Additional Images Upload -->
-                    <div>
-                        <h6>Gambar Tambahan</h6>
+                    <!-- Add More Additional Images -->
+                    <div class="p-4 border rounded">
+                        <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
                         <div id="additional-images-container">
-                            <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="additional_images[]" accept="image/*">
-                                <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
-                                <button type="button" class="btn btn-danger remove-additional-image">Hapus</button>
-                            </div>
+                            <!-- New image inputs will be appended here -->
                         </div>
                         <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">+ Tambah Gambar Tambahan</button>
                     </div>
@@ -263,31 +270,25 @@
         $('#add-more-additional-images').click(function() {
             $('#additional-images-container').append(`
                 <div class="input-group mb-3">
-                    <input type="file" class="form-control" name="additional_images[]" accept="image/*">
-                    <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
-                    <button type="button" class="btn btn-danger remove-additional-image">Hapus</button>
+                    <input type="file" class="form-control" name="additional_images[]" accept="image/*" required>
+                    <button type="button" class="btn btn-outline-danger remove-additional-image">Hapus</button>
                 </div>
             `);
         });
         
-        // Handle removing additional images
+        // Handle removing newly added images
         $(document).on('click', '.remove-additional-image', function() {
-            // Make sure at least one additional image field remains
-            if ($('#additional-images-container .input-group').length > 1) {
-                $(this).closest('.input-group').remove();
-            } else {
-                // Clear the file input if it's the last one
-                $(this).closest('.input-group').find('input[type="file"]').val('');
-            }
+            $(this).closest('.input-group').remove();
         });
         
         // Handle deleting existing images
         $(document).on('click', '.delete-existing-image', function() {
             const imageId = $(this).data('image-id');
-            const card = $(this).closest('.col-md-3');
+            const imageCard = $(this).closest('.col-md-4'); // Adjusted selector
             
             Swal.fire({
                 title: "Apakah kamu yakin ingin menghapus gambar ini?",
+                text: "Gambar ini akan dihapus secara permanen.",
                 icon: "warning",
                 showCancelButton: true,
                 cancelButtonText: "Batal",
@@ -299,7 +300,7 @@
                     // Add hidden input to mark image for deletion
                     $('#kt_modal_new_target_form').append(`<input type="hidden" name="deleted_images[]" value="${imageId}">`);
                     // Remove the card from UI
-                    card.remove();
+                    imageCard.remove();
                 }
             });
         });
