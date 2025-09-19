@@ -174,6 +174,10 @@
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Logo</label>
+                                <div id="logo-preview" class="mb-2" style="display: none;">
+                                    <img id="preview-logo-img" src="" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 5px; border: 1px solid #ddd;">
+                                    <p class="text-muted small mt-1">Preview logo</p>
+                                </div>
                                 <input type="file" class="form-control form-control-lg" id="logo"
                                     name="logo" accept="image/jpeg,image/jpg,image/png" required />
                                 <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
@@ -312,6 +316,23 @@
 
             });
 
+            // Image preview functionality for create form
+            document.getElementById('logo').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const previewDiv = document.getElementById('logo-preview');
+                const previewImg = document.getElementById('preview-logo-img');
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewDiv.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewDiv.style.display = 'none';
+                }
+            });
 
         </script>
     @endpush

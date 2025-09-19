@@ -32,10 +32,18 @@
                     <input type="hidden" id="bus_travel_id" value="">
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Logo</label>
+                        <div id="current-logo-preview" class="mb-2" style="display: none;">
+                            <img id="current-logo-img" src="" alt="Current Logo" style="max-width: 200px; max-height: 150px; border-radius: 5px;">
+                            <p class="text-muted small mt-1">Logo saat ini</p>
+                        </div>
+                        <div id="new-logo-preview" class="mb-2" style="display: none;">
+                            <img id="new-logo-img" src="" alt="New Logo Preview" style="max-width: 200px; max-height: 150px; border-radius: 5px; border: 1px solid #ddd;">
+                            <p class="text-muted small mt-1">Preview logo baru</p>
+                        </div>
                         <input type="file" class="form-control form-control-lg logo-edit" id="logo-edit"
-                            name="logo" accept="image/jpeg,image/jpg,image/png" />
+                            name="logo" accept="image/jpeg,image/jpg,image/png"/>
                         <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
-                        <div class="mt-2" id="current-logo-preview"></div>
+                        <small class="text-muted">Kosongkan jika tidak ingin mengubah logo</small>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-logo-edit"></div>
 
                         @error('logo')
@@ -172,16 +180,23 @@
 
                     // Show current logo if exists
                     if (response.data.image && response.data.image !== '-') {
-                        $('#current-logo-preview').html(`
-                            <div class="d-flex align-items-center">
-                                <img src="/storage/${response.data.image}" alt="Current Logo"
-                                     style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" class="me-2">
-                                <span class="text-muted">Logo saat ini</span>
-                            </div>
-                        `);
+                        $('#current-logo-img').attr('src', '/storage/' + response.data.image);
+                        $('#current-logo-preview').show();
+                        // Update help text based on logo existence
+                        $('small.text-muted').text('Kosongkan jika tidak ingin mengubah logo');
+                        // Make logo field optional
+                        $('#logo-edit').removeAttr('required');
                     } else {
-                        $('#current-logo-preview').html('<span class="text-muted">Belum ada logo</span>');
+                        $('#current-logo-preview').hide();
+                        // Update help text for required logo
+                        $('small.text-muted').text('Logo wajib diisi');
+                        // Make logo field required
+                        $('#logo-edit').attr('required', 'required');
                     }
+
+                    // Reset new logo preview
+                    $('#new-logo-preview').hide();
+                    $('#logo-edit').val('');
 
                     $('#modal-edit').modal('show');
 
@@ -213,8 +228,15 @@
             formData.append('_token', token);
             formData.append('_method', 'PUT');
 
+            // Check if logo is required (no existing logo in database)
+            let hasExistingLogo = $('#current-logo-preview').is(':visible');
+
             if (logo) {
                 formData.append('logo', logo);
+            } else if (!hasExistingLogo) {
+                // Show error if no logo selected and no existing logo
+                alert('Logo wajib diisi!');
+                return;
             }
 
             //ajax
@@ -271,6 +293,24 @@
                     }
                 }
             });
+        });
+
+        // Image preview functionality for edit form
+        $('#logo-edit').on('change', function(e) {
+            const file = e.target.files[0];
+            const previewDiv = $('#new-logo-preview');
+            const previewImg = $('#new-logo-img');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.attr('src', e.target.result);
+                    previewDiv.show();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewDiv.hide();
+            }
         });
     });
 </script>
