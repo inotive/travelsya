@@ -53,7 +53,7 @@
                             Persyaratan perjalanan
                         </div>
                         <div class="subtitle-how">
-                            Cek protokol dan syarat perjalanan selama pandemi
+                            Cek protokol dan syarat perjalanan selama pandemi di travelysa.com
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ class BusRoute extends Model
 {
     use HasFactory;
 
-    protected $fillabel = [
+    protected $fillable = [
         'name'
     ];
 

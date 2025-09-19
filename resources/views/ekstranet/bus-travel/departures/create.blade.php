@@ -77,12 +77,12 @@
                             <div class="row mb-6">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">Kota Keberangkatan</label>
                                 <div class="col-lg-8 fv-row">
-                                    <select name="from_route_id" class="form-select form-select-solid form-select-lg"
+                                    <select name="from_city_id" class="form-select form-select-solid form-select-lg"
                                         required>
                                         <option value="">Pilih Kota Keberangkatan</option>
-                                        @foreach ($routes as $id => $name)
+                                        @foreach ($cities as $id => $name)
                                             <option value="{{ $id }}"
-                                                {{ old('from_route_id') == $id ? 'selected' : '' }}>{{ $name }}
+                                                {{ old('from_city_id') == $id ? 'selected' : '' }}>{{ $name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -91,15 +91,27 @@
                             <div class="row mb-6">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">Kota Tujuan</label>
                                 <div class="col-lg-8 fv-row">
-                                    <select name="to_route_id" class="form-select form-select-solid form-select-lg"
+                                    <select name="to_city_id" class="form-select form-select-solid form-select-lg"
                                         required>
                                         <option value="">Pilih Kota Tujuan</option>
-                                        @foreach ($routes as $id => $name)
+                                        @foreach ($cities as $id => $name)
                                             <option value="{{ $id }}"
-                                                {{ old('to_route_id') == $id ? 'selected' : '' }}>{{ $name }}
+                                                {{ old('to_city_id') == $id ? 'selected' : '' }}>{{ $name }}
                                             </option>
                                         @endforeach
                                     </select>
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Titik Naik</label>
+                                <div class="col-lg-8 fv-row">
+                                    <input type="text" name="titik_naik" class="form-control form-control-lg form-control-solid" placeholder="Masukkan titik naik" value="{{ old('titik_naik') }}" required />
+                                </div>
+                            </div>
+                            <div class="row mb-6">
+                                <label class="col-lg-4 col-form-label required fw-bold fs-6">Titik Turun</label>
+                                <div class="col-lg-8 fv-row">
+                                    <input type="text" name="titik_turun" class="form-control form-control-lg form-control-solid" placeholder="Masukkan titik turun" value="{{ old('titik_turun') }}" required />
                                 </div>
                             </div>
                             <div class="row mb-6">

@@ -85,17 +85,13 @@
                     </div>
                 </div>
 
+                {{-- Multiple Upload Section with Preview --}}
                 <div class="form-row">
                     <div class="form-group">
                         <label class="fs-6 fw-semibold mb-2">Gambar</label>
-                        <input type="file" class="form-control" id="image" name="image" accept="image/*">
-
-                        @error('image')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                        <input type="hidden" value="1">
+                        <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*">
+                        @error('images.*') <span class="text-danger mt-1">{{ $message }}</span> @enderror
+                        <div id="image-preview-container" class="d-flex flex-wrap gap-3 mt-3"></div>
                     </div>
                 </div>
 
@@ -106,7 +102,8 @@
                             <div class="col-2">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="facilities[]"
-                                        value="{{ $facility->id }}" id="facility{{ $facility->id }}">
+                                        value="{{ $facility->id }}" id="facility{{ $facility->id }}"
+                                        {{ in_array($facility->id, old('facilities', [])) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="facility{{ $facility->id }}">
                                         {{ $facility->name }}
                                     </label>
@@ -121,16 +118,15 @@
                     @enderror
                 </div>
                 <br>
+                <div class="form-group">
+                    <label class="required fs-6 fw-semibold mb-2">Peraturan atau Ketentuan</label>
+                    <textarea class="form-control" name="tos" required placeholder="Masukkan Peraturan atau Ketentuan">{{ old('tos') }}</textarea>
+                    @error('tos') <span class="text-danger mt-1">{{ $message }}</span> @enderror
+                </div>
 
                 <div class="row mt-5">
                     <div class="col">
-                        <input
-                            class="btn btn-secondary"
-                            action="action"
-                            onclick="window.history.go(-1); return false;"
-                            type="submit"
-                            value="Kembali"
-                        />
+                        <a href="{{ route('partner.daftar.bus-travel') }}" class="btn btn-secondary w-100">Kembali</a>
                     </div>
                     <div class="col">
                         <button type="submit" class="btn btn-primary w-100">Simpan</button>
@@ -142,6 +138,84 @@
 @endsection
 
 @push('add-script')
+<script>
+    const imageInput = document.getElementById('images');
+    const previewContainer = document.getElementById('image-preview-container');
+    let fileArray = []; // Use a simple array as the source of truth
+
+    // --- Event Listener ---
+    imageInput.addEventListener('change', (e) => {
+        // Add newly selected files to our array
+        for (const file of e.target.files) {
+            fileArray.push(file);
+        }
+        // Sync the file input with our array and render previews
+        syncInputAndRender();
+    });
+
+    // --- Functions ---
+
+    function removeFile(index) {
+        // Remove the file from our array at the given index
+        fileArray.splice(index, 1);
+        // Re-sync and re-render
+        syncInputAndRender();
+    }
+
+    function syncInputAndRender() {
+        // Create a new DataTransfer object
+        const dataTransfer = new DataTransfer();
+        // Add all files from our array to the DataTransfer object
+        for (const file of fileArray) {
+            dataTransfer.items.add(file);
+        }
+        // Update the real file input's files list
+        imageInput.files = dataTransfer.files;
+        // Render the previews based on our array
+        renderPreviews();
+    }
+
+    function renderPreviews() {
+        // Clear the preview container
+        previewContainer.innerHTML = '';
+
+        // Render a preview for each file in our array
+        fileArray.forEach((file, i) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const previewCard = document.createElement('div');
+                previewCard.className = 'preview-image-card';
+
+                const imageWrapper = document.createElement('div');
+                imageWrapper.className = 'image-wrapper';
+
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'btn-remove-preview';
+                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                removeBtn.type = 'button';
+                removeBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    removeFile(i); // Call removeFile with the correct index
+                });
+
+                imageWrapper.appendChild(img);
+                imageWrapper.appendChild(removeBtn);
+                previewCard.appendChild(imageWrapper);
+                previewContainer.appendChild(previewCard);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Back button functionality
+    document.getElementById('backButton').addEventListener('click', function() {
+        window.history.back();
+    });
+</script>
 @endpush
 
 <style>
@@ -209,10 +283,83 @@
         background: #007bff;
         color: white;
     }
-</style>
 
-<script>
-      document.getElementById('backButton').addEventListener('click', function() {
-        window.history.back();
-      });
-</script>
+    /* Preview Image Card Styles */
+    .preview-image-card {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 2px solid #007bff;
+    }
+
+    .preview-image-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .image-wrapper {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .preview-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .preview-image-card:hover .preview-image {
+        transform: scale(1.05);
+    }
+
+    .btn-remove-preview {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(255, 255, 255, 0.95);
+        color: #dc3545;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        opacity: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(4px);
+    }
+
+    .preview-image-card:hover .btn-remove-preview {
+        opacity: 1;
+    }
+
+    .btn-remove-preview:hover {
+        background: rgba(255, 255, 255, 1);
+        color: #dc3545;
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-remove-preview i {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    /* Add some spacing and responsiveness */
+    @media (max-width: 768px) {
+        .preview-image-card {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>

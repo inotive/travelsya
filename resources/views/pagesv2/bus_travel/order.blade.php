@@ -1,3 +1,8 @@
+@php
+    $departureDateTime = \Carbon\Carbon::parse($date_pergi . ' ' . $departure->departure_time);
+    $arrivalDateTime = $departureDateTime->copy()->addHours($departure->duration);
+@endphp
+
 @extends('layouts.app_v2')
 
 @section('content')
@@ -44,7 +49,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="phone_pemesan" class="form-label">Nomor Ponsel</label>
-                                    <input type="text" name="phone_pemesan" id="phone_pemesan" class="form-control"
+                                    <input type="number" name="phone_pemesan" id="phone_pemesan" class="form-control"
                                         value="{{ $user->phone }}" placeholder="Masukan nomor Handphone" required>
                                 </div>
                                 <div class="mb-3">
@@ -127,7 +132,7 @@
                                     <div class="mb-3">
                                         <label for="customer_phone_{{ $i }}" class="form-label">Nomor
                                             Ponsel</label>
-                                        <input type="text" class="form-control" id="customer_phone_{{ $i }}"
+                                        <input type="number" class="form-control" id="customer_phone_{{ $i }}"
                                             name="customer_phone_{{ $i }}" placeholder="Masukan nomor handphone"
                                             required>
                                     </div>
@@ -159,7 +164,7 @@
                                     <div class="mb-3">
                                         <label for="phone_disabled_pengunjung" class="form-label">Nomor
                                             Ponsel</label>
-                                        <input type="text" class="form-control" id="phone_disabled_pengunjung"
+                                        <input type="number" class="form-control" id="phone_disabled_pengunjung"
                                             placeholder="Masukan nomor handphone" disabled readonly>
                                     </div>
                                     <div class="mb-3">
@@ -206,34 +211,65 @@
         <div class="col-4">
             <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
                 <div class="card-body p-5">
+
+                    <!-- Header -->
                     <div class="d-flex flex-row align-items-center">
-                        <span class="fw-bold p-2 rouded-1 text-wrap bg-snow-pink text-danger">Pergi</span>
-                        <span class="ms-2">Sel, 15 Okt 2024 . 09:54</span>
-                        <span class="text-danger ms-sm-auto">Detail</span>
+                        <span class="fw-bold p-2 rounded-1 text-wrap bg-snow-pink text-danger">Pergi</span>
+                        <span class="ms-2">{{ $departureDateTime->format('D, d M Y') }} . {{ $departureDateTime->format('H:i') }} <strong>({{ $departure->duration }} jam)</strong></span>
                     </div>
+
                     <hr class="opacity-25 my-5">
-                    <div class="d-flex flex-column">
-                        <div class="d-flex flex-row align-items-center">
-                            <span class="">{{ $departure->from->name ?? 'Invalid from' }}</span>
-                            <i class="fa-solid fa-arrow-right ms-3"></i>
-                            <span class="ms-3">{{ $departure->to->name ?? 'Invalid To' }}</span>
+
+                    <!-- Routes / Info -->
+                    <div class="d-flex flex-column gap-2">
+
+                        <!-- City names -->
+                        <div class="row g-2 align-items-start">
+                            <!-- Left column -->
+                            <div class="col">
+                                <div class="fw-semibold text-wrap">
+                                    {{ $departure->from->city_name ?? 'Invalid from' }}
+                                </div>
+                                <div class="text-wrap">
+                                    {{ $departure->titik_naik ?? 'Invalid from' }}
+                                </div>
+                                <div class="text-muted">
+                                    {{ $departureDateTime->format('H:m') }}
+                                </div>
+                            </div>
+
+                            <!-- Arrow column -->
+                            <div class="col-auto text-center" style="min-width:30px;">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </div>
+
+                            <!-- Right column -->
+                            <div class="col">
+                                <div class="fw-semibold text-wrap">
+                                    {{ $departure->to->city_name ?? 'Invalid To' }}
+                                </div>
+                                <div class="text-wrap">
+                                    {{ $departure->titik_turun ?? 'Invalid To' }}
+                                </div>
+                                <div class="text-muted">
+                                    {{ $arrivalDateTime->format('H:m') }}
+                                </div>
+                            </div>
                         </div>
-                        <div class="d-flex flex-row align-items-center">
-                            <span class="">{{ $departure->busTravel->busTravel->business_name ?? 'Invalid business'
-                                }}</span>
-                            <span class="fa-solid mx-3 fa-circle text-secondary" style="font-size: 5px;"></span>
-                            <span>{{ $departure->busTravel->name }}</span>
-                        </div>
-                    </div>
+
                     <hr class="opacity-25 my-5">
+
+                    <!-- Total -->
                     <div class="d-flex flex-row align-items-center">
                         <span>Total pembayaran</span>
-                        <span class="fs-3 ms-sm-auto">IDR
-                            {{ number_format($departure->price * $jumlah_penumpang) }}</span>
+                        <span class="fs-3 ms-sm-auto fw-bold">
+                            IDR {{ number_format($departure->price * $jumlah_penumpang) }}
+                        </span>
                     </div>
                 </div>
             </div>
         </div>
+
 
     </section>
 </div>

@@ -73,6 +73,9 @@ class DatabaseSeeder extends Seeder
             HealthBeautyPackageSeeder::class,
             HealthBeautyTransactionSeeder::class,
             BookingSeeder::class,
+            BusDepartureSeeder::class,
+            BusRouteSeeder::class,
+            BusTravelHasBusSeeder::class,
         ]);
     }
 }

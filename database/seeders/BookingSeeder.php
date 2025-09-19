@@ -3,10 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\Brand;
+use App\Models\BusBooked;
+use App\Models\BusDeparture;
+use App\Models\BusTravels;
+use App\Models\BusTravelHasBus;
 use App\Models\CarBookDate;
 use App\Models\CarModel;
 use App\Models\CarRental;
 use App\Models\CarRentalHasCars;
+use App\Models\DetailTransactionBus;
 use App\Models\DetailTransactionCarRental;
 use App\Models\DetailTransactionRecreation;
 use App\Models\Recreation;
@@ -60,6 +65,9 @@ class BookingSeeder extends Seeder
 
         // 4. Seed Recreation Bookings
         $this->seedRecreationBookings($partnerUser, $customers);
+
+        // 5. Seed Bus Travel Bookings
+        $this->seedBusTravelBookings($partnerUser, $customers);
     }
 
     private function seedCarRentalBookings($partnerUser, $customers)
@@ -276,6 +284,101 @@ class BookingSeeder extends Seeder
                     'fee_admin' => '5000',
                     'kode_unik' => rand(100, 999),
                     'is_used' => 0,
+                ]
+            );
+        }
+    }
+
+    private function seedBusTravelBookings($partnerUser, $customers)
+    {
+        // Create or find a Bus Travel company owned by the partner
+        $busTravel = BusTravels::firstOrCreate(
+            ['business_name' => 'PO Travelsya'],
+            [
+                'user_id' => $partnerUser->id,
+                'city' => 'Jakarta',
+                'phone' => '081122334456',
+                'address' => 'Jl. Angkasa No. 1, Jakarta',
+                'is_active' => true,
+            ]
+        );
+
+        // Create a bus for the travel company
+        $bus = BusTravelHasBus::firstOrCreate(
+            [
+                'bus_travel_id' => $busTravel->id,
+            ],
+            [
+                'name' => 'Bus AC VIP',
+                'tos' => 'Terms of service for bus travel',
+                'number_seats' => 40,
+                'class' => 'Executive',
+                'is_active' => true,
+            ]
+        );
+
+        // Create a bus departure route (Jakarta to Bandung)
+        $departure = BusDeparture::firstOrCreate(
+            [
+                'bus_travel_has_bus_id' => $bus->id,
+                'from_city_id' => 1, // Jakarta (using placeholder ID)
+                'to_city_id' => 2,   // Bandung (using placeholder ID)
+            ],
+            [
+                'departure_time' => '08:00:00',
+                'titik_naik' => 'Terminal Lebak Bulus',
+                'titik_turun' => 'Terminal Bandung',
+                'duration' => 180, // 3 hours in minutes
+                'days' => '1,2,3,4,5,6,0', // Everyday
+                'price' => 100000,
+            ]
+        );
+
+        // Create 5 bus travel bookings
+        foreach ($customers as $key => $customer) {
+            $booking_id = 'BOOK-BUS-' . Str::random(8);
+            $transaction = Transaction::firstOrCreate(
+                ['no_inv' => 'TRX-BUS-' . $booking_id],
+                [
+                    'user_id' => $customer->id,
+                    'service' => 'Bus',
+                    'service_id' => 3,
+                    'payment' => 'onthespot',
+                    'total' => 105000,
+                    'status' => 'PAID',
+                ]
+            );
+
+            DetailTransactionBus::firstOrCreate(
+                ['booking_id' => $booking_id],
+                [
+                    'transaction_id' => $transaction->id,
+                    'bus_travel_id' => $busTravel->id,
+                    'bus_travel_has_bus_id' => $bus->id,
+                    'bus_departure_id' => $departure->id,
+                    'departure_time' => Carbon::now()->addDays($key + 1)->setTime(8, 0, 0),
+                    'from' => 'KABUPATEN SIMEULUE',
+                    'to' => 'KABUPATEN ACEH SINGKIL',
+                    'price' => 100000,
+                    'fee_admin' => 5000,
+                    'duration' => '03:00:00',
+                    'kode_unik' => rand(100, 999),
+                    'customer_name' => $customer->name,
+                    'customer_email' => $customer->email,
+                    'customer_phone' => $customer->phone,
+                ]
+            );
+
+            BusBooked::create(
+                [
+                    'transaction_id' => $transaction->id,
+                    'bus_travel_id' => $busTravel->id,
+                    'bus_travel_has_bus_id' => $bus->id,
+                    'bus_departure_id' => $departure->id,
+                    'customer_name' => $customer->name,
+                    'customer_phone' => $customer->phone,
+                    'customer_email' => $customer->email,
+                    'departure_time' => Carbon::now()->addDays($key + 1)->setTime(8, 0, 0),
                 ]
             );
         }

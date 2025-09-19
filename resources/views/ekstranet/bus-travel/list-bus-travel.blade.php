@@ -14,34 +14,35 @@
                     id="kt_datatable_zero_configuration">
                     <thead class="fw-bold">
                         <tr>
-                            <th>No</th>
-                            <th>Gambar</th>
-                            <th>Nama</th>
+                            <th style="width: 50px">No</th>
+                            <th style=": 150px">Gambar</th>
+                            <th style=": 150px">Nama</th>
+                            {{-- <th style=": 250px">Peraturan atau Ketentuan</th> --}}
                             {{-- <th class="text-center px-2">Class</th> --}}
-                            <th>Jumlah Seat</th>
-                            <th>Fasilitas</th>
-                            <th>Status</th>
+                            <th style=": 100px">Jumlah Seat</th>
+                            <th style=": 180px">Fasilitas</th>
+                            <th style=": 70px">Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody id="table-posts">
-                        @php
-                            $no = 1;
-                        @endphp
-
                         @foreach ($buses as $bus)
                             <tr id="index_{{ $bus->id }}">
-                                <td>{{ $no++ }}</td>
+                                <td></td>
                                 <td>
-                                    @if ($bus->image)
-                                        <img src="{{ asset('storage/buses/' . $bus->image) }}"
+                                    @php
+                                        $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
+                                    @endphp
+                                    @if (!empty($images) && is_array($images))
+                                        <img src="{{ asset('storage/buses/' . $images[0]) }}"
                                             style="width: 130px; height: 100px; object-fit: contain;">
                                     @else
                                         Tidak Ada Gambar
                                     @endif
                                 </td>
                                 <td>{{ $bus->name ?? '' }}</td>
+                                {{-- <td class="text-truncate" style="max-width: 250px">{{ $bus->tos ?? '' }}</td> --}}
                                 <td>{{ $bus->number_seats ?? '0' }}</td>
                                 <td style="max-width: 200px">
                                     @foreach ($bus->facilities as $facility)
@@ -169,8 +170,10 @@
 @push('add-script')
     <script>
         $(document).ready(function() {
-            $('#kt_datatable_zero_configuration').DataTable({
+            var table = $('#kt_datatable_zero_configuration').DataTable({
+                "order": [],
                 "scrollY": "500px",
+                // "scrollX": true,
                 "scrollCollapse": true,
                 "language": {
                     "lengthMenu": "Show _MENU_",
@@ -187,6 +190,14 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
+
+            table.on('order.dt search.dt', function () {
+                let i = 1;
+ 
+                table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                    this.data(i++);
+                });
+            }).draw();
         });
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -273,5 +284,21 @@
             background: transparent;
             border: none;
         }
+
+        /* .dataTables_scrollHead {
+            overflow: hidden !important;
+        }
+
+        .dataTables_scrollBody {
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+        }
+
+        /* Prevent header misalignment when scrollbar shows */
+        /* table.dataTable {
+            width: 100% !important;
+            border-collapse: collapse;
+            table-layout: fixed; /* prevents column shift
+        } */
     </style>
 @endpush

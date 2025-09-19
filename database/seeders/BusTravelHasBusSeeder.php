@@ -15,6 +15,7 @@ class BusTravelHasBusSeeder extends Seeder
     {
         DB::table('bus_travel_has_buses')->insert([
             'bus_travel_id' => 1,
+            'tos' => 'No rokok',
             'name' => 'NPM Solok Padang',
             'number_seats' => 40,
             'class' => 'Executive (subclass C)',
@@ -24,6 +25,7 @@ class BusTravelHasBusSeeder extends Seeder
 
         DB::table('bus_travel_has_buses')->insert([
             'bus_travel_id' => 1,
+            'tos' => 'No rokok',
             'name' => 'NPM Jakarta Bandung',
             'number_seats' => 35,
             'class' => 'Ekonomi',
@@ -33,6 +35,7 @@ class BusTravelHasBusSeeder extends Seeder
 
         DB::table('bus_travel_has_buses')->insert([
             'bus_travel_id' => 2,
+            'tos' => 'No rokok',
             'name' => 'AWR Padang Bukittinggi',
             'number_seats' => 35,
             'class' => 'Ekonomi',
@@ -42,6 +45,7 @@ class BusTravelHasBusSeeder extends Seeder
 
         DB::table('bus_travel_has_buses')->insert([
             'bus_travel_id' => 2,
+            'tos' => 'No rokok',
             'name' => 'AWR Jakarta Bandung',
             'number_seats' => 35,
             'class' => 'Ekonomi',

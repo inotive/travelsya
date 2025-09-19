@@ -19,20 +19,22 @@ class BusTravelController extends Controller
     {
         $user = auth()->user();
 
-        $bus_travel = BusTravels::all();
+        // Get ALL bus_travel_ids for this user
+        $bus_travel_ids = BusTravels::where('user_id', $user->id)->pluck('id');
 
-        $bus_travel_id = BusTravels::where('user_id', $user->id)->pluck('id')->first();
+        // Get all bus travels for this user (used in view)
+        $bus_travel = BusTravels::whereIn('id', $bus_travel_ids)->orderBy('id', 'desc')->get();
 
+        // Get all buses for ALL of the user's bus travels
         $buses = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
-            ->where('bus_travel_id', $bus_travel_id)
+            ->whereIn('bus_travel_id', $bus_travel_ids)
+            ->orderBy('id', 'desc')
             ->get();
 
-        $view = [
-            'buses' => $buses,
-            'bus_travel' => $bus_travel,
-        ];
-
-        return view('ekstranet.bus-travel.list-bus-travel', $view);
+        return view('ekstranet.bus-travel.list-bus-travel', [
+            'buses'       => $buses,
+            'bus_travel'  => $bus_travel,
+        ]);
     }
 
     public function create()
@@ -53,10 +55,12 @@ class BusTravelController extends Controller
         $validator = Validator::make($request->all(), [
             'bus_travel_id' => 'required|exists:bus_travels,id',
             'name' => 'required',
+            'tos' => 'required|string',
             'class' => 'required',
             'is_active' => 'required',
             'number_seats' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             'facilities' => 'nullable|array',
             'facilities.*' => 'exists:bus_facilities,id'
         ]);
@@ -70,33 +74,36 @@ class BusTravelController extends Controller
 
         $user = auth()->user();
         $bus_travel_id = $request->input('bus_travel_id');
-        
+
         // Check if the bus travel exists
         $bus_travel = BusTravels::where('id', $bus_travel_id)->first();
         if (!$bus_travel) {
             return redirect()->route('partner.daftar.bus-travel')->with('error', 'Bus & Travel tidak ditemukan!');
         }
-        
+
         // Check if the bus travel belongs to the current user
         if ($bus_travel->user_id != $user->id) {
             return redirect()->route('partner.daftar.bus-travel')->with('error', 'Bus & Travel ini bukan milik Anda!');
         }
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('buses', $imageName, 'public');
-        } else {
-            $imageName = NULL;
+        $imageNames = [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('buses', $imageName, 'public');
+                $imageNames[] = $imageName;
+            }
         }
 
         $data = [
             'bus_travel_id' => $request->input('bus_travel_id'),
             'name' => $request->input('name'),
+            'tos' => $request->input('tos'),
             'class' => $request->input('class'),
             'is_active' => $request->input('is_active'),
             'number_seats' => $request->input('number_seats'),
-            'image' => $imageName,
+            'image' => json_encode($imageNames),
         ];
 
         Log::info($request->all());
@@ -123,10 +130,13 @@ class BusTravelController extends Controller
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
         $facilities = BusFacility::all();
 
+        $selectedFacilities = $bus->facilities->pluck('bus_facility_id')->toArray();
+
         $view = [
             'bus' => $bus,
             'bus_travel' =>  $bus_travel,
-            'facilities' => $facilities
+            'facilities' => $facilities,
+            'selectedFacilities' => $selectedFacilities
         ];
 
         return view('ekstranet.bus-travel.update', $view);
@@ -138,10 +148,12 @@ class BusTravelController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required',
+            'tos' => 'required|string',
             'class' => 'required',
             'is_active' => 'required',
             'number_seats' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
             'facilities' => 'nullable|array',
             'facilities.*' => 'exists:bus_facilities,id'
         ]);
@@ -153,20 +165,32 @@ class BusTravelController extends Controller
                 ->withInput();
         }
 
-        if ($request->hasFile('image')) {
-            Storage::delete('buses/' . $bus->image);
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('buses', $imageName, 'public');
-        } else {
-            $imageName = $bus->image;
+        $imageNames = is_array($bus->image) ? $bus->image : json_decode($bus->image, true) ?? [];
+
+        if ($request->filled('removed_images')) {
+            $removedImages = json_decode($request->removed_images, true) ?? [];
+
+            foreach ($removedImages as $removed) {
+                Storage::disk('public')->delete('buses/' . $removed);
+
+                $imageNames = array_values(array_diff($imageNames, [$removed]));
+            }
+        }
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->storeAs('buses', $imageName, 'public');
+                $imageNames[] = $imageName;
+            }
         }
 
         $bus->name = $request->name;
+        $bus->tos = $request->tos;
         $bus->class = $request->class;
         $bus->is_active = $request->is_active;
         $bus->number_seats = $request->number_seats;
-        $bus->image = $imageName;
+        $bus->image = json_encode($imageNames);
         $bus->save();
 
         if ($request->has('facilities')) {
@@ -186,9 +210,11 @@ class BusTravelController extends Controller
     {
         $bus = BusTravelHasBus::find($id);
 
-        $img = $bus->image;
-        if($img) {
-            Storage::delete('buses/' . $img);
+        $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
+        if (!empty($images) && is_array($images)) {
+            foreach ($images as $image) {
+                Storage::disk('public')->delete('buses/' . $image);
+            }
         }
 
         $bus->delete();

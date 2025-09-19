@@ -13,8 +13,11 @@ class BusDeparture extends Model
     protected $fillable = [
         "bus_travel_has_bus_id",
         "departure_time",
-        "from_route_id",
-        "to_route_id",
+        "departure_date",
+        "from_city_id",
+        "to_city_id",
+        "titik_naik",
+        "titik_turun",
         "duration",
         "days",
         "price",
@@ -27,11 +30,11 @@ class BusDeparture extends Model
 
     public function from(): BelongsTo
     {
-        return $this->belongsTo(BusRoute::class, 'from_route_id', 'id');
+        return $this->belongsTo(City::class, 'from_city_id', 'id');
     }
 
     public function to(): BelongsTo
     {
-        return $this->belongsTo(BusRoute::class, 'to_route_id', 'id');
+        return $this->belongsTo(City::class, 'to_city_id', 'id');
     }
 }
