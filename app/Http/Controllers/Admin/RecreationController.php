@@ -70,6 +70,9 @@ class RecreationController extends Controller
             'city' => 'required',
             'category_recreation_id' => 'required',
             'address' => 'required',
+            'description' => 'required',
+            'open' => 'required',
+            'close' => 'required',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -92,6 +95,9 @@ class RecreationController extends Controller
                 'lat' => $request->lat,
                 'ltd' => $request->ltd,
                 'address' => $request->address,
+                'description' => $request->description,
+                'open' => $request->open,
+                'close' => $request->close,
                 'is_active' => 1,
             ]);
 
@@ -117,7 +123,7 @@ class RecreationController extends Controller
                 ->withInput();
         }
 
-        
+
     }
 
     /**
@@ -125,8 +131,7 @@ class RecreationController extends Controller
      */
     public function show(string $id)
     {
-        $recreation = Recreation::findOrFail($id);
-
+        $recreation = Recreation::with('image')->findOrFail($id);
 
         return response()->json([
             'success' => true,
@@ -156,8 +161,12 @@ class RecreationController extends Controller
             'ltd' => 'nullable',
             'city' => 'required',
             'address' => 'required',
+            'description' => 'required',
+            'open' => 'required',
+            'close' => 'required',
             'is_active' => 'required',
             'category_recreation_id' => 'required|exists:category_recreations,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -174,9 +183,24 @@ class RecreationController extends Controller
             'ltd' => $request->ltd,
             'phone' => $request->phone,
             'address' => $request->address,
+            'description' => $request->description,
+            'open' => $request->open,
+            'close' => $request->close,
             'is_active' => $request->is_active,
         ]);
 
+        // Handle image upload if provided
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imgName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('recreation', $imgName, 'public');
+
+            // Update or create recreation image
+            recreationImages::updateOrCreate(
+                ['recreation_id' => $recreation->id, 'main' => 1],
+                ['image' => $imgName]
+            );
+        }
 
         toast('Mitra has been updated', 'success');
         return response()->json([

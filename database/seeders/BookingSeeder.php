@@ -93,7 +93,6 @@ class BookingSeeder extends Seeder
                 'category_rent' => 'Dengan Driver',
                 'category' => 'manual',
                 'rental_price_per_day' => 300000,
-                'duration' => '1 Hari',
                 'status' => '1',
                 'description' => 'Mobil keluarga yang nyaman',
                 'years' => '2023',
@@ -144,12 +143,12 @@ class BookingSeeder extends Seeder
                 ]
             );
         }
-        
+
         // Create 5 car rental bookings that are expired
         foreach (array_slice($customers, 5, 5) as $key => $customer) {
             // Adjust key to start from 0 for the slice
             $adjustedKey = $key - 5;
-            
+
             $booking_id = 'BOOK-CAR-EXP-' . Str::random(8);
             $transaction = Transaction::firstOrCreate(
                 ['no_inv' => 'TRX-CAR-EXP-' . $booking_id],
@@ -238,7 +237,7 @@ class BookingSeeder extends Seeder
                 ]
             );
         }
-        
+
         // Create 5 expired recreation bookings
         for ($i = 0; $i < 5; $i++) {
             $expiredCustomer = User::firstOrCreate(
@@ -252,7 +251,7 @@ class BookingSeeder extends Seeder
                     'is_active' => 1,
                 ]
             );
-            
+
             $booking_id = 'BOOK-REC-EXP-' . Str::random(8);
             $transaction = Transaction::firstOrCreate(
                 ['no_inv' => 'TRX-REC-EXP-' . $booking_id],

@@ -63,6 +63,12 @@ class BeautyClinicController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
+            'open' => 'required',
+            'close' => 'required',
+            'description' => 'required',
+            'highlight' => 'required',
+            'lat' => 'required',
+            'ltd' => 'required',
             // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -84,6 +90,12 @@ class BeautyClinicController extends Controller
         $clinic->city = $request->input('city');
         $clinic->phone = $request->input('phone');
         $clinic->address = $request->input('address');
+        $clinic->open = $request->input('open');
+        $clinic->close = $request->input('close');
+        $clinic->description = $request->input('description');
+        $clinic->highlight = $request->input('highlight');
+        $clinic->lat = $request->input('lat');
+        $clinic->ltd = $request->input('ltd');
         $clinic->is_active = 1; // Assuming new clinics are active by default
         $clinic->category = $request->input('category');
         // $clinic->image = $imageName;
@@ -122,6 +134,12 @@ class BeautyClinicController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
+            'open' => 'required',
+            'close' => 'required',
+            'description' => 'required',
+            'highlight' => 'required',
+            'lat' => 'required',
+            'ltd' => 'required',
             'is_active' => 'required',
             'category' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
@@ -150,6 +168,12 @@ class BeautyClinicController extends Controller
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
+            'open' => $request->open,
+            'close' => $request->close,
+            'description' => $request->description,
+            'highlight' => $request->highlight,
+            'lat' => $request->lat,
+            'ltd' => $request->ltd,
             'is_active' => $request->is_active,
             'category' => $request->category,
             'image' => $imageName,
