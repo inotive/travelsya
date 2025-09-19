@@ -26,6 +26,8 @@ class CarRentalHasCars extends Model
         'description',
         'category',
         'koper',
+        'years',
+        'pickup_location',
     ];
 
     // Definisikan relasi ke model Brand

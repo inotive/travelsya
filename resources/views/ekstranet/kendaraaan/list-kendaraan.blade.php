@@ -38,7 +38,7 @@
                             <td>{{ $no++ }}</td>
                             <td>
                                 @if ($car->image_url)
-                                    <img src="{{ asset('storage/cars/' . $car->image_url) }}"
+                                    <img src="{{ Storage::url($car->image_url) }}"
                                          style="width: 130px; height: 100px; object-fit: contain;">
                                 @else
                                     <span class="text-muted">Tidak ada gambar</span>
