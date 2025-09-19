@@ -150,16 +150,20 @@
                     <div class="mb-5 p-4 border rounded">
                         <h6 class="mb-3">Gambar Utama</h6>
                         @if($mainImage)
-                            <div class="d-flex flex-wrap align-items-start">
-                                <div class="me-4 mb-2">
-                                    <img src="{{ asset($mainImage->image) }}" class="rounded" style="width: 150px; height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
-                                    <div class="text-muted text-truncate mt-1" style="max-width: 150px;">{{ basename($mainImage->image) }}</div>
+                            <div class="row">
+                                <div class="col-md-4 col-sm-6 mb-4">
+                                    <div class="card h-100">
+                                        <img src="{{ asset($mainImage->image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                        <div class="card-body text-center p-3">
+                                            <p class="card-text text-muted text-truncate" title="{{ basename($mainImage->image) }}">{{ basename($mainImage->image) }}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="flex-grow-1">
-                                    <label class="form-label">Ganti Gambar Utama</label>
-                                    <input type="file" class="form-control" name="main_image" accept="image/*">
-                                    <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
-                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <label class="form-label">Ganti Gambar Utama</label>
+                                <input type="file" class="form-control" name="main_image" accept="image/*">
+                                <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
                             </div>
                         @else
                             <p>Belum ada gambar utama. Silakan unggah.</p>
