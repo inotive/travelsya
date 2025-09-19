@@ -127,7 +127,7 @@
                 <h3 class="mb-3">Kebijakan Rental</h3>
                 <div class="d-flex flex-row">
                     <div>
-                        {!! $car->policy->description ?? '-' !!}
+                        {!! $car->policy?->description ?? 'Kebijakan tidak tersedia.' !!}
                     </div>
                 </div>
             </div>
