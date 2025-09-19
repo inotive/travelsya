@@ -224,16 +224,36 @@ class KendaraanController extends Controller
 
     public function destroy($id)
     {
-        $car = CarRentalHasCars::with('images')->findOrFail($id);
-        $carRental = CarRental::where('user_id', auth()->id())->where('id', $car->car_rental_id)->firstOrFail();
+        DB::beginTransaction();
+        try {
+            $car = CarRentalHasCars::with(['images', 'booked'])->findOrFail($id);
 
-        foreach ($car->images as $image) {
-            Storage::disk('public')->delete($image->image_url);
+            // Ensure the user owns the car rental associated with this car
+            $carRental = CarRental::where('user_id', auth()->id())->where('id', $car->car_rental_id)->firstOrFail();
+
+            // Check if the car has any related bookings
+            if ($car->booked()->exists()) {
+                DB::rollBack();
+                return response()->json(['error' => 'Tidak dapat menghapus mobil yang masih terhubung dengan data booking.'], 422);
+            }
+
+            // Delete all associated image files from storage
+            foreach ($car->images as $image) {
+                Storage::disk('public')->delete($image->image_url);
+            }
+            
+            // Deleting the car will also delete the image records from DB due to onDelete('cascade')
+            $car->delete();
+
+            DB::commit();
+
+            return response()->json(['success' => 'Data mobil berhasil dihapus.']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Error deleting car: ' . $e->getMessage());
+            return response()->json(['error' => 'Gagal menghapus data mobil.'], 500);
         }
-        
-        $car->delete();
-
-        return redirect()->back()->with('delete', 'Data berhasil dihapus!');
     }
 
     public function getCarModels(Request $request)
