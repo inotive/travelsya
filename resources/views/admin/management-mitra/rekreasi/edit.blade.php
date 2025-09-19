@@ -123,6 +123,10 @@
                             <img id="current-image" src="" alt="Current Image" style="max-width: 200px; max-height: 150px; border-radius: 5px;">
                             <p class="text-muted small mt-1">Gambar saat ini</p>
                         </div>
+                        <div id="new-image-preview" class="mb-2" style="display: none;">
+                            <img id="new-preview-img" src="" alt="New Image Preview" style="max-width: 200px; max-height: 150px; border-radius: 5px; border: 1px solid #ddd;">
+                            <p class="text-muted small mt-1">Preview gambar baru</p>
+                        </div>
                         <input type="file" class="form-control image-edit" id="image-edit" name="image" accept="image/*">
                         <div class="alert alert-danger mt-1 d-none"></div>
                         <small class="text-muted">Kosongkan jika tidak ingin mengubah gambar</small>
@@ -186,6 +190,10 @@
                     } else {
                         $('#current-image-preview').hide();
                     }
+
+                    // Reset new image preview
+                    $('#new-image-preview').hide();
+                    $('#image-edit').val('');
 
                     $('#modal-edit').modal('show');
                 }
@@ -257,6 +265,24 @@
                     }
                 }
             });
+        });
+
+        // Image preview functionality for edit form
+        $('#image-edit').on('change', function(e) {
+            const file = e.target.files[0];
+            const previewDiv = $('#new-image-preview');
+            const previewImg = $('#new-preview-img');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.attr('src', e.target.result);
+                    previewDiv.show();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewDiv.hide();
+            }
         });
     });
 
