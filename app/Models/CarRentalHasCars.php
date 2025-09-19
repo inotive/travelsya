@@ -67,6 +67,16 @@ class CarRentalHasCars extends Model
         return $this->hasMany(CarRentalRating::class, 'car_rental_has_car_id', 'id');
     }
 
+    /**
+     * Get all of the images for the Car.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(CarImage::class, 'car_rental_has_cars_id', 'id');
+    }
+
 
 
     public function scopeActive()

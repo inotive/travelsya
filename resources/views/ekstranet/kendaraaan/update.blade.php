@@ -171,34 +171,74 @@
                             @enderror
                         </div>
 
-                        <!-- Existing Images -->
+                        <!-- Kelola Gambar -->
                         <div class="col-md-12 mt-4">
-                            <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                            @if($car->image_url)
-                                <div class="row mb-3">
-                                    <div class="col-md-3">
-                                        <div class="card">
-                                            <img src="{{ Storage::url('cars/' . $car->image_url) }}" class="card-img-top" alt="Current Image" style="height: 150px; object-fit: cover;">
-                                            <div class="card-body p-2 text-center">
-                                                <small>Gambar Utama Sekarang</small>
+                            <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
+                            
+                            @php
+                                // Safely handle the images relationship. If it's null, treat as an empty collection.
+                                $images = $car->images ?? collect();
+                                $mainImage = $images->firstWhere('main', 1);
+                                $additionalImages = $images->where('main', 0);
+                            @endphp
+
+                            <!-- Main Image Section -->
+                            <div class="mb-5 p-4 border rounded">
+                                <h6 class="mb-3">Gambar Utama</h6>
+                                @if($mainImage)
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-6 mb-4">
+                                            <div class="card h-100">
+                                                <img src="{{ Storage::url($mainImage->image_url) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama">
+                                                <div class="card-body text-center p-3">
+                                                    <p class="card-text text-muted text-truncate" title="{{ basename($mainImage->image_url) }}">{{ basename($mainImage->image_url) }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            @else
-                                <p class="text-muted">Tidak ada gambar utama saat ini.</p>
-                            @endif
-                        </div>
-
-                        <div class="col-md-12 mt-4">
-                            <label class="fs-6 fw-semibold mb-2">Ganti Gambar Kendaraan (Opsional)</label>
-                            <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="images[]" accept="image/*">
-                                <label class="input-group-text bg-primary text-white">Gambar Baru</label>
+                                    <div class="mt-3">
+                                        <label class="form-label">Ganti Gambar Utama</label>
+                                        <input type="file" class="form-control" name="main_image" accept="image/*">
+                                        <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
+                                    </div>
+                                @else
+                                    <p>Belum ada gambar utama. Silakan unggah.</p>
+                                    <input type="file" class="form-control" name="main_image" accept="image/*">
+                                @endif
                             </div>
-                            <div id="additional-images"></div>
-                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
-                            <small class="form-text text-muted">Catatan: Gambar pertama akan menjadi gambar utama.</small>
+
+                            <!-- Additional Images Section -->
+                            <div class="mb-5 p-4 border rounded">
+                                <h6 class="mb-3">Gambar Tambahan</h6>
+                                <div class="row">
+                                    @if(count($additionalImages) > 0)
+                                        @foreach($additionalImages as $image)
+                                            <div class="col-md-4 col-sm-6 mb-4 existing-image-card">
+                                                <div class="card h-100">
+                                                    <img src="{{ Storage::url($image->image_url) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Image">
+                                                    <div class="card-body text-center p-3">
+                                                        <p class="card-text text-muted text-truncate" title="{{ basename($image->image_url) }}">{{ basename($image->image_url) }}</p>
+                                                        <button type="button" class="btn btn-sm btn-danger delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="col-12">
+                                            <p class="text-muted">Tidak ada gambar tambahan.</p>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <!-- Add More Additional Images -->
+                            <div class="p-4 border rounded">
+                                <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
+                                <div id="additional-images-container">
+                                    <!-- New image inputs will be appended here -->
+                                </div>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">+ Tambah Gambar Tambahan</button>
+                            </div>
                         </div>
                     </div>
                     <!--end::Input group-->
@@ -224,40 +264,34 @@
 @endsection
 
 @push('add-script')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    
         $(document).ready(function() {
+            // === Car Model Logic (Existing) ===
+            var savedModelId = {{ old('car_model_id', $car->car_model_id) ?? 'null' }};
             var selectedBrandId = $('#brand_id').val();
             if (selectedBrandId) {
-                loadCarModels(selectedBrandId);
+                loadCarModels(selectedBrandId, savedModelId);
             }
-            
             $('#brand_id').on('change', function() {
                 var brand_id = $(this).val();
                 loadCarModels(brand_id);
             });
-            
-            function loadCarModels(brand_id) {
+            function loadCarModels(brand_id, selectedModelId = null) {
                 if (brand_id) {
                     $('#car_model_id').prop('disabled', false);
                     $('#car_model_id').empty().append('<option value="">Memuat model...</option>');
-
                     $.ajax({
-                        url: '{{ url('/partner/get-model-kendaraan') }}',
+                        url: '{{ url("/partner/get-model-kendaraan") }}',
                         type: 'GET',
-                        data: {
-                            brand_id: brand_id
-                        },
+                        data: { brand_id: brand_id },
                         success: function(response) {
                             $('#car_model_id').empty();
-
-                            $('#car_model_id').append(
-                                '<option selected disabled value="">Pilih Model</option>');
-
+                            $('#car_model_id').append('<option value="">Pilih Model</option>');
                             if (response.models && response.models.length > 0) {
                                 $.each(response.models, function(index, model) {
-                                    $('#car_model_id').append('<option value="' + model.id + '">' +
-                                        model.name + '</option>');
+                                    var isSelected = (model.id == selectedModelId) ? 'selected' : '';
+                                    $('#car_model_id').append('<option value="' + model.id + '" ' + isSelected + '>' + model.name + '</option>');
                                 });
                             } else {
                                 $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
@@ -265,43 +299,62 @@
                         },
                         error: function(xhr, status, error) {
                             console.error("Error fetching models:", error);
-                            $('#car_model_id').empty().append('<option selected disabled value="">Error memuat model</option>');
+                            $('#car_model_id').empty().append('<option value="">Error memuat model</option>');
                             toastr.error("Terjadi kesalahan saat mengambil data model. Silakan coba lagi.");
                         }
                     });
                 } else {
                     $('#car_model_id').prop('disabled', true);
                     $('#car_model_id').empty();
-                    $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+                    $('#car_model_id').append('<option value="">Pilih Model</option>');
                 }
             }
 
-            // Handle adding additional images
-            $('#add-more-images').click(function() {
-                $('#additional-images').append(`
+            // === New Image Management Logic ===
+            $('#add-more-additional-images').click(function() {
+                $('#additional-images-container').append(`
                     <div class="input-group mb-3">
-                        <input type="file" class="form-control" name="images[]" accept="image/*">
-                        <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
-                        <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                        <input type="file" class="form-control" name="additional_images[]" accept="image/*" required>
+                        <button type="button" class="btn btn-outline-danger remove-additional-image">Hapus</button>
                     </div>
                 `);
             });
-            
-            // Handle removing additional images
-            $(document).on('click', '.remove-image', function() {
+
+            $(document).on('click', '.remove-additional-image', function() {
                 $(this).closest('.input-group').remove();
+            });
+
+            $(document).on('click', '.delete-existing-image', function() {
+                const imageId = $(this).data('image-id');
+                const imageCard = $(this).closest('.existing-image-card');
+                
+                Swal.fire({
+                    title: "Apakah Anda yakin?",
+                    text: "Gambar ini akan ditandai untuk dihapus saat disimpan.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "Batal",
+                    confirmButtonText: "Ya, Hapus",
+                    confirmButtonColor: '#d33',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('form').append(`<input type="hidden" name="deleted_images[]" value="${imageId}">`);
+                        imageCard.remove();
+                        Swal.fire('Ditandai!', 'Gambar akan dihapus saat Anda menyimpan perubahan.', 'success');
+                    }
+                });
             });
         });
 
+        // === Price Formatting Logic (Existing) ===
         function formatRupiah(amount) {
-        return amount.toString().replace(/[^0-9]/g, '')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return amount.toString().replace(/[^0-9]/g, '')
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
         const rentalInput = document.getElementById('rental_price_per_day_display');
         const rentalRawInput = document.getElementById('rental_price_per_day');
-
-        // Ambil data dari blade
         const rawRentalPrice = @json(old('rental_price_per_day', $car->rental_price_per_day));
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -317,7 +370,6 @@
             rentalInput.value = formatRupiah(value);
             rentalRawInput.value = value;
         });
-
     </script>
 @endpush
 

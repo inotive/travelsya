@@ -487,7 +487,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('kendaraan-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'store'])->name('partner.kendaraan.create');
         Route::delete('kendaraan-delete/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'destroy'])->name('partner.kendaraan.delete');
         Route::get('daftar-kendaraan/show/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'show'])->name('partner.show.kendaraan');
-        Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
+        Route::put('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
         Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
         Route::get('daftar-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'index'])->name('partner.daftar.bus-travel');

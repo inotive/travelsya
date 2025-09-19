@@ -165,14 +165,27 @@
                             @enderror
                         </div>
 
+                        <!-- Image Upload Section -->
                         <div class="col-md-12 mt-4">
                             <label class="required fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
-                            <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="images[]" accept="image/*" required>
-                                <label class="input-group-text bg-primary text-white">Gambar</label>
+                            
+                            <!-- Main Image Upload -->
+                            <div class="mb-4">
+                                <h6 class="required">Gambar Utama</h6>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" name="main_image" accept="image/*" required>
+                                    <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                                </div>
                             </div>
-                            <div id="additional-images"></div>
-                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
+                            
+                            <!-- Additional Images Upload -->
+                            <div>
+                                <h6>Gambar Tambahan (Opsional)</h6>
+                                <div id="additional-images-container">
+                                    <!-- new fields will be appended here -->
+                                </div>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">+ Tambah Gambar Tambahan</button>
+                            </div>
                         </div>
                     </div>
                     <!--end::Input group-->
@@ -199,80 +212,80 @@
 
 @push('add-script')
     <script>
-        $('#brand_id').on('change', function() {
-            var brand_id = $(this).val();
+        $(document).ready(function() {
+            // --- Brand/Model Logic --- 
+            $('#brand_id').on('change', function() {
+                var brand_id = $(this).val();
 
-            if (brand_id) {
-                $('#car_model_id').prop('disabled', false);
-                $('#car_model_id').empty().append('<option value="">Memuat model...</option>');
+                if (brand_id) {
+                    $('#car_model_id').prop('disabled', false);
+                    $('#car_model_id').empty().append('<option value="">Memuat model...</option>');
 
-                $.ajax({
-                    url: '{{ url('/partner/get-model-kendaraan') }}',
-                    type: 'GET',
-                    data: {
-                        brand_id: brand_id
-                    },
-                    success: function(response) {
-                        $('#car_model_id').empty();
+                    $.ajax({
+                        url: '{{ url('/partner/get-model-kendaraan') }}',
+                        type: 'GET',
+                        data: {
+                            brand_id: brand_id
+                        },
+                        success: function(response) {
+                            $('#car_model_id').empty();
 
-                        $('#car_model_id').append(
-                            '<option selected disabled value="">Pilih Model</option>');
+                            $('#car_model_id').append(
+                                '<option selected disabled value="">Pilih Model</option>');
 
-                        if (response.models && response.models.length > 0) {
-                            $.each(response.models, function(index, model) {
-                                $('#car_model_id').append('<option value="' + model.id + '">' +
-                                    model.name + '</option>');
-                            });
-                        } else {
-                            $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
+                            if (response.models && response.models.length > 0) {
+                                $.each(response.models, function(index, model) {
+                                    $('#car_model_id').append('<option value="' + model.id + '">' +
+                                        model.name + '</option>');
+                                });
+                            } else {
+                                $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching models:", error);
+                            $('#car_model_id').empty().append('<option selected disabled value="">Error memuat model</option>');
+                            toastr.error("Terjadi kesalahan saat mengambil data model. Silakan coba lagi.");
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error fetching models:", error);
-                        $('#car_model_id').empty().append('<option selected disabled value="">Error memuat model</option>');
-                        toastr.error("Terjadi kesalahan saat mengambil data model. Silakan coba lagi.");
-                    }
-                });
-            } else {
-                $('#car_model_id').prop('disabled', true);
-                $('#car_model_id').empty();
-                $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+                    });
+                } else {
+                    $('#car_model_id').prop('disabled', true);
+                    $('#car_model_id').empty();
+                    $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+                }
+            });
+            
+            // --- New Image Logic ---
+            $('#add-more-additional-images').click(function() {
+                $('#additional-images-container').append(`
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" name="additional_images[]" accept="image/*">
+                        <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
+                        <button type="button" class="btn btn-danger remove-additional-image">Hapus</button>
+                    </div>
+                `);
+            });
+            
+            $(document).on('click', '.remove-additional-image', function() {
+                $(this).closest('.input-group').remove();
+            });
+
+            // --- Price Formatting Logic ---
+            function formatRupiah(amount) {
+                return amount.toString().replace(/[^0-9]/g, '')
+                    .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                    .replace(/([0-9])([0-9]{3})\./g, '$1.$2.');
             }
-        });
-        
-        // Handle adding additional images
-        $('#add-more-images').click(function() {
-            $('#additional-images').append(`
-                <div class="input-group mb-3">
-                    <input type="file" class="form-control" name="images[]" accept="image/*">
-                    <label class="input-group-text bg-secondary text-white">Gambar</label>
-                    <button type="button" class="btn btn-danger remove-image">Hapus</button>
-                </div>
-            `);
-        });
-        
-        // Handle removing additional images
-        $(document).on('click', '.remove-image', function() {
-            $(this).closest('.input-group').remove();
-        });
 
-        function formatRupiah(amount) {
-            return amount.toString().replace(/[^0-9]/g, '')
-                .replace(/([0-9])([0-9]{3})$/, '$1.$2')
-                .replace(/([0-9])([0-9]{3})\./g, '$1.$2.');
-        }
+            const rentalInput = document.getElementById('rental_price_per_day_display');
+            const rentalRawInput = document.getElementById('rental_price_per_day');
 
-        const rentalInput = document.getElementById('rental_price_per_day_display');
-        const rentalRawInput = document.getElementById('rental_price_per_day');
-
-        rentalInput.addEventListener('keyup', function() {
-            let value = rentalInput.value;
-
-            let formattedValue = formatRupiah(value);
-
-            rentalInput.value = formattedValue;
-
-            rentalRawInput.value = value.replace(/[^0-9]/g, '');
+            rentalInput.addEventListener('keyup', function() {
+                let value = rentalInput.value;
+                let formattedValue = formatRupiah(value);
+                rentalInput.value = formattedValue;
+                rentalRawInput.value = value.replace(/[^0-9]/g, '');
+            });
         });
     </script>
 @endpush
