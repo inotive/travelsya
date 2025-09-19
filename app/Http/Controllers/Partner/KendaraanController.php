@@ -105,7 +105,7 @@ class KendaraanController extends Controller
             return redirect()->back()->with('error', 'Gagal menyimpan data kendaraan. Silakan coba lagi.')->withInput();
         }
 
-        return redirect()->route('partner.daftar.kendaraan')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('partner.daftar.kendaraan')->with('success_add', 'Data berhasil ditambahkan!');
     }
 
     public function show(Request $request, $id)

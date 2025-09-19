@@ -196,7 +196,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
+            @if (session('success_add'))
                 var toastElSuccess = document.getElementById('toast-success');
                 if (toastElSuccess) {
                     var toastSuccess = new bootstrap.Toast(toastElSuccess);
