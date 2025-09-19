@@ -334,6 +334,10 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::resource('bus-travel', \App\Http\Controllers\Admin\BusTravelController::class);
             });
 
+            // Brand and Car Model Management
+            Route::resource('brand', \App\Http\Controllers\Admin\BrandController::class);
+            Route::resource('car-model', \App\Http\Controllers\Admin\CarModelController::class);
+
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
             Route::post('user', [AdminUserController::class, 'create'])->name('user.create');
             Route::post('user/edit', [AdminUserController::class, 'editJson'])->name('user.edit');
