@@ -463,9 +463,7 @@ class HealthBeautyController extends Controller
         $req = $request->name;
 
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
-            ->whereHas('packages', function ($p) {
-                $p->whereColumn('unit_price', '>', 'price');
-            })
+            ->whereHas('packages')
             ->when($request->name, function ($c, $req) {
                 $c->where('clinic_name', 'like', '%' . $req . '%');
             })
