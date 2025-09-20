@@ -413,6 +413,8 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('transaction', [AdminTransactionController::class, 'index'])->name('transaction');
             // Route::post('transaction/', [AdminTransactionController::class, 'store'])->name('transaction.store');
             Route::get('transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('transaction.detail');
+            Route::get('transaction/detail/{id}', [AdminTransactionController::class, 'getDetail'])->name('transaction.get.detail');
+            Route::get('transaction/pdf/{id}', [AdminTransactionController::class, 'generatePdf'])->name('transaction.pdf');
             Route::put('transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('transaction.detail.update');
 
             //city management

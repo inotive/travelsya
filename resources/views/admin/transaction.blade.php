@@ -257,6 +257,7 @@
                                     <th style="width:15%; text-align: center;">Potongan Point</th>
                                     <th style="width:15%; text-align: center;">Grand Total</th>
                                     <th style="width:10%; text-align: center;">Status</th>
+                                    <th style="width:10%; text-align: center;">Action</th>
                                 </tr>
                             </thead>
                             <!--end::Table head-->
@@ -325,6 +326,17 @@
                                                 @endif
                                             </div>
                                         </td>
+                                        <td>
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#transactionDetailModal"
+                                                    onclick="viewTransactionDetail({{ $transaction->id }})">
+                                                <i class="ki-duotone ki-eye fs-5">
+                                                    <span class="path1"></span>
+                                                    <span class="path2"></span>
+                                                    <span class="path3"></span>
+                                                </i>
+                                                Detail
+                                            </button>
+                                        </td>
 
                                     </tr>
                                 @endforeach
@@ -344,6 +356,111 @@
         <!--end::Tab pane-->
     </div>
     <!--end::Tab Content-->
+
+    <!--begin::Transaction Detail Modal-->
+    <div class="modal fade" id="transactionDetailModal" tabindex="-1" aria-labelledby="transactionDetailModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="transactionDetailModalLabel">Detail Transaksi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card bg-light-primary">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">Informasi Transaksi</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Waktu:</label>
+                                        <p class="mb-0" id="modal-waktu">-</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Invoice:</label>
+                                        <p class="mb-0" id="modal-invoice">-</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Service:</label>
+                                        <p class="mb-0" id="modal-service">-</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Metode Pembayaran:</label>
+                                        <p class="mb-0" id="modal-payment">-</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Status:</label>
+                                        <p class="mb-0" id="modal-status">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light-info">
+                                <div class="card-body">
+                                    <h6 class="card-title text-info">Informasi Customer</h6>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Nama:</label>
+                                        <p class="mb-0" id="modal-user-name">-</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Email:</label>
+                                        <p class="mb-0" id="modal-user-email">-</p>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold">Phone:</label>
+                                        <p class="mb-0" id="modal-user-phone">-</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <div class="card bg-light-success">
+                                <div class="card-body">
+                                    <h6 class="card-title text-success">Rincian Keuangan</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Harga:</label>
+                                                <p class="mb-0 text-primary" id="modal-harga">-</p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Biaya Layanan:</label>
+                                                <p class="mb-0 text-success" id="modal-biaya-layanan">-</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Potongan Point:</label>
+                                                <p class="mb-0 text-danger" id="modal-potongan-point">-</p>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-bold">Grand Total:</label>
+                                                <p class="mb-0 text-info fw-bold fs-5" id="modal-grand-total">-</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="downloadPdfBtn" onclick="downloadPdf()">
+                        <i class="ki-duotone ki-file-down fs-5">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                        Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--end::Transaction Detail Modal-->
 
 @endsection
 @push('add-script')
@@ -448,5 +565,157 @@
                 }, 100);
             });
         });
+
+        // Global variable to store current transaction ID
+        let currentTransactionId = null;
+
+        // Function to view transaction detail
+        function viewTransactionDetail(transactionId) {
+            currentTransactionId = transactionId;
+
+            // Show loading state
+            $('#transactionDetailModal .modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+
+            // Fetch transaction detail via AJAX
+            $.ajax({
+                url: '/admin/transaction/detail/' + transactionId,
+                method: 'GET',
+                success: function(response) {
+                    // Parse the response and populate modal
+                    populateModal(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching transaction detail:', error);
+                    $('#transactionDetailModal .modal-body').html('<div class="alert alert-danger">Error loading transaction details.</div>');
+                }
+            });
+        }
+
+        // Function to populate modal with transaction data
+        function populateModal(transaction) {
+            // Restore modal body content
+            $('#transactionDetailModal .modal-body').html(`
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-light-primary">
+                            <div class="card-body">
+                                <h6 class="card-title text-primary">Informasi Transaksi</h6>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Waktu:</label>
+                                    <p class="mb-0" id="modal-waktu">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Invoice:</label>
+                                    <p class="mb-0" id="modal-invoice">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Service:</label>
+                                    <p class="mb-0" id="modal-service">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Metode Pembayaran:</label>
+                                    <p class="mb-0" id="modal-payment">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Status:</label>
+                                    <p class="mb-0" id="modal-status">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light-info">
+                            <div class="card-body">
+                                <h6 class="card-title text-info">Informasi Customer</h6>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nama:</label>
+                                    <p class="mb-0" id="modal-user-name">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Email:</label>
+                                    <p class="mb-0" id="modal-user-email">-</p>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Phone:</label>
+                                    <p class="mb-0" id="modal-user-phone">-</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card bg-light-success">
+                            <div class="card-body">
+                                <h6 class="card-title text-success">Rincian Keuangan</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Harga:</label>
+                                            <p class="mb-0 text-primary" id="modal-harga">-</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Biaya Layanan:</label>
+                                            <p class="mb-0 text-success" id="modal-biaya-layanan">-</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Potongan Point:</label>
+                                            <p class="mb-0 text-danger" id="modal-potongan-point">-</p>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label fw-bold">Grand Total:</label>
+                                            <p class="mb-0 text-info fw-bold fs-5" id="modal-grand-total">-</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            // Populate the data
+            $('#modal-waktu').text(transaction.waktu || '-');
+            $('#modal-invoice').text(transaction.invoice || '-');
+            $('#modal-service').text(transaction.service || '-');
+            $('#modal-payment').text(transaction.payment || '-');
+            $('#modal-status').html(transaction.status || '-');
+            $('#modal-user-name').text(transaction.user_name || '-');
+            $('#modal-user-email').text(transaction.user_email || '-');
+            $('#modal-user-phone').text(transaction.user_phone || '-');
+            $('#modal-harga').text(transaction.harga || '-');
+            $('#modal-biaya-layanan').text(transaction.biaya_layanan || '-');
+            $('#modal-potongan-point').text(transaction.potongan_point || '-');
+            $('#modal-grand-total').text(transaction.grand_total || '-');
+        }
+
+        // Function to download PDF
+        function downloadPdf() {
+            if (currentTransactionId) {
+                // Open PDF in new window and trigger print
+                const printWindow = window.open('/admin/transaction/pdf/' + currentTransactionId, '_blank');
+
+                // Wait for the window to load then trigger print
+                printWindow.onload = function() {
+                    setTimeout(() => {
+                        printWindow.print();
+                        // Close the window after printing (optional)
+                        // printWindow.close();
+                    }, 1000);
+                };
+
+                // Fallback: if onload doesn't work, try after a delay
+                setTimeout(() => {
+                    try {
+                        printWindow.print();
+                    } catch (e) {
+                        console.log('Print dialog could not be opened automatically');
+                    }
+                }, 2000);
+            }
+        }
     </script>
 @endpush
