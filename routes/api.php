@@ -84,6 +84,7 @@ route::get('/health-beauty/city', [HealthBeautyController::class, 'clinicCity'])
 route::get('/beauty_home', [HealthBeautyController::class, 'beautyHome']);
 route::get('/spa_home', [HealthBeautyController::class, 'spaHome']);
 route::get('/beauty_search', [HealthBeautyController::class, 'beauty_search']);
+route::get('/spa_search', [HealthBeautyController::class, 'spa_search']);
 route::get('/clinic_detail/{id}', [HealthBeautyController::class, 'detail']);
 
 // Car Rental

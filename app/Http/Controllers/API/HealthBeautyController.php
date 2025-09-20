@@ -499,6 +499,48 @@ class HealthBeautyController extends Controller
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }
 
+    public function spa_search(Request $request)
+    {
+        $city = '%' . $request->location . '%';
+        $req = $request->name;
+
+        $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'spa dan kecantikan')
+            ->whereHas('packages')
+            ->when($request->name, function ($c, $req) {
+                $c->where('clinic_name', 'like', '%' . $req . '%');
+            })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
+            ->get();
+
+        $spa = [];
+
+        foreach ($special as $key => $rec) {
+            if (count($rec['packages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'name' => $rec['clinic_name'],
+                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('images/not_found.jpg'),
+                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'category' => $rec['category'],
+                    'unit_price' => $rec['packages'][0]['unit_price'],
+                    'price' => $rec['packages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                    'avg_rating' => $rec->avgRating(),
+                ];
+
+                array_push($spa, $item);
+            }
+        }
+
+        $data['clinic'] = $spa;
+
+        return ResponseFormatter::success($data, 'Data successfully loaded');
+    }
+
     public function clinicCity()
     {
         $cityIds = Clinic::distinct()->pluck('city')->filter();
