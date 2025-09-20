@@ -326,7 +326,7 @@ class RecreationController extends Controller
     {
         $recreations = Recreation::active()->select('id', 'business_name', 'category_recreation_id')
             ->withCount('reviews')
-            ->with('images', 'recreationPackages', 'kota')
+            ->with('image', 'recreationPackages', 'kota')
             ->get();
 
         $data['category'] = CategoryRecreation::select('id', 'name')->get()->toArray();

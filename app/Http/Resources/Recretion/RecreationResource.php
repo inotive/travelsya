@@ -14,12 +14,11 @@ class RecreationResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // dd($this->image->toArray());
         return [
             'id' => $this->id,
             'name' => $this->business_name,
-            'image' => optional($this->images->first())->image
-                ? asset('storage/' . $this->images->first()->image)
-                : asset('images/not_found.jpg'),
+            'image' => $this->image ? asset('storage/' . $this->image->image) : asset('images/not_found.jpg'),
             'location' => $this->kota ? $this->kota['city_name'] : 'Kota dihapus',
             'unit_price' => $this->recreationPackages->first()->unit_price ?? null,
             'price' => $this->recreationPackages->first()->price ?? null,
