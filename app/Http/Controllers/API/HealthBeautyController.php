@@ -305,14 +305,6 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
-            // ->whereHas('packages', function ($p) {
-            //     $p->whereColumn('unit_price', '>', 'price');
-            // })
-            // ->when($city, function ($c, $cit) {
-            //     $c->whereHas('kota', function ($k) use ($cit) {
-            //         $k->where('city_name', 'like', $cit);
-            //     });
-            // })
             ->limit(10)
             ->get();
 
@@ -336,9 +328,7 @@ class HealthBeautyController extends Controller
             }
         }
 
-        $category = CategoriesServices::select('id', 'name')->get();
-
-        $data['categories'] = $category;
+        $data['categories'] = $special->pluck('category')->unique()->toArray();
         $data['special_deals'] = $cantik;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
