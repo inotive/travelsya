@@ -526,8 +526,10 @@ class HealthBeautyController extends Controller
     public function list()
     {
         $datas = Clinic::active()->with('reviews', 'packages', 'kota')->get();
+
         $kesehatan = [];
         $cantik = [];
+        $spa = [];
 
         foreach ($datas as $key => $rec) {
             if (count($rec['packages']) > 0) {
@@ -545,7 +547,7 @@ class HealthBeautyController extends Controller
                     ];
 
                     array_push($kesehatan, $item);
-                } else {
+                } elseif ($rec['category'] == "kecantikan") {
                     $item2 = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
@@ -559,13 +561,28 @@ class HealthBeautyController extends Controller
                     ];
 
                     array_push($cantik, $item2);
+                } elseif ($rec['category'] == "spa dan kecantikan") {
+                    $item3 = [
+                        'id' => $rec['id'],
+                        'name' => $rec['clinic_name'],
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
+                        'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                        'category' => $rec['category'],
+                        'unit_price' => $rec['packages'][0]['unit_price'],
+                        'price' => $rec['packages'][0]['price'],
+                        'rating_count' => count($rec['reviews']),
+                        'avg_rating' => $rec->avgRating(),
+                    ];
+
+                    array_push($spa, $item3);
                 }
             }
         }
 
-        $data['category'] = ['kecantikan', 'kesehatan'];
+        $data['category'] = ['kecantikan', 'kesehatan', 'spa dan kecantikan'];
         $data['kesehatan'] = $kesehatan;
         $data['kecantikan'] = $cantik;
+        $data['spa dan kecantikan'] = $spa;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }
