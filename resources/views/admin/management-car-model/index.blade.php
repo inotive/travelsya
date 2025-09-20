@@ -45,7 +45,7 @@
                         @foreach ($carModels as $carModel)
                             <tr id="index_{{ $carModel->id }}">
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $carModel->brand->name }}</td>
+                                <td class="text-center">{{ $carModel->brand ? $carModel->brand->name : '-' }}</td>
                                 <td class="text-start">
                                     <div class="d-flex flex-column">
                                         <span class="fw-bold">{{ $carModel->name }}</span>
