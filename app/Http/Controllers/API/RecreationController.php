@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Helpers\ResponseFormatter;
+use App\Http\Resources\Recretion\RecreationResource;
 use App\Http\Resources\Recretion\RecretionSearchResource;
 use App\Models\CategoryRecreation;
 use App\Models\City;
@@ -187,6 +188,7 @@ class RecreationController extends Controller
             })
             ->get();
 
+
         $recre = [];
 
         foreach ($recreations as $rec) {
@@ -322,36 +324,13 @@ class RecreationController extends Controller
     // new list
     public function list2()
     {
-        $recreations = Recreation::active()->with('reviews', 'recreationPackages', 'kota')->get();
-
-
-        $recre = [];
-
-        foreach ($recreations as $key => $rec) {
-            if (count($rec['recreationPackages']) > 0) {
-                if (!$rec['image']) {
-                    $img = asset('storage/not_found.png');
-                } else {
-                    $img = asset('storage/' . $rec['image']['image']);
-                }
-
-                $item = [
-                    'id' => $rec['id'],
-                    'name' => $rec['business_name'],
-                    'image' => $img,
-                    'location' => $rec['kota'] ? $rec['kota']['city_name'] : 'Kota dihapus',
-                    'unit_price' => $rec['recreationPackages'][0]['unit_price'],
-                    'price' => $rec['recreationPackages'][0]['price'],
-                    'rating_count' => count($rec['reviews']),
-                    'avg_rating' => $rec->avgRating(),
-                ];
-
-                array_push($recre, $item);
-            }
-        }
+        $recreations = Recreation::active()->select('id', 'business_name', 'category_recreation_id')
+            ->withCount('reviews')
+            ->with('images', 'recreationPackages', 'kota')
+            ->get();
 
         $data['category'] = CategoryRecreation::select('id', 'name')->get()->toArray();
-        $data['recreations'] = $recre;
+        $data['recreations'] = RecreationResource::collection($recreations);
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }

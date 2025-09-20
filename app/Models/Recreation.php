@@ -58,7 +58,7 @@ class Recreation extends Model
      */
     public function images(): HasMany
     {
-        return $this->hasMany(recreationImages::class, 'recreation_id', 'id');
+        return $this->hasMany(recreationImages::class, 'recreation_id', 'id')->orderBy('id', 'desc');
     }
 
     public function image(): HasOne
