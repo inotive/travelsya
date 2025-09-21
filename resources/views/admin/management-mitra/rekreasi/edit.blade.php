@@ -185,7 +185,7 @@
 
                     // Show current image if exists
                     if(response.data.image && response.data.image.image) {
-                        $('#current-image').attr('src', '/storage/recreation/' + response.data.image.image);
+                        $('#current-image').attr('src', '/storage/' + response.data.image.image);
                         $('#current-image-preview').show();
                     } else {
                         $('#current-image-preview').hide();
