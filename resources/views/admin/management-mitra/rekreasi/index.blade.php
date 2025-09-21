@@ -38,7 +38,7 @@
                                 <td>{{ $loop->iteration }}</td>
 
                                 <td class="text-center">
-                                    <img src="{{ $recreation->image != null && $recreation->image != '-' ? asset('storage/' . $recreation->image) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}"
+                                    <img src="{{ $recreation->images != null && $recreation->images != '-' ? asset('storage/' . $recreation->images) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}"
                                         alt="" style="width: 25px; height: 25px;">
                                     {{ $recreation->name }}
                                 </td>
@@ -282,6 +282,10 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="required fs-6 fw-semibold mb-2">Gambar</label>
+                                    <div id="image-preview" class="mb-2" style="display: none;">
+                                        <img id="preview-img" src="" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 5px; border: 1px solid #ddd;">
+                                        <p class="text-muted small mt-1">Preview gambar</p>
+                                    </div>
                                     <input type="file" class="form-control" id="image" name="image"
                                         accept="image/*">
 
@@ -392,6 +396,24 @@
                     var myModal = new bootstrap.Modal(document.getElementById('create'));
                     myModal.show();
                 @endif
+            });
+
+            // Image preview functionality for create form
+            document.getElementById('image').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                const previewDiv = document.getElementById('image-preview');
+                const previewImg = document.getElementById('preview-img');
+
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewImg.src = e.target.result;
+                        previewDiv.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewDiv.style.display = 'none';
+                }
             });
         </script>
     @endpush

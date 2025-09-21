@@ -30,6 +30,7 @@ class BusTravelController extends Controller
             'bus_travels.id as bus_travel_id',
             'bus_travels.phone as bus_travel_phone',
             'bus_travels.*',
+            'bus_travels.is_active as bus_travel_is_active',
             'users.id as user_id',
             'users.*',
             'cities.city_id as city_id',
@@ -37,6 +38,8 @@ class BusTravelController extends Controller
             'cities.*'
         )
         ->get();
+
+        // dd($bus_travels->toArray());
 
         $cities = City::all();
 
@@ -119,24 +122,32 @@ class BusTravelController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
+        $bus_travel = BusTravels::findOrFail($id);
+
+        $rules = [
             'name' => 'required',
             'user_id' => 'required',
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
             'is_active' => 'required',
-            'logo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
-        ]);
+        ];
+
+        // Only require logo if no existing logo in database
+        if (!$bus_travel->image || $bus_travel->image == '-') {
+            $rules['logo'] = 'required|image|mimes:jpeg,jpg,png|max:2048';
+        } else {
+            $rules['logo'] = 'nullable|image|mimes:jpeg,jpg,png|max:2048';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $bus_travel = BusTravels::findOrFail($id);
-
-        // Handle logo upload
-        $logoPath = $bus_travel->image; // Keep existing logo if no new one uploaded
+        // Handle logo upload - keep existing logo if no new one uploaded
+        $logoPath = $bus_travel->image; // Keep existing logo by default
         if ($request->hasFile('logo')) {
             // Delete old logo if exists
             if ($bus_travel->image && Storage::disk('public')->exists($bus_travel->image)) {

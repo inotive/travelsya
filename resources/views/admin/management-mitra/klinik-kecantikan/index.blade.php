@@ -365,8 +365,10 @@
 
                             <div class="col-md-6">
                                 <label class="required fs-6 fw-semibold mb-2">Latitude</label>
-                                <input type="number" class="form-control form-control-lg" id="lat"
-                                    placeholder="Masukan latitude..." name="lat" required />
+                                <input type="text" class="form-control form-control-lg" id="lat"
+                                    placeholder="Masukan latitude (contoh: -6.200000)" name="lat"
+                                    pattern="^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$"
+                                    title="Masukkan latitude yang valid (-90 sampai 90)" required />
 
                                 @error('lat')
                                     <span class="text-danger mt-1" role="alert">
@@ -377,8 +379,10 @@
 
                             <div class="col-md-6">
                                 <label class="required fs-6 fw-semibold mb-2">Longitude</label>
-                                <input type="number" class="form-control form-control-lg" id="ltd"
-                                    placeholder="Masukan longitude..." name="ltd" required />
+                                <input type="text" class="form-control form-control-lg" id="ltd"
+                                    placeholder="Masukan longitude (contoh: 106.816666)" name="ltd"
+                                    pattern="^-?((1[0-7][0-9])|([1-9]?[0-9]))(\.[0-9]+)?$"
+                                    title="Masukkan longitude yang valid (-180 sampai 180)" required />
 
                                 @error('ltd')
                                     <span class="text-danger mt-1" role="alert">
