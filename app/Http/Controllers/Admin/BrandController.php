@@ -118,6 +118,11 @@ class BrandController extends Controller
             return redirect()->back()->with('error', 'Tipe kendaraan tidak dapat dihapus karena masih digunakan');
         }
 
+        if ($brand->carModels()->count() > 0) {
+            // Ubah istilah: "Brand tidak dapat dihapus karena masih digunakan" => "Tipe kendaraan tidak dapat dihapus karena masih digunakan"
+            return redirect()->back()->with('error', 'Tipe kendaraan tidak dapat dihapus karena masih digunakan');
+        }
+
         // Delete image if exists
         if ($brand->image) {
             $this->deleteFile($brand->image, 'brands');
