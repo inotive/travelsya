@@ -12,9 +12,6 @@
                 <a href="{{ route('admin.brand.index') }}" class="btn btn-sm btn-light-primary">
                     <i class="ki-duotone ki-arrow-left fs-2"></i>Kembali
                 </a>
-                <a href="{{ route('admin.brand.edit', $brand->id) }}" class="btn btn-sm btn-primary ms-2">
-                    <i class="ki-duotone ki-pencil fs-2"></i>Edit
-                </a>
             </div>
         </div>
         <!--end::Header-->

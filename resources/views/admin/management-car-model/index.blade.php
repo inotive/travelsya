@@ -1,4 +1,4 @@
-@extends('admin.layout', ['title' => 'Daftar Tipe Kendaraan', 'url' => ''])
+@extends('admin.layout', ['title' => 'Daftar Merek Kendaraan', 'url' => ''])
 
 @section('content-admin')
     @if(session('success'))
@@ -21,7 +21,7 @@
         <div class="card-header pt-5">
             <div class="card-toolbar">
                 <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Tipe Kendaraan</a>
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Merek Kendaraan</a>
             </div>
         </div>
         <!--end::Header-->
@@ -30,28 +30,28 @@
             <!--begin::Table container-->
             <div class="table-responsive">
                 <!--begin::Table-->
-                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                <table class="table table-bordered table-hover fs-6 gy-5 align-middle"
                     id="kt_datatable_zero_configuration">
                     <thead>
-                        <tr class="fw-bold fs-6 text-gray-800 ">
-                            <th class="text-center">No.</th>
-                            <th class="text-center">Merek</th>
-                            <th class="text-center">Tipe Kendaraan</th>
-                            <th class="text-center">Gambar</th>
-                            <th class="text-center">Action</th>
+                        <tr class="fw-bold fs-6 text-gray-800">
+                            <th class="text-center" style="width: 10%;">No.</th>
+                            <th class="text-center" style="width: 20%;">Tipe</th>
+                            <th class="text-center" style="width: 30%;">Merek Kendaraan</th>
+                            <th class="text-center" style="width: 20%;">Gambar</th>
+                            <th class="text-center" style="width: 20%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($carModels as $carModel)
                             <tr id="index_{{ $carModel->id }}">
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $carModel->brand ? $carModel->brand->name : '-' }}</td>
-                                <td class="text-start">
+                                <td class="text-center" style="width: 10%;">{{ $loop->iteration }}</td>
+                                <td class="text-center" style="width: 20%;">{{ $carModel->brand ? $carModel->brand->name : '-' }}</td>
+                                <td class="text-start" style="width: 30%;">
                                     <div class="d-flex flex-column">
                                         <span class="fw-bold">{{ $carModel->name }}</span>
                                     </div>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" style="width: 20%;">
                                     @if($carModel->image)
                                         <img src="{{ asset('storage/' . $carModel->image) }}" alt="{{ $carModel->name }}"
                                              style="width: 50px; height: 50px; object-fit: cover;" class="rounded">
@@ -63,7 +63,7 @@
                                         </div>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" style="width: 20%;">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
                                         <!--begin::Menu item-->
@@ -113,14 +113,14 @@
                                             @csrf
                                             @method('DELETE')
                                             <div class="modal-header">
-                                                <h2 class="fw-bold">DELETE Tipe Kendaraan</h2>
+                                                <h2 class="fw-bold">DELETE Merek Kendaraan</h2>
                                                 <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
                                                     data-bs-dismiss="modal">
                                                     <i class="ki-duotone ki-cross fs-1"></i>
                                                 </button>
                                             </div>
                                             <div class="modal-body py-10 px-lg-17">
-                                                <p>Anda yakin ingin menghapus data Tipe Kendaraan dengan nama {{ $carModel->name }}?
+                                                <p>Anda yakin ingin menghapus data Merek Kendaraan dengan nama {{ $carModel->name }}?
                                                 </p>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
@@ -160,11 +160,11 @@
                         action="{{ route('admin.car-model.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Create Tipe Kendaraan</h1>
+                            <h1 class="mb-3">Create Merek Kendaraan</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Gambar Tipe Kendaraan</label>
+                                <label class="required fs-6 fw-semibold mb-2">Gambar Merek Kendaraan</label>
                                 <div id="create-image-preview" class="mb-3"></div>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" required accept="image/*" id="create-image-input">
                                 @error('image')
@@ -175,9 +175,9 @@
                                 <div class="form-text">Format yang didukung: JPG, PNG, GIF, SVG. Maksimal 2MB</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Merek</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    placeholder="Masukan nama tipe" name="name" value="{{ old('name') }}" />
+                                    placeholder="Masukan nama merek" name="name" value="{{ old('name') }}" />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -185,10 +185,10 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Merek</label>
+                                <label class="required fs-6 fw-semibold mb-2">Tipe</label>
                                 <select class="form-select form-select-solid @error('brand_id') is-invalid @enderror"
                                     name="brand_id">
-                                    <option value="">Pilih Merek</option>
+                                    <option value="">Pilih Tipe</option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
                                             {{ $brand->name }}
@@ -242,11 +242,11 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Edit Tipe Kendaraan</h1>
+                            <h1 class="mb-3">Edit Merek Kendaraan</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="fs-6 fw-semibold mb-2">Gambar Tipe Kendaraan</label>
+                                <label class="fs-6 fw-semibold mb-2">Gambar Merek Kendaraan</label>
                                 <div id="current-image" class="mb-3"></div>
                                 <div id="edit-image-preview" class="mb-3"></div>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" accept="image/*" id="edit-image-input">
@@ -258,9 +258,9 @@
                                 <div class="form-text">Format yang didukung: JPG, PNG, GIF, SVG. Maksimal 2MB. Kosongkan jika tidak ingin mengubah gambar.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Merek</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    id="edit-name" placeholder="Masukan nama tipe" name="name" />
+                                    id="edit-name" placeholder="Masukan nama merek" name="name" />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -268,10 +268,10 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Merek</label>
+                                <label class="required fs-6 fw-semibold mb-2">Tipe</label>
                                 <select class="form-select form-select-solid @error('brand_id') is-invalid @enderror"
                                     name="brand_id" id="edit-brand-id">
-                                    <option value="">Pilih Merek</option>
+                                    <option value="">Pilih Tipe</option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
@@ -306,11 +306,45 @@
     </div>
 
     @push('add-script')
+        <style>
+            @media (max-width: 768px) {
+                #kt_datatable_zero_configuration {
+                    font-size: 0.875rem;
+                }
+                #kt_datatable_zero_configuration th,
+                #kt_datatable_zero_configuration td {
+                    padding: 0.5rem 0.25rem;
+                    white-space: nowrap;
+                }
+                #kt_datatable_zero_configuration .table-responsive {
+                    overflow-x: auto;
+                }
+            }
+
+            #kt_datatable_zero_configuration {
+                table-layout: fixed;
+            }
+
+            #kt_datatable_zero_configuration th,
+            #kt_datatable_zero_configuration td {
+                vertical-align: middle;
+            }
+        </style>
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
                     "scrollY": "500px",
                     "scrollCollapse": true,
+                    "scrollX": true,
+                    "responsive": true,
+                    "autoWidth": false,
+                    "columnDefs": [
+                        { "width": "10%", "targets": 0 },
+                        { "width": "20%", "targets": 1 },
+                        { "width": "30%", "targets": 2 },
+                        { "width": "20%", "targets": 3 },
+                        { "width": "20%", "targets": 4 }
+                    ],
                     "language": {
                         "lengthMenu": "Show _MENU_",
                     },
@@ -441,19 +475,19 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Tipe Kendaraan harus diisi!');
+                        alert('Nama Merek Kendaraan harus diisi!');
                         return false;
                     }
 
                     if (brandId === '') {
                         e.preventDefault();
-                        alert('Merek harus dipilih!');
+                        alert('Tipe harus dipilih!');
                         return false;
                     }
 
                     if (image === 0) {
                         e.preventDefault();
-                        alert('Gambar Tipe Kendaraan harus diisi!');
+                        alert('Gambar Merek Kendaraan harus diisi!');
                         return false;
                     }
                 });
@@ -464,13 +498,13 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Tipe Kendaraan harus diisi!');
+                        alert('Nama Merek Kendaraan harus diisi!');
                         return false;
                     }
 
                     if (brandId === '') {
                         e.preventDefault();
-                        alert('Merek harus dipilih!');
+                        alert('Tipe harus dipilih!');
                         return false;
                     }
                 });

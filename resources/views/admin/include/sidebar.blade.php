@@ -495,7 +495,7 @@
                 <!--end:Menu link-->
                 <!--begin:Menu sub-->
                 <div class="menu-sub menu-sub-accordion">
-                    <!--begin:Menu item-->
+
                     <div class="menu-item initial menu-hover">
                         <!--begin:Menu link-->
                         @if (Route::currentRouteName() == 'admin.brand.index')
@@ -503,10 +503,30 @@
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot" style="background-color: white !important;"></span>
                                 </span>
-                                <span class="menu-title" style="color: white !important;">Merek</span>
+                                <span class="menu-title" style="color: white !important;">Tipe</span>
                             </a>
                         @else
                             <a class="menu-link" href="{{ route('admin.brand.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title custom">Tipe</span>
+                            </a>
+                        @endif
+                        <!--end:Menu link-->
+                    </div>
+                    <!--begin:Menu item-->
+                    <div class="menu-item initial menu-hover">
+                        <!--begin:Menu link-->
+                        @if (Route::currentRouteName() == 'admin.car-model.index')
+                            <a class="menu-link" href="{{ route('admin.car-model.index') }}" style="background-color: #C02425;">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                </span>
+                                <span class="menu-title" style="color: white !important;">Merek</span>
+                            </a>
+                        @else
+                            <a class="menu-link" href="{{ route('admin.car-model.index') }}">
                                 <span class="menu-bullet">
                                     <span class="bullet bullet-dot"></span>
                                 </span>
@@ -517,25 +537,6 @@
                     </div>
                     <!--end:Menu item-->
                     <!--begin:Menu item-->
-                    <div class="menu-item initial menu-hover">
-                        <!--begin:Menu link-->
-                        @if (Route::currentRouteName() == 'admin.car-model.index')
-                            <a class="menu-link" href="{{ route('admin.car-model.index') }}" style="background-color: #C02425;">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot" style="background-color: white !important;"></span>
-                                </span>
-                                <span class="menu-title" style="color: white !important;">Tipe</span>
-                            </a>
-                        @else
-                            <a class="menu-link" href="{{ route('admin.car-model.index') }}">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title custom">Tipe</span>
-                            </a>
-                        @endif
-                        <!--end:Menu link-->
-                    </div>
                     <!--end:Menu item-->
                 </div>
                 <!--end:Menu sub-->
