@@ -1,5 +1,17 @@
 @extends('admin.layout', ['title' => 'Transaction', 'url' => route('admin.transaction')])
+@push('add-style')
+    <style>
 
+.select2-container .select2-selection--single {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: block;
+    height: 46px;
+    user-select: none;
+    -webkit-user-select: none;
+}
+    </style>
+@endpush
 @section('content-admin')
     <!--begin::Form-->
     <form action="#" method="get">
@@ -9,20 +21,16 @@
             <div class="card-body">
                 <!--begin::Compact form-->
                 <!--begin::Row-->
-                <div class="row">
+                <div class="row g-3">
                     <!--begin::Col-->
-
                     {{-- ERROR --}}
-
                     {{-- @if (isset($services) && auth()->user()->role == 0) --}}
-                    <div class="col-4">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <!--begin::Select-->
                         <label for="service" class="form-label">Layanan</label>
-
                         <select class="form-select form-select-solid" data-control="select2" id="service"
                             data-placeholder="Layanan" data-hide-search="true" name="service">
                             <option value=""></option>
-
                             @foreach ($services as $service)
                                 <option value="{{ $service->id }}"
                                     {{ isset($_GET['service']) && $service->id == $_GET['service'] ? 'selected' : '' }}>
@@ -30,12 +38,10 @@
                             @endforeach
                         </select>
                         <!--end::Select-->
-
                     </div>
                     {{-- @endif --}}
 
-
-                    <div class="col-3">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <!--begin::Label-->
                         <label for="start" class="form-label">Tanggal Awal</label>
                         <!--end::Label-->
@@ -44,7 +50,7 @@
                             value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
                         <!--end::Input-->
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                         <!--begin::Label-->
                         <label for="end" class="form-label">Tanggal Akhir</label>
                         <!--end::Label-->
@@ -53,18 +59,10 @@
                             value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
                         <!--end::Input-->
                     </div>
-                    {{-- <div class="col-lg-3">
-                        <!--begin::Input-->
-                        <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end" value="{{isset($_GET['end']) ? $_GET['end'] : ''}}">
-                        <!--end::Input-->
-                    </div> --}}
                     <!--end::Col-->
                     <!--begin::Col-->
-                    <div class="col-2">
-                        <label class="form-label" style="width: 100%; display: inline-block;">&nbsp;</label>
-
-                        <button type="submit" id="cari" class="btn btn-primary">Cari Data</button>
-
+                    <div class="col-12 col-sm-6 col-md-12 col-lg-3 d-flex align-items-end">
+                        <button type="submit" id="cari" class="btn btn-primary w-100">Cari Data</button>
                     </div>
                     <!--end::Col-->
                 </div>
@@ -86,15 +84,27 @@
                             <div class="text-primary fs-2 fw-bold" id="totalHarga">
                                 @php
                                     $totalHarga = 0;
-                                    foreach($transactions as $transaction) {
+                                    foreach ($transactions as $transaction) {
                                         if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10])) {
-                                            $totalHarga += $transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0);
-                                        } elseif(in_array($transaction->service_id, [1, 2, 11, 12])) {
-                                            $totalHarga += $transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0);
-                                        } elseif($transaction->service_id == 8) {
-                                            $totalHarga += $transaction->total - ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHotel->first()->kode_unik ?? 0);
-                                        } elseif($transaction->service_id == 7) {
-                                            $totalHarga += $transaction->total - ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHostel->first()->kode_unik ?? 0);
+                                            $totalHarga +=
+                                                $transaction->total -
+                                                ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) -
+                                                ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0);
+                                        } elseif (in_array($transaction->service_id, [1, 2, 11, 12])) {
+                                            $totalHarga +=
+                                                $transaction->total -
+                                                ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) -
+                                                ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0);
+                                        } elseif ($transaction->service_id == 8) {
+                                            $totalHarga +=
+                                                $transaction->total -
+                                                ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) -
+                                                ($transaction->detailTransactionHotel->first()->kode_unik ?? 0);
+                                        } elseif ($transaction->service_id == 7) {
+                                            $totalHarga +=
+                                                $transaction->total -
+                                                ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) -
+                                                ($transaction->detailTransactionHostel->first()->kode_unik ?? 0);
                                         }
                                     }
                                 @endphp
@@ -110,15 +120,23 @@
                             <div class="text-success fs-2 fw-bold" id="totalBiayaLayanan">
                                 @php
                                     $totalBiayaLayanan = 0;
-                                    foreach($transactions as $transaction) {
+                                    foreach ($transactions as $transaction) {
                                         if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10])) {
-                                            $totalBiayaLayanan += ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0);
-                                        } elseif(in_array($transaction->service_id, [1, 2, 11, 12])) {
-                                            $totalBiayaLayanan += ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0);
-                                        } elseif($transaction->service_id == 8) {
-                                            $totalBiayaLayanan += ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHotel->first()->kode_unik ?? 0);
-                                        } elseif($transaction->service_id == 7) {
-                                            $totalBiayaLayanan += ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHostel->first()->kode_unik ?? 0);
+                                            $totalBiayaLayanan +=
+                                                ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) +
+                                                ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0);
+                                        } elseif (in_array($transaction->service_id, [1, 2, 11, 12])) {
+                                            $totalBiayaLayanan +=
+                                                ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) +
+                                                ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0);
+                                        } elseif ($transaction->service_id == 8) {
+                                            $totalBiayaLayanan +=
+                                                ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) +
+                                                ($transaction->detailTransactionHotel->first()->kode_unik ?? 0);
+                                        } elseif ($transaction->service_id == 7) {
+                                            $totalBiayaLayanan +=
+                                                ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) +
+                                                ($transaction->detailTransactionHostel->first()->kode_unik ?? 0);
                                         }
                                     }
                                 @endphp
@@ -134,7 +152,7 @@
                             <div class="text-danger fs-2 fw-bold" id="totalPotonganPoint">
                                 @php
                                     $totalPotonganPoint = 0;
-                                    foreach($transactions as $transaction) {
+                                    foreach ($transactions as $transaction) {
                                         $totalPotonganPoint += $transaction->historyPoint->first()->point ?? 0;
                                     }
                                 @endphp
@@ -150,7 +168,7 @@
                             <div class="text-info fs-2 fw-bold" id="totalGrandTotal">
                                 @php
                                     $totalGrandTotal = 0;
-                                    foreach($transactions as $transaction) {
+                                    foreach ($transactions as $transaction) {
                                         $totalGrandTotal += $transaction->total;
                                     }
                                 @endphp
@@ -242,22 +260,23 @@
                 <!--begin::Body-->
                 <div class="card-body py-3">
                     <!--begin::Table container-->
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                         <!--begin::Table-->
-                        <table class="table table-bordered gs-0 gy-4 text-center" style="font-size: 11px;">
+                        <table class="table table-bordered gs-0 gy-4 text-center"
+                            style="font-size: 11px; min-width: 1200px;">
                             <!--begin::Table head-->
                             <thead>
                                 <tr class="fw-bold text-center text-gray-800">
-                                    <th style="width:15%; text-align: center;">Waktu</th>
-                                    <th style="width:15%; text-align: center;">Invoice</th>
-                                    <th style="width:10%; text-align: center;">Service</th>
-                                    <th style="width:10%; text-align: center;">Metode Pembayaran</th>
-                                    <th style="width:15%; text-align: center;">Harga</th>
-                                    <th style="width:15%; text-align: center;">Biaya Layanan</th>
-                                    <th style="width:15%; text-align: center;">Potongan Point</th>
-                                    <th style="width:15%; text-align: center;">Grand Total</th>
-                                    <th style="width:10%; text-align: center;">Status</th>
-                                    <th style="width:10%; text-align: center;">Action</th>
+                                    <th style="min-width: 120px; text-align: center;">Waktu</th>
+                                    <th style="min-width: 120px; text-align: center;">Invoice</th>
+                                    <th style="min-width: 80px; text-align: center;">Service</th>
+                                    <th style="min-width: 100px; text-align: center;">Metode Pembayaran</th>
+                                    <th style="min-width: 120px; text-align: center;">Harga</th>
+                                    <th style="min-width: 120px; text-align: center;">Biaya Layanan</th>
+                                    <th style="min-width: 120px; text-align: center;">Potongan Point</th>
+                                    <th style="min-width: 120px; text-align: center;">Grand Total</th>
+                                    <th style="min-width: 80px; text-align: center;">Status</th>
+                                    <th style="min-width: 100px; text-align: center;">Action</th>
                                 </tr>
                             </thead>
                             <!--end::Table head-->
@@ -265,30 +284,33 @@
                             <tbody>
                                 @foreach ($transactions as $transaction)
                                     @php
-                                        $biayaAdmin = $transaction->hotel_fee ?? ($transaction->hostel_fee ?? ($transaction->ppob_fee ?? $transaction->topup_fee));
+                                        $biayaAdmin =
+                                            $transaction->hotel_fee ??
+                                            ($transaction->hostel_fee ??
+                                                ($transaction->ppob_fee ?? $transaction->topup_fee));
                                     @endphp
                                     <tr>
-                                        <td>
-                                            <div class="text-dark mb-1 ">
+                                        <td style="white-space: nowrap;">
+                                            <div class="text-dark mb-1">
                                                 {{ \Carbon\Carbon::parse($transaction->created_at)->format('d M y h:m') }}
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="text-dark mb-1 ">{{ $transaction->no_inv }}</div>
+                                        <td style="white-space: nowrap;">
+                                            <div class="text-dark mb-1">{{ $transaction->no_inv }}</div>
                                         </td>
                                         <td>
-                                            <span class="badge badge-rounded badge-primary">
+                                            <span class="badge badge-rounded badge-primary" style="font-size: 10px;">
                                                 {{ strtoupper($transaction->service) ?? '-' }}
                                             </span>
                                         </td>
-                                        <td>
-                                            <div class="text-dark d-block mb-1 ">
-                                                {{ $transaction->payment_method ." - ". $transaction->payment_channel?? '-' }}
+                                        <td style="white-space: nowrap;">
+                                            <div class="text-dark d-block mb-1">
+                                                {{ $transaction->payment_method . ' - ' . $transaction->payment_channel ?? '-' }}
                                             </div>
                                         </td>
                                         <td>
                                             @if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10]))
-                                                @currency($transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0) )
+                                                @currency($transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
                                             @elseif(in_array($transaction->service_id, [1, 2, 11, 12]))
                                                 @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
                                             @elseif($transaction->service_id == 8)
@@ -309,7 +331,8 @@
                                             @endif
                                         </td>
                                         <td class="text-danger fw-bold">
-                                            Rp. {{ number_format($transaction->historyPoint->first()->point ?? 0, 0, ',', '.') }}
+                                            Rp.
+                                            {{ number_format($transaction->historyPoint->first()->point ?? 0, 0, ',', '.') }}
                                         </td>
                                         <td>
                                             Rp. {{ number_format($transaction->total, 0, ',', '.') }}
@@ -327,8 +350,9 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#transactionDetailModal"
-                                                    onclick="viewTransactionDetail({{ $transaction->id }})">
+                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#transactionDetailModal"
+                                                onclick="viewTransactionDetail({{ $transaction->id }})">
                                                 <i class="ki-duotone ki-eye fs-5">
                                                     <span class="path1"></span>
                                                     <span class="path2"></span>
@@ -358,7 +382,8 @@
     <!--end::Tab Content-->
 
     <!--begin::Transaction Detail Modal-->
-    <div class="modal fade" id="transactionDetailModal" tabindex="-1" aria-labelledby="transactionDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="transactionDetailModal" tabindex="-1" aria-labelledby="transactionDetailModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -461,11 +486,11 @@
         </div>
     </div>
     <!--end::Transaction Detail Modal-->
-
 @endsection
 @push('add-script')
     <!-- DataTables Buttons CSS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 
     <!-- DataTables Buttons JS -->
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
@@ -480,7 +505,7 @@
             var table = $('.table').DataTable({
                 "scrollY": "500px",
                 "scrollCollapse": true,
-                "order" : [],
+                "order": [],
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
@@ -495,14 +520,12 @@
                     "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">",
-                "buttons": [
-                    {
-                        extend: 'excel',
-                        text: 'Export Excel',
-                        className: 'btn btn-success btn-sm',
-                        title: 'Transaction Data'
-                    }
-                ]
+                "buttons": [{
+                    extend: 'excel',
+                    text: 'Export Excel',
+                    className: 'btn btn-success btn-sm',
+                    title: 'Transaction Data'
+                }]
             });
 
             // Add export buttons to the toolbar
@@ -516,7 +539,9 @@
                 var totalGrandTotal = 0;
 
                 // Get all visible rows (after filtering)
-                table.rows({page: 'current'}).every(function() {
+                table.rows({
+                    page: 'current'
+                }).every(function() {
                     var data = this.data();
 
                     // Extract values from the table row data
@@ -574,7 +599,9 @@
             currentTransactionId = transactionId;
 
             // Show loading state
-            $('#transactionDetailModal .modal-body').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            $('#transactionDetailModal .modal-body').html(
+                '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>'
+                );
 
             // Fetch transaction detail via AJAX
             $.ajax({
@@ -586,7 +613,8 @@
                 },
                 error: function(xhr, status, error) {
                     console.error('Error fetching transaction detail:', error);
-                    $('#transactionDetailModal .modal-body').html('<div class="alert alert-danger">Error loading transaction details.</div>');
+                    $('#transactionDetailModal .modal-body').html(
+                        '<div class="alert alert-danger">Error loading transaction details.</div>');
                 }
             });
         }
