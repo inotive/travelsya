@@ -22,6 +22,12 @@ class TransactionController extends Controller
     {
         if (auth()->user()->role == 0) {
             $tr = Transaction::with('user')
+                ->when($request->start, function ($query) use ($request) {
+                    $query->whereDate('transactions.created_at', '>=', $request->start);
+                })
+                ->when($request->end, function ($query) use ($request) {
+                    $query->whereDate('transactions.created_at', '<=', $request->end);
+                })
                 ->leftJoin('detail_transaction_top_up', function ($join) {
                     $join->on('transactions.id', '=', 'detail_transaction_top_up.transaction_id');
                 })
@@ -71,22 +77,6 @@ class TransactionController extends Controller
 
         if ($request->service != null)
             $tr = $tr->where('service_id', $request->service);
-
-        // if ($request->start != null) {
-        //     $tr = $tr->whereDate('transactions.created_at', '>=', $request->start );
-        // }
-        // if ($request->end != null) {
-        //     $tr = $tr->whereDate('transactions.created_at', '>=', $request->end );
-        // }
-
-        if ($request->start != null && $request->end != null) {
-            $tr = $tr->whereDate('transactions.created_at', '>= ', $request->start)
-                ->whereDate('transactions.created_at', '<=', $request->end);
-        } elseif ($request->start != null) {
-            $tr = $tr->whereDate('transactions.created_at', '>=', $request->start);
-        } elseif ($request->end != null) {
-            $tr = $tr->whereDate('transactions.created_at', '<=', $request->end);
-        }
 
         $transactions = $tr->orderBy('no_inv', 'desc')->get();
 

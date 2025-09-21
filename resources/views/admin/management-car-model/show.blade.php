@@ -1,19 +1,16 @@
-@extends('admin.layout', ['title' => 'Detail Tipe Kendaraan', 'url' => ''])
+@extends('admin.layout', ['title' => 'Detail Merek Kendaraan', 'url' => ''])
 
 @section('content-admin')
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
         <div class="card-header pt-5">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">Detail Tipe Kendaraan</span>
-                <span class="text-muted mt-1 fw-semibold fs-7">Informasi lengkap tipe kendaraan {{ $carModel->name }}</span>
+                <span class="card-label fw-bold fs-3 mb-1">Detail Merek Kendaraan</span>
+                <span class="text-muted mt-1 fw-semibold fs-7">Informasi lengkap merek kendaraan {{ $carModel->name }}</span>
             </h3>
             <div class="card-toolbar">
                 <a href="{{ route('admin.car-model.index') }}" class="btn btn-sm btn-light-primary">
                     <i class="ki-duotone ki-arrow-left fs-2"></i>Kembali
-                </a>
-                <a href="{{ route('admin.car-model.edit', $carModel->id) }}" class="btn btn-sm btn-primary ms-2">
-                    <i class="ki-duotone ki-pencil fs-2"></i>Edit
                 </a>
             </div>
         </div>
@@ -23,7 +20,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-10">
-                        <label class="form-label fw-bold">Gambar Tipe</label>
+                        <label class="form-label fw-bold">Gambar Merek</label>
                         <div class="mt-2">
                             @if($carModel->image)
                                 <img src="{{ asset('storage/' . $carModel->image) }}" alt="{{ $carModel->name }}"
@@ -42,13 +39,13 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-10">
-                                <label class="form-label fw-bold">Nama Tipe</label>
+                                <label class="form-label fw-bold">Nama Merek</label>
                                 <div class="form-control form-control-solid">{{ $carModel->name }}</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-10">
-                                <label class="form-label fw-bold">Merek</label>
+                                <label class="form-label fw-bold">Tipe</label>
                                 <div class="form-control form-control-solid">
                                     <span class="badge badge-light-primary fs-6">{{ $carModel->brand->name }}</span>
                                 </div>
@@ -82,7 +79,7 @@
                         </i>
                         <div class="d-flex flex-column">
                             <h4 class="mb-1 text-info">Informasi</h4>
-                            <span>Tipe kendaraan ini sedang digunakan dalam {{ $carModel->vendor->count() }} kendaraan rental.
+                            <span>Merek kendaraan ini sedang digunakan dalam {{ $carModel->vendor->count() }} kendaraan rental.
                                   Data tidak dapat dihapus selama masih digunakan.</span>
                         </div>
                     </div>

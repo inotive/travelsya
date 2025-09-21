@@ -1,4 +1,4 @@
-@extends('admin.layout', ['title' => 'Daftar Merek', 'url' => ''])
+@extends('admin.layout', ['title' => 'Daftar Tipe', 'url' => ''])
 
 @section('content-admin')
     @if(session('success'))
@@ -21,7 +21,7 @@
         <div class="card-header pt-5">
             <div class="card-toolbar">
                 <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Merek</a>
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Tipe</a>
             </div>
         </div>
         <!--end::Header-->
@@ -30,22 +30,22 @@
             <!--begin::Table container-->
             <div class="table-responsive">
                 <!--begin::Table-->
-                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                <table class="table table-bordered table-hover fs-6 gy-5 align-middle"
                     id="kt_datatable_zero_configuration">
                     <thead>
-                        <tr class="fw-bold fs-6 text-gray-800 ">
-                            <th class="text-center">No.</th>
-                            <th class="text-center">Merek Kendaraan</th>
-                            <th class="text-center">Gambar</th>
-                            <th class="text-center">Action</th>
+                        <tr class="fw-bold fs-6 text-gray-800">
+                            <th class="text-center" style="width: 10%;">No.</th>
+                            <th class="text-center" style="width: 10%;">Tipe Kendaraan</th>
+                            <th class="text-center" style="width: 20%;">Gambar</th>
+                            <th class="text-center" style="width: 20%;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($brands as $brand)
                             <tr id="index_{{ $brand->id }}">
-                                <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-start">{{ $brand->name }}</td>
-                                <td class="text-center">
+                                <td class="text-center" style="width: 10%;">{{ $loop->iteration }}</td>
+                                <td class="text-start" style="width: 10%;">{{ $brand->name }}</td>
+                                <td class="text-center" style="width: 20%;">
                                     @if($brand->image)
                                         <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}"
                                              style="width: 50px; height: 50px; object-fit: cover;" class="rounded">
@@ -57,7 +57,7 @@
                                         </div>
                                     @endif
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" style="width: 20%;">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
                                         <!--begin::Menu item-->
@@ -106,14 +106,14 @@
                                             @csrf
                                             @method('DELETE')
                                             <div class="modal-header">
-                                                <h2 class="fw-bold">DELETE Merek</h2>
+                                                <h2 class="fw-bold">DELETE Tipe</h2>
                                                 <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
                                                     data-bs-dismiss="modal">
                                                     <i class="ki-duotone ki-cross fs-1"></i>
                                                 </button>
                                             </div>
                                             <div class="modal-body py-10 px-lg-17">
-                                                <p>Anda yakin ingin menghapus data Merek dengan nama {{ $brand->name }}?
+                                                <p>Anda yakin ingin menghapus data Tipe dengan nama {{ $brand->name }}?
                                                 </p>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
@@ -153,13 +153,13 @@
                         action="{{ route('admin.brand.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Create Brand</h1>
+                            <h1 class="mb-3">Create Tipe</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Merek Kendaraan</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe Kendaraan</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    placeholder="Masukan nama merek kendaraan" name="name" value="{{ old('name') }}" required />
+                                    placeholder="Masukan nama tipe kendaraan" name="name" value="{{ old('name') }}" required />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -218,13 +218,13 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Edit Brand</h1>
+                            <h1 class="mb-3">Edit Tipe</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Merek Kendaraan</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe Kendaraan</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    id="edit-name" name="name" placeholder="Masukan nama merek kendaraan" value="{{ old('name') }}" required />
+                                    id="edit-name" name="name" placeholder="Masukan nama tipe kendaraan" value="{{ old('name') }}" required />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -267,11 +267,44 @@
     </div>
 
     @push('add-script')
+        <style>
+            @media (max-width: 768px) {
+                #kt_datatable_zero_configuration {
+                    font-size: 0.875rem;
+                }
+                #kt_datatable_zero_configuration th,
+                #kt_datatable_zero_configuration td {
+                    padding: 0.5rem 0.25rem;
+                    white-space: nowrap;
+                }
+                #kt_datatable_zero_configuration .table-responsive {
+                    overflow-x: auto;
+                }
+            }
+
+            #kt_datatable_zero_configuration {
+                table-layout: fixed;
+            }
+
+            #kt_datatable_zero_configuration th,
+            #kt_datatable_zero_configuration td {
+                vertical-align: middle;
+            }
+        </style>
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
                     "scrollY": "500px",
                     "scrollCollapse": true,
+                    "scrollX": true,
+                    "responsive": true,
+                    "autoWidth": false,
+                    "columnDefs": [
+                        { "width": "10%", "targets": 0 },
+                        { "width": "30%", "targets": 1 },
+                        { "width": "20%", "targets": 2 },
+                        { "width": "20%", "targets": 3 }
+                    ],
                     "language": {
                         "lengthMenu": "Show _MENU_",
                     },
@@ -396,7 +429,7 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Merek Kendaraan harus diisi!');
+                        alert('Nama Tipe Kendaraan harus diisi!');
                         return false;
                     }
 
@@ -412,7 +445,7 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Merek Kendaraan harus diisi!');
+                        alert('Nama Tipe Kendaraan harus diisi!');
                         return false;
                     }
                 });

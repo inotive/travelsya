@@ -21,7 +21,11 @@ class CarModelController extends Controller
         $carModels = CarModel::with('brand')->orderBy('created_at', 'desc')->paginate(10);
 
         $brands = Brand::orderBy('name', 'asc')->get();
-        return view('admin.management-car-model.index', compact('carModels', 'brands'));
+        // Ubah: brands = daftar tipe, carModels = daftar merek
+        return view('admin.management-car-model.index', [
+            'carModels' => $carModels, // carModels = merek
+            'brands' => $brands,       // brands = tipe
+        ]);
     }
 
     /**
@@ -30,6 +34,7 @@ class CarModelController extends Controller
     public function create()
     {
         $brands = Brand::orderBy('name', 'asc')->get();
+        // brands = tipe
         return view('admin.management-car-model.create', compact('brands'));
     }
 
@@ -40,7 +45,7 @@ class CarModelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'brand_id' => 'required|exists:brands,id',
+            'brand_id' => 'required|exists:brands,id', // brand_id = tipe_id
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -51,8 +56,8 @@ class CarModelController extends Controller
         }
 
         $data = [
-            'name' => $request->name,
-            'brand_id' => $request->brand_id,
+            'name' => $request->name, // name = nama merek
+            'brand_id' => $request->brand_id, // brand_id = tipe_id
         ];
 
         if ($request->hasFile('image')) {
@@ -62,7 +67,8 @@ class CarModelController extends Controller
 
         CarModel::create($data);
 
-        return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil ditambahkan');
+        // Ubah istilah: "Tipe kendaraan berhasil ditambahkan" => "Merek kendaraan berhasil ditambahkan"
+        return redirect()->route('admin.car-model.index')->with('success', 'Merek kendaraan berhasil ditambahkan');
     }
 
     /**
@@ -80,6 +86,7 @@ class CarModelController extends Controller
     public function edit(CarModel $carModel)
     {
         $brands = Brand::orderBy('name', 'asc')->get();
+        // brands = tipe
         return view('admin.management-car-model.edit', compact('carModel', 'brands'));
     }
 
@@ -90,7 +97,7 @@ class CarModelController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'brand_id' => 'required|exists:brands,id',
+            'brand_id' => 'required|exists:brands,id', // brand_id = tipe_id
             'image' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
@@ -101,8 +108,8 @@ class CarModelController extends Controller
         }
 
         $data = [
-            'name' => $request->name,
-            'brand_id' => $request->brand_id,
+            'name' => $request->name, // name = nama merek
+            'brand_id' => $request->brand_id, // brand_id = tipe_id
         ];
 
         if ($request->hasFile('image')) {
@@ -116,7 +123,8 @@ class CarModelController extends Controller
 
         $carModel->update($data);
 
-        return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil diperbarui');
+        // Ubah istilah: "Tipe kendaraan berhasil diperbarui" => "Merek kendaraan berhasil diperbarui"
+        return redirect()->route('admin.car-model.index')->with('success', 'Merek kendaraan berhasil diperbarui');
     }
 
     /**
@@ -126,7 +134,13 @@ class CarModelController extends Controller
     {
         // Check if car model is being used
         if ($carModel->vendor()->count() > 0) {
-            return redirect()->back()->with('error', 'Tipe kendaraan tidak dapat dihapus karena masih digunakan');
+            // Ubah istilah: "Tipe kendaraan tidak dapat dihapus karena masih digunakan" => "Merek kendaraan tidak dapat dihapus karena masih digunakan"
+            return redirect()->back()->with('error', 'Merek kendaraan tidak dapat dihapus karena masih digunakan');
+        }
+
+        if ($carModel->carRentalHasCars()->count() > 0) {
+            // Ubah istilah: "Tipe kendaraan tidak dapat dihapus karena masih digunakan" => "Merek kendaraan tidak dapat dihapus karena masih digunakan"
+            return redirect()->back()->with('error', 'Merek kendaraan tidak dapat dihapus karena masih digunakan');
         }
 
         // Delete image if exists
@@ -136,6 +150,7 @@ class CarModelController extends Controller
 
         $carModel->delete();
 
-        return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil dihapus');
+        // Ubah istilah: "Tipe kendaraan berhasil dihapus" => "Merek kendaraan berhasil dihapus"
+        return redirect()->route('admin.car-model.index')->with('success', 'Merek kendaraan berhasil dihapus');
     }
 }
