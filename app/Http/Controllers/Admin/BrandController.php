@@ -18,7 +18,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::orderBy('created_at', 'desc')->paginate(10);
-        // Ubah istilah: brands = daftar tipe
+        // Ubah istilah: brands = daftar merek
         return view('admin.management-brand.index', compact('brands'));
     }
 
@@ -27,7 +27,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        // Ubah istilah: form tambah tipe
+        // Ubah istilah: form tambah merek
         return view('admin.management-brand.create');
     }
 
@@ -58,8 +58,8 @@ class BrandController extends Controller
 
         Brand::create($data);
 
-        // Ubah istilah: "Brand berhasil ditambahkan" => "Tipe kendaraan berhasil ditambahkan"
-        return redirect()->route('admin.brand.index')->with('success', 'Tipe kendaraan berhasil ditambahkan');
+        // Ubah istilah: "Brand berhasil ditambahkan" => "Merek kendaraan berhasil ditambahkan"
+        return redirect()->route('admin.brand.index')->with('success', 'Merek kendaraan berhasil ditambahkan');
     }
 
     /**
@@ -67,7 +67,7 @@ class BrandController extends Controller
      */
     public function show(Brand $brand)
     {
-        // Ubah istilah: detail tipe
+        // Ubah istilah: detail merek
         return view('admin.management-brand.show', compact('brand'));
     }
 
@@ -103,8 +103,8 @@ class BrandController extends Controller
 
         $brand->update($data);
 
-        // Ubah istilah: "Brand berhasil diperbarui" => "Tipe kendaraan berhasil diperbarui"
-        return redirect()->route('admin.brand.index')->with('success', 'Tipe kendaraan berhasil diperbarui');
+        // Ubah istilah: "Brand berhasil diperbarui" => "Merek kendaraan berhasil diperbarui"
+        return redirect()->route('admin.brand.index')->with('success', 'Merek kendaraan berhasil diperbarui');
     }
 
     /**
@@ -114,13 +114,13 @@ class BrandController extends Controller
     {
         // Check if brand is being used
         if ($brand->vendor()->count() > 0) {
-            // Ubah istilah: "Brand tidak dapat dihapus karena masih digunakan" => "Tipe kendaraan tidak dapat dihapus karena masih digunakan"
-            return redirect()->back()->with('error', 'Tipe kendaraan tidak dapat dihapus karena masih digunakan');
+            // Ubah istilah: "Brand tidak dapat dihapus karena masih digunakan" => "Merek kendaraan tidak dapat dihapus karena masih digunakan"
+            return redirect()->back()->with('error', 'Merek kendaraan tidak dapat dihapus karena masih digunakan');
         }
 
         if ($brand->carModels()->count() > 0) {
-            // Ubah istilah: "Brand tidak dapat dihapus karena masih digunakan" => "Tipe kendaraan tidak dapat dihapus karena masih digunakan"
-            return redirect()->back()->with('error', 'Tipe kendaraan tidak dapat dihapus karena masih digunakan');
+            // Ubah istilah: "Brand tidak dapat dihapus karena masih digunakan" => "Merek kendaraan tidak dapat dihapus karena masih digunakan"
+            return redirect()->back()->with('error', 'Merek kendaraan tidak dapat dihapus karena masih digunakan');
         }
 
         // Delete image if exists
@@ -130,7 +130,7 @@ class BrandController extends Controller
 
         $brand->delete();
 
-        // Ubah istilah: "Brand berhasil dihapus" => "Tipe kendaraan berhasil dihapus"
-        return redirect()->route('admin.brand.index')->with('success', 'Tipe kendaraan berhasil dihapus');
+        // Ubah istilah: "Brand berhasil dihapus" => "Merek kendaraan berhasil dihapus"
+        return redirect()->route('admin.brand.index')->with('success', 'Merek kendaraan berhasil dihapus');
     }
 }
