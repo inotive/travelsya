@@ -9,7 +9,7 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <form action="{{ route('partner.kendaraan.create') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('partner.kendaraan.update', $car->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
@@ -232,18 +232,18 @@
 
 @push('add-script')
     <script>
-    
+
         $(document).ready(function() {
             var selectedBrandId = $('#brand_id').val();
             if (selectedBrandId) {
                 loadCarModels(selectedBrandId);
             }
-            
+
             $('#brand_id').on('change', function() {
                 var brand_id = $(this).val();
                 loadCarModels(brand_id);
             });
-            
+
             function loadCarModels(brand_id) {
                 if (brand_id) {
                     $('#car_model_id').prop('disabled', false);
@@ -295,23 +295,23 @@
                     </div>
                 `);
             });
-            
+
             // Handle removing additional images
             $(document).on('click', '.remove-image', function() {
                 $(this).closest('.input-group').remove();
             });
-            
+
             // Handle setting main image
             $(document).on('click', '.set-main-image', function() {
                 // Reset all flags to 0
                 $('.main-image-flag').val('0');
                 $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
-                
+
                 // Set current flag to 1
                 $(this).closest('.input-group').find('.main-image-flag').val('1');
                 $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
             });
-            
+
             // Handle setting existing image as main
             $(document).on('click', '.set-existing-main-image', function() {
                 // Reset all flags to 0
@@ -319,7 +319,7 @@
                 $('.existing-main-image-flag').val('0');
                 $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
                 $('.set-existing-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
-                
+
                 // Set current flag to 1
                 $(this).closest('.card-body').find('.existing-main-image-flag').val('1');
                 $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
@@ -419,16 +419,16 @@
         background: #007bff;
         color: white;
     }
-    
+
     .set-main-image, .set-existing-main-image {
         border-radius: 0 !important;
         border: none;
     }
-    
+
     .set-main-image:hover, .set-existing-main-image:hover {
         opacity: 0.9;
     }
-    
+
     .card-img-top {
         height: 150px;
         object-fit: cover;
