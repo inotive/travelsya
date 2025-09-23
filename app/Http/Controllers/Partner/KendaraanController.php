@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Partner;
 use App\Models\Car;
 use App\Models\Brand;
 use App\Models\Policy;
-
+use App\Models\CarImage;
 use App\Models\CarModel;
 use App\Models\Category;
 use App\Models\CarRental;
@@ -22,146 +22,184 @@ class KendaraanController extends Controller
     {
         $user = auth()->user();
 
-        $brands = Brand::all();
-        $policies = Policy::all();
-        $car_models = CarModel::all();
-        $car_rental = CarRental::all();
+        $car_rentals = CarRental::where('user_id', $user->id)->get();
 
-        $car_rental_id = CarRental::where('user_id', $user->id)->pluck('id')->first();
+        if ($car_rentals->count() > 0) {
+            $car_rental_ids = $car_rentals->pluck('id')->toArray();
+            
+            $cars = CarRentalHasCars::with(['brand', 'carModel', 'images'])
+                ->whereIn('car_rental_id', $car_rental_ids)
+                ->get();
+        } else {
+            $cars = collect();
+        }
 
-        $cars = CarRentalHasCars::with('brand', 'carModel', 'policy', 'carRental')
-            ->where('car_rental_id', $car_rental_id)
-            ->get();
-
-        return view('ekstranet.kendaraaan.list-kendaraan', compact('cars', 'brands', 'car_models', 'policies', 'car_rental'));
+        return view('ekstranet.kendaraaan.list-kendaraan', compact('cars', 'car_rentals'));
     }
 
     public function store(Request $request)
     {
-        // dd($request->all());
-
-        $brands = Brand::all();
-        $policies = Policy::all();
-        $car_models = CarModel::all();
-        $cars = CarRentalHasCars::all();
-
-        // Validasi input
         $validator = Validator::make($request->all(), [
-            'brand_id' => 'required',
-            'car_model_id' => 'required',
-            'category' => 'required',
-            'category_rent' => 'required',
-            'rental_price_per_day' => 'required',
+            'car_rental_id' => 'required|exists:car_rentals,id',
+            'brand_id' => 'required|exists:brands,id',
+            'car_model_id' => 'required|exists:car_models,id',
+            'category' => 'required|string',
+            'category_rent' => 'required|string',
+            'rental_price_per_day' => 'required|numeric',
             'pickup_location' => 'required|string|max:255',
-            'description' => 'required',
-            // 'policy_id' => 'nullable',
-            'years' => 'required',
-            'number_seats' => 'required',
-            'status' => 'required',
-            'images' => 'required|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'description' => 'required|string',
+            'years' => 'required|digits:4',
+            'number_seats' => 'required|integer',
+            'status' => 'required|boolean',
+            'duration' => 'required|integer|min:1',
+            'main_image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
-        // Validation has already been done above
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('cars', $imageName, 'public');
-        } else {
-            $imageName = NULL;
+        $carRental = CarRental::where('user_id', auth()->id())->where('id', $request->car_rental_id)->firstOrFail();
+
+        $mainImagePath = null;
+
+        try {
+            DB::transaction(function () use ($request, $carRental, &$mainImagePath) {
+                $car = new CarRentalHasCars();
+                $car->fill($request->except(['main_image', 'additional_images']));
+                $car->car_rental_id = $carRental->id;
+                $car->save();
+
+                if ($request->hasFile('main_image')) {
+                    $image = $request->file('main_image');
+                    $imageName = time() . '_main.' . $image->getClientOriginalExtension();
+                    $mainImagePath = $image->storeAs('cars', $imageName, 'public');
+
+                    $car->images()->create([
+                        'image_url' => $mainImagePath,
+                        'main' => 1,
+                    ]);
+                }
+
+                if ($request->hasFile('additional_images')) {
+                    foreach ($request->file('additional_images') as $image) {
+                        if ($image && $image->isValid()) {
+                            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                            $path = $image->storeAs('cars', $imageName, 'public');
+                            $car->images()->create([
+                                'image_url' => $path,
+                                'main' => 0,
+                            ]);
+                        }
+                    }
+                }
+                
+                if ($mainImagePath) {
+                    $car->image_url = $mainImagePath;
+                    $car->save();
+                }
+            });
+        } catch (\Exception $e) {
+            
+            \Log::error('Error creating car: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan data kendaraan. Silakan coba lagi.')->withInput();
         }
 
-        $price = (int) preg_replace('/[^\d]/', '', $request->rental_price_per_day);
-
-        $data = [
-            'car_rental_id' => $request->car_rental_id,
-            'brand_id' => $request->brand_id,
-            'car_model_id' => $request->car_model_id,
-            'category' => $request->category,
-            'category_rent' => $request->category_rent,
-            'rental_price_per_day' => $price,
-            'pickup_location' => $request->pickup_location,
-            'description' => $request->description,
-            // 'policy_id' => $request->policy_id,
-            'years' => $request->years,
-            'number_seats' => $request->number_seats,
-            'status' => $request->status,
-            'image_url' => $imageName,
-        ];
-
-        DB::table('car_rental_has_cars')->insert($data);
-
-        return redirect()->route('partner.daftar.kendaraan')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('partner.daftar.kendaraan')->with('success_add', 'Data berhasil ditambahkan!');
     }
 
     public function show(Request $request, $id)
     {
-        $car = CarRentalHasCars::find($id);
-        $brands = Brand::all();
-        $policies = Policy::all();
-        $car_models = CarModel::all();
-        // dd($car_models);
-        $car_rentals = CarRental::all();
+        $car = CarRentalHasCars::with('images')->findOrFail($id);
+        
+        $user = auth()->user();
+        $carRental = CarRental::where('user_id', $user->id)->where('id', $car->car_rental_id)->firstOrFail();
 
-        return view('ekstranet.kendaraaan.update', compact('car', 'brands', 'policies', 'car_models', 'car_rentals', 'id'));
+        $brands = Brand::all();
+        $car_models = CarModel::where('brand_id', $car->brand_id)->get();
+        $car_rentals = CarRental::where('user_id', $user->id)->get();
+
+        return view('ekstranet.kendaraaan.update', compact('car', 'brands', 'car_models', 'car_rentals'));
     }
 
     public function update(Request $request, $id)
     {
-        $car = CarRentalHasCars::find($id);
-        $brands = Brand::all();
-        $policies = Policy::all();
-        $car_models = CarModel::all();
-
         $validator = Validator::make($request->all(), [
-            'brand_id' => 'required',
-            'car_model_id' => 'required',
-            'category' => 'required',
-            'category_rent' => 'required',
-            'rental_price_per_day' => 'required',
+            'car_rental_id' => 'required|exists:car_rentals,id',
+            'brand_id' => 'required|exists:brands,id',
+            'car_model_id' => 'required|exists:car_models,id',
+            'category' => 'required|string',
+            'category_rent' => 'required|string',
+            'rental_price_per_day' => 'required|numeric',
             'pickup_location' => 'required|string|max:255',
-            'description' => 'required',
-            // 'policy_id' => 'nullable',
-            'years' => 'required',
-            'number_seats' => 'required',
-            'status' => 'required',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'description' => 'required|string',
+            'years' => 'required|digits:4',
+            'number_seats' => 'required|integer',
+            'status' => 'required|boolean',
+            'duration' => 'required|integer|min:1',
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'deleted_images.*' => 'nullable|integer|exists:car_images,id',
         ]);
-
-        // dd($validator);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        if ($request->hasFile('image')) {
-            $oldImage = $car->image_url;
-            if($oldImage) Storage::delete('cars/' . $car->image_url);
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('cars', $imageName, 'public');
-        } else {
-            $imageName = $car->image_url;
-        }
+        $car = CarRentalHasCars::with('images')->findOrFail($id);
+        $carRental = CarRental::where('user_id', auth()->id())->where('id', $request->car_rental_id)->firstOrFail();
 
-        $car->brand_id = $request->brand_id;
-        $car->car_model_id = $request->car_model_id;
-        $car->category = $request->category;
-        $car->category_rent = $request->category_rent;
-        $car->rental_price_per_day = $request->rental_price_per_day;
-        $car->pickup_location = $request->pickup_location;
-        $car->description = $request->description;
-        // $car->policy_id = $request->policy_id;
-        $car->years = $request->years;
-        $car->number_seats = $request->number_seats;
-        $car->status = $request->status;
-        $car->image_url = $imageName;
-        $car->save();
+        try {
+            DB::transaction(function () use ($request, $car) {
+                $car->fill($request->except(['main_image', 'additional_images', 'deleted_images']));
+                $car->save();
+
+                if ($request->has('deleted_images')) {
+                    $imagesToDelete = CarImage::whereIn('id', $request->deleted_images)->get();
+                    foreach ($imagesToDelete as $image) {
+                        Storage::disk('public')->delete($image->image_url);
+                        $image->delete();
+                    }
+                }
+
+                if ($request->hasFile('main_image')) {
+                    $oldMainImages = $car->images()->where('main', 1)->get();
+                    foreach ($oldMainImages as $oldMain) {
+                        Storage::disk('public')->delete($oldMain->image_url);
+                        $oldMain->delete();
+                    }
+
+                    $image = $request->file('main_image');
+                    $imageName = time() . '_main.' . $image->getClientOriginalExtension();
+                    $path = $image->storeAs('cars', $imageName, 'public');
+
+                    $car->images()->create([
+                        'image_url' => $path,
+                        'main' => 1,
+                    ]);
+                    
+                    $car->image_url = $path;
+                    $car->save();
+                }
+
+                if ($request->hasFile('additional_images')) {
+                    foreach ($request->file('additional_images') as $image) {
+                        if ($image && $image->isValid()) {
+                            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                            $path = $image->storeAs('cars', $imageName, 'public');
+                            $car->images()->create([
+                                'image_url' => $path,
+                                'main' => 0,
+                            ]);
+                        }
+                    }
+                }
+            });
+        } catch (\Exception $e) {
+            \Log::error('Error updating car: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal memperbarui data kendaraan. Silakan coba lagi.')->withInput();
+        }
 
         return redirect()->route('partner.daftar.kendaraan')->with('update', 'Data berhasil diupdate!');
     }
@@ -188,10 +226,36 @@ class KendaraanController extends Controller
 
     public function destroy($id)
     {
-        $car = CarRentalHasCars::findOrFail($id);
-        $car->delete();
+        DB::beginTransaction();
+        try {
+            $car = CarRentalHasCars::with(['images', 'booked'])->findOrFail($id);
 
-        return redirect()->back()->with('delete', 'Data berhasil dihapus!');
+            // Ensure the user owns the car rental associated with this car
+            $carRental = CarRental::where('user_id', auth()->id())->where('id', $car->car_rental_id)->firstOrFail();
+
+            // Check if the car has any related bookings
+            if ($car->booked()->exists()) {
+                DB::rollBack();
+                return response()->json(['error' => 'Tidak dapat menghapus mobil yang masih terhubung dengan data booking.'], 422);
+            }
+
+            // Delete all associated image files from storage
+            foreach ($car->images as $image) {
+                Storage::disk('public')->delete($image->image_url);
+            }
+            
+            // Deleting the car will also delete the image records from DB due to onDelete('cascade')
+            $car->delete();
+
+            DB::commit();
+
+            return response()->json(['success' => 'Data mobil berhasil dihapus.']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Error deleting car: ' . $e->getMessage());
+            return response()->json(['error' => 'Gagal menghapus data mobil.'], 500);
+        }
     }
 
     public function getCarModels(Request $request)

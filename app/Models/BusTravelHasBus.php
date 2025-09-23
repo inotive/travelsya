@@ -20,6 +20,10 @@ class BusTravelHasBus extends Model
         "image"
     ];
 
+    protected $casts = [
+        'image' => 'array'
+    ];
+
     /**
      * Get the busTravel that owns the BusTravelHasBus
      *

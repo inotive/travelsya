@@ -26,6 +26,9 @@ class CarRentalHasCars extends Model
         'description',
         'category',
         'koper',
+        'years',
+        'pickup_location',
+        'duration',
     ];
 
     // Definisikan relasi ke model Brand
@@ -65,6 +68,16 @@ class CarRentalHasCars extends Model
     public function carRentalRate(): HasMany
     {
         return $this->hasMany(CarRentalRating::class, 'car_rental_has_car_id', 'id');
+    }
+
+    /**
+     * Get all of the images for the Car.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(CarImage::class, 'car_rental_has_cars_id', 'id');
     }
 
 

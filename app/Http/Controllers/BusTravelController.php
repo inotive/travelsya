@@ -37,151 +37,209 @@ class BusTravelController extends Controller
     {
         $data['city'] = BusRoute::get()->pluck('name', 'name');
 
-        $route = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+        // Get route relationships for filtering
+        $routes = BusDeparture::with('from', 'to')->get();
+        $routeData = [];
+        foreach ($routes as $route) {
+            $from = $route->from->city_name ?? '';
+            $to = $route->to->city_name ?? '';
 
-        $data['route'] = $route->map(function ($r) {
-            $r['from'] = $r->departure->from->name ?? '-';
-            $r['to'] = $r->departure->to->name ?? '-';
+            if ($from && $to) {
+                // Add to departure routes (from city -> to cities)
+                if (!isset($routeData['departures'][$from])) {
+                    $routeData['departures'][$from] = [];
+                }
+                if (!in_array($to, $routeData['departures'][$from])) {
+                    $routeData['departures'][$from][] = $to;
+                }
 
-            return $r;
-        });
+                // Add to destination routes (to city <- from cities)
+                if (!isset($routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to] = [];
+                }
+                if (!in_array($from, $routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to][] = $from;
+                }
+            }
+        }
+        $data['routeData'] = $routeData;
 
-        $route_travel = BusBooked::withCount('departure')->orderBy('departure_count', 'desc')->limit(12)->get();
+        $popularRoutes = DetailTransactionBus::query()
+            ->select('from', 'to', DB::raw('COUNT(*) as orders_count'))
+            ->whereNotNull('from')
+            ->whereNotNull('to')
+            ->groupBy('from', 'to')
+            ->orderByDesc('orders_count')
+            ->limit(12)
+            ->get();
 
-        $data['route_travel'] = $route_travel->map(function ($r) {
-            $r['from'] = $r->departure->from->name ?? '-';
-            $r['to'] = $r->departure->to->name ?? '-';
+        $data['route'] = $popularRoutes;
 
-            return $r;
-        });
+        $data['route_travel'] = BusDeparture::with(['from', 'to'])->latest()->limit(12)->get();
 
         $data['popular'] = BusTravels::withCount('booked')->orderBy('booked_count', 'desc')->limit(8)->get();
 
         return view('pagesv2.bus_travel.index', $data);
     }
 
+    public function popularSearch($id)
+    {
+        $busTravel = BusTravels::find($id);
+
+        if (!$busTravel) {
+            return redirect()->route('bus_travel.index')->with('error', 'Bus operator not found.');
+        }
+
+        // Find a random departure associated with this bus travel operator
+        $departure = BusDeparture::whereHas('busTravel.busTravel', function ($query) use ($id) {
+            $query->where('id', $id);
+        })->inRandomOrder()->first();
+
+        if (!$departure) {
+            // If no departures, maybe just search by agent name with no routes
+            $request = new Request([
+                'agent' => $busTravel->business_name,
+                'kota_awal' => '',
+                'kota_tujuan' => '',
+                'date_pergi' => now()->format('Y-m-d'),
+                'jumlah_penumpang' => 1,
+                'is_pulang_pergi' => 0,
+            ]);
+            return $this->search($request);
+        }
+
+        // Create a new request with the random route data
+        $request = new Request([
+            'agent' => $busTravel->business_name,
+            'kota_awal' => $departure->from->city_name,
+            'kota_tujuan' => $departure->to->city_name,
+            'date_pergi' => now()->format('Y-m-d'),
+            'jumlah_penumpang' => 1,
+            'is_pulang_pergi' => 0,
+        ]);
+
+        // Call the existing search method
+        return $this->search($request);
+    }
+
     /**
+     /**
      * Enhanced search method that supports:
      * - Business name search
      * - Route name search (from city -> to city)
      * - Price range search (100K intervals)
      */
- public function search_ajax(Request $request)
+    public function search_ajax(Request $request)
     {
         $searchTerm = trim($request->name);
+
+        // Basic validation
+        if (strlen($searchTerm) < 2) {
+            return '<div class="text-center text-muted p-3">Ketik minimal 2 karakter</div>';
+        }
+
         $find = '%' . $searchTerm . '%';
 
-        // Check search type
+        // --- Search Type Detection ---
         $isNumericSearch = is_numeric(str_replace(['k', 'K', '.', ','], '', $searchTerm));
         $isTimeSearch = $this->isTimeSearch($searchTerm);
         $isFacilitySearch = $this->isFacilitySearch($searchTerm);
 
-        $price = null;
-        $timeRange = null;
-        $facilityTerms = [];
+        // --- Query Builder ---
+        $query = BusDeparture::with(['busTravel.busTravel', 'from', 'to']);
 
         if ($isNumericSearch && !$isTimeSearch) {
+            // --- Price Search ---
             $cleanInput = str_replace(['k', 'K', '.', ','], '', $searchTerm);
             $price = (int) $cleanInput;
             if (stripos($searchTerm, 'k') !== false) {
                 $price *= 1000;
             }
+            $query->where('price', '<=', $price);
+
         } elseif ($isTimeSearch) {
+            // --- Time Search ---
             $timeRange = $this->calculateTimeRange($searchTerm);
+            if ($timeRange) {
+                $query->whereTime('departure_time', '>=', $timeRange['start'])
+                    ->whereTime('departure_time', '<=', $timeRange['end']);
+            }
         } elseif ($isFacilitySearch) {
+            // --- Facility Search ---
             $facilityTerms = $this->getFacilitySearchTerms($searchTerm);
+            if (!empty($facilityTerms)) {
+                $query->whereHas('busTravel', function ($q) use ($facilityTerms) {
+                    $q->where(function ($q2) use ($facilityTerms) {
+                        foreach ($facilityTerms as $facility) {
+                            // Assuming 'facilities' is a JSON column or a text column on bus_travel_has_bus table
+                            $q2->orWhere('facilities', 'like', '%' . $facility . '%')
+                                ->orWhere('description', 'like', '%' . $facility . '%')
+                                ->orWhere('class', 'like', '%' . $facility . '%');
+                        }
+                    });
+                });
+            }
+        } else {
+            // --- General Search (Business Name or Route) ---
+            $query->where(function ($q) use ($find) {
+                $q->whereHas('busTravel.busTravel', function ($b) use ($find) {
+                    $b->where('business_name', 'like', $find);
+                })->orWhereHas('from', function ($f) use ($find) {
+                    $f->where('city_name', 'like', $find); // Corrected from 'name' to 'city_name'
+                })->orWhereHas('to', function ($t) use ($find) {
+                    $t->where('city_name', 'like', $find); // Corrected from 'name' to 'city_name'
+                });
+            });
         }
 
-        $buses = BusDeparture::with('busTravel', 'from', 'to')
-            ->whereHas('busTravel', function ($q) use ($find, $price, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
-                $q->whereHas('busTravel', function ($b) use ($find, $isNumericSearch, $isTimeSearch, $isFacilitySearch, $facilityTerms) {
-                    // Search by business name if not numeric/time/facility
-                    if (!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch) {
-                        $b->where('business_name', 'like', $find);
-                    }
+        $buses = $query->limit(10)->get();
 
-                    // Search by facilities
-                    if ($isFacilitySearch && !empty($facilityTerms)) {
-                        foreach ($facilityTerms as $facility) {
-                            $b->orWhere('facilities', 'like', '%' . $facility . '%')
-                              ->orWhere('description', 'like', '%' . $facility . '%')
-                              ->orWhere('class', 'like', '%' . $facility . '%');
-                        }
-                    }
-                });
-
-                // Add price filter if numeric search
-                if ($isNumericSearch && $price && !$isTimeSearch) {
-                    $q->where('price', '<=', $price);
-                }
-            })
-            // Add route name search if not numeric/time/facility
-            ->when(!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch, function ($query) use ($find) {
-                $query->orWhereHas('from', function ($f) use ($find) {
-                    $f->where('name', 'like', $find);
-                })->orWhereHas('to', function ($t) use ($find) {
-                    $t->where('name', 'like', $find);
-                });
-            })
-            // Add price search for main departure table
-            ->when($isNumericSearch && $price && !$isTimeSearch, function ($query) use ($price) {
-                $query->orWhere('price', '<=', $price);
-            })
-            // Add time range search
-            ->when($isTimeSearch && $timeRange, function ($query) use ($timeRange) {
-                $query->orWhereTime('departure_time', '>=', $timeRange['start'])
-                      ->whereTime('departure_time', '<=', $timeRange['end']);
-            })
-            ->limit(10)
-            ->get();
-
-        $result = '';
-
+        // --- Result Rendering ---
         if ($buses->isEmpty()) {
             return '<div class="text-center text-muted p-3">Tidak ada hasil ditemukan</div>';
         }
 
+        $result = '';
         foreach ($buses as $bus) {
-            $businessName = $bus['busTravel']['busTravel']['business_name'] ?? 'Invalid bus';
-            $fromCity = $bus['from']['name'] ?? 'Invalid Route';
-            $toCityName = $bus['to']['name'] ?? 'Invalid Route';
-            $price = number_format($bus['price'] ?? 0, 0, ',', '.');
+            $businessName = $bus->busTravel->busTravel->business_name ?? 'Invalid bus';
+            $fromCity = $bus->from->city_name ?? 'Invalid Route'; // Corrected from 'name'
+            $toCityName = $bus->to->city_name ?? 'Invalid Route'; // Corrected from 'name'
+            $priceFormatted = number_format($bus->price ?? 0, 0, ',', '.');
 
-            // Highlight search term in results if not numeric
-            if (!$isNumericSearch) {
+            // Highlight search term
+            if (!$isNumericSearch && !$isTimeSearch && !$isFacilitySearch) {
                 $businessName = $this->highlightSearchTerm($businessName, $searchTerm);
                 $fromCity = $this->highlightSearchTerm($fromCity, $searchTerm);
                 $toCityName = $this->highlightSearchTerm($toCityName, $searchTerm);
             }
 
-            $result .= '<a href="' .
-                route(
-                    'bus_travel.detail',
-                    [
-                        'departure_id' => $bus['id'],
-                        'kota_awal' => ($bus['from']['name'] ?? null),
-                        'kota_tujuan' => ($bus['to']['name'] ?? null),
-                        'is_pulang_pergi' => 0,
-                        'jumlah_penumpang' => 1,
-                        'date_pergi' => date('d-m-Y', strtotime(now())),
-                        'date_pulang' => null
-                    ]
-                ) . '" class="d-flex w-100 flex-stack">
-                    <div class="d-flex align-items-center flex-row-fluid flex-wrap">
-                        <div class="flex-grow-1 me-2">
-                            <span class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">'
-                . $fromCity . ' → ' . $toCityName .
-                '</span>
-                            <span class="text-muted fw-semibold d-block fs-7">
-                                ' . $businessName . '
-                            </span>
-                            <span class="text-success fw-bold d-block fs-8">
-                                Rp ' . $price . '
-                            </span>
-                        </div>
-                    </div>
-                </a>
-                <hr>';
+            $detailUrl = route('bus_travel.detail', [
+                'departure_id' => $bus->id,
+                'kota_awal' => $bus->from->city_name ?? null, // Corrected from 'name'
+                'kota_tujuan' => $bus->to->city_name ?? null, // Corrected from 'name'
+                'is_pulang_pergi' => 0,
+                'jumlah_penumpang' => 1,
+                'date_pergi' => now()->format('d-m-Y'),
+                'date_pulang' => null
+            ]);
+
+            $result .= <<<HTML
+        <a href="{$detailUrl}" class="d-flex w-100 flex-stack p-3 border-bottom">
+            <div class="d-flex align-items-center flex-row-fluid flex-wrap">
+                <div class="flex-grow-1 me-2">
+                    <span class="text-gray-800 text-hover-primary fs-6 fw-bold text-capitalize">
+                        {$fromCity} → {$toCityName}
+                    </span>
+                    <span class="text-muted fw-semibold d-block fs-7">
+                        {$businessName}
+                    </span>
+                    <span class="text-success fw-bold d-block fs-8">
+                        Rp {$priceFormatted}
+                    </span>
+                </div>
+            </div>
+        </a>
+HTML;
         }
 
         return $result;
@@ -346,15 +404,63 @@ class BusTravelController extends Controller
      */
     public function search(Request $request, $agent = null)
     {
+        // Log that we've reached the search method
+        \Log::info('BusTravelController@search called', [
+            'method' => $request->method(),
+            'all_inputs' => $request->all()
+        ]);
+
+        // Validate required fields
+        $request->validate([
+            'kota_awal' => 'nullable|string',
+            'kota_tujuan' => 'nullable|string',
+            'date_pergi' => 'required|date',
+            'jumlah_penumpang' => 'required|integer|min:1',
+            'is_pulang_pergi' => 'required|in:0,1'
+        ], [
+            'kota_awal.required' => 'Kota awal wajib diisi.',
+            'kota_tujuan.required' => 'Kota tujuan wajib diisi.',
+            'date_pergi.required' => 'Tanggal pergi wajib diisi.',
+            'date_pergi.date' => 'Format tanggal pergi tidak valid.',
+            'jumlah_penumpang.required' => 'Jumlah penumpang wajib diisi.',
+            'jumlah_penumpang.integer' => 'Jumlah penumpang harus berupa angka.',
+            'jumlah_penumpang.min' => 'Jumlah penumpang minimal 1.',
+            'is_pulang_pergi.required' => 'Pilihan pulang pergi wajib diisi.',
+            'is_pulang_pergi.in' => 'Pilihan pulang pergi tidak valid.'
+        ]);
+
         $date = $request->date_pergi ?? now()->format('Y-m-d');
         $date_pulang = $request->date_pulang ?? null;
         $qty = $request->jumlah_penumpang ?: 1;
         $pp = $request->is_pulang_pergi ?? 0;
         $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
 
-        // --- Price parsing ---
+        // Get route relationships for filtering
+        $routes = BusDeparture::with('from', 'to')->get();
+        $routeData = [];
+        foreach ($routes as $route) {
+            $from = $route->from->city_name ?? '';
+            $to = $route->to->city_name ?? '';
+
+            if ($from && $to) {
+                if (!isset($routeData['departures'][$from])) {
+                    $routeData['departures'][$from] = [];
+                }
+                if (!in_array($to, $routeData['departures'][$from])) {
+                    $routeData['departures'][$from][] = $to;
+                }
+                if (!isset($routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to] = [];
+                }
+                if (!in_array($from, $routeData['destinations'][$to])) {
+                    $routeData['destinations'][$to][] = $from;
+                }
+            }
+        }
+
+        // Parse price if provided
         $price = null;
-        if ($request->has('price') && is_numeric(str_replace(['k', 'K', '.'], '', $request->price))) {
+        if ($request->price) {
             $cleanInput = str_replace(['k', 'K', '.', ','], '', $request->price);
             $price = (int) $cleanInput;
             if (stripos($request->price, 'k') !== false) {
@@ -362,35 +468,75 @@ class BusTravelController extends Controller
             }
         }
 
-        // --- Time range parsing ---
+        // Parse time range if provided
         $timeRange = null;
-        if ($request->has('time') && $this->isTimeSearch($request->time)) {
+        if ($request->time) {
             $timeRange = $this->calculateTimeRange($request->time);
         }
 
-        // --- Facility search terms ---
+        // Parse facility search terms
         $facilityTerms = [];
-        if ($request->has('facility') && $this->isFacilitySearch($request->facility)) {
+        if ($request->facility) {
             $facilityTerms = $this->getFacilitySearchTerms($request->facility);
         }
 
-        // --- Query Departures (Pergi) ---
-        $pergi = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
-            ->has('busTravel')
-            ->when($request->kota_awal, fn($q) =>
-                $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_awal . '%'))
-            )
-            ->when($request->kota_tujuan, fn($q) =>
-                $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_tujuan . '%'))
-            )
-            ->when($selected_agent, function ($q, $a) {
-                $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a));
-            })
+        // --- BASE QUERY BUILDER ---
+        $baseQuery = function () use ($request, $date, $date_pulang, $pp) {
+            $dayOfWeekPergi = $date ? date('w', strtotime($date)) : null;
+            $dayOfWeekPulang = $date_pulang ? date('w', strtotime($date_pulang)) : null;
+            $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+
+            $pergiQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
+                ->has('busTravel')
+                ->when($request->kota_awal, fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%')))
+                ->when($request->kota_tujuan, fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
+                ->when($date, function ($q) use ($date, $dayOfWeekPergi, $dayNames) {
+                    $q->where(function ($query) use ($date, $dayOfWeekPergi, $dayNames) {
+                        $query->where('departure_date', $date)
+                            ->orWhere(function ($subQuery) use ($dayOfWeekPergi, $dayNames) {
+                                $subQuery->whereNull('departure_date')
+                                    ->where('days', 'like', '%' . $dayNames[$dayOfWeekPergi] . '%');
+                            });
+                    });
+                });
+
+            $pulangQuery = null;
+            if ((int)$pp === 1) {
+                $pulangQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
+                    ->has('busTravel')
+                    ->when($request->kota_awal, fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_awal . '%')))
+                    ->when($request->kota_tujuan, fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
+                    ->when($date_pulang, function ($q) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
+                        $q->where(function ($query) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
+                            $query->where('departure_date', $date_pulang)
+                                ->orWhere(function ($subQuery) use ($dayOfWeekPulang, $dayNames) {
+                                    $subQuery->whereNull('departure_date')
+                                        ->where('days', 'like', '%' . $dayNames[$dayOfWeekPulang] . '%');
+                                });
+                        });
+                    });
+            }
+            return [$pergiQuery, $pulangQuery];
+        };
+
+        // --- GET ALL AGENTS FOR THE CURRENT ROUTE ---
+        list($pergiQueryForAgents, $pulangQueryForAgents) = $baseQuery();
+        $pergiForAgents = $pergiQueryForAgents->get();
+        $pulangForAgents = $pulangQueryForAgents ? $pulangQueryForAgents->get() : collect();
+        $availableAgentIds = $pergiForAgents->pluck('busTravel.busTravel.id')
+            ->merge($pulangForAgents->pluck('busTravel.busTravel.id'))
+            ->unique()
+            ->filter();
+        $agents = BusTravels::Active()
+            ->whereIn('id', $availableAgentIds)
+            ->get();
+
+        // --- GET FILTERED RESULTS ---
+        list($pergiQuery, $pulangQuery) = $baseQuery();
+        $pergi = $pergiQuery
+            ->when($selected_agent, fn($q, $a) => $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a)))
             ->when($price, fn($q) => $q->where('price', '<=', $price))
-            ->when($timeRange, fn($q) =>
-                $q->whereTime('departure_time', '>=', $timeRange['start'])
-                ->whereTime('departure_time', '<=', $timeRange['end'])
-            )
+            ->when($timeRange, fn($q) => $q->whereTime('departure_time', '>=', $timeRange['start'])->whereTime('departure_time', '<=', $timeRange['end']))
             ->when(!empty($facilityTerms), function ($q) use ($facilityTerms) {
                 $q->whereHas('busTravel', function ($bus) use ($facilityTerms) {
                     foreach ($facilityTerms as $term) {
@@ -402,25 +548,12 @@ class BusTravelController extends Controller
             })
             ->get();
 
-        // --- Query Departures (Pulang) ---
         $pulang = [];
-        if ((int)$pp === 1) {
-            $pulang = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
-                ->has('busTravel')
-                ->when($request->kota_awal, fn($q) =>
-                    $q->whereHas('to', fn($t) => $t->where('name', 'like', '%' . $request->kota_awal . '%'))
-                )
-                ->when($request->kota_tujuan, fn($q) =>
-                    $q->whereHas('from', fn($f) => $f->where('name', 'like', '%' . $request->kota_tujuan . '%'))
-                )
-                ->when($selected_agent, function ($q, $a) {
-                    $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a));
-                })
+        if ($pulangQuery) {
+            $pulang = $pulangQuery
+                ->when($selected_agent, fn($q, $a) => $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a)))
                 ->when($price, fn($q) => $q->where('price', '<=', $price))
-                ->when($timeRange, fn($q) =>
-                    $q->whereTime('departure_time', '>=', $timeRange['start'])
-                    ->whereTime('departure_time', '<=', $timeRange['end'])
-                )
+                ->when($timeRange, fn($q) => $q->whereTime('departure_time', '>=', $timeRange['start'])->whereTime('departure_time', '<=', $timeRange['end']))
                 ->when(!empty($facilityTerms), function ($q) use ($facilityTerms) {
                     $q->whereHas('busTravel', function ($bus) use ($facilityTerms) {
                         foreach ($facilityTerms as $term) {
@@ -433,15 +566,22 @@ class BusTravelController extends Controller
                 ->get();
         }
 
-        // --- Get only agents that actually have departures matching filters ---
-        $availableAgentIds = $pergi->pluck('busTravel.busTravel.id')
-            ->merge(collect($pulang)->pluck('busTravel.busTravel.id'))
-            ->unique()
-            ->filter();
+        // Format the bus data
+        $formattedPergi = $this->formatBus($pergi, $date);
+        $formattedPulang = $this->formatBus($pulang, $date_pulang);
 
-        $agents = BusTravels::Active()
-            ->when($availableAgentIds->isNotEmpty(), fn($q) => $q->whereIn('id', $availableAgentIds))
-            ->get();
+        // Check if there are no departures for the selected date but the route exists
+        $noDeparturesFound = false;
+        if (empty($formattedPergi) && $request->kota_awal && $request->kota_tujuan && $date) {
+            $anyRouteDepartures = BusDeparture::with('from', 'to')
+                ->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%'))
+                ->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
+                ->exists();
+
+            if ($anyRouteDepartures) {
+                $noDeparturesFound = true;
+            }
+        }
 
         $newData = [
             'agent' => $agents,
@@ -455,9 +595,11 @@ class BusTravelController extends Controller
             'date_pergi' => $request->date_pergi,
             'date_pulang' => $request->date_pulang,
             'jumlah_penumpang' => $qty,
-            'pergi' => $this->formatBus($pergi, $date),
-            'pulang' => $this->formatBus($pulang, $date_pulang),
+            'pergi' => $formattedPergi,
+            'pulang' => $formattedPulang,
             'city' => BusRoute::pluck('name', 'name'),
+            'routeData' => $routeData,
+            'noDeparturesFound' => $noDeparturesFound,
         ];
 
         return view('pagesv2.bus_travel.search_result', $newData);
@@ -477,10 +619,10 @@ class BusTravelController extends Controller
         $pergi = BusDeparture::with('busTravel', 'from', 'to')
             ->has('busTravel')
             ->whereHas('from', function ($f) use ($from) {
-                $f->where('name', 'like', $from);
+                $f->where('city_name', 'like', $from);
             })
             ->whereHas('to', function ($t) use ($to) {
-                $t->where('name', 'like', $to);
+                $t->where('city_name', 'like', $to);
             })
             ->when($selected_agent, function ($q, $a) {
                 $q->whereHas('busTravel.busTravel', function ($b2) use ($a) {
@@ -495,10 +637,10 @@ class BusTravelController extends Controller
             $pulang = BusDeparture::with('busTravel', 'from', 'to')
                 ->has('busTravel')
                 ->whereHas('to', function ($f) use ($from) {
-                    $f->where('name', 'like', $from);
+                    $f->where('city_name', 'like', $from);
                 })
                 ->whereHas('from', function ($t) use ($to) {
-                    $t->where('name', 'like', $to);
+                    $t->where('city_name', 'like', $to);
                 })
                 ->when($selected_agent, function ($q, $a) {
                     $q->whereHas('busTravel', function ($b) use ($a) {
@@ -555,9 +697,11 @@ class BusTravelController extends Controller
                 'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
                 'name' => $val['busTravel']['name'] ?? 'Deleted business',
                 'class' => $val['busTravel']['class'],
-                'departure_point' => $val['from']['name'] ?? 'Deleted point',
+                'departure_point' => $val['from']['city_name'] ?? 'Deleted point',
+                'titik_naik' => $val['titik_naik'],
                 'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
-                'arrival_point' => $val['to']['name'] ?? 'Deleted point',
+                'arrival_point' => $val['to']['city_name'] ?? 'Deleted point',
+                'titik_turun' => $val['titik_turun'],
                 'arrival_time' => Carbon::parse($val['departure_time'])->addHours($val['duration'] ?? 1)->format('H:i'),
                 'price' => $val['price'],
                 'duration' => $val['duration'],
@@ -629,7 +773,8 @@ class BusTravelController extends Controller
 
     public function request_transaction(Request $request)
     {
-        for ($i = 1; $i < $request->jumlah_penumpang; $i++) {
+        // Fix the loop condition - should be <= not <
+        for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
             $data_kursi = [
                 'id_costumer' => auth()->user()->id,
                 'id_departure' => $request->ticket_pergi_id,
@@ -637,7 +782,7 @@ class BusTravelController extends Controller
                 'is_pulang_pergi' => $request->is_pulang_pergi,
                 'date_pergi' => $request->date_pergi,
                 'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
-                'kursi_pergi' => $request->{"kursi_penumpang_$i"},
+                'kursi_pergi' => $request->{"kursi_penumpang_$i"} ?? null,
                 'kursi_pulang' => '',
             ];
 
@@ -708,7 +853,12 @@ class BusTravelController extends Controller
                 );
             }
 
-            $pulang = BusDeparture::with('busTravel', 'from', 'to')->find($data['ticket_pulang_id']);
+            // Ensure proper relationship loading
+            $pulang = BusDeparture::with([
+                'busTravel.busTravel',
+                'from:id,city_name',
+                'to:id,city_name'
+            ])->find($data['ticket_pulang_id']);
 
             if (!$pulang) {
                 return ResponseFormatter::error(
@@ -720,20 +870,35 @@ class BusTravelController extends Controller
                 );
             }
 
-            $dateTimePulang = $data['date_pulang'] . ' ' . $pulang['departure_time'];
+            $dateTimePulang = $data['date_pulang'] . ' ' . $pulang->departure_time;
 
             $berangkatPulang =  Carbon::parse($dateTimePulang)->format('Y-m-d H:i');
 
-            $total += $pulang['price'];
+            $total += $pulang->price;
         } else {
             $berangkatPulang = null;
         }
 
         $data = $request->all();
 
-        $pergi = BusDeparture::with('busTravel', 'from', 'to')->find($data['ticket_pergi_id']);
-        $dateTimePergi = $data['date_pergi'] . ' ' . $pergi['departure_time'];
+        // Ensure proper relationship loading with specific columns
+        $pergi = BusDeparture::with([
+            'busTravel.busTravel:id,business_name',
+            'from:id,city_name',
+            'to:id,city_name'
+        ])->find($data['ticket_pergi_id']);
 
+        if (!$pergi) {
+            return ResponseFormatter::error(
+                [
+                    'message' => 'Paket tiket pergi tidak ditemukan',
+                ],
+                'Bus & Travel process failed',
+                500,
+            );
+        }
+
+        $dateTimePergi = $data['date_pergi'] . ' ' . $pergi->departure_time;
         $berangkat =  Carbon::parse($dateTimePergi)->format('Y-m-d H:i');
 
         $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('bus_travel') . '-' . time();
@@ -749,8 +914,7 @@ class BusTravelController extends Controller
 
         $kali = (int)$data['is_pulang_pergi'] == 1 ? 2 : 1;
 
-        $total += $pergi['price'];
-
+        $total += $pergi->price;
 
         $amount = $total * $data['jumlah_penumpang'];
 
@@ -783,9 +947,12 @@ class BusTravelController extends Controller
             ];
         }
 
-        $business = $pergi['busTravel']['busTravel']['business_name'] ?? 'Deleted business';
+        // Safely access relationship data
+        $business = $pergi->busTravel->busTravel->business_name ?? 'Deleted business';
+        $fromCity = $pergi->from->city_name ?? 'Unknown';
+        $toCity = $pergi->to->city_name ?? 'Unknown';
 
-        $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $pergi['from']['name'] . ' - ' . $pergi['to']['name'] . ' untuk tanggal ' . $berangkat;
+        $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $fromCity . ' - ' . $toCity . ' untuk tanggal ' . $berangkat;
 
         // Create xendit
         $payoutsXendit = $this->xendit->create([
@@ -812,7 +979,7 @@ class BusTravelController extends Controller
         ]);
 
         // true buat trans
-        DB::transaction(function () use ($data, $berangkat, $berangkatPulang, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $pergi, $pulang, $saldoPointCustomer) {
+        DB::transaction(function () use ($data, $berangkat, $berangkatPulang, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $pergi, $pulang, $saldoPointCustomer, $fromCity, $toCity) {
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'BNT-' . time(),
@@ -833,48 +1000,52 @@ class BusTravelController extends Controller
             $booking_id = \Illuminate\Support\Str::random(6);
 
             for ($i = 1; $i <= $data['jumlah_penumpang']; $i++) {
+                // Safely access relationship data
+                $pergiFrom = $pergi->from->city_name ?? 'Unknown';
+                $pergiTo = $pergi->to->city_name ?? 'Unknown';
 
                 DetailTransactionBus::create([
                     "transaction_id" => $storeTransaction->id,
-                    "bus_travel_id" => $pergi['busTravel']['busTravel']['id'],
-                    "bus_travel_has_bus_id" => $pergi['busTravel']['id'],
-                    "bus_departure_id" => $pergi['id'],
+                    "bus_travel_id" => $pergi->busTravel->busTravel->id,
+                    "bus_travel_has_bus_id" => $pergi->busTravel->id,
+                    "bus_departure_id" => $pergi->id,
                     "booking_id" => $booking_id,
                     "departure_time" => $berangkat,
-                    "from" => $pergi['from']['name'],
-                    "to" => $pergi['to']['name'],
-                    "price" => $pergi['price'],
+                    "from" => $pergiFrom,
+                    "to" => $pergiTo,
+                    "price" => $pergi->price,
                     "fee_admin" => $fees[0]['value'] / $data['jumlah_penumpang'],
                     "kode_unik" => $kode_unik,
-                    "customer_name" => $request['customer_call_' . $i] . ' ' . $request['customer_name_' . $i] ?? '-',
-                    "customer_phone" => $request['customer_phone_' . $i] ?? '-',
-                    "customer_email" => $request['customer_email_' . $i] ?? '-',
+                    "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
+                    "customer_phone" => $request['customer_phone_' . $i] ?? '',
+                    "customer_email" => $request['customer_email_' . $i] ?? '',
                 ]);
 
                 if ((int)$data['is_pulang_pergi'] == 1) {
+                    // Safely access relationship data for pulang
+                    $pulangFrom = $pulang->from->city_name ?? 'Unknown';
+                    $pulangTo = $pulang->to->city_name ?? 'Unknown';
+
                     DetailTransactionBus::create([
                         "transaction_id" => $storeTransaction->id,
-                        "bus_travel_id" => $pulang['busTravel']['busTravel']['id'],
-                        "bus_travel_has_bus_id" => $pulang['busTravel']['id'],
-                        "bus_departure_id" => $pulang['id'],
+                        "bus_travel_id" => $pulang->busTravel->busTravel->id,
+                        "bus_travel_has_bus_id" => $pulang->busTravel->id,
+                        "bus_departure_id" => $pulang->id,
                         "booking_id" => $booking_id,
                         "departure_time" => $berangkatPulang,
-                        "from" => $pulang['from']['name'],
-                        "to" => $pulang['to']['name'],
-                        "price" => $pulang['price'],
+                        "from" => $pulangFrom,
+                        "to" => $pulangTo,
+                        "price" => $pulang->price,
                         "fee_admin" => 0,
-                        // "duration" => $data['duration'],
                         "kode_unik" => $kode_unik,
-                        "customer_name" => $request['customer_call_' . $i] . ' ' . $request['customer_name_' . $i] ?? '-',
-                        "customer_phone" => $request['customer_phone_' . $i] ?? '-',
-                        "customer_email" => $request['customer_email_' . $i] ?? '-',
+                        "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
+                        "customer_phone" => $request['customer_phone_' . $i] ?? '',
+                        "customer_email" => $request['customer_email_' . $i] ?? '',
                     ]);
                 }
             }
         });
 
-        // return ResponseFormatter::success($hotel, 'Payment successfully created');
-        // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
         return redirect()->away($payoutsXendit['invoice_url']);
     }
 }

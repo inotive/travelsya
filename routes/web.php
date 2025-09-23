@@ -271,6 +271,7 @@ Route::group(['prefix' => 'bus_travel'], function () {
     Route::get('/detail/{departure_id}/{kota_awal}/{kota_tujuan}/{is_pulang_pergi}/{jumlah_penumpang}/{date_pergi?}/{date_pulang?}', [BusTravelController::class, 'detail'])->name('bus_travel.detail');
     Route::post('/order', [BusTravelController::class, 'order'])->name('bus_travel.order');
     Route::post('/request_transaction', [BusTravelController::class, 'request_transaction'])->name('bus_travel.request_transaction');
+    Route::get('/popular_search/{id}', [BusTravelController::class, 'popularSearch'])->name('bus_travel.popular_search');
 });
 
 
@@ -493,7 +494,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('kendaraan-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'store'])->name('partner.kendaraan.create');
         Route::delete('kendaraan-delete/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'destroy'])->name('partner.kendaraan.delete');
         Route::get('daftar-kendaraan/show/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'show'])->name('partner.show.kendaraan');
-        Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
+        Route::put('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
         Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
         Route::get('daftar-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'index'])->name('partner.daftar.bus-travel');
@@ -517,7 +518,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         // Route::delete('bus-routes/delete/{id}', [\App\Http\Controllers\Partner\BusRouteController::class, 'destroy'])->name('partner.bus.routes.delete');
 
         // Bus departures management
-        Route::get('bus-departures', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures');
+        Route::get('bus-departures', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index2'])->name('partner.bus.departures');
         Route::get('bus-departures/bus/{busId}', [\App\Http\Controllers\Partner\BusDepartureController::class, 'index'])->name('partner.bus.departures.bus');
         Route::post('bus-departures/store', [\App\Http\Controllers\Partner\BusDepartureController::class, 'store'])->name('partner.bus.departures.store');
         Route::post('bus-departures/update', [\App\Http\Controllers\Partner\BusDepartureController::class, 'update'])->name('partner.bus.departures.update');

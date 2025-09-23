@@ -11,14 +11,16 @@
             <div class="card-body">
                 <form action="{{ route('partner.kendaraan.update', $car->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <!--begin::Input group-->
                     <div class="row g-9 mb-8">
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Bisnis</label>
                             <select class="form-control" name="car_rental_id" id="car_rental_id" required>
+                                <option value="">-- Pilih Bisnis --</option>
                                 @foreach ($car_rentals as $car_rental)
-                                    <option value="{{ $car_rental->id }}" {{ old('car_rental_id', $car->car_rental_id) === $car_rental->id }} >{{ $car_rental->business_name }}</option>
+                                    <option value="{{ $car_rental->id }}" {{ old('car_rental_id', $car->car_rental_id) == $car_rental->id ? 'selected' : '' }}>{{ $car_rental->business_name }}</option>
                                 @endforeach
                             </select>
                             @error('car_rental_id')
@@ -31,9 +33,9 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Merk</label>
                             <select class="form-control" id="brand_id" name="brand_id" required>
-                                {{-- <option value="">Pilih Merk</option> --}}
+                                <option value="">Pilih Merk</option>
                                 @foreach ($brands as $brand)
-                                    <option value="{{ $brand->id }}" {{ old('brand_id', $car->brand_id) === $brand->id }} >{{ $brand->name }}</option>
+                                    <option value="{{ $brand->id }}" {{ old('brand_id', $car->brand_id) == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
                                 @endforeach
                             </select>
                             @error('brand_id')
@@ -46,8 +48,9 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Model</label>
                             <select class="form-control" id="car_model_id" name="car_model_id" required>
+                                <option value="">Pilih Model</option>
                                 @foreach ($car_models as $car_model)
-                                    <option value="{{ $car_model->id }}" {{ old('car_model_id', $car->car_model_id) ===  $car_model->id ? 'selected' : '' }} >{{ $car_model->name }}</option>
+                                    <option value="{{ $car_model->id }}" {{ old('car_model_id', $car->car_model_id) == $car_model->id ? 'selected' : '' }}>{{ $car_model->name }}</option>
                                 @endforeach
                             </select>
                             @error('car_model_id')
@@ -60,12 +63,9 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tipe</label>
                             <select class="form-control" id="category" name="category" required>
-                                @php
-                                    $types = ['manual' => 'Manual', 'automatic' => 'Matic'];
-                                @endphp
-                                @foreach ($types as $key => $label)
-                                   <option value="{{ $key }}" {{ old('type') == $key ? 'selected' : '' }}>{{ $label }}</option>
-                                @endforeach
+                                <option value="">Pilih Tipe</option>
+                                <option value="manual" {{ old('category', $car->category) == 'manual' ? 'selected' : '' }}>Manual</option>
+                                <option value="automatic" {{ old('category', $car->category) == 'automatic' ? 'selected' : '' }}>Matic</option>
                             </select>
                             @error('category')
                                 <span class="text-danger mt-1" role="alert">
@@ -77,14 +77,9 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Kategori Rental</label>
                             <select class="form-control" id="category_rent" name="category_rent" required>
-                                @php
-                                    $categories = ['Lepas Kunci', 'Dengan Supir'];
-                                @endphp
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category }}" {{ old('category_rent', $car->category_rent) === $category ? 'selected' : '' }} >{{ $category }}</option>
-                                @endforeach
-                                <option value="Lepas Kunci">Lepas Kunci</option>
-                                <option value="Dengan Supir">Dengan Supir</option>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Lepas Kunci" {{ old('category_rent', $car->category_rent) == 'Lepas Kunci' ? 'selected' : '' }}>Lepas Kunci</option>
+                                <option value="Dengan Supir" {{ old('category_rent', $car->category_rent) == 'Dengan Supir' ? 'selected' : '' }}>Dengan Supir</option>
                             </select>
                             @error('category_rent')
                                 <span class="text-danger mt-1" role="alert">
@@ -99,8 +94,8 @@
                                 <span class="input-group-text" id="basic-addon1">Rp</span>
                                 <input type="text" class="form-control" id="rental_price_per_day_display"
                                     placeholder="Biaya Sewa" aria-label="rental_price_per_day_display"
-                                    aria-describedby="basic-addon1" required>
-                                <input type="hidden" id="rental_price_per_day" name="rental_price_per_day">
+                                    aria-describedby="basic-addon1" value="{{ old('rental_price_per_day_display', number_format($car->rental_price_per_day, 0, ',', '.')) }}" required>
+                                <input type="hidden" id="rental_price_per_day" name="rental_price_per_day" value="{{ old('rental_price_per_day', $car->rental_price_per_day) }}">
                             </div>
                             @error('rental_price_per_day')
                                 <span class="text-danger mt-1" role="alert">
@@ -112,6 +107,7 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tahun</label>
                             <select class="form-control" id="years" name="years" required>
+                                <option value="">Pilih Tahun</option>
                                 @php
                                     $currentYear = date('Y');
                                     $startYear = $currentYear - 20;
@@ -119,7 +115,7 @@
                                 @endphp
 
                                 @for ($year = $endYear; $year >= $startYear; $year--)
-                                    <option value="{{ $year }}" {{ old('years', $car->years) == $year ? 'selected' : ''}} >{{ $year }}</option>
+                                    <option value="{{ $year }}" {{ old('years', $car->years) == $year ? 'selected' : '' }}>{{ $year }}</option>
                                 @endfor
                             </select>
                             @error('years')
@@ -131,9 +127,19 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Jumlah Kursi</label>
-                            <input type="number" class="form-control" id="number_seats" name="number_seats" value="{{ $car->number_seats }}"
+                            <input type="number" class="form-control" id="number_seats" name="number_seats" value="{{ old('number_seats', $car->number_seats) }}"
                                 placeholder="Jumlah Kursi" required>
                             @error('number_seats')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="required fs-6 fw-semibold mb-2">Durasi (Hari)</label>
+                            <input type="number" class="form-control" name="duration" value="{{ old('duration', $car->duration) }}" placeholder="Contoh: 1" required min="1">
+                            @error('duration')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
@@ -153,8 +159,9 @@
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Status</label>
                             <select class="form-control" id="status" name="status" required>
-                                <option value="1" {{ $car->status === 1 ? 'selected' : '' }}>Aktif</option>
-                                <option value="0" {{ $car->status === 0 ? 'selected' : '' }}>Tidak Aktif</option>
+                                <option value="">Pilih Status</option>
+                                <option value="1" {{ old('status', $car->status) == '1' ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('status', $car->status) == '0' ? 'selected' : '' }}>Tidak Aktif</option>
                             </select>
                             @error('status')
                                 <span class="text-danger mt-1" role="alert">
@@ -165,7 +172,7 @@
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
-                            <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" required>{{ $car->description }}</textarea>
+                            <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" required>{{ old('description', $car->description) }}</textarea>
                             <small class="form-text text-muted">Maksimal 2000 karakter</small>
                             @error('description')
                                 <span class="text-danger mt-1" role="alert">
@@ -174,38 +181,74 @@
                             @enderror
                         </div>
 
-                        <!-- Existing Images -->
-                        @if($car->images && $car->images->count() > 0)
-                            <div class="col-md-12 mt-4">
-                                <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                                <div class="row">
-                                    @foreach($car->images as $image)
-                                        <div class="col-md-3 mb-3">
-                                            <div class="card">
-                                                <img src="{{ Storage::url('cars/' . $image->image_url) }}" class="card-img-top" alt="Image" style="height: 150px; object-fit: cover;">
-                                                <div class="card-body p-2">
-                                                    <input type="hidden" name="existing_images[]" value="{{ $image->id }}">
-                                                    <input type="hidden" name="existing_main_image[]" value="{{ $image->is_main ? '1' : '0' }}" class="existing-main-image-flag">
-                                                    <button type="button" class="btn btn-sm {{ $image->is_main ? 'btn-success' : 'btn-primary' }} w-100 set-existing-main-image">
-                                                        {{ $image->is_main ? 'Gambar Utama' : 'Jadikan Utama' }}
-                                                    </button>
+                        <!-- Kelola Gambar -->
+                        <div class="col-md-12 mt-4">
+                            <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
+
+                            @php
+                                // Safely handle the images relationship. If it's null, treat as an empty collection.
+                                $images = $car->images ?? collect();
+                                $mainImage = $images->firstWhere('main', 1);
+                                $additionalImages = $images->where('main', 0);
+                            @endphp
+
+                            <!-- Main Image Section -->
+                            <div class="mb-5 p-4 border rounded">
+                                <h6 class="mb-3">Gambar Utama</h6>
+                                @if($mainImage)
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-6 mb-4">
+                                            <div class="card h-100">
+                                                <img src="{{ Storage::url($mainImage->image_url) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama">
+                                                <div class="card-body text-center p-3">
+                                                    <p class="card-text text-muted text-truncate" title="{{ basename($mainImage->image_url) }}">{{ basename($mainImage->image_url) }}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    </div>
+                                    <div class="mt-3">
+                                        <label class="form-label">Ganti Gambar Utama</label>
+                                        <input type="file" class="form-control" name="main_image" accept="image/*">
+                                        <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
+                                    </div>
+                                @else
+                                    <p>Belum ada gambar utama. Silakan unggah.</p>
+                                    <input type="file" class="form-control" name="main_image" accept="image/*">
+                                @endif
+                            </div>
+
+                            <!-- Additional Images Section -->
+                            <div class="mb-5 p-4 border rounded">
+                                <h6 class="mb-3">Gambar Tambahan</h6>
+                                <div class="row">
+                                    @if(count($additionalImages) > 0)
+                                        @foreach($additionalImages as $image)
+                                            <div class="col-md-4 col-sm-6 mb-4 existing-image-card">
+                                                <div class="card h-100">
+                                                    <img src="{{ Storage::url($image->image_url) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Image">
+                                                    <div class="card-body text-center p-3">
+                                                        <p class="card-text text-muted text-truncate" title="{{ basename($image->image_url) }}">{{ basename($image->image_url) }}</p>
+                                                        <button type="button" class="btn btn-sm btn-danger delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="col-12">
+                                            <p class="text-muted">Tidak ada gambar tambahan.</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                        @endif
 
-                        <div class="col-md-12 mt-4">
-                            <label class="fs-6 fw-semibold mb-2">Gambar Kendaraan</label>
-                            <div class="input-group mb-3">
-                                <input type="file" class="form-control" name="images[]" accept="image/*">
-                                <input type="hidden" name="main_image[]" value="1">
-                                <label class="input-group-text bg-primary text-white">Gambar Utama</label>
+                            <!-- Add More Additional Images -->
+                            <div class="p-4 border rounded">
+                                <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
+                                <div id="additional-images-container">
+                                    <!-- New image inputs will be appended here -->
+                                </div>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">+ Tambah Gambar Tambahan</button>
                             </div>
-                            <div id="additional-images"></div>
-                            <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-images">+ Tambah Gambar</button>
                         </div>
                     </div>
                     <!--end::Input group-->
@@ -213,7 +256,7 @@
                     <div class="text-center">
                         <div class="row">
                             <div class="col-6 mb-2">
-                                <button type="reset" class="btn btn-light w-100" onclick="history.back()">Batal</button>
+                                <a href="{{ route('partner.daftar.kendaraan') }}" class="btn btn-light w-100">Batal</a>
                             </div>
                             <div class="col-6">
                                 <button type="submit" class="btn btn-primary w-100">
@@ -231,40 +274,34 @@
 @endsection
 
 @push('add-script')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-
         $(document).ready(function() {
+            // === Car Model Logic (Existing) ===
+            var savedModelId = {{ old('car_model_id', $car->car_model_id) ?? 'null' }};
             var selectedBrandId = $('#brand_id').val();
             if (selectedBrandId) {
-                loadCarModels(selectedBrandId);
+                loadCarModels(selectedBrandId, savedModelId);
             }
-
             $('#brand_id').on('change', function() {
                 var brand_id = $(this).val();
                 loadCarModels(brand_id);
             });
-
-            function loadCarModels(brand_id) {
+            function loadCarModels(brand_id, selectedModelId = null) {
                 if (brand_id) {
                     $('#car_model_id').prop('disabled', false);
                     $('#car_model_id').empty().append('<option value="">Memuat model...</option>');
-
                     $.ajax({
-                        url: '{{ url('/partner/get-model-kendaraan') }}',
+                        url: '{{ url("/partner/get-model-kendaraan") }}',
                         type: 'GET',
-                        data: {
-                            brand_id: brand_id
-                        },
+                        data: { brand_id: brand_id },
                         success: function(response) {
                             $('#car_model_id').empty();
-
-                            $('#car_model_id').append(
-                                '<option selected disabled value="">Pilih Model</option>');
-
+                            $('#car_model_id').append('<option value="">Pilih Model</option>');
                             if (response.models && response.models.length > 0) {
                                 $.each(response.models, function(index, model) {
-                                    $('#car_model_id').append('<option value="' + model.id + '">' +
-                                        model.name + '</option>');
+                                    var isSelected = (model.id == selectedModelId) ? 'selected' : '';
+                                    $('#car_model_id').append('<option value="' + model.id + '" ' + isSelected + '>' + model.name + '</option>');
                                 });
                             } else {
                                 $('#car_model_id').append('<option disabled>Model tidak tersedia</option>');
@@ -272,69 +309,62 @@
                         },
                         error: function(xhr, status, error) {
                             console.error("Error fetching models:", error);
-                            $('#car_model_id').empty().append('<option selected disabled value="">Error memuat model</option>');
+                            $('#car_model_id').empty().append('<option value="">Error memuat model</option>');
                             toastr.error("Terjadi kesalahan saat mengambil data model. Silakan coba lagi.");
                         }
                     });
                 } else {
                     $('#car_model_id').prop('disabled', true);
                     $('#car_model_id').empty();
-                    $('#car_model_id').append('<option selected disabled value="">Pilih Model</option>');
+                    $('#car_model_id').append('<option value="">Pilih Model</option>');
                 }
             }
 
-            // Handle adding additional images
-            $('#add-more-images').click(function() {
-                $('#additional-images').append(`
+            // === New Image Management Logic ===
+            $('#add-more-additional-images').click(function() {
+                $('#additional-images-container').append(`
                     <div class="input-group mb-3">
-                        <input type="file" class="form-control" name="images[]" accept="image/*">
-                        <input type="hidden" name="main_image[]" value="0" class="main-image-flag">
-                        <label class="input-group-text bg-secondary text-white">Gambar Tambahan</label>
-                        <button type="button" class="btn btn-primary set-main-image">Jadikan Utama</button>
-                        <button type="button" class="btn btn-danger remove-image">Hapus</button>
+                        <input type="file" class="form-control" name="additional_images[]" accept="image/*" required>
+                        <button type="button" class="btn btn-outline-danger remove-additional-image">Hapus</button>
                     </div>
                 `);
             });
 
-            // Handle removing additional images
-            $(document).on('click', '.remove-image', function() {
+            $(document).on('click', '.remove-additional-image', function() {
                 $(this).closest('.input-group').remove();
             });
 
-            // Handle setting main image
-            $(document).on('click', '.set-main-image', function() {
-                // Reset all flags to 0
-                $('.main-image-flag').val('0');
-                $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
+            $(document).on('click', '.delete-existing-image', function() {
+                const imageId = $(this).data('image-id');
+                const imageCard = $(this).closest('.existing-image-card');
 
-                // Set current flag to 1
-                $(this).closest('.input-group').find('.main-image-flag').val('1');
-                $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
-            });
-
-            // Handle setting existing image as main
-            $(document).on('click', '.set-existing-main-image', function() {
-                // Reset all flags to 0
-                $('.main-image-flag').val('0');
-                $('.existing-main-image-flag').val('0');
-                $('.set-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
-                $('.set-existing-main-image').removeClass('btn-success').addClass('btn-primary').text('Jadikan Utama');
-
-                // Set current flag to 1
-                $(this).closest('.card-body').find('.existing-main-image-flag').val('1');
-                $(this).removeClass('btn-primary').addClass('btn-success').text('Gambar Utama');
+                Swal.fire({
+                    title: "Apakah Anda yakin?",
+                    text: "Gambar ini akan ditandai untuk dihapus saat disimpan.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: "Batal",
+                    confirmButtonText: "Ya, Hapus",
+                    confirmButtonColor: '#d33',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('form').append(`<input type="hidden" name="deleted_images[]" value="${imageId}">`);
+                        imageCard.remove();
+                        Swal.fire('Ditandai!', 'Gambar akan dihapus saat Anda menyimpan perubahan.', 'success');
+                    }
+                });
             });
         });
 
+        // === Price Formatting Logic (Existing) ===
         function formatRupiah(amount) {
-        return amount.toString().replace(/[^0-9]/g, '')
-            .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            return amount.toString().replace(/[^0-9]/g, '')
+                .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
         const rentalInput = document.getElementById('rental_price_per_day_display');
         const rentalRawInput = document.getElementById('rental_price_per_day');
-
-        // Ambil data dari blade
         const rawRentalPrice = @json(old('rental_price_per_day', $car->rental_price_per_day));
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -350,7 +380,6 @@
             rentalInput.value = formatRupiah(value);
             rentalRawInput.value = value;
         });
-
     </script>
 @endpush
 

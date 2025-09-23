@@ -231,10 +231,7 @@
                 {{-- <div class="d-flex align-items-center me-lg-n2 ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                 <a class="text-dark" href="{{route('login')}}">Login</a>
             </div> --}}
-
-                <a href="{{ route('login') }}"
-                    class="btn btn-outline btn-outline-secondary text-dark btn-active-light-secondary me-4">Masuk</a>
-                <a href="{{ route('register') }}" class="btn btn-danger fw-semibold bg-main">Daftar</a>
+                <a href="{{ route('login') }}" class="btn btn-danger fw-semibold bg-main">Login</a>
             @endif
             <!--end::User -->
 
