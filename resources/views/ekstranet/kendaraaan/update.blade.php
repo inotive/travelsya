@@ -184,7 +184,7 @@
                         <!-- Kelola Gambar -->
                         <div class="col-md-12 mt-4">
                             <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
-                            
+
                             @php
                                 // Safely handle the images relationship. If it's null, treat as an empty collection.
                                 $images = $car->images ?? collect();
@@ -240,7 +240,7 @@
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <!-- Add More Additional Images -->
                             <div class="p-4 border rounded">
                                 <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
@@ -337,7 +337,7 @@
             $(document).on('click', '.delete-existing-image', function() {
                 const imageId = $(this).data('image-id');
                 const imageCard = $(this).closest('.existing-image-card');
-                
+
                 Swal.fire({
                     title: "Apakah Anda yakin?",
                     text: "Gambar ini akan ditandai untuk dihapus saat disimpan.",
