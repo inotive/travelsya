@@ -1,4 +1,4 @@
-@extends('admin.layout', ['title' => 'Daftar Merek Kendaraan', 'url' => ''])
+@extends('admin.layout', ['title' => 'Daftar Tipe Kendaraan', 'url' => ''])
 
 @section('content-admin')
     @if(session('success'))
@@ -21,7 +21,7 @@
         <div class="card-header pt-5">
             <div class="card-toolbar">
                 <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Merek Kendaraan</a>
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Tipe Kendaraan</a>
             </div>
         </div>
         <!--end::Header-->
@@ -35,8 +35,8 @@
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th class="text-center" style="width: 10%;">No.</th>
-                            <th class="text-center" style="width: 20%;">Tipe</th>
-                            <th class="text-center" style="width: 30%;">Merek Kendaraan</th>
+                            <th class="text-center" style="width: 20%;">Merek</th>
+                            <th class="text-center" style="width: 30%;">Tipe Kendaraan</th>
                             <th class="text-center" style="width: 20%;">Gambar</th>
                             <th class="text-center" style="width: 20%;">Action</th>
                         </tr>
@@ -113,14 +113,14 @@
                                             @csrf
                                             @method('DELETE')
                                             <div class="modal-header">
-                                                <h2 class="fw-bold">DELETE Merek Kendaraan</h2>
+                                                <h2 class="fw-bold">DELETE Tipe Kendaraan</h2>
                                                 <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
                                                     data-bs-dismiss="modal">
                                                     <i class="ki-duotone ki-cross fs-1"></i>
                                                 </button>
                                             </div>
                                             <div class="modal-body py-10 px-lg-17">
-                                                <p>Anda yakin ingin menghapus data Merek Kendaraan dengan nama {{ $carModel->name }}?
+                                                <p>Anda yakin ingin menghapus data Tipe Kendaraan dengan nama {{ $carModel->name }}?
                                                 </p>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
@@ -160,11 +160,11 @@
                         action="{{ route('admin.car-model.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Create Merek Kendaraan</h1>
+                            <h1 class="mb-3">Create Tipe Kendaraan</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Gambar Merek Kendaraan</label>
+                                <label class="required fs-6 fw-semibold mb-2">Gambar Tipe Kendaraan</label>
                                 <div id="create-image-preview" class="mb-3"></div>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" required accept="image/*" id="create-image-input">
                                 @error('image')
@@ -175,9 +175,9 @@
                                 <div class="form-text">Format yang didukung: JPG, PNG, GIF, SVG. Maksimal 2MB</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Merek</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    placeholder="Masukan nama merek" name="name" value="{{ old('name') }}" />
+                                    placeholder="Masukan nama tipe" name="name" value="{{ old('name') }}" />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -185,10 +185,10 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Tipe</label>
+                                <label class="required fs-6 fw-semibold mb-2">Merek</label>
                                 <select class="form-select form-select-solid @error('brand_id') is-invalid @enderror"
                                     name="brand_id">
-                                    <option value="">Pilih Tipe</option>
+                                    <option value="">Pilih Merek</option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}" {{ old('brand_id') == $brand->id ? 'selected' : '' }}>
                                             {{ $brand->name }}
@@ -242,11 +242,11 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Edit Merek Kendaraan</h1>
+                            <h1 class="mb-3">Edit Tipe Kendaraan</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="fs-6 fw-semibold mb-2">Gambar Merek Kendaraan</label>
+                                <label class="fs-6 fw-semibold mb-2">Gambar Tipe Kendaraan</label>
                                 <div id="current-image" class="mb-3"></div>
                                 <div id="edit-image-preview" class="mb-3"></div>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image" accept="image/*" id="edit-image-input">
@@ -258,9 +258,9 @@
                                 <div class="form-text">Format yang didukung: JPG, PNG, GIF, SVG. Maksimal 2MB. Kosongkan jika tidak ingin mengubah gambar.</div>
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Merek</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    id="edit-name" placeholder="Masukan nama merek" name="name" />
+                                    id="edit-name" placeholder="Masukan nama tipe" name="name" />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -268,10 +268,10 @@
                                 @enderror
                             </div>
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Tipe</label>
+                                <label class="required fs-6 fw-semibold mb-2">Merek</label>
                                 <select class="form-select form-select-solid @error('brand_id') is-invalid @enderror"
                                     name="brand_id" id="edit-brand-id">
-                                    <option value="">Pilih Tipe</option>
+                                    <option value="">Pilih Merek</option>
                                     @foreach($brands as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
@@ -475,19 +475,19 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Merek Kendaraan harus diisi!');
+                        alert('Nama Tipe Kendaraan harus diisi!');
                         return false;
                     }
 
                     if (brandId === '') {
                         e.preventDefault();
-                        alert('Tipe harus dipilih!');
+                        alert('Merek harus dipilih!');
                         return false;
                     }
 
                     if (image === 0) {
                         e.preventDefault();
-                        alert('Gambar Merek Kendaraan harus diisi!');
+                        alert('Gambar Tipe Kendaraan harus diisi!');
                         return false;
                     }
                 });
@@ -498,13 +498,13 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Merek Kendaraan harus diisi!');
+                        alert('Nama Tipe Kendaraan harus diisi!');
                         return false;
                     }
 
                     if (brandId === '') {
                         e.preventDefault();
-                        alert('Tipe harus dipilih!');
+                        alert('Merek harus dipilih!');
                         return false;
                     }
                 });

@@ -1,4 +1,4 @@
-@extends('admin.layout', ['title' => 'Daftar Tipe', 'url' => ''])
+@extends('admin.layout', ['title' => 'Daftar Merek', 'url' => ''])
 
 @section('content-admin')
     @if(session('success'))
@@ -21,7 +21,7 @@
         <div class="card-header pt-5">
             <div class="card-toolbar">
                 <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Tipe</a>
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Merek</a>
             </div>
         </div>
         <!--end::Header-->
@@ -35,7 +35,7 @@
                     <thead>
                         <tr class="fw-bold fs-6 text-gray-800">
                             <th class="text-center" style="width: 10%;">No.</th>
-                            <th class="text-center" style="width: 10%;">Tipe Kendaraan</th>
+                            <th class="text-center" style="width: 10%;">Merek Kendaraan</th>
                             <th class="text-center" style="width: 20%;">Gambar</th>
                             <th class="text-center" style="width: 20%;">Action</th>
                         </tr>
@@ -106,14 +106,14 @@
                                             @csrf
                                             @method('DELETE')
                                             <div class="modal-header">
-                                                <h2 class="fw-bold">DELETE Tipe</h2>
+                                                <h2 class="fw-bold">DELETE Merek</h2>
                                                 <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
                                                     data-bs-dismiss="modal">
                                                     <i class="ki-duotone ki-cross fs-1"></i>
                                                 </button>
                                             </div>
                                             <div class="modal-body py-10 px-lg-17">
-                                                <p>Anda yakin ingin menghapus data Tipe dengan nama {{ $brand->name }}?
+                                                <p>Anda yakin ingin menghapus data Merek dengan nama {{ $brand->name }}?
                                                 </p>
                                             </div>
                                             <div class="modal-footer d-flex justify-content-center">
@@ -153,13 +153,13 @@
                         action="{{ route('admin.brand.store') }}" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Create Tipe</h1>
+                            <h1 class="mb-3">Create Merek</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe Kendaraan</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Merek Kendaraan</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    placeholder="Masukan nama tipe kendaraan" name="name" value="{{ old('name') }}" required />
+                                    placeholder="Masukan nama merek kendaraan" name="name" value="{{ old('name') }}" required />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -218,13 +218,13 @@
                         @csrf
                         @method('PUT')
                         <div class="mb-13 text-center">
-                            <h1 class="mb-3">Edit Tipe</h1>
+                            <h1 class="mb-3">Edit Merek</h1>
                         </div>
                         <div class="row g-9 mb-8">
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Nama Tipe Kendaraan</label>
+                                <label class="required fs-6 fw-semibold mb-2">Nama Merek Kendaraan</label>
                                 <input class="form-control form-control-lg @error('name') is-invalid @enderror"
-                                    id="edit-name" name="name" placeholder="Masukan nama tipe kendaraan" value="{{ old('name') }}" required />
+                                    id="edit-name" name="name" placeholder="Masukan nama merek kendaraan" value="{{ old('name') }}" required />
                                 @error('name')
                                     <div class="alert alert-danger mt-2">
                                         {{ $message }}
@@ -429,7 +429,7 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Tipe Kendaraan harus diisi!');
+                        alert('Nama Merek Kendaraan harus diisi!');
                         return false;
                     }
 
@@ -445,7 +445,7 @@
 
                     if (name === '') {
                         e.preventDefault();
-                        alert('Nama Tipe Kendaraan harus diisi!');
+                        alert('Nama Merek Kendaraan harus diisi!');
                         return false;
                     }
                 });

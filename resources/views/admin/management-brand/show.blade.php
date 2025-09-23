@@ -1,12 +1,12 @@
-@extends('admin.layout', ['title' => 'Detail Merek', 'url' => ''])
+@extends('admin.layout', ['title' => 'Detail Tipe', 'url' => ''])
 
 @section('content-admin')
     <div class="card mb-5 mb-xl-8">
         <!--begin::Header-->
         <div class="card-header pt-5">
             <h3 class="card-title align-items-start flex-column">
-                <span class="card-label fw-bold fs-3 mb-1">Detail Merek</span>
-                <span class="text-muted mt-1 fw-semibold fs-7">Informasi lengkap merek {{ $brand->name }}</span>
+                <span class="card-label fw-bold fs-3 mb-1">Detail Tipe</span>
+                <span class="text-muted mt-1 fw-semibold fs-7">Informasi lengkap tipe {{ $brand->name }}</span>
             </h3>
             <div class="card-toolbar">
                 <a href="{{ route('admin.brand.index') }}" class="btn btn-sm btn-light-primary">
@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="mb-10">
-                        <label class="form-label fw-bold">Gambar Merek</label>
+                        <label class="form-label fw-bold">Gambar Tipe</label>
                         <div class="mt-2">
                             @if($brand->image)
                                 <img src="{{ asset('storage/' . $brand->image) }}" alt="{{ $brand->name }}"
@@ -39,15 +39,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-10">
-                                <label class="form-label fw-bold">Nama Merek</label>
+                                <label class="form-label fw-bold">Nama Tipe</label>
                                 <div class="form-control form-control-solid">{{ $brand->name }}</div>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-10">
-                                <label class="form-label fw-bold">Jumlah Tipe</label>
+                                <label class="form-label fw-bold">Jumlah Merek</label>
                                 <div class="form-control form-control-solid">
-                                    <span class="badge badge-light-info fs-6">{{ $brand->carModels->count() }} Tipe</span>
+                                    <span class="badge badge-light-info fs-6">{{ $brand->carModels->count() }} Merek</span>
                                 </div>
                             </div>
                         </div>
@@ -70,14 +70,14 @@
             @if($brand->carModels->count() > 0)
                 <div class="separator separator-dashed my-10"></div>
                 <div class="mb-10">
-                    <h4 class="fw-bold mb-5">Daftar Tipe Kendaraan</h4>
+                    <h4 class="fw-bold mb-5">Daftar Merek Kendaraan</h4>
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No.</th>
                                     <th class="text-center">Gambar</th>
-                                    <th class="text-center">Nama Tipe</th>
+                                    <th class="text-center">Nama Merek</th>
                                     <th class="text-center">Tanggal Dibuat</th>
                                 </tr>
                             </thead>

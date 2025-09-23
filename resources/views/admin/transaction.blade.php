@@ -30,7 +30,7 @@
                         <label for="service" class="form-label">Layanan</label>
                         <select class="form-select form-select-solid" data-control="select2" id="service"
                             data-placeholder="Layanan" data-hide-search="true" name="service">
-                            <option value=""></option>
+                            <option value=" ">Semua Layanan</option>
                             @foreach ($services as $service)
                                 <option value="{{ $service->id }}"
                                     {{ isset($_GET['service']) && $service->id == $_GET['service'] ? 'selected' : '' }}>
@@ -260,10 +260,9 @@
                 <!--begin::Body-->
                 <div class="card-body py-3">
                     <!--begin::Table container-->
-                    <div class="table-responsive" style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
+                    <div class="table-responsive">
                         <!--begin::Table-->
-                        <table class="table table-bordered gs-0 gy-4 text-center"
-                            style="font-size: 11px; min-width: 1200px;">
+                        <table class="table table-bordered gs-0 gy-4 text-center">
                             <!--begin::Table head-->
                             <thead>
                                 <tr class="fw-bold text-center text-gray-800">
@@ -503,8 +502,6 @@
     <script>
         $(document).ready(function() {
             var table = $('.table').DataTable({
-                "scrollY": "500px",
-                "scrollCollapse": true,
                 "order": [],
                 "language": {
                     "lengthMenu": "Show _MENU_",
