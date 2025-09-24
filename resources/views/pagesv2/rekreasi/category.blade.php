@@ -40,9 +40,9 @@
 
                                         <div class="price mt-7">
                                             <span class="coret text-decoration-line-through">IDR
-                                                {{ number_format($p->unit_price, 0, ',', '.') }}</span>
+                                                {{ number_format((float)$p->unit_price, 0, ',', '.') }}</span>
                                             <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                                {{ number_format($p->price, 0, ',', '.') }}</span>
+                                                {{ number_format((float)$p->price, 0, ',', '.') }}</span>
                                         </div>
                                     </div>
                                 </div>

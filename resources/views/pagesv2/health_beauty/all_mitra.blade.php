@@ -29,10 +29,17 @@
                                 <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
 
                                 <div class="price mt-6 text-start">
+                                    @if($partner->packages && $partner->packages->count() > 0 && $partner->packages[0])
                                     <span style="font-size: 0.8rem" class="coret text-dark  text-decoration-line-through">IDR
-                                        {{ number_format($partner->packages[0]->unit_price ?? 120000, 0, ',', '.') }}</span>
+                                        {{ number_format((float)$partner->packages[0]->unit_price ?? 120000, 0, ',', '.') }}</span>
                                     <span class="text-danger text-bold">IDR
-                                        {{ number_format($partner->packages[0]->price ?? 120000, 0, ',', '.') }}</span>
+                                        {{ number_format((float)$partner->packages[0]->price ?? 120000, 0, ',', '.') }}</span>
+                                    @else
+                                    <span style="font-size: 0.8rem" class="coret text-dark  text-decoration-line-through">IDR
+                                        {{ number_format(0, 0, ',', '.') }}</span>
+                                    <span class="text-danger text-bold">IDR
+                                        {{ number_format(0, 0, ',', '.') }}</span>
+                                    @endif
                                 </div>
                             </div>
                         </a>

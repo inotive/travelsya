@@ -42,7 +42,12 @@
 {{--                                            <span class="coret text-decoration-line-through">IDR--}}
 {{--                                                {{ number_format($clinic['packages'][0]->unit_price ?? 0, 0, ',', '.') }}</span>--}}
                                             <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                                {{ number_format($clinic['packages'][0]->price ?? 0, 0, ',', '.') }}</span>
+                                                @if(isset($clinic['packages']) && $clinic['packages']->count() > 0 && $clinic['packages'][0] && isset($clinic['packages'][0]->price))
+                                                    {{ number_format((float)$clinic['packages'][0]->price, 0, ',', '.') }}
+                                                @else
+                                                    {{ number_format(0, 0, ',', '.') }}
+                                                @endif
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

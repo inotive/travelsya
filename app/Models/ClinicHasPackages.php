@@ -114,7 +114,7 @@ class ClinicHasPackages extends Model
     protected function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'Rp ' . number_format($this->price, 0, ',', '.')
+            get: fn () => 'Rp ' . number_format((float)$this->price, 0, ',', '.')
         );
     }
 
@@ -177,7 +177,7 @@ class ClinicHasPackages extends Model
     // Method untuk formatted discounted price
     public function getFormattedDiscountedPrice()
     {
-        return 'Rp ' . number_format($this->getDiscountedPrice(), 0, ',', '.');
+        return 'Rp ' . number_format((float)$this->getDiscountedPrice(), 0, ',', '.');
     }
 
     // Method untuk check jika ada discount

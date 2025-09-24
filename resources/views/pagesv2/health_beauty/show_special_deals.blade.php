@@ -26,7 +26,6 @@
                                 <div class="w-100 d-flex flex-row align-items-center">
                                     <span class="fa-solid fa-location-dot me-2"></span>
                                     <span>{{ ucwords($deal->clinic->kota->city_name ?? '-') }}</span>
-                                    <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                 </div>
 
                                     <h3 class="mt-3 text-dark">{{ ucwords($deal->name) }}</h3>
@@ -41,9 +40,9 @@
 
                                     <div class="price mt-7">
                                         <span class="coret text-decoration-line-through">IDR
-                                            {{ number_format($deal->unit_price, 0, ',', '.') }}</span>
+                                            {{ number_format((float)$deal->unit_price, 0, ',', '.') }}</span>
                                         <span style="font-size: 1.5rem;" class="text-danger text-bold">IDR
-                                            {{ number_format($deal->price, 0, ',', '.') }}</span>
+                                            {{ number_format((float)$deal->price, 0, ',', '.') }}</span>
                                     </div>
                                 </div>
                             </div>

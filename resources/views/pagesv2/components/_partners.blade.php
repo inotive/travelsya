@@ -46,9 +46,17 @@
 
                     <div class="price mt-6 text-start">
                         <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                            {{ number_format($partner->packages[0]->unit_price ?? 120000, 0, ',', '.') }}</span>
+                            @if($partner->packages && $partner->packages->count() > 0 && $partner->packages[0])
+                                {{ number_format((float)($partner->packages[0]->unit_price ?? 120000), 0, ',', '.') }}
+                            @else
+                                {{ number_format(0, 0, ',', '.') }}
+                            @endif
                         <span class="text-danger text-bold">IDR
-                            {{ number_format($partner->packages[0]->price ?? 120000, 0, ',', '.') }}</span>
+                            @if($partner->packages && $partner->packages->count() > 0 && $partner->packages[0])
+                                {{ number_format((float)($partner->packages[0]->price ?? 120000), 0, ',', '.') }}
+                            @else
+                                {{ number_format(0, 0, ',', '.') }}
+                            @endif
                     </div>
                 </div>
             </div>
