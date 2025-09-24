@@ -305,14 +305,6 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
-            // ->whereHas('packages', function ($p) {
-            //     $p->whereColumn('unit_price', '>', 'price');
-            // })
-            // ->when($city, function ($c, $cit) {
-            //     $c->whereHas('kota', function ($k) use ($cit) {
-            //         $k->where('city_name', 'like', $cit);
-            //     });
-            // })
             ->limit(10)
             ->get();
 
@@ -336,9 +328,7 @@ class HealthBeautyController extends Controller
             }
         }
 
-        $category = CategoriesServices::select('id', 'name')->get();
-
-        $data['categories'] = $category;
+        $data['categories'] = $special->pluck('category')->unique()->toArray();
         $data['special_deals'] = $cantik;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
@@ -430,9 +420,12 @@ class HealthBeautyController extends Controller
     {
         $city = '%' . $request->location . '%';
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kesehatan')
-            // ->whereHas('packages', function ($p) {
-            //     $p->whereColumn('unit_price', '>', 'price');
-            // })
+            ->whereHas('packages', function ($p) {
+                $p->whereColumn('unit_price', '>', 'price');
+            })
+            ->when($request->name, function ($c, $cit) {
+                $c->where('clinic_name', 'like', '%' . $cit . '%');
+            })
             ->when($city, function ($c, $cit) {
                 $c->whereHas('kota', function ($k) use ($cit) {
                     $k->where('city_name', 'like', $cit);
@@ -446,7 +439,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('images/not_found.jpg'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
@@ -467,10 +460,13 @@ class HealthBeautyController extends Controller
     public function beauty_search(Request $request)
     {
         $city = '%' . $request->location . '%';
+        $req = $request->name;
+
         $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'kecantikan')
-            // ->whereHas('packages', function ($p) {
-            //     $p->whereColumn('unit_price', '>', 'price');
-            // })
+            ->whereHas('packages')
+            ->when($request->name, function ($c, $req) {
+                $c->where('clinic_name', 'like', '%' . $req . '%');
+            })
             ->when($city, function ($c, $cit) {
                 $c->whereHas('kota', function ($k) use ($cit) {
                     $k->where('city_name', 'like', $cit);
@@ -485,7 +481,7 @@ class HealthBeautyController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'name' => $rec['clinic_name'],
-                    'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
+                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('images/not_found.jpg'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'category' => $rec['category'],
                     'unit_price' => $rec['packages'][0]['unit_price'],
@@ -499,6 +495,48 @@ class HealthBeautyController extends Controller
         }
 
         $data['clinic'] = $cantik;
+
+        return ResponseFormatter::success($data, 'Data successfully loaded');
+    }
+
+    public function spa_search(Request $request)
+    {
+        $city = '%' . $request->location . '%';
+        $req = $request->name;
+
+        $special = Clinic::Active()->with('reviews', 'packages', 'kota')->where('category', 'spa dan kecantikan')
+            ->whereHas('packages')
+            ->when($request->name, function ($c, $req) {
+                $c->where('clinic_name', 'like', '%' . $req . '%');
+            })
+            ->when($city, function ($c, $cit) {
+                $c->whereHas('kota', function ($k) use ($cit) {
+                    $k->where('city_name', 'like', $cit);
+                });
+            })
+            ->get();
+
+        $spa = [];
+
+        foreach ($special as $key => $rec) {
+            if (count($rec['packages']) > 0) {
+                $item = [
+                    'id' => $rec['id'],
+                    'name' => $rec['clinic_name'],
+                    'image' => isset($rec['image']['image']) ? asset('storage/' . $rec['image']['image']) : asset('images/not_found.jpg'),
+                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'category' => $rec['category'],
+                    'unit_price' => $rec['packages'][0]['unit_price'],
+                    'price' => $rec['packages'][0]['price'],
+                    'rating_count' => count($rec['reviews']),
+                    'avg_rating' => $rec->avgRating(),
+                ];
+
+                array_push($spa, $item);
+            }
+        }
+
+        $data['clinic'] = $spa;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }
@@ -518,8 +556,10 @@ class HealthBeautyController extends Controller
     public function list()
     {
         $datas = Clinic::active()->with('reviews', 'packages', 'kota')->get();
+
         $kesehatan = [];
         $cantik = [];
+        $spa = [];
 
         foreach ($datas as $key => $rec) {
             if (count($rec['packages']) > 0) {
@@ -537,7 +577,7 @@ class HealthBeautyController extends Controller
                     ];
 
                     array_push($kesehatan, $item);
-                } else {
+                } elseif ($rec['category'] == "kecantikan") {
                     $item2 = [
                         'id' => $rec['id'],
                         'name' => $rec['clinic_name'],
@@ -551,13 +591,28 @@ class HealthBeautyController extends Controller
                     ];
 
                     array_push($cantik, $item2);
+                } elseif ($rec['category'] == "spa dan kecantikan") {
+                    $item3 = [
+                        'id' => $rec['id'],
+                        'name' => $rec['clinic_name'],
+                        'image' => isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
+                        'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                        'category' => $rec['category'],
+                        'unit_price' => $rec['packages'][0]['unit_price'],
+                        'price' => $rec['packages'][0]['price'],
+                        'rating_count' => count($rec['reviews']),
+                        'avg_rating' => $rec->avgRating(),
+                    ];
+
+                    array_push($spa, $item3);
                 }
             }
         }
 
-        $data['category'] = ['kecantikan', 'kesehatan'];
+        $data['category'] = ['kecantikan', 'kesehatan', 'spa dan kecantikan'];
         $data['kesehatan'] = $kesehatan;
         $data['kecantikan'] = $cantik;
+        $data['spa dan kecantikan'] = $spa;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
     }

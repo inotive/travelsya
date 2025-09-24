@@ -208,80 +208,83 @@ class CarRentalController extends Controller
     {
         $data = $request->all();
 
-        $transmisi = $data['transmisi'] ?? null;
-
-        $type = "Tidak Dengan Drive";
-        $start = $data['date'] ?? null;
+        // Clean input extraction
+        $transmisiInput = $data['transmisi'] ?? null;
         $city = $data['location'] ?? null;
-        $duration = $data['duration'] ?? null;
+        $withDriver = isset($data['with_driver']) && $data['with_driver'] == 1;
 
-        if ($transmisi !== null) {
-            $transmisi = $data['transmisi'] == 'otomatis' ? 'automatic' : 'manual';
-            $filter = $data['transmisi'];
+        // Determine transmission and filter
+        if ($transmisiInput !== null) {
+            $transmisi = $transmisiInput === 'otomatis' ? 'automatic' : 'manual';
+            $filter = $transmisiInput;
         } else {
             $transmisi = null;
             $filter = 'semua';
         }
 
-        if (isset($data['with_driver']) && $data['with_driver'] == 1) {
-            $type = "Dengan Driver";
-        } else {
-            $type = null;
-        }
+        // Determine rental type
+        $type = $withDriver ? 'Dengan Driver' : null;
 
-        $model = Brand::with('vendor')
-            ->when($type, function ($t, $type) {
-                $t->whereHas('vendor', function ($v1) use ($type) {
-                    $v1->where('category_rent', $type);
+        // Build query
+        $brands = Brand::with(['vendor.carModel', 'vendor.brand', 'vendor.carRental'])
+            ->when($type, function ($query, $type) {
+                $query->whereHas('vendor', function ($q) use ($type) {
+                    $q->where('category_rent', $type);
                 });
             })
-            ->when($transmisi, function ($t, $trans) {
-                $t->whereHas('vendor', function ($v2) use ($trans) {
-                    $v2->where('category', $trans);
+            ->when($transmisi, function ($query, $transmisi) {
+                $query->whereHas('vendor', function ($q) use ($transmisi) {
+                    $q->where('category', $transmisi);
                 });
             })
-            ->when($city, function ($d, $city) {
-                $d->whereHas('vendor', function ($v3) use ($city) {
-                    $v3->whereHas('carRental', function ($c) use ($city) {
-                        $c->whereHas('kota', function ($k) use ($city) {
-                            $k->where('city_name', 'like', '%' . $city . '%');
+            ->when($city, function ($query, $city) {
+                $query->whereHas('vendor', function ($q) use ($city) {
+                    $q->whereHas('carRental', function ($q2) use ($city) {
+                        $q2->whereHas('kota', function ($q3) use ($city) {
+                            $q3->where('city_name', 'like', '%' . $city . '%');
                         });
                     });
                 });
             })
             ->get();
 
-        $newModel = [
+        $result = [
             'brand' => [],
             'vendor' => [],
         ];
 
-        foreach ($model as $key => $mod) {
-            if (count($mod['vendor']) > 0) {
-
-                $item['brand_id'] = $key;
-                $item['brand'] = ($mod['vendor'][0]['carModel']['name'] ?? 'Invalid Car Model') . ' ' . ($mod['vendor'][0]['brand']['name'] ?? 'Invalid Brand');
-                $item['seats'] = $mod['vendor'][0]['number_seats'];
-                $item['price'] = $mod['vendor'][0]['rental_price_per_day'];
-                $item['transmission'] = $mod['vendor'][0]['category'];
-                $item['image'] = $mod['vendor']['0']['image_url'] ? asset('storage/' . $mod['vendor']['0']['image_url']) : asset('images/not_found.jpg');
-
-                $subVendor = [];
-
-                foreach ($mod['vendor'] as $key2 => $ven) {
-                    $sub['id_car'] = $ven['id'];
-                    $sub['business_name'] = $ven['carRental']['business_name'];
-                    $sub['price'] = $ven['rental_price_per_day'];
-
-                    array_push($subVendor, $sub);
-                }
-
-                $newModel['brand'][$key] = $item;
-                $newModel['vendor'][$item['brand']] = $subVendor;
+        foreach ($brands as $brandKey => $brand) {
+            if ($brand->vendor->isEmpty()) {
+                continue;
             }
+
+            $firstVendor = $brand->vendor->first();
+
+            $brandName = ($firstVendor->carModel->name ?? 'Invalid Car Model') . ' ' . ($firstVendor->brand->name ?? 'Invalid Brand');
+
+            $item = [
+                'brand_id'    => $brand->id,
+                'brand'       => $brandName,
+                'seats'       => $firstVendor->number_seats ?? null,
+                'price'       => $firstVendor->rental_price_per_day ?? null,
+                'transmission'=> $firstVendor->category ?? null,
+                'image'       => !empty($firstVendor->image_url) ? asset('storage/' . $firstVendor->image_url) : asset('images/not_found.jpg'),
+            ];
+
+            $subVendors = [];
+            foreach ($brand->vendor as $vendor) {
+                $subVendors[] = [
+                    'id_car'        => $vendor->id,
+                    'business_name' => $vendor->carRental->business_name ?? 'Deleted Business',
+                    'price'         => $vendor->rental_price_per_day,
+                ];
+            }
+
+            $result['brand'][$brandKey] = $item;
+            $result['vendor'][$brandName] = $subVendors;
         }
 
-        return ResponseFormatter::success($newModel, 'Data successfully loaded');
+        return ResponseFormatter::success($result, 'Data successfully loaded');
     }
 
     public function postRating(Request $request)

@@ -18,6 +18,7 @@ class CarRental extends Model
         'city',
         'phone',
         'address',
+        'kebijakan_rental_mobil',
     ];
 
     /**

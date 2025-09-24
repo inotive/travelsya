@@ -138,7 +138,7 @@
     // detail
     function showDetail(id) {
         $.ajax({
-            url: 'recreation/' + id
+            url: '/partner/recreation/' + id
             , type: 'GET'
             , success: function(response) {
                 $('#package-details').html(`
@@ -179,7 +179,7 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: 'recreation/' + id
+                    url: '/partner/recreation/' + id
                     , type: 'DELETE'
                     , headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

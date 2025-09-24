@@ -11,6 +11,11 @@
             Route::currentRouteName() == 'admin.bus-travel.index';
     }
 
+    function getActiveBrandLink()
+    {
+        return Route::currentRouteName() == 'admin.brand.index' || Route::currentRouteName() == 'admin.car-model.index';
+    }
+
 @endphp
 
 
@@ -263,7 +268,7 @@
                         @if (getActiveMitraLink())
                             <span class="menu-title main-accordion" style="color: white !important;">Mitra</span>
                         @else
-                            <span class="menu-title custom">Mitra</span>
+                            <span class="menu-title custom">Mitra </span>
                         @endif
 
 
@@ -459,6 +464,83 @@
 
                     </div>
                     <!--end:Menu sub-->
+                </div>
+                <!--end:Menu item-->
+
+                <!--begin:Menu item-->
+                @if (getActiveBrandLink())
+                    <div data-kt-menu-trigger="click"
+                        class="menu-item menu-accordion {{ getActiveBrandLink() ? 'here show' : '' }} "
+                        style="background-color: white;">
+                    @else
+                        <div data-kt-menu-trigger="click"
+                            class="menu-item menu-accordion {{ getActiveBrandLink() ? 'here show' : '' }} ">
+                @endif
+
+                <!--begin:Menu link-->
+                <span class="menu-link {{ getActiveBrandLink() ? 'main-accordion' : '' }}">
+                    <span class="menu-icon {{ getActiveBrandLink() ? 'main-accordion' : '' }}">
+                        <i class="fas fa-car fs-3">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                    </span>
+                    @if (getActiveBrandLink())
+                        <span class="menu-title main-accordion" style="color: white !important;">Kendaraan</span>
+                    @else
+                        <span class="menu-title custom">Kendaraan</span>
+                    @endif
+                    <span class="menu-arrow {{ getActiveBrandLink() ? 'main-accordion' : '' }}"></span>
+                </span>
+                <!--end:Menu link-->
+                <!--begin:Menu sub-->
+                <div class="menu-sub menu-sub-accordion">
+
+
+                    <div class="menu-item initial menu-hover">
+                        <!--begin:Menu link-->
+                        @if (Route::currentRouteName() == 'admin.brand.index')
+                            <a class="menu-link" href="{{ route('admin.brand.index') }}" style="background-color: #C02425;">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                </span>
+                                <span class="menu-title" style="color: white !important;">Merek</span>
+                            </a>
+                        @else
+                            <a class="menu-link" href="{{ route('admin.brand.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title custom">Merek</span>
+                            </a>
+                        @endif
+                        <!--end:Menu link-->
+                    </div>
+                    <!--begin:Menu item-->
+                    <div class="menu-item initial menu-hover">
+                        <!--begin:Menu link-->
+                        @if (Route::currentRouteName() == 'admin.car-model.index')
+                            <a class="menu-link" href="{{ route('admin.car-model.index') }}" style="background-color: #C02425;">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                </span>
+                                <span class="menu-title" style="color: white !important;">Tipe</span>
+                            </a>
+                        @else
+                            <a class="menu-link" href="{{ route('admin.car-model.index') }}">
+                                <span class="menu-bullet">
+                                    <span class="bullet bullet-dot"></span>
+                                </span>
+                                <span class="menu-title custom">Tipe</span>
+                            </a>
+                        @endif
+                        <!--end:Menu link-->
+                    </div>
+                    <!--end:Menu item-->
+                    <!--begin:Menu item-->
+                    <!--end:Menu item-->
+                </div>
+                <!--end:Menu sub-->
             </div>
             <!--end:Menu item-->
             <!--begin:Menu item-->

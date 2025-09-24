@@ -335,6 +335,10 @@ Route::middleware(['auth', 'role'])->group(function () {
                 Route::resource('bus-travel', \App\Http\Controllers\Admin\BusTravelController::class);
             });
 
+            // Brand and Car Model Management
+            Route::resource('brand', \App\Http\Controllers\Admin\BrandController::class);
+            Route::resource('car-model', \App\Http\Controllers\Admin\CarModelController::class);
+
             Route::get('user', [AdminUserController::class, 'index'])->name('user');
             Route::post('user', [AdminUserController::class, 'create'])->name('user.create');
             Route::post('user/edit', [AdminUserController::class, 'editJson'])->name('user.edit');
@@ -410,6 +414,8 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('transaction', [AdminTransactionController::class, 'index'])->name('transaction');
             // Route::post('transaction/', [AdminTransactionController::class, 'store'])->name('transaction.store');
             Route::get('transaction/{id}/detail', [AdminTransactionController::class, 'detail'])->name('transaction.detail');
+            Route::get('transaction/detail/{id}', [AdminTransactionController::class, 'getDetail'])->name('transaction.get.detail');
+            Route::get('transaction/pdf/{id}', [AdminTransactionController::class, 'generatePdf'])->name('transaction.pdf');
             Route::put('transaction/detail/update', [AdminTransactionController::class, 'detailUpdate'])->name('transaction.detail.update');
 
             //city management
@@ -488,7 +494,7 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('kendaraan-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'store'])->name('partner.kendaraan.create');
         Route::delete('kendaraan-delete/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'destroy'])->name('partner.kendaraan.delete');
         Route::get('daftar-kendaraan/show/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'show'])->name('partner.show.kendaraan');
-        Route::post('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
+        Route::put('daftar-kendaraan/edit/{id}', [\App\Http\Controllers\Partner\KendaraanController::class, 'update'])->name('partner.kendaraan.update');
         Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
         Route::get('daftar-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'index'])->name('partner.daftar.bus-travel');

@@ -225,7 +225,7 @@
                         </div>
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
-                            <span class="text-success fs-7">{{ $car->policy->description }}</span>
+                            <span class="text-success fs-7">{{ $car->policy?->description ?? 'Kebijakan tidak tersedia.' }}</span>
                             <span class="fa-solid fa-chevron-right ms-sm-auto"></span>
                         </div>
                         <hr class="opacity-25 my-5">

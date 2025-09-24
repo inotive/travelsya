@@ -20,4 +20,12 @@ class Brand extends Model
     {
         return $this->hasMany(CarRentalHasCars::class, 'brand_id', 'id')->orderBy('rental_price_per_day', 'asc');
     }
+
+    /**
+     * Get all car models for this brand
+     */
+    public function carModels(): HasMany
+    {
+        return $this->hasMany(CarModel::class, 'brand_id', 'id');
+    }
 }

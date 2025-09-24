@@ -18,7 +18,7 @@ class CategoryRecreationSeeder extends Seeder
         ]);
 
         CategoryRecreation::create([
-            "name" => "Spa & Kecantikan"
+            "name" => "Arena"
         ]);
 
         CategoryRecreation::create([

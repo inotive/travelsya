@@ -24,23 +24,41 @@ class RecreationController extends Controller
 
         $category = DB::table('category_recreations')->get();
 
-        $recreations = DB::table('recreations')
-        ->join('users', 'recreations.user_id', '=', 'users.id')
-        ->join('cities', 'recreations.city', '=', 'cities.city_id')
-        ->join('category_recreations', 'recreations.category_recreation_id', '=', 'category_recreations.id')
-        ->select(
-            'recreations.id as recreation_id',
-            'recreations.*',
-            'recreations.phone as recreation_phone',
-            'recreations.is_active as recreation_status',
-            'category_recreations.name as category_name',
-            'users.id as user_id',
-            'users.*',
-            'cities.city_id as city_id',
-            'cities.image as city_image',
-            'cities.*'
-        )
-        ->get();
+        $recreations = Recreation::with([
+            'user',
+            'kota',
+            'categoryRecreation',
+            'image' => function($q) {
+                $q->where('main', 1);
+            }
+        ])
+        ->get()
+        ->map(function($recreation) {
+            return (object)[
+                'recreation_id'      => $recreation->id,
+                'business_name'      => $recreation->business_name,
+                'category_recreation_id' => $recreation->category_recreation_id,
+                'user_id'            => $recreation->user_id,
+                'city'               => $recreation->city,
+                'lat'                => $recreation->lat,
+                'ltd'                => $recreation->ltd,
+                'phone'              => $recreation->phone,
+                'recreation_phone'   => $recreation->phone,
+                'address'            => $recreation->address,
+                'description'        => $recreation->description,
+                'open'               => $recreation->open,
+                'close'              => $recreation->close,
+                'is_active'          => $recreation->is_active,
+                'recreation_status'  => $recreation->is_active,
+                'category_name'      => optional($recreation->categoryRecreation)->name,
+                'name'               => optional($recreation->user)->name,
+                'email'              => optional($recreation->user)->email,
+                'city_id'            => optional($recreation->kota)->city_id,
+                'city_name'          => optional($recreation->kota)->city_name,
+                'city_image'         => optional($recreation->kota)->image,
+                'images'             => optional($recreation->image)->image ?? '-',
+            ];
+        });
 
         $cities = City::all();
 
@@ -70,6 +88,9 @@ class RecreationController extends Controller
             'city' => 'required',
             'category_recreation_id' => 'required',
             'address' => 'required',
+            'description' => 'required',
+            'open' => 'required',
+            'close' => 'required',
             'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
@@ -92,6 +113,9 @@ class RecreationController extends Controller
                 'lat' => $request->lat,
                 'ltd' => $request->ltd,
                 'address' => $request->address,
+                'description' => $request->description,
+                'open' => $request->open,
+                'close' => $request->close,
                 'is_active' => 1,
             ]);
 
@@ -100,7 +124,7 @@ class RecreationController extends Controller
                 $imgName = time() . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('recreation', $imgName, 'public');
                 recreationImages::create([
-                    'recreation_id' => $recreationId,
+                    'recreation_id' => "recreation/" . $recreationId,
                     'image' => $imgName
                 ]);
             }
@@ -117,7 +141,7 @@ class RecreationController extends Controller
                 ->withInput();
         }
 
-        
+
     }
 
     /**
@@ -125,8 +149,7 @@ class RecreationController extends Controller
      */
     public function show(string $id)
     {
-        $recreation = Recreation::findOrFail($id);
-
+        $recreation = Recreation::with('image')->findOrFail($id);
 
         return response()->json([
             'success' => true,
@@ -156,8 +179,12 @@ class RecreationController extends Controller
             'ltd' => 'nullable',
             'city' => 'required',
             'address' => 'required',
+            'description' => 'required',
+            'open' => 'required',
+            'close' => 'required',
             'is_active' => 'required',
             'category_recreation_id' => 'required|exists:category_recreations,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -174,9 +201,24 @@ class RecreationController extends Controller
             'ltd' => $request->ltd,
             'phone' => $request->phone,
             'address' => $request->address,
+            'description' => $request->description,
+            'open' => $request->open,
+            'close' => $request->close,
             'is_active' => $request->is_active,
         ]);
 
+        // Handle image upload if provided
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imgName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('recreation', $imgName, 'public');
+
+            // Update or create recreation image
+            recreationImages::updateOrCreate(
+                ['recreation_id' => $recreation->id, 'main' => 1],
+                ['image' => "recreation/" . $imgName]
+            );
+        }
 
         toast('Mitra has been updated', 'success');
         return response()->json([

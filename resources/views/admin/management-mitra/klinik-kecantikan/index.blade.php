@@ -1,193 +1,198 @@
 @extends('admin.layout', ['title' => 'Daftar Klinik Kecantikan', 'url' => ''])
 
 @section('content-admin')
-<!--begin::Tables Widget 11-->
-<div class="card mb-5 mb-xl-8">
-    <!--begin::Header-->
-    <div class="card-header pt-5">
-        <div class="card-toolbar">
-            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-                <i class="ki-duotone ki-plus fs-2"></i>Tambah Klinik Kecantikan</a>
-        </div>
-    </div>
-    <!--end::Header-->
-    <!--begin::Body-->
-    <div class="card-body py-3">
-        <!--begin::Table container-->
-        <div class="table-responsive">
-            <!--begin::Table-->
-
-            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                id="kt_datatable_zero_configuration">
-                <thead>
-                    <tr class="fw-bold fs-6 text-gray-800 ">
-                        <th class="text-center">No.</th>
-                        <th class="text-center">Mitra</th>
-                        <th class="text-center">Kategori</th>
-                        <th class="text-center">Nama Usaha</th>
-                        <th class="text-center">Kota/Kabupaten</th>
-
-                        <th class="text-center">Alamat</th>
-                        <th class="text-center">Nomor Telepon</th>
-
-                        <th class="text-center">Status</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($clinics as $clinic)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td class="text-center">
-                            <img src="{{ $clinic->image != null && $clinic->image != "-" ? asset('storage/' .
-                                $clinic->image) :
-                            'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg'
-                            }}" alt=""style="width: 25px; height: 25px;">
-
-                            {{ $clinic->name }}
-                        </td>
-
-                        <td class="text-center">
-                            {{ $clinic->category }}
-                        </td>
-
-                        <td class="text-center">
-
-                            {{ $clinic->clinic_name }}
-                        </td>
-                        <td class="text-center">{{ $clinic->city_name }}</td>
-
-                        <td class="text-center">{{ $clinic->address }}</td>
-
-                        <td class="text-center">{{ $clinic->clinic_phone }}</td>
-
-                        <td class="text-center">
-                            @if ($clinic->clinic_active === 1)
-                            <span class="badge badge-success">Aktif</span>
-                            @elseif ($clinic->clinic_active === 0)
-                            <span class="badge badge-danger">Tidak Aktif</span>
-                            @endif
-                        </td>
-
-                        <td class="text-center">
-                            <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                data-kt-menu="true" style="">
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
-                                        class="menu-link px-3 text-warning" id="btn-edit-clinic"
-                                        data-id="{{ $clinic->clinic_id }}">
-                                        Edit
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
-                                <!--begin::Menu item-->
-                                <div class="menu-item px-3">
-                                    <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal"
-                                        data-kt-customer-table-filter="delete_row"
-                                        data-bs-target="#kt_modal_delete_customer{{ $clinic->clinic_id }}">
-                                        Delete
-                                    </a>
-                                </div>
-                                <!--end::Menu item-->
-                            </div>
-                            <!--begin::Menu-->
-                            <a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                Aksi
-                                <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                            </a>
-                            <!--end::Menu-->
-                        </td>
-                    </tr>
-                    <div class="modal fade" id="kt_modal_delete_customer{{ $clinic->clinic_id }}" tabindex="-1"
-                        aria-hidden="true">
-                        <!-- Konten modal penghapusan -->
-                        <div class="modal-dialog modal-dialog-centered mw-650px">
-                            <div class="modal-content">
-                                <form action="{{ route('admin.klinik-kecantikan.destroy', $clinic->clinic_id) }}"
-                                    method="POST" id="kt_modal_delete_customer_form">
-                                    @csrf
-                                    @method('DELETE')
-                                    <div class="modal-header">
-                                        <h2 class="fw-bold">DELETE KLINIK</h2>
-                                        <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
-                                            data-bs-dismiss="modal">
-                                            <i class="ki-duotone ki-cross fs-1"></i>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body py-10 px-lg-17">
-                                        <p>Anda yakin ingin menghapus data klinik dengan nama {{ $clinic->clinic_name
-                                            }}?
-                                        </p>
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-center">
-                                        <button type="button" class="btn btn-light me-3"
-                                            data-bs-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                    @include('admin.management-mitra.klinik-kecantikan.edit')
-
-
-                </tbody>
-            </table>
-
-        </div>
-        <!--end::Table container-->
-    </div>
-
-    <!--begin::Body-->
-</div>
-<!--end::Tables Widget 11-->
-
-
-
-
-<!--begin::Modal - New Target-->
-<div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content rounded">
-            <!--begin::Modal header-->
-            <div class="modal-header pb-0 border-0 justify-content-end">
-                <!--begin::Close-->
-                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
-                </div>
-                <!--end::Close-->
+    <!--begin::Tables Widget 11-->
+    <div class="card mb-5 mb-xl-8">
+        <!--begin::Header-->
+        <div class="card-header pt-5">
+            <div class="card-toolbar">
+                <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Klinik Kecantikan</a>
             </div>
-            <!--begin::Modal header-->
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post"
-                    action="{{ route('admin.klinik-kecantikan.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="id" id="id">
-                    <!--begin::Heading-->
-                    <div class="mb-8 text-center">
-                        <!--begin::Title-->
-                        <h1 class="mb-3">Create Mitra</h1>
-                        <!--end::Title-->
+        </div>
+        <!--end::Header-->
+        <!--begin::Body-->
+        <div class="card-body py-3">
+            <!--begin::Table container-->
+            <div class="table-responsive">
+                <!--begin::Table-->
+
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
+                    id="kt_datatable_zero_configuration">
+                    <thead>
+                        <tr class="fw-bold fs-6 text-gray-800 ">
+                            <th class="text-center">No.</th>
+                            <th class="text-center">Mitra</th>
+                            <th class="text-center">Kategori</th>
+                            <th class="text-center">Nama Usaha</th>
+                            <th class="text-center">Kota/Kabupaten</th>
+                            <th class="text-center">Waktu Buka</th>
+                            <th class="text-center">Waktu Tutup</th>
+                            <th class="text-center">Alamat</th>
+                            <th class="text-center">Nomor Telepon</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($clinics as $clinic)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+
+                                <td class="text-center">
+                                    <img src="{{ $clinic->image != null && $clinic->image != '-'
+                                        ? asset('storage/' . $clinic->image)
+                                        : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}"
+                                        alt=""style="width: 25px; height: 25px;">
+
+                                    {{ $clinic->name }}
+                                </td>
+
+                                <td class="text-center">
+                                    {{ $clinic->category }}
+                                </td>
+
+                                <td class="text-center">
+
+                                    {{ $clinic->clinic_name }}
+                                </td>
+                                <td class="text-center">{{ $clinic->city_name }}</td>
+
+                                <td class="text-center">{{ $clinic->open ?? '-' }}</td>
+
+                                <td class="text-center">{{ $clinic->close ?? '-' }}</td>
+
+                                <td class="text-center">{{ $clinic->address }}</td>
+
+                                <td class="text-center">{{ $clinic->clinic_phone }}</td>
+
+                                <td class="text-center">
+                                    @if ($clinic->clinic_active)
+                                        <span class="badge badge-success">Aktif</span>
+                                    @else
+                                        <span class="badge badge-danger">Tidak Aktif</span>
+                                    @endif
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
+                                        data-kt-menu="true" style="">
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="" data-bs-toggle="modal" data-bs-target="#modal-edit"
+                                                class="menu-link px-3 text-warning" id="btn-edit-clinic"
+                                                data-id="{{ $clinic->clinic_id }}">
+                                                Edit
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                        <!--begin::Menu item-->
+                                        <div class="menu-item px-3">
+                                            <a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal"
+                                                data-kt-customer-table-filter="delete_row"
+                                                data-bs-target="#kt_modal_delete_customer{{ $clinic->clinic_id }}">
+                                                Delete
+                                            </a>
+                                        </div>
+                                        <!--end::Menu item-->
+                                    </div>
+                                    <!--begin::Menu-->
+                                    <a href="#"
+                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+                                        Aksi
+                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
+                                    </a>
+                                    <!--end::Menu-->
+                                </td>
+                            </tr>
+                            <div class="modal fade" id="kt_modal_delete_customer{{ $clinic->clinic_id }}" tabindex="-1"
+                                aria-hidden="true">
+                                <!-- Konten modal penghapusan -->
+                                <div class="modal-dialog modal-dialog-centered mw-650px">
+                                    <div class="modal-content">
+                                        <form action="{{ route('admin.klinik-kecantikan.destroy', $clinic->clinic_id) }}"
+                                            method="POST" id="kt_modal_delete_customer_form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <div class="modal-header">
+                                                <h2 class="fw-bold">DELETE KLINIK</h2>
+                                                <button type="button" class="btn btn-icon btn-sm btn-active-icon-primary"
+                                                    data-bs-dismiss="modal">
+                                                    <i class="ki-duotone ki-cross fs-1"></i>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body py-10 px-lg-17">
+                                                <p>Anda yakin ingin menghapus data klinik dengan nama
+                                                    {{ $clinic->clinic_name }}?
+                                                </p>
+                                            </div>
+                                            <div class="modal-footer d-flex justify-content-center">
+                                                <button type="button" class="btn btn-light me-3"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        @include('admin.management-mitra.klinik-kecantikan.edit')
+
+
+                    </tbody>
+                </table>
+
+            </div>
+            <!--end::Table container-->
+        </div>
+
+        <!--begin::Body-->
+    </div>
+    <!--end::Tables Widget 11-->
+
+
+
+
+    <!--begin::Modal - New Target-->
+    <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header pb-0 border-0 justify-content-end">
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-duotone ki-cross fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
                     </div>
-                    <!--end::Heading-->
-                    <!--begin::Input group-->
-                    <div class="row g-9 mb-8">
-                        <!--begin::Label-->
-                        {{-- <label class="col-lg-4 col-form-label fw-semibold fs-6">Logo</label> --}}
-                        <!--end::Label-->
-                        <!--begin::Image input-->
-                        {{-- <div class="d-flex align-items-center flex-column">
+                    <!--end::Close-->
+                </div>
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                    <!--begin:Form-->
+                    <form id="kt_modal_new_target_form" class="form" method="post"
+                        action="{{ route('admin.klinik-kecantikan.store') }}" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="id" id="id">
+                        <!--begin::Heading-->
+                        <div class="mb-8 text-center">
+                            <!--begin::Title-->
+                            <h1 class="mb-3">Create Mitra</h1>
+                            <!--end::Title-->
+                        </div>
+                        <!--end::Heading-->
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <!--begin::Label-->
+                            {{-- <label class="col-lg-4 col-form-label fw-semibold fs-6">Logo</label> --}}
+                            <!--end::Label-->
+                            <!--begin::Image input-->
+                            {{-- <div class="d-flex align-items-center flex-column">
                             <div class="image-input image-input-outline m-5" data-kt-image-input="true">
                                 <!--begin::Image preview wrapper-->
                                 <div class="image-input-wrapper w-125px h-125px" style="background-image: url('')">
@@ -231,123 +236,199 @@
                         <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
                         <!--end::Hint-->
                         </div>  --}}
-                        <!--end::Image input-->
+                            <!--end::Image input-->
 
-                        <div class="col-md-12">
-                            <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                            <input class="form-control form-control-lg" id="name" placeholder="Masukan nama klinik"
-                                name="name" required />
+                            <div class="col-md-12">
+                                <label class="required fs-6 fw-semibold mb-2">Nama</label>
+                                <input class="form-control form-control-lg" id="name"
+                                    placeholder="Masukan nama klinik" name="name" required />
 
-                            @error('name')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Mitra</label>
-                            <select class="form-control" id="user_id" name="user_id" required>
-                                <option value="">--Pilih Mitra--</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('user_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                            <input type="hidden" value="1">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
-                            <input type="number" class="form-control form-control-lg" id="phone"
-                                placeholder="Masukan nomor telepon... " name="phone" required />
-
-                            @error('phone')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-
-
-
-                        <div class="col-md-12">
-                            <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
-                            <select class="js-example-basic-single form-control form-control-lg" name="city" id="city" required>
-                                <option value="">--Pilih Kota/Kabupaten--</option>
-                                @foreach ($cities as $city)
-                                    <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
-                                @endforeach
-                            </select>
-
-
-                            @error('city')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                            @enderror
-                        </div>
-
-                        <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                        <!--begin::Radio group-->
-                        <div class="btn-group w-60" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
-                            <!--begin::Radio-->
-                            @foreach (App\Models\Clinic::CATEGORY as $key => $value)
-                            <label class="btn btn-outline btn-danger" data-kt-button="true">
-                                <input class="btn-check" type="radio" name="category" value="{{ $key }}" required />
-                                {{ $value }}
-                            </label>
-                            @endforeach
-                            <!--end::Radio-->
-                        </div>
-
-                        <div class="col-12">
-                            <label for="" class="required form-label">Alamat</label>
-                            <textarea name="address" id="address" cols="30" rows="5" class="form-control"
-                                required></textarea>
-                        </div>
-
-                    </div>
-                    <!--end::Input group-->
-                    <!--begin::Actions-->
-                    <div class="text-center">
-                        <div class="row">
-                            <div class="col-6">
-                                <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel
-                                </button>
+                                @error('name')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                            <div class="col-6">
-                                <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                                    <span class="indicator-label">Simpan</span>
-                                    <span class="indicator-progress">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                                </button>
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Mitra</label>
+                                <select class="form-control" id="user_id" name="user_id" required>
+                                    <option value="">--Pilih Mitra--</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('user_id')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                                <input type="hidden" value="1">
                             </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
+                                <input type="number" class="form-control form-control-lg" id="phone"
+                                    placeholder="Masukan nomor telepon... " name="phone" required />
+
+                                @error('phone')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+
+
+
+                            <div class="col-md-12">
+                                <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
+                                <select class="js-example-basic-single form-control form-control-lg" name="city"
+                                    id="city" required>
+                                    <option value="">--Pilih Kota/Kabupaten--</option>
+                                    @foreach ($cities as $city)
+                                        <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                                    @endforeach
+                                </select>
+
+
+                                @error('city')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                            <!--begin::Radio group-->
+                            <div class="btn-group w-60" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
+                                <!--begin::Radio-->
+                                @foreach (App\Models\Clinic::CATEGORY as $key => $value)
+                                    <label class="btn btn-outline btn-danger" data-kt-button="true">
+                                        <input class="btn-check" type="radio" name="category"
+                                            value="{{ $key }}" required />
+                                        {{ $value }}
+                                    </label>
+                                @endforeach
+                                <!--end::Radio-->
+                            </div>
+
+                            <div class="col-12">
+                                <label for="" class="required form-label">Alamat</label>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
+                                <input type="time" class="form-control form-control-lg" id="open"
+                                    placeholder="Masukan waktu buka..." name="open" required />
+
+                                @error('open')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                                <input type="time" class="form-control form-control-lg" id="close"
+                                    placeholder="Masukan waktu tutup..." name="close" required />
+
+                                @error('close')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-12">
+                                <label for="" class="required form-label">Deskripsi</label>
+                                <textarea name="description" id="description" cols="30" rows="5" class="form-control" required></textarea>
+
+                                @error('description')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-12">
+                                <label for="" class="required form-label">Highlight</label>
+                                <textarea name="highlight" id="highlight" cols="30" rows="3" class="form-control" required></textarea>
+
+                                @error('highlight')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Latitude</label>
+                                <input type="text" class="form-control form-control-lg" id="lat"
+                                    placeholder="Masukan latitude (contoh: -6.200000)" name="lat"
+                                    pattern="^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$"
+                                    title="Masukkan latitude yang valid (-90 sampai 90)" required />
+
+                                @error('lat')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="required fs-6 fw-semibold mb-2">Longitude</label>
+                                <input type="text" class="form-control form-control-lg" id="ltd"
+                                    placeholder="Masukan longitude (contoh: 106.816666)" name="ltd"
+                                    pattern="^-?((1[0-7][0-9])|([1-9]?[0-9]))(\.[0-9]+)?$"
+                                    title="Masukkan longitude yang valid (-180 sampai 180)" required />
+
+                                @error('ltd')
+                                    <span class="text-danger mt-1" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+
                         </div>
+                        <!--end::Input group-->
+                        <!--begin::Actions-->
+                        <div class="text-center">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button type="reset" id="kt_modal_new_target_cancel"
+                                        class="btn btn-light me-3">Cancel
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
+                                        <span class="indicator-label">Simpan</span>
+                                        <span class="indicator-progress">Please wait...
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                    </button>
+                                </div>
+                            </div>
 
 
-                    </div>
-                    <!--end::Actions-->
-                </form>
-                <!--end:Form-->
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end:Form-->
+                </div>
+                <!--end::Modal body-->
             </div>
-            <!--end::Modal body-->
+            <!--end::Modal content-->
         </div>
-        <!--end::Modal content-->
+        <!--end::Modal dialog-->
     </div>
-    <!--end::Modal dialog-->
-</div>
-<!--end::Modal - New Target-->
+    <!--end::Modal - New Target-->
 
 
 
-@push('add-script')
-<script>
-    $(document).ready(function() {
+    @push('add-script')
+        <script>
+            $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
                     "scrollY": "500px",
                     "scrollCollapse": true,
@@ -369,6 +450,6 @@
 
 
             });
-</script>
-@endpush
+        </script>
+    @endpush
 @endsection

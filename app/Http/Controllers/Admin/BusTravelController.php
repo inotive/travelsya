@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BusTravelController extends Controller
@@ -21,21 +22,24 @@ class BusTravelController extends Controller
         ->where('role', 1)
         ->get();
 
-    
+
         $bus_travels = DB::table('bus_travels')
         ->join('users', 'bus_travels.user_id', '=', 'users.id')
         ->join('cities', 'bus_travels.city', '=', 'cities.city_id')
         ->select(
-            'bus_travels.id as bus_travel_id', 
+            'bus_travels.id as bus_travel_id',
             'bus_travels.phone as bus_travel_phone',
-            'bus_travels.*', 
-            'users.id as user_id', 
+            'bus_travels.*',
+            'bus_travels.is_active as bus_travel_is_active',
+            'users.id as user_id',
             'users.*',
             'cities.city_id as city_id',
-            'cities.image as city_image', 
+            'cities.image as city_image',
             'cities.*'
         )
         ->get();
+
+        // dd($bus_travels->toArray());
 
         $cities = City::all();
 
@@ -61,10 +65,19 @@ class BusTravelController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
+            'logo' => 'required|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        // Handle logo upload
+        $logoPath = null;
+        if ($request->hasFile('logo')) {
+            $logo = $request->file('logo');
+            $logoName = time() . '_' . $logo->getClientOriginalName();
+            $logoPath = $logo->storeAs('bus_travels', $logoName, 'public');
         }
 
         DB::table('bus_travels')->insert([
@@ -73,6 +86,7 @@ class BusTravelController extends Controller
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
+            'image' => $logoPath,
             'is_active' => 1,
         ]);
 
@@ -108,31 +122,54 @@ class BusTravelController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
+        $bus_travel = BusTravels::findOrFail($id);
+
+        $rules = [
             'name' => 'required',
             'user_id' => 'required',
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
-            'is_active' => 'required'
-        ]);
+            'is_active' => 'required',
+        ];
+
+        // Only require logo if no existing logo in database
+        if (!$bus_travel->image || $bus_travel->image == '-') {
+            $rules['logo'] = 'required|image|mimes:jpeg,jpg,png|max:2048';
+        } else {
+            $rules['logo'] = 'nullable|image|mimes:jpeg,jpg,png|max:2048';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
+        // Handle logo upload - keep existing logo if no new one uploaded
+        $logoPath = $bus_travel->image; // Keep existing logo by default
+        if ($request->hasFile('logo')) {
+            // Delete old logo if exists
+            if ($bus_travel->image && Storage::disk('public')->exists($bus_travel->image)) {
+                Storage::disk('public')->delete($bus_travel->image);
+            }
 
-        $bus_travel = BusTravels::findOrFail($id);
+            $logo = $request->file('logo');
+            $logoName = time() . '_' . $logo->getClientOriginalName();
+            $logoPath = $logo->storeAs('bus_travels', $logoName, 'public');
+        }
+
         $bus_travel->update([
             'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
+            'image' => $logoPath,
             'is_active' => $request->is_active,
         ]);
 
-    
+
         toast('Mitra has been updated', 'success');
         return response()->json([
             'success' => true,

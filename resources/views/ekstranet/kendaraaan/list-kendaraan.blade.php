@@ -4,7 +4,7 @@
     <div class="card">
         <div class="card-header pt-5">
             <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="halaman-create">
+                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.halaman.create') }}">
                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Data Mobil</a>
             </div>
         </div>
@@ -23,6 +23,7 @@
                         <th>Jumlah Seat</th>
                         <th>Kategori Rental</th>
                         <th>Biaya Rental</th>
+                        <th>Durasi</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -38,8 +39,10 @@
                             <td>{{ $no++ }}</td>
                             <td>
                                 @if ($car->image_url)
-                                    <img src="{{ asset('storage/cars/' . $car->image_url) }}"
+                                    <img src="{{ Storage::url($car->image_url) }}"
                                          style="width: 130px; height: 100px; object-fit: contain;">
+                                @else
+                                    <span class="text-muted">Tidak ada gambar</span>
                                 @endif
                             </td>
                             <td>{{ $car->brand->name ?? '' }}</td>
@@ -50,6 +53,7 @@
                             <td class="text-center">{{ $car->number_seats }}</td>
                             <td>{{ $car->category_rent }}</td>
                             <td>Rp. {{ number_format($car->rental_price_per_day, 0,',','.') }}</td>
+                            <td>{{ $car->duration ? $car->duration . ' Hari' : '-' }}</td>
                             <td class="text-center">
                                 @if ($car->status == '1')
                                     <span class="badge badge-success">Aktif</span>
@@ -63,9 +67,9 @@
                                     <a href="{{ route('partner.show.kendaraan', $car->id) }}" class="btn btn-sm btn-light-warning btn-icon">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
-                                    <a type="button" class="btn btn-sm btn-light-danger btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $car->id }}">
+                                    <button class="btn btn-sm btn-light-danger btn-icon" onclick="deleteCar({{ $car->id }})">
                                         <i class="fa fa-trash" aria-hidden="true"></i>
-                                    </a>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
@@ -74,29 +78,6 @@
                     </tbody>
 
                 </table>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL DELETE DATA -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Hapus Data</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Apakah Anda yakin ingin menghapus data ini?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <form action="{{ route('partner.kendaraan.delete', 1) }}" method="POST" id="form-delete">
-                        @method('delete')
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Hapus</button>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
@@ -162,6 +143,7 @@
 @endsection
 
 @push('add-script')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
             $('#kt_datatable_zero_configuration').DataTable({
@@ -182,19 +164,10 @@
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
                     ">"
             });
-
-            $('#deleteModal').on('show.bs.modal', function (event) {
-                var button = $(event.relatedTarget);
-                var id = button.data('id');
-                var form = $('#form-delete');
-                var url = "{{ route('partner.kendaraan.delete', ':id') }}";
-                url = url.replace(':id', id);
-                form.attr('action', url);
-            });
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
+            @if (session('success_add'))
                 var toastElSuccess = document.getElementById('toast-success');
                 if (toastElSuccess) {
                     var toastSuccess = new bootstrap.Toast(toastElSuccess);
@@ -218,49 +191,58 @@
                 }
             @endif
         });
+
+        function deleteCar(id) {
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+
+            swalWithBootstrapButtons.fire({
+                title: "Apakah Anda yakin?",
+                text: "Data yang dihapus tidak dapat dikembalikan.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus",
+                cancelButtonText: "Tidak, Batal",
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let url = "{{ route('partner.kendaraan.delete', ':id') }}";
+                    url = url.replace(':id', id);
+
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' 
+                        },
+                        success: function(response) {
+                            swalWithBootstrapButtons.fire(
+                                'Terhapus!',
+                                response.success || 'Data mobil berhasil dihapus.',
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            let errorMessage = 'Terjadi kesalahan saat menghapus data.';
+                            if (xhr.responseJSON && xhr.responseJSON.error) {
+                                errorMessage = xhr.responseJSON.error;
+                            }
+                            swalWithBootstrapButtons.fire(
+                                'Gagal Dihapus!',
+                                errorMessage,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        }
     </script>
-
-
-    <style>
-        .toast {
-            font-size: 1.1rem;
-            width: 300px;
-            height: 60px;
-            display: flex;
-            background-color: #28a745; /* Success color */
-            color: white;
-        }
-
-        .toast-icon {
-            font-size: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: white;
-            color: #28a745;
-            margin-right: 10px;
-            margin-left: 10px;
-            padding: 10px;
-            border: 2px solid #28a745;
-            border-radius: 50%;
-            width: 3rem;
-            height: 3rem;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .toast-icon i {
-            color: #28a745; /* Icon color matching the toast background */
-        }
-
-        .toast-body {
-            flex: 1;
-            font-size: 1.1rem;
-        }
-
-        .btn-close {
-            background: transparent;
-            border: none;
-        }
-    </style>
-
 @endpush

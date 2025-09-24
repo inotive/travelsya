@@ -25,14 +25,14 @@ class CarRentalController extends Controller
         ->join('users', 'car_rentals.user_id', '=', 'users.id')
         ->join('cities', 'car_rentals.city', '=', 'cities.city_id')
         ->select(
-            'car_rentals.id as car_rental_id', 
-            'car_rentals.phone as car_rental_phone', 
-            'car_rentals.*', 
+            'car_rentals.id as car_rental_id',
+            'car_rentals.phone as car_rental_phone',
+            'car_rentals.*',
             'car_rentals.is_active as car_rentals_is_active',
-            'users.id as user_id', 
+            'users.id as user_id',
             'users.*',
             'cities.city_id as city_id',
-            'cities.image as city_image', 
+            'cities.image as city_image',
             'cities.*'
         )
         ->get();
@@ -61,6 +61,7 @@ class CarRentalController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
+            'kebijakan_rental_mobil' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -73,6 +74,7 @@ class CarRentalController extends Controller
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
+            'kebijakan_rental_mobil' => $request->kebijakan_rental_mobil,
             'is_active' => 1,
         ]);
 
@@ -114,6 +116,7 @@ class CarRentalController extends Controller
             'phone' => 'required',
             'city' => 'required',
             'address' => 'required',
+            'kebijakan_rental_mobil' => 'required',
             'is_active' => 'required'
         ]);
 
@@ -129,10 +132,11 @@ class CarRentalController extends Controller
             'city' => $request->city,
             'phone' => $request->phone,
             'address' => $request->address,
+            'kebijakan_rental_mobil' => $request->kebijakan_rental_mobil,
             'is_active' => $request->is_active,
         ]);
 
-    
+
         toast('Mitra has been updated', 'success');
         return response()->json([
             'success' => true,
