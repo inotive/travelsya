@@ -18,16 +18,16 @@
                     <a href="{{ route('health_beauty.detail', ['lokasi' => ($deal->clinic->kota->city_name ?? '-'), 'clinic' => $deal->clinic, 'id' => $deal->clinic_id]) }}"
                         class="text-decoration-none text-dark   ">
                         <div class="card" style="box-shadow: 0 10px 15px gray">
-                            <img src="{{ asset('storage/' . ($deal->image->image ?? null)) }}"
-                            class="card-img-top" alt="{{ $deal['name'] }}"
+                            <img src="{{ asset('storage/' . (isset($deal->image) && isset($deal->image->image) ? $deal->image->image : 'images/not_found.jpg')) }}"
+                            class="card-img-top" alt="{{ $deal->name }}"
                             onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                             <div class="card-body">
-                                <div class="card-content">
-                                    <div class="w-100 d-flex flex-row align-items-center">
-                                        <span class="fa-solid fa-location-dot me-2"></span>
-                                        <span>{{ ucwords($deal->clinic->kota->city_name) }}</span>
-                                        <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
-                                    </div>
+                            <div class="card-content">
+                                <div class="w-100 d-flex flex-row align-items-center">
+                                    <span class="fa-solid fa-location-dot me-2"></span>
+                                    <span>{{ ucwords($deal->clinic->kota->city_name ?? '-') }}</span>
+                                    <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
+                                </div>
 
                                     <h3 class="mt-3 text-dark">{{ ucwords($deal->name) }}</h3>
 

@@ -198,6 +198,13 @@ class ClinicHasPackages extends Model
         return ($starReviews / $totalReviews) * 100;
     }
 
+    // Method untuk avgRating
+    public function avgRating()
+    {
+        $rating = $this->reviews()->avg('rate');
+        return $rating ? round($rating, 1) : 0;
+    }
+
     // Event handlers untuk cleanup
     protected static function boot()
     {

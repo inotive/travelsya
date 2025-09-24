@@ -30,10 +30,10 @@
         @foreach ($partners as $partner)
             <div class="swiper-slide gap-2">
                 <!-- Card -->
-                <a href="{{ route('health_beauty.detail', ['lokasi' => $partner->kota->city_name, 'clinic' => $partner['clinic_name'], 'id' => $partner['id']]) }}"
+                <a href="{{ route('health_beauty.detail', ['lokasi' => ($partner->kota->city_name ?? '-'), 'clinic' => $partner->clinic_name, 'id' => $partner->id]) }}"
                     class="card shadow-sm text-dark" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $partner->image->image != null ? asset($partner->image->image) : asset('images/placeholder.jpg') }}"
+                        <img src="{{ (isset($partner->image) && isset($partner->image->image)) ? asset($partner->image->image) : asset('images/placeholder.jpg') }}"
                             class="card-img-top" alt="{{ $partner->clinic_name }}">
                     </div>
                     <div class="card-body p-3">
@@ -52,11 +52,19 @@
                             <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
 
                             <div class="price mt-6 text-start">
+                                @if($partner->packages->count() > 0 && $partner->packages[0])
                                 <span style="font-size: 0.8rem"
                                     class="coret text-dark  text-decoration-line-through">IDR
                                     {{ number_format(intval($partner->packages[0]->unit_price) ?? 120000, 0, ',', '.') }}</span>
                                 <span class="text-danger text-bold">IDR
                                     {{ number_format(intval($partner->packages[0]->price) ?? 120000, 0, ',', '.') }}</span>
+                                @else
+                                <span style="font-size: 0.8rem"
+                                    class="coret text-dark  text-decoration-line-through">IDR
+                                    {{ number_format(0, 0, ',', '.') }}</span>
+                                <span class="text-danger text-bold">IDR
+                                    {{ number_format(0, 0, ',', '.') }}</span>
+                                @endif
                             </div>
                         </div>
                 </a>

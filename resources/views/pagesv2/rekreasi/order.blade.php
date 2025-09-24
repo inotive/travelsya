@@ -162,7 +162,7 @@
                     <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
                         <div class="card-body p-5">
                             <div class="d-flex flex-row align-items-center">
-                                <img src="{{ asset('storage/' . $package->image->image) }}"
+                                <img src="{{ asset('storage/' . (isset($package->image) && isset($package->image->image) ? $package->image->image : 'images/not_found.jpg')) }}"
                                     onerror="this.src=`{{ asset('images/not_found.jpg') }}`" alt=""
                                     width="50" height="50" class="rounded-1">
                                 <span

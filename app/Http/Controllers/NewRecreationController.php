@@ -101,7 +101,7 @@ class NewRecreationController extends Controller
 
                                     .'" class="d-flex w-100 flex-stack">
 
-                                    <img src="' . asset($recreation->image->image) .'" onerror="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max" class="me-4 w-50px" style="border-radius: 4px" alt="">
+                                    <img src="' . (isset($recreation->image) && isset($recreation->image->image) ? asset($recreation->image->image) : asset('images/placeholder.jpg')) .'" onerror="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max" class="me-4 w-50px" style="border-radius: 4px" alt="">
 
                                     <div class="d-flex align-items-center flex-row-fluid flex-wrap">
 
@@ -112,7 +112,7 @@ class NewRecreationController extends Controller
                                             '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
-                                                ' . $recreation->name . ' - ' . $recreation->recreation->kota->city_name .'
+                                                ' . $recreation->name . ' - ' . ($recreation->recreation->kota->city_name ?? '-') .'
                                             </span>
                                         </div>
                                     </div>

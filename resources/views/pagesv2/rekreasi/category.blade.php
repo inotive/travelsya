@@ -24,7 +24,7 @@
                                     <div class="card-content">
                                         <div class="w-100 d-flex flex-row align-items-center">
                                             <span class="fa-solid fa-location-dot me-2"></span>
-                                            <span>{{ $p->recreation->kota->city_name }}</span>
+                                            <span>{{ $p->recreation->kota->city_name ?? 'Lokasi tidak ditemukan' }}</span>
                                             <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                         </div>
 

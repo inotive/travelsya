@@ -29,7 +29,7 @@ class RecreationDetailResource extends JsonResource
             "description" => $this->description,
             "buka" => $this->open,
             "tutup" => $this->close,
-            "city" => $this->kota->city_name,
+            "city" => $this->kota->city_name ?? 'Kota tidak ditemukan',
             "address" => $this->address,
             "latitude" => $this->lat,
             "longitude" => $this->ltd,

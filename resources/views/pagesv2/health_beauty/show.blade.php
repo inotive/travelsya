@@ -15,7 +15,7 @@
                 <div class="row g-6 g-lg-6">
                     @foreach ($clinics as $clinic)
                     <div class="col-12 col-md-4 col-lg-3 p-3">
-                        <a href="{{ route('health_beauty.detail', ['lokasi' => ($clinic->kota->city_name ?? '-'), 'clinic' => $clinic->clinic_name, 'id' => $clinic->id]) }}"
+                        <a href="{{ route('health_beauty.detail', ['lokasi' => ($clinic->kota->city_name ?? '-'), 'clinic' => $clinic->clinic_name ?? 'Unknown', 'id' => $clinic->id]) }}"
                             class="text-decoration-none text-dark   ">
                             <div class="card" style="box-shadow: 0 10px 15px gray">
                                 <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
@@ -24,7 +24,7 @@
                                     <div class="card-content">
                                         <div class="w-100 d-flex flex-row align-items-center">
                                             <span class="fa-solid fa-location-dot me-2"></span>
-                                            <span>{{ ucwords($clinic->kota->city_name ?? 'Invalid data') }}</span>
+                                            <span>{{ ucwords($clinic->kota->city_name ?? 'Unknown location') }}</span>
                                             <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                         </div>
 

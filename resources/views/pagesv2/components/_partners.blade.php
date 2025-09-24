@@ -33,7 +33,7 @@
             <!-- Card -->
             <div class="card shadow-sm" style="width: 18rem;">
                 <div class="position-relative">
-                    <img src="{{ $partner->image->image != null ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                    <img src="{{ (isset($partner->image) && isset($partner->image->image)) ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
                         class="card-img-top" alt="{{ $partner->clinic_name }}">
                 </div>
                 <div class="card-body p-3">

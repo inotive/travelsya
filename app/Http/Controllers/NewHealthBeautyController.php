@@ -42,7 +42,7 @@ class NewHealthBeautyController extends Controller
 
         $result = null;
         foreach ($clinics as $key => $clinic) {
-            $img = isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
+            $img = isset($clinic->image) && isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
             $result = $result . '<a href="' .
                                     route('health_beauty.detail', [
                                         'lokasi' => ($clinic->clinic->kota->city_name ?? '-'),
@@ -63,7 +63,7 @@ class NewHealthBeautyController extends Controller
                                             '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
-                                                ' . $clinic->clinic->clinic_name . ' - ' . $clinic->clinic->kota->city_name .'
+                                                ' . $clinic->clinic->clinic_name . ' - ' . ($clinic->clinic->kota->city_name ?? '-') .'
                                             </span>
                                         </div>
                                     </div>
@@ -88,7 +88,7 @@ class NewHealthBeautyController extends Controller
     }
     public function index()
     {
-        $special_deals = ClinicHasPackages::with('clinic')->where(function($q){
+        $special_deals = ClinicHasPackages::with(['clinic.kota', 'image'])->where(function($q){
             $q->whereHas('clinic', function($c){
                 $c->where('category', 'kesehatan')
                 ->Active();
@@ -98,7 +98,7 @@ class NewHealthBeautyController extends Controller
         ->limit(10)
         ->get();
 
-        $special_deals_beauty = ClinicHasPackages::with('clinic')->where(function($q){
+        $special_deals_beauty = ClinicHasPackages::with(['clinic.kota', 'image'])->where(function($q){
             $q->whereHas('clinic', function($c){
                 $c->where('category', 'kecantikan')
                 ->Active();
@@ -110,7 +110,7 @@ class NewHealthBeautyController extends Controller
 
         $categories = CategoriesServices::get();
 
-        $partners = Clinic::with(['packages', 'images'])->orderBy('created_at', 'desc')->get();
+        $partners = Clinic::with(['packages', 'images', 'image', 'kota'])->orderBy('created_at', 'desc')->get();
 
         $data['special_deals'] = collect($special_deals);
         $data['special_deals_beauty'] = collect($special_deals_beauty);
@@ -122,7 +122,7 @@ class NewHealthBeautyController extends Controller
 
     public function show_special_deals(){
 
-        $special = ClinicHasPackages::whereHas('clinic', function($c){
+        $special = ClinicHasPackages::with('image', 'clinic')->whereHas('clinic', function($c){
             $c->Active();
         })->whereColumn('unit_price', '>' ,'price')->get();
 
@@ -271,7 +271,7 @@ class NewHealthBeautyController extends Controller
     }
 
     public function show_mitra(){
-        $data['mitra'] = Clinic::Active()->get();
+        $data['mitra'] = Clinic::Active()->with(['image', 'kota', 'packages'])->get();
 
         return view('pagesv2.health_beauty.all_mitra', $data);
     }
@@ -297,7 +297,7 @@ class NewHealthBeautyController extends Controller
 
     public function detail(Request $request, $lokasi = null, $clinic, $id = null){
         if($id){
-            $data['clinic'] = Clinic::with('reviews')->find($id);
+            $data['clinic'] = Clinic::with('reviews', 'kota', 'packages.image', 'packages.facility.facility', 'images')->find($id);
         }else{
             $data['clinic'] = null;
         }
