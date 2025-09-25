@@ -39,34 +39,26 @@
                     <div class="card-body p-3">
                         <div class="text-dark lokasi d-flex align-items-center">
                             <span class="text-dark ">{{ $partner->category }}</span>
-                            <span style="position: relative; margin-left: auto;"
-                                class="fa-regular text-dark  fa-bookmark fs-2"></span>
                         </div>
-                        <div class="card-body p-3">
-                            <div class="text-dark lokasi d-flex align-items-center">
-                                <span class="text-dark ">{{ $partner->category }}</span>
-                                <span style="position: relative; margin-left: auto;"
-                                    class="fa-regular text-dark  fa-bookmark fs-2"></span>
-                            </div>
 
-                            <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
+                        <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
 
-                            <div class="price mt-6 text-start">
-                                @if($partner->packages->count() > 0 && $partner->packages[0])
-                                <span style="font-size: 0.8rem"
-                                    class="coret text-dark  text-decoration-line-through">IDR
-                                    {{ number_format(intval($partner->packages[0]->unit_price) ?? 120000, 0, ',', '.') }}</span>
-                                <span class="text-danger text-bold">IDR
-                                    {{ number_format(intval($partner->packages[0]->price) ?? 120000, 0, ',', '.') }}</span>
-                                @else
-                                <span style="font-size: 0.8rem"
-                                    class="coret text-dark  text-decoration-line-through">IDR
-                                    {{ number_format(0, 0, ',', '.') }}</span>
-                                <span class="text-danger text-bold">IDR
-                                    {{ number_format(0, 0, ',', '.') }}</span>
-                                @endif
-                            </div>
+                        <div class="price mt-3 text-start">
+                            @if($partner->packages->count() > 0 && $partner->packages[0])
+                            <span style="font-size: 0.8rem"
+                                class="coret text-dark  text-decoration-line-through">IDR
+                                {{ number_format(intval($partner->packages[0]->unit_price) ?? 120000, 0, ',', '.') }}</span>
+                            <span class="text-danger text-bold">IDR
+                                {{ number_format(intval($partner->packages[0]->price) ?? 120000, 0, ',', '.') }}</span>
+                            @else
+                            <span style="font-size: 0.8rem"
+                                class="coret text-dark  text-decoration-line-through">IDR
+                                {{ number_format(0, 0, ',', '.') }}</span>
+                            <span class="text-danger text-bold">IDR
+                                {{ number_format(0, 0, ',', '.') }}</span>
+                            @endif
                         </div>
+                    </div>
                 </a>
             </div>
         @endforeach
