@@ -33,15 +33,15 @@
                 <a href="{{ route('health_beauty.detail', ['lokasi' => ($partner->kota->city_name ?? '-'), 'clinic' => $partner->clinic_name, 'id' => $partner->id]) }}"
                     class="card shadow-sm text-dark" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ (isset($partner->image) && isset($partner->image->image)) ? asset($partner->image->image) : asset('images/placeholder.jpg') }}"
-                            class="card-img-top" alt="{{ $partner->clinic_name }}">
+                        <img src="{{ (isset($partner->image) && isset($partner->image->image)) ? asset($partner->image->image) : asset('images/health_default.png') }}"
+                            class="card-img-top" style="object-fit: cover; height: 150px;" alt="{{ $partner->clinic_name }}" onerror="this.onerror=null;this.src='{{ asset('images/health_default.png') }}'">
                     </div>
                     <div class="card-body p-3">
                         <div class="text-dark lokasi d-flex align-items-center">
                             <span class="text-dark ">{{ $partner->category }}</span>
                         </div>
 
-                        <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
+                        <h3 class="mt-3 text-dark text-start" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $partner->clinic_name }}</h3>
 
                         <div class="price mt-3 text-start">
                             @if($partner->packages->count() > 0 && $partner->packages[0])
