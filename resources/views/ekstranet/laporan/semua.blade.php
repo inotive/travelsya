@@ -29,8 +29,13 @@
                             value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
                     </div>
 
-                    <div class="col-3">
+                    <div class="col-2">
                         <button type="submit" class="btn btn-primary w-100">Cari Data</button>
+                    </div>
+                    <div class="col-1">
+                        <button type="button" class="btn btn-success w-100" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel"></i> Export Excel
+                        </button>
                     </div>
                 </div>
             </form>
@@ -275,5 +280,93 @@
                 }
             }
         });
+
+        function exportToExcel() {
+            // Get table data
+            const table = document.querySelector('.table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            // Create Excel content using simple HTML table format
+            let excelContent = `
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <style>
+                        table { border-collapse: collapse; width: 100%; }
+                        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+                        th { background-color: #f2f2f2; font-weight: bold; }
+                        .text-center { text-align: center; }
+                    </style>
+                </head>
+                <body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Invoice No</th>
+                                <th class="text-center">Tanggal & Waktu</th>
+                                <th class="text-center">Customer</th>
+                                <th class="text-center">Contact</th>
+                                <th class="text-center">Metode & Channel Pembayaran</th>
+                                <th class="text-center">Deskripsi Pesanan</th>
+                                <th class="text-center">Grand Total</th>
+                                <th class="text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            // Add data rows
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 9) { // Ensure we have enough cells
+                    excelContent += '<tr>';
+                    excelContent += `<td class="text-center">${index + 1}</td>`;
+                    excelContent += `<td>${cells[1].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[2].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[3].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[4].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[5].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[6].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[7].textContent.trim()}</td>`;
+                    excelContent += `<td>${cells[8].textContent.trim()}</td>`;
+                    excelContent += '</tr>';
+                }
+            });
+
+            excelContent += `
+                        </tbody>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            // Create and download file
+            const blob = new Blob([excelContent], {
+                type: 'application/vnd.ms-excel;charset=utf-8;'
+            });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+
+            // Generate filename with current date and filters
+            const now = new Date();
+            const dateStr = now.toISOString().split('T')[0];
+            const year = document.querySelector('select[name="year"]').value || 'all';
+            const start = document.querySelector('input[name="start"]').value || 'all';
+            const end = document.querySelector('input[name="end"]').value || 'all';
+
+            let filename = `laporan_transaksi_${dateStr}`;
+            if (year !== 'all') filename += `_tahun_${year}`;
+            if (start !== 'all') filename += `_dari_${start}`;
+            if (end !== 'all') filename += `_sampai_${end}`;
+            filename += '.xls';
+
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
     </script>
 @endpush
