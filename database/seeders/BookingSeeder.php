@@ -237,6 +237,9 @@ class BookingSeeder extends Seeder
                     'transaction_id' => $transaction->id,
                     'recreation_id' => $recreation->id,
                     'recreationPackage_id' => 1,
+                    'expire_on' => Carbon::now()->addDays(30 + $key),
+                    'rent_price' => '100000',
+                    'fee_admin' => '5000',
                     'kode_unik' => rand(100, 999),
                     'status' => 'belum_dipakai',
                 ]
