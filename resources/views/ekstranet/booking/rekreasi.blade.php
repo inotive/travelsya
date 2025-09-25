@@ -69,6 +69,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -83,6 +84,7 @@
                                 @foreach ($rekreasibookdates->reverse() as $booking)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? '' }} -
                                             {{ $booking->transaction->user->phone ?? '' }}
@@ -133,6 +135,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -148,6 +151,7 @@
                                     @if($booking->is_used)
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
@@ -177,6 +181,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -193,6 +198,7 @@
                                     @if(!$booking->is_used && !$isExpired)
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
@@ -222,6 +228,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -238,6 +245,7 @@
                                     @if($isExpired)
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}

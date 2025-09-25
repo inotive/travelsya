@@ -69,6 +69,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -85,6 +86,7 @@
                                 @foreach ($carrentalbookdates as $booking)
                                     <tr>
                                         <td class="text-center">{{ $counter++ }}</td>
+                                        <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                             {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -141,6 +143,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -157,6 +160,7 @@
                                     @if($booking->status == 'sudah_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -189,6 +193,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -205,6 +210,7 @@
                                     @if($booking->status == 'belum_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -237,6 +243,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -253,6 +260,7 @@
                                     @if($booking->status == 'kedaluwarsa')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
