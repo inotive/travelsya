@@ -101,11 +101,12 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
                                             @php
-                                                $status = $booking->status;
+                                                $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
+                                                $isUsed = $booking->status == 'sudah_dipakai';
                                             @endphp
-                                            @if($status == 'kedaluwarsa')
-                                                <span class="badge badge-danger">Kadaluarsa</span>
-                                            @elseif($status == 'sudah_dipakai')
+                                            @if($isExpired)
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
+                                            @elseif($isUsed)
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
@@ -113,13 +114,14 @@
                                         </td>
                                         <td class="text-center">
                                             @php
-                                                $status = $booking->status;
+                                                $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
+                                                $isUsed = $booking->status == 'sudah_dipakai';
                                             @endphp
-                                            @if($status == 'belum_dipakai')
+                                            @if(!$isUsed && !$isExpired)
                                                 <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
                                                     Verifikasi
                                                 </a>
-                                            @elseif($status == 'sudah_dipakai')
+                                            @elseif($isUsed)
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
@@ -292,11 +294,12 @@
 
     @foreach ($carrentalbookdates as $booking)
         @php
-            $status = $booking->status;
+            $isExpired = \Carbon\Carbon::parse($booking->end)->isPast();
+            $isUsed = $booking->status == 'sudah_dipakai';
         @endphp
         
         {{-- Modal for verification --}}
-        @if($status == 'belum_dipakai')
+        @if(!$isUsed && !$isExpired)
             <div class="modal fade" id="verificationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -320,7 +323,7 @@
         @endif
         
         {{-- Modal for cancellation verification --}}
-        @if($status == 'sudah_dipakai')
+        @if($isUsed)
             <div class="modal fade" id="cancellationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -365,7 +368,7 @@
         @endif
         
         {{-- Modal for expired bookings --}}
-        @if($status == 'kedaluwarsa')
+        @if($isExpired && !$isUsed)
             <div class="modal fade" id="infoModalExpiredCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
