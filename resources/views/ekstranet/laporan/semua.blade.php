@@ -4,8 +4,8 @@
     <div class="card">
         <div class="card-body">
             <form action="" method="get">
-                <div class="row">
-                    <div class="col-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-12 col-md-2">
                         <select class="form-select" name="year">
                             <option value="" disabled selected>Pilih Tahun</option>
                             @php
@@ -20,19 +20,18 @@
                             @endfor
                         </select>
                     </div>
-                    <div class="col-3">
+                    <div class="col-12 col-md-3">
                         <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start"
                             value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
                     </div>
-                    <div class="col-3">
-                        <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="end"
+                    <div class="col-12 col-md-3">
+                        <input type="date" class="form-control" data-placeholder="Tanggal Akhir" name="end"
                             value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
                     </div>
-
-                    <div class="col-2">
+                    <div class="col-6 col-md-2 d-grid">
                         <button type="submit" class="btn btn-primary w-100">Cari Data</button>
                     </div>
-                    <div class="col-1">
+                    <div class="col-6 col-md-2 d-grid">
                         <button type="button" class="btn btn-success w-100" onclick="exportToExcel()">
                             <i class="fas fa-file-excel"></i> Export Excel
                         </button>
