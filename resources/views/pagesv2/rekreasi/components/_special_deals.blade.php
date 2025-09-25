@@ -21,7 +21,7 @@
 
 <div class="special-swiper-container overflow-hidden" id="special-swiper-container">
     <div class="swiper-wrapper mb-3">
-        @foreach ($special_deals as $deal)
+        @foreach ($special_deals->sortByDesc(function($deal) { return optional($deal->booked)->count() ?? 0; }) as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
             <a href="{{ route('rekreasi.detail', ['id' => $deal['recreation_id'], 'date' => \Carbon\Carbon::now()->addDay()->format('Y-m-d')]) }}"
@@ -66,20 +66,6 @@
             </a>
         </div>
         @endforeach
-        @if (count($special_deals) < 5) @for ($i=0; $i < (5 - count($special_deals)); $i++) <div
-            class="swiper-slide gap-2">
-            <div class="card shadow-sm" style="width: 18rem;">
-                <div class="position-relative">
-                    <img
-                        src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg">
-                </div>
-                <div class="card-body d-flex align-items-center text-center">
-                    <h1>Kami akan segera hadir</h1>
-                </div>
-            </div>
-    </div>
-    @endfor
-    @endif
 </div>
 </div>
 
