@@ -37,6 +37,77 @@
         </div>
     </div>
 
+    <!-- Summary Card -->
+    <div class="card mt-3">
+        <div class="card-header">
+            <h3 class="card-title">Ringkasan Laporan</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-50px me-5">
+                            <span class="symbol-label bg-light-primary">
+                                <i class="fas fa-dollar-sign text-primary"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between flex-grow-1">
+                            <div>
+                                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">Total Harga</a>
+                                <span class="text-muted fw-bold d-block">{{ General::rp($total_rent_price) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-50px me-5">
+                            <span class="symbol-label bg-light-warning">
+                                <i class="fas fa-cog text-warning"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between flex-grow-1">
+                            <div>
+                                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">Biaya Layanan</a>
+                                <span class="text-muted fw-bold d-block">{{ General::rp($total_fee_admin) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-50px me-5">
+                            <span class="symbol-label bg-light-success">
+                                <i class="fas fa-gift text-success"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between flex-grow-1">
+                            <div>
+                                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">Potongan Point</a>
+                                <span class="text-muted fw-bold d-block">{{ General::rp($total_point_discount) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="d-flex align-items-center">
+                        <div class="symbol symbol-50px me-5">
+                            <span class="symbol-label bg-light-danger">
+                                <i class="fas fa-calculator text-danger"></i>
+                            </span>
+                        </div>
+                        <div class="d-flex justify-content-between flex-grow-1">
+                            <div>
+                                <a href="#" class="text-dark fw-bolder text-hover-primary fs-6">Grand Total</a>
+                                <span class="text-muted fw-bold d-block">{{ General::rp($grand_total) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="card mt-3">
         <div class="card-body">
             <!--begin::Row-->
@@ -44,18 +115,18 @@
                 <div class="col-12">
                     <div class="table-responsive">
                         <table class="table table-bordered fw-normal">
-                            <thead class="fw-bold">
+                            <thead class="fw-bold text-center">
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Invoice No.</th>
-                                    <th>Tanggal & Waktu</th>
-                                    <th>Customer</th>
-                                    <th>Contact</th>
-                                    <th>Metode & Channel Pembayaran</th>
-                                    <th>Deskripsi Pesanan</th>
-                                    <th>Grand Total</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
+                                    <th class="text-center">No.</th>
+                                    <th class="text-center">Invoice No.</th>
+                                    <th class="text-center">Tanggal & Waktu</th>
+                                    <th class="text-center">Customer</th>
+                                    <th class="text-center">Contact</th>
+                                    <th class="text-center">Metode & Channel Pembayaran</th>
+                                    <th class="text-center">Deskripsi Pesanan</th>
+                                    <th class="text-center">Grand Total</th>
+                                    <th class="text-center">Status</th>
+                                    <th class="text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
