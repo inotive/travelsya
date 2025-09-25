@@ -1,19 +1,7 @@
 @extends('admin.layout', ['title' => 'Daftar Merek', 'url' => ''])
 
 @section('content-admin')
-    @if(session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    @if(session('error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+    {{-- Session messages will be handled by Toastr in JavaScript --}}
 
     <!--begin::Tables Widget 11-->
     <div class="card mb-5 mb-xl-8">
@@ -290,8 +278,67 @@
             #kt_datatable_zero_configuration td {
                 vertical-align: middle;
             }
+
+            /* Custom Toastr styling for admin theme */
+            .toast-top-right {
+                top: 80px !important;
+                right: 20px !important;
+            }
+
+            .toast-success {
+                background-color: #1bc5bd !important;
+                border-left: 4px solid #0bb7af !important;
+            }
+
+            .toast-error {
+                background-color: #f64e60 !important;
+                border-left: 4px solid #f1416c !important;
+            }
+
+            .toast-warning {
+                background-color: #ffa800 !important;
+                border-left: 4px solid #ff8c00 !important;
+            }
+
+            .toast-info {
+                background-color: #3699ff !important;
+                border-left: 4px solid #0d6efd !important;
+            }
+
+            .toast {
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+                border-radius: 0.5rem !important;
+                font-family: 'Inter', sans-serif !important;
+            }
         </style>
         <script>
+            // Setup AJAX to include CSRF token
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            // Custom Toastr configuration for this page
+            toastr.options = {
+                "closeButton": true,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": true,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "4000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut",
+                "tapToDismiss": true
+            };
+
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
                     "scrollY": "500px",
@@ -327,6 +374,7 @@
 
                     // Set form action
                     $('#kt_modal_edit_brand_form').attr('action', '{{ route("admin.brand.index") }}/' + id);
+                    $('#kt_modal_edit_brand_form').data('brand-id', id);
 
                     // Store original values for reset functionality
                     $('#kt_modal_edit_brand_form').data('original-name', name);
@@ -422,36 +470,252 @@
                     $('#modal-edit').modal('hide');
                 });
 
-                // Form validation
+                // AJAX form submission for create
                 $('#kt_modal_new_brand_form').on('submit', function(e) {
+                    e.preventDefault();
+
                     var name = $('input[name="name"]').val().trim();
-                    var image = $('input[name="image"]')[0].files.length;
+                    var imageFile = $('input[name="image"]')[0].files[0];
 
+                    // Validation
                     if (name === '') {
-                        e.preventDefault();
-                        alert('Nama Merek Kendaraan harus diisi!');
+                        toastr.error('Nama Merek Kendaraan harus diisi!');
                         return false;
                     }
 
-                    if (image === 0) {
-                        e.preventDefault();
-                        alert('Gambar Kendaraan harus diisi!');
+                    if (!imageFile) {
+                        toastr.error('Gambar Kendaraan harus diisi!');
                         return false;
                     }
+
+                    // Show loading state
+                    var submitBtn = $('#kt_modal_new_brand_submit');
+                    var originalText = submitBtn.find('.indicator-label').text();
+                    submitBtn.prop('disabled', true);
+                    submitBtn.find('.indicator-label').text('Creating...');
+
+                    // Prepare form data
+                    var formData = new FormData();
+                    formData.append('name', name);
+                    formData.append('image', imageFile);
+
+                    // AJAX request
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.success) {
+                                // Show success message
+                                showAlert('success', response.message);
+
+                                // Add new row to table
+                                addTableRow(response.data);
+
+                                // Close modal
+                                $('#create').modal('hide');
+
+                                // Reset form
+                                $('#kt_modal_new_brand_form')[0].reset();
+                                $('#create-image-preview').empty();
+                            } else {
+                                showAlert('error', response.message || 'Terjadi kesalahan saat menambahkan data');
+                            }
+                        },
+                        error: function(xhr) {
+                            var errorMessage = 'Terjadi kesalahan saat menambahkan data';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                var errors = xhr.responseJSON.errors;
+                                var errorMessages = [];
+                                for (var field in errors) {
+                                    errorMessages.push(errors[field][0]);
+                                }
+                                errorMessage = errorMessages.join('<br>');
+                            }
+                            showAlert('error', errorMessage);
+                        },
+                        complete: function() {
+                            // Reset button state
+                            submitBtn.prop('disabled', false);
+                            submitBtn.find('.indicator-label').text(originalText);
+                        }
+                    });
                 });
 
+                // AJAX form submission for edit
                 $('#kt_modal_edit_brand_form').on('submit', function(e) {
-                    var name = $('#edit-name').val().trim();
+                    e.preventDefault();
 
+                    var name = $('#edit-name').val().trim();
+                    var imageFile = $('#edit-image-input')[0].files[0];
+                    var brandId = $(this).data('brand-id');
+
+                    // Validation
                     if (name === '') {
-                        e.preventDefault();
-                        alert('Nama Merek Kendaraan harus diisi!');
+                        toastr.error('Nama Merek Kendaraan harus diisi!');
                         return false;
                     }
+
+                    // Show loading state
+                    var submitBtn = $('#kt_modal_edit_brand_submit');
+                    var originalText = submitBtn.find('.indicator-label').text();
+                    submitBtn.prop('disabled', true);
+                    submitBtn.find('.indicator-label').text('Updating...');
+
+                    // Prepare form data
+                    var formData = new FormData();
+                    formData.append('_method', 'PUT');
+                    formData.append('name', name);
+                    if (imageFile) {
+                        formData.append('image', imageFile);
+                    }
+
+                    // AJAX request
+                    $.ajax({
+                        url: $(this).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.success) {
+                                // Show success message
+                                showAlert('success', response.message);
+
+                                // Update table row data
+                                updateTableRow(brandId, response.data);
+
+                                // Close modal
+                                $('#modal-edit').modal('hide');
+
+                                // Reset form
+                                $('#kt_modal_edit_brand_form')[0].reset();
+                                $('#edit-image-preview').empty();
+                                $('#current-image').empty();
+                            } else {
+                                showAlert('error', response.message || 'Terjadi kesalahan saat memperbarui data');
+                            }
+                        },
+                        error: function(xhr) {
+                            var errorMessage = 'Terjadi kesalahan saat memperbarui data';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMessage = xhr.responseJSON.message;
+                            } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                                var errors = xhr.responseJSON.errors;
+                                var errorMessages = [];
+                                for (var field in errors) {
+                                    errorMessages.push(errors[field][0]);
+                                }
+                                errorMessage = errorMessages.join('<br>');
+                            }
+                            showAlert('error', errorMessage);
+                        },
+                        complete: function() {
+                            // Reset button state
+                            submitBtn.prop('disabled', false);
+                            submitBtn.find('.indicator-label').text(originalText);
+                        }
+                    });
                 });
             });
 
+            // Helper function to show alerts using Toastr
+            function showAlert(type, message) {
+                if (type === 'success') {
+                    toastr.success(message);
+                } else if (type === 'error') {
+                    toastr.error(message);
+                } else if (type === 'warning') {
+                    toastr.warning(message);
+                } else if (type === 'info') {
+                    toastr.info(message);
+                } else {
+                    toastr.info(message);
+                }
+            }
+
+            // Helper function to add new table row
+            function addTableRow(data) {
+                var table = $('#kt_datatable_zero_configuration').DataTable();
+                var rowCount = table.rows().count();
+                var newRowNumber = rowCount + 1;
+
+                // Create image HTML
+                var imageHtml;
+                if (data.image) {
+                    imageHtml = '<img src="{{ asset("storage/") }}/' + data.image + '" alt="' + data.name + '" style="width: 50px; height: 50px; object-fit: cover;" class="rounded">';
+                } else {
+                    imageHtml = '<div class="symbol symbol-50px"><div class="symbol-label bg-light-primary text-primary fs-6 fw-bold">' + data.name.charAt(0) + '</div></div>';
+                }
+
+                // Create new row HTML
+                var newRow = '<tr id="index_' + data.id + '">' +
+                    '<td class="text-center" style="width: 10%;">' + newRowNumber + '</td>' +
+                    '<td class="text-start" style="width: 10%;">' + data.name + '</td>' +
+                    '<td class="text-center" style="width: 20%;">' + imageHtml + '</td>' +
+                    '<td class="text-center" style="width: 20%;">' +
+                        '<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4" data-kt-menu="true" style="">' +
+                            '<div class="menu-item px-3">' +
+                                '<a href="{{ route("admin.brand.show", "") }}/' + data.id + '" class="menu-link px-3 text-primary">Detail</a>' +
+                            '</div>' +
+                            '<div class="menu-item px-3">' +
+                                '<a href="" data-bs-toggle="modal" data-bs-target="#modal-edit" class="menu-link px-3 text-warning" id="btn-edit-brand" data-id="' + data.id + '" data-name="' + data.name + '" data-image="' + (data.image || '') + '">Edit</a>' +
+                            '</div>' +
+                            '<div class="menu-item px-3">' +
+                                '<a href="#" class="menu-link px-3 text-danger" data-bs-toggle="modal" data-bs-target="#kt_modal_delete_brand' + data.id + '">Delete</a>' +
+                            '</div>' +
+                        '</div>' +
+                        '<a href="#" class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">Actions <i class="ki-duotone ki-down fs-5 ms-1"></i></a>' +
+                    '</td>' +
+                '</tr>';
+
+                // Add row to table
+                table.row.add($(newRow)).draw();
+            }
+
+            // Helper function to update table row
+            function updateTableRow(brandId, data) {
+                var row = $('#index_' + brandId);
+
+                // Update name
+                row.find('td:nth-child(2)').text(data.name);
+
+                // Update image
+                var imageCell = row.find('td:nth-child(3)');
+                if (data.image) {
+                    imageCell.html('<img src="{{ asset("storage/") }}/' + data.image + '" alt="' + data.name + '" style="width: 50px; height: 50px; object-fit: cover;" class="rounded">');
+                } else {
+                    imageCell.html('<div class="symbol symbol-50px"><div class="symbol-label bg-light-primary text-primary fs-6 fw-bold">' + data.name.charAt(0) + '</div></div>');
+                }
+
+                // Update data attributes for edit button
+                var editButton = row.find('#btn-edit-brand');
+                editButton.attr('data-name', data.name);
+                editButton.attr('data-image', data.image);
+            }
+
             document.addEventListener("DOMContentLoaded", function() {
+                // Handle session messages with Toastr
+                @if(session('success'))
+                    toastr.success('{{ session('success') }}');
+                @endif
+
+                @if(session('error'))
+                    toastr.error('{{ session('error') }}');
+                @endif
+
+                @if(session('warning'))
+                    toastr.warning('{{ session('warning') }}');
+                @endif
+
+                @if(session('info'))
+                    toastr.info('{{ session('info') }}');
+                @endif
+
                 @if ($errors->any() || session('openModal'))
                     var myModal = new bootstrap.Modal(document.getElementById('create'));
                     myModal.show();
