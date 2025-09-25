@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TransactionRequest;
+use App\Http\Resources\Transaction\TransactionResource;
 use App\Models\BookDate;
 use App\Models\DetailTransaction;
 use App\Models\Guest;
@@ -21,67 +22,51 @@ class TransactionController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->role == 0) {
-            $tr = Transaction::with('user')
+            $tr = Transaction::with([
+                    'user',
+                    'detailTransactionPPOB',
+                    'detailTransactionTopUp',
+                    'detailTransactionHotel',
+                    'detailTransactionHostel',
+                    'detailTransactionBus',
+                    'detailTransactionCarRent',
+                    'detailTransactionHealthBeauty',
+                    'detailTransactionRecreation',
+                    'services'
+                ])
                 ->when($request->start, function ($query) use ($request) {
-                    $query->whereDate('transactions.created_at', '>=', $request->start);
+                    $query->whereDate('created_at', '>=', $request->start);
                 })
                 ->when($request->end, function ($query) use ($request) {
-                    $query->whereDate('transactions.created_at', '<=', $request->end);
+                    $query->whereDate('created_at', '<=', $request->end);
                 })
-                ->leftJoin('detail_transaction_top_up', function ($join) {
-                    $join->on('transactions.id', '=', 'detail_transaction_top_up.transaction_id');
-                })
-                ->leftJoin('detail_transaction_ppob', function ($join) {
-                    $join->on('transactions.id', '=', 'detail_transaction_ppob.transaction_id');
-                })
-                ->leftJoin('detail_transaction_hotel', function ($join) {
-                    $join->on('transactions.id', '=', 'detail_transaction_hotel.transaction_id');
-                })
-                ->leftJoin('detail_transaction_hostel', function ($join) {
-                    $join->on('transactions.id', '=', 'detail_transaction_hostel.transaction_id');
-                })
-                ->where('transactions.deleted_at', null)
-                ->groupBy(
-                    'transactions.id',
-                    'transactions.no_inv',
-                    'transactions.payment_method',
-                    'transactions.payment_channel',
-                    'transactions.status',
-                    'transactions.total',
-                    'transactions.service',
-                    'transactions.created_at',
-                    'transactions.service_id'
-                )
-                ->orderBy('transactions.created_at', 'desc')
-                ->selectRaw('
-                transactions.id,
-                transactions.no_inv,
-                transactions.payment_method,
-                transactions.payment_channel,
-                transactions.status,
-                transactions.total,
-                transactions.service as service,
-                transactions.created_at,
-                transactions.service_id,
-                MAX(detail_transaction_hotel.fee_admin) + MAX(detail_transaction_hotel.kode_unik) as hotel_fee,
-                MAX(detail_transaction_hostel.fee_admin) + MAX(detail_transaction_hostel.kode_unik) as hostel_fee,
-                MAX(detail_transaction_ppob.fee_travelsya) + MAX(detail_transaction_ppob.kode_unik) as ppob_fee,
-                MAX(detail_transaction_top_up.fee_travelsya) + MAX(detail_transaction_top_up.kode_unik) as topup_fee');
-            // ->get();
+                ->whereNull('deleted_at');
         } else {
             $id = auth()->user()->id;
-            $tr = Transaction::with('user')->withWhereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
-                $q->where('user_id', $id);
-            });
+            $tr = Transaction::with([
+                    'user',
+                    'detailTransactionPPOB',
+                    'detailTransactionTopUp',
+                    'detailTransactionHotel',
+                    'detailTransactionHostel',
+                    'detailTransactionBus',
+                    'detailTransactionCarRent',
+                    'detailTransactionHealthBeauty',
+                    'detailTransactionRecreation',
+                    'services'
+                ])
+                ->whereHas('detailTransaction.hostelRoom.hostel', function ($q) use ($id) {
+                    $q->where('user_id', $id);
+                });
         }
 
-        if ($request->service != null)
+        if ($request->service != null) {
             $tr = $tr->where('service_id', $request->service);
-
+        }
         $transactions = $tr->orderBy('no_inv', 'desc')->get();
 
         $services = Service::all();
-        return view('admin.transaction', compact('transactions', 'services'));
+        return view('admin.transaction', ['transactions' => TransactionResource::collection($transactions), 'services' => $services]);
     }
 
     public function detail($id)
