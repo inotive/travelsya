@@ -105,24 +105,25 @@
     </div>
 
     <!-- Toast Container for Success -->
-    <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toast-success" class="toast align-items-center text-white bg-success border-0 rounded-3 shadow-lg"
-                role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px; font-size: 1.1rem;">
-                <div class="d-flex">
-                    <div class="toast-icon me-2">
-                        <i class="bi bi-check-circle-fill"></i>
+    @if (session('success'))
+        <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div id="toast-success" class="toast align-items-center text-white bg-success border-0 rounded-3 shadow-lg"
+                    role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px; font-size: 1.1rem;">
+                    <div class="d-flex">
+                        <div class="toast-icon me-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <div class="toast-body">
+                            {{ session('success') }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="toast-body">
-                        Data berhasil ditambahkan!
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
                 </div>
             </div>
         </div>
-    </div>
-
+    @endif
 
     <!-- Toast Container for Delete -->
     <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
@@ -164,7 +165,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
 @endsection
 
 @push('add-script')
@@ -193,7 +194,7 @@
 
             table.on('order.dt search.dt', function () {
                 let i = 1;
- 
+
                 table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
                     this.data(i++);
                 });

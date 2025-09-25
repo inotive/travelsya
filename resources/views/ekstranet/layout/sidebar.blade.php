@@ -240,97 +240,83 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
                     <!--end:Menu link-->
                     <div class="menu-sub menu-sub-accordion">
-                        @if (count($hotel) > 0 || count($hostel) > 0)
-                            @if (count($hotel) > 0)
-                                @foreach ($hotel as $item)
-                                    <!--begin:Menu item-->
-                                    <div class="menu-item">
-                                        <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' ? 'active' : '' }}"
-                                            href="{{ route('partner.riwayat-booking') }}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Hotel - {{ $item->id }}</span>
-                                        </a>
-                                    </div>
-                                    <!--end:Menu item-->
-                                @endforeach
-                            @endif
-                            @if (count($hostel) > 0)
-                                @foreach ($hostel as $item)
-                                    <!--begin:Menu item-->
-                                    <div class="menu-item">
-                                        <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' ? 'active' : '' }}"
-                                            href="{{ route('partner.riwayat-booking') }}">
-                                            <span class="menu-bullet">
-                                                <span class="bullet bullet-dot"></span>
-                                            </span>
-                                            <span class="menu-title">Hostel - {{ $item->id }}</span>
-                                        </a>
-                                    </div>
-                                    <!--end:Menu item-->
-                                @endforeach
-                            @endif
+                        @if (count($hotel) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' ? 'active' : '' }}"
+                                   href="{{ route('partner.riwayat-booking') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Hotel</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
+                        @endif
+                        @if (count($hostel) > 0)
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking' ? 'active' : '' }}"
+                                   href="{{ route('partner.riwayat-booking') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Hostel</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
                         @endif
                         @if (count($recreations) > 0)
-                            @foreach ($recreations as $item)
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-recreation' ? 'active' : '' }}"
-                                        href="{{ route('partner.riwayat-booking.recreation') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Rekreasi - {{ $item->business_name }}</span>
-                                    </a>
-                                </div>
-                                <!--end:Menu item-->
-                            @endforeach
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-recreation' ? 'active' : '' }}"
+                                   href="{{ route('partner.riwayat-booking.recreation') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Rekreasi</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
                         @endif
                         @if (count($carRentals) > 0)
-                            @foreach ($carRentals as $item)
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-car-rental' ? 'active' : '' }}"
-                                        href="{{ route('partner.riwayat-booking.car-rental') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Sewa Mobil - {{ $item->business_name }}</span>
-                                    </a>
-                                </div>
-                                <!--end:Menu item-->
-                            @endforeach
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-car-rental' ? 'active' : '' }}"
+                                   href="{{ route('partner.riwayat-booking.car-rental') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Sewa Mobil</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
                         @endif
                         @if (count($busTravels) > 0)
-                            @foreach ($busTravels as $item)
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-bus-travel' ? 'active' : '' }}"
-                                        href="{{ route('partner.riwayat-booking.bus-travel') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Bus & Travel - {{ $item->business_name }}</span>
-                                    </a>
-                                </div>
-                                <!--end:Menu item-->
-                            @endforeach
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-bus-travel' ? 'active' : '' }}"
+                                   href="{{ route('partner.riwayat-booking.bus-travel') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Bus & Travel</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
                         @endif
                         @if (count($clinic) > 0)
-                            @foreach ($clinic as $item)
-                                <!--begin:Menu item-->
-                                <div class="menu-item">
-                                    <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-health-beauty' ? 'active' : '' }}"
-                                        href="{{ route('partner.health-beauty.index') }}">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Health & Beauty - {{ $item->clinic_name }}</span>
-                                    </a>
-                                </div>
-                                <!--end:Menu item-->
-                            @endforeach
+                            <!--begin:Menu item-->
+                            <div class="menu-item">
+                                <a class="menu-link {{ Request::segment(2) == 'riwayat-booking-health-beauty' ? 'active' : '' }}"
+                                   href="{{ route('partner.health-beauty.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Health & Beauty</span>
+                                </a>
+                            </div>
+                            <!--end:Menu item-->
                         @endif
                     </div>
 
@@ -415,20 +401,6 @@ $isPemesananActive = in_array(Request::segment(2), [
                                 <i class="fas fa-car-side fs-3"></i>
                             </span>
                             <span class="menu-title">Daftar kendaraan</span>
-                        </span>
-                        <!--end:Menu link-->
-                    </a>
-                @endif
-
-                @if (count($busTravels) > 0)
-                    <a href="{{ route('partner.daftar.bus-travel') }}"
-                        class="menu-item {{ Request::segment(2) == 'daftar-bus-travel' ? 'here' : '' }} menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fas fa-bus fs-3"></i>
-                            </span>
-                            <span class="menu-title">Bus & Travel</span>
                         </span>
                         <!--end:Menu link-->
                     </a>
