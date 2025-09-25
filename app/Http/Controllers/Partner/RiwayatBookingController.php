@@ -370,6 +370,14 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
+        // Automatically update status for expired bookings
+        DetailTransactionCarRental::where('end', '<', now())
+            ->where('status', 'belum_dipakai')
+            ->whereHas('carRental', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })
+            ->update(['status' => 'kadaluwarsa']);
+
         $carrentalbookdates = DetailTransactionCarRental::with('carRental', 'car.brand', 'car.carModel', 'transaction.user')
             ->whereHas('carRental', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
