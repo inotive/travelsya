@@ -20,7 +20,7 @@
                 class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $deal->img != '' ? asset($deal->img) : asset('images/placeholder.jpg') }}"
+                        <img src="{{ asset('storage/' . (isset($deal->image) && isset($deal->image->image) ? $deal->image->image : 'images/not_found.jpg')) }}"
                             class="card-img-top" alt="{{ $deal->name }}"
                             onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"

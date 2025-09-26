@@ -88,25 +88,30 @@ class NewHealthBeautyController extends Controller
     }
     public function index()
     {
-        $special_deals = ClinicHasPackages::with(['clinic.kota', 'image'])->where(function($q){
-            $q->whereHas('clinic', function($c){
-                $c->where('category', 'kesehatan')
-                ->Active();
-            })
-            ->whereColumn('unit_price', '>' ,'price');
-        })
-        ->limit(10)
+        $special_deals_all = ClinicHasPackages::with(['clinic.kota', 'image'])->whereHas('clinic', function($q){
+            $q->Active();
+        })->whereColumn('unit_price', '>' ,'price')
+        ->limit(20) // Ambil lebih banyak untuk dibagi ke dua kategori
         ->get();
+        
+        // Filter data berdasarkan kategori
+        $special_deals = $special_deals_all->filter(function($deal) {
+            return $deal->clinic && $deal->clinic->category === 'kesehatan';
+        })->take(10);
 
-        $special_deals_beauty = ClinicHasPackages::with(['clinic.kota', 'image'])->where(function($q){
-            $q->whereHas('clinic', function($c){
-                $c->where('category', 'kecantikan')
-                ->Active();
-            })
-            ->whereColumn('unit_price', '>' ,'price');
-        })
-        ->limit(10)
-        ->get();
+        $special_deals_beauty = $special_deals_all->filter(function($deal) {
+            return $deal->clinic && $deal->clinic->category === 'kecantikan';
+        })->take(10);
+
+        // Jika data khusus untuk kesehatan kosong, gunakan semua data sebagai fallback
+        if ($special_deals->isEmpty()) {
+            $special_deals = $special_deals_all->take(10);
+        }
+        
+        // Jika data khusus untuk kecantikan kosong, gunakan semua data sebagai fallback
+        if ($special_deals_beauty->isEmpty()) {
+            $special_deals_beauty = $special_deals_all->take(10);
+        }
 
         $categories = CategoriesServices::get();
 
