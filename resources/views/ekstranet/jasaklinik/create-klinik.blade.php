@@ -217,6 +217,20 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="fs-6 fw-semibold mb-2">Harga Satuan (Unit Price)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input id="unit_price" class="form-control form-control-lg" placeholder="Masukan harga satuan" 
+                                    name="unit_price" value="{{ old('unit_price') }}" />
+                            </div>
+                            @error('unit_price')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Status</label>
                             <select class="form-control" name="is_active" required>
                                 <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
@@ -229,7 +243,7 @@
                             @enderror
                         </div>
 
-                        <input type="hidden" name="unit_price" value="unit_price">
+                        
                     </div>
                     <!--end::Input group-->
 

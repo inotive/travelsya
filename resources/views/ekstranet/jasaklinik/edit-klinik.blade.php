@@ -128,8 +128,21 @@
                             </select>
                         </div>
 
-                        <!-- Unit Price (hidden) -->
-                        <input type="hidden" name="unit_price" value="unit_price">
+                        <!-- Unit Price -->
+                        <div class="col-md-6">
+                            <label for="unit_price" class="form-label fs-6 fw-semibold mb-2">Harga Satuan (Unit Price)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" class="form-control form-control-lg" id="unit_price" name="unit_price"
+                                    placeholder="Masukan harga satuan"
+                                    value="{{ old('unit_price', $clinic->unit_price ?? '') }}">
+                            </div>
+                            @error('unit_price')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
                         <!-- Existing Images -->
                         @if(isset($clinicImages) && count($clinicImages) > 0)
@@ -223,8 +236,29 @@
             $('#price').val(formatRupiah(numericValue));
         }
         
+        // Format unit price saat halaman dimuat
+        let currentUnitPrice = $('#unit_price').val();
+        if (currentUnitPrice && /^\d+$/.test(currentUnitPrice.trim())) {
+            let numericValue = parseInt(currentUnitPrice.replace(/[^\d]/g, ''), 10);
+            $('#unit_price').val(formatRupiah(numericValue));
+        }
+        
         // Format harga saat input
         $('#price').on('input', function(e) {
+            let oldValue = this.value;
+            let numericValue = parseRupiah(oldValue);
+            
+            if (numericValue === 0 && oldValue.replace(/[^0-9]/g, '') === '') {
+                $(this).val('');
+                return;
+            }
+            
+            let formatted = formatRupiah(numericValue);
+            $(this).val(formatted);
+        });
+        
+        // Format unit price saat input
+        $('#unit_price').on('input', function(e) {
             let oldValue = this.value;
             let numericValue = parseRupiah(oldValue);
             
@@ -254,6 +288,20 @@
                 alert('Harga wajib diisi');
                 e.preventDefault();
                 return false;
+            }
+            
+            // Parse unit price sebelum submit jika ada
+            let unitPriceValue = $('#unit_price').val();
+            if (unitPriceValue && unitPriceValue.trim() !== '') {
+                let unitPrice = parseRupiah(unitPriceValue);
+                
+                if (isNaN(unitPrice) || unitPrice < 0) {
+                    alert('Harga satuan harus berupa angka yang valid dan tidak negatif');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                $('#unit_price').val(unitPrice);
             }
         });
 

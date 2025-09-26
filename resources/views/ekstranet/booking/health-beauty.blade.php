@@ -58,6 +58,7 @@
                         <thead>
                             <tr class="fw-bold fs-6 text-gray-800 ">
                                 <th class="text-center">No</th>
+                                <th class="text-center">Nama Bisnis (Mitra Health & Beauty)</th>
                                 <th class="text-center">Customer</th>
                                 <th class="text-center">Code Booking</th>
                                 <th class="text-center">Jenis Paket</th>
@@ -111,6 +112,7 @@
                                 @if (true)
                                 <tr data-booking-id="{{ $booking->id }}" data-status="{{ $statusKey }}">
                                     <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $booking->clinic->clinic_name ?? '' }}</td>
                                     <td class="text-center">
                                         {{ $booking->transaction->user->name ?? '' }} -
                                         {{ $booking->transaction->user->phone ?? '' }}
