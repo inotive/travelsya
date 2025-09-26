@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Modal Edit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Test Modal Edit</h2>
+
+        <!-- Test Button -->
+        <button type="button" class="btn btn-warning" id="btn-edit-car-model"
+                data-id="1"
+                data-name="Toyota Camry"
+                data-image="car-models/test-image.jpg"
+                data-brand-id="2">
+            Edit Car Model
+        </button>
+
+        <!-- Test Button for Brand -->
+        <button type="button" class="btn btn-warning" id="btn-edit-brand"
+                data-id="1"
+                data-name="Toyota"
+                data-image="brands/test-brand.jpg">
+            Edit Brand
+        </button>
+
+        <!-- Modal Edit Car Model -->
+        <div class="modal fade" id="modal-edit" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered mw-650px">
+                <div class="modal-content rounded">
+                    <div class="modal-header pb-0 border-0 justify-content-end">
+                        <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                            <i class="ki-duotone ki-cross fs-1">×</i>
+                        </div>
+                    </div>
+                    <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                        <form id="kt_modal_edit_car_model_form" class="form" method="post" action="" enctype="multipart/form-data">
+                            <div class="mb-13 text-center">
+                                <h1 class="mb-3">Edit Tipe Kendaraan</h1>
+                            </div>
+                            <div class="row g-9 mb-8">
+                                <div class="col-md-12">
+                                    <label class="fs-6 fw-semibold mb-2">Gambar Tipe Kendaraan</label>
+                                    <div id="current-image" class="mb-3"></div>
+                                    <div id="edit-image-preview" class="mb-3"></div>
+                                    <input type="file" class="form-control" name="image" accept="image/*" id="edit-image-input">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="required fs-6 fw-semibold mb-2">Nama Tipe</label>
+                                    <input class="form-control form-control-lg" id="edit-name" placeholder="Masukan nama tipe" name="name" />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="required fs-6 fw-semibold mb-2">Merek</label>
+                                    <select class="form-select form-select-solid" name="brand_id" id="edit-brand-id">
+                                        <option value="">Pilih Merek</option>
+                                        <option value="1">Honda</option>
+                                        <option value="2">Toyota</option>
+                                        <option value="3">Suzuki</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="reset" id="kt_modal_edit_car_model_cancel" class="btn btn-light me-3">Cancel</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="submit" id="kt_modal_edit_car_model_submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    $(document).ready(function() {
+        // Edit button click handler
+        $(document).on('click', '#btn-edit-car-model', function(e) {
+            e.preventDefault();
+
+            var id = $(this).data('id');
+            var name = $(this).data('name');
+            var image = $(this).data('image');
+            var brandId = $(this).data('brand-id');
+
+            console.log('Edit button clicked:', {id, name, image, brandId});
+
+            // Set form action
+            $('#kt_modal_edit_car_model_form').attr('action', '/admin/car-model/' + id);
+
+            // Store original values for reset functionality
+            $('#kt_modal_edit_car_model_form').data('original-name', name);
+            $('#kt_modal_edit_car_model_form').data('original-image', image);
+            $('#kt_modal_edit_car_model_form').data('original-brand-id', brandId);
+
+            // Set default values from database
+            $('#edit-name').val(name);
+            $('#edit-brand-id').val(brandId);
+
+            console.log('Setting form values:', {
+                name: name,
+                brandId: brandId,
+                image: image
+            });
+
+            // Clear previous preview
+            $('#edit-image-preview').empty();
+            $('#edit-image-input').val('');
+
+            // Show current image if exists
+            if (image && image !== '') {
+                $('#current-image').html('<img src="/storage/' + image + '" style="width: 100px; height: 100px; object-fit: cover;" class="rounded">');
+            } else {
+                $('#current-image').html('<div class="symbol symbol-100px"><div class="symbol-label bg-light-info text-info fs-2 fw-bold">' + (name ? name.charAt(0).toUpperCase() : 'N') + '</div></div>');
+            }
+
+            // Show the modal
+            $('#modal-edit').modal('show');
+
+            // Verify data is set after modal is shown
+            setTimeout(function() {
+                console.log('Form values after modal show:', {
+                    name: $('#edit-name').val(),
+                    brandId: $('#edit-brand-id').val(),
+                    image: image
+                });
+            }, 100);
+        });
+
+        // Ensure data is populated when modal is shown
+        $('#modal-edit').on('shown.bs.modal', function() {
+            console.log('Modal shown, checking form values:', {
+                name: $('#edit-name').val(),
+                brandId: $('#edit-brand-id').val()
+            });
+        });
+    });
+    </script>
+</body>
+</html>
