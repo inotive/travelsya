@@ -327,7 +327,7 @@
                     <div class=" container-xxl">
                         <div class="row py-10  ">
                             <div class="col-md-3">
-                                <img class="logo-travelsya" style="width: 170px; height: 50px;" class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}" alt="logo-travelsya">
+                                <img class="logo-travelsya" style="width: 170px; height: 50px;" class="img-fluid mb-5" src="{{ asset('assets/media/logos/logonew.png') }}" alt="logo-travelsya">
                                 <p class="mt-5"><strong>Alamat</strong></p>
                                 <p class="mt-5">Kalimantan Timur, Balikpapan, Indonesia</p>
                                 <p class="mt-5"><strong>Email</strong></p>
@@ -390,7 +390,7 @@
                                                 Bayar PDAM
                                             </a>
                                         </p>
-                                        <p class="mt-5">Transfer Bank</p>
+                                        {{-- <p class="mt-5">Transfer Bank</p> --}}
                                         <p class="mt-5" data-bs-toggle="modal" data-bs-target="#modal-ewallet">
                                             <a class="text-dark" href="#">
                                                 Top up Ewallet
