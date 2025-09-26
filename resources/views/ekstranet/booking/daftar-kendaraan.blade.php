@@ -69,6 +69,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -85,6 +86,7 @@
                                 @foreach ($carrentalbookdates as $booking)
                                     <tr>
                                         <td class="text-center">{{ $counter++ }}</td>
+                                        <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                             {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -98,26 +100,20 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
-                                            @php
-                                                $status = $booking->status;
-                                            @endphp
-                                            @if($status == 'kedaluwarsa')
-                                                <span class="badge badge-danger">Kadaluarsa</span>
-                                            @elseif($status == 'sudah_dipakai')
+                                            @if($booking->status == 'kadaluwarsa')
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
+                                            @elseif($booking->status == 'sudah_dipakai')
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @php
-                                                $status = $booking->status;
-                                            @endphp
-                                            @if($status == 'belum_dipakai')
+                                            @if($booking->status == 'belum_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
                                                     Verifikasi
                                                 </a>
-                                            @elseif($status == 'sudah_dipakai')
+                                            @elseif($booking->status == 'sudah_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
@@ -141,6 +137,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -157,6 +154,7 @@
                                     @if($booking->status == 'sudah_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -189,6 +187,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -205,6 +204,7 @@
                                     @if($booking->status == 'belum_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -237,6 +237,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
@@ -253,6 +254,7 @@
                                     @if($booking->status == 'kedaluwarsa')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
@@ -283,12 +285,7 @@
 </form>
 
     @foreach ($carrentalbookdates as $booking)
-        @php
-            $status = $booking->status;
-        @endphp
-        
-        {{-- Modal for verification --}}
-        @if($status == 'belum_dipakai')
+        @if ($booking->status == 'belum_dipakai')
             <div class="modal fade" id="verificationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -309,10 +306,7 @@
                     </div>
                 </div>
             </div>
-        @endif
-        
-        {{-- Modal for cancellation verification --}}
-        @if($status == 'sudah_dipakai')
+        @elseif($booking->status == 'sudah_dipakai')
             <div class="modal fade" id="cancellationModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -335,7 +329,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Modal Konfirmasi Pembatalan -->
             <div class="modal fade" id="confirmCancelModalCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -354,10 +348,7 @@
                     </div>
                 </div>
             </div>
-        @endif
-        
-        {{-- Modal for expired bookings --}}
-        @if($status == 'kedaluwarsa')
+        @elseif($booking->status == 'kadaluwarsa')
             <div class="modal fade" id="infoModalExpiredCarRental{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">

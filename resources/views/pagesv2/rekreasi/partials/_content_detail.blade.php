@@ -21,9 +21,6 @@
                     <a class="nav-link text-dark" href="#lokasi">Lokasi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="#fasilitas">Fasilitas</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link text-dark" href="#deskripsi">Deskripsi</a>
                 </li>
             </ul>
@@ -120,22 +117,6 @@
                 </div>
             </div>
         @endif
-
-        <div class="px-3 mb-35px d-flex flex-column fs-4" id="fasilitas">
-            <div class="section-title mb-4">
-                <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
-                    Fasilitas
-                </div>
-            </div>
-            <div id="facility" class="d-flex flex-row align-items-center">
-                <span class="fa-solid fa-store"></span>
-                <span class="ms-2">Toko Suvenir</span>
-                <span class="fa-solid fa-camera ms-5"></span>
-                <span class="ms-2">Spot Foto</span>
-                <span class="fa-solid fa-utensils ms-5"></span>
-                <span class="ms-2">Restoran/Food Court</span>
-            </div>
-        </div>
 
         <div class="px-3 mb-35px d-flex flex-column fs-4" id="deskripsi">
             <div class="section-title mb-4">

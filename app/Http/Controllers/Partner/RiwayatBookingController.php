@@ -291,6 +291,14 @@ class RiwayatBookingController extends Controller
     {
         $user_id = auth()->user()->id;
 
+        // Automatically update status for expired bookings
+        DetailTransactionRecreation::where('expire_on', '<', now())
+            ->where('status', 'belum_dipakai')
+            ->whereHas('recreation', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })
+            ->update(['status' => 'kadaluwarsa']);
+
         $rekreasibookdates = DetailTransactionRecreation::with('recreation', 'transaction.user', 'package')
             ->whereHas('recreation', function ($query) use ($user_id) {
                 $query->where('user_id', $user_id);
@@ -342,7 +350,7 @@ class RiwayatBookingController extends Controller
     public function verifikasiRekreasi($id)
     {
         $booking = DetailTransactionRecreation::findOrFail($id);
-        $booking->is_used = true;
+        $booking->status = 'sudah_dipakai';
         $booking->save();
 
         return redirect()->back()->with('success', 'Booking berhasil diverifikasi');
@@ -351,7 +359,7 @@ class RiwayatBookingController extends Controller
     public function batalVerifikasiRekreasi($id)
     {
         $booking = DetailTransactionRecreation::findOrFail($id);
-        $booking->is_used = false;
+        $booking->status = 'belum_dipakai';
         $booking->save();
 
         return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
@@ -361,6 +369,14 @@ class RiwayatBookingController extends Controller
     public function indexCarRental(Request $request)
     {
         $user_id = auth()->user()->id;
+
+        // Automatically update status for expired bookings
+        DetailTransactionCarRental::where('end', '<', now())
+            ->where('status', 'belum_dipakai')
+            ->whereHas('carRental', function ($query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })
+            ->update(['status' => 'kadaluwarsa']);
 
         $carrentalbookdates = DetailTransactionCarRental::with('carRental', 'car.brand', 'car.carModel', 'transaction.user')
             ->whereHas('carRental', function ($query) use ($user_id) {

@@ -37,8 +37,6 @@
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
                                 <span class="text-start">{{ $partner['lokasi'] }}</span>
-                                {{-- <span style="position: relative; margin-left: auto;"
-                                    class="fa-regular fa-bookmark fs-2"></span> --}}
                             </div>
 
                             <h3 class="mt-3 text-dark text-start">{{ $partner['business_name'] }}</h3>

@@ -131,16 +131,6 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Durasi (Hari)</label>
-                            <input type="number" class="form-control" name="duration" value="{{ old('duration') }}" placeholder="Contoh: 1" required min="1">
-                            @error('duration')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Tempat Mengambil Mobil</label>
                             <input type="text" class="form-control" id="pickup_location" name="pickup_location" placeholder="Tempat Mengambil Mobil" value="{{ old('pickup_location') }}" required>
                             @error('pickup_location')

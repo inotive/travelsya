@@ -29,7 +29,6 @@
                                         <span class="fa-solid fa-location-dot me-2"></span>
                                         <span>{{ ucwords($package->recreation->kota->city_name ?? 'Invalid City')
                                             }}</span>
-                                        <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                     </div>
 
                                     <h3 class="mt-3 text-dark">{{ ucwords($package->name) }}</h3>

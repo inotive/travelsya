@@ -138,7 +138,7 @@ class BookingSeeder extends Seeder
                     'customer_name' => $customer->name,
                     'customer_email' => $customer->email,
                     'customer_phone' => $customer->phone,
-                    'status' => 'pending', // Not yet verified
+                    'status' => 'belum_dipakai', // Not yet verified
                 ]
             );
 
@@ -186,7 +186,7 @@ class BookingSeeder extends Seeder
                     'customer_name' => $customer->name,
                     'customer_email' => $customer->email,
                     'customer_phone' => $customer->phone,
-                    'status' => 'expired', // Expired status
+                    'status' => 'kadaluwarsa', // Expired status
                 ]
             );
 
@@ -241,7 +241,7 @@ class BookingSeeder extends Seeder
                     'rent_price' => '100000',
                     'fee_admin' => '5000',
                     'kode_unik' => rand(100, 999),
-                    'is_used' => 0,
+                    'status' => 'belum_dipakai',
                 ]
             );
         }
@@ -283,7 +283,7 @@ class BookingSeeder extends Seeder
                     'rent_price' => '100000',
                     'fee_admin' => '5000',
                     'kode_unik' => rand(100, 999),
-                    'is_used' => 0,
+                    'status' => 'kadaluwarsa',
                 ]
             );
         }
