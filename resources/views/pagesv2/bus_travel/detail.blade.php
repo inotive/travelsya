@@ -27,6 +27,8 @@
 
     $departureDateTime = \Carbon\Carbon::parse($date_pergi . ' ' . $departure->departure_time);
     $arrivalDateTime = $departureDateTime->copy()->addHours($departure->duration);
+
+    $busImages = is_array($departure->busTravel->image) ? $departure->busTravel->image : json_decode($departure->busTravel->image, true);
 @endphp
 
 @extends('layouts.app_v2')
@@ -40,10 +42,10 @@
                 <a class="nav-link active" id="details-tab" data-bs-toggle="tab" href="#details_tab_pane" role="tab"
                     aria-controls="details_tab_pane" aria-selected="true">Detail</a>
             </li>
-            <li class="nav-item" role="presentation">
+            {{-- <li class="nav-item" role="presentation">
                 <a class="nav-link" id="tnc-tab" data-bs-toggle="tab" href="#tnc_tab_pane" role="tab"
                     aria-controls="tnc_tab_pane" aria-selected="false">Syarat & Ketentuan</a>
-            </li>
+            </li> --}}
         </ul>
 
         <div class="tab-content" id="busDetailsTabContent">
@@ -52,10 +54,10 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                @if (!empty($departure->busTravel->image) && is_array($departure->busTravel->image))
+                                @if (!empty($busImages) && is_array($busImages))
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                        <img src="{{ asset('storage/buses/' . $departure->busTravel->image[0]) }}"
-                                            class="object-fit-contain w-100" alt="{{ $departure->busTravel->name }}"
+                                        <img src="/storage/buses/{{ $busImages[0] }}"
+                                            class="object-fit-contain w-100" style="max-height: 270px" alt="{{ $departure->busTravel->name }}"
                                             onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                                     </a>
                                 @else
@@ -144,6 +146,22 @@
                     </div>
                 </div>
                 <div class="mb-35px">
+                    <span class="title fw-bold">Syarat dan Ketentuan</span>
+                </div>
+                <div class="card shadow mb-35px">
+                    <div class="card-body">
+                        {!! $departure->busTravel->tos !!}
+                    </div>
+                </div>
+                <div class="mb-35px">
+                    <span class="title fw-bold">Deskripsi</span>
+                </div>
+                <div class="card shadow mb-35px">
+                    <div class="card-body">
+                        {!! $departure->busTravel->deskripsi !!}
+                    </div>
+                </div>
+                <div class="mb-35px">
                     <span class="title fw-bold">Kamu Harus Tau</span>
                 </div>
                 <div class="card shadow mb-35px">
@@ -157,16 +175,6 @@
                                 memverifikasi
                                 penumpang</li>
                         </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="tnc_tab_pane" role="tabpanel" aria-labelledby="tnc-tab">
-                <div class="mb-35px">
-                    <span class="title fw-bold">Syarat dan Ketentuan</span>
-                </div>
-                <div class="card shadow mb-35px">
-                    <div class="card-body">
-                        {!! $departure->busTravel->tos !!}
                     </div>
                 </div>
             </div>
@@ -203,7 +211,7 @@
         @include('pagesv2.bus_travel.partials.components._modal_kursi')
     </div>
 
-    @if (!empty($departure->busTravel->image) && is_array($departure->busTravel->image))
+    @if (!empty($busImages) && is_array($busImages))
     <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content rounded-4 shadow-lg">
@@ -217,7 +225,7 @@
                     {{-- Main preview --}}
                     <div class="text-center mb-4">
                         <img id="mainGalleryImage"
-                            src="{{ asset('storage/buses/' . $departure->busTravel->image[0]) }}"
+                            src="/storage/buses/{{ $busImages[0] }}"
                             class="img-fluid rounded-3 shadow-sm"
                             alt="Preview Bus"
                             style="max-height: 350px; object-fit: contain;">
@@ -225,12 +233,12 @@
 
                     {{-- Thumbnail grid --}}
                     <div class="row g-2">
-                        @foreach ($departure->busTravel->image as $key => $image)
+                        @foreach ($busImages as $key => $image)
                             <div class="col-3">
-                                <img src="{{ asset('storage/buses/' . $image) }}"
+                                <img src="/storage/buses/{{ $image }}"
                                     class="img-fluid rounded-2 shadow-sm gallery-thumb {{ $key == 0 ? 'active-thumb' : '' }}"
                                     alt="Thumbnail {{ $key+1 }}"
-                                    data-src="{{ asset('storage/buses/' . $image) }}"
+                                    data-src="/storage/buses/{{ $image }}"
                                     style="cursor: pointer; height: 90px; object-fit: cover; width: 100%;">
                             </div>
                         @endforeach
@@ -254,6 +262,8 @@
             opacity: 1;
             border: 2px solid #dc3545; /* highlight selected thumb */
         }
+
+
     </style>
 
     <script>
