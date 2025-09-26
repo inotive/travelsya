@@ -131,12 +131,15 @@ class ClinicHasPackages extends Model
     {
         return Attribute::make(
             get: function () {
-                if ($this->image && $this->image->image) {
-                    return Storage::url($this->image->image);
+                if ($this->image && !empty($this->image->image) && $this->image->image !== 'images/not_found.jpg') {
+                    // Memeriksa apakah file gambar benar-benar ada di storage
+                    if (Storage::exists($this->image->image)) {
+                        return Storage::url($this->image->image);
+                    }
                 }
                 
-                // Fallback ke gambar default jika tidak ada
-                return asset('images/default-package.jpg');
+                // Fallback ke gambar health_default.png
+                return asset('images/health_default.png');
             }
         );
     }

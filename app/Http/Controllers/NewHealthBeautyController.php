@@ -113,13 +113,51 @@ class NewHealthBeautyController extends Controller
             $special_deals_beauty = $special_deals_all->take(10);
         }
 
-        $categories = CategoriesServices::get();
+        $all_categories = CategoriesServices::get();
+        
+        // Pisahkan kategori berdasarkan tipe untuk tab beauty
+        $beauty_service_keywords = ['injection', 'threadlift', 'peeling', 'treatment', 'facial', 'skin care', 'acne', 'anti aging'];
+        $service_categories = collect();
+        $product_categories = collect();
+        $health_categories = collect();
+        
+        foreach ($all_categories as $category) {
+            $category_name_lower = strtolower($category->name);
+            $clinic_packages = $category->clinicHasPackages()->with(['clinic'])->get();
+            
+            // Cek apakah kategori terkait dengan klinik kecantikan
+            $is_beauty = $clinic_packages->contains(function($package) {
+                return $package->clinic && strtolower($package->clinic->category) === 'kecantikan';
+            });
+            
+            if ($is_beauty) {
+                // Cek apakah termasuk service berdasarkan kata kunci
+                $is_service = false;
+                foreach ($beauty_service_keywords as $keyword) {
+                    if (str_contains($category_name_lower, $keyword)) {
+                        $is_service = true;
+                        break;
+                    }
+                }
+                
+                if ($is_service) {
+                    $service_categories->push($category);
+                } else {
+                    $product_categories->push($category);
+                }
+            } else {
+                // Kategori untuk kesehatan
+                $health_categories->push($category);
+            }
+        }
 
         $partners = Clinic::with(['packages', 'images', 'image', 'kota'])->orderBy('created_at', 'desc')->get();
 
         $data['special_deals'] = collect($special_deals);
         $data['special_deals_beauty'] = collect($special_deals_beauty);
-        $data['categorises'] = collect($categories);
+        $data['categorises'] = collect($all_categories);  // untuk tab kesehatan
+        $data['service_categories'] = $service_categories;
+        $data['product_categories'] = $product_categories;
         $data['partners'] = collect($partners);
 
         return view('pagesv2.health_beauty.index', $data);
