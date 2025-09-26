@@ -17,6 +17,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Throwable;
 
 class NewRecreationController extends Controller
@@ -58,7 +60,7 @@ class NewRecreationController extends Controller
         foreach ($data_partners as $key => $rec) {
                 $item = [
                     'id' => $rec['id'],
-                    'img' => asset('storage/' . ($rec['image']['image'] ?? 'health_default.png')),
+                    'img' => optional($rec->image)->image ? Storage::url(Str::after($rec->image->image, 'public/')) : asset('images/health_default.png'),
                     'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'business_name' => $rec['business_name'],
                     'rate' => $rec->avgRating(),

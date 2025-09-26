@@ -24,7 +24,7 @@
                 <!-- Card -->
                 <a href="{{ route('rekreasi.category', ['id' => $category['id']]) }}" class="card shadow-sm rounded-4 d-flex flex-row align-items-center"
                     style="width: 18rem;">
-                    <img src="{{ Storage::url($category['image']) }}"
+                    <img src="{{ Storage::url(Str::after($category['image'], 'public/')) }}"
                         class="card-img-top" alt="{{ $category['name'] }}"
                         onerror="this.src='https://images.unsplash.com/photo-1521289594125-e8e32a214a2b?q=80&w=3787&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                     <div class="d-flex flex-column w-100 align-items-center" style="z-index: 1; position: absolute;">
