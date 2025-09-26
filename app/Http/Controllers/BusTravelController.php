@@ -180,14 +180,17 @@ class BusTravelController extends Controller
                 });
             }
         } else {
-            // --- General Search (Business Name or Route) ---
+            // --- General Search (Business Name, Route, Class, or Kategori) ---
             $query->where(function ($q) use ($find) {
                 $q->whereHas('busTravel.busTravel', function ($b) use ($find) {
-                    $b->where('business_name', 'like', $find);
+                    $b->where('business_name', 'like', $find)
+                      ->orWhere('kategori', 'like', $find);
+                })->orWhereHas('busTravel', function ($bt) use ($find) {
+                    $bt->where('class', 'like', $find);
                 })->orWhereHas('from', function ($f) use ($find) {
-                    $f->where('city_name', 'like', $find); // Corrected from 'name' to 'city_name'
+                    $f->where('city_name', 'like', $find);
                 })->orWhereHas('to', function ($t) use ($find) {
-                    $t->where('city_name', 'like', $find); // Corrected from 'name' to 'city_name'
+                    $t->where('city_name', 'like', $find);
                 });
             });
         }
@@ -409,6 +412,9 @@ HTML;
             'method' => $request->method(),
             'all_inputs' => $request->all()
         ]);
+
+        $kategori = $request->kategori;
+        $class = $request->class;
 
         // Validate required fields
         $request->validate([
@@ -697,6 +703,7 @@ HTML;
                 'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
                 'name' => $val['busTravel']['name'] ?? 'Deleted business',
                 'class' => $val['busTravel']['class'],
+                'kategori' => $val['busTravel']['busTravel']['kategori'] ?? null,
                 'departure_point' => $val['from']['city_name'] ?? 'Deleted point',
                 'titik_naik' => $val['titik_naik'],
                 'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
