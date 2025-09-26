@@ -60,6 +60,7 @@
                         @endif
                         <form action="{{ route('partner.bus.departures.store') }}" method="POST">
                             @csrf
+                            <input type="hidden" name="redirect_url" value="{{ $redirectUrl }}">
                             <div class="row mb-6">
                                 <label class="col-lg-4 col-form-label required fw-bold fs-6">Bus</label>
                                 <div class="col-lg-8 fv-row">

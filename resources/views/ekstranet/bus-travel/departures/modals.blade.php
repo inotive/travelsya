@@ -8,6 +8,7 @@
             </div>
             <form action="{{ route('partner.bus.departures.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="redirect_url" value="{{ Request::url() }}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label required">Bus</label>
@@ -129,6 +130,7 @@
             <form action="{{ route('partner.bus.departures.update') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id" id="edit_departure_id">
+                <input type="hidden" name="redirect_url" value="{{ Request::url() }}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label required">Bus</label>
@@ -240,6 +242,7 @@
             </div>
             <form action="{{ route('partner.bus.departures.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="redirect_url" value="{{ Request::url() }}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="index2_bus_travel_has_bus_id" class="form-label required">Bus</label>
@@ -321,6 +324,7 @@
             <form action="{{ route('partner.bus.departures.update') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id" id="edit_index2_departure_id">
+                <input type="hidden" name="redirect_url" value="{{ Request::url() }}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="edit_index2_bus_travel_has_bus_id" class="form-label required">Bus</label>
@@ -402,6 +406,7 @@
             <form action="{{ route('partner.bus.departures.delete') }}" method="POST">
                 @csrf
                 <input type="hidden" name="id" id="delete_departure_id">
+                <input type="hidden" name="redirect_url" value="{{ Request::url() }}">
                 <div class="modal-body">
                     <p>Apakah Anda yakin ingin menghapus jadwal keberangkatan ini?</p>
                     <p class="text-danger">Perhatian: Jadwal yang sudah dipesan tidak dapat dihapus.</p>

@@ -291,7 +291,8 @@
 <script>
 $(document).ready(function() {
     // Auto-submit when bus filter changes
-    $('#busFilter').on('input change', function() {
+    $('#busFilter').on('change', function() {
+        console.log('Bus filter changed to:', $(this).val()); // Debug log
         $('#filterForm').submit();
     });
 
@@ -299,14 +300,26 @@ $(document).ready(function() {
     let searchTimer;
     $('#searchInput').on('input', function() {
         clearTimeout(searchTimer);
+        const searchValue = $(this).val();
+        console.log('Search input changed to:', searchValue); // Debug log
+
         searchTimer = setTimeout(() => {
+            console.log('Submitting search form'); // Debug log
             $('#filterForm').submit();
-        }, 500); // adjust delay (ms) if needed
+        }, 500);
     });
 
+    // Debug: Log form submission
+    $('#filterForm').on('submit', function() {
+        const busId = $('#busFilter').val();
+        const search = $('#searchInput').val();
+        console.log('Form submitting with:', { busId, search }); // Debug log
+    });
+
+    // Handle validation errors for create modal
     @if($errors->any())
     try {
-        const createModal = new bootstrap.Modal(document.getElementById('createDepartureModal'));
+        const createModal = new bootstrap.Modal(document.getElementById('createDepartureModalIndex2'));
         if (createModal) {
             createModal.show();
         }
@@ -315,11 +328,14 @@ $(document).ready(function() {
     }
     @endif
 
+    // Delete modal setup
     $('#deleteDepartureModal').on('show.bs.modal', function(event) {
         try {
             const button = $(event.relatedTarget);
             const id = button.data('id');
             const modal = $(this);
+
+            console.log('Setting up delete modal for ID:', id); // Debug log
 
             if (id) {
                 modal.find('#delete_departure_id').val(id);
@@ -329,32 +345,54 @@ $(document).ready(function() {
         }
     });
 
-    $('#editDepartureModal').on('show.bs.modal', function(event) {
+    // Edit modal setup
+    $('#editDepartureModalIndex2').on('show.bs.modal', function(event) {
         try {
             const button = $(event.relatedTarget);
             const modal = $(this);
 
-            modal.find('#edit_departure_id').val(button.data('id'));
-            modal.find('#edit_bus_travel_has_bus_id').val(button.data('bus'));
-            modal.find('#edit_from_city_id').val(button.data('from'));
-            modal.find('#edit_to_city_id').val(button.data('to'));
-            modal.find('#edit_titik_naik').val(button.data('titik-naik'));
-            modal.find('#edit_titik_turun').val(button.data('titik-turun'));
-            modal.find('#edit_duration').val(button.data('duration'));
-            modal.find('#edit_price').val(button.data('price'));
+            // Get all data attributes
+            const data = {
+                id: button.data('id'),
+                bus: button.data('bus'),
+                from: button.data('from'),
+                to: button.data('to'),
+                titikNaik: button.data('titik-naik'),
+                titikTurun: button.data('titik-turun'),
+                duration: button.data('duration'),
+                price: button.data('price'),
+                tanggal: button.data('tanggal'),
+                time: button.data('time'),
+                days: button.data('days')
+            };
 
-            const timeData = button.data('time');
-            if (timeData) {
-                const [date, time] = timeData.split(' ');
-                modal.find('#edit_departure_date').val(date);
-                modal.find('#edit_departure_time').val(time);
+            console.log('Edit modal data:', data); // Debug log
+
+            // Set form values
+            modal.find('#edit_departure_id').val(data.id);
+            modal.find('#edit_bus_travel_has_bus_id').val(data.bus);
+            modal.find('#edit_from_city_id').val(data.from);
+            modal.find('#edit_to_city_id').val(data.to);
+            modal.find('#edit_titik_naik').val(data.titikNaik);
+            modal.find('#edit_titik_turun').val(data.titikTurun);
+            modal.find('#edit_duration').val(data.duration);
+            modal.find('#edit_price').val(data.price);
+
+            // Handle date and time
+            if (data.tanggal) {
+                modal.find('#edit_departure_date').val(data.tanggal);
             }
 
-            const daysData = button.data('days');
-            if (daysData) {
-                const daysArray = daysData.split(',');
+            if (data.time) {
+                modal.find('#edit_departure_time').val(data.time);
+            }
+
+            // Handle days checkboxes
+            if (data.days) {
+                const daysArray = data.days.split(',');
                 modal.find('input[name="days[]"]').each(function() {
-                    $(this).prop('checked', daysArray.includes($(this).val()));
+                    const isChecked = daysArray.includes($(this).val());
+                    $(this).prop('checked', isChecked);
                 });
             }
         } catch (error) {
@@ -362,6 +400,7 @@ $(document).ready(function() {
         }
     });
 
+    // Initialize tooltips
     try {
         if (typeof $().tooltip === 'function') {
             $('[title]').tooltip({

@@ -74,7 +74,7 @@ class BusDepartureController extends Controller
         $user = Auth::user();
         $busTravelIds = BusTravels::where('user_id', $user->id)->pluck('id');
 
-        // Base query for buses
+        // Base query for buses - only get buses that belong to user's travel businesses
         $busesQuery = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->with('busTravel');
 
         // Get all buses for the filter dropdown
@@ -83,17 +83,25 @@ class BusDepartureController extends Controller
         );
 
         // Get selected bus from request for filtering
-        $selectedBusId = $request->input('bus_id');
+        $selectedBusId = $request->input('bus_id', 'all'); // Default to 'all' if not set
 
-        // Start building the departures query
+        // Get all bus IDs that belong to the user
+        $userBusIds = $busesQuery->pluck('id')->toArray();
+
+        // Start building the departures query with proper relationships
         $departuresQuery = BusDeparture::query()->with(['busTravel', 'from', 'to']);
 
         // Filter by selected bus if a specific bus is chosen
         if ($selectedBusId && $selectedBusId !== 'all') {
-            $departuresQuery->where('bus_travel_has_bus_id', $selectedBusId);
+            // Verify the selected bus belongs to the user
+            if (in_array($selectedBusId, $userBusIds)) {
+                $departuresQuery->where('bus_travel_has_bus_id', $selectedBusId);
+            } else {
+                // If user tries to access a bus that doesn't belong to them, show no results
+                $departuresQuery->where('bus_travel_has_bus_id', -1);
+            }
         } else {
-            // If "All" is selected or no specific bus, get all departures for the user's travels
-            $userBusIds = $busesQuery->pluck('id');
+            // If "All" is selected, get all departures for the user's buses
             $departuresQuery->whereIn('bus_travel_has_bus_id', $userBusIds);
         }
 
@@ -112,7 +120,10 @@ class BusDepartureController extends Controller
             });
         }
 
-        $departures = $departuresQuery->orderBy('departure_time')->get();
+        // Order by departure time and get results
+        $departures = $departuresQuery->orderBy('departure_date', 'asc')
+                                    ->orderBy('departure_time', 'asc')
+                                    ->get();
 
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id');
 
@@ -121,7 +132,7 @@ class BusDepartureController extends Controller
             'cities'       => $cities,
             'defaultBusId' => $selectedBusId, // Pass selected bus to the view
             'allBuses'     => $allBuses,
-            'search'       => $search, // Pass search term to the view
+            'search'       => $search,
         ]);
     }
 
@@ -131,7 +142,7 @@ class BusDepartureController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
         $user = Auth::user();
 
@@ -152,7 +163,10 @@ class BusDepartureController extends Controller
         // Get all cities
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
-        return view('ekstranet.bus-travel.departures.create', compact('buses', 'cities'));
+        $redirectUrl = $request->input('redirect_to', route('partner.bus.departures'));
+
+
+        return view('ekstranet.bus-travel.departures.create', compact('buses', 'cities', 'redirectUrl'));
     }
 
     /**
@@ -173,6 +187,7 @@ class BusDepartureController extends Controller
             'departure_time' => 'required',
             'duration' => 'required|integer|min:1',
             'price' => 'required|numeric|min:1000',
+            'redirect_url' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -224,8 +239,10 @@ class BusDepartureController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('partner.bus.departures.bus', ['busId' => $request->bus_travel_has_bus_id])
-            ->with('success', 'Jadwal keberangkatan berhasil ditambahkan!');
+        $redirectUrl = $request->input('redirect_url', route('partner.bus.departures'));
+
+
+        return redirect($redirectUrl)->with('success', 'Jadwal keberangkatan berhasil ditambahkan!');
     }
 
 
@@ -235,7 +252,7 @@ class BusDepartureController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $user = Auth::user();
         $departure = BusDeparture::with(['busTravel', 'from', 'to'])->findOrFail($id);
@@ -265,7 +282,10 @@ class BusDepartureController extends Controller
         // Get all cities
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
-        return view('ekstranet.bus-travel.departures.edit', compact('departure', 'buses', 'cities'));
+        $redirectUrl = $request->input('redirect_to', route('partner.bus.departures'));
+
+
+        return view('ekstranet.bus-travel.departures.edit', compact('departure', 'buses', 'cities', 'redirectUrl'));
     }
 
     /**
@@ -287,6 +307,7 @@ class BusDepartureController extends Controller
             'departure_time' => 'required',
             'duration' => 'required|integer|min:1',
             'price' => 'required|numeric|min:1000',
+            'redirect_url' => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
@@ -347,8 +368,10 @@ class BusDepartureController extends Controller
             'days' => $days,
         ]);
 
-        return redirect()->route('partner.bus.departures.bus', ['busId' => $request->bus_travel_has_bus_id])
-            ->with('success', 'Jadwal keberangkatan berhasil diperbarui!');
+        $redirectUrl = $request->input('redirect_url', route('partner.bus.departures'));
+
+
+        return redirect($redirectUrl)->with('success', 'Jadwal keberangkatan berhasil diperbarui!');
     }
 
 
@@ -361,12 +384,18 @@ class BusDepartureController extends Controller
  */
 public function delete(Request $request): RedirectResponse
 {
-    $id = $request->id;
+    $validator = Validator::make($request->all(), [
+        'id' => 'required|exists:bus_departures,id',
+        'redirect_url' => 'nullable|string',
+    ]);
 
-    if (!$id) {
-        return redirect()->route('partner.bus.departures')
-            ->with('error', 'ID jadwal keberangkatan tidak valid!');
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput();
     }
+
+    $id = $request->id;
 
     try {
         $departure = BusDeparture::findOrFail($id);
@@ -391,12 +420,14 @@ public function delete(Request $request): RedirectResponse
 
         $departure->delete();
 
-        return redirect()->route('partner.bus.departures')
-            ->with('success', 'Jadwal keberangkatan berhasil dihapus!');
+        $redirectUrl = $request->input('redirect_url', route('partner.bus.departures'));
+
+
+        return redirect($redirectUrl)->with('success', 'Jadwal keberangkatan berhasil dihapus!');
 
     } catch (\Exception $e) {
-        return redirect()->route('partner.bus.departures')
-            ->with('error', 'Terjadi kesalahan saat menghapus jadwal keberangkatan!');
+        $redirectUrl = $request->input('redirect_url', route('partner.bus.departures'));
+        return redirect($redirectUrl)->with('error', 'Terjadi kesalahan saat menghapus jadwal keberangkatan!');
     }
 }
 }
