@@ -235,7 +235,7 @@ class RecreationController extends Controller
 
             // Handle Main Image Upload
             if ($request->hasFile('main_image')) {
-                $imagePath = $request->file('main_image')->store('images/recreation_package_images', 'public');
+                $imagePath = $request->file('main_image')->store('public/images/recreation_package_images');
                 RecreationPackagesImages::create([
                     'recreation_package_id' => $recreation->id,
                     'image' => $imagePath,
@@ -247,7 +247,7 @@ class RecreationController extends Controller
             if ($request->hasFile('additional_images')) {
                 foreach ($request->file('additional_images') as $image) {
                     if ($image) { // Check if a file was actually uploaded
-                        $imagePath = $image->store('images/recreation_package_images', 'public');
+                        $imagePath = $image->store('public/images/recreation_package_images');
                         RecreationPackagesImages::create([
                             'recreation_package_id' => $recreation->id,
                             'image' => $imagePath,
@@ -361,7 +361,7 @@ class RecreationController extends Controller
                 }
 
                 // Store new main image
-                $imagePath = $request->file('main_image')->store('images/recreation_package_images', 'public');
+                $imagePath = $request->file('main_image')->store('public/images/recreation_package_images');
                 RecreationPackagesImages::create([
                     'recreation_package_id' => $recreationPackage->id,
                     'image' => $imagePath,
@@ -373,7 +373,7 @@ class RecreationController extends Controller
             if ($request->hasFile('additional_images')) {
                 foreach ($request->file('additional_images') as $image) {
                     if ($image) {
-                        $imagePath = $image->store('images/recreation_package_images', 'public');
+                        $imagePath = $image->store('public/images/recreation_package_images');
                         RecreationPackagesImages::create([
                             'recreation_package_id' => $recreationPackage->id,
                             'image' => $imagePath,
