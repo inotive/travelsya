@@ -20,7 +20,7 @@
                     <a href="{{ route('rekreasi.detail', ['id' => $package['recreation_id'], 'date' => \Carbon\Carbon::now()->addDay()->format('Y-m-d')]) }}"
                         class="text-decoration-none text-dark   ">
                         <div class="card" style="box-shadow: 0 10px 15px gray">
-                            <img src="{{ asset($package->image->image) }}"
+                            <img src="{{ Storage::url($package->image->image) }}"
                                 onerror="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                                 class="card-img-top" alt="...">
                             <div class="card-body">

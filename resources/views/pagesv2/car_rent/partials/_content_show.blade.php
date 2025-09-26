@@ -112,7 +112,7 @@
                 <div class="card shadow mb-1 w-100">
                     <div class="card-body d-flex flex-row">
                         <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
-                            <img src="{{ asset($car->brand->image ?? null) }}" 
+                            <img src="{{ Storage::url($car->image_url ?? null) }}" 
                                  class="card-img-aspect card-img-top"
                                  alt="{{ $car->brand->name }}"
                                  onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
