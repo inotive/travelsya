@@ -213,7 +213,7 @@
                                     id="provider_button_brand{{ $brand->id }}" onclick="submit_brand({{ $brand->id }})">
                                     <div class="card border border-dark rounded-4 h-100">
                                         <div class="card-img-container" style="overflow: hidden;">
-                                            <img src="{{ asset($brand->image) }}"
+                                            <img src="{{ Storage::url($brand->image) }}"
                                                  class="card-img-top card-img-aspect"
                                                  alt="{{ $brand->name ?? 'Car Brand' }}"
                                                  onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
@@ -249,7 +249,7 @@
                         ]) }}" class="text-decoration-none text-dark">
                             <div class="card border border-dark rounded-4 h-100">
                                 <div class="card-img-container" style="overflow: hidden;">
-                                    <img src="{{ asset(optional($model->carModel)->image) }}"
+                                    <img src="{{ Storage::url(optional($model->carModel)->image) }}"
                                          class="card-img-top card-img-aspect"
                                          alt="{{ optional($model->carModel)->name ?? 'Car Model' }}"
                                          onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">

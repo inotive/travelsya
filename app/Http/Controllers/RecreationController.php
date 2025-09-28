@@ -234,9 +234,8 @@ class RecreationController extends Controller
             $recreation = RecreationPackages::create($packageData);
 
             // Handle Main Image Upload
-            if ($request->hasFile('main_image')) {
-                $imagePath = $request->file('main_image')->store('images/recreation_package_images', 'public');
-                RecreationPackagesImages::create([
+                            if ($request->hasFile('main_image')) {
+                                $imagePath = $request->file('main_image')->store('images/recreation_package_images', 'public');                RecreationPackagesImages::create([
                     'recreation_package_id' => $recreation->id,
                     'image' => $imagePath,
                     'main' => 1

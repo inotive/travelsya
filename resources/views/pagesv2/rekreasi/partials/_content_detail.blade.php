@@ -71,9 +71,13 @@
                 <div class="col-3">
                     <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
                         <span class="d-flex justify-content-space-between gap-2 align-items-center">
-                            Mulai Dari <span class="text-danger fs-2 fw-bold">
-                                IDR {{ number_format($detail['recreationPackages'][0]['price']) }}
-                            </span>
+                            @if($detail->recreationPackages->isNotEmpty())
+                                Mulai Dari <span class="text-danger fs-2 fw-bold">
+                                    IDR {{ number_format($detail->recreationPackages->first()->price) }}
+                                </span>
+                            @else
+                                <span class="text-muted">Harga tidak tersedia</span>
+                            @endif
                         </span>
                     </div>
                 </div>
