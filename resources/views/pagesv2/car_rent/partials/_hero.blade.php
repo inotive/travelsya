@@ -17,7 +17,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link active" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="category" value="Dengan Driver" checked required />
+                                <input class="btn-check" type="radio" name="category" value="Dengan Supir" checked required />
                                 <!--end::Input-->
                                 Dengan Supir
                             </label>

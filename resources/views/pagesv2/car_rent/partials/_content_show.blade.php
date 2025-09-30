@@ -56,7 +56,7 @@
                 </span>
                 <select name="category" id="category" class="form-select bg-transparent border-0 shadow-none" style="width: 200px; flex-shrink: 0;">
                     <option value="">Semua Cara Rental</option>
-                    <option @if (isset($category) && $category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver</option>
+                    <option @if (isset($category) && $category=='Dengan Supir' ) selected @endif value="Dengan Supir">Dengan Supir</option>
                     <option @if (isset($category) && $category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci</option>
                 </select>
                 <select name="location" id="location" class="form-select bg-transparent border-0 shadow-none" style="max-width: 220px;" data-placeholder="Pilih Lokasi" autocomplete="on" required>
