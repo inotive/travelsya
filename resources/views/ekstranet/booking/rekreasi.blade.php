@@ -69,6 +69,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -83,6 +84,7 @@
                                 @foreach ($rekreasibookdates->reverse() as $booking)
                                     <tr>
                                         <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? '' }} -
                                             {{ $booking->transaction->user->phone ?? '' }}
@@ -93,23 +95,20 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                         <td class="text-center">
-                                            @php
-                                                $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast();
-                                            @endphp
-                                            @if($isExpired)
+                                            @if($booking->status == 'kadaluwarsa')
                                                 <span class="badge badge-danger">Kadaluwarsa</span>
-                                            @elseif($booking->is_used)
+                                            @elseif($booking->status == 'sudah_dipakai')
                                                 <span class="badge badge-success">Sudah Dipakai</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if(!$booking->is_used && !$isExpired)
+                                            @if($booking->status == 'belum_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalRekreasi{{ $booking->id }}">
                                                     Verifikasi
                                                 </a>
-                                            @elseif($booking->is_used)
+                                            @elseif($booking->status == 'sudah_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalRekreasi{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
@@ -133,6 +132,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -145,9 +145,10 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($rekreasibookdates->reverse() as $booking)
-                                    @if($booking->is_used)
+                                    @if($booking->status == 'sudah_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
@@ -177,6 +178,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -189,10 +191,10 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($rekreasibookdates->reverse() as $booking)
-                                    @php $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast(); @endphp
-                                    @if(!$booking->is_used && !$isExpired)
+                                    @if($booking->status == 'belum_dipakai')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
@@ -222,6 +224,7 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
@@ -234,10 +237,10 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($rekreasibookdates->reverse() as $booking)
-                                    @php $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast(); @endphp
-                                    @if($isExpired)
+                                    @if($booking->status == 'kadaluwarsa')
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center">{{ $booking->recreation->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
@@ -265,10 +268,7 @@
 </form>
 
     @foreach ($rekreasibookdates as $booking)
-        @php
-            $isExpired = \Carbon\Carbon::parse($booking->expire_on)->isPast();
-        @endphp
-        @if(!$booking->is_used && !$isExpired)
+        @if ($booking->status == 'belum_dipakai')
             <div class="modal fade" id="verificationModalRekreasi{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -289,9 +289,7 @@
                     </div>
                 </div>
             </div>
-        @endif
-
-        @if($booking->is_used)
+        @elseif($booking->status == 'sudah_dipakai')
             <div class="modal fade" id="cancellationModalRekreasi{{ $booking->id }}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -314,26 +312,43 @@
                     </div>
                 </div>
             </div>
-        @endif
-        
-        <!-- Modal Konfirmasi Pembatalan -->
-        <div class="modal fade" id="confirmCancelModal{{ $booking->id }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Konfirmasi Pembatalan</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Yakin, ingin membatalkan Verifikasi?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Ya, Batalkan Verifikasi</a>
+
+            <!-- Modal Konfirmasi Pembatalan -->
+            <div class="modal fade" id="confirmCancelModal{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Konfirmasi Pembatalan</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Yakin, ingin membatalkan Verifikasi?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <a href="{{ route('partner.riwayat-booking.batal-verifikasi-rekreasi', $booking->id) }}" class="btn btn-danger">Ya, Batalkan Verifikasi</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @elseif($booking->status == 'kadaluwarsa')
+            <div class="modal fade" id="infoModalExpired{{ $booking->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Informasi Booking</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <iframe src="{{ route('partner.riwayat-booking.cetak-invoice-rekreasi', $booking->id) }}" width="100%" height="800px" style="border:none;"></iframe>
+                            </div>
+                        </div>
+                        <!-- Tidak ada tombol footer untuk booking kadaluwarsa -->
+                    </div>
+                </div>
+            </div>
+        @endif
     @endforeach
 @endsection
 

@@ -23,7 +23,6 @@
                         <th>Jumlah Seat</th>
                         <th>Kategori Rental</th>
                         <th>Biaya Rental</th>
-                        <th>Durasi</th>
                         <th>Status</th>
                         <th>Aksi</th>
                     </tr>
@@ -53,7 +52,6 @@
                             <td class="text-center">{{ $car->number_seats }}</td>
                             <td>{{ $car->category_rent }}</td>
                             <td>Rp. {{ number_format($car->rental_price_per_day, 0,',','.') }}</td>
-                            <td>{{ $car->duration ? $car->duration . ' Hari' : '-' }}</td>
                             <td class="text-center">
                                 @if ($car->status == '1')
                                     <span class="badge badge-success">Aktif</span>

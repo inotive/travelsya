@@ -26,7 +26,7 @@
                     class="text-decoration-none text-dark">
                     <div class="card shadow-sm" style="width: 18rem;">
                         <div class="position-relative">
-                            <img src="{{ asset('storage/' . ($partner->image->image ?? '-')) }}" class="card-img-top"
+                            <img src="{{ $partner['img'] }}" class="card-img-top"
                                 alt="{{ $partner['business_name'] }}"
                                 onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
                             <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
@@ -37,8 +37,6 @@
                             <div class="lokasi d-flex align-items-center">
                                 <span class="fa-solid fa-location-dot me-2"></span>
                                 <span class="text-start">{{ $partner['lokasi'] }}</span>
-                                {{-- <span style="position: relative; margin-left: auto;"
-                                    class="fa-regular fa-bookmark fs-2"></span> --}}
                             </div>
 
                             <h3 class="mt-3 text-dark text-start">{{ $partner['business_name'] }}</h3>

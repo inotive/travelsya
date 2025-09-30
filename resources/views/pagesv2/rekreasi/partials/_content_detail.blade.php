@@ -21,9 +21,6 @@
                     <a class="nav-link text-dark" href="#lokasi">Lokasi</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="#fasilitas">Fasilitas</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link text-dark" href="#deskripsi">Deskripsi</a>
                 </li>
             </ul>
@@ -74,9 +71,13 @@
                 <div class="col-3">
                     <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
                         <span class="d-flex justify-content-space-between gap-2 align-items-center">
-                            Mulai Dari <span class="text-danger fs-2 fw-bold">
-                                IDR {{ number_format($detail['recreationPackages'][0]['price']) }}
-                            </span>
+                            @if($detail->recreationPackages->isNotEmpty())
+                                Mulai Dari <span class="text-danger fs-2 fw-bold">
+                                    IDR {{ number_format($detail->recreationPackages->first()->price) }}
+                                </span>
+                            @else
+                                <span class="text-muted">Harga tidak tersedia</span>
+                            @endif
                         </span>
                     </div>
                 </div>
@@ -120,22 +121,6 @@
                 </div>
             </div>
         @endif
-
-        <div class="px-3 mb-35px d-flex flex-column fs-4" id="fasilitas">
-            <div class="section-title mb-4">
-                <div class="w-100 title text-capitalize" style="font-size: calc(1rem + 0.85vw)">
-                    Fasilitas
-                </div>
-            </div>
-            <div id="facility" class="d-flex flex-row align-items-center">
-                <span class="fa-solid fa-store"></span>
-                <span class="ms-2">Toko Suvenir</span>
-                <span class="fa-solid fa-camera ms-5"></span>
-                <span class="ms-2">Spot Foto</span>
-                <span class="fa-solid fa-utensils ms-5"></span>
-                <span class="ms-2">Restoran/Food Court</span>
-            </div>
-        </div>
 
         <div class="px-3 mb-35px d-flex flex-column fs-4" id="deskripsi">
             <div class="section-title mb-4">

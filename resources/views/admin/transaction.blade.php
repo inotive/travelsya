@@ -1,15 +1,14 @@
 @extends('admin.layout', ['title' => 'Transaction', 'url' => route('admin.transaction')])
 @push('add-style')
     <style>
-
-.select2-container .select2-selection--single {
-    box-sizing: border-box;
-    cursor: pointer;
-    display: block;
-    height: 46px;
-    user-select: none;
-    -webkit-user-select: none;
-}
+        .select2-container .select2-selection--single {
+            box-sizing: border-box;
+            cursor: pointer;
+            display: block;
+            height: 46px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
     </style>
 @endpush
 @section('content-admin')
@@ -299,7 +298,7 @@
                                         </td>
                                         <td>
                                             <span class="badge badge-rounded badge-primary" style="font-size: 10px;">
-                                                {{ strtoupper($transaction->service) ?? '-' }}
+                                                {{ strtoupper($transaction->services->name) ?? '-' }}
                                             </span>
                                         </td>
                                         <td style="white-space: nowrap;">
@@ -308,25 +307,41 @@
                                             </div>
                                         </td>
                                         <td>
-                                            @if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10]))
+                                            @if ($transaction->services->name == 'pln')
                                                 @currency($transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
-                                            @elseif(in_array($transaction->service_id, [1, 2, 11, 12]))
-                                                @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
-                                            @elseif($transaction->service_id == 8)
+                                            @elseif($transaction->services->name == 'hotel')
                                                 @currency($transaction->total - ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHotel->first()->kode_unik ?? 0))
-                                            @elseif($transaction->service_id == 7)
+                                            @elseif($transaction->services->name == 'hostel')
                                                 @currency($transaction->total - ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHostel->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'bus-travel')
+                                                @currency($transaction->total - ($transaction->detailTransactionBus->first()->fee_admin ?? 0) - ($transaction->detailTransactionBus->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'car-rent')
+                                                @currency($transaction->total - ($transaction->detailTransactionCarRent->first()->fee_admin ?? 0) - ($transaction->detailTransactionCarRent->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'health-beauty')
+                                                @currency($transaction->total - ($transaction->detailTransactionHealthBeauty->first()->fee_admin ?? 0) - ($transaction->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'recreation')
+                                                @currency($transaction->total - ($transaction->detailTransactionRecreation->first()->fee_admin ?? 0) - ($transaction->detailTransactionRecreation->first()->kode_unik ?? 0))
+                                            @else
+                                                @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
                                             @endif
                                         </td>
                                         <td class="text-success fw-bold">
-                                            @if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10]))
+                                            @if ($transaction->services->name == 'pln')
                                                 @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
-                                            @elseif(in_array($transaction->service_id, [1, 2, 11, 12]))
-                                                @currency(($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
-                                            @elseif($transaction->service_id == 8)
+                                            @elseif($transaction->services->name == 'hotel')
                                                 @currency(($transaction->detailTransactionHotel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHotel->first()->kode_unik ?? 0))
-                                            @elseif($transaction->service_id == 7)
+                                            @elseif($transaction->services->name == 'hostel')
                                                 @currency(($transaction->detailTransactionHostel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHostel->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'bus-travel')
+                                                @currency(($transaction->detailTransactionBus->first()->fee_admin ?? 0) + ($transaction->detailTransactionBus->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'car-rent')
+                                                @currency(($transaction->detailTransactionCarRent->first()->fee_admin ?? 0) + ($transaction->detailTransactionCarRent->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'health-beauty')
+                                                @currency(($transaction->detailTransactionHealthBeauty->first()->fee_admin ?? 0) + ($transaction->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
+                                            @elseif($transaction->services->name == 'recreation')
+                                                @currency(($transaction->detailTransactionRecreation->first()->fee_admin ?? 0) + ($transaction->detailTransactionRecreation->first()->kode_unik ?? 0))
+                                            @else
+                                                @currency(($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
                                             @endif
                                         </td>
                                         <td class="text-danger fw-bold">
@@ -598,7 +613,7 @@
             // Show loading state
             $('#transactionDetailModal .modal-body').html(
                 '<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>'
-                );
+            );
 
             // Fetch transaction detail via AJAX
             $.ajax({

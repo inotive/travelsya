@@ -20,7 +20,7 @@
                     <a href="{{ route('rekreasi.detail', ['id' => $package['recreation_id'], 'date' => \Carbon\Carbon::now()->addDay()->format('Y-m-d')]) }}"
                         class="text-decoration-none text-dark   ">
                         <div class="card" style="box-shadow: 0 10px 15px gray">
-                            <img src="{{ asset($package->image->image) }}"
+                            <img src="{{ optional($package->image)->image ? Storage::url(Str::after($package->image->image, 'public/')) : '' }}"
                                 onerror="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
                                 class="card-img-top" alt="...">
                             <div class="card-body">
@@ -29,7 +29,6 @@
                                         <span class="fa-solid fa-location-dot me-2"></span>
                                         <span>{{ ucwords($package->recreation->kota->city_name ?? 'Invalid City')
                                             }}</span>
-                                        <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                     </div>
 
                                     <h3 class="mt-3 text-dark">{{ ucwords($package->name) }}</h3>
