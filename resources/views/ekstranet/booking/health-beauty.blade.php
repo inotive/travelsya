@@ -332,6 +332,10 @@
     </style>
     
     <script>
+        // Route templates
+        const VERIFY_ROUTE = '{{ route('partner.health-beauty.verify', ['id' => 'REPLACE_ID']) }}';
+        const CANCEL_VERIFY_ROUTE = '{{ route('partner.health-beauty.cancel-verify', ['id' => 'REPLACE_ID']) }}';
+        
         $(document).ready(function() {
             // Initialize DataTable
             var table = $('#kt_datatable_zero_configuration').DataTable({
@@ -369,15 +373,12 @@
             $('.status-tab').on('click', function() {
                 var tabValue = $(this).data('tab');
                 
-                // Update hidden input
-                $('#tab_input').val(tabValue);
+                // Get current URL and update tab parameter
+                var url = new URL(window.location);
+                url.searchParams.set('tab', tabValue);
                 
-                // Update active state
-                $('.status-tab').removeClass('active');
-                $(this).addClass('active');
-                
-                // Submit the form to filter results
-                $('form').submit();
+                // Update the browser URL and reload the page
+                window.location = url.toString();
             });
             
             // Handle verify button click
@@ -436,8 +437,13 @@
                         '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>' +
                         '<button type="button" class="btn btn-danger cancel-verify-btn-modal" data-booking-id="' + bookingId + '">Ya, Batalkan Verifikasi</button>'
                     );
+                } else if (status === 'expired') {
+                    // For expired status, only show close button - no verification buttons
+                    $('#infoModalFooter').append(
+                        '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>'
+                    );
                 } else {
-                    // For expired or other statuses, only show close button
+                    // For other statuses (pending, etc.), only show close button
                     $('#infoModalFooter').append(
                         '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>'
                     );
@@ -450,10 +456,11 @@
             // Handle verify button click in info modal
             $(document).on('click', '.verify-btn-modal', function() {
                 var bookingId = $(this).data('booking-id');
+                var url = VERIFY_ROUTE.replace('REPLACE_ID', bookingId);
                 
                 // Send AJAX request to verify transaction
                 $.ajax({
-                    url: '/ekstranet/booking/health-beauty/' + bookingId + '/verify',
+                    url: url,
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}'
@@ -478,10 +485,11 @@
             // Handle cancel verify button click in info modal
             $(document).on('click', '.cancel-verify-btn-modal', function() {
                 var bookingId = $(this).data('booking-id');
+                var url = CANCEL_VERIFY_ROUTE.replace('REPLACE_ID', bookingId);
                 
                 // Send AJAX request to cancel verify transaction
                 $.ajax({
-                    url: '/ekstranet/booking/health-beauty/' + bookingId + '/cancel-verify',
+                    url: url,
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}'
@@ -506,10 +514,11 @@
             // Handle confirm verify button click
             $('#confirmVerifyBtn').on('click', function() {
                 var bookingId = $(this).data('booking-id');
+                var url = VERIFY_ROUTE.replace('REPLACE_ID', bookingId);
                 
                 // Send AJAX request to verify transaction
                 $.ajax({
-                    url: '/ekstranet/booking/health-beauty/' + bookingId + '/verify',
+                    url: url,
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}'
@@ -534,10 +543,11 @@
             // Handle confirm cancel verify button click
             $('#confirmCancelVerifyBtn').on('click', function() {
                 var bookingId = $(this).data('booking-id');
+                var url = CANCEL_VERIFY_ROUTE.replace('REPLACE_ID', bookingId);
                 
                 // Send AJAX request to cancel verify transaction
                 $.ajax({
-                    url: '/ekstranet/booking/health-beauty/' + bookingId + '/cancel-verify',
+                    url: url,
                     method: 'POST',
                     data: {
                         _token: '{{ csrf_token() }}'

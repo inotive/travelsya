@@ -152,18 +152,26 @@
                                     @foreach($clinicImages as $image)
                                     <div class="col-md-3 mb-3">
                                         <div class="card">
-                                            <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image">
+                                            <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image" style="height: 150px; object-fit: cover;">
                                             <div class="card-body text-center">
                                                 @if($image->main == 1)
                                                     <span class="badge bg-primary">Main Image</span>
                                                 @else
                                                     <span class="badge bg-secondary">Additional Image</span>
                                                 @endif
-                                                <div class="form-check mt-2">
-                                                    <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image->id }}" id="delete_image_{{ $image->id }}">
-                                                    <label class="form-check-label" for="delete_image_{{ $image->id }}">
-                                                        Hapus gambar
-                                                    </label>
+                                                <div class="mt-2">
+                                                    <div class="form-check mb-1">
+                                                        <input class="form-check-input main-image-radio" type="radio" name="main_image_id" value="{{ $image->id }}" id="main_image_{{ $image->id }}" {{ $image->main == 1 ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="main_image_{{ $image->id }}">
+                                                            Jadikan Utama
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image->id }}" id="delete_image_{{ $image->id }}">
+                                                        <label class="form-check-label" for="delete_image_{{ $image->id }}">
+                                                            Hapus gambar
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -433,5 +441,18 @@
             tags: true
         });
     }
+    
+    // Event listener for delete checkboxes to manage main image selection
+    $(document).on('change', 'input[name="delete_images[]"]', function() {
+        if (this.checked) {
+            // If deleting the main image, uncheck the main image radio button for that image
+            let imageId = $(this).val();
+            let mainRadio = $('input[name="main_image_id"][value="' + imageId + '"]');
+            if (mainRadio.is(':checked')) {
+                // Reset main image selection to ensure a new one is selected or handled on server side
+                mainRadio.prop('checked', false);
+            }
+        }
+    });
 </script>
 @endpush
