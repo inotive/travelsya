@@ -47,7 +47,7 @@ route::post('/send-token-password', [AuthController::class, 'sendTokenPassword']
 route::post('/token-password-confirmation', [AuthController::class, 'tokenCheck']);
 route::post('/reset-password', [AuthController::class, 'resetPassword']);
 Route::post('payment', [\App\Http\Controllers\PaymentController::class, 'store']);
-Route::post('/xendit/callback', [TransactionController::class, 'xenditCallback'])->name('xendit-callback');
+route::post('/xendit/callback', [CallbackController::class, 'xendit'])->name('xendit-callback');
 Route::get('/fee-admin', [TransactionController::class, 'AdminFee']);
 
 //hostel

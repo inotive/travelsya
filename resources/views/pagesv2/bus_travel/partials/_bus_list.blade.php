@@ -67,15 +67,15 @@
                                         {{ $p['business_name'] ?? 'Invalid business' }}
                                     </div>
                                     <div class="subtitle-how text-secondary-strong">
-                                        {{ $p['name'] }}
+                                        {{ $p['kategori'] }} {{ $p['name'] }} {{ $p['class'] }}
                                     </div>
                                 </div>
-                                <div class="label ms-4">
+                                {{-- <div class="label ms-4">
                                     <span class="badge round p-3 badge-light-danger fs-5">
                                         <i class="fa-solid fa-thumbs-up me-2 text-danger"></i>
                                         Paling banyak diminati
                                     </span>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                         <div class="col-12 col-md-6 text-end">

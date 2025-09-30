@@ -405,20 +405,6 @@ $isPemesananActive = in_array(Request::segment(2), [
                         <!--end:Menu link-->
                     </a>
                 @endif
-
-                @if (count($busTravels) > 0)
-                    <a href="{{ route('partner.daftar.bus-travel') }}"
-                        class="menu-item {{ Request::segment(2) == 'daftar-bus-travel' ? 'here' : '' }} menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fas fa-bus fs-3"></i>
-                            </span>
-                            <span class="menu-title">Bus & Travel</span>
-                        </span>
-                        <!--end:Menu link-->
-                    </a>
-                @endif
                 @php
                     $isBusTravelActive = in_array(Request::segment(2), ['daftar-bus-travel', 'bus-departures']);
                 @endphp

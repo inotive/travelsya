@@ -340,7 +340,7 @@
                     <div class=" container-xxl ">
                         <div class="row py-10">
                             <div class="col-md-3">
-                                <img class="img-fluid mb-5" src="{{ asset('assets/media/logos/logo.png') }}"
+                                <img class="img-fluid mb-5" src="{{ asset('assets/media/logos/logonew.png') }}"
                                     alt="logo-travelsya">
                                 <p>Kalimantan Timur, Balikpapan</p>
                                 <p>Indonesia</p>
@@ -385,7 +385,7 @@
                                                 Bayar PDAM
                                             </a>
                                         </p>
-                                        <p>Transfer Bank</p>
+                                        {{-- <p>Transfer Bank</p> --}}
                                         <p data-bs-toggle="modal" data-bs-target="#modal-ewallet">
                                             <a class="text-white" href="#">
                                                 Top up Ewallet

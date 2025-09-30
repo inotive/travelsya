@@ -19,13 +19,9 @@ class BusTravelController extends Controller
     {
         $user = auth()->user();
 
-        // Get ALL bus_travel_ids for this user
         $bus_travel_ids = BusTravels::where('user_id', $user->id)->pluck('id');
-
-        // Get all bus travels for this user (used in view)
         $bus_travel = BusTravels::whereIn('id', $bus_travel_ids)->orderBy('id', 'desc')->get();
 
-        // Get all buses for ALL of the user's bus travels
         $buses = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
             ->whereIn('bus_travel_id', $bus_travel_ids)
             ->orderBy('id', 'desc')
@@ -42,27 +38,27 @@ class BusTravelController extends Controller
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
         $facilities = BusFacility::all();
 
-        $view = [
+        return view('ekstranet.bus-travel.create-bus-travel', [
             'bus_travel' => $bus_travel,
             'facilities' => $facilities
-        ];
-
-        return view('ekstranet.bus-travel.create-bus-travel', $view);
+        ]);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'bus_travel_id' => 'required|exists:bus_travels,id',
-            'name' => 'required',
-            'tos' => 'required|string',
-            'class' => 'required',
-            'is_active' => 'required',
-            'number_seats' => 'required',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-            'facilities' => 'nullable|array',
-            'facilities.*' => 'exists:bus_facilities,id'
+            'name'          => 'required',
+            'deskripsi'     => 'required|string',
+            'kategori'      => 'required|string',
+            'tos'           => 'required|string',
+            'class'         => 'required',
+            'is_active'     => 'required',
+            'number_seats'  => 'required|integer',
+            'images'        => 'nullable|array',
+            'images.*'      => 'image|mimes:jpg,jpeg,png|max:2048',
+            'facilities'    => 'nullable|array',
+            'facilities.*'  => 'exists:bus_facilities,id'
         ]);
 
         if ($validator->fails()) {
@@ -73,21 +69,18 @@ class BusTravelController extends Controller
         }
 
         $user = auth()->user();
-        $bus_travel_id = $request->input('bus_travel_id');
+        $bus_travel_id = $request->bus_travel_id;
 
-        // Check if the bus travel exists
         $bus_travel = BusTravels::where('id', $bus_travel_id)->first();
         if (!$bus_travel) {
             return redirect()->route('partner.daftar.bus-travel')->with('error', 'Bus & Travel tidak ditemukan!');
         }
 
-        // Check if the bus travel belongs to the current user
         if ($bus_travel->user_id != $user->id) {
             return redirect()->route('partner.daftar.bus-travel')->with('error', 'Bus & Travel ini bukan milik Anda!');
         }
 
         $imageNames = [];
-
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
@@ -97,16 +90,16 @@ class BusTravelController extends Controller
         }
 
         $data = [
-            'bus_travel_id' => $request->input('bus_travel_id'),
-            'name' => $request->input('name'),
-            'tos' => $request->input('tos'),
-            'class' => $request->input('class'),
-            'is_active' => $request->input('is_active'),
-            'number_seats' => $request->input('number_seats'),
-            'image' => json_encode($imageNames),
+            'bus_travel_id' => $bus_travel_id,
+            'name'          => $request->name,
+            'deskripsi'     => $request->deskripsi,
+            'kategori'      => $request->kategori,
+            'tos'           => $request->tos,
+            'class'         => $request->class,
+            'is_active'     => $request->is_active,
+            'number_seats'  => $request->number_seats,
+            'image'         => json_encode($imageNames),
         ];
-
-        Log::info($request->all());
 
         $bus_has_travel = DB::table('bus_travel_has_buses')->insertGetId($data);
 
@@ -114,12 +107,12 @@ class BusTravelController extends Controller
             foreach ($request->facilities as $facility) {
                 BusTravelHasFacility::create([
                     'bus_travel_has_bus_id' => $bus_has_travel,
-                    'bus_facility_id' => $facility
+                    'bus_facility_id'       => $facility
                 ]);
             }
         }
 
-        return redirect()->route('partner.daftar.bus-travel')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('partner.daftar.bus-travel')->with('status', 'Data berhasil ditambahkan!');
     }
 
     public function show($id)
@@ -127,19 +120,17 @@ class BusTravelController extends Controller
         $bus = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
             ->where('id', $id)
             ->first();
+
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
         $facilities = BusFacility::all();
-
         $selectedFacilities = $bus->facilities->pluck('bus_facility_id')->toArray();
 
-        $view = [
-            'bus' => $bus,
-            'bus_travel' =>  $bus_travel,
-            'facilities' => $facilities,
+        return view('ekstranet.bus-travel.update', [
+            'bus'                => $bus,
+            'bus_travel'         => $bus_travel,
+            'facilities'         => $facilities,
             'selectedFacilities' => $selectedFacilities
-        ];
-
-        return view('ekstranet.bus-travel.update', $view);
+        ]);
     }
 
     public function update(Request $request, $id)
@@ -147,14 +138,16 @@ class BusTravelController extends Controller
         $bus = BusTravelHasBus::find($id);
 
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'tos' => 'required|string',
-            'class' => 'required',
-            'is_active' => 'required',
-            'number_seats' => 'required',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpg,jpeg,png|max:2048',
-            'facilities' => 'nullable|array',
+            'name'         => 'required',
+            'deskripsi'    => 'required|string',
+            'kategori'     => 'required|string',
+            'tos'          => 'required|string',
+            'class'        => 'required',
+            'is_active'    => 'required',
+            'number_seats' => 'required|integer',
+            'images'       => 'nullable|array',
+            'images.*'     => 'image|mimes:jpg,jpeg,png|max:2048',
+            'facilities'   => 'nullable|array',
             'facilities.*' => 'exists:bus_facilities,id'
         ]);
 
@@ -169,10 +162,8 @@ class BusTravelController extends Controller
 
         if ($request->filled('removed_images')) {
             $removedImages = json_decode($request->removed_images, true) ?? [];
-
             foreach ($removedImages as $removed) {
                 Storage::disk('public')->delete('buses/' . $removed);
-
                 $imageNames = array_values(array_diff($imageNames, [$removed]));
             }
         }
@@ -185,12 +176,14 @@ class BusTravelController extends Controller
             }
         }
 
-        $bus->name = $request->name;
-        $bus->tos = $request->tos;
-        $bus->class = $request->class;
-        $bus->is_active = $request->is_active;
+        $bus->name         = $request->name;
+        $bus->deskripsi    = $request->deskripsi;
+        $bus->kategori     = $request->kategori;
+        $bus->tos          = $request->tos;
+        $bus->class        = $request->class;
+        $bus->is_active    = $request->is_active;
         $bus->number_seats = $request->number_seats;
-        $bus->image = json_encode($imageNames);
+        $bus->image        = json_encode($imageNames);
         $bus->save();
 
         if ($request->has('facilities')) {
@@ -198,7 +191,7 @@ class BusTravelController extends Controller
             foreach ($request->facilities as $facility) {
                 BusTravelHasFacility::create([
                     'bus_travel_has_bus_id' => $id,
-                    'bus_facility_id' => $facility
+                    'bus_facility_id'       => $facility
                 ]);
             }
         }

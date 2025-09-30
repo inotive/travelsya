@@ -24,6 +24,14 @@
                     @error('bus_travel_id') <span class="text-danger mt-1">{{ $message }}</span> @enderror
                 </div>
             </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                    <input type="text" class="form-control form-control-lg" name="kategori"
+                        value="{{ old('kategori', $bus->kategori) }}" placeholder="Masukkan Kategori" />
+                    @error('kategori') <span class="text-danger mt-1">{{ $message }}</span> @enderror
+                </div>
+            </div>
 
             <div class="form-row">
                 <div class="form-group">
@@ -109,6 +117,12 @@
                 </div>
                 @error('facilities') <span class="text-danger mt-1">{{ $message }}</span> @enderror
             </div>
+            
+            <div class="form-group">
+                <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
+                <textarea class="form-control" name="deskripsi" required>{{ old('deskripsi', $bus->deskripsi) }}</textarea>
+                @error('deskripsi') <span class="text-danger mt-1">{{ $message }}</span> @enderror
+            </div>
 
             <div class="form-group">
                 <label class="required fs-6 fw-semibold mb-2">Peraturan atau Ketentuan</label>
@@ -171,7 +185,7 @@
     function renderPreviews() {
         // Clear the preview container
         previewContainer.innerHTML = '';
-        
+
         // Render a preview for each file in our array
         fileArray.forEach((file, i) => {
             const reader = new FileReader();

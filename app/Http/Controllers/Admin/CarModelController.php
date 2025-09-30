@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\UploadFile;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CarModel\CarModelRequest;
 use App\Models\Brand;
 use App\Models\CarModel;
 use Illuminate\Http\Request;
@@ -41,34 +42,49 @@ class CarModelController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CarModelRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'brand_id' => 'required|exists:brands,id', // brand_id = merek_id
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        try {
+            $data = [
+                'name' => $request->name, // name = nama tipe
+                'brand_id' => $request->brand_id, // brand_id = merek_id
+            ];
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
+            if ($request->hasFile('image')) {
+                $image = $this->storeFile($request->file('image'), 'car-models');
+                $data['image'] = "car-models/" . $image;
+            }
+
+            $carModel = CarModel::create($data);
+            $carModel->load('brand');
+
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Tipe kendaraan berhasil ditambahkan',
+                    'data' => [
+                        'id' => $carModel->id,
+                        'name' => $carModel->name,
+                        'brand_name' => $carModel->brand ? $carModel->brand->name : '-',
+                        'image' => $carModel->image,
+                        'brand_id' => $carModel->brand_id
+                    ]
+                ]);
+            }
+
+            // Ubah istilah: "Merek kendaraan berhasil ditambahkan" => "Tipe kendaraan berhasil ditambahkan"
+            return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil ditambahkan');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menambahkan data: ' . $e->getMessage());
         }
-
-        $data = [
-            'name' => $request->name, // name = nama tipe
-            'brand_id' => $request->brand_id, // brand_id = merek_id
-        ];
-
-        if ($request->hasFile('image')) {
-            $image = $this->storeFile($request->file('image'), 'car-models');
-            $data['image'] = "car-models/" . $image;
-        }
-
-        CarModel::create($data);
-
-        // Ubah istilah: "Merek kendaraan berhasil ditambahkan" => "Tipe kendaraan berhasil ditambahkan"
-        return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil ditambahkan');
     }
 
     /**
@@ -93,38 +109,53 @@ class CarModelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CarModel $carModel)
+    public function update(CarModelRequest $request, CarModel $carModel)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'brand_id' => 'required|exists:brands,id', // brand_id = merek_id
-            'image' => 'sometimes|required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
+        try {
+            $data = [
+                'name' => $request->name, // name = nama tipe
+                'brand_id' => $request->brand_id, // brand_id = merek_id
+            ];
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
-        $data = [
-            'name' => $request->name, // name = nama tipe
-            'brand_id' => $request->brand_id, // brand_id = merek_id
-        ];
-
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($carModel->image) {
-                $this->deleteFile($carModel->image, 'car-models');
+            if ($request->hasFile('image')) {
+                // Delete old image if exists
+                if ($carModel->image) {
+                    $this->deleteFile($carModel->image, 'car-models');
+                }
+                $image = $this->storeFile($request->file('image'), 'car-models');
+                $data['image'] = "car-models/" . $image;
             }
-            $image = $this->storeFile($request->file('image'), 'car-models');
-            $data['image'] = "car-models/" . $image;
+
+            $carModel->update($data);
+            $carModel->load('brand');
+
+            // Return JSON response for AJAX requests
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Tipe kendaraan berhasil diperbarui',
+                    'data' => [
+                        'id' => $carModel->id,
+                        'name' => $carModel->name,
+                        'brand_name' => $carModel->brand ? $carModel->brand->name : '-',
+                        'image' => $carModel->image,
+                        'brand_id' => $carModel->brand_id
+                    ]
+                ]);
+            }
+
+            // Ubah istilah: "Merek kendaraan berhasil diperbarui" => "Tipe kendaraan berhasil diperbarui"
+            return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil diperbarui');
+        } catch (\Exception $e) {
+            if ($request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
         }
-
-        $carModel->update($data);
-
-        // Ubah istilah: "Merek kendaraan berhasil diperbarui" => "Tipe kendaraan berhasil diperbarui"
-        return redirect()->route('admin.car-model.index')->with('success', 'Tipe kendaraan berhasil diperbarui');
     }
 
     /**

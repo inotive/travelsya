@@ -105,66 +105,31 @@
     </div>
 
     <!-- Toast Container for Success -->
-    <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toast-success" class="toast align-items-center text-white bg-success border-0 rounded-3 shadow-lg"
-                role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px; font-size: 1.1rem;">
-                <div class="d-flex">
-                    <div class="toast-icon me-2">
-                        <i class="bi bi-check-circle-fill"></i>
+    @if (session('status') || session('update') || session('delete'))
+        @php
+            $message = session('status') ?? session('update') ?? session('delete');
+        @endphp
+        <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
+            <div class="toast-container position-fixed top-0 end-0 p-3">
+                <div id="toast-main" class="toast align-items-center text-white bg-success border-0 rounded-3 shadow-lg"
+                    role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px; font-size: 1.1rem;">
+                    <div class="d-flex">
+                        <div class="toast-icon me-2">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+                        <div class="toast-body">
+                            {{ $message }}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                            aria-label="Close"></button>
                     </div>
-                    <div class="toast-body">
-                        Data berhasil ditambahkan!
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
                 </div>
             </div>
         </div>
-    </div>
-
-
-    <!-- Toast Container for Delete -->
-    <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toast-delete" class="toast align-items-center text-white bg-success border-0 rounded-3 shadow-lg"
-                role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px; font-size: 1.1rem;">
-                <div class="d-flex">
-                    <div class="toast-icon me-2">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div class="toast-body">
-                        Data berhasil dihapus!
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Toast Container for update -->
-    <div aria-live="polite" aria-atomic="true" style="position: relative; z-index: 1050;">
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toast-update" class="toast align-items-center text-white bg-success border-0 rounded-3 shadow-lg"
-                role="alert" aria-live="assertive" aria-atomic="true" style="min-width: 350px; font-size: 1.1rem;">
-                <div class="d-flex">
-                    <div class="toast-icon me-2">
-                        <i class="bi bi-check-circle-fill"></i>
-                    </div>
-                    <div class="toast-body">
-                        Data berhasil diupdate!
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                        aria-label="Close"></button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @endif
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script> --}}
 @endsection
 
 @push('add-script')
@@ -193,7 +158,7 @@
 
             table.on('order.dt search.dt', function () {
                 let i = 1;
- 
+
                 table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
                     this.data(i++);
                 });
@@ -201,42 +166,22 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            @if (session('success'))
-                var toastElSuccess = document.getElementById('toast-success');
-                if (toastElSuccess) {
-                    var toastSuccess = new bootstrap.Toast(toastElSuccess);
-                    toastSuccess.show();
-                }
-            @endif
-
-            @if (session('delete'))
-                var toastElDelete = document.getElementById('toast-delete');
-                if (toastElDelete) {
-                    var toastDelete = new bootstrap.Toast(toastElDelete);
-                    toastDelete.show();
-                }
-            @endif
-
-            @if (session('update'))
-                var toastElUpdate = document.getElementById('toast-update');
-                if (toastElUpdate) {
-                    var toastUpdate = new bootstrap.Toast(toastElUpdate);
-                    toastUpdate.show();
-                }
-            @endif
+            var toastEl = document.getElementById('toast-main');
+            if (toastEl) {
+                var toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
         });
     </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const deleteButtons = document.querySelectorAll('.menu-item .text-danger');
+            const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"][data-id]');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const busId = this.getAttribute('data-id');
                     const form = document.getElementById('form-delete');
-                    form.action = '{{ route('partner.delete.bus-travel', '__id') }}'.replace(
-                        '__id',
-                        busId);
+                    form.action = '{{ route('partner.delete.bus-travel', '__id') }}'.replace('__id', busId);
                 });
             });
         });

@@ -32,6 +32,20 @@
 
                 <div class="form-row">
                     <div class="form-group">
+                        <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                        <input type="text" class="form-control form-control-lg" id="kategori" name="kategori"
+                            value="{{ old('kategori') }}" placeholder="Masukkan Kategori Bus" />
+
+                        @error('kategori')
+                            <span class="text-danger mt-1" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text" class="form-control form-control-lg" id="name" name="name" value="{{ old('name') }}"
                             placeholder="Masukkan Nama" />
@@ -116,6 +130,12 @@
                             <strong>{{ $message }}</strong>
                         </span>
                     @enderror
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
+                    <textarea class="form-control" name="deskripsi" required placeholder="Masukkan Deskripsi">{{ old('deskripsi') }}</textarea>
+                    @error('deskripsi') <span class="text-danger mt-1">{{ $message }}</span> @enderror
                 </div>
                 <br>
                 <div class="form-group">
