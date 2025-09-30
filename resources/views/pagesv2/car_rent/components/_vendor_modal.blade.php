@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
-                        <img src="{{ Storage::url($car->brand->image ?? null) }}" 
+                        <img src="{{ $car->brand->image ? Storage::url($car->brand->image) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg' }}" 
                              class="card-img-aspect card-img-top"
                              alt="{{ $car->brand->name ?? 'Car Brand' }}"
                              onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
@@ -34,7 +34,16 @@
                 @forelse (collect($car->vendor)->sortBy(function($item) { return $item['price'] ?? $item->rental_price_per_day ?? 0; }) as $v)
                 <div class="card shadow-sm mb-5" id="rental_{{ $v['car_id'] ?? $v->id ?? 'unknown' }}">
                     <div class="card-body d-flex flex-row">
-                        <div class="d-flex flex-column">
+                        <!-- Tambahkan gambar mobil di sini jika tersedia -->
+                        <div class="d-flex flex-column me-3">
+                            <div class="card-img-container" style="width: 100px; height: 70px; overflow: hidden;">
+                                <img src="{{ $v['car_image'] ?? ($v->car_image ?? ($v['image_url'] ?? ($v->image_url ?? ($car->image_url ? Storage::url($car->image_url) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg')))) }}"
+                                     class="card-img-aspect card-img-top" 
+                                     alt="{{ $car->brand->name ?? 'Car Image' }}"
+                                     onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
+                            </div>
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1">
                             <span class="fw-bold mb-5">{{ $v['business_name'] ?? $v->carRental->business_name ?? 'Unknown Vendor' }}</span>
                             <div class="rating d-flex align-items-center mb-1">
                                 <span class="bintang text-warning fa fa-star checked me-2"></span>
