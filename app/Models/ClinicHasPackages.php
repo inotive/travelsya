@@ -114,7 +114,7 @@ class ClinicHasPackages extends Model
     protected function formattedPrice(): Attribute
     {
         return Attribute::make(
-            get: fn () => 'Rp ' . number_format($this->price, 0, ',', '.')
+            get: fn () => 'Rp ' . number_format((float)$this->price, 0, ',', '.')
         );
     }
 
@@ -131,12 +131,15 @@ class ClinicHasPackages extends Model
     {
         return Attribute::make(
             get: function () {
-                if ($this->image && $this->image->image) {
-                    return Storage::url($this->image->image);
+                if ($this->image && !empty($this->image->image) && $this->image->image !== 'images/not_found.jpg') {
+                    // Memeriksa apakah file gambar benar-benar ada di storage
+                    if (Storage::exists($this->image->image)) {
+                        return Storage::url($this->image->image);
+                    }
                 }
                 
-                // Fallback ke gambar default jika tidak ada
-                return asset('images/default-package.jpg');
+                // Fallback ke gambar health_default.png
+                return asset('images/health_default.png');
             }
         );
     }
@@ -177,7 +180,7 @@ class ClinicHasPackages extends Model
     // Method untuk formatted discounted price
     public function getFormattedDiscountedPrice()
     {
-        return 'Rp ' . number_format($this->getDiscountedPrice(), 0, ',', '.');
+        return 'Rp ' . number_format((float)$this->getDiscountedPrice(), 0, ',', '.');
     }
 
     // Method untuk check jika ada discount
@@ -196,6 +199,13 @@ class ClinicHasPackages extends Model
 
         $starReviews = $this->reviews()->where('rate', $stars)->count();
         return ($starReviews / $totalReviews) * 100;
+    }
+
+    // Method untuk avgRating
+    public function avgRating()
+    {
+        $rating = $this->reviews()->avg('rate');
+        return $rating ? round($rating, 1) : 0;
     }
 
     // Event handlers untuk cleanup

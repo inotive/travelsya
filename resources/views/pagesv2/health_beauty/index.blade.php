@@ -31,11 +31,23 @@
             </div>
         </div>
         <section class="categories" style="margin-bottom: 50px;">
-            @include('pagesv2.health_beauty.partials._categories', [
-                'section_title' => 'Kebutuhan Kesehatan dan Kecantikan',
-                'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagian maksimal',
-                'categorises' => $categorises,
-            ])
+            <!-- Tab health menampilkan semua kategori -->
+            <div id="health_categories_section">
+                @include('pagesv2.health_beauty.partials._categories', [
+                    'section_title' => 'Kebutuhan Kesehatan dan Kecantikan',
+                    'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagian maksimal',
+                    'categorises' => $categorises,
+                ])
+            </div>
+            <!-- Tab beauty menampilkan kategori terpisah untuk service dan product -->
+            <div id="beauty_categories_section" style="display: none;">
+                @include('pagesv2.health_beauty.partials._categories_beauty', [
+                    'section_title' => 'Kebutuhan Kesehatan dan Kecantikan',
+                    'section_subtitle' => 'Jelajahi kategori-kategori kami untuk kebahagian maksimal',
+                    'service_categories' => $service_categories,
+                    'product_categories' => $product_categories,
+                ])
+            </div>
         </section>
 
         <section class="partners" style="margin-bottom: 50px;">
@@ -46,4 +58,21 @@
             ])
         </section>
     </div>
+@push('js')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Event listener untuk tab change
+        document.getElementById('health_tab').addEventListener('shown.bs.tab', function() {
+            document.getElementById('health_categories_section').style.display = 'block';
+            document.getElementById('beauty_categories_section').style.display = 'none';
+        });
+        
+        document.getElementById('beauty_tab').addEventListener('shown.bs.tab', function() {
+            document.getElementById('health_categories_section').style.display = 'none';
+            document.getElementById('beauty_categories_section').style.display = 'block';
+        });
+    });
+</script>
+@endpush
+
 @endsection

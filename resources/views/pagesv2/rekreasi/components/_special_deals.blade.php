@@ -53,10 +53,10 @@
 
                         <div class="price mt-3 text-start">
                             <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                {{ number_format($deal['unit_price'], 0, ',', '.') }}</span>
+                                {{ number_format((float)$deal['unit_price'], 0, ',', '.') }}</span>
                             </span>
                             <span class="text-danger text-bold">IDR
-                                {{ number_format($deal['price'], 0, ',', '.') }}</span>
+                                {{ number_format((float)$deal['price'], 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>

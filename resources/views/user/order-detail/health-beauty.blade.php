@@ -93,7 +93,7 @@
                                         {{-- Card-Hostel --}}
                                         <div class="card border border-1 mt-5 mb-5">
                                             @php
-                                                $hostelImage = $transaction->clinic->image->image; // Pastikan $hostelPict tidak null
+                                                $hostelImage = (isset($transaction->clinic->image) && isset($transaction->clinic->image->image)) ? $transaction->clinic->image->image : '';
                                                 $imagePath = 'storage/'.$hostelImage;
                                             @endphp
 
@@ -114,7 +114,7 @@
                                             </div>
                                             <div class="m-5 d-flex align-items-center">
                                                 @php
-                                                    $roomImage = $transaction->package->image->image;
+                                                    $roomImage = (isset($transaction->package->image) && isset($transaction->package->image->image)) ? $transaction->package->image->image : '';
                                                     $imagePath = 'storage/'. ($roomImage ?? '');
                                                 @endphp
                                                 <div class="symbol symbol-75px"
