@@ -112,7 +112,7 @@ class BusTravelController extends Controller
             }
         }
 
-        return redirect()->route('partner.daftar.bus-travel')->with('success', 'Data berhasil ditambahkan!');
+        return redirect()->route('partner.daftar.bus-travel')->with('status', 'Data berhasil ditambahkan!');
     }
 
     public function show($id)

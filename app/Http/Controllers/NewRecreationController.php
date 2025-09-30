@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CategoryRecreation;
 use App\Models\Country;
-use App\Models\detailTransactionRecreation;
+use App\Models\DetailTransactionRecreation;
 use App\Models\Fee;
 use App\Models\Recreation;
 use App\Models\RecreationPackages;
@@ -17,6 +17,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Throwable;
 
 class NewRecreationController extends Controller
@@ -58,7 +60,7 @@ class NewRecreationController extends Controller
         foreach ($data_partners as $key => $rec) {
                 $item = [
                     'id' => $rec['id'],
-                    'img' => asset('storage/' . ($rec['image']['image'] ?? 'health_default.png')),
+                    'img' => optional($rec->image)->image ? Storage::url(Str::after($rec->image->image, 'public/')) : asset('images/health_default.png'),
                     'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
                     'business_name' => $rec['business_name'],
                     'rate' => $rec->avgRating(),
@@ -85,7 +87,7 @@ class NewRecreationController extends Controller
         $recreations = RecreationPackages::with(['recreation', 'category', 'image'])->whereHas('recreation', function($q) use($find) {
             $q->where('business_name', 'like', $find);
         })->orWhere('name', 'like', $find)->get();
-        
+
 
 
         $date = Carbon::now()->format('Y-m-d');
@@ -305,7 +307,7 @@ class NewRecreationController extends Controller
                 $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
             }
 
-                detailTransactionRecreation::create([
+                DetailTransactionRecreation::create([
                     "transaction_id" => $storeTransaction->id,
                     "recreation_id" => $package['recreation_id'],
                     "recreationPackage_id" => $package['id'],
@@ -314,7 +316,7 @@ class NewRecreationController extends Controller
                     "rent_price" => $package->price,
                     "fee_admin" => $fees[0]['value'],
                     "kode_unik" => $kode_unik,
-                    "is_used" => 0,
+                    "status" => 0,
                     "total_ticket" => $data['total_ticket'],
                     "book_date" => $data['book_date'],
                     "customer_name" => $data['sapa_pengunjung'] .' '. $data['nama_pengunjung'],
