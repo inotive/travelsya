@@ -83,7 +83,7 @@
                                 $statusKey = '';
                                 $isUsed = $booking->is_used ?? false;
                                 
-                                if ($booking->transaction->payment_status == 'paid') {
+                                if (($booking->transaction->payment_status ?? '') == 'paid') {
                                     // Cek apakah paket sudah melewati tanggal kedaluwarsa
                                     if ($now->gt($expiryDate)) {
                                         $status = 'Kedaluwarsa';
@@ -111,14 +111,14 @@
                             @if (true)
                             <tr data-booking-id="{{ $booking->id }}" data-status="{{ $statusKey }}">
                                 <td class="text-center">{{ $loop->iteration }}</td>
-                                <td class="text-center">{{ $booking->clinic->clinic_name ?? '' }}</td>
+                                <td class="text-center">{{ $booking->clinic->clinic_name ?? 'Klinik tidak ditemukan' }}</td>
                                 <td class="text-center">
-                                    {{ $booking->transaction->user->name ?? '' }} -
-                                    {{ $booking->transaction->user->phone ?? '' }}
+                                    {{ $booking->transaction->user->name ?? 'User tidak ditemukan' }} -
+                                    {{ $booking->transaction->user->phone ?? 'No HP tidak ditemukan' }}
                                 </td>
                                 <td class="text-center">{{ $booking->booking_id }}</td>
-                                <td class="text-center">{{ $booking->package->name }}</td>
-                                <td class="text-center">{{ General::rp($booking->transaction->total) }}</td>
+                                <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
+                                <td class="text-center">{{ General::rp($booking->transaction->total ?? 0) }}</td>
                                 <td class="text-center">{{ $orderDates }}</td>
                                 <td class="text-center">{{ $expiryDates }}</td>
                                 <td class="text-center">

@@ -98,6 +98,12 @@ class ClinicHasPackages extends Model
         return $this->hasMany(ClinicPackageFacilities::class, 'clinic_package_id');
     }
 
+    // Relasi ke single facility (first facility)
+    public function facility(): HasOne
+    {
+        return $this->hasOne(ClinicPackageFacilities::class, 'clinic_package_id')->latest('id');
+    }
+
     // Relasi ke main image
     public function image(): HasOne
     {

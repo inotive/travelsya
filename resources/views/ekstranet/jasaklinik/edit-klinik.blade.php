@@ -47,7 +47,7 @@
                         </div>
 
                         <!-- Kategori -->
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="category-field" style="display: block;">
                             <label for="categories_services_id" class="form-label required fs-6 fw-semibold mb-2">Kategori</label>
                             <select class="form-control" id="categories_services_id" name="categories_services_id" required>
                                 <option value="">Pilih Kategori</option>
@@ -144,42 +144,73 @@
                             @enderror
                         </div>
 
-                        <!-- Existing Images -->
-                        @if(isset($clinicImages) && count($clinicImages) > 0)
-                            <div class="col-md-12 mt-4">
-                                <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                                <div class="row">
-                                    @foreach($clinicImages as $image)
-                                    <div class="col-md-3 mb-3">
-                                        <div class="card">
-                                            <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image" style="height: 150px; object-fit: cover;">
-                                            <div class="card-body text-center">
-                                                @if($image->main == 1)
-                                                    <span class="badge bg-primary">Main Image</span>
-                                                @else
-                                                    <span class="badge bg-secondary">Additional Image</span>
-                                                @endif
-                                                <div class="mt-2">
-                                                    <div class="form-check mb-1">
-                                                        <input class="form-check-input main-image-radio" type="radio" name="main_image_id" value="{{ $image->id }}" id="main_image_{{ $image->id }}" {{ $image->main == 1 ? 'checked' : '' }}>
-                                                        <label class="form-check-label" for="main_image_{{ $image->id }}">
-                                                            Jadikan Utama
-                                                        </label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image->id }}" id="delete_image_{{ $image->id }}">
-                                                        <label class="form-check-label" for="delete_image_{{ $image->id }}">
-                                                            Hapus gambar
-                                                        </label>
-                                                    </div>
+                        <!-- Kelola Gambar -->
+                        <div class="col-md-12 mt-4">
+                            <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
+                            
+                            @php
+                                $mainImage = $clinicImages->firstWhere('main', 1);
+                                $additionalImages = $clinicImages->where('main', 0);
+                            @endphp
+
+                            <!-- Main Image Section -->
+                            <div class="mb-5 p-4 border rounded">
+                                <h6 class="mb-3">Gambar Utama</h6>
+                                @if($mainImage)
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-6 mb-4">
+                                            <div class="card h-100">
+                                                <img src="{{ Storage::url($mainImage->image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                                <div class="card-body text-center p-3">
+                                                    <p class="card-text text-muted text-truncate" title="{{ basename($mainImage->image) }}">{{ basename($mainImage->image) }}</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    @endforeach
+                                    <div class="mt-3">
+                                        <label class="form-label">Ganti Gambar Utama</label>
+                                        <input type="file" class="form-control" name="main_image" accept="image/*">
+                                        <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
+                                    </div>
+                                @else
+                                    <p>Belum ada gambar utama. Silakan unggah.</p>
+                                    <input type="file" class="form-control" name="main_image" accept="image/*">
+                                @endif
+                            </div>
+
+                            <!-- Additional Images Section -->
+                            <div class="mb-5 p-4 border rounded">
+                                <h6 class="mb-3">Gambar Tambahan</h6>
+                                <div class="row">
+                                    @if(count($additionalImages) > 0)
+                                        @foreach($additionalImages as $image)
+                                            <div class="col-md-4 col-sm-6 mb-4">
+                                                <div class="card h-100">
+                                                    <img src="{{ Storage::url($image->image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                                    <div class="card-body text-center p-3">
+                                                        <p class="card-text text-muted text-truncate" title="{{ basename($image->image) }}">{{ basename($image->image) }}</p>
+                                                        <button type="button" class="btn btn-sm btn-danger delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="col-12">
+                                            <p class="text-muted">Tidak ada gambar tambahan.</p>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
-                        @endif
+                            
+                            <!-- Add More Additional Images -->
+                            <div class="p-4 border rounded">
+                                <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
+                                <div id="additional-images-container">
+                                    <!-- New image inputs will be appended here -->
+                                </div>
+                                <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">+ Tambah Gambar Tambahan</button>
+                            </div>
+                        </div>
                         
                         <div id="data-id-service" data-variable="{{ $clinic->categories_services_id ?? '' }}" data-business-category="{{ $businessCategory ?? '' }}"></div>
                     </div>
@@ -279,38 +310,75 @@
             $(this).val(formatted);
         });
         
-        // Parse harga sebelum submit
-        $('#clinic-form').on('submit', function(e) {
-            let hargaValue = $('#price').val();
-            if (hargaValue && hargaValue.trim() !== '') {
-                let harga = parseRupiah(hargaValue);
-                
-                if (isNaN(harga) || harga <= 0) {
-                    alert('Harga harus berupa angka yang valid dan lebih besar dari 0');
-                    e.preventDefault();
-                    return false;
-                }
-                
-                $('#price').val(harga);
-            } else {
-                alert('Harga wajib diisi');
-                e.preventDefault();
-                return false;
-            }
+        // Format harga saat input (from rekreasi)
+        $('#price').on('input', function () {
+            let input = $(this).val();
+            let formatted = formatRupiah(input, 'Rp. ');
+            $(this).val(formatted);
+        });
+        
+        // Format harga saat input (from rekreasi)
+        $('#price').on('input', function () {
+            let input = $(this).val();
+            let formatted = formatRupiah(input, 'Rp. ');
+            $(this).val(formatted);
+        });
+        
+        // Handle submit with confirmation dialog
+        document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
+            event.preventDefault();
             
-            // Parse unit price sebelum submit jika ada
-            let unitPriceValue = $('#unit_price').val();
-            if (unitPriceValue && unitPriceValue.trim() !== '') {
-                let unitPrice = parseRupiah(unitPriceValue);
-                
-                if (isNaN(unitPrice) || unitPrice < 0) {
-                    alert('Harga satuan harus berupa angka yang valid dan tidak negatif');
-                    e.preventDefault();
-                    return false;
+            // Show loading indicator
+            const submitButton = this;
+            submitButton.disabled = true;
+            const indicatorLabel = submitButton.querySelector('.indicator-label');
+            const indicatorProgress = submitButton.querySelector('.indicator-progress');
+            indicatorLabel.style.display = 'none';
+            indicatorProgress.style.display = 'inline-block';
+
+            Swal.fire({
+                title: "Apa kamu yakin ingin menyimpan perubahan?",
+                icon: "question",
+                showCancelButton: true,
+                cancelButtonText: "Tidak jadi",
+                cancelButtonColor: '#d33',
+                confirmButtonText: "Ya",
+                confirmButtonColor: '#3085d6',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Format the price value before submitting
+                    let hargaInput = document.getElementById('price');
+                    if (hargaInput) {
+                        // Remove formatting characters (Rp., commas, dots) to get clean number
+                        let cleanPrice = hargaInput.value.replace(/[^\d]/g, '');
+                        hargaInput.value = cleanPrice;
+                    }
+                    
+                    // Parse unit price sebelum submit jika ada
+                    let unitPriceValue = $('#unit_price').val();
+                    if (unitPriceValue && unitPriceValue.trim() !== '') {
+                        let unitPrice = parseRupiah(unitPriceValue);
+                        
+                        if (isNaN(unitPrice) || unitPrice < 0) {
+                            alert('Harga satuan harus berupa angka yang valid dan tidak negatif');
+                            submitButton.disabled = false;
+                            indicatorLabel.style.display = 'inline-block';
+                            indicatorProgress.style.display = 'none';
+                            return false;
+                        }
+                        
+                        $('#unit_price').val(unitPrice);
+                    }
+                    
+                    document.getElementById('clinic-form').submit();
+                } else {
+                    // Re-enable button if cancelled
+                    submitButton.disabled = false;
+                    indicatorLabel.style.display = 'inline-block';
+                    indicatorProgress.style.display = 'none';
                 }
-                
-                $('#unit_price').val(unitPrice);
-            }
+            });
         });
 
         // Inisialisasi Select2 untuk clinic_id (jika ada)
@@ -322,16 +390,52 @@
                 let selectedOption = $(this).find('option:selected');
                 let businessCategory = selectedOption.data('category');
                 
-                if (businessCategory) {
-                    loadCategoriesByBusinessCategory(businessCategory);
+                // Check if business category is Spa & Kecantikan (adjust the condition as needed)
+                if (businessCategory && (businessCategory.toLowerCase().includes('spa') || businessCategory.toLowerCase().includes('kecantikan'))) {
+                    // Hide category field for Spa & Kecantikan business
+                    $('#category-field').hide();
+                    // Make categories_services_id field not required
+                    $('#categories_services_id').removeAttr('required');
+                    // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                    $('#categories_services_id').val(''); // Clear any existing selection
                 } else {
-                    loadCategories();
+                    // Show category field for other businesses
+                    $('#category-field').show();
+                    // Make categories_services_id field required
+                    $('#categories_services_id').attr('required', 'required');
+                    
+                    if (businessCategory) {
+                        loadCategoriesByBusinessCategory(businessCategory);
+                    } else {
+                        loadCategories();
+                    }
                 }
             });
         @endif
 
         // Load categories saat halaman dimuat
         loadCategories();
+        
+        // On page load, check the initial clinic category and hide/show category field accordingly
+        $(document).ready(function() {
+            let initialClinicOption = $('#clinic_id option:selected');
+            let initialBusinessCategory = initialClinicOption.data('category');
+            
+            // Check if business category is Spa & Kecantikan (adjust the condition as needed)
+            if (initialBusinessCategory && (initialBusinessCategory.toLowerCase().includes('spa') || initialBusinessCategory.toLowerCase().includes('kecantikan'))) {
+                // Hide category field for Spa & Kecantikan business
+                $('#category-field').hide();
+                // Make categories_services_id field not required
+                $('#categories_services_id').removeAttr('required');
+                // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                $('#categories_services_id').val(''); // Clear any existing selection
+            } else {
+                // Show category field for other businesses
+                $('#category-field').show();
+                // Make categories_services_id field required
+                $('#categories_services_id').attr('required', 'required');
+            }
+        });
     });
 
     // Fungsi untuk memuat kategori berdasarkan business category
@@ -442,17 +546,72 @@
         });
     }
     
-    // Event listener for delete checkboxes to manage main image selection
-    $(document).on('change', 'input[name="delete_images[]"]', function() {
-        if (this.checked) {
-            // If deleting the main image, uncheck the main image radio button for that image
-            let imageId = $(this).val();
-            let mainRadio = $('input[name="main_image_id"][value="' + imageId + '"]');
-            if (mainRadio.is(':checked')) {
-                // Reset main image selection to ensure a new one is selected or handled on server side
-                mainRadio.prop('checked', false);
+    // Format Rupiah function (from rekreasi)
+    function formatRupiah(angka, prefix) {
+        angka = angka.toString().replace(/[^,\d]/g, '');
+        const split = angka.split(',');
+        const sisa = split[0].length % 3;
+        let rupiah = split[0].substr(0, sisa);
+        const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        if (ribuan) {
+            const separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] !== undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix !== undefined ? prefix + rupiah : rupiah;
+    }
+    
+    // Handle adding additional images
+    $('#add-more-additional-images').click(function() {
+        $('#additional-images-container').append(`
+            <div class="input-group mb-3">
+                <input type="file" class="form-control" name="additional_images[]" accept="image/*" required>
+                <button type="button" class="btn btn-outline-danger remove-additional-image">Hapus</button>
+            </div>
+        `);
+    });
+    
+    // Handle removing newly added images
+    $(document).on('click', '.remove-additional-image', function() {
+        $(this).closest('.input-group').remove();
+    });
+    
+    // Handle deleting existing images
+    $(document).on('click', '.delete-existing-image', function() {
+        const imageId = $(this).data('image-id');
+        const imageCard = $(this).closest('.col-md-4'); // Adjusted selector
+        
+        Swal.fire({
+            title: "Apakah kamu yakin ingin menghapus gambar ini?",
+            text: "Gambar ini akan dihapus secara permanen.",
+            icon: "warning",
+            showCancelButton: true,
+            cancelButtonText: "Batal",
+            confirmButtonText: "Ya, Hapus",
+            confirmButtonColor: '#d33',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Add hidden input to mark image for deletion
+                $('#clinic-form').append(`<input type="hidden" name="deleted_images[]" value="${imageId}">`);
+                // Remove the card from UI
+                imageCard.remove();
             }
+        });
+    });
+    
+    // Validasi form sebelum submit
+    $('#clinic-form').on('submit', function() {
+        // Jika field kategori disembunyikan (untuk bisnis Spa & Kecantikan), 
+        // pastikan tidak diperlukan validasi
+        if ($('#category-field').is(':hidden')) {
+            $('#categories_services_id').removeAttr('required');
         }
     });
 </script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @endpush
