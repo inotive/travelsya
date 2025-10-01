@@ -33,8 +33,11 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="required fs-6 fw-semibold mb-2">Kategori</label>
-                        <input type="text" class="form-control form-control-lg" id="kategori" name="kategori"
-                            value="{{ old('kategori') }}" placeholder="Masukkan Kategori Bus" />
+                        <select class="form-control form-control-lg" id="kategori" name="kategori">
+                            <option value="">Pilih Kategori</option>
+                            <option value="bus" {{ old('kategori') == 'bus' ? 'selected' : '' }}>Bus</option>
+                            <option value="travel" {{ old('kategori') == 'travel' ? 'selected' : '' }}>Travel</option>
+                        </select>
 
                         @error('kategori')
                             <span class="text-danger mt-1" role="alert">
