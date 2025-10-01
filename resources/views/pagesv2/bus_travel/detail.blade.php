@@ -213,36 +213,44 @@
 
     @if (!empty($busImages) && is_array($busImages))
     <div class="modal fade" id="galleryModal" tabindex="-1" aria-labelledby="galleryModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow-lg">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">
-                        {{ $departure->busTravel->busTravel->business_name }} – Galeri Foto
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="galleryModalLabel">Bus Gallery</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    {{-- Main preview --}}
-                    <div class="text-center mb-4">
-                        <img id="mainGalleryImage"
-                            src="/storage/buses/{{ $busImages[0] }}"
-                            class="img-fluid rounded-3 shadow-sm"
-                            alt="Preview Bus"
-                            style="max-height: 350px; object-fit: contain;">
+                <div class="modal-body text-center">
+                    <div id="galleryCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @foreach ($busImages as $key => $image)
+                                <div class="carousel-item {{ $key === 0 ? 'active' : '' }}">
+                                    <img src="/storage/buses/{{ $image }}"
+                                        class="d-block w-100 rounded-3 shadow-sm"
+                                        style="max-height: 450px; object-fit: contain;" alt="Bus Image">
+                                </div>
+                            @endforeach
+                        </div>
+                        @if (count($busImages) > 1)
+                        <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        @endif
                     </div>
-
-                    {{-- Thumbnail grid --}}
-                    <div class="row g-2">
-                        @foreach ($busImages as $key => $image)
-                            <div class="col-3">
-                                <img src="/storage/buses/{{ $image }}"
-                                    class="img-fluid rounded-2 shadow-sm gallery-thumb {{ $key == 0 ? 'active-thumb' : '' }}"
-                                    alt="Thumbnail {{ $key+1 }}"
-                                    data-src="/storage/buses/{{ $image }}"
-                                    style="cursor: pointer; height: 90px; object-fit: cover; width: 100%;">
-                            </div>
-                        @endforeach
+                    
+                    @if (count($busImages) > 1)
+                    <div class="mt-3">
+                        <ol class="carousel-indicators p-0">
+                            @foreach ($busImages as $key => $image)
+                                <li data-bs-target="#galleryCarousel" data-bs-slide-to="{{ $key }}" class="{{ $key === 0 ? 'active' : '' }}"></li>
+                            @endforeach
+                        </ol>
                     </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -266,21 +274,5 @@
 
     </style>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const mainImage = document.getElementById("mainGalleryImage");
-            const thumbs = document.querySelectorAll(".gallery-thumb");
-
-            thumbs.forEach(thumb => {
-                thumb.addEventListener("click", function () {
-                    // Update main image
-                    mainImage.src = this.dataset.src;
-
-                    // Update active state
-                    thumbs.forEach(t => t.classList.remove("active-thumb"));
-                    this.classList.add("active-thumb");
-                });
-            });
-        });
-    </script>
+    
 @endsection
