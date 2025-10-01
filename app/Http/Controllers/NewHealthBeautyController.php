@@ -30,6 +30,24 @@ class NewHealthBeautyController extends Controller
         $this->xendit = $xendit;
         $this->point = $point;
     }
+    
+    /**
+     * Map category string to integer ID
+     * 
+     * @param string $category
+     * @return int
+     */
+    private function mapCategoryToInteger($category)
+    {
+        $categoryMap = [
+            'kesehatan' => 1,
+            'kecantikan' => 2,
+            'spa dan kecantikan' => 3,
+        ];
+        
+        // If it's a known category, return its integer ID; otherwise return 0 for unknown
+        return $categoryMap[$category] ?? 0;
+    }
 
     public function search_ajax(request $request){
         $find = '%' . $request->name . '%';
@@ -462,11 +480,15 @@ class NewHealthBeautyController extends Controller
                 $point->deductPoint(Auth::user()->id, $saldoPointCustomer, $storeTransaction->id);
             }
 
+            // Map category string to integer ID for database storage
+            $categoryValue = $package['clinic']['category'] ?? 'Deleted clinic';
+            $categoryInt = $this->mapCategoryToInteger($categoryValue);
+            
             DetailTransactionHealthBeauty::create([
                 "transaction_id" => $storeTransaction->id,
                 "clinic_id" => $package['clinic_id'],
                 "clinic_package_id" => $package['id'],
-                "category" => $package['clinic']['category'] ?? 'Deleted clinic',
+                "category" => $categoryInt,
                 "booking_id" => Str::random(6),
                 "expire_on" => $expire,
                 "rent_price" => $package->price,

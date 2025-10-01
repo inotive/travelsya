@@ -21,6 +21,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Nama Jasa</th>
                             <th class="text-center">Kategori</th>
+                            <th class="text-center">Durasi</th>
                             <th class="text-center">Masa Berlaku</th>
                             <th class="text-center">Biaya</th>
                             <th class="text-center">Status</th>
@@ -46,6 +47,7 @@
                                 </td>
                                 <td class="text-center">{{ $clinic->categoriesService->name ?? 'Kategori tidak ditemukan' }}
                                 </td>
+                                <td class="text-center">{{ $clinic->duration . ' ' . \Illuminate\Support\Str::ucfirst($clinic->duration_type) }}</td>
                                 <td class="text-center">{{ $clinic->expiry_date }} Hari</td>
                                 <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }} / <span class="text-capitalize">{{ $clinic->duration_type }}</span></td>
                                 <td class="text-center">
