@@ -128,8 +128,21 @@
                             </select>
                         </div>
 
-                        <!-- Unit Price (hidden) -->
-                        <input type="hidden" name="unit_price" value="unit_price">
+                        <!-- Unit Price -->
+                        <div class="col-md-6">
+                            <label for="unit_price" class="form-label fs-6 fw-semibold mb-2">Harga Satuan (Unit Price)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="text" class="form-control form-control-lg" id="unit_price" name="unit_price"
+                                    placeholder="Masukan harga satuan"
+                                    value="{{ old('unit_price', $clinic->unit_price ?? '') }}">
+                            </div>
+                            @error('unit_price')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
 
                         <!-- Existing Images -->
                         @if(isset($clinicImages) && count($clinicImages) > 0)
@@ -139,18 +152,26 @@
                                     @foreach($clinicImages as $image)
                                     <div class="col-md-3 mb-3">
                                         <div class="card">
-                                            <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image">
+                                            <img src="{{ Storage::url($image->image) }}" class="card-img-top" alt="Clinic Image" style="height: 150px; object-fit: cover;">
                                             <div class="card-body text-center">
                                                 @if($image->main == 1)
                                                     <span class="badge bg-primary">Main Image</span>
                                                 @else
                                                     <span class="badge bg-secondary">Additional Image</span>
                                                 @endif
-                                                <div class="form-check mt-2">
-                                                    <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image->id }}" id="delete_image_{{ $image->id }}">
-                                                    <label class="form-check-label" for="delete_image_{{ $image->id }}">
-                                                        Hapus gambar
-                                                    </label>
+                                                <div class="mt-2">
+                                                    <div class="form-check mb-1">
+                                                        <input class="form-check-input main-image-radio" type="radio" name="main_image_id" value="{{ $image->id }}" id="main_image_{{ $image->id }}" {{ $image->main == 1 ? 'checked' : '' }}>
+                                                        <label class="form-check-label" for="main_image_{{ $image->id }}">
+                                                            Jadikan Utama
+                                                        </label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="delete_images[]" value="{{ $image->id }}" id="delete_image_{{ $image->id }}">
+                                                        <label class="form-check-label" for="delete_image_{{ $image->id }}">
+                                                            Hapus gambar
+                                                        </label>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -223,8 +244,29 @@
             $('#price').val(formatRupiah(numericValue));
         }
         
+        // Format unit price saat halaman dimuat
+        let currentUnitPrice = $('#unit_price').val();
+        if (currentUnitPrice && /^\d+$/.test(currentUnitPrice.trim())) {
+            let numericValue = parseInt(currentUnitPrice.replace(/[^\d]/g, ''), 10);
+            $('#unit_price').val(formatRupiah(numericValue));
+        }
+        
         // Format harga saat input
         $('#price').on('input', function(e) {
+            let oldValue = this.value;
+            let numericValue = parseRupiah(oldValue);
+            
+            if (numericValue === 0 && oldValue.replace(/[^0-9]/g, '') === '') {
+                $(this).val('');
+                return;
+            }
+            
+            let formatted = formatRupiah(numericValue);
+            $(this).val(formatted);
+        });
+        
+        // Format unit price saat input
+        $('#unit_price').on('input', function(e) {
             let oldValue = this.value;
             let numericValue = parseRupiah(oldValue);
             
@@ -254,6 +296,20 @@
                 alert('Harga wajib diisi');
                 e.preventDefault();
                 return false;
+            }
+            
+            // Parse unit price sebelum submit jika ada
+            let unitPriceValue = $('#unit_price').val();
+            if (unitPriceValue && unitPriceValue.trim() !== '') {
+                let unitPrice = parseRupiah(unitPriceValue);
+                
+                if (isNaN(unitPrice) || unitPrice < 0) {
+                    alert('Harga satuan harus berupa angka yang valid dan tidak negatif');
+                    e.preventDefault();
+                    return false;
+                }
+                
+                $('#unit_price').val(unitPrice);
             }
         });
 
@@ -385,5 +441,18 @@
             tags: true
         });
     }
+    
+    // Event listener for delete checkboxes to manage main image selection
+    $(document).on('change', 'input[name="delete_images[]"]', function() {
+        if (this.checked) {
+            // If deleting the main image, uncheck the main image radio button for that image
+            let imageId = $(this).val();
+            let mainRadio = $('input[name="main_image_id"][value="' + imageId + '"]');
+            if (mainRadio.is(':checked')) {
+                // Reset main image selection to ensure a new one is selected or handled on server side
+                mainRadio.prop('checked', false);
+            }
+        }
+    });
 </script>
 @endpush

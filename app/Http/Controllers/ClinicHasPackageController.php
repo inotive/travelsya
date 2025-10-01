@@ -64,6 +64,7 @@ class ClinicHasPackageController extends Controller
             'duration' => 'required|integer|min:1',
             'expiry_date' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
+            'unit_price' => 'nullable|numeric|min:0',
             'is_active' => 'required|boolean',
             'duration_type' => 'required|in:jam,menit',
             'images' => 'required|array|min:1|max:5',
@@ -83,6 +84,7 @@ class ClinicHasPackageController extends Controller
         DB::beginTransaction();
         try {
             $price = (int) preg_replace('/[^\d]/', '', $request->price);
+            $unitPrice = $request->unit_price ? (int) preg_replace('/[^\d]/', '', $request->unit_price) : 0;
 
             // Handle categories_services_id
             $categoriesServicesId = $request->categories_services_id;
@@ -107,7 +109,7 @@ class ClinicHasPackageController extends Controller
             $clinic->duration = $request->duration;
             $clinic->description = $request->description;
             $clinic->price = $price;
-            $clinic->unit_price = 'unit_price';
+            $clinic->unit_price = $unitPrice;
             $clinic->expiry_date = $request->expiry_date;
             $clinic->is_active = $request->is_active;
             $clinic->duration_type = $request->duration_type;

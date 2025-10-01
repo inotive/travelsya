@@ -16,13 +16,13 @@
         @foreach ($data as $deal)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <a href="{{ route('health_beauty.detail', ['lokasi' => $deal->clinic->kota->city_name ?? '-', 'clinic' => $deal->clinic, 'id' => $deal['clinic_id']]) }}"
+            <a href="{{ route('health_beauty.detail', ['lokasi' => $deal->clinic->kota->city_name ?? '-', 'clinic' => $deal->clinic->clinic_name ?? 'Unknown', 'id' => $deal->clinic_id]) }}"
                 class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $deal['img'] != '' ? asset($deal['img']) : asset('images/placeholder.jpg') }}"
-                            class="card-img-top" alt="{{ $deal['name'] }}"
-                            onerror="this.src='{{ asset('images/placeholder.jpg') }}">
+                        <img src="{{ $deal->main_image_url }}"
+                            class="card-img-top" alt="{{ $deal->name }}"
+                            onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
                             style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
                         </div>
@@ -30,12 +30,10 @@
                     <div class="card-body">
                         <div class="lokasi d-flex align-items-center">
                             <span class="fa-solid fa-location-dot me-2"></span>
-                            <span class="text-start">{{ $deal->clinic->kota->city_name }}</span>
-                            <span style="position: relative; margin-left: auto;"
-                                class="fa-regular fa-bookmark fs-2"></span>
+                            <span class="text-start">{{ $deal->clinic->kota->city_name ?? '-' }}</span>
                         </div>
 
-                        <h3 class="mt-3 text-dark text-start">{{ $deal['name'] }}</h3>
+                        <h3 class="mt-3 text-dark text-start">{{ $deal->name }}</h3>
 
                         <div class="rating d-flex align-items-center text-start">
                             <span class="bintang text-warning fs-2 fa fa-star checked me-2"></span>
@@ -47,9 +45,9 @@
 
                         <div class="price mt-3 text-start">
                             <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                                {{ number_format($deal['unit_price'], 0, ',', '.') }}</span>
+                                {{ number_format((float)$deal->unit_price, 0, ',', '.') }}</span>
                             <span class="text-danger text-bold">IDR
-                                {{ number_format($deal['price'], 0, ',', '.') }}</span>
+                                {{ number_format((float)$deal->price, 0, ',', '.') }}</span>
                         </div>
                     </div>
                 </div>

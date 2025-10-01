@@ -87,7 +87,11 @@
                         <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
                             <span class="d-flex justify-content-space-between gap-2 align-items-center">
                                 Mulai Dari <span class="text-danger fs-2 fw-bold">
-                                    IDR {{ number_format($clinic['packages'][0]['price']) }}
+                                    @if(isset($clinic->packages) && $clinic->packages->count() > 0 && isset($clinic->packages[0]->price))
+                                    IDR {{ number_format($clinic->packages[0]->price) }}
+                                    @else
+                                    IDR {{ number_format(0) }}
+                                    @endif
                                 </span>
                             </span>
                         </div>

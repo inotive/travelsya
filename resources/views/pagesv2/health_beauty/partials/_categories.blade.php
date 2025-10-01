@@ -23,12 +23,12 @@
         @foreach($categorises as $category)
         <div class="swiper-slide gap-2">
             <!-- Card -->
-            <a href="{{ route('health_beauty.category', ['id' => $category['id']]) }}" class="card shadow-sm rounded-4 d-flex flex-row align-items-center" style="width: 18rem;">
-                <img src="{{ $category['img'] ?? asset('images/placeholder.jpg') }}"
-                    class="card-img-top" alt="{{ $category['name'] }}">
+            <a href="{{ route('health_beauty.category', ['id' => $category->id]) }}" class="card shadow-sm rounded-4 d-flex flex-row align-items-center" style="width: 18rem;">
+                <img src="{{ $category->img ?? asset('images/placeholder.jpg') }}"
+                    class="card-img-top" alt="{{ $category->name }}">
                 <div class="d-flex flex-column w-100 align-items-center" style="z-index: 1; position: absolute;">
                     <div class="carousel-tab">
-                        <h3 class="text-light fw-bold">{{ $category['name'] }}</h3>
+                        <h3 class="text-light fw-bold">{{ $category->name }}</h3>
                     </div>
                 </div>
             </a>

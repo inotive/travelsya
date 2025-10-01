@@ -90,13 +90,13 @@ class BusTravelController extends Controller
             return redirect()->route('bus_travel.index')->with('error', 'Bus operator not found.');
         }
 
-        // Find a random departure associated with this bus travel operator
-        $departure = BusDeparture::whereHas('busTravel.busTravel', function ($query) use ($id) {
+        // Get all departures associated with this bus travel operator
+        $departures = BusDeparture::whereHas('busTravel.busTravel', function ($query) use ($id) {
             $query->where('id', $id);
-        })->inRandomOrder()->first();
+        })->get();
 
-        if (!$departure) {
-            // If no departures, maybe just search by agent name with no routes
+        if ($departures->isEmpty()) {
+            // If no departures, search by agent name with no routes
             $request = new Request([
                 'agent' => $busTravel->business_name,
                 'kota_awal' => '',
@@ -108,11 +108,15 @@ class BusTravelController extends Controller
             return $this->search($request);
         }
 
-        // Create a new request with the random route data
+        // For now, using the first departure's route as the initial search parameters
+        // but the search will show all routes for this bus operator
+        $firstDeparture = $departures->first();
+        
+        // Create a new request with the agent name to search for all routes of this operator
         $request = new Request([
             'agent' => $busTravel->business_name,
-            'kota_awal' => $departure->from->city_name,
-            'kota_tujuan' => $departure->to->city_name,
+            'kota_awal' => '', // Leave empty to show all routes for this agent
+            'kota_tujuan' => '', // Leave empty to show all routes for this agent
             'date_pergi' => now()->format('Y-m-d'),
             'jumlah_penumpang' => 1,
             'is_pulang_pergi' => 0,

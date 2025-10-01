@@ -99,7 +99,7 @@ class RiwayatBookingController extends Controller
         // Tidak perlu update database karena status "Kedaluwarsa" ditentukan secara dinamis
         // berdasarkan perbandingan tanggal kedaluwarsa dengan tanggal saat ini
 
-        $query = DetailTransactionHealthBeauty::with(['transaction.user', 'package'])
+        $query = DetailTransactionHealthBeauty::with(['transaction.user', 'package', 'clinic'])
             ->whereHas('transaction', function ($q) {
                 $q->where('status', 'PAID');
             })
