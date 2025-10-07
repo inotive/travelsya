@@ -20,7 +20,7 @@
                 class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $deal->main_image_url }}"
+                        <img src="{{ $deal->image ? asset('/storage/' . $deal->image->image) : asset('images/health_default.png') }}"
                             class="card-img-top" alt="{{ $deal->name }}"
                             onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"

@@ -38,9 +38,9 @@
                                         <div class="d-flex justify-content-center align-items-center"
                                             style="width: 125px; height: 125px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
                                             <a href="{{ asset('/storage/' . ($clinic->image->image ?? 'images/health_default.png')) }}"
-                                                target="_blank">
+                                                target="_blank" style="display: block; width: 100%; height: 100%;">
                                                 <img src="{{ asset('/storage/' . ($clinic->image->image ?? 'images/health_default.png')) }}"
-                                                    alt="Dokumentasi" style="width: 100%; height: auto; object-fit: cover;">
+                                                    alt="Dokumentasi" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
                                             </a>
                                         </div>
                                     </div>
