@@ -139,18 +139,22 @@
 
         <div class="card shadow mb-35px">
             <div class="card-body">
+                @php
+                    $startDateTime = \Carbon\Carbon::parse($date);
+                    $endDateTime = $startDateTime->copy()->addDays($duration);
+                @endphp
                 <div class="row pb-3 mb-3" style="border-bottom:2px dashed black;">
                     <div class="col-6 d-flex flex-column">
                         <span>Tanggal Penjemputan</span>
-                        <span class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth($date) }}</span>
-                        <span class="fs-4">{{ \Carbon\Carbon::parse($date)->format('H:i') }}</span>
+                        <span class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth($startDateTime) }}</span>
+                        <span class="fs-4">{{ $startDateTime->format('H:i') }}</span>
                     </div>
                     <div class="col-6 d-flex flex-column">
                         <span>Tanggal Drop-off</span>
                         <span
-                            class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth(\App\Helpers\General::addingDays($date, $duration)) }}</span>
+                            class="fs-3 title fw-bold">{{ \App\Helpers\General::getDayDateShortMonth($endDateTime) }}</span>
                         <span
-                            class="fs-4">{{ date('H:i', strtotime(\App\Helpers\General::addingDays($date, $duration))) }}</span>
+                            class="fs-4">{{ $endDateTime->format('H:i') }}</span>
                     </div>
                 </div>
                 <span class="text-success">Bisa refund, reschedule, dan overtime</span>
