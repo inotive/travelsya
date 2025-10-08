@@ -18,9 +18,11 @@
                     <a href="{{ route('health_beauty.detail', ['lokasi' => ($deal->clinic->kota->city_name ?? '-'), 'clinic' => $deal->clinic, 'id' => $deal->clinic_id]) }}"
                         class="text-decoration-none text-dark   ">
                         <div class="card" style="box-shadow: 0 10px 15px gray">
-                            <img src="{{ asset('storage/' . (isset($deal->image) && isset($deal->image->image) ? $deal->image->image : 'images/not_found.jpg')) }}"
-                            class="card-img-top" alt="{{ $deal->name }}"
-                            onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
+                            <div style="height: 200px; overflow: hidden;">
+                                <img src="{{ asset('storage/' . (isset($deal->image) && isset($deal->image->image) ? $deal->image->image : 'images/not_found.jpg')) }}"
+                                class="card-img-top" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ $deal->name }}"
+                                onerror="this.src='https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg'">
+                            </div>
                             <div class="card-body">
                             <div class="card-content">
                                 <div class="w-100 d-flex flex-row align-items-center">
@@ -192,5 +194,21 @@
         
         return colDiv;
     }
+    
+    // Tambahkan CSS untuk menjaga ukuran gambar tetap konsisten
+    const style = document.createElement('style');
+    style.innerHTML = `
+        .special-deals .card-img-top {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        
+        .special-deals .card-img-container {
+            height: 150px;
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(style);
 </script>
 @endpush

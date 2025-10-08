@@ -19,9 +19,9 @@
             <a href="{{ route('health_beauty.detail', ['lokasi' => $deal->clinic->kota->city_name ?? '-', 'clinic' => $deal->clinic->clinic_name ?? 'Unknown', 'id' => $deal->clinic_id]) }}"
                 class="text-decoration-none text-dark">
                 <div class="card shadow-sm" style="width: 18rem;">
-                    <div class="position-relative">
+                    <div class="position-relative" style="height: 150px; overflow: hidden;">
                         <img src="{{ $deal->image ? asset('/storage/' . $deal->image->image) : asset('images/health_default.png') }}"
-                            class="card-img-top" alt="{{ $deal->name }}"
+                            class="card-img-top" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ $deal->name }}"
                             onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
                         <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
                             style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
