@@ -33,8 +33,6 @@ class RecreationPackages extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:0',
-        'unit_price' => 'decimal:0',
         'is_active' => 'boolean',
         'is_refundable' => 'boolean',
         'is_reschedule' => 'boolean',
