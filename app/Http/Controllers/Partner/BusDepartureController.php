@@ -410,13 +410,11 @@ public function delete(Request $request): RedirectResponse
                 ->with('error', 'Anda tidak memiliki akses ke jadwal keberangkatan ini!');
         }
 
-        // Check if the departure has any bookings
-        // You'll need to replace 'booked()' with the actual relationship name or query
-        // For example, if you have a bookings relationship:
-        // if ($departure->bookings()->count() > 0) {
-        //     return redirect()->route('partner.bus.departures')
-        //         ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
-        // }
+        $bookings = \App\Models\DetailTransactionBus::where('bus_departure_id', $departure->id)->count();
+        if ($bookings > 0) {
+            return redirect()->back()
+                ->with('error', 'Jadwal keberangkatan ini tidak dapat dihapus karena sudah ada pemesanan!');
+        }
 
         $departure->delete();
 

@@ -71,7 +71,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="price" class="form-label required">Harga (Rp)</label>
-                            <input type="number" class="form-control" name="price" id="price" min="1000" required>
+                            <input type="text" class="form-control" name="price" id="price" required>
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -184,7 +184,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="edit_price" class="form-label required">Harga (Rp)</label>
-                            <input type="number" class="form-control" name="price" id="edit_price" min="1000" required>
+                            <input type="text" class="form-control" name="price" id="edit_price" required>
                         </div>
                     </div>
                     {{-- <div class="row mb-3">
@@ -300,7 +300,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="index2_price" class="form-label required">Harga (Rp)</label>
-                            <input type="number" class="form-control" name="price" id="index2_price" min="1000" required>
+                            <input type="text" class="form-control" name="price" id="index2_price" required>
                         </div>
                     </div>
                 </div>
@@ -382,7 +382,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="edit_index2_price" class="form-label required">Harga (Rp)</label>
-                            <input type="number" class="form-control" name="price" id="edit_index2_price" min="1000" required>
+                            <input type="text" class="form-control" name="price" id="edit_index2_price" required>
                         </div>
                     </div>
                 </div>
@@ -421,6 +421,21 @@
 </div>
 
 <script>
+// Function to format number with thousand separators (dots)
+function formatRupiah(angka) {
+    if (!angka) return '';
+    // Remove all non-digits first
+    let num = angka.toString().replace(/\D/g, '');
+    // Add thousand separators (dots)
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Function to unformat number (remove dots to get actual number)
+function unformatRupiah(rupiah) {
+    if (!rupiah) return '';
+    return rupiah.toString().replace(/\./g, '');
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Modal script loaded');
     const allBuses = @json($allBuses);
@@ -457,7 +472,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('edit_titik_naik').value = titikNaik || '';
                 document.getElementById('edit_titik_turun').value = titikTurun || '';
                 document.getElementById('edit_duration').value = duration || '';
-                document.getElementById('edit_price').value = price || '';
+                document.getElementById('edit_price').value = price ? formatRupiah(price) : '';
 
                 // Handle date and time parsing
                 if (departureTime) {
@@ -551,6 +566,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const createForm = document.querySelector('#createDepartureModal form');
     if (createForm) {
         createForm.addEventListener('submit', function(e) {
+            // Unformat the price before submitting
+            const priceField = document.getElementById('price');
+            if (priceField) {
+                priceField.value = unformatRupiah(priceField.value);
+            }
+            
             const fromCity = document.getElementById('from_city_id').value;
             const toCity = document.getElementById('to_city_id').value;
 
@@ -562,10 +583,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Format price input as user types
+    const priceInput = document.getElementById('price');
+    if (priceInput) {
+        priceInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            const unformatted = unformatRupiah(value);
+            const formatted = formatRupiah(unformatted);
+            e.target.value = formatted;
+        });
+    }
+
+    // Format edit price input as user types
+    const editPriceInput = document.getElementById('edit_price');
+    if (editPriceInput) {
+        editPriceInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            const unformatted = unformatRupiah(value);
+            const formatted = formatRupiah(unformatted);
+            e.target.value = formatted;
+        });
+    }
+
     // Form validation for edit modal
     const editForm = document.querySelector('#editDepartureModal form');
     if (editForm) {
         editForm.addEventListener('submit', function(e) {
+            // Unformat the price before submitting
+            const priceField = document.getElementById('edit_price');
+            if (priceField) {
+                priceField.value = unformatRupiah(priceField.value);
+            }
+            
             const fromCity = document.getElementById('edit_from_city_id').value;
             const toCity = document.getElementById('edit_to_city_id').value;
 
@@ -609,7 +658,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('edit_index2_titik_naik').value = titikNaik || '';
                 document.getElementById('edit_index2_titik_turun').value = titikTurun || '';
                 document.getElementById('edit_index2_duration').value = duration || '';
-                document.getElementById('edit_index2_price').value = price || '';
+                document.getElementById('edit_index2_price').value = price ? formatRupiah(price) : '';
 
                 // Handle date and time parsing
                 if (departureTime) {
@@ -663,6 +712,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const createFormIndex2 = document.querySelector('#createDepartureModalIndex2 form');
     if (createFormIndex2) {
         createFormIndex2.addEventListener('submit', function(e) {
+            // Unformat the price before submitting
+            const priceField = document.getElementById('index2_price');
+            if (priceField) {
+                priceField.value = unformatRupiah(priceField.value);
+            }
+            
             const fromCity = document.getElementById('index2_from_city_id').value;
             const toCity = document.getElementById('index2_to_city_id').value;
 
@@ -674,10 +729,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Format index2 price input as user types
+    const index2PriceInput = document.getElementById('index2_price');
+    if (index2PriceInput) {
+        index2PriceInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            const unformatted = unformatRupiah(value);
+            const formatted = formatRupiah(unformatted);
+            e.target.value = formatted;
+        });
+    }
+
+    // Format edit index2 price input as user types
+    const editIndex2PriceInput = document.getElementById('edit_index2_price');
+    if (editIndex2PriceInput) {
+        editIndex2PriceInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            const unformatted = unformatRupiah(value);
+            const formatted = formatRupiah(unformatted);
+            e.target.value = formatted;
+        });
+    }
+
     // Form validation for edit modal index2
     const editFormIndex2 = document.querySelector('#editDepartureModalIndex2 form');
     if (editFormIndex2) {
         editFormIndex2.addEventListener('submit', function(e) {
+            // Unformat the price before submitting
+            const priceField = document.getElementById('edit_index2_price');
+            if (priceField) {
+                priceField.value = unformatRupiah(priceField.value);
+            }
+            
             const fromCity = document.getElementById('edit_index2_from_city_id').value;
             const toCity = document.getElementById('edit_index2_to_city_id').value;
 
