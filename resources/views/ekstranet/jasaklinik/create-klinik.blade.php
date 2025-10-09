@@ -422,13 +422,14 @@
                                 });
                                 $('#categories_services_id').append(otherGroup);
                             }
+                        }
                         // Inisialisasi ulang Select2 setelah memuat opsi
-                            $('#categories_services_id').select2({
-                                placeholder: "Pilih atau ketik kategori baru...",
-                                tags: true,
-                                allowClear: true,
-                                dropdownParent: $('#categories_services_id').parent()
-                            });
+                        $('#categories_services_id').select2({
+                            placeholder: "Pilih atau ketik kategori baru...",
+                            tags: true,
+                            allowClear: true,
+                            dropdownParent: $('#categories_services_id').parent()
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error loading categories:", error);
