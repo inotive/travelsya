@@ -411,7 +411,57 @@ HTML;
      */
     public function search(Request $request, $agent = null)
     {
-        // Log that we've reached the search method
+        // Check if the request is a GET request (for showing the form without search)
+        if ($request->method() === 'GET') {
+            // Get route relationships for filtering
+            $routes = BusDeparture::with('from', 'to')->get();
+            $routeData = [];
+            foreach ($routes as $route) {
+                $from = $route->from->city_name ?? '';
+                $to = $route->to->city_name ?? '';
+
+                if ($from && $to) {
+                    // Add to departure routes (from city -> to cities)
+                    if (!isset($routeData['departures'][$from])) {
+                        $routeData['departures'][$from] = [];
+                    }
+                    if (!in_array($to, $routeData['departures'][$from])) {
+                        $routeData['departures'][$from][] = $to;
+                    }
+
+                    // Add to destination routes (to city <- from cities)
+                    if (!isset($routeData['destinations'][$to])) {
+                        $routeData['destinations'][$to] = [];
+                    }
+                    if (!in_array($from, $routeData['destinations'][$to])) {
+                        $routeData['destinations'][$to][] = $from;
+                    }
+                }
+            }
+
+            $newData = [
+                'agent' => collect(), // Empty collection since no search has been performed yet
+                'selected_agent' => null,
+                'selected_price_range' => null,
+                'selected_time_range' => null,
+                'selected_facility' => null,
+                'is_pulang_pergi' => 0,
+                'kota_awal' => old('kota_awal', null),
+                'kota_tujuan' => old('kota_tujuan', null),
+                'date_pergi' => old('date_pergi', now()->format('Y-m-d')),
+                'date_pulang' => old('date_pulang', null),
+                'jumlah_penumpang' => old('jumlah_penumpang', 1),
+                'pergi' => [],
+                'pulang' => [],
+                'city' => BusRoute::pluck('name', 'name'),
+                'routeData' => $routeData,
+                'noDeparturesFound' => false,
+            ];
+
+            return view('pagesv2.bus_travel.search_result', $newData);
+        }
+        
+        // Log that we've reached the search method with POST
         \Log::info('BusTravelController@search called', [
             'method' => $request->method(),
             'all_inputs' => $request->all()
@@ -420,7 +470,7 @@ HTML;
         $kategori = $request->kategori;
         $class = $request->class;
 
-        // Validate required fields
+        // Validate required fields (only for POST requests)
         $request->validate([
             'kota_awal' => 'nullable|string',
             'kota_tujuan' => 'nullable|string',

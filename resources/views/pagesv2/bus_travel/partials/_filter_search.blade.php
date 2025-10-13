@@ -159,10 +159,8 @@ function initBusFilter() {
             formData.append('jumlah_penumpang', mainFormJumlahPenumpang.value);
         }
 
-        // Add other required fields with default values if needed
-        formData.append('is_pulang_pergi', '0'); // Default value
+        formData.append('is_pulang_pergi', '0');
 
-        // Submit using fetch
         fetch("{{ route('bus_travel.search') }}", {
             method: 'POST',
             body: formData,
