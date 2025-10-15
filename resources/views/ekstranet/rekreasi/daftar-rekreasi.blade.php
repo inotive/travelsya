@@ -38,7 +38,7 @@
                         <td>{{ $item->duration }} {{ $item->duration_unit }}</td>
                         <td>{{ 'Rp ' . number_format((float) $item->price) }}</td>
                         <td>
-                            @if ($item->is_active === 1)
+                            @if ($item->is_active)
                                 <span class="badge badge-success">Aktif</span>
                             @else
                                 <span class="badge badge-danger">Tidak Aktif</span>
