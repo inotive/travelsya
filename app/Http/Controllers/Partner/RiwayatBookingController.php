@@ -458,19 +458,44 @@ class RiwayatBookingController extends Controller
         $start = $request->input('start');
         $end = $request->input('end');
         $keyword = $request->input('keyword');
+        $filterType = $request->input('filter_type', 'booking'); // Default: tanggal pemesanan
 
-        if ($year != null) {
-            $busbookings->whereYear('departure_time', $year);
+        // Filter berdasarkan tipe yang dipilih
+        if ($filterType == 'departure') {
+            // Filter berdasarkan tanggal keberangkatan (departure_time)
+            if ($year != null) {
+                $busbookings->whereYear('departure_time', $year);
+            }
+
+            if ($start != null) {
+                $busbookings->whereDate('departure_time', '>=', $start);
+            }
+
+            if ($end != null) {
+                $busbookings->whereDate('departure_time', '<=', $end);
+            }
+        } else {
+            // Filter berdasarkan tanggal pemesanan (created_at dari transaction)
+            if ($year != null) {
+                $busbookings->whereHas('transaction', function ($q) use ($year) {
+                    $q->whereYear('created_at', $year);
+                });
+            }
+
+            if ($start != null) {
+                $busbookings->whereHas('transaction', function ($q) use ($start) {
+                    $q->whereDate('created_at', '>=', $start);
+                });
+            }
+
+            if ($end != null) {
+                $busbookings->whereHas('transaction', function ($q) use ($end) {
+                    $q->whereDate('created_at', '<=', $end);
+                });
+            }
         }
 
-        if ($start != null) {
-            $busbookings = $busbookings->where('departure_time', '>=', $start);
-        }
-
-        if ($end != null) {
-            $busbookings = $busbookings->where('departure_time', '<=', $end);
-        }
-
+        // Filter keyword
         if ($keyword) {
             $busbookings->where(function ($query) use ($keyword) {
                 $query->where('booking_id', 'like', '%' . $keyword . '%')
@@ -486,7 +511,7 @@ class RiwayatBookingController extends Controller
             });
         }
 
-        $busbookings = $busbookings->get();
+        $busbookings = $busbookings->orderBy('created_at', 'desc')->get();
 
         return view('ekstranet.booking.bus-travel', compact('busbookings'));
     }

@@ -66,7 +66,7 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-between" style="margin-top: 30px;">
+    {{-- <div class="row justify-content-between" style="margin-top: 30px;">
         <div class="col-md-4 d-flex align-items-center">
             <span class="fs-5">Pilih mau naik dan turun dimana?</span>
         </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 <script>

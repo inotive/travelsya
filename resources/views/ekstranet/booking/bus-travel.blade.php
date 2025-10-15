@@ -5,10 +5,22 @@
     <div class="card mb-2">
         <div class="card-body">
             <div class="row g-3 align-items-end">
-                <div class="col-md-4">
+                {{-- <div class="col-12 col-md-2 mb-2 mb-md-0">
+                    <label class="form-label">Filter Berdasarkan</label>
+                    <select class="form-select" name="filter_type">
+                        <option value="booking" {{ request()->get('filter_type') == 'booking' || !request()->get('filter_type') ? 'selected' : '' }}>
+                            Tanggal Pemesanan
+                        </option>
+                        <option value="departure" {{ request()->get('filter_type') == 'departure' ? 'selected' : '' }}>
+                            Tanggal Keberangkatan
+                        </option>
+                    </select>
+                </div> --}}
+                <input type="hidden" name="filter_type" value="departure">
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
                     <label class="form-label">Tahun</label>
                     <select class="form-select" name="year">
-                        <option value="">Pilih Tahun</option>
+                        <option value="">Semua Tahun</option>
                         @php
                             $currentYear = date('Y');
                             $startYear = 2020;
@@ -21,13 +33,27 @@
                         @endfor
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Dari Tanggal</label>
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <label class="form-label">Tanggal Mulai</label>
                     <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}">
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Sampai Tanggal</label>
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <label class="form-label">Tanggal Akhir</label>
                     <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}">
+                </div>
+                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <div class="btn-group w-100" role="group">
+                        <button type="submit" class="btn btn-primary" style="width: 75%;">
+                            <i class="bi bi-search me-1"></i>Cari
+                        </button>
+                        <a href="{{ route('partner.riwayat-booking.bus-travel') }}"
+                        class="btn btn-secondary"
+                        style="width: 25%;"
+                        title="Reset Filter">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -90,7 +116,7 @@
                             <tbody>
                                 @foreach ($busbookings as $booking)
                                     <tr>
-                                        <td class="text-center">{{ $loop->iteration }}</td>
+                                        <td class="text-center"></td>
                                         <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -143,14 +169,12 @@
                                                             </button>
                                                         </li>
                                                     @endif
-                                                    @if($status == 'verified' || ($status != 'verified' && !$isDeparted))
-                                                        <li>
-                                                            <button type="button" class="dropdown-item text-primary btn-invoice-modal"
-                                                                data-booking-id="{{ $booking->id }}">
-                                                                Invoice
-                                                            </button>
-                                                        </li>
-                                                    @endif
+                                                    <li>
+                                                        <button type="button" class="dropdown-item text-primary btn-invoice-modal"
+                                                            data-booking-id="{{ $booking->id }}">
+                                                            Invoice
+                                                        </button>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </td>
@@ -167,7 +191,7 @@
                             id="kt_datatable_verified">
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
-                                    <th class="text-center">No</th>
+                                    <th class="text-left">No</th>
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
@@ -184,7 +208,7 @@
                                 @foreach ($busbookings as $booking)
                                     @if(($booking->status ?? 'pending') == 'verified')
                                         <tr>
-                                            <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center"></td>
                                             <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -258,7 +282,7 @@
                                     @endphp
                                     @if($status != 'verified' && !$isDeparted)
                                         <tr>
-                                            <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center"></td>
                                             <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -334,7 +358,7 @@
                                     @endphp
                                     @if($isDeparted && $status != 'verified')
                                         <tr>
-                                            <td class="text-center">{{ $counter++ }}</td>
+                                            <td class="text-center"></td>
                                             <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -352,10 +376,19 @@
                                             </td>
                                             <td class="text-center">
                                                 <div class="dropdown">
-                                                    <button class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary disabled">
+                                                    <button class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
                                                         Actions
                                                         <i class="ki-duotone ki-down fs-5 ms-1"></i>
                                                     </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <button type="button" class="dropdown-item text-primary btn-invoice-modal"
+                                                                data-booking-id="{{ $booking->id }}">
+                                                                Invoice
+                                                            </button>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </td>
                                         </tr>
@@ -469,28 +502,91 @@
         .modal-content {
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         }
+
+        /* Hide DataTable sorting arrows */
+        table.dataTable thead .sorting:before,
+        table.dataTable thead .sorting:after,
+        table.dataTable thead .sorting_asc:before,
+        table.dataTable thead .sorting_asc:after,
+        table.dataTable thead .sorting_desc:before,
+        table.dataTable thead .sorting_desc:after {
+            display: none !important;
+        }
+
+        /* Fix table layout and scrolling */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .dataTables_wrapper .dataTables_scroll {
+            width: 100%;
+        }
+
+        .dataTables_wrapper .dataTables_scrollBody {
+            overflow-x: auto !important;
+        }
+
+        /* Ensure table columns align properly */
+        table.dataTable {
+            width: 100% !important;
+            table-layout: auto !important;
+        }
+
+        table.dataTable thead th,
+        table.dataTable tbody td {
+            white-space: nowrap;
+        }
+
+        /* Center align No column */
+        table.dataTable thead th:first-child,
+        table.dataTable tbody td:first-child {
+            text-align: center !important;
+            vertical-align: middle !important;
+        }
     </style>
 
     <script>
         $(document).ready(function() {
             // Konfigurasi DataTable untuk semua tab
             const dataTableConfig = {
+                "scrollX": true,
                 "scrollY": "500px",
                 "scrollCollapse": true,
+                "autoWidth": false,
                 "language": {
                     "lengthMenu": "Show _MENU_",
                 },
                 "dom":
                     "<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>" +
                     "<'row'<'col-sm-12't>>" +
-                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>"
+                    "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+                "columnDefs": [
+                    {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0
+                    }
+                ],
+
+                "order": [[1, 'desc']]
             };
 
             // Initialize DataTables untuk setiap tab
-            $('#kt_datatable_semua').DataTable(dataTableConfig);
-            $('#kt_datatable_verified').DataTable(dataTableConfig);
-            $('#kt_datatable_pending').DataTable(dataTableConfig);
-            $('#kt_datatable_expired').DataTable(dataTableConfig);
+            var table1 = $('#kt_datatable_semua').DataTable(dataTableConfig);
+            var table2 = $('#kt_datatable_verified').DataTable(dataTableConfig);
+            var table3 = $('#kt_datatable_pending').DataTable(dataTableConfig);
+            var table4 = $('#kt_datatable_expired').DataTable(dataTableConfig);
+
+            // Auto numbering untuk semua tabel
+            [table1, table2, table3, table4].forEach(function(table) {
+                table.on('order.dt search.dt', function () {
+                    let i = 1;
+                    table.cells(null, 0, { search: 'applied', order: 'applied' }).every(function (cell) {
+                        this.data(i++);
+                    });
+                }).draw();
+            });
 
             // Custom tab functionality
             $('.nav-tab-simple').on('click', function(e) {
