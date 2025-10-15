@@ -280,37 +280,39 @@
     <section class="near_location" style="margin-bottom: 100px;">
         <div class="section-title" style="margin-bottom: 25px;">
             <div style="display: flex; align-items: center;">
-                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekat di Kota Lainnya
+                <h2 class="text-dark" style="position: relative; top: 3px;">Rental Mobil Terdekat Di Kota Lainnya
                 </h2>
             </div>
         </div>
         <div class="row row-cols-4 row-cols-lg-4 g-6 g-lg-6">
-            @foreach ($near_location as $location)
-                <div class="col p-3">
-                    <form action="{{ route('car_rent.show') }}" method="post"
-                        id="form_location{{ \App\Helpers\General::getSlug($location) }}">
-                        @csrf
-                        <input type="hidden" name="location" value="{{ $location }}">
-                        <input type="hidden" name="category" value="">
-                        <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
-                        <input type="hidden" name="time" value="08:00">
-                        <input type="hidden" name="duration" value="1">
-                        <a href="javascript:" class="text-decoration-none text-dark"
-                            id="location_button{{ \App\Helpers\General::getSlug($location) }}"
-                            onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
-                            <div class="card border border-dark rounded-4 position-relative">
-                                <img src="{{ $location }}"
-                                    onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
-                                    class="card-img-top-rounded card-img-bottom-rounded img-fluid"
-                                    style="filter: brightness(0.5)" alt="...">
-                                <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
-                                    style="top: 50%; left: 50%;">
-                                    {{ $location }}
-                                </h3>
-                            </div>
-                        </a>
-                    </form>
-                </div>
+            @foreach ($near_location as $key => $location)
+                @if($key)
+                    <div class="col p-3">
+                        <form action="{{ route('car_rent.show') }}" method="post"
+                            id="form_location{{ \App\Helpers\General::getSlug($location) }}">
+                            @csrf
+                            <input type="hidden" name="location" value="{{ $location }}">
+                            <input type="hidden" name="category" value="">
+                            <input type="hidden" name="date" value="{{ date('Y-m-d') }}">
+                            <input type="hidden" name="time" value="08:00">
+                            <input type="hidden" name="duration" value="1">
+                            <a href="javascript:" class="text-decoration-none text-dark"
+                                id="location_button{{ \App\Helpers\General::getSlug($location) }}"
+                                onclick="submit_location('{{ \App\Helpers\General::getSlug($location) }}')">
+                                <div class="card border border-dark rounded-4 position-relative">
+                                    <img src="{{ $location }}"
+                                        onerror="this.src='https://images.unsplash.com/photo-1718729362445-51d2da1ee7a7?q=80&w=3871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'"
+                                        class="card-img-top-rounded card-img-bottom-rounded img-fluid"
+                                        style="filter: brightness(0.5)" alt="...">
+                                    <h3 class="position-absolute translate-middle fw-bold text-center text-light fs-2 shadow"
+                                        style="top: 50%; left: 50%;">
+                                        {{ $location }}
+                                    </h3>
+                                </div>
+                            </a>
+                        </form>
+                    </div>
+                @endif
             @endforeach
         </div>
     </section>
