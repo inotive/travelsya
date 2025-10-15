@@ -15,7 +15,7 @@
             <!--end::Heading-->
 
             <div class="row g-9 mb-8">
-                
+
                 <!-- Display Validation Errors -->
                 @if ($errors->any())
                 <div class="alert alert-danger">
@@ -140,7 +140,7 @@
                 <!-- Kelola Gambar -->
                 <div class="col-md-12 mt-4">
                     <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
-                    
+
                     @php
                         $mainImage = $recreation_has_packages->images->firstWhere('main', 1);
                         $additionalImages = $recreation_has_packages->images->where('main', 0);
@@ -153,7 +153,7 @@
                             <div class="row">
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <div class="card h-100">
-                                        <img src="{{ Storage::url(Str::after($mainImage->image, 'public/')) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                        <img src="{{ asset('storage/' . $mainImage->image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
                                         <div class="card-body text-center p-3">
                                             <p class="card-text text-muted text-truncate" title="{{ basename($mainImage->image) }}">{{ basename($mainImage->image) }}</p>
                                         </div>
@@ -179,7 +179,7 @@
                                 @foreach($additionalImages as $image)
                                     <div class="col-md-4 col-sm-6 mb-4">
                                         <div class="card h-100">
-                                            <img src="{{ Storage::url(Str::after($image->image, 'public/')) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                            <img src="{{ asset('storage/' . $image->image) }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
                                             <div class="card-body text-center p-3">
                                                 <p class="card-text text-muted text-truncate" title="{{ basename($image->image) }}">{{ basename($image->image) }}</p>
                                                 <button type="button" class="btn btn-sm btn-danger delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
@@ -194,7 +194,7 @@
                             @endif
                         </div>
                     </div>
-                    
+
                     <!-- Add More Additional Images -->
                     <div class="p-4 border rounded">
                         <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
@@ -228,7 +228,7 @@
 <script>
     document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
         event.preventDefault();
-        
+
         // Show loading indicator
         const submitButton = this;
         submitButton.disabled = true;
@@ -279,17 +279,17 @@
                 </div>
             `);
         });
-        
+
         // Handle removing newly added images
         $(document).on('click', '.remove-additional-image', function() {
             $(this).closest('.input-group').remove();
         });
-        
+
         // Handle deleting existing images
         $(document).on('click', '.delete-existing-image', function() {
             const imageId = $(this).data('image-id');
             const imageCard = $(this).closest('.col-md-4'); // Adjusted selector
-            
+
             Swal.fire({
                 title: "Apakah kamu yakin ingin menghapus gambar ini?",
                 text: "Gambar ini akan dihapus secara permanen.",

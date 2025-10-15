@@ -90,16 +90,13 @@
                                 } elseif (!empty($v->id)) {
                                     $provider = $v->id;
                                 }
-                                           
-                                // Menentukan tanggal dengan format yang benar
-                                $tanggal = urlencode(trim(($date ?? date('Y-m-d')) . ' ' . ($time ?? '08:00')));
                             @endphp
                             <a href="{{ route('car_rent.detail', [
                                 'category' => $category ?? 'dengan supir',
                                 'lokasi' => $lokasi,
                                 'model' => $model ?? $car->car_model_id,
                                 'provider' => $provider,
-                                'date' => $tanggal,
+                                'date' => $date,
                                 'duration'=> $duration ?? 1
                             ]) }}">
 
