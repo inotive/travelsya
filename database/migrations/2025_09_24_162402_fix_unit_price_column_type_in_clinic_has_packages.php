@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -11,6 +12,19 @@ return new class extends Migration
      */
     public function up(): void
     {
+
+        if (Schema::hasTable('clinic_has_packages')) {
+            DB::table('clinic_has_packages')
+                ->whereNull('unit_price')
+                ->orWhere('unit_price', '')
+                ->update(['unit_price' => 0]);
+
+            DB::table('clinic_has_packages')
+                ->whereNull('price')
+                ->orWhere('price', '')
+                ->update(['price' => 0]);
+        }
+
         // Check if the columns exist before attempting to change them
         if (Schema::hasTable('clinic_has_packages') && Schema::hasColumn('clinic_has_packages', 'unit_price')) {
             Schema::table('clinic_has_packages', function (Blueprint $table) {
