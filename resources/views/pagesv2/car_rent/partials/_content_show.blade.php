@@ -56,7 +56,7 @@
                 </span>
                 <select name="category" id="category" class="form-select bg-transparent border-0 shadow-none" style="width: 200px; flex-shrink: 0;">
                     <option value="">Semua Cara Rental</option>
-                    <option @if (isset($category) && $category=='Dengan Driver' ) selected @endif value="Dengan Driver">Dengan Driver</option>
+                    <option @if (isset($category) && $category=='Dengan Supir' ) selected @endif value="Dengan Supir">Dengan Supir</option>
                     <option @if (isset($category) && $category=='Lepas Kunci' ) selected @endif value="Lepas Kunci">Lepas Kunci</option>
                 </select>
                 <select name="location" id="location" class="form-select bg-transparent border-0 shadow-none" style="max-width: 220px;" data-placeholder="Pilih Lokasi" autocomplete="on" required>
@@ -75,7 +75,7 @@
                     @endforeach
                 </select>
                 @endif
-                <input type="text" name="date" id="date" onfocus="(this.type='date')" class="form-control bg-transparent border-0 shadow-none" value="{{ isset($date) && $date != '' ? $date : date('Y-m-d') }}" placeholder="tanggal sewa">
+                <input type="text" name="date" id="date" onfocus="(this.type='date')" class="form-control bg-transparent border-0 shadow-none" value="{{ isset($date) && $date != '' ? $date : date('Y-m-d') }}" placeholder="tanggal sewa" style="width: 180px; flex-shrink: 0;">
                 <input type="time" name="time" id="time" class="form-control bg-transparent border-0 shadow-none" value="{{ isset($time) && $time != '' ? $time : date('H:i', strtotime(now())) }}" style="width: 140px; flex-shrink: 0;">
                 <input type="number" name="duration" class="form-control bg-transparent border-0 shadow-none" id="duration" value="{{ isset($duration) ? $duration : 1 }}" placeholder="durasi" style="width: 90px; flex-shrink: 0;">
                 <span class="input-group-text bg-transparent border-0">Hari</span>

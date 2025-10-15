@@ -53,7 +53,7 @@ class NewCarRentController extends Controller
         $result = '';
         foreach ($cars as $key => $car) {
             // Memastikan semua parameter tersedia
-            $category = $car->category_rent ?? 'dengan driver';
+            $category = $car->category_rent ?? 'dengan supir';
             $lokasi = $car->carRental->kota->city_name ?? 'jakarta';
             $model = $car->car_model_id ?? 1;
             $provider = $car->id ?? 1;
@@ -362,8 +362,8 @@ class NewCarRentController extends Controller
             if ($category) {
                 // Konversi nilai dari form ke format yang sesuai di database
                 $dbCategory = $category;
-                if ($category == 'Dengan Driver' || $category == 'dengan driver') {
-                    $dbCategory = 'Dengan Driver';
+                if ($category == 'Dengan Driver' || $category == 'dengan driver' || $category == 'Dengan Supir' || $category == 'dengan supir') {
+                    $dbCategory = 'Dengan Supir'; // Gunakan format yang seragam di database
                 } elseif ($category == 'Lepas Kunci' || $category == 'Tidak Dengan Driver' || $category == 'lepas kunci') {
                     $dbCategory = 'Lepas Kunci';
                 }

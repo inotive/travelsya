@@ -212,7 +212,7 @@
                             </div>
                             <div class="d-flex flex-column ms-3">
                                 <span class="fs-7">
-                                    @if ($category == 'supir')
+                                    @if ($category == 'Dengan Supir' || $category == 'supir' || $category == 'dengan supir' || $category == 'Dengan Driver' || $category == 'dengan driver')
                                     Dengan Supir
                                     @else
                                     Lepas Kunci

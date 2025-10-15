@@ -7,22 +7,22 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * Menambahkan kolom status.
      */
     public function up(): void
     {
         Schema::table('detail_transaction_car_rentals', function (Blueprint $table) {
-            $table->string('status')->default('belum_dipakai')->change();
+            $table->string('status')->default('belum_dipakai')->after('id');
         });
     }
 
     /**
-     * Reverse the migrations.
+     * Menghapus kolom status (kebalikan dari 'up').
      */
     public function down(): void
     {
         Schema::table('detail_transaction_car_rentals', function (Blueprint $table) {
-            $table->string('status')->default('pending')->change();
+            $table->dropColumn('status');
         });
     }
 };

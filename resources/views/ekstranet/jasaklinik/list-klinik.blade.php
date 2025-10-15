@@ -21,6 +21,7 @@
                             <th class="text-center">No.</th>
                             <th class="text-center">Nama Jasa</th>
                             <th class="text-center">Kategori</th>
+                            <th class="text-center">Durasi</th>
                             <th class="text-center">Masa Berlaku</th>
                             <th class="text-center">Biaya</th>
                             <th class="text-center">Status</th>
@@ -36,16 +37,17 @@
                                         {{ $clinic->name }}
                                         <div class="d-flex justify-content-center align-items-center"
                                             style="width: 125px; height: 125px; border: 1px solid #ddd; border-radius: 5px; overflow: hidden;">
-                                            <a href="{{ asset('/storage/' . ($clinic->images->first()->image ?? '') ) }}"
-                                                target="_blank">
-                                                <img src="{{ asset('/storage/' . ($clinic->images->first()->image ?? '') ) }}"
-                                                    alt="Dokumentasi" style="width: 100%; height: auto; object-fit: cover;">
+                                            <a href="{{ asset('/storage/' . ($clinic->image->image ?? 'images/health_default.png')) }}"
+                                                target="_blank" style="display: block; width: 100%; height: 100%;">
+                                                <img src="{{ asset('/storage/' . ($clinic->image->image ?? 'images/health_default.png')) }}"
+                                                    alt="Dokumentasi" style="width: 100%; height: 100%; object-fit: cover; object-position: center; display: block;">
                                             </a>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="text-center">{{ $clinic->categoriesService->name ?? 'Kategori tidak ditemukan' }}
                                 </td>
+                                <td class="text-center">{{ $clinic->duration . ' ' . \Illuminate\Support\Str::ucfirst($clinic->duration_type) }}</td>
                                 <td class="text-center">{{ $clinic->expiry_date }} Hari</td>
                                 <td class="text-center">{{ 'Rp ' . number_format($clinic->price) }} / <span class="text-capitalize">{{ $clinic->duration_type }}</span></td>
                                 <td class="text-center">

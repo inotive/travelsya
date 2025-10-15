@@ -70,7 +70,7 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="category-field" style="display: block;">
                             <label class="required fs-6 fw-semibold mb-2">Kategori</label>
                             <select class="form-control" name="categories_services_id" id="categories_services_id" required>
                                 <option value="">Pilih Kategori</option>
@@ -173,25 +173,21 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Gambar (Multiple)</label>
-                            <input type="file" class="form-control form-control-lg" name="images[]" 
-                                multiple accept="image/*" id="images" required />
-                            <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus (maks. 5MB per gambar)</small>
+                        <!-- Image Upload Section -->
+                        <div class="col-md-12 mt-4">
+                            <label class="required fs-6 fw-semibold mb-2">Gambar Jasa Klinik</label>
                             
-                            <div id="image-preview" class="mt-2"></div>
-                            
-                            @if($errors->has('images'))
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $errors->first('images') }}</strong>
-                                </span>
-                            @endif
-                            
-                            @if($errors->has('images.*'))
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>Terjadi kesalahan dengan salah satu gambar</strong>
-                                </span>
-                            @endif
+                            <!-- Multiple Images Upload -->
+                            <div>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" name="images[]" multiple accept="image/*">
+                                    <label class="input-group-text bg-primary text-white">Unggah Gambar</label>
+                                </div>
+                                <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus</small>
+                                
+                                <!-- Preview for images -->
+                                <div id="image-preview" class="mt-2"></div>
+                            </div>
                         </div>
 
                         <div class="col-12">
@@ -217,6 +213,20 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="fs-6 fw-semibold mb-2">Harga Satuan (Unit Price)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input id="unit_price" class="form-control form-control-lg" placeholder="Masukan harga satuan" 
+                                    name="unit_price" value="{{ old('unit_price') }}" />
+                            </div>
+                            @error('unit_price')
+                                <span class="text-danger mt-1" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Status</label>
                             <select class="form-control" name="is_active" required>
                                 <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
@@ -229,7 +239,7 @@
                             @enderror
                         </div>
 
-                        <input type="hidden" name="unit_price" value="unit_price">
+                        
                     </div>
                     <!--end::Input group-->
 
@@ -309,15 +319,31 @@
                 placeholder: "Pilih klinik...",
                 allowClear: true
             }).on('change', function() {
-                // Saat klinik dipilih, muat kategori yang sesuai
+                // Saat klinik dipilih, cek kategori bisnis dan atur field kategori
                 let selectedOption = $(this).find('option:selected');
                 let businessCategory = selectedOption.data('category');
                 
-                if (businessCategory) {
-                    loadCategoriesByBusinessCategory(businessCategory);
+                // Check if business category is Spa & Kecantikan (adjust the condition as needed)
+                if (businessCategory && (businessCategory.toLowerCase().includes('spa') || businessCategory.toLowerCase().includes('kecantikan'))) {
+                    // Hide category field for Spa & Kecantikan business
+                    $('#category-field').hide();
+                    // Make categories_services_id field not required
+                    $('#categories_services_id').removeAttr('required');
+                    // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                    $('#categories_services_id').val(''); // Clear any existing selection
                 } else {
-                    // Jika tidak ada kategori bisnis, muat semua kategori
-                    loadCategoriesByBusinessCategory(null);
+                    // Show category field for other businesses
+                    $('#category-field').show();
+                    // Make categories_services_id field required
+                    $('#categories_services_id').attr('required', 'required');
+                    
+                    // Load categories for other business types
+                    if (businessCategory) {
+                        loadCategoriesByBusinessCategory(businessCategory);
+                    } else {
+                        // Jika tidak ada kategori bisnis, muat semua kategori
+                        loadCategoriesByBusinessCategory(null);
+                    }
                 }
             });
 
@@ -396,13 +422,14 @@
                                 });
                                 $('#categories_services_id').append(otherGroup);
                             }
+                        }
                         // Inisialisasi ulang Select2 setelah memuat opsi
-                            $('#categories_services_id').select2({
-                                placeholder: "Pilih atau ketik kategori baru...",
-                                tags: true,
-                                allowClear: true,
-                                dropdownParent: $('#categories_services_id').parent()
-                            });
+                        $('#categories_services_id').select2({
+                            placeholder: "Pilih atau ketik kategori baru...",
+                            tags: true,
+                            allowClear: true,
+                            dropdownParent: $('#categories_services_id').parent()
+                        });
                     },
                     error: function(xhr, status, error) {
                         console.error("Error loading categories:", error);
@@ -425,21 +452,23 @@
                 allowClear: true
             });
             
-            // Preview gambar
-            $('#images').on('change', function() {
-                $('#image-preview').empty();
+            // Preview for images  
+            $(document).on('change', 'input[name="images[]"]', function() {
                 var files = this.files;
                 
-                for (var i = 0; i < files.length; i++) {
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#image-preview').append(
-                            '<div class="image-preview-item d-inline-block m-1">' +
-                            '<img src="' + e.target.result + '" class="img-thumbnail" width="100">' +
-                            '</div>'
-                        );
+                if (files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        let file = files[i];
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#image-preview').append(
+                                '<div class="image-preview-item d-inline-block m-1">' +
+                                '<img src="' + e.target.result + '" class="img-thumbnail" width="100" style="object-fit:cover; height:100px;">' +
+                                '</div>'
+                            );
+                        }
+                        reader.readAsDataURL(file);
                     }
-                    reader.readAsDataURL(files[i]);
                 }
             });
 
@@ -448,6 +477,12 @@
                 // Parse harga sebelum submit
                 let harga = parseRupiah($('#harga').val());
                 $('#harga').val(harga);
+                
+                // Jika field kategori disembunyikan (untuk bisnis Spa & Kecantikan), 
+                // pastikan tidak diperlukan validasi
+                if ($('#category-field').is(':hidden')) {
+                    $('#categories_services_id').removeAttr('required');
+                }
             });
         });
     </script>

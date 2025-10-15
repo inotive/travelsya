@@ -272,19 +272,22 @@
 
             // --- Price Formatting Logic ---
             function formatRupiah(amount) {
-                return amount.toString().replace(/[^0-9]/g, '')
-                    .replace(/([0-9])([0-9]{3})$/, '$1.$2')
-                    .replace(/([0-9])([0-9]{3})\./g, '$1.$2.');
+                return amount.toString().replace(/[^0-9]/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
             }
 
             const rentalInput = document.getElementById('rental_price_per_day_display');
             const rentalRawInput = document.getElementById('rental_price_per_day');
 
+            document.addEventListener('DOMContentLoaded', function() {
+                if (rentalRawInput.value) {
+                    rentalInput.value = formatRupiah(rentalRawInput.value);
+                }
+            });
+
             rentalInput.addEventListener('keyup', function() {
-                let value = rentalInput.value;
-                let formattedValue = formatRupiah(value);
-                rentalInput.value = formattedValue;
-                rentalRawInput.value = value.replace(/[^0-9]/g, '');
+                let value = rentalInput.value.replace(/[^0-9]/g, '');
+                rentalInput.value = formatRupiah(value);
+                rentalRawInput.value = value;
             });
         });
     </script>

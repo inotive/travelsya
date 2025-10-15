@@ -14,7 +14,7 @@
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->number_seats }} Penumpang</span>
                             <span class="fa-solid fa-gears ms-5 opacity-25"></span>
                             <span class="ms-2 opacity-25" id="passage_number">{{ $car->category }}</span>
-                            @if (strtolower($car->category_rent) == 'dengan driver')
+                            @if (strtolower($car->category_rent) == 'dengan driver' || strtolower($car->category_rent) == 'dengan supir')
                             <span class="fa-solid fa-user ms-5 opacity-25"></span>
                             @else
                             <span class="fa-solid fa-user-slash ms-5 opacity-25"></span>
@@ -90,16 +90,13 @@
                                 } elseif (!empty($v->id)) {
                                     $provider = $v->id;
                                 }
-                                           
-                                // Menentukan tanggal dengan format yang benar
-                                $tanggal = urlencode(trim(($date ?? date('Y-m-d')) . ' ' . ($time ?? '08:00')));
                             @endphp
                             <a href="{{ route('car_rent.detail', [
-                                'category' => $category ?? 'dengan driver',
+                                'category' => $category ?? 'dengan supir',
                                 'lokasi' => $lokasi,
                                 'model' => $model ?? $car->car_model_id,
                                 'provider' => $provider,
-                                'date' => $tanggal,
+                                'date' => $date,
                                 'duration'=> $duration ?? 1
                             ]) }}">
 

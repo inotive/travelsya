@@ -183,7 +183,7 @@
         <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
             <div class="card-body p-5">
                 <div class="d-flex flex-row align-items-center">
-                    <img src="{{ asset('storage/'. $paket->image->image) }}" onerror="this.src=`{{ asset('images/not_found.jpg') }}`" alt="" width="50" height="50" class="rounded-1">
+                    <img src="{{ asset('storage/'. (isset($paket->image) && isset($paket->image->image) ? $paket->image->image : 'images/not_found.jpg')) }}" onerror="this.src=`{{ asset('images/not_found.jpg') }}`" alt="" width="50" height="50" class="rounded-1">
                     <span class="fw-bold ms-3 text-wrap">{{ $paket['clinic']['clinic_name'] ?? 'Invalid clinic' }}</span>
                     <span class="text-danger ms-sm-auto">Detail Paket</span>
                 </div>

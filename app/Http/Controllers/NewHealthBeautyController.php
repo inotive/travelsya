@@ -30,6 +30,24 @@ class NewHealthBeautyController extends Controller
         $this->xendit = $xendit;
         $this->point = $point;
     }
+    
+    /**
+     * Map category string to integer ID
+     * 
+     * @param string $category
+     * @return int
+     */
+    private function mapCategoryToInteger($category)
+    {
+        $categoryMap = [
+            'kesehatan' => 1,
+            'kecantikan' => 2,
+            'spa dan kecantikan' => 3,
+        ];
+        
+        // If it's a known category, return its integer ID; otherwise return 0 for unknown
+        return $categoryMap[$category] ?? 0;
+    }
 
     public function search_ajax(request $request){
         $find = '%' . $request->name . '%';
@@ -42,7 +60,7 @@ class NewHealthBeautyController extends Controller
 
         $result = null;
         foreach ($clinics as $key => $clinic) {
-            $img = isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
+            $img = isset($clinic->image) && isset($clinic->image->image) ? asset($clinic->image->image) : asset('images/placeholder.jpg');
             $result = $result . '<a href="' .
                                     route('health_beauty.detail', [
                                         'lokasi' => ($clinic->clinic->kota->city_name ?? '-'),
@@ -63,7 +81,7 @@ class NewHealthBeautyController extends Controller
                                             '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
-                                                ' . $clinic->clinic->clinic_name . ' - ' . $clinic->clinic->kota->city_name .'
+                                                ' . $clinic->clinic->clinic_name . ' - ' . ($clinic->clinic->kota->city_name ?? '-') .'
                                             </span>
                                         </div>
                                     </div>
@@ -88,33 +106,76 @@ class NewHealthBeautyController extends Controller
     }
     public function index()
     {
-        $special_deals = ClinicHasPackages::with('clinic')->where(function($q){
-            $q->whereHas('clinic', function($c){
-                $c->where('category', 'kesehatan')
-                ->Active();
-            })
-            ->whereColumn('unit_price', '>' ,'price');
-        })
-        ->limit(10)
+        $special_deals_all = ClinicHasPackages::with(['clinic.kota', 'image'])->whereHas('clinic', function($q){
+            $q->Active();
+        })->whereColumn('unit_price', '>' ,'price')
+        ->limit(20) // Ambil lebih banyak untuk dibagi ke dua kategori
         ->get();
+        
+        // Filter data berdasarkan kategori
+        $special_deals = $special_deals_all->filter(function($deal) {
+            return $deal->clinic && $deal->clinic->category === 'kesehatan';
+        })->take(10);
 
-        $special_deals_beauty = ClinicHasPackages::with('clinic')->where(function($q){
-            $q->whereHas('clinic', function($c){
-                $c->where('category', 'kecantikan')
-                ->Active();
-            })
-            ->whereColumn('unit_price', '>' ,'price');
-        })
-        ->limit(10)
-        ->get();
+        $special_deals_beauty = $special_deals_all->filter(function($deal) {
+            return $deal->clinic && $deal->clinic->category === 'kecantikan';
+        })->take(10);
 
-        $categories = CategoriesServices::get();
+        // Jika data khusus untuk kesehatan kosong, gunakan semua data sebagai fallback
+        if ($special_deals->isEmpty()) {
+            $special_deals = $special_deals_all->take(10);
+        }
+        
+        // Jika data khusus untuk kecantikan kosong, gunakan semua data sebagai fallback
+        if ($special_deals_beauty->isEmpty()) {
+            $special_deals_beauty = $special_deals_all->take(10);
+        }
 
-        $partners = Clinic::with(['packages', 'images'])->orderBy('created_at', 'desc')->get();
+        $all_categories = CategoriesServices::get();
+        
+        // Pisahkan kategori berdasarkan tipe untuk tab beauty
+        $beauty_service_keywords = ['injection', 'threadlift', 'peeling', 'treatment', 'facial', 'skin care', 'acne', 'anti aging'];
+        $service_categories = collect();
+        $product_categories = collect();
+        $health_categories = collect();
+        
+        foreach ($all_categories as $category) {
+            $category_name_lower = strtolower($category->name);
+            $clinic_packages = $category->clinicHasPackages()->with(['clinic'])->get();
+            
+            // Cek apakah kategori terkait dengan klinik kecantikan
+            $is_beauty = $clinic_packages->contains(function($package) {
+                return $package->clinic && strtolower($package->clinic->category) === 'kecantikan';
+            });
+            
+            if ($is_beauty) {
+                // Cek apakah termasuk service berdasarkan kata kunci
+                $is_service = false;
+                foreach ($beauty_service_keywords as $keyword) {
+                    if (str_contains($category_name_lower, $keyword)) {
+                        $is_service = true;
+                        break;
+                    }
+                }
+                
+                if ($is_service) {
+                    $service_categories->push($category);
+                } else {
+                    $product_categories->push($category);
+                }
+            } else {
+                // Kategori untuk kesehatan
+                $health_categories->push($category);
+            }
+        }
+
+        $partners = Clinic::with(['packages', 'images', 'image', 'kota'])->orderBy('created_at', 'desc')->get();
 
         $data['special_deals'] = collect($special_deals);
         $data['special_deals_beauty'] = collect($special_deals_beauty);
-        $data['categorises'] = collect($categories);
+        $data['categorises'] = collect($all_categories);  // untuk tab kesehatan
+        $data['service_categories'] = $service_categories;
+        $data['product_categories'] = $product_categories;
         $data['partners'] = collect($partners);
 
         return view('pagesv2.health_beauty.index', $data);
@@ -122,7 +183,7 @@ class NewHealthBeautyController extends Controller
 
     public function show_special_deals(){
 
-        $special = ClinicHasPackages::whereHas('clinic', function($c){
+        $special = ClinicHasPackages::with('image', 'clinic')->whereHas('clinic', function($c){
             $c->Active();
         })->whereColumn('unit_price', '>' ,'price')->get();
 
@@ -271,7 +332,7 @@ class NewHealthBeautyController extends Controller
     }
 
     public function show_mitra(){
-        $data['mitra'] = Clinic::Active()->get();
+        $data['mitra'] = Clinic::Active()->with(['image', 'kota', 'packages'])->get();
 
         return view('pagesv2.health_beauty.all_mitra', $data);
     }
@@ -297,7 +358,7 @@ class NewHealthBeautyController extends Controller
 
     public function detail(Request $request, $lokasi = null, $clinic, $id = null){
         if($id){
-            $data['clinic'] = Clinic::with('reviews')->find($id);
+            $data['clinic'] = Clinic::with('reviews', 'kota', 'packages.image', 'packages.facility.facility', 'images')->find($id);
         }else{
             $data['clinic'] = null;
         }
@@ -419,11 +480,15 @@ class NewHealthBeautyController extends Controller
                 $point->deductPoint(Auth::user()->id, $saldoPointCustomer, $storeTransaction->id);
             }
 
+            // Map category string to integer ID for database storage
+            $categoryValue = $package['clinic']['category'] ?? 'Deleted clinic';
+            $categoryInt = $this->mapCategoryToInteger($categoryValue);
+            
             DetailTransactionHealthBeauty::create([
                 "transaction_id" => $storeTransaction->id,
                 "clinic_id" => $package['clinic_id'],
                 "clinic_package_id" => $package['id'],
-                "category" => $package['clinic']['category'] ?? 'Deleted clinic',
+                "category" => $categoryInt,
                 "booking_id" => Str::random(6),
                 "expire_on" => $expire,
                 "rent_price" => $package->price,

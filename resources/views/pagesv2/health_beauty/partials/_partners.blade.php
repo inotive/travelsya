@@ -30,35 +30,35 @@
         @foreach ($partners as $partner)
             <div class="swiper-slide gap-2">
                 <!-- Card -->
-                <a href="{{ route('health_beauty.detail', ['lokasi' => $partner->kota->city_name, 'clinic' => $partner['clinic_name'], 'id' => $partner['id']]) }}"
+                <a href="{{ route('health_beauty.detail', ['lokasi' => ($partner->kota->city_name ?? '-'), 'clinic' => $partner->clinic_name, 'id' => $partner->id]) }}"
                     class="card shadow-sm text-dark" style="width: 18rem;">
                     <div class="position-relative">
-                        <img src="{{ $partner->image->image != null ? asset($partner->image->image) : asset('images/placeholder.jpg') }}"
-                            class="card-img-top" alt="{{ $partner->clinic_name }}">
+                        <img src="{{ (isset($partner->image) && isset($partner->image->image)) ? asset($partner->image->image) : asset('images/health_default.png') }}"
+                            class="card-img-top" style="object-fit: cover; height: 150px;" alt="{{ $partner->clinic_name }}" onerror="this.onerror=null;this.src='{{ asset('images/health_default.png') }}'">
                     </div>
                     <div class="card-body p-3">
                         <div class="text-dark lokasi d-flex align-items-center">
                             <span class="text-dark ">{{ $partner->category }}</span>
-                            <span style="position: relative; margin-left: auto;"
-                                class="fa-regular text-dark  fa-bookmark fs-2"></span>
                         </div>
-                        <div class="card-body p-3">
-                            <div class="text-dark lokasi d-flex align-items-center">
-                                <span class="text-dark ">{{ $partner->category }}</span>
-                                <span style="position: relative; margin-left: auto;"
-                                    class="fa-regular text-dark  fa-bookmark fs-2"></span>
-                            </div>
 
-                            <h3 class="mt-3 text-dark text-start">{{ $partner->clinic_name }}</h3>
+                        <h3 class="mt-3 text-dark text-start" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ $partner->clinic_name }}</h3>
 
-                            <div class="price mt-6 text-start">
-                                <span style="font-size: 0.8rem"
-                                    class="coret text-dark  text-decoration-line-through">IDR
-                                    {{ number_format(intval($partner->packages[0]->unit_price) ?? 120000, 0, ',', '.') }}</span>
-                                <span class="text-danger text-bold">IDR
-                                    {{ number_format(intval($partner->packages[0]->price) ?? 120000, 0, ',', '.') }}</span>
-                            </div>
+                        <div class="price mt-3 text-start">
+                            @if($partner->packages->count() > 0 && $partner->packages[0])
+                            <span style="font-size: 0.8rem"
+                                class="coret text-dark  text-decoration-line-through">IDR
+                                {{ number_format(intval($partner->packages[0]->unit_price) ?? 120000, 0, ',', '.') }}</span>
+                            <span class="text-danger text-bold">IDR
+                                {{ number_format(intval($partner->packages[0]->price) ?? 120000, 0, ',', '.') }}</span>
+                            @else
+                            <span style="font-size: 0.8rem"
+                                class="coret text-dark  text-decoration-line-through">IDR
+                                {{ number_format(0, 0, ',', '.') }}</span>
+                            <span class="text-danger text-bold">IDR
+                                {{ number_format(0, 0, ',', '.') }}</span>
+                            @endif
                         </div>
+                    </div>
                 </a>
             </div>
         @endforeach

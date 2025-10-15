@@ -33,7 +33,7 @@
             <!-- Card -->
             <div class="card shadow-sm" style="width: 18rem;">
                 <div class="position-relative">
-                    <img src="{{ $partner->image->image != null ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
+                    <img src="{{ (isset($partner->image) && isset($partner->image->image)) ? asset($partner->image->image) : 'https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg' }}"
                         class="card-img-top" alt="{{ $partner->clinic_name }}">
                 </div>
                 <div class="card-body p-3">
@@ -46,9 +46,17 @@
 
                     <div class="price mt-6 text-start">
                         <span style="font-size: 0.8rem" class="coret text-decoration-line-through">IDR
-                            {{ number_format($partner->packages[0]->unit_price ?? 120000, 0, ',', '.') }}</span>
+                            @if($partner->packages && $partner->packages->count() > 0 && $partner->packages[0])
+                                {{ number_format((float)($partner->packages[0]->unit_price ?? 120000), 0, ',', '.') }}
+                            @else
+                                {{ number_format(0, 0, ',', '.') }}
+                            @endif
                         <span class="text-danger text-bold">IDR
-                            {{ number_format($partner->packages[0]->price ?? 120000, 0, ',', '.') }}</span>
+                            @if($partner->packages && $partner->packages->count() > 0 && $partner->packages[0])
+                                {{ number_format((float)($partner->packages[0]->price ?? 120000), 0, ',', '.') }}
+                            @else
+                                {{ number_format(0, 0, ',', '.') }}
+                            @endif
                     </div>
                 </div>
             </div>

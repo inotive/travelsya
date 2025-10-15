@@ -32,6 +32,15 @@ class RecreationPackages extends Model
         "weekend_price",
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+        'is_refundable' => 'boolean',
+        'is_reschedule' => 'boolean',
+        'has_weekend' => 'boolean',
+        'duration' => 'integer',
+        'expiry_date' => 'integer',
+    ];
+
     /**
      * Get the category that owns the RecreationPackages
      *
