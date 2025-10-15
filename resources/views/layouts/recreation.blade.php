@@ -17,7 +17,7 @@
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="K" />
     <link rel="canonical" href="" />
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <link rel="shortcut icon" href="assets/media/logos/_Favicon.ico" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 
