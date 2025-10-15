@@ -102,6 +102,8 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Stasiun Awal</th>
+                                    <th class="text-center">Stasiun Tujuan</th>
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
@@ -117,6 +119,8 @@
                                 @foreach ($busbookings as $booking)
                                     <tr>
                                         <td class="text-center"></td>
+                                        <td class="text-center">{{ $booking->from ?? '' }}</td>
+                                        <td class="text-center">{{ $booking->to ?? '' }}</td>
                                         <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                         <td class="text-center">
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -131,7 +135,8 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
                                             @php
-                                                $isDeparted = \Carbon\Carbon::parse($booking->departure_time)->isPast();
+                                                $departureTime = \Carbon\Carbon::parse($booking->departure_time);
+                                                $isDeparted = $departureTime->addHours(3)->isPast();
                                                 $status = $booking->status ?? 'pending';
                                             @endphp
                                             @if($isDeparted && $status != 'verified')
@@ -191,7 +196,9 @@
                             id="kt_datatable_verified">
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
-                                    <th class="text-left">No</th>
+                                    <th class="text-center">No</th>
+                                    <th class="text-center">Stasiun Awal</th>
+                                    <th class="text-center">Stasiun Tujuan</th>
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
@@ -209,12 +216,16 @@
                                     @if(($booking->status ?? 'pending') == 'verified')
                                         <tr>
                                             <td class="text-center"></td>
+                                            <td class="text-center">{{ $booking->from ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->to ?? '' }}</td>
                                             <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
-                                            <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
+                                            <td class="text-center">
+                                                {{ $booking->busTravelHasBus->name ?? '-' }}
+                                            </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ General::rp($booking->price + $booking->fee_admin) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
@@ -262,6 +273,8 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Stasiun Awal</th>
+                                    <th class="text-center">Stasiun Tujuan</th>
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
@@ -283,6 +296,8 @@
                                     @if($status != 'verified' && !$isDeparted)
                                         <tr>
                                             <td class="text-center"></td>
+                                            <td class="text-center">{{ $booking->from ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->to ?? '' }}</td>
                                             <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -338,6 +353,8 @@
                             <thead>
                                 <tr class="fw-bold fs-6 text-gray-800">
                                     <th class="text-center">No</th>
+                                    <th class="text-center">Stasiun Awal</th>
+                                    <th class="text-center">Stasiun Tujuan</th>
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
@@ -359,6 +376,8 @@
                                     @if($isDeparted && $status != 'verified')
                                         <tr>
                                             <td class="text-center"></td>
+                                            <td class="text-center">{{ $booking->from ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->to ?? '' }}</td>
                                             <td class="text-center">{{ $booking->busTravel->business_name ?? '' }}</td>
                                             <td class="text-center">
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
@@ -544,6 +563,18 @@
             text-align: center !important;
             vertical-align: middle !important;
         }
+
+        table.dataTable tbody td {
+            white-space: nowrap;
+            padding-left: 8px !important;
+            padding-right: 8px !important;
+        }
+
+        /* Atau lebih spesifik untuk text-center */
+        table.dataTable tbody td.text-center {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+        }
     </style>
 
     <script>
@@ -569,7 +600,7 @@
                     }
                 ],
 
-                "order": [[1, 'desc']]
+                "order": [[8, 'asc']]
             };
 
             // Initialize DataTables untuk setiap tab
