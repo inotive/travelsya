@@ -35,7 +35,7 @@
                         <td>{{ $item->business_name }}</td>
                         <td>{{ $item->category_name }}</td>
                         <td>{{ $item->name }}</td>
-                        <td>{{ $item->duration }} {{ $item->unit_price }}</td>
+                        <td>{{ $item->duration }} {{ $item->duration_unit }}</td>
                         <td>{{ 'Rp ' . number_format((float) $item->price) }}</td>
                         <td>
                             @if ($item->is_active === 1)
@@ -145,7 +145,7 @@
                     <p><strong>Nama Bisnis:</strong> ${response.recreation_name || '-'}</p>
                     <p><strong>Nama Paket:</strong> ${response.name || '-'}</p>
                     <p><strong>Kategori:</strong> ${response.category_name || '-'}</p>
-                    <p><strong>Durasi:</strong> ${response.duration || '-'} ${response.unit_price || '-'}</p>
+                    <p><strong>Durasi:</strong> ${response.duration || '-'} ${response.duration_unit || '-'}</p>
                     <p><strong>Kadaluarsa Dalam:</strong> ${response.expiry_date || '-'} ${response.expiry_type || '-'}</p>
                     <p><strong>Harga:</strong> Rp ${response.price || '-'}</p>
                     <p><strong>Deskripsi:</strong> ${response.description || '-'}</p>
