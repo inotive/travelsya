@@ -304,39 +304,41 @@ class ClinicHasPackageController extends Controller
 
     public function getCategoriesByClinic(Request $request)
     {
-        // Ambil semua kategori tanpa filter clinic_id
-        $categories = CategoriesServices::all();
-        
-        // Filter kategori berdasarkan jenis bisnis jika parameter dikirim
+        \Log::info('Request received for getCategoriesByClinic');
+        \Log::info('Business Category: ' . $request->input('business_category'));
+
+        $categories = collect(); // Default to an empty collection
+
         if ($request->has('business_category')) {
             $businessCategory = $request->input('business_category');
-            
-            // Tentukan kategori yang sesuai berdasarkan jenis bisnis
+            $allCategories = CategoriesServices::all();
+            \Log::info('All Categories from DB: ' . $allCategories->pluck('name'));
+
             switch ($businessCategory) {
                 case 'kesehatan': // Health
-                    // Untuk kategori Health, sertakan Clinic dan kategori lainnya
-                    $allowedCategories = ['Clinic', 'Threadlift', 'Peeling', 'Injection'];
-                    $categories = $categories->filter(function ($category) use ($allowedCategories) {
-                        return in_array($category->name, $allowedCategories);
+                    $allowedCategories = ['Clinic'];
+                    $categories = $allCategories->filter(function ($category) use ($allowedCategories) {
+                        return in_array(strtolower($category->name), array_map('strtolower', $allowedCategories));
                     });
                     break;
                 case 'kecantikan': // Beauty
-                    // Untuk kategori Beauty, sertakan Service, Product dan kategori lainnya
-                    $allowedCategories = ['Service', 'Product', 'Threadlift', 'Peeling', 'Injection'];
-                    $categories = $categories->filter(function ($category) use ($allowedCategories) {
-                        return in_array($category->name, $allowedCategories);
+                    $allowedCategories = ['Service', 'Product'];
+                    $categories = $allCategories->filter(function ($category) use ($allowedCategories) {
+                        return in_array(strtolower($category->name), array_map('strtolower', $allowedCategories));
                     });
                     break;
                 case 'spa dan kecantikan': // Spa & Beauty
-                    // Untuk kategori Spa & Beauty, sertakan semua kategori
+                    // Return empty as requested
                     break;
                 default:
-                    // Default behavior - sertakan semua kategori
+                    // Default behavior - return all categories
+                    $categories = $allCategories;
                     break;
             }
         }
 
-        return response()->json($categories);
+        \Log::info('Returning categories: ' . $categories->pluck('name'));
+        return response()->json($categories->values());
     }
 
 
