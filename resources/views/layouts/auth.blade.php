@@ -17,7 +17,7 @@
     <meta property="og:url" content="" />
     <meta property="og:site_name" content="" />
     <link rel="canonical" href="" />
-    <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+    <link rel="shortcut icon" href="assets/media/logos/_Favicon.ico" />
 
     <!--begin::Fonts(mandatory for all pages)-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" /> <!--end::Fonts-->
@@ -76,9 +76,10 @@
                 <!--begin::Content-->
                 <div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
                     <!--begin::Image-->
-                    <img class="theme-light-show mx-auto  mb-10 mb-lg-20" style="width : 90%" src="{{asset('assets/media/travelsyanew.png')}}" alt="" />
+                    <img class="theme-light-show mx-auto  mb-10 mb-lg-20" style="width : 90%" src="{{asset('assets/media/bg-login.png')}}" alt="" />
 {{--                    <img class="d-block w-100 h-400px" src="https://fastly.picsum.photos/id/861/1200/400.jpg?hmac=oEEp9Zqn58JvH4Jr3KtUz1MIhsZl__Xh-W8RZIqv4a4" alt="second slide">--}}
-                    <img class="theme-dark-show mx-auto  mb-10 mb-lg-20" src="{{asset('assets/media/travelsyanew.png')}}" alt="" />
+                    <img class="theme-dark-show mx-auto  mb-10 mb-lg-20" src="{{asset('assets/media/bg-login.png
+                    ')}}" alt="" />
                     <!--end::Image-->
 
 {{--                    <!--begin::Title-->--}}
