@@ -304,23 +304,27 @@ class ClinicHasPackageController extends Controller
 
     public function getCategoriesByClinic(Request $request)
     {
+        \Log::info('Request received for getCategoriesByClinic');
+        \Log::info('Business Category: ' . $request->input('business_category'));
+
         $categories = collect(); // Default to an empty collection
 
         if ($request->has('business_category')) {
             $businessCategory = $request->input('business_category');
             $allCategories = CategoriesServices::all();
+            \Log::info('All Categories from DB: ' . $allCategories->pluck('name'));
 
             switch ($businessCategory) {
                 case 'kesehatan': // Health
                     $allowedCategories = ['Clinic'];
                     $categories = $allCategories->filter(function ($category) use ($allowedCategories) {
-                        return in_array($category->name, $allowedCategories);
+                        return in_array(strtolower($category->name), array_map('strtolower', $allowedCategories));
                     });
                     break;
                 case 'kecantikan': // Beauty
                     $allowedCategories = ['Service', 'Product'];
                     $categories = $allCategories->filter(function ($category) use ($allowedCategories) {
-                        return in_array($category->name, $allowedCategories);
+                        return in_array(strtolower($category->name), array_map('strtolower', $allowedCategories));
                     });
                     break;
                 case 'spa dan kecantikan': // Spa & Beauty
@@ -333,6 +337,7 @@ class ClinicHasPackageController extends Controller
             }
         }
 
+        \Log::info('Returning categories: ' . $categories->pluck('name'));
         return response()->json($categories->values());
     }
 

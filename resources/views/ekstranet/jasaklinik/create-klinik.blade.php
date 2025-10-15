@@ -323,13 +323,13 @@
                 let selectedOption = $(this).find('option:selected');
                 let businessCategory = selectedOption.data('category');
                 
-                // Check if business category is Spa & Kecantikan (adjust the condition as needed)
-                if (businessCategory && (businessCategory.toLowerCase().includes('spa') || businessCategory.toLowerCase().includes('kecantikan'))) {
-                    // Hide category field for Spa & Kecantikan business
+                // Check if business category is 'spa dan kecantikan'
+                if (businessCategory && businessCategory.toLowerCase() === 'spa dan kecantikan') {
+                    // Hide category field for 'spa dan kecantikan' business
                     $('#category-field').hide();
                     // Make categories_services_id field not required
                     $('#categories_services_id').removeAttr('required');
-                    // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                    // Set default value
                     $('#categories_services_id').val(''); // Clear any existing selection
                 } else {
                     // Show category field for other businesses
