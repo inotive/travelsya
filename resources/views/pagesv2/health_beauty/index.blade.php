@@ -13,6 +13,7 @@
                     ])
                     @include('pagesv2.health_beauty.partials._special_deals', [
                         'data' => $special_deals,
+                        'category' => 'health',
                     ])
                 </section>
 
@@ -25,6 +26,7 @@
                     ])
                     @include('pagesv2.health_beauty.partials._special_deals', [
                         'data' => $special_deals_beauty,
+                        'category' => 'beauty',
                     ])
                 </section>
 
