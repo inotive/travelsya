@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('bus_travel_id');
             $table->string('name');
-            $table->longtext('tos');
+            $table->string('tos');
             $table->integer('number_seats');
             $table->string('class');
             $table->boolean('is_active')->default(1);

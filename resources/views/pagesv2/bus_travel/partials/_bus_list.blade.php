@@ -65,6 +65,10 @@
                                 <div class="title-card">
                                     <div class="title-how text-capitalize fs-4 fw-bold mb-2">
                                         {{ $p['business_name'] ?? 'Invalid business' }}
+                                        <span class="badge round p-2 badge-light-danger fs-5">
+                                            <i class="fa-solid fa-calendar-days me-2 text-danger"></i>
+                                            {{ $p['departure_date'] }}
+                                        </span>
                                     </div>
                                     <div class="subtitle-how text-secondary-strong">
                                         {{ $p['kategori'] }} {{ $p['name'] }} {{ $p['class'] }}
