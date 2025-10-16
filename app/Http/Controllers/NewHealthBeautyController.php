@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
+
 class NewHealthBeautyController extends Controller
 {
     protected $xendit, $point;
@@ -49,12 +50,22 @@ class NewHealthBeautyController extends Controller
         return $categoryMap[$category] ?? 0;
     }
 
-    public function search_ajax(request $request){
+    public function search_ajax(Request $request){
         $find = '%' . $request->name . '%';
 
-        $clinics = ClinicHasPackages::with('clinic')->whereHas('clinic', function($q) use($find) {
-            $q->where('clinic_name', 'like', $find);
-        })->get();
+        $clinics = ClinicHasPackages::with('clinic.kota')
+            ->where(function($query) use($find) {
+                $query->whereHas('clinic', function($q) use($find) {
+                    // Cari berdasarkan nama klinik
+                    $q->where('clinic_name', 'like', $find);
+                })
+                ->orWhere('name', 'like', $find) // Cari berdasarkan nama paket
+                ->orWhereHas('clinic.kota', function($q) use($find) {
+                    // Cari berdasarkan nama kota
+                    $q->where('city_name', 'like', $find);
+                });
+            })
+            ->get();
 
         $date = Carbon::now()->format('d-m-Y H:i');
 
