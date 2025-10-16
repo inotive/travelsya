@@ -267,7 +267,7 @@ Route::group(['prefix' => 'health_beauty'], function () {
 
 Route::group(['prefix' => 'bus_travel'], function () {
     Route::get('/', [BusTravelController::class, 'index'])->name('bus_travel.index');
-    Route::post('/search', [BusTravelController::class, 'search'])->name('bus_travel.search');
+    Route::match(['get', 'post'], '/search', [BusTravelController::class, 'search'])->name('bus_travel.search');
     Route::get('/findbyroute/{kota_awal}/{kota_tujuan}', [BusTravelController::class, 'findByRoute'])->name('bus_travel.findroute');
     Route::get('/detail/{departure_id}/{kota_awal}/{kota_tujuan}/{is_pulang_pergi}/{jumlah_penumpang}/{date_pergi?}/{date_pulang?}', [BusTravelController::class, 'detail'])->name('bus_travel.detail');
     Route::post('/order', [BusTravelController::class, 'order'])->name('bus_travel.order');

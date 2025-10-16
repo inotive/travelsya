@@ -111,7 +111,7 @@ class BusTravelController extends Controller
         // For now, using the first departure's route as the initial search parameters
         // but the search will show all routes for this bus operator
         $firstDeparture = $departures->first();
-        
+
         // Create a new request with the agent name to search for all routes of this operator
         $request = new Request([
             'agent' => $busTravel->business_name,
@@ -411,7 +411,57 @@ HTML;
      */
     public function search(Request $request, $agent = null)
     {
-        // Log that we've reached the search method
+        // Check if the request is a GET request (for showing the form without search)
+        if ($request->method() === 'GET') {
+            // Get route relationships for filtering
+            $routes = BusDeparture::with('from', 'to')->get();
+            $routeData = [];
+            foreach ($routes as $route) {
+                $from = $route->from->city_name ?? '';
+                $to = $route->to->city_name ?? '';
+
+                if ($from && $to) {
+                    // Add to departure routes (from city -> to cities)
+                    if (!isset($routeData['departures'][$from])) {
+                        $routeData['departures'][$from] = [];
+                    }
+                    if (!in_array($to, $routeData['departures'][$from])) {
+                        $routeData['departures'][$from][] = $to;
+                    }
+
+                    // Add to destination routes (to city <- from cities)
+                    if (!isset($routeData['destinations'][$to])) {
+                        $routeData['destinations'][$to] = [];
+                    }
+                    if (!in_array($from, $routeData['destinations'][$to])) {
+                        $routeData['destinations'][$to][] = $from;
+                    }
+                }
+            }
+
+            $newData = [
+                'agent' => collect(), // Empty collection since no search has been performed yet
+                'selected_agent' => null,
+                'selected_price_range' => null,
+                'selected_time_range' => null,
+                'selected_facility' => null,
+                'is_pulang_pergi' => 0,
+                'kota_awal' => old('kota_awal', null),
+                'kota_tujuan' => old('kota_tujuan', null),
+                'date_pergi' => old('date_pergi', now()->format('Y-m-d')),
+                'date_pulang' => old('date_pulang', null),
+                'jumlah_penumpang' => old('jumlah_penumpang', 1),
+                'pergi' => [],
+                'pulang' => [],
+                'city' => BusRoute::pluck('name', 'name'),
+                'routeData' => $routeData,
+                'noDeparturesFound' => false,
+            ];
+
+            return view('pagesv2.bus_travel.search_result', $newData);
+        }
+
+        // Log that we've reached the search method with POST
         \Log::info('BusTravelController@search called', [
             'method' => $request->method(),
             'all_inputs' => $request->all()
@@ -420,7 +470,7 @@ HTML;
         $kategori = $request->kategori;
         $class = $request->class;
 
-        // Validate required fields
+        // Validate required fields (only for POST requests)
         $request->validate([
             'kota_awal' => 'nullable|string',
             'kota_tujuan' => 'nullable|string',
@@ -620,19 +670,84 @@ HTML;
     {
         $from = '%' . $kota_awal . '%';
         $to = '%' . $kota_tujuan . '%';
-        $date = now()->format('Y-m-d');
-        $date_pulang = null;
         $qty = 1;
         $pp = 0;
         $selected_agent = null;
 
-        $pergi = BusDeparture::with('busTravel', 'from', 'to')
+        // Find the most recent departure date for this route
+        $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
+        $today = now();
+        $currentDayOfWeek = $today->dayOfWeek;
+
+        // Get all departures for this route
+        $routeDepartures = BusDeparture::with('from', 'to')
+            ->whereHas('from', function ($f) use ($from) {
+                $f->where('city_name', 'like', $from);
+            })
+            ->whereHas('to', function ($t) use ($to) {
+                $t->where('city_name', 'like', $to);
+            })
+            ->get();
+
+        // Find the nearest available date
+        $date = null;
+        $nearestDays = 365; // Max days to look ahead
+
+        foreach ($routeDepartures as $departure) {
+            if ($departure->departure_date) {
+                // Specific date departure
+                $departureDate = Carbon::parse($departure->departure_date);
+
+                if ($departureDate->gte($today->startOfDay())) {
+                    $daysUntil = $today->startOfDay()->diffInDays($departureDate, false);
+                    if ($daysUntil < $nearestDays) {
+                        $nearestDays = $daysUntil;
+                        $date = $departureDate->format('Y-m-d');
+                    }
+                }
+            } else if ($departure->days) {
+                // Recurring departure based on days
+                $departureDays = array_map('trim', explode(',', strtolower($departure->days)));
+
+                // Check next 7 days for recurring schedules
+                for ($i = 0; $i < 7; $i++) {
+                    $checkDate = $today->copy()->addDays($i);
+                    $checkDayName = $dayNames[$checkDate->dayOfWeek];
+
+                    if (in_array($checkDayName, $departureDays)) {
+                        if ($i < $nearestDays) {
+                            $nearestDays = $i;
+                            $date = $checkDate->format('Y-m-d');
+                            break; // Found the nearest, no need to check further
+                        }
+                    }
+                }
+            }
+        }
+
+        // If no date found, default to today
+        if (!$date) {
+            $date = $today->format('Y-m-d');
+        }
+
+        $date_pulang = null;
+        $dayOfWeekPergi = date('w', strtotime($date));
+
+        // Query with the found date
+        $pergi = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
             ->has('busTravel')
             ->whereHas('from', function ($f) use ($from) {
                 $f->where('city_name', 'like', $from);
             })
             ->whereHas('to', function ($t) use ($to) {
                 $t->where('city_name', 'like', $to);
+            })
+            ->where(function ($q) use ($date, $dayOfWeekPergi, $dayNames) {
+                $q->where('departure_date', $date)
+                    ->orWhere(function ($subQuery) use ($dayOfWeekPergi, $dayNames) {
+                        $subQuery->whereNull('departure_date')
+                            ->where('days', 'like', '%' . $dayNames[$dayOfWeekPergi] . '%');
+                    });
             })
             ->when($selected_agent, function ($q, $a) {
                 $q->whereHas('busTravel.busTravel', function ($b2) use ($a) {
@@ -644,7 +759,7 @@ HTML;
         $pulang = [];
 
         if ((int)$pp == 1) {
-            $pulang = BusDeparture::with('busTravel', 'from', 'to')
+            $pulang = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
                 ->has('busTravel')
                 ->whereHas('to', function ($f) use ($from) {
                     $f->where('city_name', 'like', $from);
@@ -662,9 +777,43 @@ HTML;
                 ->get();
         }
 
-        $newData['agent'] = BusTravels::Active()->get();
-        $newData['selected_agent'] = null;
+        // Get route relationships for filtering
+        $routes = BusDeparture::with('from', 'to')->get();
+        $routeData = [];
+        foreach ($routes as $route) {
+            $fromCity = $route->from->city_name ?? '';
+            $toCity = $route->to->city_name ?? '';
 
+            if ($fromCity && $toCity) {
+                // Add to departure routes
+                if (!isset($routeData['departures'][$fromCity])) {
+                    $routeData['departures'][$fromCity] = [];
+                }
+                if (!in_array($toCity, $routeData['departures'][$fromCity])) {
+                    $routeData['departures'][$fromCity][] = $toCity;
+                }
+
+                // Add to destination routes
+                if (!isset($routeData['destinations'][$toCity])) {
+                    $routeData['destinations'][$toCity] = [];
+                }
+                if (!in_array($fromCity, $routeData['destinations'][$toCity])) {
+                    $routeData['destinations'][$toCity][] = $fromCity;
+                }
+            }
+        }
+
+        // Get agents that have routes for this search
+        $availableAgentIds = $pergi->pluck('busTravel.busTravel.id')
+            ->unique()
+            ->filter();
+
+        $agents = BusTravels::Active()
+            ->whereIn('id', $availableAgentIds)
+            ->get();
+
+        $newData['agent'] = $agents;
+        $newData['selected_agent'] = null;
         $newData['is_pulang_pergi'] = $pp;
         $newData['kota_awal'] = $kota_awal;
         $newData['kota_tujuan'] = $kota_tujuan;
@@ -674,10 +823,11 @@ HTML;
         $newData['pergi'] = $this->formatBus($pergi, $date);
         $newData['pulang'] = $this->formatBus($pulang, $date_pulang);
         $newData['city'] = BusRoute::get()->pluck('name', 'name');
+        $newData['routeData'] = $routeData;
+        $newData['noDeparturesFound'] = empty($newData['pergi']) && !$routeDepartures->isEmpty();
 
         return view('pagesv2.bus_travel.search_result', $newData);
     }
-
     public function formatSingleBus($collection, $date = null)
     {
         $available = General::busAvailableTicket($collection, $date);

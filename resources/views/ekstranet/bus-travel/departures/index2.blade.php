@@ -6,7 +6,7 @@
 
 @section('content-admin')
     <div class="card">
-        <form id="filterForm" action="{{ route('partner.bus.departures') }}" method="GET">
+        <form id="filterForm" method="GET">
             <div class="card-header border-0 pt-6">
                 <div class="card-title">
                     <div class="d-flex align-items-center position-relative my-1">
@@ -94,8 +94,8 @@
                         @forelse ($departures as $key => $departure)
                             <tr>
                                 <td class="col-no">{{ $key + 1 }}</td>
-                                <td class="col-bus" title="{{ $departure->busTravel->name ?? 'N/A' }}">
-                                    <div class="text-truncate">{{ $departure->busTravel->name ?? 'N/A' }}</div>
+                                <td class="col-bus" title="{{ $departure->busTravel->busTravel->business_name . ' - ' . $departure->busTravel->name ?? 'N/A' }}">
+                                    <div class="text-truncate">{{ $departure->busTravel->busTravel->business_name . ' - ' . $departure->busTravel->name ?? 'N/A' }}</div>
                                 </td>
                                 <td class="col-from" title="{{ $departure->from->city_name ?? 'N/A' }}">
                                     <div class="text-truncate">{{ $departure->from->city_name ?? 'N/A' }}</div>
@@ -289,128 +289,63 @@
 
 @section('scripts')
 <script>
-$(document).ready(function() {
-    // Auto-submit when bus filter changes
-    $('#busFilter').on('change', function() {
-        console.log('Bus filter changed to:', $(this).val()); // Debug log
-        $('#filterForm').submit();
-    });
+(function($) {
+    'use strict';
 
-    // Debounced search submit (refresh after typing stops)
-    let searchTimer;
-    $('#searchInput').on('input', function() {
-        clearTimeout(searchTimer);
-        const searchValue = $(this).val();
-        console.log('Search input changed to:', searchValue); // Debug log
+    $(document).ready(function() {
+        const $filterForm = $('#filterForm');
+        let searchTimer = null;
 
-        searchTimer = setTimeout(() => {
-            console.log('Submitting search form'); // Debug log
-            $('#filterForm').submit();
-        }, 500);
-    });
+        // Bus filter - submit immediately on change
+        $('#busFilter').on('change', function() {
+            $filterForm.submit();
+        });
 
-    // Debug: Log form submission
-    $('#filterForm').on('submit', function() {
-        const busId = $('#busFilter').val();
-        const search = $('#searchInput').val();
-        console.log('Form submitting with:', { busId, search }); // Debug log
-    });
+        // Search filter - debounced submit (wait 500ms after typing stops)
+        $('#searchInput').on('input', function() {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => $filterForm.submit(), 500);
+        });
 
-    // Handle validation errors for create modal
-    @if($errors->any())
-    try {
-        const createModal = new bootstrap.Modal(document.getElementById('createDepartureModalIndex2'));
-        if (createModal) {
-            createModal.show();
-        }
-    } catch (error) {
-        console.error('Error showing create modal:', error);
-    }
-    @endif
+        // Delete modal setup
+        $('#deleteDepartureModal').on('show.bs.modal', function(e) {
+            const id = $(e.relatedTarget).data('id');
+            $(this).find('#delete_departure_id').val(id);
+        });
 
-    // Delete modal setup
-    $('#deleteDepartureModal').on('show.bs.modal', function(event) {
-        try {
-            const button = $(event.relatedTarget);
-            const id = button.data('id');
-            const modal = $(this);
+        // Edit modal setup
+        $('#editDepartureModalIndex2').on('show.bs.modal', function(e) {
+            const $btn = $(e.relatedTarget);
+            const $modal = $(this);
 
-            console.log('Setting up delete modal for ID:', id); // Debug log
-
-            if (id) {
-                modal.find('#delete_departure_id').val(id);
-            }
-        } catch (error) {
-            console.error('Error setting up delete modal:', error);
-        }
-    });
-
-    // Edit modal setup
-    $('#editDepartureModalIndex2').on('show.bs.modal', function(event) {
-        try {
-            const button = $(event.relatedTarget);
-            const modal = $(this);
-
-            // Get all data attributes
-            const data = {
-                id: button.data('id'),
-                bus: button.data('bus'),
-                from: button.data('from'),
-                to: button.data('to'),
-                titikNaik: button.data('titik-naik'),
-                titikTurun: button.data('titik-turun'),
-                duration: button.data('duration'),
-                price: button.data('price'),
-                tanggal: button.data('tanggal'),
-                time: button.data('time'),
-                days: button.data('days')
-            };
-
-            console.log('Edit modal data:', data); // Debug log
-
-            // Set form values
-            modal.find('#edit_departure_id').val(data.id);
-            modal.find('#edit_bus_travel_has_bus_id').val(data.bus);
-            modal.find('#edit_from_city_id').val(data.from);
-            modal.find('#edit_to_city_id').val(data.to);
-            modal.find('#edit_titik_naik').val(data.titikNaik);
-            modal.find('#edit_titik_turun').val(data.titikTurun);
-            modal.find('#edit_duration').val(data.duration);
-            modal.find('#edit_price').val(data.price);
-
-            // Handle date and time
-            if (data.tanggal) {
-                modal.find('#edit_departure_date').val(data.tanggal);
-            }
-
-            if (data.time) {
-                modal.find('#edit_departure_time').val(data.time);
-            }
+            // Populate basic fields
+            $modal.find('#edit_departure_id').val($btn.data('id'));
+            $modal.find('#edit_bus_travel_has_bus_id').val($btn.data('bus'));
+            $modal.find('#edit_from_city_id').val($btn.data('from'));
+            $modal.find('#edit_to_city_id').val($btn.data('to'));
+            $modal.find('#edit_titik_naik').val($btn.data('titik-naik'));
+            $modal.find('#edit_titik_turun').val($btn.data('titik-turun'));
+            $modal.find('#edit_duration').val($btn.data('duration'));
+            $modal.find('#edit_price').val($btn.data('price'));
+            $modal.find('#edit_departure_date').val($btn.data('tanggal'));
+            $modal.find('#edit_departure_time').val($btn.data('time'));
 
             // Handle days checkboxes
-            if (data.days) {
-                const daysArray = data.days.split(',');
-                modal.find('input[name="days[]"]').each(function() {
-                    const isChecked = daysArray.includes($(this).val());
-                    $(this).prop('checked', isChecked);
-                });
-            }
-        } catch (error) {
-            console.error('Error setting up edit modal:', error);
-        }
+            const days = ($btn.data('days') || '').toString().split(',');
+            $modal.find('input[name="days[]"]').each(function() {
+                $(this).prop('checked', days.includes($(this).val()));
+            });
+        });
+
+        // Show create modal if validation errors exist
+        @if($errors->any())
+        new bootstrap.Modal(document.getElementById('createDepartureModalIndex2')).show();
+        @endif
+
+        // Initialize tooltips
+        $('[data-bs-toggle="tooltip"], [title]').tooltip({ placement: 'top', trigger: 'hover' });
     });
 
-    // Initialize tooltips
-    try {
-        if (typeof $().tooltip === 'function') {
-            $('[title]').tooltip({
-                placement: 'top',
-                trigger: 'hover'
-            });
-        }
-    } catch (error) {
-        console.error('Error initializing tooltips:', error);
-    }
-});
+})(jQuery);
 </script>
 @endsection

@@ -66,7 +66,7 @@
             </div>
         </div>
     </div>
-    <div class="row justify-content-between" style="margin-top: 30px;">
+    {{-- <div class="row justify-content-between" style="margin-top: 30px;">
         <div class="col-md-4 d-flex align-items-center">
             <span class="fs-5">Pilih mau naik dan turun dimana?</span>
         </div>
@@ -103,7 +103,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 </div>
 
 <script>
@@ -159,10 +159,8 @@ function initBusFilter() {
             formData.append('jumlah_penumpang', mainFormJumlahPenumpang.value);
         }
 
-        // Add other required fields with default values if needed
-        formData.append('is_pulang_pergi', '0'); // Default value
+        formData.append('is_pulang_pergi', '0');
 
-        // Submit using fetch
         fetch("{{ route('bus_travel.search') }}", {
             method: 'POST',
             body: formData,
