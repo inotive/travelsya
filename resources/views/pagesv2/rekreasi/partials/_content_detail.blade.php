@@ -1,15 +1,12 @@
 <div class="container mb-5">
     <section class="special-deals mt-5">
 
-        @include('pagesv2.rekreasi.components._detail_header');
+        @include('pagesv2.rekreasi.components._detail_header')
 
         <div class="px-3 mb-5">
             <ul class="nav">
                 <li class="nav-item">
                     <a class="nav-link text-dark active" aria-current="page" href="#ringkasan">Ringkasan</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-dark" href="#highlight">Highlight</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="#paket">Paket</a>
@@ -53,20 +50,9 @@
                         <div class="lokasi d-flex align-items-center mb-25px">
                             <span class="fa-solid fa-clock fs-2 me-2 text-dark opacity-50"></span>
                             <span class="fs-3 me-2">Buka: {{ $detail->open }} - {{ $detail->close }}</span>
-                            <a href="#" class="text-danger text-decoration-none fs-3 fw-bold">Lihat</a>
                         </div>
                     </div>
-                    <div class="card bg-danger bg-opacity-25 rounded-4 pd-3 mb-35px">
-                        <div class="card-body">
-                            <div id="highlight" class="mb-3">
-                                <h2>Highlight</h2>
-                                <div class="fs-3">
-                                    {!! $detail->highlight ?? 'Belum ada highlight' !!}
-                                </div>
-                                <a href="#" class="text-danger text-decoration-none fs-3">Lihat Selengkapnya</a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <div class="col-3">
                     <div class="card d-flex flex-column align-items-center p-3 border boreder-dark">
