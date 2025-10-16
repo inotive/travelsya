@@ -86,6 +86,16 @@ class RecreationPackages extends Model
         return $this->hasMany(RecreationRatings::class, 'recreation_packages_id', 'id')->orderBy('created_at', 'desc');
     }
 
+    /**
+     * Get all of the booked for the RecreationPackages.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function booked(): HasMany
+    {
+        return $this->hasMany(DetailTransactionRecreation::class, 'recreationPackage_id', 'id');
+    }
+
     public function avgRating()
     {
         $rating = RecreationRatings::where('recreation_packages_id', $this->id)->get()->pluck('rate')->toArray();
