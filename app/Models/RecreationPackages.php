@@ -24,6 +24,7 @@ class RecreationPackages extends Model
         "expiry_date",
         "expiry_type",
         "duration_unit",
+        "unit_price",
         "price",
         "is_active",
         "is_refundable",
