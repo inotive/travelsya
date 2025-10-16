@@ -29,11 +29,12 @@
                         </div>
                         <div class="input-group mb-3">
                             @php
-                                $cities = \App\Models\Clinic::pluck('city')->toArray(); // Ubah ke array
+                                $cities = \App\Models\Clinic::pluck('city')->unique()->toArray(); // Ambil kota-kota unik
                                 $cityList = \App\Models\City::whereIn('city_id', $cities)->get(); // Query data sesuai ID
                             @endphp
                             <select name="location" id="location" class="form-select select" data-control="select2"
                                     data-placeholder="Pilih Lokasi" autocomplete="on">
+                                <option value="" disabled selected>Pilih Lokasi</option> <!-- Placeholder -->
                                 @foreach($cityList as $city)
                                     <option value="{{ $city->city_name }}">{{ $city->city_name }}</option>
                                 @endforeach
