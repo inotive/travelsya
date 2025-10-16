@@ -307,6 +307,23 @@ function initBusFilter() {
             input.name = 'date_pergi';
             input.value = datePergi.value;
             form.appendChild(input);
+            
+            // Add date range parameters: search 7 days from the selected date
+            const startDate = new Date(datePergi.value);
+            const endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + 6); // 7 days total (including start date)
+            
+            const startDateInput = document.createElement('input');
+            startDateInput.type = 'hidden';
+            startDateInput.name = 'date_pergi_start';
+            startDateInput.value = startDate.toISOString().split('T')[0];
+            form.appendChild(startDateInput);
+            
+            const endDateInput = document.createElement('input');
+            endDateInput.type = 'hidden';
+            endDateInput.name = 'date_pergi_end';
+            endDateInput.value = endDate.toISOString().split('T')[0];
+            form.appendChild(endDateInput);
         }
 
         if (jumlahPenumpang) {

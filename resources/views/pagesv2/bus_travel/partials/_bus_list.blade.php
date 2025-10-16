@@ -8,6 +8,11 @@
         'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-dark'],
     ];
 
+    $categoryIcons = [
+        'bus' => ['type' => 'fa', 'class' => 'fa-solid fa-bus text-danger'],
+        'travel' => ['type' => 'fa', 'class' => 'fa-solid fa-truck-front text-danger']
+    ];
+
     // Small inline function to render the HTML
     $renderIcon = function ($name) use ($facilityIcons) {
         $key = strtolower(trim($name));
@@ -20,6 +25,22 @@
 
         if ($icon['type'] === 'image') {
             return '<img src="' . e($icon['src']) . '" height="15" alt="' . e($name) . '">';
+        }
+
+        return '<i class="' . e($icon['class']) . '"></i>';
+    };
+
+    $renderCategoryIcon = function ($kategori) use ($categoryIcons) {
+        $key = strtolower(trim($kategori));
+
+        if (!isset($categoryIcons[$key])) {
+            return '<i class="fa-regular fa-circle-question text-muted"></i>'; // fallback
+        }
+
+        $icon = $categoryIcons[$key];
+
+        if ($icon['type'] === 'image') {
+            return '<img src="' . e($icon['src']) . '" height="15" alt="' . e($kategori) . '">';
         }
 
         return '<i class="' . e($icon['class']) . '"></i>';
@@ -66,12 +87,16 @@
                                     <div class="title-how text-capitalize fs-4 fw-bold mb-2">
                                         {{ $p['business_name'] ?? 'Invalid business' }}
                                         <span class="badge round p-2 badge-light-danger fs-5">
-                                            <i class="fa-solid fa-calendar-days me-2 text-danger"></i>
+                                            <i class="fa-solid fa-calendar me-2 text-danger"></i>
                                             {{ $p['departure_date'] }}
+                                        </span>
+                                        <span class="badge round p-2 badge-light-danger fs-5">
+                                            {!! $renderCategoryIcon($p['kategori']) !!}
+                                            <span class="ms-1 text-capitalize">{{ $p['kategori'] }}</span>
                                         </span>
                                     </div>
                                     <div class="subtitle-how text-secondary-strong">
-                                        {{ $p['kategori'] }} {{ $p['name'] }} {{ $p['class'] }}
+                                        {{ $p['name'] }} {{ $p['class'] }}
                                     </div>
                                 </div>
                                 {{-- <div class="label ms-4">

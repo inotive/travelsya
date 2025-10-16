@@ -183,6 +183,7 @@ class BusTravelController extends Controller
         $bus->class        = $request->class;
         $bus->is_active    = $request->is_active;
         $bus->number_seats = $request->number_seats;
+        $bus->kategori     = $request->kategori;
         $bus->image        = json_encode($imageNames);
         $bus->save();
 

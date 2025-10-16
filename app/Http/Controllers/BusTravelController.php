@@ -474,15 +474,26 @@ HTML;
                         fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%')))
                     ->when($request->kota_tujuan && $request->kota_tujuan !== '',
                         fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                    ->when($date, function ($q) use ($date, $dayOfWeekPergi, $dayNames) {
-                        $q->where(function ($query) use ($date, $dayOfWeekPergi, $dayNames) {
-                            $query->where('departure_date', $date)
-                                ->orWhere(function ($subQuery) use ($dayOfWeekPergi, $dayNames) {
-                                    $subQuery->whereNull('departure_date')
-                                        ->where('days', 'like', '%' . $dayNames[$dayOfWeekPergi] . '%');
-                                });
-                        });
-                    });
+                    ->when($date, function ($q) use ($request, $date, $dayOfWeekPergi, $dayNames) {
+                             $dateStart = $request->date_pergi_start ?? $date;
+                             $dateEnd = $request->date_pergi_end ?? date('Y-m-d', strtotime($date . ' +6 days'));
+
+                             $q->where(function ($query) use ($dateStart, $dateEnd, $dayNames) {
+                                 // Search for specific dates in the range OR recurring schedules that match the day of week
+                                 $query->whereBetween('departure_date', [$dateStart, $dateEnd])
+                                       ->orWhere(function ($subQuery) use ($dateStart, $dateEnd, $dayNames) {
+                                           // Check if any day in the date range matches the recurring days
+                                       $startDay = new \DateTime($dateStart);
+                                       $endDay = new \DateTime($dateEnd);
+
+                                       for ($currentDate = clone $startDay; $currentDate <= $endDay; $currentDate->modify('+1 day')) {
+                                           $dayOfWeek = $currentDate->format('w');
+                                           $dayName = $dayNames[$dayOfWeek];
+                                           $subQuery->orWhere('days', 'like', '%' . $dayName . '%');
+                                       }
+                                   });
+                         });
+                     });
 
                 $pulangQuery = null;
                 if ((int)$pp === 1) {
@@ -860,10 +871,10 @@ HTML;
                 'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
                 'name' => $val['busTravel']['name'] ?? 'Deleted business',
                 'class' => $val['busTravel']['class'],
-                'kategori' => $val['busTravel']['busTravel']['kategori'] ?? null,
+                'kategori' => $val['busTravel']['kategori'] ?? null,
                 'departure_point' => $val['from']['city_name'] ?? 'Deleted point',
                 'titik_naik' => $val['titik_naik'],
-                'departure_date' => $date ? Carbon::parse($date)->format('d M Y') : null,
+                'departure_date' => $val->departure_date ? Carbon::parse($val->departure_date)->format('d M Y') : null,
                 'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
                 'arrival_point' => $val['to']['city_name'] ?? 'Deleted point',
                 'titik_turun' => $val['titik_turun'],

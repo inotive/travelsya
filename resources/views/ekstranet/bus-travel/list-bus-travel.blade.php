@@ -16,6 +16,7 @@
                         <tr>
                             <th style="width: 50px">No</th>
                             <th style=": 150px">Gambar</th>
+                            <th style=": 150px">Kategori</th>
                             <th style=": 150px">Nama</th>
                             {{-- <th style=": 250px">Peraturan atau Ketentuan</th> --}}
                             {{-- <th class="text-center px-2">Class</th> --}}
@@ -41,6 +42,7 @@
                                         Tidak Ada Gambar
                                     @endif
                                 </td>
+                                <td>{{ $bus->kategori }}</td>
                                 <td>{{ $bus->name ?? '' }}</td>
                                 {{-- <td class="text-truncate" style="max-width: 250px">{{ $bus->tos ?? '' }}</td> --}}
                                 <td>{{ $bus->number_seats ?? '0' }}</td>

@@ -149,16 +149,16 @@
                     <span class="title fw-bold">Syarat dan Ketentuan</span>
                 </div>
                 <div class="card shadow mb-35px">
-                    <div class="card-body">
-                        {!! $departure->busTravel->tos !!}
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                        {!! nl2br(e($departure->busTravel->tos)) !!}
                     </div>
                 </div>
                 <div class="mb-35px">
                     <span class="title fw-bold">Deskripsi</span>
                 </div>
-                <div class="card shadow mb-35px">
+                <div class="card shadow mb-35px" style="max-height: 300px; overflow-y: auto;">
                     <div class="card-body">
-                        {!! $departure->busTravel->deskripsi !!}
+                        {!! nl2br(e($departure->busTravel->deskripsi)) !!}
                     </div>
                 </div>
                 <div class="mb-35px">
@@ -179,7 +179,7 @@
                 </div>
             </div>
         </div>
-        <hr class="mb-35px" style="border-top: 2px dashed #777;">
+        <hr class="mb-35px" style="color: #777">
         <div class="card shadow rouded-4 mb-35px">
             <div class="card-body d-flex flex-row align-items-center justify-content-between">
                 <span class="fs-2 text-danger">IDR {{ number_format($departure->price * $jumlah_penumpang, 0, ',', '.') }}</span>
@@ -241,7 +241,7 @@
                         </button>
                         @endif
                     </div>
-                    
+
                     @if (count($busImages) > 1)
                     <div class="mt-3">
                         <ol class="carousel-indicators p-0">
@@ -274,5 +274,5 @@
 
     </style>
 
-    
+
 @endsection
