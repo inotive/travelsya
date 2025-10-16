@@ -38,6 +38,7 @@
                     <button class="toggle-button active" data-category="all">Semua</button>
                     <button class="toggle-button" data-category="kesehatan">Kesehatan</button>
                     <button class="toggle-button" data-category="kecantikan">Kecantikan</button>
+                    <button class="toggle-button" data-category="spa-kecantikan">Spa dan Kecantikan</button>
                 </div>
 
                 <div class="search-container">
@@ -207,19 +208,31 @@
 
                     // Filter cards in card-grid
                     cards.forEach(card => {
-                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                        const cardCategory = card.getAttribute('data-category');
+                        
+                        // Handle special case for 'spa-kecantikan' which should show both 'kecantikan' and 'spa' items
+                        if (category === 'all') {
                             card.style.display = 'block';
+                        } else if (category === 'spa-kecantikan') {
+                            // Show cards with 'kecantikan' category when 'spa-kecantikan' is selected
+                            card.style.display = (cardCategory === 'kecantikan' || cardCategory === 'spa') ? 'block' : 'none';
                         } else {
-                            card.style.display = 'none';
+                            card.style.display = (cardCategory === category) ? 'block' : 'none';
                         }
                     });
 
                     // Filter cards in partner-grid
                     partnerCards.forEach(card => {
-                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                        const cardCategory = card.getAttribute('data-category');
+                        
+                        // Handle special case for 'spa-kecantikan' which should show both 'kecantikan' and 'spa' items
+                        if (category === 'all') {
                             card.style.display = 'block';
+                        } else if (category === 'spa-kecantikan') {
+                            // Show cards with 'kecantikan' category when 'spa-kecantikan' is selected
+                            card.style.display = (cardCategory === 'kecantikan' || cardCategory === 'spa') ? 'block' : 'none';
                         } else {
-                            card.style.display = 'none';
+                            card.style.display = (cardCategory === category) ? 'block' : 'none';
                         }
                     });
                 });

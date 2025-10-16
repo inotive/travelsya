@@ -21,6 +21,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" data-bs-toggle="tab" href="#beauty_tab">Beauty</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" data-bs-toggle="tab" href="#spa_beauty_tab">Spa dan Kecantikan</a>
+                                </li>
                             </ul>
 
                         </div>
