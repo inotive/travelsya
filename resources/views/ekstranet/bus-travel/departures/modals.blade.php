@@ -12,17 +12,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label required">Bus</label>
-                        @if($defaultBusId && isset($allBuses[$defaultBusId]))
-                            <p class="form-control-plaintext fw-bolder">{{ $allBuses[$defaultBusId] }}</p>
-                            <input type="hidden" name="bus_travel_has_bus_id" id="bus_travel_has_bus_id" value="{{ $defaultBusId }}">
-                        @else
-                            <select class="form-select" name="bus_travel_has_bus_id" id="bus_travel_has_bus_id" required>
-                                <option value="" selected>Pilih Bus</option>
-                                @foreach ($allBuses as $id => $name)
-                                    <option value="{{ $id }}">{{ $name }}</option>
-                                @endforeach
-                            </select>
-                        @endif
+                        <select class="form-select" name="bus_travel_has_bus_id" id="bus_travel_has_bus_id" required>
+                            <option value="">Pilih Bus</option>
+                            @foreach ($allBuses as $id => $name)
+                                <option value="{{ $id }}" {{ (isset($defaultBusId) && $defaultBusId == $id) ? 'selected' : '' }}>{{ $name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
@@ -571,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (priceField) {
                 priceField.value = unformatRupiah(priceField.value);
             }
-            
+
             const fromCity = document.getElementById('from_city_id').value;
             const toCity = document.getElementById('to_city_id').value;
 
@@ -614,7 +609,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (priceField) {
                 priceField.value = unformatRupiah(priceField.value);
             }
-            
+
             const fromCity = document.getElementById('edit_from_city_id').value;
             const toCity = document.getElementById('edit_to_city_id').value;
 
@@ -717,7 +712,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (priceField) {
                 priceField.value = unformatRupiah(priceField.value);
             }
-            
+
             const fromCity = document.getElementById('index2_from_city_id').value;
             const toCity = document.getElementById('index2_to_city_id').value;
 
@@ -760,7 +755,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (priceField) {
                 priceField.value = unformatRupiah(priceField.value);
             }
-            
+
             const fromCity = document.getElementById('edit_index2_from_city_id').value;
             const toCity = document.getElementById('edit_index2_to_city_id').value;
 

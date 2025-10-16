@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('detail_transaction_car_rentals', function (Blueprint $table) {
-            $table->string('status')->default('belum_dipakai')->after('id'); // 'after' opsional, untuk posisi
+            $table->string('status')->default('belum_dipakai')->after('id');
         });
     }
 
@@ -23,6 +23,6 @@ return new class extends Migration
     {
         Schema::table('detail_transaction_car_rentals', function (Blueprint $table) {
             $table->dropColumn('status');
-        }); 
+        });
     }
 };

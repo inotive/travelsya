@@ -72,65 +72,55 @@ class BusDepartureController extends Controller
     public function index2(Request $request)
     {
         $user = Auth::user();
+
+        // Get user's bus travel IDs
         $busTravelIds = BusTravels::where('user_id', $user->id)->pluck('id');
 
-        // Base query for buses - only get buses that belong to user's travel businesses
-        $busesQuery = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)->with('busTravel');
-
-        // Get all buses for the filter dropdown
-        $allBuses = $busesQuery->get()->mapWithKeys(fn($bus) =>
-            [$bus->id => $bus->busTravel->business_name . ' - ' . $bus->name]
-        );
-
-        // Get selected bus from request for filtering
-        $selectedBusId = $request->input('bus_id', 'all'); // Default to 'all' if not set
-
-        // Get all bus IDs that belong to the user
-        $userBusIds = $busesQuery->pluck('id')->toArray();
-
-        // Start building the departures query with proper relationships
-        $departuresQuery = BusDeparture::query()->with(['busTravel', 'from', 'to']);
-
-        // Filter by selected bus if a specific bus is chosen
-        if ($selectedBusId && $selectedBusId !== 'all') {
-            // Verify the selected bus belongs to the user
-            if (in_array($selectedBusId, $userBusIds)) {
-                $departuresQuery->where('bus_travel_has_bus_id', $selectedBusId);
-            } else {
-                // If user tries to access a bus that doesn't belong to them, show no results
-                $departuresQuery->where('bus_travel_has_bus_id', -1);
-            }
-        } else {
-            // If "All" is selected, get all departures for the user's buses
-            $departuresQuery->whereIn('bus_travel_has_bus_id', $userBusIds);
-        }
-
-        // Handle search query
-        $search = $request->input('search');
-        if ($search) {
-            $departuresQuery->where(function ($query) use ($search) {
-                $query->where('titik_naik', 'like', '%' . $search . '%')
-                    ->orWhere('titik_turun', 'like', '%' . $search . '%')
-                    ->orWhereHas('from', function ($q) use ($search) {
-                        $q->where('city_name', 'like', '%' . $search . '%');
-                    })
-                    ->orWhereHas('to', function ($q) use ($search) {
-                        $q->where('city_name', 'like', '%' . $search . '%');
-                    });
+        // Get all user's buses for dropdown
+        $allBuses = BusTravelHasBus::whereIn('bus_travel_id', $busTravelIds)
+            ->with('busTravel')
+            ->get()
+            ->mapWithKeys(function($bus) {
+                return [$bus->id => $bus->busTravel->business_name . ' - ' . $bus->name];
             });
-        }
 
-        // Order by departure time and get results
-        $departures = $departuresQuery->orderBy('departure_date', 'asc')
-                                    ->orderBy('departure_time', 'asc')
-                                    ->get();
+        // Get filter parameters
+        $selectedBusId = $request->input('bus_id');
+        $search = $request->input('search');
+
+        // Build departures query
+        $departures = BusDeparture::query()
+            ->with(['busTravel.busTravel', 'from', 'to'])
+            ->whereHas('busTravel', function($query) use ($busTravelIds) {
+                $query->whereIn('bus_travel_id', $busTravelIds);
+            })
+            // Apply bus filter
+            ->when($selectedBusId && $selectedBusId !== 'all', function($query) use ($selectedBusId) {
+                $query->where('bus_travel_has_bus_id', $selectedBusId);
+            })
+            // Apply search filter
+            ->when($search, function($query) use ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('titik_naik', 'like', "%{$search}%")
+                    ->orWhere('titik_turun', 'like', "%{$search}%")
+                    ->orWhereHas('from', function($subQ) use ($search) {
+                        $subQ->where('city_name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('to', function($subQ) use ($search) {
+                        $subQ->where('city_name', 'like', "%{$search}%");
+                    });
+                });
+            })
+            ->orderBy('departure_date', 'asc')
+            ->orderBy('departure_time', 'asc')
+            ->get();
 
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id');
 
         return view('ekstranet.bus-travel.departures.index2', [
             'departures'   => $departures,
             'cities'       => $cities,
-            'defaultBusId' => $selectedBusId, // Pass selected bus to the view
+            'defaultBusId' => $selectedBusId ?: 'all',
             'allBuses'     => $allBuses,
             'search'       => $search,
         ]);

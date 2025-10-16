@@ -347,7 +347,7 @@
             });
         });
 
-        // === Price Formatting Logic (Existing) ===
+        // === Price Formatting Logic (Fixed) ===
         function formatRupiah(amount) {
             return amount.toString().replace(/[^0-9]/g, '')
                 .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -359,9 +359,12 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             if (rentalInput && rawRentalPrice) {
-                const formattedValue = formatRupiah(rawRentalPrice);
+                // Parse raw price as integer to remove decimals (e.g., .00) that cause formatting errors.
+                const integerPrice = parseInt(rawRentalPrice, 10);
+                const formattedValue = formatRupiah(integerPrice.toString());
+
                 rentalInput.value = formattedValue;
-                rentalRawInput.value = rawRentalPrice;
+                rentalRawInput.value = integerPrice;
             }
         });
 

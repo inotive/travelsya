@@ -52,7 +52,7 @@ class ClinicHasPackageController extends Controller
 
     public function store(Request $request)
     {
-     
+
 
         $validator = Validator::make($request->all(), [
             'clinic_id' => 'required|integer|exists:clinics,id',
@@ -64,7 +64,7 @@ class ClinicHasPackageController extends Controller
             'duration' => 'required|integer|min:1',
             'expiry_date' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
-            'unit_price' => 'nullable|numeric|min:0',
+            // 'unit_price' => 'nullable|numeric|min:0',
             'is_active' => 'required|boolean',
             'duration_type' => 'required|in:jam,menit',
             'images' => 'required|array|min:1|max:5',
@@ -88,10 +88,10 @@ class ClinicHasPackageController extends Controller
 
             // Handle categories_services_id
             $categoriesServicesId = $request->categories_services_id;
-            
+
             if (is_string($categoriesServicesId) && !is_numeric($categoriesServicesId)) {
                 $existingService = CategoriesServices::where('name', $categoriesServicesId)->first();
-                
+
                 if (!$existingService) {
                     $newService = CategoriesServices::create(['name' => $categoriesServicesId]);
                     $categoriesServicesId = $newService->id;
@@ -109,7 +109,7 @@ class ClinicHasPackageController extends Controller
             $clinic->duration = $request->duration;
             $clinic->description = $request->description;
             $clinic->price = $price;
-            $clinic->unit_price = $unitPrice;
+            // $clinic->unit_price = $unitPrice;
             $clinic->expiry_date = $request->expiry_date;
             $clinic->is_active = $request->is_active;
             $clinic->duration_type = $request->duration_type;
@@ -120,9 +120,9 @@ class ClinicHasPackageController extends Controller
                 foreach ($request->file('images') as $key => $image) {
                     $imageName = time() . '_' . $key . '.' . $image->getClientOriginalExtension();
                     $imagePath = $image->storeAs('images/clinic_package_images', $imageName, 'public');
-                    
+
                     $isMain = ($key === 0) ? 1 : 0;
-                    
+
                     ClinicPackageImages::create([
                         'clinic_package_id' => $clinic->id,
                         'image' => $imagePath,
@@ -135,7 +135,6 @@ class ClinicHasPackageController extends Controller
 
             return redirect()->route('clinics.list')
                 ->with('success', 'Jasa klinik berhasil ditambahkan.');
-                
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -158,7 +157,7 @@ class ClinicHasPackageController extends Controller
             'rules' => 'required|string',
             'duration_type' => 'required|in:menit,jam', // Pastikan nilai duration_type valid
             'duration' => 'nullable',
-            'unit_price' => 'nullable|string',
+            // 'unit_price' => 'nullable|string',
             'expiry_date' => 'nullable|integer', // Validasi agar tanggal tidak lebih dari hari ini
             'description' => 'required|string',
             'price' => 'required', // Validasi harga minimal 0
@@ -177,9 +176,9 @@ class ClinicHasPackageController extends Controller
 
             $price = (int) preg_replace('/[^\d]/', '', $request->price);
 
-            if(is_string($request->categories_services_id)) {
+            if (is_string($request->categories_services_id)) {
                 $existingService  = CategoriesServices::where('name', $request->categories_services_id)->first();
-                if(!$existingService) {
+                if (!$existingService) {
                     $newService = CategoriesServices::create(['name' => $request->categories_services_id]);
                     $request['categories_services_id'] = $newService->id;
                 }
@@ -193,20 +192,20 @@ class ClinicHasPackageController extends Controller
                 'rules' => $request->input('rules'),
                 'duration_type' => $request->input('duration_type'),
                 'duration' => $request->input('duration'),
-                'unit_price' => $request->input('unit_price'),
+                // 'unit_price' => $request->input('unit_price'),
                 'expiry_date' => $request->input('expiry_date'),
                 'description' => $request->input('description'),
                 'price' => $price,
                 'is_active' => $request->input('is_active'),
             ]);
-            
+
             // Handle multiple image uploads and deletions
             // Hapus gambar yang dipilih
             if ($request->has('delete_images')) {
                 $imagesToDelete = ClinicPackageImages::whereIn('id', $request->delete_images)
                     ->where('clinic_package_id', $clinic->id)
                     ->get();
-                
+
                 $mainImageDeleted = false;
                 foreach ($imagesToDelete as $image) {
                     if ($image->main == 1) {
@@ -215,7 +214,7 @@ class ClinicHasPackageController extends Controller
                     Storage::delete($image->image);
                     $image->delete();
                 }
-                
+
                 // Jika gambar utama dihapus dan masih ada gambar lain, tentukan gambar utama baru
                 if ($mainImageDeleted) {
                     $remainingImage = ClinicPackageImages::where('clinic_package_id', $clinic->id)->first();
@@ -229,21 +228,21 @@ class ClinicHasPackageController extends Controller
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $key => $image) {
                     $imagePath = $image->store('images/clinic_package_images', 'public');
-                    
+
                     // Set the first image as main image if no main image exists
                     $clinicId = $clinic->id ?? null; // Get the ID explicitly with null fallback
                     $isMain = 0; // Default bukan gambar utama
-                    
+
                     // Cek apakah sudah ada gambar utama (termasuk yang baru diupload)
                     $hasMainImage = ClinicPackageImages::where('clinic_package_id', $clinicId)
                         ->where('main', 1)
                         ->exists();
-                    
+
                     // Jika belum ada gambar utama, set gambar pertama sebagai utama
                     if (!$hasMainImage && $key === 0) {
                         $isMain = 1;
                     }
-                    
+
                     ClinicPackageImages::create([
                         'clinic_package_id' => $clinicId,
                         'image' => $imagePath,
@@ -263,8 +262,6 @@ class ClinicHasPackageController extends Controller
                 ->withErrors(['error' => 'Gagal mengubah klinik.'])
                 ->withInput();
         }
-
-        
     }
 
 
@@ -288,7 +285,7 @@ class ClinicHasPackageController extends Controller
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all();
         $clinics = Clinic::all(); // Ambil semua klinik
-        
+
         // Fetch existing images for this clinic package
         $clinicImages = ClinicPackageImages::where('clinic_package_id', $id)->get();
 
