@@ -9,7 +9,15 @@
                 Hasil Pencarian
             </div>
             <div class="subtitle text-capitalize mt-2">
-                Special Deals {{ ucfirst($category ?? 'health') }}
+                @if(strtolower($category) === 'spa_beauty')
+                    Special Deals Spa dan Kecantikan
+                @elseif(strtolower($category) === 'beauty' || strtolower($category) === 'kecantikan')
+                    Special Deals Kecantikan
+                @elseif(strtolower($category) === 'health' || strtolower($category) === 'kesehatan')
+                    Special Deals Kesehatan
+                @else
+                    Special Deals {{ ucfirst($category ?? 'health') }}
+                @endif
             </div>
         </div>
 

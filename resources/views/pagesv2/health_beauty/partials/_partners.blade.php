@@ -20,7 +20,7 @@
     <div class="panah btn btn-gray-carousel rounded-circle" id="swiper-button-next">
         <span class="chevron fa-solid fa-chevron-right"></span>
     </div>
-    <a href="{{ route('health_beauty.show_mitra') }}" class="text-danger text-decoration-none"
+    <a href="{{ route('health_beauty.show_mitra', ['category' => $category ?? null]) }}" class="text-danger text-decoration-none"
         style="font-size: 1.5rem; font-weight:700; margin-left:auto;">Lihat
         Semua</a>
 </div>
