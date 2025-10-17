@@ -96,7 +96,7 @@
                                             {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                         </td>
                                         <td class="text-center">{{ $booking->duration }}</td>
-                                        <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                        <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
@@ -164,7 +164,7 @@
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -214,7 +214,7 @@
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -264,7 +264,7 @@
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">

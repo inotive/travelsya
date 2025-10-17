@@ -91,7 +91,7 @@
                                         </td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
-                                        <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                        <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                         <td class="text-center">
@@ -155,7 +155,7 @@
                                             </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
@@ -201,7 +201,7 @@
                                             </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
@@ -247,7 +247,7 @@
                                             </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
