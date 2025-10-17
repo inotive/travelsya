@@ -218,7 +218,7 @@ class NewHealthBeautyController extends Controller
             return $deal->clinic && in_array(strtolower(trim($deal->clinic->category)), ['spa', 'salon', 'spa dan kecantikan']);
         })->take(10);
 
-        $all_categories = CategoriesServices::get();
+        $all_categories = CategoriesServices::whereNotIn('name', ['Product', 'Threadlift', 'Peeling', 'Injection', 'Service'])->get();
         
         // Pisahkan kategori berdasarkan tipe untuk tab beauty
         $beauty_service_keywords = ['injection', 'threadlift', 'peeling', 'treatment', 'facial', 'skin care', 'acne', 'anti aging'];
