@@ -431,10 +431,10 @@
                     "lengthMenu": "Show _MENU_",
                 },
                 "dom": "<'row'" +
-                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-start'l>" +
                     "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
                     ">" +
-                    "<'table-responsive'tr>" +
+                    "<tr>" +
                     "<'row'" +
                     "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
                     "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
@@ -446,6 +446,11 @@
             $('#kt_datatable_dipakai').DataTable(dataTableConfig);
             $('#kt_datatable_belum_dipakai').DataTable(dataTableConfig);
             $('#kt_datatable_kadaluarsa').DataTable(dataTableConfig);
+
+            // Adjust columns on window resize
+            $(window).on('resize', function () {
+                $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust();
+            });
 
             // Custom tab functionality
             $('.nav-tab-simple').on('click', function() {
