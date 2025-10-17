@@ -71,6 +71,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
@@ -91,6 +92,7 @@
                                             {{ $booking->transaction->user->name ?? '' }} -
                                             {{ $booking->transaction->user->phone ?? '' }}
                                         </td>
+                                        <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                         <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
@@ -138,6 +140,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
@@ -159,6 +162,7 @@
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
@@ -188,6 +192,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
@@ -209,6 +214,7 @@
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
@@ -238,6 +244,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
@@ -259,6 +266,7 @@
                                                 {{ $booking->transaction->user->name ?? '' }} -
                                                 {{ $booking->transaction->user->phone ?? '' }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>

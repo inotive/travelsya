@@ -197,6 +197,10 @@
         <div class="section-title">Informasi Booking</div>
         <div class="info-block">
             <div class="info-row">
+                <span class="info-label">Nomor Invoice</span>
+                <span class="info-value">{{ $data->transaction->no_inv ?? '-' }}</span>
+            </div>
+            <div class="info-row">
                 <span class="info-label">Kode Booking</span>
                 <span class="info-value">{{ $data->booking_id }}</span>
             </div>

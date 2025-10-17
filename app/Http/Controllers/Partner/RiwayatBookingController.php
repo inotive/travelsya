@@ -342,7 +342,7 @@ class RiwayatBookingController extends Controller
             });
         }
 
-        $rekreasibookdates = $rekreasibookdates->get();
+        $rekreasibookdates = $rekreasibookdates->get()->unique('transaction_id');
 
         return view('ekstranet.booking.rekreasi', compact('rekreasibookdates'));
     }
@@ -419,7 +419,7 @@ class RiwayatBookingController extends Controller
             });
         }
 
-        $carrentalbookdates = $carrentalbookdates->get();
+        $carrentalbookdates = $carrentalbookdates->get()->unique('transaction_id');
 
         return view('ekstranet.booking.daftar-kendaraan', compact('carrentalbookdates'));
     }

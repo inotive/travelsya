@@ -71,6 +71,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
@@ -93,6 +94,7 @@
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                             {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                         </td>
+                                        <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">
                                             {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
@@ -143,6 +145,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
@@ -165,6 +168,7 @@
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
@@ -197,6 +201,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
@@ -219,6 +224,7 @@
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
@@ -251,6 +257,7 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
@@ -273,6 +280,7 @@
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
