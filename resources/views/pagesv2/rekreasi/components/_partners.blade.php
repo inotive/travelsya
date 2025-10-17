@@ -12,7 +12,7 @@
     <div class="panah btn btn-gray-carousel rounded-circle" id="swiper-button-next">
         <span class="chevron fa-solid fa-chevron-right"></span>
     </div>
-    <a href="{{ route('health_beauty.show_special_deals') }}" class="text-danger text-decoration-none"
+    <a href="{{ route('rekreasi.category', ['id' => 'all']) }}" class="text-danger text-decoration-none"
         style="font-size: 1.5rem; font-weight:700; margin-left:auto;">Lihat
         Semua</a>
 </div>

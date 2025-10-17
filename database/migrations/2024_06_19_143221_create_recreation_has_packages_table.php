@@ -25,6 +25,7 @@ return new class extends Migration
             $table->text("rules");
             $table->text("description");
             $table->string("duration");
+            $table->string('duration_unit');
             $table->integer("expiry_date");
             $table->enum("expiry_type", ["Hari", "Jam"]);
             $table->string("unit_price");

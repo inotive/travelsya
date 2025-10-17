@@ -230,6 +230,7 @@ class RecreationController extends Controller
             $packageData = $request->all();
             $packageData['category_recreation_id'] = $recreationBusiness->category_recreation_id;
             $packageData['price'] = $price;
+            $packageData['unit_price'] = $price;
 
             $recreation = RecreationPackages::create($packageData);
 

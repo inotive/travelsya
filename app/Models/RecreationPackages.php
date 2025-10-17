@@ -24,6 +24,7 @@ class RecreationPackages extends Model
         "expiry_date",
         "expiry_type",
         "duration_unit",
+        "unit_price",
         "price",
         "is_active",
         "is_refundable",
@@ -84,6 +85,16 @@ class RecreationPackages extends Model
     public function reviews(): HasMany
     {
         return $this->hasMany(RecreationRatings::class, 'recreation_packages_id', 'id')->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get all of the booked for the RecreationPackages.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function booked(): HasMany
+    {
+        return $this->hasMany(DetailTransactionRecreation::class, 'recreationPackage_id', 'id');
     }
 
     public function avgRating()
