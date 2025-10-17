@@ -24,9 +24,6 @@
                             <img src="{{ $deal->image ? asset('/storage/' . $deal->image->image) : asset('images/health_default.png') }}"
                                 class="card-img-top" style="width: 100%; height: 100%; object-fit: cover;" alt="{{ $deal->name }}"
                                 onerror="this.src='{{ asset('images/placeholder.jpg') }}'">
-                            <div class="badge bg-opacity-25 text-danger position-absolute translate-middle p-2 rounded-pill"
-                                style="bottom: 0px; left:50px; background-color:pink !important;">Big Deal
-                            </div>
                         </div>
                         <div class="card-body">
                             <div class="lokasi d-flex align-items-center">
