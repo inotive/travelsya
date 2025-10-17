@@ -3,9 +3,15 @@
         'colokan usb' => ['type' => 'image', 'src' => asset('images/icon/usb.png')],
         'full ac' => ['type' => 'image', 'src' => asset('images/icon/ac.png')],
         'kursi recliner' => ['type' => 'image', 'src' => asset('images/icon/chair.png')],
-        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-dark'],
-        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-dark'],
-        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-dark'],
+        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-muted-custom'],
+        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-muted-custom'],
+        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-muted-custom'],
+        'tv led' => ['type' => 'fa', 'class' => 'fa-solid fa-tv text-muted-custom'],
+        'toilet' => ['type' => 'fa', 'class' => 'fa-solid fa-toilet text-muted-custom'],
+        'wi-fi' => ['type' => 'fa', 'class' => 'fa-solid fa-wifi text-muted-custom'],
+        'selimut dan bantal' => ['type' => 'fa', 'class' => 'fa-solid fa-bed text-muted-custom'],
+        'bagasi bawah' => ['type' => 'fa', 'class' => 'fa-solid fa-suitcase-rolling text-muted-custom'],
+        'rak bagasi atas' => ['type' => 'fa', 'class' => 'fa-solid fa-suitcase text-muted-custom'],
     ];
 
     $categoryIcons = [
@@ -180,3 +186,10 @@
     @endif
 
 </div>
+
+<style>
+    .text-muted-custom {
+        color: #4e4e57 !important;
+    }
+</style>
+

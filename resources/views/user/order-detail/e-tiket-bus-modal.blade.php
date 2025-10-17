@@ -6,7 +6,7 @@
                 <div class="card-body py-3">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex align-items-center">
-                            <img src="/assets/media/logos/logo.png" style="max-height: 40px;" alt="Logo" class="me-3">
+                            <img src="/assets/media/logos/logobaru.png" style="max-height: 40px;" alt="Logo" class="me-3">
                             <div class="text-white">
                                 <h5 class="mb-0 fw-bold" style="color: white">TRAVELSYA</h5>
                                 <small>Bus Travel e-Ticket</small>
