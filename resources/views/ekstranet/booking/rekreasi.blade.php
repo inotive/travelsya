@@ -74,6 +74,8 @@
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Status</th>
@@ -92,6 +94,8 @@
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                         <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                         <td class="text-center">
@@ -137,6 +141,8 @@
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Aksi</th>
@@ -156,6 +162,8 @@
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
@@ -183,6 +191,8 @@
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Aksi</th>
@@ -202,6 +212,8 @@
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">
@@ -229,6 +241,8 @@
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Tanggal Kadaluwarsa</th>
                                     <th class="text-center">Aksi</th>
@@ -248,6 +262,8 @@
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                             <td class="text-center">

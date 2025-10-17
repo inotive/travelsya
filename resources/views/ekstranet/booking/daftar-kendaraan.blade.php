@@ -75,6 +75,8 @@
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Status</th>
@@ -97,6 +99,8 @@
                                         </td>
                                         <td class="text-center">{{ $booking->duration }}</td>
                                         <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
@@ -143,6 +147,8 @@
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Aksi</th>
@@ -165,6 +171,8 @@
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -193,6 +201,8 @@
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Aksi</th>
@@ -215,6 +225,8 @@
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -243,6 +255,8 @@
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Aksi</th>
@@ -265,6 +279,8 @@
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
