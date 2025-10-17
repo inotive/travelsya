@@ -13,9 +13,6 @@
     <div class="panah btn btn-gray-carousel rounded-circle" id="category-button-next">
         <span class="chevron fa-solid fa-chevron-right"></span>
     </div>
-    <a href="{{ route('health_beauty.category', ['id' => 'all']) }}" class="text-danger text-decoration-none"
-        style="font-size: 1.5rem; font-weight:700; margin-left:auto;">Lihat
-        Semua</a>
 </div>
 
 <div class="categories-swiper-container overflow-hidden">
