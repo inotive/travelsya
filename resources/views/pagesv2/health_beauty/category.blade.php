@@ -25,7 +25,6 @@
                                         <div class="w-100 d-flex flex-row align-items-center">
                                             <span class="fa-solid fa-location-dot me-2"></span>
                                             <span>{{ $p->clinic->kota->city_name ?? '-' }}</span>
-                                            <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                         </div>
 
                                         <h3 class="mt-3 text-dark">{{ ucwords($p->name) }}</h3>
