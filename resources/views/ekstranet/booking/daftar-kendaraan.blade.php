@@ -100,27 +100,27 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
-                                            @if($booking->status == 'kadaluwarsa')
-                                                <span class="badge badge-danger">Kadaluwarsa</span>
-                                            @elseif($booking->status == 'sudah_dipakai')
+                                            @if($booking->status == 'sudah_dipakai')
                                                 <span class="badge badge-success">Sudah Dipakai</span>
+                                            @elseif(\Carbon\Carbon::parse($booking->end)->isPast())
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($booking->status == 'belum_dipakai')
-                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
-                                                    Verifikasi
-                                                </a>
-                                            @elseif($booking->status == 'sudah_dipakai')
+                                            @if($booking->status == 'sudah_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
-                                            @else
+                                            @elseif(\Carbon\Carbon::parse($booking->end)->isPast())
                                                 <button class="btn btn-sm action-btn expired-btn" data-bs-toggle="modal" data-bs-target="#infoModalExpiredCarRental{{ $booking->id }}">
                                                     Informasi
                                                 </button>
+                                            @else
+                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
+                                                    Verifikasi
+                                                </a>
                                             @endif
                                         </td>
                                     </tr>
@@ -201,7 +201,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @if($booking->status == 'belum_dipakai')
+                                    @if($booking->status == 'belum_dipakai' && !\Carbon\Carbon::parse($booking->end)->isPast())
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
@@ -251,7 +251,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @if($booking->status == 'kedaluwarsa')
+                                    @if($booking->status != 'sudah_dipakai' && \Carbon\Carbon::parse($booking->end)->isPast())
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>

@@ -95,10 +95,10 @@
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->transaction->created_at)->format('d F Y') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->expire_on)->format('d F Y') }}</td>
                                         <td class="text-center">
-                                            @if($booking->status == 'kadaluwarsa')
-                                                <span class="badge badge-danger">Kadaluwarsa</span>
-                                            @elseif($booking->status == 'sudah_dipakai')
+                                            @if($booking->status == 'sudah_dipakai')
                                                 <span class="badge badge-success">Sudah Dipakai</span>
+                                            @elseif(\Carbon\Carbon::parse($booking->expire_on)->isPast())
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
