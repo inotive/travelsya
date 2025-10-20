@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('recreation_has_packages', function (Blueprint $table) {
-            $table->string('duration_unit')->after('duration');
-        });
+        if (!Schema::hasColumn('recreation_has_packages', 'duration_unit')) {
+            Schema::table('recreation_has_packages', function (Blueprint $table) {
+                $table->string('duration_unit')->after('duration');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('recreation_has_packages', function (Blueprint $table) {
-            $table->dropColumn('duration_unit');
-        });
+        if (Schema::hasColumn('recreation_has_packages', 'duration_unit')) {
+            Schema::table('recreation_has_packages', function (Blueprint $table) {
+                $table->dropColumn('duration_unit');
+            });
+        }
     }
 };
