@@ -33,6 +33,15 @@
             flex: unset !important;
             width: 100% !important;
         }
+        
+        .header-image {
+            border-radius: 0px;
+            background: linear-gradient(to right, rgba(44, 4, 4, 0.73), rgba(245, 246, 252, 0.52)),
+                url("https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2532&q=80") no-repeat center center;
+            background-size: cover;
+            border-bottom-left-radius: 4em;
+            border-bottom-right-radius: 4em;
+        }
     </style>
 </head>
 <!--end::Head-->

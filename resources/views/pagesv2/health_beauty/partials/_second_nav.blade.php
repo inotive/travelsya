@@ -1,71 +1,17 @@
-<div class="second-nav border-top border-bottom border-3">
-    <div class="container d-flex flex-row align-items-center">
-        <div class="d-flex w-100">
-            <div class="d-flex align-items-center">
-                <a href="javascript:" onclick="history.back()" class="back-btn text-danger fs-16 text-decoration-none">
-                    <h4 class="text-danger">
-                        <i class="fa-solid fa-arrow-left me-2 text-danger"></i>
-                        <span class="fw-bold my-auto">
-                            Kembali
-                        </span>
-                    </h4>
-                </a>
-            </div>
-            <div class="ms-sm-auto position-relative">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
-                        <i class="fa-solid fa-search"></i>
-                    </span>
-                    <input type="text" onkeyup="findData()" class="form-control search-input" id="find"
-                        placeholder="Cari klinik keseharan dan kecantikan disini" />
+<div class="card border-transparent header-image" data-bs-theme="light" style="border-radius: 0 !important; margin-bottom: 0 !important; border-bottom-left-radius: 4em !important; border-bottom-right-radius: 4em !important; box-shadow: none !important;">
+    <div class="card-body d-flex ps-xl-20">
+        <div class="m-0 w-100">
+            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2 d-flex justify-content-between align-items-center">
+                <button onclick="history.back()"
+                    class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold">
+                    <i class="las la-times"></i>
+                </button>
+                <div class="text-center flex-grow-1">
+                    <div>Health & Beauty</div>
+                    <div class="fs-5 text-gray-300">Cari klinik kecantikan dan kesehatan di lokasimu!</div>
                 </div>
-                <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result" style="z-index: 9999">
-                    <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
-                        <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>
-                    </div>
-                </div>
+                <div></div> <!-- Empty div for spacing symmetry -->
             </div>
         </div>
     </div>
 </div>
-@push('js')
-<script>
-    const password = document.querySelector('input[id="find"]');
-        password.addEventListener("focus", (event) => {
-            $('#card_result').removeClass('d-none');
-        });
-
-        password.addEventListener("blur", (event) => {
-            $("#card_result").delay(500).queue(function() {
-                $('#card_result').addClass('d-none');
-                $('#search-wrapper').empty();
-                $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>');
-            });
-        });
-    function findData(){
-        var val = $('#find').val();
-
-        if(val.length > 1){
-            $.ajax({
-                url: "{{ route('search_clinic') }}",
-                type: "POST",
-                data: {
-                    name : val
-                },
-                success : function($res){
-                    if($res){
-                        $('#search-wrapper').empty();
-                        $('#search-wrapper').append($res);
-                        // $('#card_result').removeClass('d-none');
-                    }else{
-                        $('#search-wrapper').empty();
-                        $('#search-wrapper').append('<div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Tidak ada data</div>');
-                    }
-
-                }
-            });
-        }
-
-    }
-</script>
-@endpush
