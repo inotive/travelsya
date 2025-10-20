@@ -71,10 +71,13 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Status</th>
@@ -91,36 +94,39 @@
                                             {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                             {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                         </td>
+                                        <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">
                                             {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                         </td>
                                         <td class="text-center">{{ $booking->duration }}</td>
-                                        <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                        <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
-                                            @if($booking->status == 'kadaluwarsa')
-                                                <span class="badge badge-danger">Kadaluwarsa</span>
-                                            @elseif($booking->status == 'sudah_dipakai')
+                                            @if($booking->status == 'sudah_dipakai')
                                                 <span class="badge badge-success">Sudah Dipakai</span>
+                                            @elseif(\Carbon\Carbon::parse($booking->end)->isPast())
+                                                <span class="badge badge-danger">Kadaluwarsa</span>
                                             @else
                                                 <span class="badge badge-warning">Belum Dipakai</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
-                                            @if($booking->status == 'belum_dipakai')
-                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
-                                                    Verifikasi
-                                                </a>
-                                            @elseif($booking->status == 'sudah_dipakai')
+                                            @if($booking->status == 'sudah_dipakai')
                                                 <a href="#" class="btn btn-sm action-btn manage-btn" data-bs-toggle="modal" data-bs-target="#cancellationModalCarRental{{ $booking->id }}">
                                                     Kelola Invoice
                                                 </a>
-                                            @else
+                                            @elseif(\Carbon\Carbon::parse($booking->end)->isPast())
                                                 <button class="btn btn-sm action-btn expired-btn" data-bs-toggle="modal" data-bs-target="#infoModalExpiredCarRental{{ $booking->id }}">
                                                     Informasi
                                                 </button>
+                                            @else
+                                                <a href="#" class="btn btn-sm action-btn verify-btn" data-bs-toggle="modal" data-bs-target="#verificationModalCarRental{{ $booking->id }}">
+                                                    Verifikasi
+                                                </a>
                                             @endif
                                         </td>
                                     </tr>
@@ -139,10 +145,13 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Aksi</th>
@@ -159,12 +168,15 @@
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -189,10 +201,13 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Aksi</th>
@@ -201,7 +216,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @if($booking->status == 'belum_dipakai')
+                                    @if($booking->status == 'belum_dipakai' && !\Carbon\Carbon::parse($booking->end)->isPast())
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
@@ -209,12 +224,15 @@
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -239,10 +257,13 @@
                                     <th class="text-center">No</th>
                                     <th class="text-center">Nama Bisnis</th>
                                     <th class="text-center">Customer</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jenis Mobil</th>
                                     <th class="text-center">Durasi Rental</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Waktu Rental</th>
                                     <th class="text-center">Waktu Kembali</th>
                                     <th class="text-center">Aksi</th>
@@ -251,7 +272,7 @@
                             <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($carrentalbookdates as $booking)
-                                    @if($booking->status == 'kedaluwarsa')
+                                    @if($booking->status != 'sudah_dipakai' && \Carbon\Carbon::parse($booking->end)->isPast())
                                         <tr>
                                             <td class="text-center">{{ $counter++ }}</td>
                                             <td class="text-center">{{ $booking->carRental->business_name ?? '' }}</td>
@@ -259,12 +280,15 @@
                                                 {{ $booking->transaction->user->name ?? $booking->customer_name }} -
                                                 {{ $booking->transaction->user->phone ?? $booking->customer_phone }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">
                                                 {{ $booking->car->brand->name ?? '' }} {{ $booking->car->carModel->name ?? '' }}
                                             </td>
                                             <td class="text-center">{{ $booking->duration }}</td>
-                                            <td class="text-center">{{ General::rp($booking->rent_price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->start)->format('d F Y H:i') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->end)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
