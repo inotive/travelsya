@@ -243,6 +243,7 @@ Route::post('/s_recreation', [NewRecreationController::class, 'search_ajax'])->n
 
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
+    Route::get('/show/all', [NewRecreationController::class, 'showAll'])->name('rekreasi.show.all');
     Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
     Route::get('/detail/{id}/{date}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
     Route::post('/order/{id}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
