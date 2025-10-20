@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
+
 class NewHealthBeautyController extends Controller
 {
     protected $xendit, $point;
@@ -49,12 +50,22 @@ class NewHealthBeautyController extends Controller
         return $categoryMap[$category] ?? 0;
     }
 
-    public function search_ajax(request $request){
+    public function search_ajax(Request $request){
         $find = '%' . $request->name . '%';
 
-        $clinics = ClinicHasPackages::with('clinic')->whereHas('clinic', function($q) use($find) {
-            $q->where('clinic_name', 'like', $find);
-        })->get();
+        $clinics = ClinicHasPackages::with('clinic.kota')
+            ->where(function($query) use($find) {
+                $query->whereHas('clinic', function($q) use($find) {
+                    // Cari berdasarkan nama klinik
+                    $q->where('clinic_name', 'like', $find);
+                })
+                ->orWhere('name', 'like', $find) // Cari berdasarkan nama paket
+                ->orWhereHas('clinic.kota', function($q) use($find) {
+                    // Cari berdasarkan nama kota
+                    $q->where('city_name', 'like', $find);
+                });
+            })
+            ->get();
 
         $date = Carbon::now()->format('d-m-Y H:i');
 
@@ -106,32 +117,108 @@ class NewHealthBeautyController extends Controller
     }
     public function index()
     {
-        $special_deals_all = ClinicHasPackages::with(['clinic.kota', 'image'])->whereHas('clinic', function($q){
-            $q->Active();
-        })->whereColumn('unit_price', '>' ,'price')
-        ->limit(20) // Ambil lebih banyak untuk dibagi ke dua kategori
-        ->get();
-        
-        // Filter data berdasarkan kategori
-        $special_deals = $special_deals_all->filter(function($deal) {
-            return $deal->clinic && $deal->clinic->category === 'kesehatan';
+        // Ambil data khusus untuk kesehatan dan kecantikan secara terpisah
+        $special_deals_all_health = ClinicHasPackages::with(['clinic.kota', 'clinic'])
+            ->whereHas('clinic', function($q) {
+                $q->Active();
+            })
+            ->whereColumn('unit_price', '>' ,'price')
+            ->limit(20)
+            ->get();
+
+        $special_deals_all_beauty = clone $special_deals_all_health;
+
+        // Filter data untuk kesehatan
+        $special_deals_health = $special_deals_all_health->filter(function($deal) {
+            return $deal->clinic && strtolower(trim($deal->clinic->category)) === 'kesehatan';
         })->take(10);
 
-        $special_deals_beauty = $special_deals_all->filter(function($deal) {
-            return $deal->clinic && $deal->clinic->category === 'kecantikan';
+        // Filter data untuk kecantikan
+        $special_deals_beauty = $special_deals_all_beauty->filter(function($deal) {
+            return $deal->clinic && strtolower(trim($deal->clinic->category)) === 'kecantikan';
         })->take(10);
 
-        // Jika data khusus untuk kesehatan kosong, gunakan semua data sebagai fallback
-        if ($special_deals->isEmpty()) {
-            $special_deals = $special_deals_all->take(10);
+        // Debug: log kategori yang ditemukan
+        foreach($special_deals_all_health as $deal) {
+            if($deal->clinic) {
+                \Log::info('Package: ' . $deal->name . ' - Clinic Category: ' . $deal->clinic->category);
+            }
+        }
+
+        // Jika tidak ada penawaran khusus untuk kesehatan, tampilkan semua paket dari klinik kesehatan
+        if ($special_deals_health->isEmpty()) {
+            $special_deals_health = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($q) {
+                    $q->Active();
+                    $q->where(function($subq) {
+                        $subq->where('category', 'kesehatan')
+                             ->orWhere('category', 'Kesehatan')
+                             ->orWhere('category', 'KESEHATAN');
+                    });
+                })
+                ->limit(10)
+                ->get();
         }
         
-        // Jika data khusus untuk kecantikan kosong, gunakan semua data sebagai fallback
+        // Jika tidak ada penawaran khusus untuk kecantikan, tampilkan semua paket dari klinik kecantikan
         if ($special_deals_beauty->isEmpty()) {
-            $special_deals_beauty = $special_deals_all->take(10);
+            $special_deals_beauty = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($q) {
+                    $q->Active();
+                    $q->where(function($subq) {
+                        $subq->where('category', 'kecantikan')
+                             ->orWhere('category', 'Kecantikan')
+                             ->orWhere('category', 'KECANTIKAN');
+                    });
+                })
+                ->limit(10)
+                ->get();
+        }
+        
+        // Data untuk tab spa dan kecantikan - ambil dari semua data klinik
+        $special_deals_spa_beauty = ClinicHasPackages::with(['clinic.kota', 'clinic'])
+            ->whereHas('clinic', function($q) {
+                $q->Active();
+            })
+            ->whereColumn('unit_price', '>' ,'price')
+            ->get()
+            ->filter(function($deal) {
+                return $deal->clinic && in_array(strtolower(trim($deal->clinic->category)), ['spa', 'salon', 'spa dan kecantikan']);
+            })->take(10);
+
+        // Jika tidak ada penawaran khusus untuk spa dan kecantikan, tampilkan semua paket dari klinik spa/kecantikan
+        if ($special_deals_spa_beauty->isEmpty()) {
+            $special_deals_spa_beauty = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($q) {
+                    $q->Active();
+                    $q->where(function($subq) {
+                        $subq->where('category', 'spa')
+                             ->orWhere('category', 'SPA')
+                             ->orWhere('category', 'Salon')
+                             ->orWhere('category', 'salon')
+                             ->orWhere('category', 'spa dan kecantikan')
+                             ->orWhere('category', 'Spa Dan Kecantikan')
+                             ->orWhere('category', 'SPA DAN KECANTIKAN');
+                    });
+                })
+                ->limit(10)
+                ->get();
         }
 
-        $all_categories = CategoriesServices::get();
+        // Lakukan filter tambahan untuk memastikan hanya kategori tertentu yang ditampilkan
+        $special_deals_health = $special_deals_health->filter(function($deal) {
+            return $deal->clinic && in_array(strtolower(trim($deal->clinic->category)), ['kesehatan', 'health']);
+        })->take(10);
+
+        $special_deals_beauty = $special_deals_beauty->filter(function($deal) {
+            return $deal->clinic && in_array(strtolower(trim($deal->clinic->category)), ['kecantikan', 'beauty']);
+        })->take(10);
+
+        $special_deals_spa_beauty = $special_deals_spa_beauty->filter(function($deal) {
+            return $deal->clinic && in_array(strtolower(trim($deal->clinic->category)), ['spa', 'salon', 'spa dan kecantikan']);
+        })->take(10);
+
+        $all_categories = CategoriesServices::whereNotIn('name', ['Product', 'Threadlift', 'Peeling', 'Injection', 'Service'])->get();
         
         // Pisahkan kategori berdasarkan tipe untuk tab beauty
         $beauty_service_keywords = ['injection', 'threadlift', 'peeling', 'treatment', 'facial', 'skin care', 'acne', 'anti aging'];
@@ -145,7 +232,7 @@ class NewHealthBeautyController extends Controller
             
             // Cek apakah kategori terkait dengan klinik kecantikan
             $is_beauty = $clinic_packages->contains(function($package) {
-                return $package->clinic && strtolower($package->clinic->category) === 'kecantikan';
+                return $package->clinic && in_array(strtolower(trim($package->clinic->category)), ['kecantikan', 'beauty']);
             });
             
             if ($is_beauty) {
@@ -171,8 +258,13 @@ class NewHealthBeautyController extends Controller
 
         $partners = Clinic::with(['packages', 'images', 'image', 'kota'])->orderBy('created_at', 'desc')->get();
 
-        $data['special_deals'] = collect($special_deals);
-        $data['special_deals_beauty'] = collect($special_deals_beauty);
+        // Debug: tambahkan count untuk melihat berapa banyak data
+        \Log::info('Special Deals Health Count: ' . $special_deals_health->count());
+        \Log::info('Special Deals Beauty Count: ' . $special_deals_beauty->count());
+
+        $data['special_deals'] = $special_deals_health;
+        $data['special_deals_beauty'] = $special_deals_beauty;
+        $data['special_deals_spa_beauty'] = $special_deals_spa_beauty;
         $data['categorises'] = collect($all_categories);  // untuk tab kesehatan
         $data['service_categories'] = $service_categories;
         $data['product_categories'] = $product_categories;
@@ -181,13 +273,114 @@ class NewHealthBeautyController extends Controller
         return view('pagesv2.health_beauty.index', $data);
     }
 
-    public function show_special_deals(){
+    public function show_special_deals($category = 'health'){
 
-        $special = ClinicHasPackages::with('image', 'clinic')->whereHas('clinic', function($c){
-            $c->Active();
-        })->whereColumn('unit_price', '>' ,'price')->get();
+        // Menentukan kategori berdasarkan parameter
+        if (strtolower($category) === 'beauty' || strtolower($category) === 'kecantikan') {
+            // Untuk kecantikan
+            $special = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($c){
+                    $c->Active();
+                    $c->where(function($subq) {
+                        $subq->where('category', 'kecantikan')
+                             ->orWhere('category', 'Kecantikan')
+                             ->orWhere('category', 'KECANTIKAN')
+                             ->orWhere('category', 'beauty')
+                             ->orWhere('category', 'Beauty')
+                             ->orWhere('category', 'BEAUTY');
+                    });
+                })
+                ->whereColumn('unit_price', '>' ,'price')
+                ->get();
+
+            // Jika tidak ada penawaran khusus untuk kecantikan, tampilkan semua paket dari klinik kecantikan
+            if ($special->isEmpty()) {
+                $special = ClinicHasPackages::with(['clinic.kota', 'image'])
+                    ->whereHas('clinic', function($q) {
+                        $q->Active();
+                        $q->where(function($subq) {
+                            $subq->where('category', 'kecantikan')
+                                 ->orWhere('category', 'Kecantikan')
+                                 ->orWhere('category', 'KECANTIKAN')
+                                 ->orWhere('category', 'beauty')
+                                 ->orWhere('category', 'Beauty')
+                                 ->orWhere('category', 'BEAUTY');
+                        });
+                    })
+                    ->get();
+            }
+        } elseif (strtolower($category) === 'spa_beauty' || strtolower($category) === 'spa' || strtolower($category) === 'salon' || strtolower($category) === 'spa dan kecantikan') {
+            // Untuk spa dan kecantikan
+            $special = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($c){
+                    $c->Active();
+                    $c->where(function($subq) {
+                        $subq->where('category', 'spa')
+                             ->orWhere('category', 'SPA')
+                             ->orWhere('category', 'Salon')
+                             ->orWhere('category', 'salon')
+                             ->orWhere('category', 'spa dan kecantikan')
+                             ->orWhere('category', 'Spa Dan Kecantikan')
+                             ->orWhere('category', 'SPA DAN KECANTIKAN');
+                    });
+                })
+                ->whereColumn('unit_price', '>' ,'price')
+                ->get();
+
+            // Jika tidak ada penawaran khusus untuk spa dan kecantikan, tampilkan semua paket dari klinik spa/kecantikan
+            if ($special->isEmpty()) {
+                $special = ClinicHasPackages::with(['clinic.kota', 'image'])
+                    ->whereHas('clinic', function($q) {
+                        $q->Active();
+                        $q->where(function($subq) {
+                            $subq->where('category', 'spa')
+                                 ->orWhere('category', 'SPA')
+                                 ->orWhere('category', 'Salon')
+                                 ->orWhere('category', 'salon')
+                                 ->orWhere('category', 'spa dan kecantikan')
+                                 ->orWhere('category', 'Spa Dan Kecantikan')
+                                 ->orWhere('category', 'SPA DAN KECANTIKAN');
+                        });
+                    })
+                    ->get();
+            }
+        } else {
+            // Untuk kesehatan (default)
+            $special = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($c){
+                    $c->Active();
+                    $c->where(function($subq) {
+                        $subq->where('category', 'kesehatan')
+                             ->orWhere('category', 'Kesehatan')
+                             ->orWhere('category', 'KESEHATAN')
+                             ->orWhere('category', 'health')
+                             ->orWhere('category', 'Health')
+                             ->orWhere('category', 'HEALTH');
+                    });
+                })
+                ->whereColumn('unit_price', '>' ,'price')
+                ->get();
+
+            // Jika tidak ada penawaran khusus untuk kesehatan, tampilkan semua paket dari klinik kesehatan
+            if ($special->isEmpty()) {
+                $special = ClinicHasPackages::with(['clinic.kota', 'image'])
+                    ->whereHas('clinic', function($q) {
+                        $q->Active();
+                        $q->where(function($subq) {
+                            $subq->where('category', 'kesehatan')
+                                 ->orWhere('category', 'Kesehatan')
+                                 ->orWhere('category', 'KESEHATAN')
+                                 ->orWhere('category', 'health')
+                                 ->orWhere('category', 'Health')
+                                 ->orWhere('category', 'HEALTH');
+                        });
+                    })
+                    ->get();
+            }
+        }
 
         $data['special_deals'] = $special;
+        $data['category'] = $category; // Kirim kategori ke view
 
         return view('pagesv2.health_beauty.show_special_deals', $data);
     }
@@ -331,8 +524,52 @@ class NewHealthBeautyController extends Controller
         return view('pagesv2.health_beauty.show', $data);
     }
 
-    public function show_mitra(){
-        $data['mitra'] = Clinic::Active()->with(['image', 'kota', 'packages'])->get();
+    public function show_mitra($category = null){
+        $query = Clinic::Active()->with(['image', 'kota', 'packages']);
+        
+        if ($category) {
+            if (strtolower($category) === 'spa_beauty' || strtolower($category) === 'spa' || strtolower($category) === 'salon' || strtolower($category) === 'spa dan kecantikan') {
+                // Untuk kategori spa dan kecantikan
+                $query->where(function($q) {
+                    $q->where('category', 'kecantikan')
+                      ->orWhere('category', 'Kecantikan')
+                      ->orWhere('category', 'KECANTIKAN')
+                      ->orWhere('category', 'beauty')
+                      ->orWhere('category', 'Beauty')
+                      ->orWhere('category', 'BEAUTY')
+                      ->orWhere('category', 'spa')
+                      ->orWhere('category', 'SPA')
+                      ->orWhere('category', 'Salon')
+                      ->orWhere('category', 'salon')
+                      ->orWhere('category', 'spa dan kecantikan')
+                      ->orWhere('category', 'Spa Dan Kecantikan')
+                      ->orWhere('category', 'SPA DAN KECANTIKAN');
+                });
+            } elseif (strtolower($category) === 'health' || strtolower($category) === 'kesehatan') {
+                // Untuk kategori kesehatan
+                $query->where(function($q) {
+                    $q->where('category', 'kesehatan')
+                      ->orWhere('category', 'Kesehatan')
+                      ->orWhere('category', 'KESEHATAN')
+                      ->orWhere('category', 'health')
+                      ->orWhere('category', 'Health')
+                      ->orWhere('category', 'HEALTH');
+                });
+            } elseif (strtolower($category) === 'beauty' || strtolower($category) === 'kecantikan') {
+                // Untuk kategori kecantikan
+                $query->where(function($q) {
+                    $q->where('category', 'kecantikan')
+                      ->orWhere('category', 'Kecantikan')
+                      ->orWhere('category', 'KECANTIKAN')
+                      ->orWhere('category', 'beauty')
+                      ->orWhere('category', 'Beauty')
+                      ->orWhere('category', 'BEAUTY');
+                });
+            }
+        }
+        
+        $data['mitra'] = $query->get();
+        $data['category'] = $category;
 
         return view('pagesv2.health_beauty.all_mitra', $data);
     }
@@ -541,5 +778,189 @@ class NewHealthBeautyController extends Controller
 
         // return ResponseFormatter::success($hotel, 'Payment successfully created');
         // return ResponseFormatter::success($payoutsXendit, 'Payment successfully created');
+    }
+
+    public function search_special_deals(Request $request){
+        $search = $request->input('search');
+        $category = $request->input('category', 'health'); // Default ke health
+
+        if (strtolower($category) === 'beauty' || strtolower($category) === 'kecantikan') {
+            // Untuk kecantikan
+            $query = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($c){
+                    $c->Active();
+                    $c->where(function($subq) {
+                        $subq->where('category', 'kecantikan')
+                             ->orWhere('category', 'Kecantikan')
+                             ->orWhere('category', 'KECANTIKAN')
+                             ->orWhere('category', 'beauty')
+                             ->orWhere('category', 'Beauty')
+                             ->orWhere('category', 'BEAUTY');
+                    });
+                });
+
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhereHas('clinic', function($clinicQuery) use ($search) {
+                          $clinicQuery->where('clinic_name', 'LIKE', "%{$search}%");
+                      });
+                });
+            } else {
+                // Jika pencarian kosong, tampilkan semua penawaran khusus dari klinik kecantikan
+                $query->whereColumn('unit_price', '>' ,'price');
+            }
+
+            $special_deals = $query->get();
+
+            // Jika tidak ada penawaran khusus yang cocok dengan pencarian, tampilkan semua paket dari klinik kecantikan
+            if ($special_deals->isEmpty() && !empty($search)) {
+                $query = ClinicHasPackages::with(['clinic.kota', 'image'])
+                    ->whereHas('clinic', function($q) {
+                        $q->Active();
+                        $q->where(function($subq) {
+                            $subq->where('category', 'kecantikan')
+                                 ->orWhere('category', 'Kecantikan')
+                                 ->orWhere('category', 'KECANTIKAN')
+                                 ->orWhere('category', 'beauty')
+                                 ->orWhere('category', 'Beauty')
+                                 ->orWhere('category', 'BEAUTY');
+                        });
+                    });
+
+                if (!empty($search)) {
+                    $query->where(function($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%")
+                          ->orWhereHas('clinic', function($clinicQuery) use ($search) {
+                              $clinicQuery->where('clinic_name', 'LIKE', "%{$search}%");
+                          });
+                    });
+                }
+
+                $special_deals = $query->get();
+            }
+        } elseif (strtolower($category) === 'spa_beauty' || strtolower($category) === 'spa' || strtolower($category) === 'salon' || strtolower($category) === 'spa dan kecantikan') {
+            // Untuk spa dan kecantikan
+            $query = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($c){
+                    $c->Active();
+                    $c->where(function($subq) {
+                        $subq->where('category', 'kecantikan')
+                             ->orWhere('category', 'Kecantikan')
+                             ->orWhere('category', 'KECANTIKAN')
+                             ->orWhere('category', 'beauty')
+                             ->orWhere('category', 'Beauty')
+                             ->orWhere('category', 'BEAUTY')
+                             ->orWhere('category', 'spa')
+                             ->orWhere('category', 'SPA')
+                             ->orWhere('category', 'Salon')
+                             ->orWhere('category', 'salon')
+                             ->orWhere('category', 'spa dan kecantikan')
+                             ->orWhere('category', 'Spa Dan Kecantikan')
+                             ->orWhere('category', 'SPA DAN KECANTIKAN');
+                    });
+                });
+
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhereHas('clinic', function($clinicQuery) use ($search) {
+                          $clinicQuery->where('clinic_name', 'LIKE', "%{$search}%");
+                      });
+                });
+            } else {
+                // Jika pencarian kosong, tampilkan semua penawaran khusus dari klinik spa/kecantikan
+                $query->whereColumn('unit_price', '>' ,'price');
+            }
+
+            $special_deals = $query->get();
+
+            // Jika tidak ada penawaran khusus yang cocok dengan pencarian, tampilkan semua paket dari klinik spa/kecantikan
+            if ($special_deals->isEmpty() && !empty($search)) {
+                $query = ClinicHasPackages::with(['clinic.kota', 'image'])
+                    ->whereHas('clinic', function($q) {
+                        $q->Active();
+                        $q->where(function($subq) {
+                            $subq->where('category', 'spa')
+                                 ->orWhere('category', 'SPA')
+                                 ->orWhere('category', 'Salon')
+                                 ->orWhere('category', 'salon')
+                                 ->orWhere('category', 'spa dan kecantikan')
+                                 ->orWhere('category', 'Spa Dan Kecantikan')
+                                 ->orWhere('category', 'SPA DAN KECANTIKAN');
+                        });
+                    });
+
+                if (!empty($search)) {
+                    $query->where(function($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%")
+                          ->orWhereHas('clinic', function($clinicQuery) use ($search) {
+                              $clinicQuery->where('clinic_name', 'LIKE', "%{$search}%");
+                          });
+                    });
+                }
+
+                $special_deals = $query->get();
+            }
+        } else {
+            // Untuk kesehatan (default)
+            $query = ClinicHasPackages::with(['clinic.kota', 'image'])
+                ->whereHas('clinic', function($c){
+                    $c->Active();
+                    $c->where(function($subq) {
+                        $subq->where('category', 'kesehatan')
+                             ->orWhere('category', 'Kesehatan')
+                             ->orWhere('category', 'KESEHATAN')
+                             ->orWhere('category', 'health')
+                             ->orWhere('category', 'Health')
+                             ->orWhere('category', 'HEALTH');
+                    });
+                });
+
+            if (!empty($search)) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'LIKE', "%{$search}%")
+                      ->orWhereHas('clinic', function($clinicQuery) use ($search) {
+                          $clinicQuery->where('clinic_name', 'LIKE', "%{$search}%");
+                      });
+                });
+            } else {
+                // Jika pencarian kosong, tampilkan semua penawaran khusus dari klinik kesehatan
+                $query->whereColumn('unit_price', '>' ,'price');
+            }
+
+            $special_deals = $query->get();
+
+            // Jika tidak ada penawaran khusus yang cocok dengan pencarian, tampilkan semua paket dari klinik kesehatan
+            if ($special_deals->isEmpty() && !empty($search)) {
+                $query = ClinicHasPackages::with(['clinic.kota', 'image'])
+                    ->whereHas('clinic', function($q) {
+                        $q->Active();
+                        $q->where(function($subq) {
+                            $subq->where('category', 'kesehatan')
+                                 ->orWhere('category', 'Kesehatan')
+                                 ->orWhere('category', 'KESEHATAN')
+                                 ->orWhere('category', 'health')
+                                 ->orWhere('category', 'Health')
+                                 ->orWhere('category', 'HEALTH');
+                        });
+                    });
+
+                if (!empty($search)) {
+                    $query->where(function($q) use ($search) {
+                        $q->where('name', 'LIKE', "%{$search}%")
+                          ->orWhereHas('clinic', function($clinicQuery) use ($search) {
+                              $clinicQuery->where('clinic_name', 'LIKE', "%{$search}%");
+                          });
+                    });
+                }
+
+                $special_deals = $query->get();
+            }
+        }
+
+        return response()->json([
+            'special_deals' => $special_deals
+        ]);
     }
 }

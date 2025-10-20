@@ -51,7 +51,7 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
-                    <select class="form-select" aria-label="Default select example" name="unit_price" required>
+                    <select class="form-select" aria-label="Default select example" name="duration_unit" required>
                         <option value="Menit">Menit</option>
                         <option value="Jam">Jam</option>
                     </select>

@@ -192,7 +192,7 @@ class RecreationController extends Controller
             'rules' => 'required|string',
             'description' => 'required|string',
             'duration' => 'required|numeric',
-            'unit_price' => 'required|string|max:255',
+            'duration_unit' => 'required|string|max:255',
             'expiry_date' => 'required|numeric',
             'expiry_type' => 'required|string|in:' . implode(',', $allowedExpiryTypes),
             'price' => 'required|numeric',
@@ -205,7 +205,7 @@ class RecreationController extends Controller
             'description.required' => 'Deskripsi harus diisi.',
             'duration.required' => 'Durasi harus diisi.',
             'duration.numeric' => 'Durasi harus berupa angka.',
-            'unit_price.required' => 'Tipe durasi harus dipilih.',
+            'duration_unit.required' => 'Tipe durasi harus dipilih.',
             'expiry_date.required' => 'Masa berlaku harus diisi.',
             'expiry_date.numeric' => 'Masa berlaku harus berupa angka.',
             'expiry_type.required' => 'Tipe masa berlaku harus dipilih.',
@@ -230,6 +230,7 @@ class RecreationController extends Controller
             $packageData = $request->all();
             $packageData['category_recreation_id'] = $recreationBusiness->category_recreation_id;
             $packageData['price'] = $price;
+            $packageData['unit_price'] = $price;
 
             $recreation = RecreationPackages::create($packageData);
 
@@ -308,7 +309,7 @@ class RecreationController extends Controller
             'duration' => 'required|numeric',
             'expiry_date' => 'required|numeric',
             'expiry_type' => 'required|string|in:' . implode(',', $allowedExpiryTypes),
-            'unit_price' => 'required|string',
+            'duration_unit' => 'required|string',
             'price' => 'required|numeric',
             'is_active' => 'required|boolean',
             'recreation_id' => 'required|exists:recreations,id',
@@ -326,7 +327,7 @@ class RecreationController extends Controller
             'expiry_date.numeric' => 'Masa berlaku harus berupa angka.',
             'expiry_type.required' => 'Tipe masa berlaku harus dipilih.',
             'expiry_type.in' => 'Tipe masa berlaku yang dipilih tidak valid.',
-            'unit_price.required' => 'Tipe durasi harus dipilih.',
+            'duration_unit.required' => 'Tipe durasi harus dipilih.',
             'price.required' => 'Harga harus diisi.',
             'price.numeric' => 'Harga harus berupa angka.',
             'is_active.required' => 'Status harus dipilih.',

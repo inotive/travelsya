@@ -8,7 +8,17 @@
             <div class="subtitle text-capitalize mt-2">Menampilkan <span class="text-dark" id="deal-count">{{ count($special_deals) }}</span>
                 Hasil Pencarian
             </div>
-            <div class="subtitle text-capitalize mt-2">Special Deals</div>
+            <div class="subtitle text-capitalize mt-2">
+                @if(strtolower($category) === 'spa_beauty')
+                    Special Deals Spa dan Kecantikan
+                @elseif(strtolower($category) === 'beauty' || strtolower($category) === 'kecantikan')
+                    Special Deals Kecantikan
+                @elseif(strtolower($category) === 'health' || strtolower($category) === 'kesehatan')
+                    Special Deals Kesehatan
+                @else
+                    Special Deals {{ ucfirst($category ?? 'health') }}
+                @endif
+            </div>
         </div>
 
         <div class="p-5 my-3">
@@ -81,6 +91,7 @@
     // Fungsi untuk melakukan pencarian
     function performSearch() {
         const searchValue = searchInput ? searchInput.value : '';
+        const category = "{{ $category ?? 'health' }}"; // Ambil kategori dari view
         
         // Jika input kosong, tampilkan semua data
         if (searchValue.trim() === '') {
@@ -89,7 +100,8 @@
                 url: "{{ route('health_beauty.search_special_deals') }}",
                 type: "POST",
                 data: {
-                    _token: '{{ csrf_token() }}'
+                    _token: '{{ csrf_token() }}',
+                    category: category
                 },
                 success: function(response) {
                     updateDealList(response.special_deals);
@@ -104,6 +116,7 @@
         // Siapkan parameter pencarian
         const params = {
             search: searchValue,
+            category: category,
             _token: '{{ csrf_token() }}'
         };
         

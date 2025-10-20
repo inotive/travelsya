@@ -72,9 +72,9 @@
 
                 <div class="col-md-6">
                     <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
-                    <select class="form-select" name="unit_price" aria-label="Default select example" required>
-                        <option value="Menit" {{ old('unit_price', $recreation_has_packages->unit_price) == 'Menit' ? 'selected' : '' }}>Menit</option>
-                        <option value="Jam" {{ old('unit_price', $recreation_has_packages->unit_price) == 'Jam' ? 'selected' : '' }}>Jam</option>
+                    <select class="form-select" name="duration_unit" aria-label="Default select example" required>
+                        <option value="Menit" {{ old('duration_unit', $recreation_has_packages->duration_unit) == 'Menit' ? 'selected' : '' }}>Menit</option>
+                        <option value="Jam" {{ old('duration_unit', $recreation_has_packages->duration_unit) == 'Jam' ? 'selected' : '' }}>Jam</option>
                     </select>
                 </div>
 

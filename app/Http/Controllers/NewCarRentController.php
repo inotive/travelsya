@@ -394,10 +394,19 @@ class NewCarRentController extends Controller
 
         foreach ($cars as $key => $c) {
             // Perbaiki pengambilan vendor - filter berdasarkan brand_id dan car_model_id yang sama
-            $vendor = CarRentalHasCars::with('carRental', 'carRental.kota', 'carRental.reviews')
+            $vendorQuery = CarRentalHasCars::with('carRental', 'carRental.kota', 'carRental.reviews')
                 ->where('brand_id', $c['brand_id'])
-                ->where('car_model_id', $c['car_model_id'])
-                ->get();
+                ->where('car_model_id', $c['car_model_id']);
+
+            if ($location) {
+                $vendorQuery->whereHas('carRental', function ($subQuery) use ($location) {
+                    $subQuery->whereHas('kota', function ($kotaQuery) use ($location) {
+                        $kotaQuery->where('city_name', 'like', '%' . $location . '%');
+                    });
+                });
+            }
+            
+            $vendor = $vendorQuery->get();
             $ven = [];
             foreach ($vendor as $key => $v) {
                 $item = [

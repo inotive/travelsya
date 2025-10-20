@@ -33,7 +33,7 @@ class NewRecreationController extends Controller
 
     public function index()
     {
-        $special_deals = RecreationPackages::with('category', 'recreation')->whereColumn('price', '<', 'unit_price')->limit(10)->get();
+        $special_deals = RecreationPackages::with('category', 'recreation', 'recreation.kota', 'reviews', 'booked')->whereColumn('price', '<', 'unit_price')->limit(10)->get();
 
         $categories = CategoryRecreation::select('id', 'name', 'image')->get()->toArray();
 
@@ -66,7 +66,7 @@ class NewRecreationController extends Controller
                     'rate' => $rec->avgRating(),
                     'category' => $rec['category'],
                     // Memeriksa apakah recreationPackages ada dan memiliki elemen
-                    'origin_price' => isset($rec['recreationPackages']) && count($rec['recreationPackages']) > 0 ? $rec['recreationPackages'][0]['unit_price'] : 0,
+                    'origin_price' => isset($rec['recreationPackages']) && count($rec['recreationPackages']) > 0 ? $rec['recreationPackages'][0]['weekend_price'] : 0,
                     'cut_price' => isset($rec['recreationPackages']) && count($rec['recreationPackages']) > 0 ? $rec['recreationPackages'][0]['price'] : 0,
                     'rating_count' => count($rec['reviews']),
                 ];
