@@ -287,7 +287,8 @@
         }
     </style>
     @stack('add-style')
-    {{-- @vite(['resources/js/app.js']) --}}
+    <link rel="stylesheet" href="{{ asset('build/assets/app-71455456.css') }}">
+    <script type="module" src="{{ asset('build/assets/app-16433653.js') }}"></script>
 </head>
 <!--end::Head-->
 
