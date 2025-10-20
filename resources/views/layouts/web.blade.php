@@ -345,7 +345,7 @@
                                 <p>Kalimantan Timur, Balikpapan</p>
                                 <p>Indonesia</p>
                                 <p>cs@travelsya.com</p>
-                                <p>(0542)8795954</p>
+                                <p>(+62) 822-7756-6690</p>
 
                             </div>
                             <div class="col-md-6">

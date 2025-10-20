@@ -33,11 +33,12 @@
                 <h1 class="text-white">Cantik Sehat, Hidup Lebih Bahagia</h1>
             </div>
 
-            <div class="search-box">
+            <form action="{{ route('clinics.search') }}" method="GET" class="search-box">
                 <div class="button-group">
                     <button class="toggle-button active" data-category="all">Semua</button>
                     <button class="toggle-button" data-category="kesehatan">Kesehatan</button>
                     <button class="toggle-button" data-category="kecantikan">Kecantikan</button>
+                    <button class="toggle-button" data-category="spa-kecantikan">Spa dan Kecantikan</button>
                 </div>
 
                 <div class="search-container">
@@ -45,11 +46,12 @@
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" placeholder="Mau treatment dimana?">
+                    <input type="text" name="location" placeholder="Mau treatment dimana?" value="{{ request()->query('location') }}">
                 </div>
 
                 <div class="date-container">
-                    <input type="text" placeholder="Pilihan tanggal">
+                    <input type="text" name="date" onfocus="(this.type='date')" class="form-control"
+                        placeholder="Tanggal reservasi" aria-label="Username" aria-describedby="basic-addon1" value="{{ request()->query('date') }}" />
                     <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
                         <line x1="16" y1="2" x2="16" y2="6"></line>
@@ -58,8 +60,8 @@
                     </svg>
                 </div>
 
-                <button class="search-button" onclick="window.location.href='{{ route('clinics.search') }}'">Cari Sekarang</button>
-            </div>
+                <button class="search-button" type="submit">Cari Sekarang</button>
+            </form>
         </section>
 
         <div class="container">
@@ -93,7 +95,6 @@
                                 <div class="lokasi d-flex align-items-center">
                                     <span class="fa-solid fa-location-dot me-2"></span>
                                     <span>{{ $clinic->city }}</span>
-                                    <span style="margin-left: auto;" class="fa-regular fa-bookmark"></span>
                                 </div>
 
                                 <h3 class="mt-3 text-dark">{{ $package->name }}</h3>
@@ -175,7 +176,6 @@
                             <div class="partner-card">
                                 <div class="d-flex align-items-center">
                                     <span>{{ $clinic->category }}</span>
-                                    <span style="margin-left: auto;" class="fa-regular fa-bookmark"></span>
                                     
                                 </div>
                                 <h3 class="mt-3 text-dark">{{ $clinic->clinic_name }}</h3>
@@ -207,19 +207,31 @@
 
                     // Filter cards in card-grid
                     cards.forEach(card => {
-                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                        const cardCategory = card.getAttribute('data-category');
+                        
+                        // Handle special case for 'spa-kecantikan' which should show both 'kecantikan' and 'spa' items
+                        if (category === 'all') {
                             card.style.display = 'block';
+                        } else if (category === 'spa-kecantikan') {
+                            // Show cards with 'kecantikan' category when 'spa-kecantikan' is selected
+                            card.style.display = (cardCategory === 'kecantikan' || cardCategory === 'spa') ? 'block' : 'none';
                         } else {
-                            card.style.display = 'none';
+                            card.style.display = (cardCategory === category) ? 'block' : 'none';
                         }
                     });
 
                     // Filter cards in partner-grid
                     partnerCards.forEach(card => {
-                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                        const cardCategory = card.getAttribute('data-category');
+                        
+                        // Handle special case for 'spa-kecantikan' which should show both 'kecantikan' and 'spa' items
+                        if (category === 'all') {
                             card.style.display = 'block';
+                        } else if (category === 'spa-kecantikan') {
+                            // Show cards with 'kecantikan' category when 'spa-kecantikan' is selected
+                            card.style.display = (cardCategory === 'kecantikan' || cardCategory === 'spa') ? 'block' : 'none';
                         } else {
-                            card.style.display = 'none';
+                            card.style.display = (cardCategory === category) ? 'block' : 'none';
                         }
                     });
                 });

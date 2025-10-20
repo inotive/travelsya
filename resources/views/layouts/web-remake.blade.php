@@ -333,7 +333,7 @@
                                 <p class="mt-5"><strong>Email</strong></p>
                                 <p class="mt-5">cs@travelsya.com</p>
                                 <p class="mt-5"><strong>Telp</strong></p>
-                                <p class="mt-5">(0542)8795954</p>
+                                <p class="mt-5">(+62) 822-7756-6690</p>
                                 <p class="mt-5"><strong>Ikuti Kami</strong></p>
                                 <div>
                                     <a href="https://www.facebook.com/travelsya.id" target="_blank">

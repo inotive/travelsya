@@ -3,7 +3,7 @@
 @section('content-admin')
     <div class="container">
         <!-- Tampilkan error validasi -->
-        @if($errors->any())
+        @if ($errors->any())
             <div class="alert alert-danger">
                 <h4>Terjadi Kesalahan:</h4>
                 <ul>
@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
@@ -28,11 +28,12 @@
                         z-index: 9999 !important;
                         min-width: 200px !important;
                     }
+
                     .select2-dropdown {
                         z-index: 9999 !important;
                     }
                 </style>
-                
+
                 <form id="clinic-form" action="{{ route('clinics.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!--begin::Input group-->
@@ -45,7 +46,7 @@
                                     $userClinics = \App\Models\Clinic::where('user_id', Auth::id())->get();
                                 @endphp
                                 @foreach ($userClinics as $clinic)
-                                    <option value="{{ $clinic->id }}" 
+                                    <option value="{{ $clinic->id }}"
                                         {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}
                                         data-category="{{ $clinic->category }}">
                                         {{ $clinic->clinic_name }}
@@ -122,7 +123,7 @@
 
                         <div class="col-md-3">
                             <label class="required fs-6 fw-semibold mb-2">Durasi</label>
-                            <input type="number" class="form-control form-control-lg" placeholder="Masukan durasi" 
+                            <input type="number" class="form-control form-control-lg" placeholder="Masukan durasi"
                                 name="duration" value="{{ old('duration') }}" min="1" required />
                             @error('duration')
                                 <span class="text-danger mt-1" role="alert">
@@ -134,7 +135,8 @@
                         <div class="col-md-3">
                             <label class="required fs-6 fw-semibold mb-2">Tipe Durasi</label>
                             <select class="form-control form-control-lg" name="duration_type" required>
-                                <option value="menit" {{ old('duration_type', 'menit') == 'menit' ? 'selected' : '' }}>Menit</option>
+                                <option value="menit" {{ old('duration_type', 'menit') == 'menit' ? 'selected' : '' }}>
+                                    Menit</option>
                                 <option value="jam" {{ old('duration_type') == 'jam' ? 'selected' : '' }}>Jam</option>
                             </select>
                             @error('duration_type')
@@ -146,7 +148,7 @@
 
                         <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Masa Berlaku (hari)</label>
-                            <input type="number" class="form-control" name="expiry_date" 
+                            <input type="number" class="form-control" name="expiry_date"
                                 value="{{ old('expiry_date', 30) }}" min="1" required />
                             @error('expiry_date')
                                 <span class="text-danger mt-1" role="alert">
@@ -176,7 +178,7 @@
                         <!-- Image Upload Section -->
                         <div class="col-md-12 mt-4">
                             <label class="required fs-6 fw-semibold mb-2">Gambar Jasa Klinik</label>
-                            
+
                             <!-- Multiple Images Upload -->
                             <div>
                                 <div class="input-group mb-3">
@@ -184,7 +186,7 @@
                                     <label class="input-group-text bg-primary text-white">Unggah Gambar</label>
                                 </div>
                                 <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus</small>
-                                
+
                                 <!-- Preview for images -->
                                 <div id="image-preview" class="mt-2"></div>
                             </div>
@@ -192,8 +194,7 @@
 
                         <div class="col-12">
                             <label for="description" class="required form-label">Deskripsi</label>
-                            <textarea name="description" cols="30" rows="3" class="form-control" 
-                                required>{{ old('description') }}</textarea>
+                            <textarea name="description" cols="30" rows="3" class="form-control" required>{{ old('description') }}</textarea>
                             @error('description')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -203,8 +204,7 @@
 
                         <div class="col-12">
                             <label class="required fs-6 fw-semibold mb-2">Peraturan</label>
-                            <textarea name="rules" cols="30" rows="2" class="form-control" 
-                                required>{{ old('rules') }}</textarea>
+                            <textarea name="rules" cols="30" rows="2" class="form-control" required>{{ old('rules') }}</textarea>
                             @error('rules')
                                 <span class="text-danger mt-1" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -212,11 +212,11 @@
                             @enderror
                         </div>
 
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <label class="fs-6 fw-semibold mb-2">Harga Satuan (Unit Price)</label>
                             <div class="input-group">
                                 <span class="input-group-text">Rp</span>
-                                <input id="unit_price" class="form-control form-control-lg" placeholder="Masukan harga satuan" 
+                                <input id="unit_price" class="form-control form-control-lg" placeholder="Masukan harga satuan"
                                     name="unit_price" value="{{ old('unit_price') }}" />
                             </div>
                             @error('unit_price')
@@ -224,9 +224,9 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                             @enderror
-                        </div>
+                        </div> --}}
 
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Status</label>
                             <select class="form-control" name="is_active" required>
                                 <option value="1" {{ old('is_active', 1) == 1 ? 'selected' : '' }}>Aktif</option>
@@ -239,7 +239,7 @@
                             @enderror
                         </div>
 
-                        
+
                     </div>
                     <!--end::Input group-->
 
@@ -298,22 +298,22 @@
             // Simpan posisi kursor
             let start = this.selectionStart;
             let end = this.selectionEnd;
-            
+
             // Format nilai
             let formatted = formatRupiah(input);
             $(this).val(formatted);
-            
+
             // Pertahankan posisi kursor
             this.setSelectionRange(start, end);
         });
 
         // Format harga saat halaman dimuat jika ada nilai old
-        @if(old('price'))
+        @if (old('price'))
             $('#harga').val(formatRupiah('{{ old('price') }}', 'Rp '));
         @endif
 
         $(document).ready(function() {
-            
+
             // Inisialisasi Select2 untuk klinik
             $('#clinic_id').select2({
                 placeholder: "Pilih klinik...",
@@ -322,7 +322,7 @@
                 // Saat klinik dipilih, cek kategori bisnis dan atur field kategori
                 let selectedOption = $(this).find('option:selected');
                 let businessCategory = selectedOption.data('category');
-                
+
                 // Check if business category is 'spa dan kecantikan'
                 if (businessCategory && businessCategory.toLowerCase() === 'spa dan kecantikan') {
                     // Hide category field for 'spa dan kecantikan' business
@@ -336,7 +336,7 @@
                     $('#category-field').show();
                     // Make categories_services_id field required
                     $('#categories_services_id').attr('required', 'required');
-                    
+
                     // Load categories for other business types
                     if (businessCategory) {
                         loadCategoriesByBusinessCategory(businessCategory);
@@ -359,18 +359,22 @@
                         console.log("Categories Data:", data);
                         $('#categories_services_id').empty();
                         if (data.length > 0) {
-                            $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
-                            
+                            $('#categories_services_id').append(
+                                '<option value="">Pilih Kategori</option>');
+
                             // Kelompokkan kategori berdasarkan tipe
-                            const clinicCategories = data.filter(category => category.name === 'Clinic');
-                            const serviceCategories = data.filter(category => category.name === 'Service');
-                            const productCategories = data.filter(category => category.name === 'Product');
-                            const otherCategories = data.filter(category => 
-                                category.name !== 'Clinic' && 
-                                category.name !== 'Service' && 
+                            const clinicCategories = data.filter(category => category.name ===
+                                'Clinic');
+                            const serviceCategories = data.filter(category => category.name ===
+                                'Service');
+                            const productCategories = data.filter(category => category.name ===
+                                'Product');
+                            const otherCategories = data.filter(category =>
+                                category.name !== 'Clinic' &&
+                                category.name !== 'Service' &&
                                 category.name !== 'Product'
                             );
-                            
+
                             // Tambahkan optgroup untuk Clinic
                             if (clinicCategories.length > 0) {
                                 const clinicGroup = $('<optgroup label="Clinic"></optgroup>');
@@ -383,7 +387,7 @@
                                 });
                                 $('#categories_services_id').append(clinicGroup);
                             }
-                            
+
                             // Tambahkan optgroup untuk Service
                             if (serviceCategories.length > 0) {
                                 const serviceGroup = $('<optgroup label="Service"></optgroup>');
@@ -396,7 +400,7 @@
                                 });
                                 $('#categories_services_id').append(serviceGroup);
                             }
-                            
+
                             // Tambahkan optgroup untuk Product
                             if (productCategories.length > 0) {
                                 const productGroup = $('<optgroup label="Product"></optgroup>');
@@ -409,7 +413,7 @@
                                 });
                                 $('#categories_services_id').append(productGroup);
                             }
-                            
+
                             // Tambahkan optgroup untuk kategori lainnya
                             if (otherCategories.length > 0) {
                                 const otherGroup = $('<optgroup label="Lainnya"></optgroup>');
@@ -433,8 +437,9 @@
                     },
                     error: function(xhr, status, error) {
                         console.error("Error loading categories:", error);
-                        $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
-                        
+                        $('#categories_services_id').empty().append(
+                            '<option value="">Gagal memuat kategori</option>');
+
                         // Inisialisasi ulang Select2 meskipun terjadi error
                         $('#categories_services_id').select2({
                             placeholder: "Pilih atau ketik kategori baru...",
@@ -451,11 +456,11 @@
                 placeholder: "Pilih spesialis...",
                 allowClear: true
             });
-            
-            // Preview for images  
+
+            // Preview for images
             $(document).on('change', 'input[name="images[]"]', function() {
                 var files = this.files;
-                
+
                 if (files.length > 0) {
                     for (let i = 0; i < files.length; i++) {
                         let file = files[i];
@@ -463,7 +468,8 @@
                         reader.onload = function(e) {
                             $('#image-preview').append(
                                 '<div class="image-preview-item d-inline-block m-1">' +
-                                '<img src="' + e.target.result + '" class="img-thumbnail" width="100" style="object-fit:cover; height:100px;">' +
+                                '<img src="' + e.target.result +
+                                '" class="img-thumbnail" width="100" style="object-fit:cover; height:100px;">' +
                                 '</div>'
                             );
                         }
@@ -477,8 +483,8 @@
                 // Parse harga sebelum submit
                 let harga = parseRupiah($('#harga').val());
                 $('#harga').val(harga);
-                
-                // Jika field kategori disembunyikan (untuk bisnis Spa & Kecantikan), 
+
+                // Jika field kategori disembunyikan (untuk bisnis Spa & Kecantikan),
                 // pastikan tidak diperlukan validasi
                 if ($('#category-field').is(':hidden')) {
                     $('#categories_services_id').removeAttr('required');

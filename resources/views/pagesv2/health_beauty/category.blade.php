@@ -18,14 +18,15 @@
                         <a href="{{ route('health_beauty.detail', ['lokasi' => $p->clinic->kota->city_name ?? '-', 'clinic' => $p->name, 'id' => $p->clinic_id]) }}"
                             class="text-decoration-none text-dark   ">
                             <div class="card" style="box-shadow: 0 10px 15px gray">
-                                <img src="https://images.unsplash.com/photo-1461988320302-91bde64fc8e4?ixid=2yJhcHBfaWQiOjEyMDd9&&fm=jpg&w=400&fit=max"
-                                    class="card-img-top" alt="...">
+                                <div style="height: 180px; overflow: hidden;">
+                                    <img src="{{ $p->image ? asset('storage/' . $p->image->image) : asset('images/placeholder.jpg') }}"
+                                        class="card-img-top w-100" style="object-fit: cover; height: 100%;" alt="{{ $p->name }}">
+                                </div>
                                 <div class="card-body">
                                     <div class="card-content">
                                         <div class="w-100 d-flex flex-row align-items-center">
                                             <span class="fa-solid fa-location-dot me-2"></span>
                                             <span>{{ $p->clinic->kota->city_name ?? '-' }}</span>
-                                            <span style="margin-left:auto;" class="fa-regular fa-bookmark"></span>
                                         </div>
 
                                         <h3 class="mt-3 text-dark">{{ ucwords($p->name) }}</h3>
