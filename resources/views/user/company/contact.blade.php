@@ -17,14 +17,14 @@
                             <div class="h1 text-center mb-5">Kontak Kami</div>
                             <div class="row">
                                 <div class="col-12 col-md-3 mb-5">
-                                    <a target="_blank" href="tel:(0542)8795954">
+                                    <a target="_blank" href="tel:(+62) 822-7756-6690">
                                     <div class="card" style="background: #C02425">
                                             <div class="d-flex align-items-center justify-content-center m-5 text-white">
                                                 <i class="fa-solid fa-phone text-white fs-1" style="margin-right: 16px;"></i>
                                                 <div class="bungkus">
                                                     <div class="text ">Phone</div>
                                                     <div class="text-white fw-bold h4">
-                                                    (0542)8795954
+                                                    (+62) 822-7756-6690
                                                     </div>
                                                 </div>
                                             </div>
