@@ -3,10 +3,17 @@
         'colokan usb' => ['type' => 'image', 'src' => asset('images/icon/usb.png')],
         'full ac' => ['type' => 'image', 'src' => asset('images/icon/ac.png')],
         'kursi recliner' => ['type' => 'image', 'src' => asset('images/icon/chair.png')],
-        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-dark'],
-        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-dark'],
-        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-dark'],
+        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-muted-custom'],
+        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-muted-custom'],
+        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-muted-custom'],
+        'tv led' => ['type' => 'fa', 'class' => 'fa-solid fa-tv text-muted-custom'],
+        'toilet' => ['type' => 'fa', 'class' => 'fa-solid fa-toilet text-muted-custom'],
+        'wi-fi' => ['type' => 'fa', 'class' => 'fa-solid fa-wifi text-muted-custom'],
+        'selimut dan bantal' => ['type' => 'fa', 'class' => 'fa-solid fa-bed text-muted-custom'],
+        'bagasi bawah' => ['type' => 'fa', 'class' => 'fa-solid fa-suitcase-rolling text-muted-custom'],
+        'rak bagasi atas' => ['type' => 'fa', 'class' => 'fa-solid fa-suitcase text-muted-custom'],
     ];
+
 
     // Small inline function to render the HTML
     $renderIcon = function ($name) use ($facilityIcons) {
@@ -47,6 +54,26 @@
                     aria-controls="tnc_tab_pane" aria-selected="false">Syarat & Ketentuan</a>
             </li> --}}
         </ul>
+
+        @if($is_pulang_pergi == 1)
+            <div class="alert alert-info rounded-4 mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    @if($departure->from->city_name == $kota_tujuan && $departure->to->city_name == $kota_awal)
+                        <i class="fa-solid fa-arrow-right-arrow-left me-2 text-success fs-4"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">Tiket Kepulangan</h4>
+                            <p class="mb-0">Anda sedang memilih tiket untuk kepulangan dari <strong>{{ $kota_tujuan }}</strong> ke <strong>{{ $kota_awal }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pulang)->format('d M Y') }}</strong></p>
+                        </div>
+                    @else
+                        <i class="fa-solid fa-arrow-right me-2 text-primary fs-4"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">Tiket Kepergian</h4>
+                            <p class="mb-0">Anda sedang memilih tiket untuk kepergian dari <strong>{{ $kota_awal }}</strong> ke <strong>{{ $kota_tujuan }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <div class="tab-content" id="busDetailsTabContent">
             <div class="tab-pane fade show active" id="details_tab_pane" role="tabpanel" aria-labelledby="details-tab">

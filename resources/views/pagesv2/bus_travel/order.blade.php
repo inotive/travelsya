@@ -63,7 +63,11 @@
                                 <input type="hidden" name="ticket_pergi_id" value="{{ $departure->id }}">
                                 <input type="hidden" name="point" value="0">
                                 <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                                <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
                                 <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                                @if(request()->has('ticket_pulang_id'))
+                                    <input type="hidden" name="ticket_pulang_id" value="{{ request()->get('ticket_pulang_id') }}">
+                                @endif
                             </div>
                         </div>
                     </div>

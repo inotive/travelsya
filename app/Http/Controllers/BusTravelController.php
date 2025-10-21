@@ -937,6 +937,11 @@ HTML;
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
         $data['user'] = $user;
 
+        // For round-trip, get return ticket if available
+        if ($param['is_pulang_pergi'] == 1 && !empty($param['ticket_pulang_id'])) {
+            $data['return_departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['ticket_pulang_id']);
+        }
+
         $service = Service::where('name', 'bus-travel')->first();
 
         $data['service_id'] = $service->id;
