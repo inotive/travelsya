@@ -183,6 +183,10 @@ class ClinicHasPackageController extends Controller
     // Mengupdate data klinik
     public function update(Request $request, $id)
     {
+        // Log untuk debugging - melihat apakah fungsi dipanggil dan data yang diterima
+        \Log::info('ClinicHasPackageController@update called with id: ' . $id);
+        \Log::info('Request data: ', $request->all());
+        
         // Validasi clinic_id terlebih dahulu
         $request->validate([
             'clinic_id' => 'nullable|integer|exists:clinics,id',
@@ -207,28 +211,36 @@ class ClinicHasPackageController extends Controller
         // Validasi input
         $rules = [
             'name' => 'required|string|max:255',
-            'clinic_id' => 'nullable', // Memastikan klinik yang dipilih ada
+            'clinic_id' => 'nullable|integer|exists:clinics,id',
+            'categories_services_id' => 'nullable|integer|exists:categories_services,id',
+            'specialist_id' => 'nullable|integer|exists:specialists,id',
             'rules' => 'required|string',
             'duration_type' => 'required|in:menit,jam', // Pastikan nilai duration_type valid
-            'duration' => 'nullable',
-            // 'unit_price' => 'nullable|string',
-            'expiry_date' => 'nullable|integer', // Validasi agar tanggal tidak lebih dari hari ini
+            'duration' => 'required|integer|min:1',
+            'unit_price' => 'nullable',
+            'expiry_date' => 'required|integer|min:1', // Validasi agar tanggal tidak lebih dari hari ini
             'description' => 'required|string',
             'price' => 'required', // Validasi harga minimal 0
-            'is_active' => 'required',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Validasi untuk multiple images
+            'is_active' => 'required|boolean',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Validasi untuk multiple images
+            'main_image' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Validasi untuk main image
+            'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:5120', // Validasi untuk additional images
             'delete_images.*' => 'nullable|integer|exists:clinic_package_images,id', // Validasi untuk delete images
+            'deleted_images.*' => 'nullable|integer|exists:clinic_package_images,id', // Validasi untuk deleted images
         ];
         
         // Tambahkan rules untuk categories_services_id tergantung kategorinya
         if ($categoriesRequired) {
-            $rules['categories_services_id'] = 'required';
+            $rules['categories_services_id'] = 'required|integer|exists:categories_services,id';
         } else {
             $rules['categories_services_id'] = 'nullable';
         }
         
         $request->validate($rules);
 
+        // Log bahwa validasi berhasil
+        \Log::info('Validation passed, proceeding with update');
+        
         DB::beginTransaction();
         try {
 
@@ -275,6 +287,7 @@ class ClinicHasPackageController extends Controller
                 'name' => $request->input('name'),
                 'categories_services_id' => $categoriesServicesId,
                 'clinic_id' => $request->input('clinic_id'),
+                'specialist_id' => $request->input('specialist_id', 1), // Gunakan default 1 jika tidak disediakan
                 'rules' => $request->input('rules'),
                 'duration_type' => $request->input('duration_type'),
                 'duration' => $request->input('duration'),
@@ -310,27 +323,92 @@ class ClinicHasPackageController extends Controller
                 }
             }
 
-            // Upload gambar baru
+            // Handle deleted existing images (from the edit form)
+            if ($request->has('deleted_images')) {
+                $imagesToDelete = ClinicPackageImages::whereIn('id', $request->deleted_images)
+                    ->where('clinic_package_id', $clinic->id)
+                    ->get();
+
+                $mainImageDeleted = false;
+                foreach ($imagesToDelete as $image) {
+                    if ($image->main == 1) {
+                        $mainImageDeleted = true;
+                    }
+                    Storage::delete($image->image);
+                    $image->delete();
+                }
+
+                // Jika gambar utama dihapus dan masih ada gambar lain, tentukan gambar utama baru
+                if ($mainImageDeleted) {
+                    $remainingImage = ClinicPackageImages::where('clinic_package_id', $clinic->id)->first();
+                    if ($remainingImage) {
+                        $remainingImage->update(['main' => 1]);
+                    }
+                }
+            }
+
+            // Handle main image update
+            if ($request->hasFile('main_image')) {
+                // Hapus gambar utama lama jika ada
+                $mainImage = ClinicPackageImages::where('clinic_package_id', $clinic->id)
+                    ->where('main', 1)
+                    ->first();
+                
+                if ($mainImage) {
+                    Storage::delete($mainImage->image);
+                    $mainImage->delete();
+                }
+                
+                // Upload gambar utama baru
+                $mainImageFile = $request->file('main_image');
+                $mainImagePath = $mainImageFile->store('images/clinic_package_images', 'public');
+                
+                ClinicPackageImages::create([
+                    'clinic_package_id' => $clinic->id,
+                    'image' => $mainImagePath,
+                    'main' => 1
+                ]);
+            }
+
+            // Upload gambar tambahan baru
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $key => $image) {
                     $imagePath = $image->store('images/clinic_package_images', 'public');
 
-                    // Set the first image as main image if no main image exists
-                    $clinicId = $clinic->id ?? null; // Get the ID explicitly with null fallback
-                    $isMain = 0; // Default bukan gambar utama
-
-                    // Cek apakah sudah ada gambar utama (termasuk yang baru diupload)
-                    $hasMainImage = ClinicPackageImages::where('clinic_package_id', $clinicId)
+                    // Set the first image as main image if no main image exists and no main_image was provided
+                    $hasMainImage = ClinicPackageImages::where('clinic_package_id', $clinic->id)
                         ->where('main', 1)
                         ->exists();
 
-                    // Jika belum ada gambar utama, set gambar pertama sebagai utama
-                    if (!$hasMainImage && $key === 0) {
+                    // Jika belum ada gambar utama dan tidak ada file main_image yang diupload, set gambar pertama sebagai utama
+                    $isMain = 0;
+                    if (!$hasMainImage && !$request->hasFile('main_image') && $key === 0) {
                         $isMain = 1;
                     }
 
                     ClinicPackageImages::create([
-                        'clinic_package_id' => $clinicId,
+                        'clinic_package_id' => $clinic->id,
+                        'image' => $imagePath,
+                        'main' => $isMain
+                    ]);
+                }
+            }
+            
+            // Handle additional images (newly added from edit form)
+            if ($request->hasFile('additional_images')) {
+                foreach ($request->file('additional_images') as $image) {
+                    $imagePath = $image->store('images/clinic_package_images', 'public');
+
+                    // Cek apakah sudah ada gambar utama
+                    $hasMainImage = ClinicPackageImages::where('clinic_package_id', $clinic->id)
+                        ->where('main', 1)
+                        ->exists();
+
+                    // Set sebagai gambar utama hanya jika ini adalah satu-satunya gambar dan belum ada gambar utama
+                    $isMain = $hasMainImage ? 0 : 1;
+
+                    ClinicPackageImages::create([
+                        'clinic_package_id' => $clinic->id,
                         'image' => $imagePath,
                         'main' => $isMain
                     ]);
@@ -343,9 +421,13 @@ class ClinicHasPackageController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
+            // Log error untuk debugging
+            \Log::error('Error updating clinic: ' . $e->getMessage() . ' in file ' . $e->getFile() . ' on line ' . $e->getLine());
+            \Log::error('Error trace: ' . $e->getTraceAsString());
+
             return redirect()
                 ->back()
-                ->withErrors(['error' => 'Gagal mengubah klinik.'])
+                ->withErrors(['error' => 'Gagal mengubah klinik. Error: ' . $e->getMessage()])
                 ->withInput();
         }
     }

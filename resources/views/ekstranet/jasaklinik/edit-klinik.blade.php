@@ -91,14 +91,24 @@
                         </div>
 
                         <!-- Masa Berlaku -->
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label for="expiry_date" class="form-label required fs-6 fw-semibold mb-2">Masa Berlaku (hari)</label>
                             <input type="number" class="form-control" id="expiry_date" name="expiry_date"
                                 value="{{ old('expiry_date', $clinic->expiry_date ?? '') }}" required>
                         </div>
 
-                        <!-- Specialist ID (hidden) -->
-                        <input type="hidden" name="specialist_id" value="1">
+                        <!-- Spesialis -->
+                        <div class="col-md-3">
+                            <label for="specialist_id" class="form-label required fs-6 fw-semibold mb-2">Spesialis</label>
+                            <select class="form-control form-control-lg" id="specialist_id" name="specialist_id" required>
+                                @foreach ($spesialis as $specialist)
+                                    <option value="{{ $specialist->id }}"
+                                        {{ old('specialist_id', $clinic->specialist_id ?? 1) == $specialist->id ? 'selected' : '' }}>
+                                        {{ $specialist->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
                         <!-- Multiple Images -->
                         <div class="col-md-6">
@@ -268,18 +278,26 @@
     }
 
     $(document).ready(function() {
-        // Format harga saat halaman dimuat
+        // Format harga saat halaman dimuat jika belum diformat
         let currentPrice = $('#price').val();
-        if (currentPrice && /^\d+$/.test(currentPrice.trim())) {
-            let numericValue = parseInt(currentPrice.replace(/[^\d]/g, ''), 10);
-            $('#price').val(formatRupiah(numericValue));
+        if (currentPrice && currentPrice.trim() !== '') {
+            // Jika belum diformat (hanya angka), maka format
+            if (/^\d+$/.test(currentPrice.trim())) {
+                let numericValue = parseInt(currentPrice.replace(/[^\d]/g, ''), 10);
+                $('#price').val(formatRupiah(numericValue));
+            }
+            // Jika sudah diformat, biarkan apa adanya
         }
         
-        // Format unit price saat halaman dimuat
+        // Format unit price saat halaman dimuat jika belum diformat
         let currentUnitPrice = $('#unit_price').val();
-        if (currentUnitPrice && /^\d+$/.test(currentUnitPrice.trim())) {
-            let numericValue = parseInt(currentUnitPrice.replace(/[^\d]/g, ''), 10);
-            $('#unit_price').val(formatRupiah(numericValue));
+        if (currentUnitPrice && currentUnitPrice.trim() !== '') {
+            // Jika belum diformat (hanya angka), maka format
+            if (/^\d+$/.test(currentUnitPrice.trim())) {
+                let numericValue = parseInt(currentUnitPrice.replace(/[^\d]/g, ''), 10);
+                $('#unit_price').val(formatRupiah(numericValue));
+            }
+            // Jika sudah diformat, biarkan apa adanya
         }
         
         // Format harga saat input
@@ -310,19 +328,7 @@
             $(this).val(formatted);
         });
         
-        // Format harga saat input (from rekreasi)
-        $('#price').on('input', function () {
-            let input = $(this).val();
-            let formatted = formatRupiah(input, 'Rp. ');
-            $(this).val(formatted);
-        });
-        
-        // Format harga saat input (from rekreasi)
-        $('#price').on('input', function () {
-            let input = $(this).val();
-            let formatted = formatRupiah(input, 'Rp. ');
-            $(this).val(formatted);
-        });
+        // Hapus duplikasi event handler (sudah ditangani sebelumnya)
         
         // Handle submit with confirmation dialog
         document.getElementById('kt_modal_new_target_submit').addEventListener('click', function(event) {
@@ -347,6 +353,12 @@
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
+                    // Jika field kategori disembunyikan (untuk bisnis Spa & Kecantikan), 
+                    // pastikan tidak diperlukan validasi
+                    if ($('#category-field').is(':hidden')) {
+                        $('#categories_services_id').removeAttr('required');
+                    }
+                    
                     // Format the price value before submitting
                     let hargaInput = document.getElementById('price');
                     if (hargaInput) {
@@ -381,60 +393,74 @@
             });
         });
 
-        // Inisialisasi Select2 untuk clinic_id (jika ada)
-        @if (count($clinics) > 1)
-            $('#clinic_id').select2({
-                placeholder: "Pilih klinik...",
-                allowClear: true
-            }).on('change', function() {
-                let selectedOption = $(this).find('option:selected');
-                let businessCategory = selectedOption.data('category');
-                
-                // Check if business category is Spa & Kecantikan (adjust the condition as needed)
-                if (businessCategory && (businessCategory.toLowerCase().includes('spa') || businessCategory.toLowerCase().includes('kecantikan'))) {
-                    // Hide category field for Spa & Kecantikan business
-                    $('#category-field').hide();
-                    // Make categories_services_id field not required
-                    $('#categories_services_id').removeAttr('required');
-                    // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
-                    $('#categories_services_id').val(''); // Clear any existing selection
-                } else {
-                    // Show category field for other businesses
-                    $('#category-field').show();
-                    // Make categories_services_id field required
-                    $('#categories_services_id').attr('required', 'required');
-                    
-                    if (businessCategory) {
-                        loadCategoriesByBusinessCategory(businessCategory);
-                    } else {
-                        loadCategories();
-                    }
-                }
-            });
-        @endif
+
 
         // Load categories saat halaman dimuat
         loadCategories();
         
         // On page load, check the initial clinic category and hide/show category field accordingly
         $(document).ready(function() {
-            let initialClinicOption = $('#clinic_id option:selected');
-            let initialBusinessCategory = initialClinicOption.data('category');
-            
-            // Check if business category is Spa & Kecantikan (adjust the condition as needed)
-            if (initialBusinessCategory && (initialBusinessCategory.toLowerCase().includes('spa') || initialBusinessCategory.toLowerCase().includes('kecantikan'))) {
-                // Hide category field for Spa & Kecantikan business
-                $('#category-field').hide();
-                // Make categories_services_id field not required
-                $('#categories_services_id').removeAttr('required');
-                // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
-                $('#categories_services_id').val(''); // Clear any existing selection
-            } else {
-                // Show category field for other businesses
-                $('#category-field').show();
-                // Make categories_services_id field required
-                $('#categories_services_id').attr('required', 'required');
+            // Tambahkan fungsi untuk memastikan Select2 siap sebelum inisialisasi
+            function initSelect2WhenReady() {
+                if (typeof $().select2 === 'function') {
+                    // Inisialisasi Select2 untuk clinic_id (jika ada)
+                    @if (count($clinics) > 1)
+                        $('#clinic_id').select2({
+                            placeholder: "Pilih klinik...",
+                            allowClear: true
+                        }).on('change', function() {
+                            let selectedOption = $(this).find('option:selected');
+                            let businessCategory = selectedOption.data('category');
+                            
+                            // Check if business category is Spa & Kecantikan (adjust the condition as needed)
+                            if (businessCategory && (businessCategory.toLowerCase().includes('spa') || businessCategory.toLowerCase().includes('kecantikan'))) {
+                                // Hide category field for Spa & Kecantikan business
+                                $('#category-field').hide();
+                                // Make categories_services_id field not required
+                                $('#categories_services_id').removeAttr('required');
+                                // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                                $('#categories_services_id').val(''); // Clear any existing selection
+                            } else {
+                                // Show category field for other businesses
+                                $('#category-field').show();
+                                // Make categories_services_id field required
+                                $('#categories_services_id').attr('required', 'required');
+                                
+                                if (businessCategory) {
+                                    loadCategoriesByBusinessCategory(businessCategory);
+                                } else {
+                                    loadCategories();
+                                }
+                            }
+                        });
+                    @endif
+                    
+                    // Sekarang proses logika awal setelah Select2 siap
+                    let initialClinicOption = $('#clinic_id option:selected');
+                    let initialBusinessCategory = initialClinicOption.data('category');
+                    
+                    // Check if business category is Spa & Kecantikan (adjust the condition as needed)
+                    if (initialBusinessCategory && (initialBusinessCategory.toLowerCase().includes('spa') || initialBusinessCategory.toLowerCase().includes('kecantikan'))) {
+                        // Hide category field for Spa & Kecantikan business
+                        $('#category-field').hide();
+                        // Make categories_services_id field not required
+                        $('#categories_services_id').removeAttr('required');
+                        // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                        $('#categories_services_id').val(''); // Clear any existing selection
+                    } else {
+                        // Show category field for other businesses
+                        $('#category-field').show();
+                        // Make categories_services_id field required
+                        $('#categories_services_id').attr('required', 'required');
+                    }
+                } else {
+                    // Jika Select2 belum siap, tunggu 100ms lagi
+                    setTimeout(initSelect2WhenReady, 100);
+                }
             }
+            
+            // Panggil fungsi inisialisasi Select2
+            initSelect2WhenReady();
         });
     });
 
@@ -567,7 +593,7 @@
     $('#add-more-additional-images').click(function() {
         $('#additional-images-container').append(`
             <div class="input-group mb-3">
-                <input type="file" class="form-control" name="additional_images[]" accept="image/*" required>
+                <input type="file" class="form-control" name="additional_images[]" accept="image/*">
                 <button type="button" class="btn btn-outline-danger remove-additional-image">Hapus</button>
             </div>
         `);
@@ -602,16 +628,8 @@
         });
     });
     
-    // Validasi form sebelum submit
-    $('#clinic-form').on('submit', function() {
-        // Jika field kategori disembunyikan (untuk bisnis Spa & Kecantikan), 
-        // pastikan tidak diperlukan validasi
-        if ($('#category-field').is(':hidden')) {
-            $('#categories_services_id').removeAttr('required');
-        }
-    });
+
 </script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @endpush
