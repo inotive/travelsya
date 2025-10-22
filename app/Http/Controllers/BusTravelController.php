@@ -930,17 +930,24 @@ HTML;
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
         $data['is_order'] = 1;
-        for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
-            $data['kursi_penumpang_' . $i] = $param['kursi_penumpang_' . $i];
+
+        if ($param['is_pulang_pergi'] == 1) {
+            for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
+                $data['kursi_pergi_' . $i] = $param['kursi_penumpang_' . $i];
+                $data['kursi_pulang_' . $i] = $param['kursi_pulang_' . $i];
+            }
+            if (!empty($param['ticket_pulang_id'])) {
+                $data['pulang'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['ticket_pulang_id']);
+            }
+        } else {
+            for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
+                $data['kursi_penumpang_' . $i] = $param['kursi_penumpang_' . $i];
+            }
         }
+
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
         $data['user'] = $user;
-
-        // For round-trip, get return ticket if available
-        if ($param['is_pulang_pergi'] == 1 && !empty($param['ticket_pulang_id'])) {
-            $data['return_departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['ticket_pulang_id']);
-        }
 
         $service = Service::where('name', 'bus-travel')->first();
 
@@ -954,8 +961,10 @@ HTML;
 
     public function request_transaction(Request $request)
     {
-        // Fix the loop condition - should be <= not <
         for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
+            $kursi_pergi_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pergi_$i"} : $request->{"kursi_penumpang_$i"};
+            $kursi_pulang_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pulang_$i"} : null;
+
             $data_kursi = [
                 'id_costumer' => auth()->user()->id,
                 'id_departure' => $request->ticket_pergi_id,
@@ -963,8 +972,8 @@ HTML;
                 'is_pulang_pergi' => $request->is_pulang_pergi,
                 'date_pergi' => $request->date_pergi,
                 'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
-                'kursi_pergi' => $request->{"kursi_penumpang_$i"} ?? null,
-                'kursi_pulang' => '',
+                'kursi_pergi' => $kursi_pergi_val,
+                'kursi_pulang' => $kursi_pulang_val,
             ];
 
             BusCostumerHasChair::create($data_kursi);

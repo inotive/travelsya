@@ -1,6 +1,23 @@
 @php
-    $departureDateTime = \Carbon\Carbon::parse($date_pergi . ' ' . $departure->departure_time);
-    $arrivalDateTime = $departureDateTime->copy()->addHours($departure->duration);
+    // SAFEGUARD: Ensure departure object exists before proceeding.
+    if (!isset($departure) || !$departure) {
+        // In a real app, you might abort(404, 'Departure not found');
+    } else {
+        $departureDateTime = \Carbon\Carbon::parse($date_pergi . ' ' . $departure->departure_time);
+        $arrivalDateTime = $departureDateTime->copy()->addHours($departure->duration);
+    }
+
+    // FOR ROUND TRIP
+    if(isset($pulang) && $pulang) {
+        $pulangDateTime = \Carbon\Carbon::parse($date_pulang . ' ' . $pulang->departure_time);
+        $pulangArrivalDateTime = $pulangDateTime->copy()->addHours($pulang->duration);
+    }
+
+    // CALCULATE TOTAL PRICE
+    $totalPrice = (isset($departure) ? $departure->price : 0) * $jumlah_penumpang;
+    if (isset($pulang)) {
+        $totalPrice += $pulang->price * $jumlah_penumpang;
+    }
 @endphp
 
 @extends('layouts.app_v2')
@@ -9,6 +26,20 @@
 <div class="container mb-5">
     <section class="special-deals mt-5">
 
+        {{-- ERROR HANDLING BLOCK --}}
+        @if (!isset($departure) || !$departure)
+            <div class="row" style="padding-top: 50px;">
+                <div class="col-12">
+                    <div class="alert alert-danger text-center">
+                        <h4 class="alert-heading">Error Memuat Halaman</h4>
+                        <p>Data keberangkatan tidak dapat ditemukan. Ini mungkin terjadi karena ID tiket tidak valid atau ada masalah saat mengambil data.</p>
+                        <p>Silakan coba lagi dari halaman pencarian.</p>
+                        <a href="{{ route('bus_travel.index') }}" class="btn btn-danger mt-3">Kembali ke Pencarian</a>
+                    </div>
+                </div>
+            </div>
+        @else
+        {{-- MAIN CONTENT --}}
         <div class="row" style="padding-top: 50px;">
             <div class="col-8">
                 <div class="alert alert-soft-coral mb-25px" role="alert">
@@ -57,22 +88,34 @@
                                     <input type="email" name="email_pemesan" id="email_pemesan" class="form-control"
                                         value="{{ $user->email }}" placeholder="Masukan Email">
                                 </div>
+                                
+                                {{-- Hidden inputs for transaction --}}
                                 <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
                                 <input type="hidden" name="service" value="bus-travel">
                                 <input type="hidden" name="payment" value="xendit">
-                                <input type="hidden" name="ticket_pergi_id" value="{{ $departure->id }}">
                                 <input type="hidden" name="point" value="0">
-                                <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                                <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
                                 <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                                @if(request()->has('ticket_pulang_id'))
-                                    <input type="hidden" name="ticket_pulang_id" value="{{ request()->get('ticket_pulang_id') }}">
+                                
+                                <input type="hidden" name="ticket_pergi_id" value="{{ $departure->id }}">
+                                <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+
+                                @if($is_pulang_pergi == 1 && isset($pulang))
+                                    <input type="hidden" name="ticket_pulang_id" value="{{ $pulang->id }}">
+                                    <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
+                                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                                        <input type="hidden" name="kursi_pergi_{{ $i }}" value="{{ ${'kursi_pergi_' . $i} }}">
+                                        <input type="hidden" name="kursi_pulang_{{ $i }}" value="{{ ${'kursi_pulang_' . $i} }}">
+                                    @endfor
+                                @else
+                                    <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
+                                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                                        <input type="hidden" name="kursi_penumpang_{{ $i }}" value="{{ ${'kursi_penumpang_' . $i} }}">
+                                    @endfor
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    <!-- Additional Safety -->
                     <div class="section-title" style="margin-bottom: 25px;">
                         <div style="display: flex; align-items: center;">
                             <h2 class="text-dark" style="position: relative; top: 3px;">Detail Penumpang</h2>
@@ -82,7 +125,8 @@
                         </div>
                     </div>
 
-                    @for ($i = 1; $i <= $jumlah_penumpang; $i++) <div class="mb-35px">
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                    <div class="mb-35px">
                         <div class="card rounded-4 border-1 shadow">
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -100,31 +144,37 @@
                                     </div>
                                     @endif
                                 </div>
-                                <div
-                                    class="mb-3 bg-snow-pink text-dark p-2 rounded d-flex flex-row align-items-center px-5">
+                                
+                                {{-- Seat Info Pergi --}}
+                                <div class="mb-3 bg-snow-pink text-dark p-2 rounded d-flex flex-row align-items-center px-5">
                                     <img src="{{ asset('images/icon/chair.png') }}" width="25px" height="25px" alt="">
                                     <div class="d-flex flex-column ms-5">
-                                        <Span>{{ $departure->busTravel->busTravel->business_name }}</Span>
-                                        <Span id="baris_kursi_penumpang_{{ $i }}">Kursi {{ ${"kursi_penumpang_$i"}
-                                            }}</Span>
+                                        <Span>{{ $departure->busTravel->busTravel->business_name }} (Pergi)</Span>
+                                        <Span id="baris_kursi_penumpang_{{ $i }}">Kursi {{ $is_pulang_pergi == 1 ? ${'kursi_pergi_' . $i} : ${'kursi_penumpang_' . $i} }}</Span>
                                     </div>
-                                    <a href="javascript:" onclick="setChairForOrder()"
-                                        class="text-decoration-none ms-sm-auto">
-                                        <span class="text-danger fw-bold">Ubah Kursi</span>
-                                    </a>
                                 </div>
-                                <div id="data_pengunjung">
+
+                                {{-- Seat Info Pulang (for round trip) --}}
+                                @if ($is_pulang_pergi == 1 && isset($pulang))
+                                <div class="mb-3 bg-light-success-alpha text-dark p-2 rounded d-flex flex-row align-items-center px-5">
+                                    <img src="{{ asset('images/icon/chair.png') }}" width="25px" height="25px" alt="">
+                                    <div class="d-flex flex-column ms-5">
+                                        <Span>{{ $pulang->busTravel->busTravel->business_name }} (Pulang)</Span>
+                                        <Span>Kursi {{ ${'kursi_pulang_' . $i} }}</Span>
+                                    </div>
+                                </div>
+                                @endif
+
+                                <div id="data_pengunjung_{{ $i }}">
                                     <div class="d-flex flex-row align-items-center mb-3">
-                                        <input type="hidden" value={{ ${"kursi_penumpang_$i"} }}
-                                            name="kursi_penumpang_{{ $i }}" id="kursi_penumpang_{{ $i }}">
                                         <input type="radio" name="customer_call_{{ $i }}" class=" accent-danger"
-                                            id="radio_tuan" value="tuan" checked required>
+                                            id="radio_tuan_{{ $i }}" value="tuan" checked required>
                                         <span class="ms-3">Tuan</span>
                                         <input type="radio" name="customer_call_{{ $i }}" class="ms-5 accent-danger"
-                                            id="radio_tuan" value="nyonya" required>
+                                            id="radio_nyonya_{{ $i }}" value="nyonya" required>
                                         <span class="ms-3">Nyonya</span>
                                         <input type="radio" name="customer_call_{{ $i }}" class="ms-5 accent-danger"
-                                            id="radio_nona" value="nona" required>
+                                            id="radio_nona_{{ $i }}" value="nona" required>
                                         <span class="ms-3">Nona</span>
                                     </div>
                                     <div class="mb-3">
@@ -150,13 +200,13 @@
                                 @if ($i === 1)
                                 <div id="data_disabled_pengunjung" style="display: none;">
                                     <div class="d-flex flex-row align-items-center mb-3">
-                                        <input type="radio" name="sapa_disabled_pengunjung" id="radio_tuan" value="tuan"
+                                        <input type="radio" name="sapa_disabled_pengunjung" id="radio_tuan_disabled" value="tuan"
                                             disabled>
                                         <span class="ms-3">Tuan</span>
-                                        <input type="radio" name="sapa_disabled_pengunjung" class="ms-5" id="radio_tuan"
+                                        <input type="radio" name="sapa_disabled_pengunjung" class="ms-5" id="radio_nyonya_disabled"
                                             value="nyonya" disabled>
                                         <span class="ms-3">Nyonya</span>
-                                        <input type="radio" name="sapa_disabled_pengunjung" class="ms-5" id="radio_nona"
+                                        <input type="radio" name="sapa_disabled_pengunjung" class="ms-5" id="radio_nona_disabled"
                                             value="nona" disabled>
                                         <span class="ms-3">Nona</span>
                                     </div>
@@ -181,147 +231,122 @@
                                 @endif
                             </div>
                         </div>
-            </div>
-            @endfor
-
-            <!-- End Detail Pengunjung -->
-
-            <div class="mb-35px">
-                <input type="checkbox" name="setuju_syarat" id="setuju_syarat" class="accent-danger">
-                <span>saya menyetujui <span class="text-danger fw-bold">Syarat & Kententuan</span> di
-                    Travelsya</span>
-            </div>
-
-            <div class="mb-35px">
-                <div class="card rounded-4 border-1 shadow">
-                    <div class="card-header d-flex flex-row align-items-center">
-                        <h2 class="fw-bold">Total Pembayaran</h2>
-                        <h2 class="fw-bold">IDR {{ number_format($departure->price * $jumlah_penumpang) }}
-                        </h2>
                     </div>
-                    <div class="card-body d-flex flex-row align-items-center">
-                        <span class="fa-solid fa-gem fs-3 text-danger"></span>
-                        <span class="ms-3">Kamu akan mendapatkan
-                            {{ \App\Helpers\General::countPoint($departure->price * $jumlah_penumpang, $service_id) }}
-                            poin</span>
-                        <button class="text-light btn btn-danger ms-sm-auto" id="lanjut_pesan_button" disabled>Lanjutkan
-                            Pemesanan</button>
-                    </div>
-                </div>
-            </div>
-            </form>
-        </div>
+                    @endfor
 
-        <div class="col-4">
-            <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
-                <div class="card-body p-5">
-
-                    <!-- Header -->
-                    <div class="d-flex flex-row align-items-center">
-                        <span class="fw-bold p-2 rounded-1 text-wrap bg-snow-pink text-danger">Pergi</span>
-                        <span class="ms-2">{{ $departureDateTime->format('D, d M Y') }} . {{ $departureDateTime->format('H:i') }} <strong>({{ $departure->duration }} jam)</strong></span>
+                    <div class="mb-35px">
+                        <input type="checkbox" name="setuju_syarat" id="setuju_syarat" class="accent-danger">
+                        <span>saya menyetujui <span class="text-danger fw-bold">Syarat & Kententuan</span> di
+                            Travelsya</span>
                     </div>
 
-                    <hr class="opacity-25 my-5">
-
-                    <!-- Routes / Info -->
-                    <div class="d-flex flex-column gap-2">
-
-                        <!-- City names -->
-                        <div class="row g-2 align-items-start">
-                            <!-- Left column -->
-                            <div class="col">
-                                <div class="fw-semibold text-wrap">
-                                    {{ $departure->from->city_name ?? 'Invalid from' }}
-                                </div>
-                                <div class="text-wrap">
-                                    {{ $departure->titik_naik ?? 'Invalid from' }}
-                                </div>
-                                <div class="text-muted">
-                                    {{ $departureDateTime->format('H:m') }}
-                                </div>
+                    <div class="mb-35px">
+                        <div class="card rounded-4 border-1 shadow">
+                            <div class="card-header d-flex flex-row align-items-center">
+                                <h2 class="fw-bold">Total Pembayaran</h2>
+                                <h2 class="fw-bold text-danger ms-sm-auto">IDR {{ number_format($totalPrice) }}
+                                </h2>
                             </div>
-
-                            <!-- Arrow column -->
-                            <div class="col-auto text-center" style="min-width:30px;">
-                                <i class="fa-solid fa-arrow-right"></i>
+                            <div class="card-body d-flex flex-row align-items-center">
+                                <span class="fa-solid fa-gem fs-3 text-danger"></span>
+                                <span class="ms-3">Kamu akan mendapatkan
+                                    {{ \App\Helpers\General::countPoint($totalPrice, $service_id) }}
+                                    poin</span>
+                                <button class="text-light btn btn-danger ms-sm-auto" id="lanjut_pesan_button" disabled>Lanjutkan
+                                    Pemesanan</button>
                             </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
-                            <!-- Right column -->
-                            <div class="col">
-                                <div class="fw-semibold text-wrap">
-                                    {{ $departure->to->city_name ?? 'Invalid To' }}
+            <div class="col-4">
+                {{-- Departure Ticket --}}
+                <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
+                    <div class="card-body p-5">
+                        <div class="d-flex flex-row align-items-center">
+                            <span class="fw-bold p-2 rounded-1 text-wrap bg-snow-pink text-danger">Pergi</span>
+                            <span class="ms-2">{{ $departureDateTime->format('D, d M Y') }} . {{ $departureDateTime->format('H:i') }} <strong>({{ $departure->duration }} jam)</strong></span>
+                        </div>
+                        <hr class="opacity-25 my-5">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="row g-2 align-items-start">
+                                <div class="col">
+                                    <div class="fw-semibold text-wrap">{{ $departure->from->city_name ?? 'Invalid from' }}</div>
+                                    <div class="text-wrap">{{ $departure->titik_naik ?? 'Invalid from' }}</div>
+                                    <div class="text-muted">{{ $departureDateTime->format('H:m') }}</div>
                                 </div>
-                                <div class="text-wrap">
-                                    {{ $departure->titik_turun ?? 'Invalid To' }}
-                                </div>
-                                <div class="text-muted">
-                                    {{ $arrivalDateTime->format('H:m') }}
+                                <div class="col-auto text-center" style="min-width:30px;"><i class="fa-solid fa-arrow-right"></i></div>
+                                <div class="col">
+                                    <div class="fw-semibold text-wrap">{{ $departure->to->city_name ?? 'Invalid To' }}</div>
+                                    <div class="text-wrap">{{ $departure->titik_turun ?? 'Invalid To' }}</div>
+                                    <div class="text-muted">{{ $arrivalDateTime->format('H:m') }}</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
 
-                    <hr class="opacity-25 my-5">
+                {{-- Return Ticket (if applicable) --}}
+                @if ($is_pulang_pergi == 1 && isset($pulang))
+                <div class="card rounded-4 border-1 shadow fs-5 mb-35px">
+                    <div class="card-body p-5">
+                        <div class="d-flex flex-row align-items-center">
+                            <span class="fw-bold p-2 rounded-1 text-wrap bg-light-success text-success">Pulang</span>
+                            <span class="ms-2">{{ $pulangDateTime->format('D, d M Y') }} . {{ $pulangDateTime->format('H:i') }} <strong>({{ $pulang->duration }} jam)</strong></span>
+                        </div>
+                        <hr class="opacity-25 my-5">
+                        <div class="d-flex flex-column gap-2">
+                            <div class="row g-2 align-items-start">
+                                <div class="col">
+                                    <div class="fw-semibold text-wrap">{{ $pulang->from->city_name ?? 'Invalid from' }}</div>
+                                    <div class="text-wrap">{{ $pulang->titik_naik ?? 'Invalid from' }}</div>
+                                    <div class="text-muted">{{ $pulangDateTime->format('H:m') }}</div>
+                                </div>
+                                <div class="col-auto text-center" style="min-width:30px;"><i class="fa-solid fa-arrow-right"></i></div>
+                                <div class="col">
+                                    <div class="fw-semibold text-wrap">{{ $pulang->to->city_name ?? 'Invalid To' }}</div>
+                                    <div class="text-wrap">{{ $pulang->titik_turun ?? 'Invalid To' }}</div>
+                                    <div class="text-muted">{{ $pulangArrivalDateTime->format('H:m') }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
 
-                    <!-- Total -->
-                    <div class="d-flex flex-row align-items-center">
-                        <span>Total pembayaran</span>
-                        <span class="fs-3 ms-sm-auto fw-bold">
-                            IDR {{ number_format($departure->price * $jumlah_penumpang) }}
-                        </span>
+                {{-- Total Price --}}
+                <div class="card rounded-4 border-1 shadow fs-5">
+                    <div class="card-body p-5">
+                        <div class="d-flex flex-row align-items-center">
+                            <span>Total pembayaran</span>
+                            <span class="fs-3 ms-sm-auto fw-bold text-danger">
+                                IDR {{ number_format($totalPrice) }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
+        @endif
     </section>
 </div>
-
-
-@include('pagesv2.bus_travel.partials.components._modal_kursi')
-
-
 
 @push('js')
 <script>
     $(document).ready(function() {
-                $("#list_paket").on("click", "#decrease_paket", function() {
-                    let id = $(this).attr("id_paket");
-                    let val_paket = parseInt($("#val_paket_" + id).val());
-                    let decrease_val = val_paket;
-                    if (val_paket - 1 >= 0) {
-                        decrease_val = val_paket - 1;
-                    }
-                    $("#val_paket_" + id).val(decrease_val);
-                    $("#dummy_paket_" + id).text(decrease_val);
-                })
-
-
-                $("#list_paket").on("click", "#increase_paket", function() {
-                    let id = $(this).attr("id_paket");
-                    let val_paket = parseInt($("#val_paket_" + id).val());
-                    let increase_val = val_paket + 1;
-                    console.log(increase_val);
-
-                    $("#val_paket_" + id).val(increase_val);
-                    $("#dummy_paket_" + id).text(increase_val);
-                });
-
                 function syncField() {
                     if ($("#toggle_pengunjung").is(":checked")) {
                         $("#is_same_value").val(1);
-                        hidePengunjung();
+                        
+                        $('#data_pengunjung_1').hide();
+                        $('#data_disabled_pengunjung').show();
 
                         let sapa_pemesan = $("input[name='sapa_pemesan']:checked").val();
 
-                        if (sapa_pemesan) {
-                            $("input[name='customer_call']").prop('checked', false)
-                                .filter(`[value='${sapa_pemesan}']`).prop('checked', true);
-                            $("input[name='sapa_disabled_pengunjung']").prop('checked', false)
-                                .filter(`[value='${sapa_pemesan}']`).prop('checked', true);
-                        }
-
+                        $("input[name='sapa_disabled_pengunjung']").prop('checked', false)
+                            .filter(`[value='${sapa_pemesan}']`).prop('checked', true);
+                        
                         $("#customer_name_1").val($("#nama_pemesan").val());
                         $("#customer_phone_1").val($("#phone_pemesan").val());
                         $("#customer_email_1").val($("#email_pemesan").val());
@@ -331,24 +356,13 @@
                         $("#email_disabled_pengunjung").val($("#email_pemesan").val());
                     } else {
                         $("#is_same_value").val(0);
-                        showPengunjung();
+                        $('#data_pengunjung_1').show();
+                        $('#data_disabled_pengunjung').hide();
                     }
                 }
 
-                function showPengunjung() {
-                    $("#data_pengunjung").css("display", "block");
-                    $("#data_disabled_pengunjung").css("display", "none");
-                }
-
-                function hidePengunjung() {
-                    $("#data_pengunjung").css("display", "none");
-                    $("#data_disabled_pengunjung").css("display", "block");
-                }
-
                 $("#toggle_pengunjung").on("click", syncField);
-
                 $("input[name='sapa_pemesan']").on("click", syncField);
-
                 $("#nama_pemesan, #phone_pemesan, #email_pemesan").on("keyup", syncField);
 
                 $('#setuju_syarat').on('change', function(e) {
@@ -358,6 +372,8 @@
                         $("#lanjut_pesan_button").prop('disabled', true);
                     }
                 })
+
+                syncField();
             });
 </script>
 @endpush
