@@ -412,25 +412,48 @@
                             let selectedOption = $(this).find('option:selected');
                             let businessCategory = selectedOption.data('category');
                             
-                            // Check if business category is Spa & Kecantikan (adjust the condition as needed)
-                            if (businessCategory && (businessCategory.toLowerCase().includes('spa') || businessCategory.toLowerCase().includes('kecantikan'))) {
-                                // Hide category field for Spa & Kecantikan business
-                                $('#category-field').hide();
-                                // Make categories_services_id field not required
-                                $('#categories_services_id').removeAttr('required');
-                                // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
-                                $('#categories_services_id').val(''); // Clear any existing selection
+                            // Check business category and adjust category field accordingly
+                            if (businessCategory) {
+                                const catLower = businessCategory.toLowerCase();
+                                
+                                if (catLower.includes('spa') || catLower.includes('spa dan kecantikan')) {
+                                    // Hide category field for Spa & Kecantikan business
+                                    $('#category-field').hide();
+                                    // Make categories_services_id field not required
+                                    $('#categories_services_id').removeAttr('required');
+                                    // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
+                                    $('#categories_services_id').val(''); // Clear any existing selection
+                                } else if (catLower.includes('kesehatan')) {
+                                    // Show category field for Kesehatan business and load only Product category
+                                    $('#category-field').show();
+                                    // Make categories_services_id field required
+                                    $('#categories_services_id').attr('required', 'required');
+                                    
+                                    // Load only Product category for Kesehatan
+                                    loadCategoriesForKesehatan();
+                                } else if (catLower.includes('kecantikan')) {
+                                    // Show category field for Kecantikan business and load Service and Product categories
+                                    $('#category-field').show();
+                                    // Make categories_services_id field required
+                                    $('#categories_services_id').attr('required', 'required');
+                                    
+                                    // Load Service and Product categories for Kecantikan
+                                    loadCategoriesForKecantikan();
+                                } else {
+                                    // For other businesses, load all categories
+                                    $('#category-field').show();
+                                    // Make categories_services_id field required
+                                    $('#categories_services_id').attr('required', 'required');
+                                    
+                                    loadCategoriesByBusinessCategory(businessCategory);
+                                }
                             } else {
-                                // Show category field for other businesses
+                                // For cases where businessCategory is not defined, load all categories
                                 $('#category-field').show();
                                 // Make categories_services_id field required
                                 $('#categories_services_id').attr('required', 'required');
                                 
-                                if (businessCategory) {
-                                    loadCategoriesByBusinessCategory(businessCategory);
-                                } else {
-                                    loadCategories();
-                                }
+                                loadCategories();
                             }
                         });
                     @endif
@@ -439,19 +462,48 @@
                     let initialClinicOption = $('#clinic_id option:selected');
                     let initialBusinessCategory = initialClinicOption.data('category');
                     
-                    // Check if business category is Spa & Kecantikan (adjust the condition as needed)
-                    if (initialBusinessCategory && (initialBusinessCategory.toLowerCase().includes('spa') || initialBusinessCategory.toLowerCase().includes('kecantikan'))) {
-                        // Hide category field for Spa & Kecantikan business
-                        $('#category-field').hide();
-                        // Make categories_services_id field not required
-                        $('#categories_services_id').removeAttr('required');
-                        // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
-                        $('#categories_services_id').val(''); // Clear any existing selection
+                    // Check business category and adjust category field accordingly
+                    if (initialBusinessCategory) {
+                        const catLower = initialBusinessCategory.toLowerCase();
+                        
+                        if (catLower.includes('spa') || catLower.includes('spa dan kecantikan')) {
+                            // Hide category field for Spa & Kecantikan business
+                            $('#category-field').hide();
+                            // Make categories_services_id field not required
+                            $('#categories_services_id').removeAttr('required');
+                            // Set default value for Spa & Kecantikan
+                            $('#categories_services_id').val(''); // Clear any existing selection
+                        } else if (catLower.includes('kesehatan')) {
+                            // Show category field for Kesehatan business and load only Product category
+                            $('#category-field').show();
+                            // Make categories_services_id field required
+                            $('#categories_services_id').attr('required', 'required');
+                            
+                            // Load only Product category for Kesehatan
+                            loadCategoriesForKesehatan();
+                        } else if (catLower.includes('kecantikan')) {
+                            // Show category field for Kecantikan business and load Service and Product categories
+                            $('#category-field').show();
+                            // Make categories_services_id field required
+                            $('#categories_services_id').attr('required', 'required');
+                            
+                            // Load Service and Product categories for Kecantikan
+                            loadCategoriesForKecantikan();
+                        } else {
+                            // For other businesses, load all categories
+                            $('#category-field').show();
+                            // Make categories_services_id field required
+                            $('#categories_services_id').attr('required', 'required');
+                            
+                            loadCategoriesByBusinessCategory(initialBusinessCategory);
+                        }
                     } else {
-                        // Show category field for other businesses
+                        // For cases where businessCategory is not defined, load all categories
                         $('#category-field').show();
                         // Make categories_services_id field required
                         $('#categories_services_id').attr('required', 'required');
+                        
+                        loadCategories();
                     }
                 } else {
                     // Jika Select2 belum siap, tunggu 100ms lagi
@@ -570,6 +622,90 @@
             allowClear: true,
             tags: true
         });
+    }
+    
+    // Fungsi untuk memuat kategori khusus untuk Kesehatan (hanya Product)
+    function loadCategoriesForKesehatan() {
+        $.ajax({
+            url: '{{ route('get.categories.by.clinic') }}',
+            type: 'GET',
+            data: {
+                business_category: 'kesehatan'
+            },
+            success: function(data) {
+                // Filter hanya kategori Product
+                const productCategories = data.filter(category => 
+                    category.name.toLowerCase() === 'product'
+                );
+                
+                populateCategoriesWithSpecificOptions(productCategories);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading categories for kesehatan:", error);
+                // Jika gagal, tetap tampilkan semua kategori
+                $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
+                initializeSelect2();
+            }
+        });
+    }
+    
+    // Fungsi untuk memuat kategori khusus untuk Kecantikan (Service dan Product)
+    function loadCategoriesForKecantikan() {
+        $.ajax({
+            url: '{{ route('get.categories.by.clinic') }}',
+            type: 'GET',
+            data: {
+                business_category: 'kecantikan'
+            },
+            success: function(data) {
+                // Filter hanya kategori Service dan Product
+                const filteredCategories = data.filter(category => 
+                    category.name.toLowerCase() === 'service' || 
+                    category.name.toLowerCase() === 'product'
+                );
+                
+                populateCategoriesWithSpecificOptions(filteredCategories);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading categories for kecantikan:", error);
+                // Jika gagal, tetap tampilkan semua kategori
+                $('#categories_services_id').empty().append('<option value="">Gagal memuat kategori</option>');
+                initializeSelect2();
+            }
+        });
+    }
+    
+    // Fungsi untuk populate kategori dengan opsi tertentu
+    function populateCategoriesWithSpecificOptions(data) {
+        let selectedCategory = $('#data-id-service').data('variable');
+        
+        // Hancurkan Select2 yang sudah ada
+        if ($('#categories_services_id').hasClass("select2-hidden-accessible")) {
+            $('#categories_services_id').select2('destroy');
+        }
+        
+        $('#categories_services_id').empty();
+        
+        if (data.length > 0) {
+            $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+            
+            $.each(data, function(key, category) {
+                let option = $("<option>", {
+                    value: category.id,
+                    text: category.name
+                });
+                
+                if(category.id == selectedCategory) {
+                    option.attr("selected", true);
+                }
+                
+                $('#categories_services_id').append(option);
+            });
+        } else {
+            $('#categories_services_id').append('<option value="">Tidak ada kategori tersedia</option>');
+        }
+        
+        initializeSelect2();
     }
     
     // Format Rupiah function (from rekreasi)
