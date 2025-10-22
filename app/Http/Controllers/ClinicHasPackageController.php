@@ -85,7 +85,21 @@ class ClinicHasPackageController extends Controller
         
         // Tambahkan rules untuk categories_services_id tergantung kategorinya
         if ($categoriesRequired) {
-            $rules['categories_services_id'] = 'required';
+            if ($clinic && ($clinic->category === 'kesehatan')) {
+                // Untuk klinik kesehatan, hanya kategori Clinic yang diizinkan
+                $allowedCategory = CategoriesServices::where('name', 'Clinic')->first();
+                if ($allowedCategory) {
+                    $rules['categories_services_id'] = 'required|integer|in:' . $allowedCategory->id;
+                } else {
+                    $rules['categories_services_id'] = 'required|integer'; // fallback rule
+                }
+            } elseif ($clinic && ($clinic->category === 'kecantikan')) {
+                // Untuk klinik kecantikan, hanya kategori Service atau Product yang diizinkan
+                $allowedCategories = CategoriesServices::whereIn('name', ['Service', 'Product'])->pluck('id')->toArray();
+                $rules['categories_services_id'] = 'required|integer|in:' . implode(',', $allowedCategories);
+            } else {
+                $rules['categories_services_id'] = 'required|integer';
+            }
         } else {
             $rules['categories_services_id'] = 'nullable';
         }
@@ -121,6 +135,50 @@ class ClinicHasPackageController extends Controller
                         $defaultCategory = CategoriesServices::create(['name' => 'Service']);
                     }
                     $categoriesServicesId = $defaultCategory->id;
+                }
+            } 
+            // Jika klinik memiliki kategori "kesehatan" dan tidak ada kategori yang dipilih atau kategori yang dipilih bukan "Clinic"
+            elseif ($clinic && $clinic->category === 'kesehatan') {
+                if (!$categoriesServicesId || $categoriesServicesId === '') {
+                    // Untuk klinik "kesehatan", gunakan kategori "Clinic" sebagai default
+                    $defaultCategory = CategoriesServices::where('name', 'Clinic')->first();
+                    if (!$defaultCategory) {
+                        // Jika tidak ada kategori Clinic, buat satu
+                        $defaultCategory = CategoriesServices::create(['name' => 'Clinic']);
+                    }
+                    $categoriesServicesId = $defaultCategory->id;
+                } else {
+                    // Jika kategori dipilih, pastikan itu adalah kategori "Clinic"
+                    $selectedCategory = CategoriesServices::find($categoriesServicesId);
+                    if ($selectedCategory && strtolower($selectedCategory->name) !== 'clinic') {
+                        // Ganti dengan kategori Clinic
+                        $clinicCategory = CategoriesServices::where('name', 'Clinic')->first();
+                        if ($clinicCategory) {
+                            $categoriesServicesId = $clinicCategory->id;
+                        }
+                    }
+                }
+            } 
+            // Jika klinik memiliki kategori "kecantikan" dan tidak ada kategori yang dipilih
+            elseif ($clinic && $clinic->category === 'kecantikan') {
+                if (!$categoriesServicesId || $categoriesServicesId === '') {
+                    // Untuk klinik "kecantikan", gunakan kategori "Service" sebagai default
+                    $defaultCategory = CategoriesServices::where('name', 'Service')->first();
+                    if (!$defaultCategory) {
+                        // Jika tidak ada kategori Service, buat satu
+                        $defaultCategory = CategoriesServices::create(['name' => 'Service']);
+                    }
+                    $categoriesServicesId = $defaultCategory->id;
+                } else {
+                    // Jika kategori dipilih, pastikan itu adalah kategori "Service" atau "Product"
+                    $selectedCategory = CategoriesServices::find($categoriesServicesId);
+                    if ($selectedCategory && !in_array(strtolower($selectedCategory->name), ['service', 'product'])) {
+                        // Ganti dengan kategori Service sebagai default
+                        $serviceCategory = CategoriesServices::where('name', 'Service')->first();
+                        if ($serviceCategory) {
+                            $categoriesServicesId = $serviceCategory->id;
+                        }
+                    }
                 }
             }
 
@@ -229,33 +287,47 @@ class ClinicHasPackageController extends Controller
             'deleted_images.*' => 'nullable|integer|exists:clinic_package_images,id', // Validasi untuk deleted images
         ];
         
-        // Tambahkan rules untuk categories_services_id tergantung kategorinya
-        if ($categoriesRequired) {
-            $rules['categories_services_id'] = 'required|integer|exists:categories_services,id';
-        } else {
-            $rules['categories_services_id'] = 'nullable';
-        }
-        
-        $request->validate($rules);
-
-        // Log bahwa validasi berhasil
-        \Log::info('Validation passed, proceeding with update');
-        
-        DB::beginTransaction();
-        try {
-
             $clinic = ClinicHasPackages::with('images')->find($id);
             if (!$clinic) {
                 return redirect()->back()->withErrors('Klinik tidak ditemukan.');
             }
 
-            $price = (int) preg_replace('/[^\d]/', '', $request->price);
-            
             // Dapatkan informasi klinik terkait untuk mengetahui kategorinya
             $relatedClinic = $clinic->clinic;
             if (!$relatedClinic) {
                 $relatedClinic = Clinic::find($clinic->clinic_id);
             }
+            
+            // Tambahkan rules untuk categories_services_id tergantung kategorinya
+            if ($categoriesRequired) {
+                if ($relatedClinic && ($relatedClinic->category === 'kesehatan')) {
+                    // Untuk klinik kesehatan, hanya kategori Clinic yang diizinkan
+                    $allowedCategory = CategoriesServices::where('name', 'Clinic')->first();
+                    if ($allowedCategory) {
+                        $rules['categories_services_id'] = 'required|integer|in:' . $allowedCategory->id;
+                    } else {
+                        $rules['categories_services_id'] = 'required|integer'; // fallback rule
+                    }
+                } elseif ($relatedClinic && ($relatedClinic->category === 'kecantikan')) {
+                    // Untuk klinik kecantikan, hanya kategori Service atau Product yang diizinkan
+                    $allowedCategories = CategoriesServices::whereIn('name', ['Service', 'Product'])->pluck('id')->toArray();
+                    $rules['categories_services_id'] = 'required|integer|in:' . implode(',', $allowedCategories);
+                } else {
+                    $rules['categories_services_id'] = 'required|integer|exists:categories_services,id';
+                }
+            } else {
+                $rules['categories_services_id'] = 'nullable';
+            }
+            
+            $request->validate($rules);
+
+            // Log bahwa validasi berhasil
+            \Log::info('Validation passed, proceeding with update');
+            
+            DB::beginTransaction();
+            try {
+
+            $price = (int) preg_replace('/[^\d]/', '', $request->price);
 
             $categoriesServicesId = $request->categories_services_id;
             
@@ -270,6 +342,50 @@ class ClinicHasPackageController extends Controller
                         $defaultCategory = CategoriesServices::create(['name' => 'Service']);
                     }
                     $categoriesServicesId = $defaultCategory->id;
+                }
+            } 
+            // Jika klinik memiliki kategori "kesehatan" dan tidak ada kategori yang dipilih atau kategori yang dipilih bukan "Clinic"
+            elseif ($relatedClinic && $relatedClinic->category === 'kesehatan') {
+                if (!$categoriesServicesId || $categoriesServicesId === '') {
+                    // Untuk klinik "kesehatan", gunakan kategori "Clinic" sebagai default
+                    $defaultCategory = CategoriesServices::where('name', 'Clinic')->first();
+                    if (!$defaultCategory) {
+                        // Jika tidak ada kategori Clinic, buat satu
+                        $defaultCategory = CategoriesServices::create(['name' => 'Clinic']);
+                    }
+                    $categoriesServicesId = $defaultCategory->id;
+                } else {
+                    // Jika kategori dipilih, pastikan itu adalah kategori "Clinic"
+                    $selectedCategory = CategoriesServices::find($categoriesServicesId);
+                    if ($selectedCategory && strtolower($selectedCategory->name) !== 'clinic') {
+                        // Ganti dengan kategori Clinic
+                        $clinicCategory = CategoriesServices::where('name', 'Clinic')->first();
+                        if ($clinicCategory) {
+                            $categoriesServicesId = $clinicCategory->id;
+                        }
+                    }
+                }
+            } 
+            // Jika klinik memiliki kategori "kecantikan" dan tidak ada kategori yang dipilih
+            elseif ($relatedClinic && $relatedClinic->category === 'kecantikan') {
+                if (!$categoriesServicesId || $categoriesServicesId === '') {
+                    // Untuk klinik "kecantikan", gunakan kategori "Service" sebagai default
+                    $defaultCategory = CategoriesServices::where('name', 'Service')->first();
+                    if (!$defaultCategory) {
+                        // Jika tidak ada kategori Service, buat satu
+                        $defaultCategory = CategoriesServices::create(['name' => 'Service']);
+                    }
+                    $categoriesServicesId = $defaultCategory->id;
+                } else {
+                    // Jika kategori dipilih, pastikan itu adalah kategori "Service" atau "Product"
+                    $selectedCategory = CategoriesServices::find($categoriesServicesId);
+                    if ($selectedCategory && !in_array(strtolower($selectedCategory->name), ['service', 'product'])) {
+                        // Ganti dengan kategori Service sebagai default
+                        $serviceCategory = CategoriesServices::where('name', 'Service')->first();
+                        if ($serviceCategory) {
+                            $categoriesServicesId = $serviceCategory->id;
+                        }
+                    }
                 }
             }
             

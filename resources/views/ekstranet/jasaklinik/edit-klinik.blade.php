@@ -110,12 +110,7 @@
                             </select>
                         </div>
 
-                        <!-- Multiple Images -->
-                        <div class="col-md-6">
-                            <label class="required fs-6 fw-semibold mb-2">Gambar (Multiple)</label>
-                            <input type="file" class="form-control form-control-lg" name="images[]" multiple accept="image/*" />
-                            <small class="form-text text-muted">Anda dapat memilih beberapa gambar sekaligus</small>
-                        </div>
+
 
                         <!-- Deskripsi -->
                         <div class="col-12">
@@ -395,9 +390,6 @@
 
 
 
-        // Load categories saat halaman dimuat
-        loadCategories();
-        
         // On page load, check the initial clinic category and hide/show category field accordingly
         $(document).ready(function() {
             // Tambahkan fungsi untuk memastikan Select2 siap sebelum inisialisasi
@@ -503,6 +495,7 @@
                         // Make categories_services_id field required
                         $('#categories_services_id').attr('required', 'required');
                         
+                        // Load categories based on the clinic data
                         loadCategories();
                     }
                 } else {
@@ -624,7 +617,7 @@
         });
     }
     
-    // Fungsi untuk memuat kategori khusus untuk Kesehatan (hanya Product)
+    // Fungsi untuk memuat kategori khusus untuk Kesehatan (hanya Clinic)
     function loadCategoriesForKesehatan() {
         $.ajax({
             url: '{{ route('get.categories.by.clinic') }}',
@@ -633,12 +626,12 @@
                 business_category: 'kesehatan'
             },
             success: function(data) {
-                // Filter hanya kategori Product
-                const productCategories = data.filter(category => 
-                    category.name.toLowerCase() === 'product'
+                // Filter hanya kategori Clinic
+                const clinicCategories = data.filter(category => 
+                    category.name.toLowerCase() === 'clinic'
                 );
                 
-                populateCategoriesWithSpecificOptions(productCategories);
+                populateCategoriesWithSpecificOptions(clinicCategories);
             },
             error: function(xhr, status, error) {
                 console.error("Error loading categories for kesehatan:", error);
@@ -647,6 +640,63 @@
                 initializeSelect2();
             }
         });
+    }
+    
+    // Fungsi helper untuk populate categories dengan opsi spesifik
+    function populateCategoriesWithSpecificOptions(categories) {
+        let selectedCategory = $('#data-id-service').data('variable');
+        
+        // Hancurkan Select2 yang sudah ada
+        if ($('#categories_services_id').hasClass("select2-hidden-accessible")) {
+            $('#categories_services_id').select2('destroy');
+        }
+        
+        $('#categories_services_id').empty();
+        
+        if (categories.length > 0) {
+            $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+            
+            // Kelompokkan kategori berdasarkan tipe
+            const clinicCategories = categories.filter(category => category.name === 'Clinic');
+            const serviceCategories = categories.filter(category => category.name === 'Service');
+            const productCategories = categories.filter(category => category.name === 'Product');
+            const otherCategories = categories.filter(category => 
+                category.name !== 'Clinic' && 
+                category.name !== 'Service' && 
+                category.name !== 'Product'
+            );
+            
+            // Function helper untuk menambahkan optgroup
+            function addOptGroup(categories, label) {
+                if (categories.length > 0) {
+                    const group = $(`<optgroup label="${label}"></optgroup>`);
+                    $.each(categories, function(key, category) {
+                        let option = $("<option>", {
+                            value: category.id,
+                            text: category.name
+                        });
+                        
+                        if(category.id == selectedCategory) {
+                            option.attr("selected", true);
+                        }
+                        
+                        group.append(option);
+                    });
+                    $('#categories_services_id').append(group);
+                }
+            }
+
+            // Tambahkan semua optgroup
+            addOptGroup(clinicCategories, 'Clinic');
+            addOptGroup(serviceCategories, 'Service');
+            addOptGroup(productCategories, 'Product');
+            addOptGroup(otherCategories, 'Lainnya');
+            
+        } else {
+            $('#categories_services_id').append('<option value="">Tidak ada kategori tersedia</option>');
+        }
+        
+        initializeSelect2();
     }
     
     // Fungsi untuk memuat kategori khusus untuk Kecantikan (Service dan Product)
@@ -673,39 +723,6 @@
                 initializeSelect2();
             }
         });
-    }
-    
-    // Fungsi untuk populate kategori dengan opsi tertentu
-    function populateCategoriesWithSpecificOptions(data) {
-        let selectedCategory = $('#data-id-service').data('variable');
-        
-        // Hancurkan Select2 yang sudah ada
-        if ($('#categories_services_id').hasClass("select2-hidden-accessible")) {
-            $('#categories_services_id').select2('destroy');
-        }
-        
-        $('#categories_services_id').empty();
-        
-        if (data.length > 0) {
-            $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
-            
-            $.each(data, function(key, category) {
-                let option = $("<option>", {
-                    value: category.id,
-                    text: category.name
-                });
-                
-                if(category.id == selectedCategory) {
-                    option.attr("selected", true);
-                }
-                
-                $('#categories_services_id').append(option);
-            });
-        } else {
-            $('#categories_services_id').append('<option value="">Tidak ada kategori tersedia</option>');
-        }
-        
-        initializeSelect2();
     }
     
     // Format Rupiah function (from rekreasi)
