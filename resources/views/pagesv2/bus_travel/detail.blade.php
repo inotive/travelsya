@@ -56,19 +56,23 @@
         </ul>
 
         @if($is_pulang_pergi == 1)
+            @php
+                // Check if we're selecting the return leg by looking for ticket_pergi_id
+                $isReturnLeg = isset($ticket_pergi_id);
+            @endphp
             <div class="alert alert-info rounded-4 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    @if($departure->from->city_name == $kota_tujuan && $departure->to->city_name == $kota_awal)
+                    @if($isReturnLeg)
                         <i class="fa-solid fa-arrow-right-arrow-left me-2 text-success fs-4"></i>
                         <div>
                             <h4 class="alert-heading mb-1">Tiket Kepulangan</h4>
-                            <p class="mb-0">Anda sedang memilih tiket untuk kepulangan dari <strong>{{ $kota_tujuan }}</strong> ke <strong>{{ $kota_awal }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pulang)->format('d M Y') }}</strong></p>
+                            <p class="mb-0">Anda sedang memilih kursi untuk tiket kepulangan dari <strong>{{ $departure->from->city_name }}</strong> ke <strong>{{ $departure->to->city_name }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
                         </div>
                     @else
                         <i class="fa-solid fa-arrow-right me-2 text-primary fs-4"></i>
                         <div>
                             <h4 class="alert-heading mb-1">Tiket Kepergian</h4>
-                            <p class="mb-0">Anda sedang memilih tiket untuk kepergian dari <strong>{{ $kota_awal }}</strong> ke <strong>{{ $kota_tujuan }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
+                            <p class="mb-0">Anda sedang memilih kursi untuk tiket kepergian dari <strong>{{ $departure->from->city_name }}</strong> ke <strong>{{ $departure->to->city_name }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
                         </div>
                     @endif
                 </div>

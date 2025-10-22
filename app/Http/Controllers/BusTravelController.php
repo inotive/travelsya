@@ -464,8 +464,6 @@ HTML;
 
             // Build base query function
             $baseQuery = function () use ($request, $date, $date_pulang, $pp) {
-                $dayOfWeekPergi = $date ? date('w', strtotime($date)) : null;
-                $dayOfWeekPulang = $date_pulang ? date('w', strtotime($date_pulang)) : null;
                 $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
 
                 $pergiQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
@@ -474,45 +472,63 @@ HTML;
                         fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%')))
                     ->when($request->kota_tujuan && $request->kota_tujuan !== '',
                         fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                    ->when($date, function ($q) use ($request, $date, $dayOfWeekPergi, $dayNames) {
-                             $dateStart = $request->date_pergi_start ?? $date;
-                             $dateEnd = $request->date_pergi_end ?? date('Y-m-d', strtotime($date . ' +6 days'));
+                    ->when($date, function ($q) use ($date, $dayNames) {
+                        $dateStart = $date;
+                        $dateEnd = date('Y-m-d', strtotime($date . ' +6 days'));
 
-                             $q->where(function ($query) use ($dateStart, $dateEnd, $dayNames) {
-                                 // Search for specific dates in the range OR recurring schedules that match the day of week
-                                 $query->whereBetween('departure_date', [$dateStart, $dateEnd])
-                                       ->orWhere(function ($subQuery) use ($dateStart, $dateEnd, $dayNames) {
-                                           // Check if any day in the date range matches the recurring days
-                                       $startDay = new \DateTime($dateStart);
-                                       $endDay = new \DateTime($dateEnd);
+                        $q->where(function ($query) use ($dateStart, $dateEnd, $dayNames) {
+                            // Option 1: Has specific departure_date within range
+                            $query->whereBetween('departure_date', [$dateStart, $dateEnd])
+                                // Option 2: Has recurring schedule (departure_date is null) AND days match our date range
+                                ->orWhere(function ($subQuery) use ($dateStart, $dateEnd, $dayNames) {
+                                    $subQuery->whereNull('departure_date');
 
-                                       for ($currentDate = clone $startDay; $currentDate <= $endDay; $currentDate->modify('+1 day')) {
-                                           $dayOfWeek = $currentDate->format('w');
-                                           $dayName = $dayNames[$dayOfWeek];
-                                           $subQuery->orWhere('days', 'like', '%' . $dayName . '%');
-                                       }
-                                   });
-                         });
-                     });
+                                    // Collect all day names within our date range
+                                    $daysInRange = [];
+                                    $currentDate = new \DateTime($dateStart);
+                                    $endDate = new \DateTime($dateEnd);
+
+                                    while ($currentDate <= $endDate) {
+                                        $dayOfWeek = (int)$currentDate->format('w');
+                                        $dayName = $dayNames[$dayOfWeek];
+                                        if (!in_array($dayName, $daysInRange)) {
+                                            $daysInRange[] = $dayName;
+                                        }
+                                        $currentDate->modify('+1 day');
+                                    }
+
+                                    // Check if ANY of the days in range match the departure's recurring days
+                                    $subQuery->where(function($dayQuery) use ($daysInRange) {
+                                        foreach ($daysInRange as $dayName) {
+                                            $dayQuery->orWhere('days', 'like', '%' . $dayName . '%');
+                                        }
+                                    });
+                                });
+                        });
+                    });
 
                 $pulangQuery = null;
-                if ((int)$pp === 1) {
+                if ((int)$pp === 1 && $date_pulang) {
+                    $dayOfWeekPulang = date('w', strtotime($date_pulang));
+                    $dayNamePulang = $dayNames[$dayOfWeekPulang];
+
                     $pulangQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
                         ->has('busTravel')
                         ->when($request->kota_awal && $request->kota_awal !== '',
                             fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_awal . '%')))
                         ->when($request->kota_tujuan && $request->kota_tujuan !== '',
                             fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                        ->when($date_pulang, function ($q) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
-                            $q->where(function ($query) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
-                                $query->where('departure_date', $date_pulang)
-                                    ->orWhere(function ($subQuery) use ($dayOfWeekPulang, $dayNames) {
-                                        $subQuery->whereNull('departure_date')
-                                            ->where('days', 'like', '%' . $dayNames[$dayOfWeekPulang] . '%');
-                                    });
-                            });
+                        ->where(function ($q) use ($date_pulang, $dayNamePulang) {
+                            // Has specific departure_date matching return date
+                            $q->where('departure_date', $date_pulang)
+                                // OR has recurring schedule that matches the return day
+                                ->orWhere(function ($subQuery) use ($dayNamePulang) {
+                                    $subQuery->whereNull('departure_date')
+                                        ->where('days', 'like', '%' . $dayNamePulang . '%');
+                                });
                         });
                 }
+
                 return [$pergiQuery, $pulangQuery];
             };
 
@@ -905,9 +921,25 @@ HTML;
         $data['date_pergi'] = $date_pergi;
         $data['date_pulang'] = $date_pulang;
 
-        $data['departure'] = BusDeparture::with(['busTravel.busTravel', 'busTravel.facilities.facility', 'from', 'to'])->find($param['departure_id']);
+        // ========================================
+        // ROUND TRIP: Pass through first leg data
+        // ========================================
+        if ($request->has('ticket_pergi_id')) {
+            // We are selecting the return trip
+            $data['ticket_pergi_id'] = $request->get('ticket_pergi_id');
+            $data['original_date_pergi'] = $request->get('original_date_pergi');
+            $data['original_date_pulang'] = $request->get('original_date_pulang');
+
+            // Pass through the seat selections from the first leg
+            for ($i = 1; $i <= $jumlah_penumpang; $i++) {
+                if ($request->has('kursi_pergi_' . $i)) {
+                    $data['kursi_pergi_' . $i] = $request->get('kursi_pergi_' . $i);
+                }
+            }
+        }
+
+        $data['departure'] = BusDeparture::with(['busTravel.busTravel', 'busTravel.facilities.facility', 'from', 'to'])->find($departure_id);
         $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->where('is_active', 1)->orderBy('kursi_pergi')->get();
-        // dd($data['departure']->busTravel->number_seats%2);
 
         return view('pagesv2.bus_travel.detail', $data);
     }
@@ -933,7 +965,7 @@ HTML;
 
         if ($param['is_pulang_pergi'] == 1) {
             for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
-                $data['kursi_pergi_' . $i] = $param['kursi_penumpang_' . $i];
+                $data['kursi_pergi_' . $i] = $param['kursi_pergi_' . $i];
                 $data['kursi_pulang_' . $i] = $param['kursi_pulang_' . $i];
             }
             if (!empty($param['ticket_pulang_id'])) {
@@ -941,7 +973,7 @@ HTML;
             }
         } else {
             for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
-                $data['kursi_penumpang_' . $i] = $param['kursi_penumpang_' . $i];
+                $data['kursi_pergi_' . $i] = $param['kursi_penumpang_' . $i];
             }
         }
 
@@ -962,7 +994,7 @@ HTML;
     public function request_transaction(Request $request)
     {
         for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
-            $kursi_pergi_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pergi_$i"} : $request->{"kursi_penumpang_$i"};
+            $kursi_pergi_val = $request->{"kursi_pergi_$i"};
             $kursi_pulang_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pulang_$i"} : null;
 
             $data_kursi = [

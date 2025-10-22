@@ -109,7 +109,7 @@
                                 @else
                                     <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
                                     @for ($i = 1; $i <= $jumlah_penumpang; $i++)
-                                        <input type="hidden" name="kursi_penumpang_{{ $i }}" value="{{ ${'kursi_penumpang_' . $i} }}">
+                                        <input type="hidden" name="kursi_pergi_{{ $i }}" value="{{ ${'kursi_pergi_' . $i} }}">
                                     @endfor
                                 @endif
                             </div>
@@ -150,7 +150,7 @@
                                     <img src="{{ asset('images/icon/chair.png') }}" width="25px" height="25px" alt="">
                                     <div class="d-flex flex-column ms-5">
                                         <Span>{{ $departure->busTravel->busTravel->business_name }} (Pergi)</Span>
-                                        <Span id="baris_kursi_penumpang_{{ $i }}">Kursi {{ $is_pulang_pergi == 1 ? ${'kursi_pergi_' . $i} : ${'kursi_penumpang_' . $i} }}</Span>
+                                        <Span id="baris_kursi_penumpang_{{ $i }}">Kursi {{ ${'kursi_pergi_' . $i} }}</Span>
                                     </div>
                                 </div>
 

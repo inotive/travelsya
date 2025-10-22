@@ -151,73 +151,78 @@
                 </div>
 
                 {{-- Button section inside modal-body --}}
-                @php
-                    $is_first_leg_round_trip = ($is_pulang_pergi == 1 && !request()->has('ticket_pergi_id'));
-                    $is_second_leg_round_trip = ($is_pulang_pergi == 1 && request()->has('ticket_pergi_id'));
+                {{-- Button section inside modal-body --}}
+        @php
+            $is_first_leg_round_trip = ($is_pulang_pergi == 1 && !isset($ticket_pergi_id));
+            $is_second_leg_round_trip = ($is_pulang_pergi == 1 && isset($ticket_pergi_id));
 
-                    $form_action = route('bus_travel.order');
-                    if ($is_first_leg_round_trip) {
-                        $form_action = route('bus_travel.search');
-                    }
-                @endphp
+            $form_action = route('bus_travel.order');
+            if ($is_first_leg_round_trip) {
+                $form_action = route('bus_travel.search');
+            }
+        @endphp
 
-                <div class="p-5 bg-snow-pink">
-                    <form action="{{ $form_action }}" method="post" class="w-100">
-                        @csrf
-                        <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
-                        <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
+        <div class="p-5 bg-snow-pink">
+            <form action="{{ $form_action }}" method="post" class="w-100">
+                @csrf
+                <input type="hidden" name="is_pulang_pergi" value="{{ $is_pulang_pergi }}">
+                <input type="hidden" name="jumlah_penumpang" value="{{ $jumlah_penumpang }}">
 
-                        @if ($is_first_leg_round_trip)
-                            {{-- First leg of round trip: POST to search route for the return leg. --}}
-                            <input type="hidden" name="kota_awal" value="{{ $kota_tujuan }}"> {{-- Swapped --}}
-                            <input type="hidden" name="kota_tujuan" value="{{ $kota_awal }}"> {{-- Swapped --}}
-                            <input type="hidden" name="date_pergi" value="{{ $date_pulang }}"> {{-- New search uses original return date --}}
-                            <input type="hidden" name="date_pulang" value=""> {{-- Not needed for the return search itself --}}
+                @if ($is_first_leg_round_trip)
+                    {{-- First leg of round trip: POST to search route for the return leg. --}}
+                    <input type="hidden" name="kota_awal" value="{{ $kota_tujuan }}"> {{-- Swapped --}}
+                    <input type="hidden" name="kota_tujuan" value="{{ $kota_awal }}"> {{-- Swapped --}}
+                    <input type="hidden" name="date_pergi" value="{{ $date_pulang }}"> {{-- New search uses original return date --}}
+                    <input type="hidden" name="date_pulang" value=""> {{-- Not needed for the return search itself --}}
 
-                            {{-- Carry over original search params and selection from this leg --}}
-                            <input type="hidden" name="ticket_pergi_id" value="{{ $departure->id }}">
-                            <input type="hidden" name="original_date_pergi" value="{{ $date_pergi }}">
-                            <input type="hidden" name="original_date_pulang" value="{{ $date_pulang }}">
-                            @for ($i = 1; $i <= $jumlah_penumpang; $i++)
-                                <input type="hidden" name="kursi_pergi_{{ $i }}" id="kursi_pilihan_penumpang_{{ $i }}">
-                            @endfor
-                            <button type="submit" class="btn btn-danger w-100">Lanjut Pilih Kepulangan</button>
+                    {{-- Carry over original search params and selection from this leg --}}
+                    <input type="hidden" name="ticket_pergi_id" value="{{ $departure->id }}">
+                    <input type="hidden" name="original_date_pergi" value="{{ $date_pergi }}">
+                    <input type="hidden" name="original_date_pulang" value="{{ $date_pulang }}">
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        <input type="hidden" name="kursi_pergi_{{ $i }}" id="kursi_pilihan_penumpang_{{ $i }}">
+                    @endfor
+                    <button type="submit" class="btn btn-danger w-100">Lanjut Pilih Kepulangan</button>
 
-                        @elseif ($is_second_leg_round_trip)
-                            {{-- Second leg of round trip: POST to order route. --}}
-                            {{-- First leg data (from request) --}}
-                            <input type="hidden" name="departure_id" value="{{ request('ticket_pergi_id') }}"> {{-- CORRECTED PARAM NAME --}}
-                            <input type="hidden" name="date_pergi" value="{{ request('original_date_pergi') }}">
-                            @for ($i = 1; $i <= $jumlah_penumpang; $i++)
-                                <input type="hidden" name="kursi_pergi_{{ $i }}" value="{{ request('kursi_pergi_' . $i) }}">
-                            @endfor
-
-                            {{-- Second leg data (current selection) --}}
-                            <input type="hidden" name="ticket_pulang_id" value="{{ $departure->id }}">
-                            <input type="hidden" name="date_pulang" value="{{ $date_pergi }}"> {{-- This leg's date was passed as 'date_pergi' in the search --}}
-                            @for ($i = 1; $i <= $jumlah_penumpang; $i++)
-                                <input type="hidden" name="kursi_pulang_{{ $i }}" id="kursi_pilihan_penumpang_{{ $i }}">
-                            @endfor
-                            <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
-
-                        @else
-                            {{-- Standard one-way trip --}}
-                            <input type="hidden" name="departure_id" value="{{ $departure_id }}">
-                            <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
-                            <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
-                            <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
-                            <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
-                            @for ($i = 1; $i <= $jumlah_penumpang; $i++)
-                                <input type="hidden" name="kursi_penumpang_{{ $i }}" id="kursi_pilihan_penumpang_{{ $i }}">
-                            @endfor
-                            @if (isset($is_order))
-                                <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">Lanjutan Order</button>
-                            @else
-                                <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
-                            @endif
+                @elseif ($is_second_leg_round_trip)
+                    {{-- Second leg of round trip: POST to order route. --}}
+                    {{-- First leg data (from the passed variables) --}}
+                    <input type="hidden" name="departure_id" value="{{ $ticket_pergi_id }}">
+                    <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                    <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                    <input type="hidden" name="date_pergi" value="{{ $original_date_pergi }}">
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        @if(isset(${'kursi_pergi_' . $i}))
+                            <input type="hidden" name="kursi_pergi_{{ $i }}" value="{{ ${'kursi_pergi_' . $i} }}">
                         @endif
-                    </form>
-                </div>
+                    @endfor
+
+                    {{-- Second leg data (current selection) --}}
+                    <input type="hidden" name="ticket_pulang_id" value="{{ $departure->id }}">
+                    <input type="hidden" name="date_pulang" value="{{ $original_date_pulang }}">
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        <input type="hidden" name="kursi_pulang_{{ $i }}" id="kursi_pilihan_penumpang_{{ $i }}">
+                    @endfor
+                    <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
+
+                @else
+                    {{-- Standard one-way trip --}}
+                    <input type="hidden" name="departure_id" value="{{ $departure_id }}">
+                    <input type="hidden" name="kota_awal" value="{{ $kota_awal }}">
+                    <input type="hidden" name="kota_tujuan" value="{{ $kota_tujuan }}">
+                    <input type="hidden" name="date_pergi" value="{{ $date_pergi }}">
+                    <input type="hidden" name="date_pulang" value="{{ $date_pulang }}">
+                    @for ($i = 1; $i <= $jumlah_penumpang; $i++)
+                        <input type="hidden" name="kursi_penumpang_{{ $i }}" id="kursi_pilihan_penumpang_{{ $i }}">
+                    @endfor
+                    @if (isset($is_order))
+                        <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal">Lanjutan Order</button>
+                    @else
+                        <button type="submit" class="btn btn-danger w-100">Lanjut Ke Form Pemesanan</button>
+                    @endif
+                @endif
+            </form>
+        </div>
         </div>
     </div>
 </div>

@@ -79,33 +79,33 @@
             </div>
         </div>
     @else
-        {{-- Alert for round trip tickets --}}
-        @if($is_pulang_pergi == 1 && isset($pergi) && !empty($pergi))
-            @php
-                $firstDeparture = $pergi[0] ?? null;
-                // This logic determines if we are in the "pulang" leg of the search
-                $isReturnLegSearch = ($firstDeparture && $firstDeparture['departure_point'] == $kota_tujuan && $firstDeparture['arrival_point'] == $kota_awal);
-            @endphp
-            @if($firstDeparture)
-                <div class="alert alert-info rounded-4 mb-4" role="alert">
-                    <div class="d-flex align-items-center">
-                        @if($isReturnLegSearch)
-                            <i class="fa-solid fa-arrow-right-arrow-left me-2 text-success fs-4"></i>
-                            <div>
-                                <h4 class="alert-heading mb-1">Pilih Tiket Kepulangan</h4>
-                                <p class="mb-0">Anda sedang memilih tiket untuk kepulangan dari <strong>{{ $kota_tujuan }}</strong> ke <strong>{{ $kota_awal }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
-                            </div>
-                        @else
-                            <i class="fa-solid fa-arrow-right me-2 text-primary fs-4"></i>
-                            <div>
-                                <h4 class="alert-heading mb-1">Pilih Tiket Kepergian</h4>
-                                <p class="mb-0">Anda sedang memilih tiket untuk kepergian dari <strong>{{ $kota_awal }}</strong> ke <strong>{{ $kota_tujuan }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
-                            </div>
-                        @endif
-                    </div>
+    {{-- Alert for round trip tickets --}}
+    @if($is_pulang_pergi == 1 && isset($pergi) && !empty($pergi))
+        @php
+            $firstDeparture = $pergi[0] ?? null;
+            // Check if we're selecting the return leg by looking for ticket_pergi_id in request
+            $isReturnLegSearch = request()->has('ticket_pergi_id');
+        @endphp
+        @if($firstDeparture)
+            <div class="alert alert-info rounded-4 mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    @if($isReturnLegSearch)
+                        <i class="fa-solid fa-arrow-right-arrow-left me-2 text-success fs-4"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">Pilih Tiket Kepulangan</h4>
+                            <p class="mb-0">Anda sedang memilih tiket untuk kepulangan dari <strong>{{ $kota_awal }}</strong> ke <strong>{{ $kota_tujuan }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
+                        </div>
+                    @else
+                        <i class="fa-solid fa-arrow-right me-2 text-primary fs-4"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">Pilih Tiket Kepergian</h4>
+                            <p class="mb-0">Anda sedang memilih tiket untuk kepergian dari <strong>{{ $kota_awal }}</strong> ke <strong>{{ $kota_tujuan }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
         @endif
+    @endif
 
         @foreach ($pergi as $p)
         <div class="card shadow-sm mb-4">
@@ -179,12 +179,12 @@
                         </div>
                         @php
                             $detail_params = [
-                                'departure_id' => $p['id'], 
-                                'kota_awal' => $p['departure_point'], 
-                                'kota_tujuan' => $p['arrival_point'], 
-                                'is_pulang_pergi' => $is_pulang_pergi, 
-                                'jumlah_penumpang' => $jumlah_penumpang, 
-                                'date_pergi' => $date_pergi, 
+                                'departure_id' => $p['id'],
+                                'kota_awal' => $p['departure_point'],
+                                'kota_tujuan' => $p['arrival_point'],
+                                'is_pulang_pergi' => $is_pulang_pergi,
+                                'jumlah_penumpang' => $jumlah_penumpang,
+                                'date_pergi' => $date_pergi,
                                 'date_pulang' => $date_pulang
                             ];
 

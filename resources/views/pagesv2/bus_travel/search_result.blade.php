@@ -91,7 +91,7 @@
                     </div>
                 @endif
 
-                @if (isset($debug) || isset($is_pulang_pergi))
+                {{-- @if (isset($debug) || isset($is_pulang_pergi))
                     <div class="alert alert-danger mt-3">
                         <strong>Data terkirim</strong><br>
                         <pre>{{ json_encode([
@@ -103,7 +103,7 @@
                             'jumlah_penumpang' => $jumlah_penumpang ?? null,
                         ], JSON_PRETTY_PRINT) }}</pre>
                     </div>
-                @endif
+                @endif --}}
                 {{-- End Error/Success messages --}}
 
             </div>
