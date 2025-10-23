@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'remember_token' => Str::random(10),
         ];
-    }
+    } //remember_token 3 kali
 
     /**
      * Indicate that the model's email address should be unverified.

@@ -411,104 +411,280 @@ HTML;
      */
     public function search(Request $request, $agent = null)
     {
-        // Check if the request is a GET request (for showing the form without search)
-        if ($request->method() === 'GET') {
-            // Get route relationships for filtering
+        try {
+            // Check if GET request (show empty form)
+            if ($request->method() === 'GET') {
+                $routes = BusDeparture::with('from', 'to')->get();
+                $routeData = $this->buildRouteData($routes);
+
+                $newData = [
+                    'agent' => collect(),
+                    'selected_agent' => null,
+                    'is_pulang_pergi' => 0,
+                    'kota_awal' => old('kota_awal', null),
+                    'kota_tujuan' => old('kota_tujuan', null),
+                    'date_pergi' => old('date_pergi', now()->format('Y-m-d')),
+                    'date_pulang' => old('date_pulang', null),
+                    'jumlah_penumpang' => old('jumlah_penumpang', 1),
+                    'pergi' => [],
+                    'pulang' => [],
+                    'city' => BusRoute::pluck('name', 'name'),
+                    'routeData' => $routeData,
+                    'noDeparturesFound' => false,
+                ];
+
+                return view('pagesv2.bus_travel.search_result', $newData);
+            }
+
+            // Validate for POST
+            $request->validate([
+                'kota_awal' => 'nullable|string',
+                'kota_tujuan' => 'nullable|string',
+                'date_pergi' => 'required|date',
+                'jumlah_penumpang' => 'required|integer|min:1',
+                'is_pulang_pergi' => 'required|in:0,1'
+            ]);
+
+            // Get basic parameters
+            $date = $request->date_pergi ?? now()->format('Y-m-d');
+            $date_pulang = $request->date_pulang ?? null;
+            $qty = $request->jumlah_penumpang ?: 1;
+            $pp = $request->is_pulang_pergi ?? 0;
+            $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
+
+            // Parse filters
+            $classFilters = $request->class ? explode(',', $request->class) : [];
+            $facilityFilters = $request->facility ? explode(',', $request->facility) : [];
+            $kategoriFilters = $request->kategori ? explode(',', $request->kategori) : [];
+            $sortOrder = $request->sort; // 'asc' or 'desc'
+
+            // Get route data
             $routes = BusDeparture::with('from', 'to')->get();
-            $routeData = [];
-            foreach ($routes as $route) {
-                $from = $route->from->city_name ?? '';
-                $to = $route->to->city_name ?? '';
+            $routeData = $this->buildRouteData($routes);
 
-                if ($from && $to) {
-                    // Add to departure routes (from city -> to cities)
-                    if (!isset($routeData['departures'][$from])) {
-                        $routeData['departures'][$from] = [];
-                    }
-                    if (!in_array($to, $routeData['departures'][$from])) {
-                        $routeData['departures'][$from][] = $to;
-                    }
+            // Build base query function
+            $baseQuery = function () use ($request, $date, $date_pulang, $pp) {
+                $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
 
-                    // Add to destination routes (to city <- from cities)
-                    if (!isset($routeData['destinations'][$to])) {
-                        $routeData['destinations'][$to] = [];
-                    }
-                    if (!in_array($from, $routeData['destinations'][$to])) {
-                        $routeData['destinations'][$to][] = $from;
-                    }
+                $pergiQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
+                    ->has('busTravel')
+                    ->when($request->kota_awal && $request->kota_awal !== '',
+                        fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%')))
+                    ->when($request->kota_tujuan && $request->kota_tujuan !== '',
+                        fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
+                    ->when($date, function ($q) use ($date, $dayNames) {
+                        $dateStart = $date;
+                        $dateEnd = date('Y-m-d', strtotime($date . ' +6 days'));
+
+                        $q->where(function ($query) use ($dateStart, $dateEnd, $dayNames) {
+                            // Option 1: Has specific departure_date within range
+                            $query->whereBetween('departure_date', [$dateStart, $dateEnd])
+                                // Option 2: Has recurring schedule (departure_date is null) AND days match our date range
+                                ->orWhere(function ($subQuery) use ($dateStart, $dateEnd, $dayNames) {
+                                    $subQuery->whereNull('departure_date');
+
+                                    // Collect all day names within our date range
+                                    $daysInRange = [];
+                                    $currentDate = new \DateTime($dateStart);
+                                    $endDate = new \DateTime($dateEnd);
+
+                                    while ($currentDate <= $endDate) {
+                                        $dayOfWeek = (int)$currentDate->format('w');
+                                        $dayName = $dayNames[$dayOfWeek];
+                                        if (!in_array($dayName, $daysInRange)) {
+                                            $daysInRange[] = $dayName;
+                                        }
+                                        $currentDate->modify('+1 day');
+                                    }
+
+                                    // Check if ANY of the days in range match the departure's recurring days
+                                    $subQuery->where(function($dayQuery) use ($daysInRange) {
+                                        foreach ($daysInRange as $dayName) {
+                                            $dayQuery->orWhere('days', 'like', '%' . $dayName . '%');
+                                        }
+                                    });
+                                });
+                        });
+                    });
+
+                $pulangQuery = null;
+                if ((int)$pp === 1 && $date_pulang) {
+                    $dayOfWeekPulang = date('w', strtotime($date_pulang));
+                    $dayNamePulang = $dayNames[$dayOfWeekPulang];
+
+                    $pulangQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
+                        ->has('busTravel')
+                        ->when($request->kota_awal && $request->kota_awal !== '',
+                            fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_awal . '%')))
+                        ->when($request->kota_tujuan && $request->kota_tujuan !== '',
+                            fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
+                        ->where(function ($q) use ($date_pulang, $dayNamePulang) {
+                            // Has specific departure_date matching return date
+                            $q->where('departure_date', $date_pulang)
+                                // OR has recurring schedule that matches the return day
+                                ->orWhere(function ($subQuery) use ($dayNamePulang) {
+                                    $subQuery->whereNull('departure_date')
+                                        ->where('days', 'like', '%' . $dayNamePulang . '%');
+                                });
+                        });
+                }
+
+                return [$pergiQuery, $pulangQuery];
+            };
+
+            // Get agents for the route
+            list($pergiQueryForAgents, $pulangQueryForAgents) = $baseQuery();
+            $pergiForAgents = $pergiQueryForAgents->get();
+            $pulangForAgents = $pulangQueryForAgents ? $pulangQueryForAgents->get() : collect();
+            $availableAgentIds = $pergiForAgents->pluck('busTravel.busTravel.id')
+                ->merge($pulangForAgents->pluck('busTravel.busTravel.id'))
+                ->unique()
+                ->filter();
+            $agents = BusTravels::Active()
+                ->whereIn('id', $availableAgentIds)
+                ->get();
+
+            // Get filtered results
+            list($pergiQuery, $pulangQuery) = $baseQuery();
+
+            // Apply filters
+            $pergi = $this->applyFilters($pergiQuery, $selected_agent, $classFilters, $facilityFilters, $sortOrder, $kategoriFilters)->get();
+            $pulang = [];
+            if ($pulangQuery) {
+                $pulang = $this->applyFilters($pulangQuery, $selected_agent, $classFilters, $facilityFilters, $sortOrder, $kategoriFilters)->get();
+            }
+
+            // Format results
+            $formattedPergi = $this->formatBus($pergi, $date);
+            $formattedPulang = $this->formatBus($pulang, $date_pulang);
+
+            // Check if no departures found
+            $noDeparturesFound = false;
+            if (empty($formattedPergi) && $request->kota_awal && $request->kota_tujuan && $date) {
+                $anyRouteDepartures = BusDeparture::with('from', 'to')
+                    ->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%'))
+                    ->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
+                    ->exists();
+
+                if ($anyRouteDepartures) {
+                    $noDeparturesFound = true;
                 }
             }
 
             $newData = [
-                'agent' => collect(), // Empty collection since no search has been performed yet
-                'selected_agent' => null,
-                'selected_price_range' => null,
-                'selected_time_range' => null,
-                'selected_facility' => null,
-                'is_pulang_pergi' => 0,
-                'kota_awal' => old('kota_awal', null),
-                'kota_tujuan' => old('kota_tujuan', null),
-                'date_pergi' => old('date_pergi', now()->format('Y-m-d')),
-                'date_pulang' => old('date_pulang', null),
-                'jumlah_penumpang' => old('jumlah_penumpang', 1),
-                'pergi' => [],
-                'pulang' => [],
+                'agent' => $agents,
+                'selected_agent' => $request->agent ?? null,
+                'is_pulang_pergi' => $pp,
+                'kota_awal' => $request->kota_awal,
+                'kota_tujuan' => $request->kota_tujuan,
+                'date_pergi' => $request->date_pergi,
+                'date_pulang' => $request->date_pulang,
+                'jumlah_penumpang' => $qty,
+                'pergi' => $formattedPergi,
+                'pulang' => $formattedPulang,
                 'city' => BusRoute::pluck('name', 'name'),
                 'routeData' => $routeData,
-                'noDeparturesFound' => false,
+                'noDeparturesFound' => $noDeparturesFound,
             ];
 
-            return view('pagesv2.bus_travel.search_result', $newData);
+            // AJAX response
+            if ($request->ajax() || $request->wantsJson()) {
+                $filterSearchHtml = view('pagesv2.bus_travel.partials._filter_search', $newData)->render();
+                $busListHtml = view('pagesv2.bus_travel.partials._bus_list', $newData)->render();
+
+                return response()->json([
+                    'success' => true,
+                    'html' => $filterSearchHtml . $busListHtml,
+                    'data' => $newData
+                ]);
+            }
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->validator)->withInput();
+        } catch (\Throwable $e) {
+            \Log::error('Bus search failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            return back()->with('error', 'Terjadi kesalahan saat memproses pencarian. Detail: ' . $e->getMessage())
+                        ->withInput();
         }
 
-        // Log that we've reached the search method with POST
-        \Log::info('BusTravelController@search called', [
-            'method' => $request->method(),
-            'all_inputs' => $request->all()
-        ]);
+        return view('pagesv2.bus_travel.search_result', $newData);
+    }
 
-        $kategori = $request->kategori;
-        $class = $request->class;
+    /**
+     * Apply filters to query
+     */
+    /**
+ * Apply filters to query
+ */
+    private function applyFilters($query, $agent, $classFilters, $facilityFilters, $sortOrder, $kategoriFilters = [])
+    {
+        // Agent filter
+        $query->when($agent, fn($q, $a) => $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a)));
 
-        // Validate required fields (only for POST requests)
-        $request->validate([
-            'kota_awal' => 'nullable|string',
-            'kota_tujuan' => 'nullable|string',
-            'date_pergi' => 'required|date',
-            'jumlah_penumpang' => 'required|integer|min:1',
-            'is_pulang_pergi' => 'required|in:0,1'
-        ], [
-            'kota_awal.required' => 'Kota awal wajib diisi.',
-            'kota_tujuan.required' => 'Kota tujuan wajib diisi.',
-            'date_pergi.required' => 'Tanggal pergi wajib diisi.',
-            'date_pergi.date' => 'Format tanggal pergi tidak valid.',
-            'jumlah_penumpang.required' => 'Jumlah penumpang wajib diisi.',
-            'jumlah_penumpang.integer' => 'Jumlah penumpang harus berupa angka.',
-            'jumlah_penumpang.min' => 'Jumlah penumpang minimal 1.',
-            'is_pulang_pergi.required' => 'Pilihan pulang pergi wajib diisi.',
-            'is_pulang_pergi.in' => 'Pilihan pulang pergi tidak valid.'
-        ]);
+        // Kategori filter (bus/travel)
+        if (!empty($kategoriFilters)) {
+            $query->whereHas('busTravel.busTravel', function($q) use ($kategoriFilters) {
+                $q->where(function($subQ) use ($kategoriFilters) {
+                    foreach ($kategoriFilters as $kategori) {
+                        // Use exact match with case-insensitive comparison
+                        $subQ->orWhereRaw('LOWER(kategori) = ?', [strtolower(trim($kategori))]);
+                    }
+                });
+            });
+        }
 
-        $date = $request->date_pergi ?? now()->format('Y-m-d');
-        $date_pulang = $request->date_pulang ?? null;
-        $qty = $request->jumlah_penumpang ?: 1;
-        $pp = $request->is_pulang_pergi ?? 0;
-        $selected_agent = $request->agent ? '%' . $request->agent . '%' : null;
+        // Class filter (ekonomi, eksekutif, vip, super executive)
+        if (!empty($classFilters)) {
+            $query->whereHas('busTravel', function($q) use ($classFilters) {
+                $q->where(function($subQ) use ($classFilters) {
+                    foreach ($classFilters as $class) {
+                        $subQ->orWhere('class', 'like', '%' . $class . '%');
+                    }
+                });
+            });
+        }
 
-        // Get route relationships for filtering
-        $routes = BusDeparture::with('from', 'to')->get();
+        // Facility filter
+        if (!empty($facilityFilters)) {
+            $query->whereHas('busTravel.facilities', function($q) use ($facilityFilters) {
+                $q->whereHas('facility', function($fq) use ($facilityFilters) {
+                    $fq->where(function($subQ) use ($facilityFilters) {
+                        foreach ($facilityFilters as $facility) {
+                            $subQ->orWhere('name', 'like', '%' . $facility . '%');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Price sort
+        if ($sortOrder) {
+            $query->orderBy('price', $sortOrder === 'asc' ? 'asc' : 'desc');
+        }
+
+        return $query;
+    }
+
+    /**
+     * Build route data for filtering
+     */
+    private function buildRouteData($routes)
+    {
         $routeData = [];
         foreach ($routes as $route) {
             $from = $route->from->city_name ?? '';
             $to = $route->to->city_name ?? '';
 
             if ($from && $to) {
+                // Add to departure routes
                 if (!isset($routeData['departures'][$from])) {
                     $routeData['departures'][$from] = [];
                 }
                 if (!in_array($to, $routeData['departures'][$from])) {
                     $routeData['departures'][$from][] = $to;
                 }
+
+                // Add to destination routes
                 if (!isset($routeData['destinations'][$to])) {
                     $routeData['destinations'][$to] = [];
                 }
@@ -517,154 +693,8 @@ HTML;
                 }
             }
         }
-
-        // Parse price if provided
-        $price = null;
-        if ($request->price) {
-            $cleanInput = str_replace(['k', 'K', '.', ','], '', $request->price);
-            $price = (int) $cleanInput;
-            if (stripos($request->price, 'k') !== false) {
-                $price *= 1000;
-            }
-        }
-
-        // Parse time range if provided
-        $timeRange = null;
-        if ($request->time) {
-            $timeRange = $this->calculateTimeRange($request->time);
-        }
-
-        // Parse facility search terms
-        $facilityTerms = [];
-        if ($request->facility) {
-            $facilityTerms = $this->getFacilitySearchTerms($request->facility);
-        }
-
-        // --- BASE QUERY BUILDER ---
-        $baseQuery = function () use ($request, $date, $date_pulang, $pp) {
-            $dayOfWeekPergi = $date ? date('w', strtotime($date)) : null;
-            $dayOfWeekPulang = $date_pulang ? date('w', strtotime($date_pulang)) : null;
-            $dayNames = ['minggu', 'senin', 'selasa', 'rabu', 'kamis', 'jumat', 'sabtu'];
-
-            $pergiQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
-                ->has('busTravel')
-                ->when($request->kota_awal, fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%')))
-                ->when($request->kota_tujuan, fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                ->when($date, function ($q) use ($date, $dayOfWeekPergi, $dayNames) {
-                    $q->where(function ($query) use ($date, $dayOfWeekPergi, $dayNames) {
-                        $query->where('departure_date', $date)
-                            ->orWhere(function ($subQuery) use ($dayOfWeekPergi, $dayNames) {
-                                $subQuery->whereNull('departure_date')
-                                    ->where('days', 'like', '%' . $dayNames[$dayOfWeekPergi] . '%');
-                            });
-                    });
-                });
-
-            $pulangQuery = null;
-            if ((int)$pp === 1) {
-                $pulangQuery = BusDeparture::with('busTravel.busTravel', 'from', 'to', 'busTravel.facilities.facility')
-                    ->has('busTravel')
-                    ->when($request->kota_awal, fn($q) => $q->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_awal . '%')))
-                    ->when($request->kota_tujuan, fn($q) => $q->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_tujuan . '%')))
-                    ->when($date_pulang, function ($q) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
-                        $q->where(function ($query) use ($date_pulang, $dayOfWeekPulang, $dayNames) {
-                            $query->where('departure_date', $date_pulang)
-                                ->orWhere(function ($subQuery) use ($dayOfWeekPulang, $dayNames) {
-                                    $subQuery->whereNull('departure_date')
-                                        ->where('days', 'like', '%' . $dayNames[$dayOfWeekPulang] . '%');
-                                });
-                        });
-                    });
-            }
-            return [$pergiQuery, $pulangQuery];
-        };
-
-        // --- GET ALL AGENTS FOR THE CURRENT ROUTE ---
-        list($pergiQueryForAgents, $pulangQueryForAgents) = $baseQuery();
-        $pergiForAgents = $pergiQueryForAgents->get();
-        $pulangForAgents = $pulangQueryForAgents ? $pulangQueryForAgents->get() : collect();
-        $availableAgentIds = $pergiForAgents->pluck('busTravel.busTravel.id')
-            ->merge($pulangForAgents->pluck('busTravel.busTravel.id'))
-            ->unique()
-            ->filter();
-        $agents = BusTravels::Active()
-            ->whereIn('id', $availableAgentIds)
-            ->get();
-
-        // --- GET FILTERED RESULTS ---
-        list($pergiQuery, $pulangQuery) = $baseQuery();
-        $pergi = $pergiQuery
-            ->when($selected_agent, fn($q, $a) => $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a)))
-            ->when($price, fn($q) => $q->where('price', '<=', $price))
-            ->when($timeRange, fn($q) => $q->whereTime('departure_time', '>=', $timeRange['start'])->whereTime('departure_time', '<=', $timeRange['end']))
-            ->when(!empty($facilityTerms), function ($q) use ($facilityTerms) {
-                $q->whereHas('busTravel', function ($bus) use ($facilityTerms) {
-                    foreach ($facilityTerms as $term) {
-                        $bus->where('facilities', 'like', '%' . $term . '%')
-                            ->orWhere('description', 'like', '%' . $term . '%')
-                            ->orWhere('class', 'like', '%' . $term . '%');
-                    }
-                });
-            })
-            ->get();
-
-        $pulang = [];
-        if ($pulangQuery) {
-            $pulang = $pulangQuery
-                ->when($selected_agent, fn($q, $a) => $q->whereHas('busTravel.busTravel', fn($b) => $b->where('business_name', 'like', $a)))
-                ->when($price, fn($q) => $q->where('price', '<=', $price))
-                ->when($timeRange, fn($q) => $q->whereTime('departure_time', '>=', $timeRange['start'])->whereTime('departure_time', '<=', $timeRange['end']))
-                ->when(!empty($facilityTerms), function ($q) use ($facilityTerms) {
-                    $q->whereHas('busTravel', function ($bus) use ($facilityTerms) {
-                        foreach ($facilityTerms as $term) {
-                            $bus->where('facilities', 'like', '%' . $term . '%')
-                                ->orWhere('description', 'like', '%' . $term . '%')
-                                ->orWhere('class', 'like', '%' . $term . '%');
-                        }
-                    });
-                })
-                ->get();
-        }
-
-        // Format the bus data
-        $formattedPergi = $this->formatBus($pergi, $date);
-        $formattedPulang = $this->formatBus($pulang, $date_pulang);
-
-        // Check if there are no departures for the selected date but the route exists
-        $noDeparturesFound = false;
-        if (empty($formattedPergi) && $request->kota_awal && $request->kota_tujuan && $date) {
-            $anyRouteDepartures = BusDeparture::with('from', 'to')
-                ->whereHas('from', fn($f) => $f->where('city_name', 'like', '%' . $request->kota_awal . '%'))
-                ->whereHas('to', fn($t) => $t->where('city_name', 'like', '%' . $request->kota_tujuan . '%'))
-                ->exists();
-
-            if ($anyRouteDepartures) {
-                $noDeparturesFound = true;
-            }
-        }
-
-        $newData = [
-            'agent' => $agents,
-            'selected_agent' => $request->agent ?? null,
-            'selected_price_range' => $request->price ?? null,
-            'selected_time_range' => $request->time ?? null,
-            'selected_facility' => $request->facility ?? null,
-            'is_pulang_pergi' => $pp,
-            'kota_awal' => $request->kota_awal,
-            'kota_tujuan' => $request->kota_tujuan,
-            'date_pergi' => $request->date_pergi,
-            'date_pulang' => $request->date_pulang,
-            'jumlah_penumpang' => $qty,
-            'pergi' => $formattedPergi,
-            'pulang' => $formattedPulang,
-            'city' => BusRoute::pluck('name', 'name'),
-            'routeData' => $routeData,
-            'noDeparturesFound' => $noDeparturesFound,
-        ];
-
-        return view('pagesv2.bus_travel.search_result', $newData);
+        return $routeData;
     }
-
 
     public function findByRoute($kota_awal, $kota_tujuan)
     {
@@ -857,9 +887,10 @@ HTML;
                 'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
                 'name' => $val['busTravel']['name'] ?? 'Deleted business',
                 'class' => $val['busTravel']['class'],
-                'kategori' => $val['busTravel']['busTravel']['kategori'] ?? null,
+                'kategori' => $val['busTravel']['kategori'] ?? null,
                 'departure_point' => $val['from']['city_name'] ?? 'Deleted point',
                 'titik_naik' => $val['titik_naik'],
+                'departure_date' => $val->departure_date ? Carbon::parse($val->departure_date)->format('d M Y') : null,
                 'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
                 'arrival_point' => $val['to']['city_name'] ?? 'Deleted point',
                 'titik_turun' => $val['titik_turun'],
@@ -890,9 +921,25 @@ HTML;
         $data['date_pergi'] = $date_pergi;
         $data['date_pulang'] = $date_pulang;
 
-        $data['departure'] = BusDeparture::with(['busTravel.busTravel', 'busTravel.facilities.facility', 'from', 'to'])->find($param['departure_id']);
+        // ========================================
+        // ROUND TRIP: Pass through first leg data
+        // ========================================
+        if ($request->has('ticket_pergi_id')) {
+            // We are selecting the return trip
+            $data['ticket_pergi_id'] = $request->get('ticket_pergi_id');
+            $data['original_date_pergi'] = $request->get('original_date_pergi');
+            $data['original_date_pulang'] = $request->get('original_date_pulang');
+
+            // Pass through the seat selections from the first leg
+            for ($i = 1; $i <= $jumlah_penumpang; $i++) {
+                if ($request->has('kursi_pergi_' . $i)) {
+                    $data['kursi_pergi_' . $i] = $request->get('kursi_pergi_' . $i);
+                }
+            }
+        }
+
+        $data['departure'] = BusDeparture::with(['busTravel.busTravel', 'busTravel.facilities.facility', 'from', 'to'])->find($departure_id);
         $data['choosedChairs'] = BusCostumerHasChair::select('kursi_pergi')->where('id_departure', $departure_id)->where('date_pergi', $date_pergi)->where('is_active', 1)->orderBy('kursi_pergi')->get();
-        // dd($data['departure']->busTravel->number_seats%2);
 
         return view('pagesv2.bus_travel.detail', $data);
     }
@@ -915,9 +962,21 @@ HTML;
         $data['date_pergi'] = $param['date_pergi'];
         $data['date_pulang'] = $param['date_pulang'];
         $data['is_order'] = 1;
-        for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
-            $data['kursi_penumpang_' . $i] = $param['kursi_penumpang_' . $i];
+
+        if ($param['is_pulang_pergi'] == 1) {
+            for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
+                $data['kursi_pergi_' . $i] = $param['kursi_pergi_' . $i];
+                $data['kursi_pulang_' . $i] = $param['kursi_pulang_' . $i];
+            }
+            if (!empty($param['ticket_pulang_id'])) {
+                $data['pulang'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['ticket_pulang_id']);
+            }
+        } else {
+            for ($i = 1; $i <= $param['jumlah_penumpang']; $i++) {
+                $data['kursi_pergi_' . $i] = $param['kursi_penumpang_' . $i];
+            }
         }
+
 
         $data['departure'] = BusDeparture::with('busTravel', 'from', 'to')->find($param['departure_id']);
         $data['user'] = $user;
@@ -934,8 +993,10 @@ HTML;
 
     public function request_transaction(Request $request)
     {
-        // Fix the loop condition - should be <= not <
         for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
+            $kursi_pergi_val = $request->{"kursi_pergi_$i"};
+            $kursi_pulang_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pulang_$i"} : null;
+
             $data_kursi = [
                 'id_costumer' => auth()->user()->id,
                 'id_departure' => $request->ticket_pergi_id,
@@ -943,8 +1004,8 @@ HTML;
                 'is_pulang_pergi' => $request->is_pulang_pergi,
                 'date_pergi' => $request->date_pergi,
                 'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
-                'kursi_pergi' => $request->{"kursi_penumpang_$i"} ?? null,
-                'kursi_pulang' => '',
+                'kursi_pergi' => $kursi_pergi_val,
+                'kursi_pulang' => $kursi_pulang_val,
             ];
 
             BusCostumerHasChair::create($data_kursi);

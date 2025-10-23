@@ -17,9 +17,10 @@
                             <th style="width: 50px">No</th>
                             <th style=": 150px">Gambar</th>
                             <th style=": 150px">Nama</th>
+                            <th style=": 150px">Kategori</th>
                             {{-- <th style=": 250px">Peraturan atau Ketentuan</th> --}}
                             {{-- <th class="text-center px-2">Class</th> --}}
-                            <th style=": 100px">Jumlah Seat</th>
+                            <th style=": 100px">Kursi</th>
                             <th style=": 180px">Fasilitas</th>
                             <th style=": 70px">Status</th>
                             <th>Aksi</th>
@@ -42,6 +43,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $bus->name ?? '' }}</td>
+                                <td>{{ $bus->kategori }}</td>
                                 {{-- <td class="text-truncate" style="max-width: 250px">{{ $bus->tos ?? '' }}</td> --}}
                                 <td>{{ $bus->number_seats ?? '0' }}</td>
                                 <td style="max-width: 200px">
