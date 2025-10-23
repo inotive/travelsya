@@ -158,6 +158,14 @@ class NewRecreationController extends Controller
         return view('pagesv2.rekreasi.show', $data);
     }
 
+    public function showAll()
+    {
+        $data['section_title'] = 'Semua Rekreasi';
+        $data['packages'] = RecreationPackages::with(['image', 'recreation.kota', 'reviews'])->get();
+
+        return view('pagesv2.rekreasi.show', $data);
+    }
+
     public function detail(Request $request, $id, $date){
         $data['detail'] = Recreation::with('reviews', 'recreationPackages', 'kota')->find($id);
         $data['date'] = $date;

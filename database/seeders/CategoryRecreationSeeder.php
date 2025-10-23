@@ -14,15 +14,18 @@ class CategoryRecreationSeeder extends Seeder
     public function run(): void
     {
         CategoryRecreation::create([
-            "name" => "Atraksi"
+            "name" => "Atraksi",
+            "image" => "images/sanjoy-saha-C_OTD4dVchI-unsplash.jpg"
         ]);
 
         CategoryRecreation::create([
-            "name" => "Arena"
+            "name" => "Arena",
+            "image" => "images/ark-fen-5jtPZhhHc0w-unsplash.jpg"
         ]);
 
         CategoryRecreation::create([
-            "name" => "Event"
+            "name" => "Event",
+            "image" => "images/rachel-coyne-U7HLzMO4SIY-unsplash.jpg"
         ]);
     }
 }
