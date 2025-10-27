@@ -17,7 +17,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link active" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="is_pulang_pergi" value="0" checked required />
+                                <input class="btn-check" type="radio" name="is_pulang_pergi" value="0" id="hero_sekali_jalan" checked required />
                                 <!--end::Input-->
                                 Sekali Jalan
                             </label>
@@ -26,7 +26,7 @@
                             <!--begin::Radio-->
                             <label class="btn btn-link" data-kt-button="true">
                                 <!--begin::Input-->
-                                <input class="btn-check" type="radio" name="is_pulang_pergi" value="1" required />
+                                <input class="btn-check" type="radio" name="is_pulang_pergi" value="1" id="hero_pulang_pergi" required />
                                 <!--end::Input-->
                                 Pulang Pergi
                             </label>
@@ -71,8 +71,18 @@
                                 <i class="fa-solid fa-calendar-days"></i>
                             </span>
                             <input type="text" name="date_pergi" onfocus="(this.type='date')" class="form-control"
-                                placeholder="Tanggal reservasi" required />
+                                placeholder="Tanggal Berangkat" required />
                         </div>
+
+                        {{-- Return Date Field (Hidden by default) --}}
+                        <div class="input-group mb-3" id="hero_date_pulang_wrapper">
+                            <span class="input-group-text bg-transparent">
+                                <i class="fa-solid fa-calendar"></i>
+                            </span>
+                            <input type="text" name="date_pulang" id="hero_date_pulang" onfocus="(this.type='date')" class="form-control"
+                                placeholder="Tanggal Pulang" />
+                        </div>
+
                         <div class="input-group mb-4">
                             <span class="input-group-text bg-transparent">
                                 <i class="fa-solid fa-chair"></i>
@@ -81,9 +91,6 @@
                                 placeholder="Jumlah Kursi" required />
                         </div>
                         <button type="submit" class="btn btn-danger w-100 fw-semibold bg-main">Cari Sekarang</button>
-
-                    {{-- <a href="{{ route('register') }}" class="btn btn-danger w-100 fw-semibold bg-main">Cari
-                        Sekarang</a> --}}
 
                     </form>
             </div>
@@ -100,6 +107,20 @@
         transform: rotate(180deg);
     }
 
+    /* Hero Return Date Field Animation */
+    #hero_date_pulang_wrapper {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-bottom: 0 !important;
+        transition: all 0.3s ease;
+    }
+
+    #hero_date_pulang_wrapper.visible {
+        max-height: 100px;
+        opacity: 1;
+        margin-bottom: 1rem !important;
+    }
 </style>
 
 <script>
@@ -181,10 +202,34 @@
         });
     }
 
+    // ========================================
+    // PULANG PERGI FUNCTIONALITY
+    // ========================================
+    function handleHeroTripTypeChange() {
+        const pulangPergiRadio = document.getElementById('hero_pulang_pergi');
+        const datePulangWrapper = document.getElementById('hero_date_pulang_wrapper');
+        const datePulangInput = document.getElementById('hero_date_pulang');
+
+        const isPulangPergi = pulangPergiRadio.checked;
+
+        if (isPulangPergi) {
+            // Show return date field
+            datePulangWrapper.classList.add('visible');
+            datePulangInput.setAttribute('required', 'required');
+        } else {
+            // Hide return date field
+            datePulangWrapper.classList.remove('visible');
+            datePulangInput.removeAttribute('required');
+            datePulangInput.value = '';
+        }
+    }
+
     // Add event listeners when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
         const kotaAwal = document.getElementById('kota_awal');
         const kotaTujuan = document.getElementById('kota_tujuan');
+        const sekaliJalanRadio = document.getElementById('hero_sekali_jalan');
+        const pulangPergiRadio = document.getElementById('hero_pulang_pergi');
 
         if (kotaAwal) {
             kotaAwal.addEventListener('change', updateDestinationDropdown);
@@ -193,6 +238,20 @@
         if (kotaTujuan) {
             kotaTujuan.addEventListener('change', updateDepartureDropdown);
         }
+
+        // Listen to trip type changes
+        if (sekaliJalanRadio) {
+            sekaliJalanRadio.addEventListener('change', handleHeroTripTypeChange);
+            sekaliJalanRadio.addEventListener('click', handleHeroTripTypeChange);
+        }
+
+        if (pulangPergiRadio) {
+            pulangPergiRadio.addEventListener('change', handleHeroTripTypeChange);
+            pulangPergiRadio.addEventListener('click', handleHeroTripTypeChange);
+        }
+
+        // Set initial state
+        handleHeroTripTypeChange();
     });
 
     document.getElementById('myButton').addEventListener('click', function() {

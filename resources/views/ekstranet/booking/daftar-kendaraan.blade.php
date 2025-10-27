@@ -23,11 +23,17 @@
                 <div class="col-12 col-md-3 mb-2 mb-md-0">
                     <input type="date" class="form-control" name="start" value="{{ request()->get('start') }}" placeholder="Tanggal Mulai">
                 </div>
-                <div class="col-12 col-md-3 mb-2 mb-md-0">
+                                <div class="col-12 col-md-3 mb-2 mb-md-0">
                     <input type="date" class="form-control" name="end" value="{{ request()->get('end') }}" placeholder="Tanggal Akhir">
                 </div>
-                <div class="col-12 col-md-3">
-                    <button type="submit" class="btn btn-primary w-100">Cari Data</button>
+                <div class="col-12 col-md-2 mb-2 mb-md-0">
+                    <select class="form-select" name="sort">
+                        <option value="desc" {{ request()->get('sort') == 'desc' ? 'selected' : '' }}>Terbaru ke Terlama</option>
+                        <option value="asc" {{ request()->get('sort') == 'asc' ? 'selected' : '' }}>Terlama ke Terbaru</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">Cari</button>
                 </div>
             </div>
             <!-- Hidden input for tab status -->

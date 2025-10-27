@@ -3,10 +3,17 @@
         'colokan usb' => ['type' => 'image', 'src' => asset('images/icon/usb.png')],
         'full ac' => ['type' => 'image', 'src' => asset('images/icon/ac.png')],
         'kursi recliner' => ['type' => 'image', 'src' => asset('images/icon/chair.png')],
-        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-dark'],
-        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-dark'],
-        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-dark'],
+        'alat pemadam' => ['type' => 'fa', 'class' => 'fa-solid fa-fire-extinguisher text-muted-custom'],
+        'peraturan kursi 1 - 1' => ['type' => 'fa', 'class' => 'fa-solid fa-gear text-muted-custom'],
+        'lampu baca' => ['type' => 'bootstrap', 'class' => 'bi bi-lamp-fill text-muted-custom'],
+        'tv led' => ['type' => 'fa', 'class' => 'fa-solid fa-tv text-muted-custom'],
+        'toilet' => ['type' => 'fa', 'class' => 'fa-solid fa-toilet text-muted-custom'],
+        'wi-fi' => ['type' => 'fa', 'class' => 'fa-solid fa-wifi text-muted-custom'],
+        'selimut dan bantal' => ['type' => 'fa', 'class' => 'fa-solid fa-bed text-muted-custom'],
+        'bagasi bawah' => ['type' => 'fa', 'class' => 'fa-solid fa-suitcase-rolling text-muted-custom'],
+        'rak bagasi atas' => ['type' => 'fa', 'class' => 'fa-solid fa-suitcase text-muted-custom'],
     ];
+
 
     // Small inline function to render the HTML
     $renderIcon = function ($name) use ($facilityIcons) {
@@ -47,6 +54,30 @@
                     aria-controls="tnc_tab_pane" aria-selected="false">Syarat & Ketentuan</a>
             </li> --}}
         </ul>
+
+        @if($is_pulang_pergi == 1)
+            @php
+                // Check if we're selecting the return leg by looking for ticket_pergi_id
+                $isReturnLeg = isset($ticket_pergi_id);
+            @endphp
+            <div class="alert alert-info rounded-4 mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    @if($isReturnLeg)
+                        <i class="fa-solid fa-arrow-right-arrow-left me-2 text-success fs-4"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">Tiket Kepulangan</h4>
+                            <p class="mb-0">Anda sedang memilih kursi untuk tiket kepulangan dari <strong>{{ $departure->from->city_name }}</strong> ke <strong>{{ $departure->to->city_name }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
+                        </div>
+                    @else
+                        <i class="fa-solid fa-arrow-right me-2 text-primary fs-4"></i>
+                        <div>
+                            <h4 class="alert-heading mb-1">Tiket Kepergian</h4>
+                            <p class="mb-0">Anda sedang memilih kursi untuk tiket kepergian dari <strong>{{ $departure->from->city_name }}</strong> ke <strong>{{ $departure->to->city_name }}</strong> pada tanggal <strong>{{ \Carbon\Carbon::parse($date_pergi)->format('d M Y') }}</strong></p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
 
         <div class="tab-content" id="busDetailsTabContent">
             <div class="tab-pane fade show active" id="details_tab_pane" role="tabpanel" aria-labelledby="details-tab">
@@ -149,16 +180,16 @@
                     <span class="title fw-bold">Syarat dan Ketentuan</span>
                 </div>
                 <div class="card shadow mb-35px">
-                    <div class="card-body">
-                        {!! $departure->busTravel->tos !!}
+                    <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                        {!! nl2br(e($departure->busTravel->tos)) !!}
                     </div>
                 </div>
                 <div class="mb-35px">
                     <span class="title fw-bold">Deskripsi</span>
                 </div>
-                <div class="card shadow mb-35px">
+                <div class="card shadow mb-35px" style="max-height: 300px; overflow-y: auto;">
                     <div class="card-body">
-                        {!! $departure->busTravel->deskripsi !!}
+                        {!! nl2br(e($departure->busTravel->deskripsi)) !!}
                     </div>
                 </div>
                 <div class="mb-35px">
@@ -179,7 +210,7 @@
                 </div>
             </div>
         </div>
-        <hr class="mb-35px" style="border-top: 2px dashed #777;">
+        <hr class="mb-35px" style="color: #777">
         <div class="card shadow rouded-4 mb-35px">
             <div class="card-body d-flex flex-row align-items-center justify-content-between">
                 <span class="fs-2 text-danger">IDR {{ number_format($departure->price * $jumlah_penumpang, 0, ',', '.') }}</span>
@@ -241,7 +272,7 @@
                         </button>
                         @endif
                     </div>
-                    
+
                     @if (count($busImages) > 1)
                     <div class="mt-3">
                         <ol class="carousel-indicators p-0">
@@ -274,5 +305,5 @@
 
     </style>
 
-    
+
 @endsection

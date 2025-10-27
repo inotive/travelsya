@@ -390,6 +390,7 @@ class RiwayatBookingController extends Controller
         $start = $request->input('start');
         $end = $request->input('end');
         $keyword = $request->input('keyword');
+        $sort = $request->input('sort', 'desc');
 
         if ($year) {
             $carrentalbookdates->whereHas('transaction', function ($q) use ($year) {
@@ -419,7 +420,7 @@ class RiwayatBookingController extends Controller
             });
         }
 
-        $carrentalbookdates = $carrentalbookdates->get()->unique('transaction_id');
+        $carrentalbookdates = $carrentalbookdates->orderBy('start', $sort)->get()->unique('transaction_id');
 
         return view('ekstranet.booking.daftar-kendaraan', compact('carrentalbookdates'));
     }

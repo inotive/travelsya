@@ -28,7 +28,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 2,
                 'to_city_id' => 1,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -40,7 +40,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 1,
                 'to_city_id' => 2,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -52,7 +52,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 3,
                 'to_city_id' => 4,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -64,7 +64,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 4,
                 'to_city_id' => 3,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -76,7 +76,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 2,
                 'to_city_id' => 1,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -88,7 +88,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 1,
                 'to_city_id' => 2,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -100,7 +100,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 3,
                 'to_city_id' => 4,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -112,7 +112,7 @@ class BusDepartureSeeder extends Seeder
                 'departure_date' => '2025-10-01', // Set to October 1, 2025
                 'from_city_id' => 4,
                 'to_city_id' => 3,
-                'duration' => null,
+                'duration' => 1,
                 'days' => 'senin,selasa,rabu,kamis,jumat,sabtu,minggu',
                 'price' => 100000,
                 'titik_naik' => 'Terminal Default',
@@ -125,7 +125,7 @@ class BusDepartureSeeder extends Seeder
             // Ensure both from and to cities exist in bus_route
             $this->ensureCityInBusRoute($departure['from_city_id']);
             $this->ensureCityInBusRoute($departure['to_city_id']);
-            
+
             // Insert the departure
             DB::table('bus_departures')->insert($departure);
         }

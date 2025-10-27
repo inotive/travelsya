@@ -130,7 +130,7 @@
                                             {{ $booking->busTravelHasBus->name ?? '-' }}
                                         </td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
-                                        <td class="text-center">{{ General::rp($booking->price + $booking->fee_admin) }}</td>
+                                        <td class="text-center">{{ General::rp($booking->price ) }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
@@ -227,7 +227,7 @@
                                                 {{ $booking->busTravelHasBus->name ?? '-' }}
                                             </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ General::rp($booking->price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->price ) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -307,7 +307,7 @@
                                                 {{ $booking->busTravelHasBus->name ?? '-' }}
                                             </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ General::rp($booking->price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->price) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -387,7 +387,7 @@
                                                 {{ $booking->busTravelHasBus->name ?? '-' }}
                                             </td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ General::rp($booking->price + $booking->fee_admin) }}</td>
+                                            <td class="text-center">{{ General::rp($booking->price ) }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -574,6 +574,39 @@
         table.dataTable tbody td.text-center {
             padding-left: 0.75rem !important;
             padding-right: 0.75rem !important;
+        }
+
+        body.modal-open {
+            overflow: hidden !important;
+            padding-right: 0 !important;
+        }
+
+        .modal-open .table-responsive {
+            overflow-x: auto !important;
+        }
+
+        /* Ensure tables maintain their layout */
+        table.dataTable {
+            width: 100% !important;
+            table-layout: auto !important;
+        }
+
+        table.dataTable thead th,
+        table.dataTable tbody td {
+            white-space: nowrap !important;
+        }
+
+        /* Fix for DataTable after modal */
+        .dataTables_wrapper {
+            width: 100% !important;
+        }
+
+        .dataTables_scroll {
+            width: 100% !important;
+        }
+
+        .dataTables_scrollBody {
+            width: 100% !important;
         }
     </style>
 
@@ -830,6 +863,36 @@
                 $('body').addClass('modal-open');
             }).on('hidden.bs.modal', function() {
                 $('body').removeClass('modal-open');
+            });
+
+            $('#verifyModal, #cancelVerifyModal, #invoiceModal').on('hidden.bs.modal', function () {
+                // Force DataTable to recalculate column widths after modal closes
+                setTimeout(function() {
+                    $.fn.dataTable.tables({ visible: true, api: true }).columns.adjust().responsive.recalc();
+                }, 200);
+            });
+
+            // FIX: Ensure proper cleanup when modal is shown
+            $('#verifyModal, #cancelVerifyModal, #invoiceModal').on('show.bs.modal', function () {
+                // Store current scroll position
+                $('body').data('scroll-pos', $(window).scrollTop());
+            });
+
+            // FIX: Restore scroll position after modal closes
+            $('#verifyModal, #cancelVerifyModal, #invoiceModal').on('shown.bs.modal', function () {
+                // Prevent body from shifting
+                $('body').css('overflow', 'hidden');
+            });
+
+            $('#verifyModal, #cancelVerifyModal, #invoiceModal').on('hidden.bs.modal', function () {
+                // Restore body overflow
+                $('body').css('overflow', '');
+
+                // Restore scroll position
+                var scrollPos = $('body').data('scroll-pos');
+                if (scrollPos) {
+                    $(window).scrollTop(scrollPos);
+                }
             });
         });
     </script>
