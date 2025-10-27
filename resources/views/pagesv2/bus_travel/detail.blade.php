@@ -112,7 +112,7 @@
                                 <hr>
                                 <div class="row p2">
                                     <div class="col-3 mb-4">
-                                        <span><i class="fa-solid fa-suitcase"></i></span>
+                                        <span><i class="fa-solid fa-suitcase" style="color: #4e4e57"></i></span>
                                         <span class="ms-2">Kapasitas
                                             {{ number_format($departure->busTravel->number_seats) }}
                                             Kursi</span>
@@ -301,8 +301,9 @@
             opacity: 1;
             border: 2px solid #dc3545; /* highlight selected thumb */
         }
-
-
+        .text-muted-custom {
+            color: #4e4e57 !important;
+        }
     </style>
 
 
