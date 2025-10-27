@@ -7,6 +7,7 @@ use App\Models\BusFacility;
 use App\Models\BusTravelHasBus;
 use App\Models\BusTravelHasFacility;
 use App\Models\BusTravels;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -212,6 +213,116 @@ class BusTravelController extends Controller
         }
 
         $bus->delete();
+
+        return redirect()->back()->with('delete', 'Data berhasil dihapus!');
+    }
+
+    public function bisnisIndex()
+    {
+        $user = auth()->user();
+        $bus_travels = BusTravels::with('cityDetail')->where('user_id', $user->id)->orderBy('id', 'desc')->get();
+
+        return view('ekstranet.bus-travel.bisnis.list-bus-travel', [
+            'bus_travels'  => $bus_travels,
+        ]);
+    }
+
+    public function bisnisCreate()
+    {
+        $cities = City::all();
+        return view('ekstranet.bus-travel.bisnis.create', compact('cities'));
+    }
+
+    public function bisnisStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'city' => 'required|exists:cities,city_id',
+            'address' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'is_active' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('bus-travel-images', $imageName, 'public');
+        }
+
+        BusTravels::create([
+            'user_id' => auth()->id(),
+            'business_name' => $request->business_name,
+            'phone' => $request->phone,
+            'city' => $request->city,
+            'address' => $request->address,
+            'image' => $imageName,
+            'is_active' => $request->is_active,
+        ]);
+
+        return redirect()->route('partner.bisnis.bus-travel.index')->with('status', 'Data berhasil ditambahkan!');
+    }
+
+    public function bisnisEdit($id)
+    {
+        $bus_travel = BusTravels::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        $cities = City::all();
+        return view('ekstranet.bus-travel.bisnis.edit', compact('bus_travel', 'cities'));
+    }
+
+    public function bisnisUpdate(Request $request, $id)
+    {
+        $bus_travel = BusTravels::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+
+        $validator = Validator::make($request->all(), [
+            'business_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'city' => 'required|exists:cities,city_id',
+            'address' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'is_active' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $imageName = $bus_travel->image;
+        if ($request->hasFile('image')) {
+            if ($imageName) {
+                Storage::disk('public')->delete('bus-travel-images/' . $imageName);
+            }
+            $image = $request->file('image');
+            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('bus-travel-images', $imageName, 'public');
+        }
+
+        $bus_travel->update([
+            'business_name' => $request->business_name,
+            'phone' => $request->phone,
+            'city' => $request->city,
+            'address' => $request->address,
+            'image' => $imageName,
+            'is_active' => $request->is_active,
+        ]);
+
+        return redirect()->route('partner.bisnis.bus-travel.index')->with('update', 'Data berhasil diupdate!');
+    }
+
+    public function bisnisDestroy($id)
+    {
+        $bus_travel = BusTravels::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
+        
+        if ($bus_travel->image) {
+            Storage::disk('public')->delete('bus-travel-images/' . $bus_travel->image);
+        }
+        
+        $bus_travel->delete();
 
         return redirect()->back()->with('delete', 'Data berhasil dihapus!');
     }

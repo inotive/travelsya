@@ -406,7 +406,7 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </a>
                 @endif
                 @php
-                    $isBusTravelActive = in_array(Request::segment(2), ['daftar-bus-travel', 'bus-departures']);
+                    $isBusTravelActive = in_array(Request::segment(2), ['bisnis-bus-travel', 'daftar-bus-travel', 'bus-departures']);
                 @endphp
 
                 @if (count($busTravels) > 0)
@@ -433,6 +433,26 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
 
                     <div class="menu-sub menu-sub-accordion">
+                        <!-- Menu item: bisnis -->
+                        <div class="menu-item initial menu-hover">
+                            @if (Request::segment(2) === 'bisnis-bus-travel')
+                                <a class="menu-link" href="{{ route('partner.bisnis.bus-travel.index') }}"
+                                    style="background-color: #C02425;">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"
+                                            style="background-color: white !important;"></span>
+                                    </span>
+                                    <span class="menu-title" style="color: white !important;">Semua Bisnis</span>
+                                </a>
+                            @else
+                                <a class="menu-link" href="{{ route('partner.bisnis.bus-travel.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title custom">Semua Bisnis</span>
+                                </a>
+                            @endif
+                        </div>
                         <!-- Menu item: Bus -->
                         <div class="menu-item initial menu-hover">
                             @if (Request::segment(2) === 'daftar-bus-travel')
