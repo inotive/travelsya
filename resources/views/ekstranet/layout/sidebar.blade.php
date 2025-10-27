@@ -379,17 +379,54 @@ $isPemesananActive = in_array(Request::segment(2), [
                 @endif
 
                 @if (count($clinic) > 0)
-                    <a href="{{ route('clinics.list') }}"
-                        class="menu-item {{ Request::segment(2) == 'clinics' ? 'here' : '' }} menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
-                                <i class="fas fa-receipt fs-3"></i>
+                    @php
+                        $isHealthBeautyActive = in_array(Request::segment(2), ['management-clinic', 'clinic-paket']);
+                    @endphp
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $isHealthBeautyActive ? 'here show' : '' }}">
+                        <span class="menu-link {{ $isHealthBeautyActive ? 'main-accordion' : '' }}">
+                            <span class="menu-icon {{ $isHealthBeautyActive ? 'main-accordion' : '' }}">
+                                <i class="fas fa-spa fs-3"></i>
                             </span>
-                            <span class="menu-title">Health & Beauty</span>
+                            <span class="menu-title {{ $isHealthBeautyActive ? 'main-accordion' : '' }}">Health & Beauty</span>
+                            <span class="menu-arrow {{ $isHealthBeautyActive ? 'main-accordion' : '' }}"></span>
                         </span>
-                        <!--end:Menu link-->
-                    </a>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'management-clinic')
+                                    <a class="menu-link" href="{{ route('partner.management.clinic') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Semua Health & Beauty</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.management.clinic') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Semua Health & Beauty</span>
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'clinic-paket')
+                                    <a class="menu-link" href="{{ route('partner.clinic.paket') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Daftar Paket</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.clinic.paket') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Daftar Paket</span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 @endif
 
                 @if (count($carRentals) > 0)

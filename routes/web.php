@@ -549,6 +549,15 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::get('/categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get.categories.by.clinic');
         });
 
+        // Health & Beauty management routes
+        Route::middleware(['auth'])->group(function () {
+            Route::get('management-clinic', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'index'])->name('partner.management.clinic');
+            Route::get('management-clinic/{id}', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'show'])->name('partner.management.clinic.show');
+            Route::get('management-clinic/{id}/edit', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'edit'])->name('partner.management.clinic.edit');
+            Route::put('management-clinic/{id}', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'update'])->name('partner.management.clinic.update');
+            Route::get('clinic-paket', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'clinicPaket'])->name('partner.clinic.paket');
+        });
+
 
         // Hotel Room Image
         Route::get('daftar-room/detailroom/hotel/showimage/{id}', [ManagementRoomController::class, 'showhotelroomImage'])->name('partner.management.room.showhotelroomimage');
