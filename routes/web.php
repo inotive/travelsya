@@ -243,6 +243,7 @@ Route::post('/s_recreation', [NewRecreationController::class, 'search_ajax'])->n
 
 Route::group(['prefix' => 'rekreasi'], function () {
     Route::get('/', [NewRecreationController::class, 'index'])->name('rekreasi.index');
+    Route::get('/show/all', [NewRecreationController::class, 'showAll'])->name('rekreasi.show.all');
     Route::post('/show', [NewRecreationController::class, 'show'])->name('rekreasi.show');
     Route::get('/detail/{id}/{date}', [NewRecreationController::class, 'detail'])->name('rekreasi.detail');
     Route::post('/order/{id}', [NewRecreationController::class, 'order'])->name('rekreasi.order');
@@ -283,7 +284,7 @@ Route::post('/s_travel', [BusTravelController::class, 'search_ajax'])->name('sea
 Route::group(['prefix' => 'car_rent'], function () {
     Route::get('/', [NewCarRentController::class, 'index'])->name('car_rent.index');
     Route::get('/get_cars_vendor/{brand_id}/{city_id}', [NewCarRentController::class, 'getVendorCars']);
-    Route::post('/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
+    Route::match(['get', 'post'], '/show', [NewCarRentController::class, 'show'])->name('car_rent.show');
     Route::get('/brand/{id}', [NewCarRentController::class, 'brand_detail'])->name('car_rent.brand.detail');
     Route::get('/model/{id}', [NewCarRentController::class, 'model_detail'])->name('car_rent.model.detail');
     Route::get('/detail/{category}/{lokasi}/{model}/{provider}/{date}/{duration}', [NewCarRentController::class, 'detail'])->name('car_rent.detail');

@@ -6,7 +6,6 @@
 <meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 
 <head>
-    @stack('styles')
     @include('layouts.partials.head')
     <style>
         .nav-line-tabs .nav-item .nav-link.active,
@@ -82,13 +81,17 @@
         <div class="page d-flex flex-row flex-column-fluid">
             <!--begin::Wrapper-->
             <div class="wrapper d-flex flex-column flex-row-fluid" id="kt_wrapper">
-                <!--begin::Header-->
-                <div id="kt_header" class="header  align-items-stretch mb-0" data-kt-sticky="true"
-                    data-kt-sticky-name="header" data-kt-sticky-offset="{default: '200px', lg: '300px'}">
-                    @include('layouts.partials.header')
+                <!--begin::Content-->
+                <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+                    <!--begin::Post-->
+                    <div class="post d-flex flex-column-fluid" id="kt_post">
+                        <div id="kt_content_container" class="container-fluid px-0">
+                            @yield('content')
+                        </div>
+                    </div>
+                    <!--end::Post-->
                 </div>
-                <!--end::Header-->
-                @yield('content')
+                <!--end::Content-->
                 <!--begin::Footer-->
                 @include('layouts.partials.footer')
                 <!--end::Footer-->

@@ -1,27 +1,29 @@
-<div class="second-nav border-top border-bottom border-3">
-    <div class="container d-flex flex-row align-items-center">
-        <div class="d-flex w-100">
-            <div class="d-flex align-items-center">
-                <a href="javascript:" onclick="history.back()" class="back-btn text-danger fs-16 text-decoration-none">
-                    <h4 class="text-danger">
-                        <i class="fa-solid fa-arrow-left me-2 text-danger"></i>
-                        <span class="fw-bold my-auto">
-                            Kembali
-                        </span>
-                    </h4>
-                </a>
-            </div>
-            <div class="ms-sm-auto position-relative">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-left-round border-right-none" id="basic-addon1">
-                        <i class="fa-solid fa-search"></i>
-                    </span>
-                    <input type="text" onkeyup="findData()" class="form-control search-input" id="find"
-                        placeholder="Cari klinik keseharan dan kecantikan disini" />
+<div class="card border-transparent header-image" data-bs-theme="light" style="border-radius: 0 !important; margin-bottom: 0 !important; margin-top: -1px !important; border-bottom-left-radius: 4em !important; border-bottom-right-radius: 4em !important; box-shadow: none !important; margin-left: calc(-1 * (max(100vw - 100%, 0px) / 2)) !important; margin-right: calc(-1 * (max(100vw - 100%, 0px) / 2)) !important; min-height: 200px !important;">
+    <div class="card-body d-flex ps-xl-20">
+        <div class="m-0 w-100">
+            <div class="position-relative fs-2x z-index-2 fw-bold text-white mb-2 d-flex justify-content-between align-items-center" style="padding-top: 40px;">
+                <div class="d-flex align-items-center">
+                    <button onclick="history.back()"
+                        class="btn btn-icon btn-rounded btn-color-white bg-white bg-opacity-15 bg-hover-opacity-25 fw-semibold me-3">
+                        <i class="las la-times"></i>
+                    </button>
+                    <div>
+                        <div class="fs-1">Health & Beauty</div>
+                        <div class="fs-4 text-gray-300">Cari klinik kecantikan dan kesehatan di lokasimu!</div>
+                    </div>
                 </div>
-                <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result" style="z-index: 9999">
-                    <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
-                        <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>
+                <div class="position-relative">
+                    <div class="input-group rounded-pill overflow-hidden" style="width: 400px; background: white;">
+                        <span class="input-group-text bg-white border-0 text-dark" id="basic-addon1">
+                            <i class="fa-solid fa-search"></i>
+                        </span>
+                        <input type="text" onkeyup="findData()" class="form-control search-input border-0 text-dark" id="find"
+                            placeholder="Cari klinik kesehatan dan kecantikan disini" style="background: white; color: dark;" />
+                    </div>
+                    <div class="card d-none mt-2 rounded shadow-sm position-absolute w-100" id="card_result" style="z-index: 9999; width: 400px !important;">
+                        <div class="card-body" id="search-wrapper" style="max-height: 50vh; overflow-y : scroll">
+                            <div class="mx-auto fw-bold text-center" style="color : var(--bs-gray-500)">Ketikan Minimal 2 karakter</div>
+                        </div>
                     </div>
                 </div>
             </div>
