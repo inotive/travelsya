@@ -416,12 +416,12 @@
                                     // Set default value for Spa & Kecantikan (you may want to adjust this based on your business logic)
                                     $('#categories_services_id').val(''); // Clear any existing selection
                                 } else if (catLower.includes('kesehatan')) {
-                                    // Show category field for Kesehatan business and load only Product category
+                                    // Show category field for Kesehatan business and load only Clinic category
                                     $('#category-field').show();
                                     // Make categories_services_id field required
                                     $('#categories_services_id').attr('required', 'required');
                                     
-                                    // Load only Product category for Kesehatan
+                                    // Load only Clinic category for Kesehatan
                                     loadCategoriesForKesehatan();
                                 } else if (catLower.includes('kecantikan')) {
                                     // Show category field for Kecantikan business and load Service and Product categories
@@ -466,20 +466,20 @@
                             // Set default value for Spa & Kecantikan
                             $('#categories_services_id').val(''); // Clear any existing selection
                         } else if (catLower.includes('kesehatan')) {
-                            // Show category field for Kesehatan business and load only Product category
+                            // Show category field for Kesehatan business and load only Clinic category
                             $('#category-field').show();
                             // Make categories_services_id field required
                             $('#categories_services_id').attr('required', 'required');
                             
-                            // Load only Product category for Kesehatan
+                            // Load only Clinic category for Kesehatan
                             loadCategoriesForKesehatan();
                         } else if (catLower.includes('kecantikan')) {
-                            // Show category field for Kecantikan business and load Service and Product categories
+                            // Show category field for Kecantikan business and load only Clinic category
                             $('#category-field').show();
                             // Make categories_services_id field required
                             $('#categories_services_id').attr('required', 'required');
                             
-                            // Load Service and Product categories for Kecantikan
+                            // Load only Clinic category for Kecantikan
                             loadCategoriesForKecantikan();
                         } else {
                             // For other businesses, load all categories
@@ -611,9 +611,9 @@
     // Fungsi untuk inisialisasi Select2 (sama seperti di create)
     function initializeSelect2() {
         $('#categories_services_id').select2({
-            placeholder: "Pilih atau ketik kategori baru...",
+            placeholder: "Pilih kategori...",
             allowClear: true,
-            tags: true
+            tags: false
         });
     }
     
@@ -632,6 +632,12 @@
                 );
                 
                 populateCategoriesWithSpecificOptions(clinicCategories);
+                
+                // Set kategori "Clinic" sebagai default jika tersedia
+                if (clinicCategories.length > 0) {
+                    const clinicId = clinicCategories[0].id;
+                    $('#categories_services_id').val(clinicId).trigger('change');
+                }
             },
             error: function(xhr, status, error) {
                 console.error("Error loading categories for kesehatan:", error);
@@ -708,13 +714,19 @@
                 business_category: 'kecantikan'
             },
             success: function(data) {
-                // Filter hanya kategori Service dan Product
+                // Filter kategori Service dan Product
                 const filteredCategories = data.filter(category => 
                     category.name.toLowerCase() === 'service' || 
                     category.name.toLowerCase() === 'product'
                 );
                 
                 populateCategoriesWithSpecificOptions(filteredCategories);
+                
+                // Set kategori "Service" sebagai default jika tersedia
+                if (filteredCategories.length > 0) {
+                    const serviceId = filteredCategories[0].id;
+                    $('#categories_services_id').val(serviceId).trigger('change');
+                }
             },
             error: function(xhr, status, error) {
                 console.error("Error loading categories for kecantikan:", error);
