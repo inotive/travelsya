@@ -16,17 +16,22 @@ use Illuminate\Support\Facades\Validator;
 
 class BusTravelController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
         $bus_travel_ids = BusTravels::where('user_id', $user->id)->pluck('id');
         $bus_travel = BusTravels::whereIn('id', $bus_travel_ids)->orderBy('id', 'desc')->get();
 
-        $buses = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
-            ->whereIn('bus_travel_id', $bus_travel_ids)
-            ->orderBy('id', 'desc')
-            ->get();
+        // Filter by business_id if provided
+        $query = BusTravelHasBus::with(['busTravel', 'facilities.facility'])
+            ->whereIn('bus_travel_id', $bus_travel_ids);
+
+        if ($request->has('business_id') && $request->business_id) {
+            $query->where('bus_travel_id', $request->business_id);
+        }
+
+        $buses = $query->orderBy('id', 'desc')->get();
 
         return view('ekstranet.bus-travel.list-bus-travel', [
             'buses'       => $buses,
@@ -34,14 +39,17 @@ class BusTravelController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $bus_travel = BusTravels::where('user_id', auth()->user()->id)->get();
         $facilities = BusFacility::all();
 
+        $selected_business_id = $request->get('business_id');
+
         return view('ekstranet.bus-travel.create-bus-travel', [
             'bus_travel' => $bus_travel,
-            'facilities' => $facilities
+            'facilities' => $facilities,
+            'selected_business_id' => $selected_business_id,
         ]);
     }
 
@@ -259,7 +267,7 @@ class BusTravelController extends Controller
         $user = auth()->user();
         $bus_travels = BusTravels::with('cityDetail')->where('user_id', $user->id)->orderBy('id', 'desc')->get();
 
-        return view('ekstranet.bus-travel.bisnis.list-bus-travel', [
+        return view('ekstranet.bus-travel.bisnis.list-bus-travel-cards', [
             'bus_travels'  => $bus_travels,
         ]);
     }

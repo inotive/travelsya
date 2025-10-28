@@ -18,7 +18,12 @@
                         <select class="form-control" id="bus_travel_id" name="bus_travel_id">
                             <option value="">Pilih Bisnis Bus & Travel</option>
                             @foreach($bus_travel as $bt)
-                                <option value="{{ $bt->id }}" {{ old('bus_travel_id') == $bt->id ? 'selected' : '' }}>
+                                <option
+                                    value="{{ $bt->id }}"
+                                    @if(old('bus_travel_id') == $bt->id || (isset($selected_business_id) && $selected_business_id == $bt->id))
+                                        selected
+                                    @endif
+                                >
                                     {{ $bt->business_name }}
                                 </option>
                             @endforeach

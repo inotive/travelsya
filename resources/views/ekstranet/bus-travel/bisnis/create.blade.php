@@ -1,3 +1,5 @@
+<!-- TIDAK DIPAKAI -->
+
 @extends('ekstranet.layout', ['title' => 'Tambah Bisnis Bus Travel', 'url' => route('partner.bisnis.bus-travel.index')])
 
 @section('content-admin')

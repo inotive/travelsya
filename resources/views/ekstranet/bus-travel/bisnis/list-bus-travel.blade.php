@@ -1,45 +1,71 @@
-@extends('ekstranet.layout', ['title' => 'Daftar Bisnis Bus Travel', 'url' => '#'])
+@extends('ekstranet.layout', ['title' => 'Daftar Bus & Travel', 'url' => '#'])
 
 @section('content-admin')
     <div class="card">
         <div class="card-header pt-5">
+            <div class="card-title">
+                @if(request('business_id'))
+                    @php
+                        $selectedBusiness = \App\Models\BusTravels::find(request('business_id'));
+                    @endphp
+                    <h3 class="fw-bold">
+                        Daftar Bus & Travel - {{ $selectedBusiness->business_name ?? 'Semua' }}
+                    </h3>
+                @else
+                    <h3 class="fw-bold">Semua Bus & Travel</h3>
+                @endif
+            </div>
             <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.bisnis.bus-travel.create') }}">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Bisnis Bus & Travel
+                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.create.bus-travel') }}">
+                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Bus & Travel
                 </a>
             </div>
         </div>
         <div class="card-body py-3">
             <div class="table-responsive">
-                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle"
-                    id="kt_datatable_zero_configuration">
+                <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                     <thead class="fw-bold">
                         <tr>
                             <th style="width: 50px">No</th>
-                            <th style="width: 150px">Logo</th>
+                            <th style="width: 150px">Gambar</th>
                             <th style="width: 150px">Nama Bisnis</th>
-                            <th style="width: 150px">Kota</th>
-                            <th style="width: 100px">Telepon</th>
-                            <th style="width: 250px">Alamat</th>
+                            <th style="width: 150px">Nama Bus/Travel</th>
+                            <th style="width: 100px">Kategori</th>
+                            <th style="width: 100px">Kelas</th>
+                            <th style="width: 70px">Kursi</th>
                             <th style="width: 70px">Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
-
                     <tbody id="table-posts">
-                        @foreach ($bus_travels as $travel)
-                            <tr id="index_{{ $travel->id }}">
+                        @foreach ($buses as $bus)
+                            <tr id="index_{{ $bus->id }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
-                                    <img src="{{ $travel->image ? asset('storage/bus-travel-images/' . $travel->image) : '' }}"
-                                        style="width: 130px; height: 100px; object-fit: contain;">
+                                    @if ($bus->main_image)
+                                        <img src="{{ asset('storage/buses/main/' . $bus->main_image) }}"
+                                            style="max-width: 130px; max-height: 100px; width: auto; height: auto; display: block;">
+                                    @else
+                                        @php
+                                            $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
+                                        @endphp
+                                        @if (!empty($images) && is_array($images))
+                                            <img src="{{ asset('storage/buses/' . $images[0]) }}"
+                                                style="max-width: 130px; max-height: 100px; width: auto; height: auto; display: block;">
+                                        @else
+                                            <span class="text-muted">Tidak Ada Gambar</span>
+                                        @endif
+                                    @endif
                                 </td>
-                                <td>{{ $travel->business_name ?? '' }}</td>
-                                <td>{{ $travel->cityDetail->city_name ?? '' }}</td>
-                                <td>{{ $travel->phone ?? '' }}</td>
-                                <td class="text-truncate" style="max-width: 250px">{{ $travel->address ?? '' }}</td>
+                                <td>{{ $bus->busTravel->business_name ?? '' }}</td>
+                                <td>{{ $bus->name ?? '' }}</td>
+                                <td>
+                                    <span class="badge badge-light-info">{{ ucfirst($bus->kategori ?? '') }}</span>
+                                </td>
+                                <td>{{ $bus->class ?? '' }}</td>
+                                <td class="text-center">{{ $bus->number_seats ?? 0 }}</td>
                                 <td class="text-center">
-                                    @if ($travel->is_active == '1')
+                                    @if ($bus->is_active == '1')
                                         <span class="badge badge-success">Aktif</span>
                                     @else
                                         <span class="badge badge-danger">Tidak Aktif</span>
@@ -47,10 +73,13 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <a href="{{ route('partner.bisnis.bus-travel.edit', $travel->id) }}" class="btn btn-sm btn-light-warning btn-icon">
+                                        <a href="{{ route('partner.show.bus-travel', $bus->id) }}"
+                                           class="btn btn-sm btn-light-warning btn-icon">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
-                                        <a type="button" class="btn btn-sm btn-light-danger btn-icon" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $travel->id }}">
+                                        <a type="button" class="btn btn-sm btn-light-danger btn-icon"
+                                           data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                           data-id="{{ $bus->id }}">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </a>
                                     </div>
@@ -93,9 +122,9 @@
             const deleteButtons = document.querySelectorAll('[data-bs-target="#deleteModal"][data-id]');
             deleteButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    const travelId = this.getAttribute('data-id');
+                    const busId = this.getAttribute('data-id');
                     const form = document.getElementById('form-delete');
-                    form.action = '{{ route('partner.bisnis.bus-travel.destroy', '__id') }}'.replace('__id', travelId);
+                    form.action = '{{ route('partner.destroy.bus-travel', '__id') }}'.replace('__id', busId);
                 });
             });
         });
