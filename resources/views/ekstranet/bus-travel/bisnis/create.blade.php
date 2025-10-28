@@ -2,9 +2,6 @@
 
 @section('content-admin')
 <div class="card">
-    <div class="card-header">
-        <h1 class="mb-3">Tambah Bisnis Bus & Travel</h1>
-    </div>
     <div class="card-body">
         <form id="kt_modal_new_target_form" class="form" method="post"
             action="{{ route('partner.bisnis.bus-travel.store') }}" enctype="multipart/form-data">
@@ -43,9 +40,15 @@
                     </select>
                 </div>
             </div>
-            <div class="text-center">
-                <button type="reset" class="btn btn-light me-3">Cancel</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+            <div class="row mt-5">
+                <div class="col">
+                    <a href="{{ route('partner.bisnis.bus-travel.index') }}" class="btn btn-secondary w-100">Kembali</a>
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <span class="indicator-label">Simpan</span>
+                    </button>
+                </div>
             </div>
         </form>
     </div>

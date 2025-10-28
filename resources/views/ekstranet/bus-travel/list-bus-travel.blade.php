@@ -32,14 +32,21 @@
                             <tr id="index_{{ $bus->id }}">
                                 <td></td>
                                 <td>
-                                    @php
-                                        $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
-                                    @endphp
-                                    @if (!empty($images) && is_array($images))
-                                        <img src="{{ asset('storage/buses/' . $images[0]) }}"
-                                            style="width: 130px; height: 100px; object-fit: contain;">
+                                    @if ($bus->main_image)
+                                        <img src="{{ asset('storage/buses/main/' . $bus->main_image) }}"
+                                            style="width: 130px; height: 100px; object-fit: contain; background-color: #f8f9fa;"
+                                            alt="Main Image">
                                     @else
-                                        Tidak Ada Gambar
+                                        @php
+                                            $images = is_array($bus->image) ? $bus->image : json_decode($bus->image, true);
+                                        @endphp
+                                        @if (!empty($images) && is_array($images))
+                                            <img src="{{ asset('storage/buses/' . $images[0]) }}"
+                                                style="width: 130px; height: 100px; object-fit: contain; background-color: #f8f9fa;"
+                                                alt="Bus Image">
+                                        @else
+                                            <span class="text-muted">Tidak Ada Gambar</span>
+                                        @endif
                                     @endif
                                 </td>
                                 <td>{{ $bus->name ?? '' }}</td>

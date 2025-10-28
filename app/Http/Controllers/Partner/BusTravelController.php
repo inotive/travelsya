@@ -58,6 +58,7 @@ class BusTravelController extends Controller
             'number_seats'  => 'required|integer',
             'images'        => 'nullable|array',
             'images.*'      => 'image|mimes:jpg,jpeg,png|max:2048',
+            'main_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'facilities'    => 'nullable|array',
             'facilities.*'  => 'exists:bus_facilities,id'
         ]);
@@ -90,6 +91,13 @@ class BusTravelController extends Controller
             }
         }
 
+        $mainImageName = null;
+        if ($request->hasFile('main_image')) {
+            $mainImage = $request->file('main_image');
+            $mainImageName = time() . '_' . uniqid() . '.' . $mainImage->getClientOriginalExtension();
+            $mainImage->storeAs('buses/main', $mainImageName, 'public');
+        }
+
         $data = [
             'bus_travel_id' => $bus_travel_id,
             'name'          => $request->name,
@@ -100,6 +108,7 @@ class BusTravelController extends Controller
             'is_active'     => $request->is_active,
             'number_seats'  => $request->number_seats,
             'image'         => json_encode($imageNames),
+            'main_image'    => $mainImageName,
         ];
 
         $bus_has_travel = DB::table('bus_travel_has_buses')->insertGetId($data);
@@ -148,6 +157,7 @@ class BusTravelController extends Controller
             'number_seats' => 'required|integer',
             'images'       => 'nullable|array',
             'images.*'     => 'image|mimes:jpg,jpeg,png|max:2048',
+            'main_image'   => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'facilities'   => 'nullable|array',
             'facilities.*' => 'exists:bus_facilities,id'
         ]);
@@ -159,6 +169,7 @@ class BusTravelController extends Controller
                 ->withInput();
         }
 
+        // Handle additional images
         $imageNames = is_array($bus->image) ? $bus->image : json_decode($bus->image, true) ?? [];
 
         if ($request->filled('removed_images')) {
@@ -177,6 +188,28 @@ class BusTravelController extends Controller
             }
         }
 
+        $mainImageName = $bus->main_image;
+
+        // Check if user wants to remove main image
+        if ($request->filled('remove_main_image') && $request->remove_main_image == '1') {
+            if ($mainImageName) {
+                Storage::disk('public')->delete('buses/main/' . $mainImageName);
+                $mainImageName = null;
+            }
+        }
+
+        // Upload new main image
+        if ($request->hasFile('main_image')) {
+            // Delete old main image if exists
+            if ($mainImageName) {
+                Storage::disk('public')->delete('buses/main/' . $mainImageName);
+            }
+            $mainImage = $request->file('main_image');
+            $mainImageName = time() . '_' . uniqid() . '.' . $mainImage->getClientOriginalExtension();
+            $mainImage->storeAs('buses/main', $mainImageName, 'public');
+        }
+
+        // Update bus record
         $bus->name         = $request->name;
         $bus->deskripsi    = $request->deskripsi;
         $bus->kategori     = $request->kategori;
@@ -184,10 +217,11 @@ class BusTravelController extends Controller
         $bus->class        = $request->class;
         $bus->is_active    = $request->is_active;
         $bus->number_seats = $request->number_seats;
-        $bus->kategori     = $request->kategori;
         $bus->image        = json_encode($imageNames);
+        $bus->main_image   = $mainImageName;
         $bus->save();
 
+        // Handle facilities
         if ($request->has('facilities')) {
             BusTravelHasFacility::where('bus_travel_has_bus_id', $id)->delete();
             foreach ($request->facilities as $facility) {
@@ -210,6 +244,9 @@ class BusTravelController extends Controller
             foreach ($images as $image) {
                 Storage::disk('public')->delete('buses/' . $image);
             }
+        }
+        if ($bus->main_image) {
+            Storage::disk('public')->delete('buses/main/' . $bus->main_image);
         }
 
         $bus->delete();
@@ -317,11 +354,11 @@ class BusTravelController extends Controller
     public function bisnisDestroy($id)
     {
         $bus_travel = BusTravels::where('id', $id)->where('user_id', auth()->id())->firstOrFail();
-        
+
         if ($bus_travel->image) {
             Storage::disk('public')->delete('bus-travel-images/' . $bus_travel->image);
         }
-        
+
         $bus_travel->delete();
 
         return redirect()->back()->with('delete', 'Data berhasil dihapus!');
