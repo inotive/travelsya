@@ -31,6 +31,21 @@
                         <input type="text" id="searchInput" name="search" class="form-control form-control-solid w-250px ps-14"
                             placeholder="Cari Dari, Tujuan, Titik..." value="{{ $search ?? '' }}" />
                     </div>
+
+                    <script>
+                        document.getElementById('busFilter').addEventListener('change', function() {
+                            document.getElementById('filterForm').submit();
+                        });
+
+                        const searchInput = document.getElementById('searchInput');
+                        const filterForm = document.getElementById('filterForm');
+
+                        let typingTimer;
+                        searchInput.addEventListener('input', function() {
+                            clearTimeout(typingTimer);
+                            typingTimer = setTimeout(() => filterForm.submit(), 600); 
+                        });
+                    </script>
                 </div>
                 <div class="card-toolbar">
                     <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
@@ -345,7 +360,6 @@
         // Initialize tooltips
         $('[data-bs-toggle="tooltip"], [title]').tooltip({ placement: 'top', trigger: 'hover' });
     });
-
 })(jQuery);
 </script>
 @endsection
