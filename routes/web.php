@@ -33,6 +33,7 @@ use App\Http\Controllers\Partner\ManagementHotelController;
 use App\Http\Controllers\Partner\DashboardPartnerController;
 use App\Http\Controllers\Partner\ManagementHostelController;
 use App\Http\Controllers\Partner\ManagementRecreationController;
+use App\Http\Controllers\Partner\ManagementCarRentalController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
@@ -494,6 +495,10 @@ Route::middleware(['auth', 'role'])->group(function () {
             ->name('partner.health-beauty.verify');
         Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
             ->name('partner.health-beauty.cancel-verify');
+
+        Route::get('semua-rental-mobil', [ManagementCarRentalController::class, 'semuaRentalMobil'])->name('partner.car_rental.all');
+        Route::get('profil-rental-mobil/{id}', [ManagementCarRentalController::class, 'profilRentalMobil'])->name('partner.car_rental.profile');
+        Route::put('profil-rental-mobil/{id}', [ManagementCarRentalController::class, 'updateProfilRentalMobil'])->name('partner.car_rental.profile.update');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
