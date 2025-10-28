@@ -32,6 +32,7 @@ use App\Http\Controllers\Partner\RiwayatBookingController;
 use App\Http\Controllers\Partner\ManagementHotelController;
 use App\Http\Controllers\Partner\DashboardPartnerController;
 use App\Http\Controllers\Partner\ManagementHostelController;
+use App\Http\Controllers\Partner\ManagementRecreationController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
@@ -472,6 +473,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
+        Route::get('semua-rekreasi', [ManagementRecreationController::class, 'semuaRekreasi'])->name('partner.recreation.all');
+        Route::get('daftar-paket-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.recreation.packages');
+        Route::get('profil-rekreasi/{id}', [ManagementRecreationController::class, 'profilRekreasi'])->name('partner.recreation.profile');
+        Route::put('profil-rekreasi/{id}', [ManagementRecreationController::class, 'updateProfilRekreasi'])->name('partner.recreation.profile.update');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
         Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
         Route::put('update-rekreasi/{id}', [\App\Http\Controllers\RecreationController::class, 'update'])->name('data-rekreasi.update');
