@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Validator;
 
 class KendaraanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
@@ -27,9 +27,14 @@ class KendaraanController extends Controller
         if ($car_rentals->count() > 0) {
             $car_rental_ids = $car_rentals->pluck('id')->toArray();
             
-            $cars = CarRentalHasCars::with(['brand', 'carModel', 'images'])
-                ->whereIn('car_rental_id', $car_rental_ids)
-                ->get();
+            $carsQuery = CarRentalHasCars::with(['brand', 'carModel', 'images'])
+                ->whereIn('car_rental_id', $car_rental_ids);
+
+            if ($request->has('business_id')) {
+                $carsQuery->where('car_rental_id', $request->business_id);
+            }
+
+            $cars = $carsQuery->get();
         } else {
             $cars = collect();
         }

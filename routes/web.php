@@ -32,6 +32,8 @@ use App\Http\Controllers\Partner\RiwayatBookingController;
 use App\Http\Controllers\Partner\ManagementHotelController;
 use App\Http\Controllers\Partner\DashboardPartnerController;
 use App\Http\Controllers\Partner\ManagementHostelController;
+use App\Http\Controllers\Partner\ManagementRecreationController;
+use App\Http\Controllers\Partner\ManagementCarRentalController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
@@ -472,6 +474,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
+        Route::get('semua-rekreasi', [ManagementRecreationController::class, 'semuaRekreasi'])->name('partner.recreation.all');
+        Route::get('daftar-paket-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.recreation.packages');
+        Route::get('profil-rekreasi/{id}', [ManagementRecreationController::class, 'profilRekreasi'])->name('partner.recreation.profile');
+        Route::put('profil-rekreasi/{id}', [ManagementRecreationController::class, 'updateProfilRekreasi'])->name('partner.recreation.profile.update');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
         Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
         Route::put('update-rekreasi/{id}', [\App\Http\Controllers\RecreationController::class, 'update'])->name('data-rekreasi.update');
@@ -489,6 +495,10 @@ Route::middleware(['auth', 'role'])->group(function () {
             ->name('partner.health-beauty.verify');
         Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
             ->name('partner.health-beauty.cancel-verify');
+
+        Route::get('semua-rental-mobil', [ManagementCarRentalController::class, 'semuaRentalMobil'])->name('partner.car_rental.all');
+        Route::get('profil-rental-mobil/{id}', [ManagementCarRentalController::class, 'profilRentalMobil'])->name('partner.car_rental.profile');
+        Route::put('profil-rental-mobil/{id}', [ManagementCarRentalController::class, 'updateProfilRentalMobil'])->name('partner.car_rental.profile.update');
 
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
@@ -554,6 +564,15 @@ Route::middleware(['auth', 'role'])->group(function () {
             Route::delete('/clinics/{id}', [\App\Http\Controllers\ClinicHasPackageController::class, 'destroy'])->name('clinics.destroy');
             // penambahan route untuk mengambil kategori clinic
             Route::get('/categories-by-clinic', [\App\Http\Controllers\ClinicHasPackageController::class, 'getCategoriesByClinic'])->name('get.categories.by.clinic');
+        });
+
+        // Health & Beauty management routes
+        Route::middleware(['auth'])->group(function () {
+            Route::get('management-clinic', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'index'])->name('partner.management.clinic');
+            Route::get('management-clinic/{id}', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'show'])->name('partner.management.clinic.show');
+            Route::get('management-clinic/{id}/edit', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'edit'])->name('partner.management.clinic.edit');
+            Route::put('management-clinic/{id}', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'update'])->name('partner.management.clinic.update');
+            Route::get('clinic-paket', [\App\Http\Controllers\Partner\ManagementClinicController::class, 'clinicPaket'])->name('partner.clinic.paket');
         });
 
 

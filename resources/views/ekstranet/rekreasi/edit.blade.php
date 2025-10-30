@@ -1,4 +1,4 @@
-@extends('ekstranet.layout', ['title' => 'Daftar Rekreasi - Edit Rekreasi', 'url' => '#'])
+@extends('ekstranet.layout', ['title' => 'Daftar Paket Rekreasi - Edit Paket Rekreasi', 'url' => '#'])
 
 @section('content-admin')
 
