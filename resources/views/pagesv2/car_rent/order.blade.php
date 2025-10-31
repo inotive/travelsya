@@ -206,9 +206,9 @@
                         <hr class="opacity-25 my-5">
                         <div class="d-flex flex-row align-items-center">
                             <div class="card-img-container" style="width: 50px; height: 50px; overflow: hidden;">
-                                <img src="{{ $car->brand->image ? Storage::url($car->brand->image) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg' }}"
+                                <img src="{{ $car->image_url ? Storage::url($car->image_url) : ($car->carModel && $car->carModel->image ? Storage::url($car->carModel->image) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg') }}"
                                     onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'"
-                                    alt="{{ $car->brand->name ?? 'Car Brand' }}" class="card-img-aspect rounded-1">
+                                    alt="{{ $car->carModel->name ?? 'Car Model' }}" class="card-img-aspect rounded-1">
                             </div>
                             <div class="d-flex flex-column ms-3">
                                 <span class="fs-7">
@@ -218,7 +218,7 @@
                                     Lepas Kunci
                                     @endif
                                 </span>
-                                <span class="fs-6 fw-bold">{{ $car->brand->name }}</span>
+                                <span class="fs-6 fw-bold">{{ $car->carModel->name ?? ($car->brand->name ?? 'Nama Mobil') }}</span>
                                 <span class="fs-7 text-danger">{{ $car->carRental->business_name }}</span>
                             </div>
                             <span class="text-danger ms-sm-auto">Detail Paket</span>
