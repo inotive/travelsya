@@ -18,7 +18,9 @@ class ManagementRecreationController extends Controller
     public function profilRekreasi($id)
     {
         $recreation = Recreation::findOrFail($id);
-        return view('ekstranet.rekreasi.profil-rekreasi', compact('recreation'));
+        $cities = \App\Models\City::all();
+        $categories = \App\Models\CategoryRecreation::all();
+        return view('ekstranet.rekreasi.profil-rekreasi', compact('recreation', 'cities', 'categories'));
     }
 
     public function updateProfilRekreasi(Request $request, $id)
