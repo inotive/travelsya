@@ -150,10 +150,10 @@
                     <div class="mb-5 p-4 border rounded">
                         <h6 class="mb-3">Gambar Utama</h6>
                         @if($mainImage)
-                            <div class="row">
+                            <div class="row ms-0">
                                 <div class="col-md-4 col-sm-6 mb-4">
                                     <div class="card h-100">
-                                        <img src="{{ $mainImage->image }}" class="card-img-top" style="height: 150px; object-fit: cover;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                        <img src="{{ $mainImage->image }}" class="card-img-top" style="height: 150px; object-fit: contain;" alt="Gambar Utama" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
                                         <div class="card-body text-center p-3">
                                             <p class="card-text text-muted text-truncate" title="{{ basename($mainImage->image) }}">{{ basename($mainImage->image) }}</p>
                                         </div>
@@ -174,12 +174,12 @@
                     <!-- Additional Images Section -->
                     <div class="mb-5 p-4 border rounded">
                         <h6 class="mb-3">Gambar Tambahan</h6>
-                        <div class="row">
+                        <div class="row ms-0">
                             @if(count($additionalImages) > 0)
                                 @foreach($additionalImages as $image)
                                     <div class="col-md-4 col-sm-6 mb-4">
                                         <div class="card h-100">
-                                            <img src="{{ $image->image }}" class="card-img-top" style="height: 100px; object-fit: cover;" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
+                                            <img src="{{ $image->image }}" class="card-img-top" style="height: 150px; object-fit: contain;" alt="Image" onerror="this.src='{{ asset('images/not_found.jpg') }}';">
                                             <div class="card-body text-center p-3">
                                                 <p class="card-text text-muted text-truncate" title="{{ basename($image->image) }}">{{ basename($image->image) }}</p>
                                                 <button type="button" class="btn btn-sm btn-danger delete-existing-image" data-image-id="{{ $image->id }}">Hapus</button>
