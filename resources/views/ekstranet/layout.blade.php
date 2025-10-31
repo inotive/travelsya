@@ -88,18 +88,16 @@
 
 
 </style>
-<script>
-	@media only screen and(max - width: 768 px) {
-			.app - sidebar - logo -
-					default {
-							display: none;
-					}
-					.app - sidebar - logo - minimize {
-							display: block;
-					}
+<style>
+	@media only screen and (max-width: 768px) {
+			.app-sidebar-logo-default {
+					display: none;
+			}
+			.app-sidebar-logo-minimize {
+					display: block;
+			}
 	}
-
-</script>
+</style>
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
