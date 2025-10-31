@@ -67,6 +67,12 @@
             </div>
 
             <!-- Konten Tab -->
+            @php
+                $sortDirection = request()->get('sort', 'desc');
+                $carrentalbookdates = $sortDirection == 'asc'
+                    ? $carrentalbookdates->sortBy('start')
+                    : $carrentalbookdates->sortByDesc('start');
+            @endphp
             <div class="tab-content" id="car-rental-tab-content">
                 <div class="tab-pane fade show active" id="semua" role="tabpanel" aria-labelledby="semua-tab">
                     <div class="table-responsive bg-white p-4 rounded">
