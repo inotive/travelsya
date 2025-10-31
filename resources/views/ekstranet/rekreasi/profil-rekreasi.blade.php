@@ -32,25 +32,25 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="latitude" class="form-label">Latitude</label>
-                                <input type="text" class="form-control" id="latitude" name="latitude" value="{{ old('latitude', $recreation->latitude) }}">
+                                <input type="text" class="form-control" id="latitude" name="lat" value="{{ old('lat', $recreation->lat ?? '') }}">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="longitude" class="form-label">Longitude</label>
-                                <input type="text" class="form-control" id="longitude" name="longitude" value="{{ old('longitude', $recreation->longitude) }}">
+                                <input type="text" class="form-control" id="longitude" name="ltd" value="{{ old('ltd', $recreation->ltd ?? '') }}">
                             </div>
                         </div>
                     </div>
 
                     {{-- Kota / Kabupaten --}}
                     <div class="mb-3">
-                        <label for="city_id" class="form-label">Kota / Kabupaten</label>
-                        <select class="form-select" id="city_id" name="city_id">
+                        <label for="city" class="form-label">Kota / Kabupaten</label>
+                        <select class="form-select" id="city" name="city">
                             <option selected disabled>Pilih Kota/Kabupaten</option>
                             @if(isset($cities))
                                 @foreach($cities as $city)
-                                    <option value="{{ $city->id }}" {{ old('city_id', $recreation->city_id) == $city->id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                    <option value="{{ $city->city_id }}" {{ old('city', $recreation->city) == $city->city_id ? 'selected' : '' }}>{{ $city->city_name }}</option>
                                 @endforeach
                             @endif
                         </select>
@@ -71,12 +71,13 @@
 
                     {{-- Gambar --}}
                     <div class="mb-3">
-                        <label for="image" class="form-label">Gambar</label>
+                        <label for="image" class="form-label">Gambar Utama</label>
                         <input class="form-control" type="file" id="image" name="image">
+                        <div class="form-text">Unggah gambar baru untuk mengganti gambar utama.</div>
                         @if($recreation->image)
                             <div class="mt-2">
                                 <p>Gambar saat ini:</p>
-                                <img src="{{ Storage::url($recreation->image) }}" alt="Gambar Rekreasi" style="max-width: 200px; border-radius: 8px;">
+                                <img src="{{ Storage::url($recreation->image->image) }}" alt="Gambar Rekreasi" style="max-width: 200px; border-radius: 8px;">
                             </div>
                         @endif
                     </div>
