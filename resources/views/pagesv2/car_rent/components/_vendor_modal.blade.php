@@ -23,9 +23,9 @@
                         </div>
                     </div>
                     <div class="card-img-container" style="width: 150px; height: 100px; overflow: hidden;">
-                        <img src="{{ $car->brand->image ? Storage::url($car->brand->image) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg' }}" 
+                        <img src="{{ $car->image ? Storage::url($car->image) : 'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg' }}"
                              class="card-img-aspect card-img-top"
-                             alt="{{ $car->brand->name ?? 'Car Brand' }}"
+                             alt="{{ $car->name ?? 'Car Model' }}"
                              onerror="this.src='https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'">
                     </div>
                 </div>
