@@ -756,9 +756,10 @@
     
     // Handle adding additional images
     $('#add-more-additional-images').click(function() {
+        const newImageIndex = $('.additional-image-input').length;
         $('#additional-images-container').append(`
-            <div class="input-group mb-3">
-                <input type="file" class="form-control" name="additional_images[]" accept="image/*">
+            <div class="input-group mb-3 additional-image-group">
+                <input type="file" class="form-control additional-image-input" name="additional_images[]" accept="image/*" data-index="${newImageIndex}">
                 <button type="button" class="btn btn-outline-danger remove-additional-image">Hapus</button>
             </div>
         `);
@@ -766,7 +767,7 @@
     
     // Handle removing newly added images
     $(document).on('click', '.remove-additional-image', function() {
-        $(this).closest('.input-group').remove();
+        $(this).closest('.additional-image-group').remove();
     });
     
     // Handle deleting existing images
@@ -791,6 +792,12 @@
                 imageCard.remove();
             }
         });
+    });
+    
+    // Prevent deletion of images when form is resubmitted
+    $('#clinic-form').submit(function() {
+        // Disable delete buttons during form submission to prevent duplicate deletion
+        $('.delete-existing-image').prop('disabled', true);
     });
     
 

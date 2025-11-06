@@ -125,52 +125,45 @@
                                     <span class="badge {{ $statusClass }}">{{ $status }}</span>
                                 </td>
                                 <td class="text-center">
-                                    <!--begin::Menu-->
-                                    <a href="#"
-                                        class="btn btn-sm btn-light btn-flex btn-center btn-active-light-primary"
-                                        data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-                                        Actions
-                                        <i class="ki-duotone ki-down fs-5 ms-1"></i>
-                                    </a>
-                                    <!--end::Menu-->
-                                    
-                                    <!--begin::Menu dropdown-->
-                                    <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
-                                        data-kt-menu="true">
-                                        <!--begin::Menu item-->
-                                        <div class="menu-item px-3">
-                                            <a href="{{ route('partner.riwayat-booking.detailhealthbeauty', $booking->id) }}"
-                                                class="menu-link px-3" id="" data-id="">
-                                                Detail Booking
-                                            </a>
-                                        </div>
-                                        
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3 info-btn" 
-                                               data-booking-id="{{ $booking->id }}" 
-                                               data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}"
-                                               data-status="{{ $statusKey }}">
-                                                Informasi
-                                            </a>
-                                        </div>
-                                        @if($statusKey === 'unused')
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3 verify-btn" 
-                                               data-booking-id="{{ $booking->id }}" data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}">
-                                                Verifikasi
-                                            </a>
-                                        </div>
-                                        @elseif($statusKey === 'used')
-                                        <div class="menu-item px-3">
-                                            <a href="#" class="menu-link px-3 cancel-verify-btn" 
-                                               data-booking-id="{{ $booking->id }}" data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}">
-                                                Batal Verifikasi
-                                            </a>
-                                        </div>
-                                        @endif
-                                        <!--end::Menu item-->
-                                    </div>
-                                    <!--end::Menu dropdown-->
+                                    @if($statusKey === 'unused')
+                                        <a href="#" class="btn btn-sm action-btn verify-btn" 
+                                           data-booking-id="{{ $booking->id }}" 
+                                           data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}">
+                                            Verifikasi
+                                        </a>
+                                        <button class="btn btn-sm action-btn info-btn" 
+                                           data-booking-id="{{ $booking->id }}" 
+                                           data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}"
+                                           data-status="{{ $statusKey }}">
+                                            Detail
+                                        </button>
+                                    @elseif($statusKey === 'used')
+                                        <a href="#" class="btn btn-sm action-btn cancel-verify-btn" 
+                                           data-booking-id="{{ $booking->id }}" 
+                                           data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}">
+                                            Batal Verifikasi
+                                        </a>
+                                        <button class="btn btn-sm action-btn info-btn" 
+                                           data-booking-id="{{ $booking->id }}" 
+                                           data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}"
+                                           data-status="{{ $statusKey }}">
+                                            Detail
+                                        </button>
+                                    @elseif($statusKey === 'expired')
+                                        <button class="btn btn-sm action-btn expired-btn info-btn" 
+                                           data-booking-id="{{ $booking->id }}" 
+                                           data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}"
+                                           data-status="{{ $statusKey }}">
+                                            Detail
+                                        </button>
+                                    @else 
+                                        <button class="btn btn-sm action-btn info-btn" 
+                                           data-booking-id="{{ $booking->id }}" 
+                                           data-invoice-url="{{ route('e-tiket.health-beauty', $booking->id) }}"
+                                           data-status="{{ $statusKey }}">
+                                            Detail
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                             @endif
@@ -232,7 +225,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLabel">Informasi Transaksi</h5>
+                <h5 class="modal-title" id="infoModalLabel">Detail Booking</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -328,6 +321,75 @@
         
         .dataTables_scrollBody table {
             margin: 0 !important;
+        }
+        
+        /* Custom style untuk tombol aksi yang menarik */
+        .action-btn {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 6px 12px;
+            transition: all 0.3s ease;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 0 2px;
+        }
+        
+        /* Tombol Verifikasi - Hijau yang tidak terlalu terang */
+        .verify-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .verify-btn:hover {
+            background-color: #218838;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+        
+        /* Tombol Batal Verifikasi - Merah */
+        .cancel-verify-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .cancel-verify-btn:hover {
+            background-color: #c82333;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+        
+        /* Tombol Informasi - Biru */
+        .info-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .info-btn:hover {
+            background-color: #0069d9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+        }
+        
+        /* Tombol Detail - Abu-abu */
+        .detail-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .detail-btn:hover {
+            background-color: #5a6268;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+        
+        /* Tombol Kadaluwarsa - Abu-abu */
+        .expired-btn {
+            background-color: #6c757d;
+            color: white;
         }
     </style>
     
@@ -452,6 +514,8 @@
                 // Show modal
                 $('#infoModal').modal('show');
             });
+            
+
             
             // Handle verify button click in info modal
             $(document).on('click', '.verify-btn-modal', function() {
