@@ -24,6 +24,7 @@
                     @error('bus_travel_id') <span class="text-danger mt-1">{{ $message }}</span> @enderror
                 </div>
             </div>
+
             <div class="form-row">
                 <div class="form-group">
                     <label class="required fs-6 fw-semibold mb-2">Kategori</label>
@@ -71,34 +72,86 @@
                 </div>
             </div>
 
-            {{-- Existing Images Section --}}
-            @if($bus->image)
-                <div class="col-md-12 mt-4">
-                    <label class="fs-6 fw-semibold mb-2">Gambar Yang Sudah Ada</label>
-                    <div class="d-flex flex-wrap gap-3" id="existing-images-container">
-                        @foreach((is_array($bus->image) ? $bus->image : json_decode($bus->image, true)) ?? [] as $index => $img)
-                            <div class="existing-image-card" data-image="{{ $img }}">
-                                <div class="image-wrapper">
-                                    <img src="{{ asset('storage/buses/'.$img) }}" class="existing-image" alt="Bus Image">
-                                    <button type="button" class="btn-remove-existing" onclick="removeExistingImage('{{ $img }}', this)">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+            <!-- Kelola Gambar -->
+            <div class="col-md-12 mt-4">
+                <label class="fs-6 fw-semibold mb-2">Kelola Gambar</label>
+
+                @php
+                    $additionalImages = is_array($bus->image) ? $bus->image : json_decode($bus->image, true) ?? [];
+                @endphp
+
+                <!-- Main Image Section -->
+                <div class="mb-5 p-4 border rounded">
+                    <h6 class="mb-3">Gambar Utama</h6>
+                    @if($bus->main_image)
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6 mb-4">
+                                <div class="card h-100">
+                                    <img src="{{ asset('storage/buses/main/' . $bus->main_image) }}"
+                                         class="card-img-top"
+                                         style="height: 150px; object-fit: contain; background-color: #f8f9fa;"
+                                         alt="Gambar Utama">
+                                    <div class="card-body text-center p-3">
+                                        <p class="card-text text-muted text-truncate" title="{{ $bus->main_image }}">
+                                            {{ $bus->main_image }}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                        @endforeach
-                    </div>
-                    {{-- Hidden input to track removed images --}}
-                    <input type="hidden" name="removed_images" id="removed-images" value="">
+                        </div>
+                        <div class="mt-3">
+                            <label class="form-label">Ganti Gambar Utama</label>
+                            <input type="file" class="form-control" name="main_image" accept="image/*">
+                            <div class="form-text">Biarkan kosong jika tidak ingin mengganti gambar utama.</div>
+                        </div>
+                    @else
+                        <p>Belum ada gambar utama. Silakan unggah.</p>
+                        <input type="file" class="form-control" name="main_image" accept="image/*">
+                    @endif
                 </div>
-            @endif
 
-            {{-- Multiple Upload Section --}}
-            <div class="form-row mt-4">
-                <div class="form-group">
-                    <label class="fs-6 fw-semibold mb-2">Upload Gambar Baru</label>
-                    <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*">
-                    @error('images.*') <span class="text-danger mt-1">{{ $message }}</span> @enderror
-                    <div id="image-preview-container" class="d-flex flex-wrap gap-3 mt-3"></div>
+                <!-- Additional Images Section -->
+                <div class="mb-5 p-4 border rounded">
+                    <h6 class="mb-3">Gambar Tambahan</h6>
+                    <div class="row">
+                        @if(count($additionalImages) > 0)
+                            @foreach($additionalImages as $index => $img)
+                                <div class="col-md-4 col-sm-6 mb-4 existing-image-card">
+                                    <div class="card h-100">
+                                        <img src="{{ asset('storage/buses/' . $img) }}"
+                                             class="card-img-top"
+                                             style="height: 150px; object-fit: contain; background-color: #f8f9fa;"
+                                             alt="Image">
+                                        <div class="card-body text-center p-3">
+                                            <p class="card-text text-muted text-truncate" title="{{ $img }}">
+                                                {{ $img }}
+                                            </p>
+                                            <button type="button"
+                                                    class="btn btn-sm btn-danger delete-existing-image"
+                                                    data-image-name="{{ $img }}">
+                                                Hapus
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @else
+                            <div class="col-12">
+                                <p class="text-muted">Tidak ada gambar tambahan.</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Add More Additional Images -->
+                <div class="p-4 border rounded">
+                    <h6 class="mb-3">Tambah Gambar Tambahan Baru</h6>
+                    <div id="additional-images-container">
+                        <!-- New image inputs will be appended here -->
+                    </div>
+                    <button type="button" class="btn btn-sm btn-secondary mt-2" id="add-more-additional-images">
+                        + Tambah Gambar Tambahan
+                    </button>
                 </div>
             </div>
 
@@ -120,14 +173,14 @@
                 </div>
                 @error('facilities') <span class="text-danger mt-1">{{ $message }}</span> @enderror
             </div>
-            
-            <div class="form-group">
+
+            <div class="form-group mt-4">
                 <label class="required fs-6 fw-semibold mb-2">Deskripsi</label>
                 <textarea class="form-control" name="deskripsi" required>{{ old('deskripsi', $bus->deskripsi) }}</textarea>
                 @error('deskripsi') <span class="text-danger mt-1">{{ $message }}</span> @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-4">
                 <label class="required fs-6 fw-semibold mb-2">Peraturan atau Ketentuan</label>
                 <textarea class="form-control" name="tos" required>{{ old('tos', $bus->tos) }}</textarea>
                 @error('tos') <span class="text-danger mt-1">{{ $message }}</span> @enderror
@@ -135,10 +188,12 @@
 
             <div class="row mt-5">
                 <div class="col">
-                    <input class="btn btn-secondary" id="backButton" onclick="window.history.go(-1); return false;" type="submit" value="Kembali" />
+                    <a href="{{ route('partner.daftar.bus-travel') }}" class="btn btn-secondary w-100">Kembali</a>
                 </div>
                 <div class="col">
-                    <button type="submit" class="btn btn-primary w-100">Simpan</button>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <span class="indicator-label">Simpan</span>
+                    </button>
                 </div>
             </div>
         </form>
@@ -147,109 +202,79 @@
 @endsection
 
 @push('add-script')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const imageInput = document.getElementById('images');
-    const previewContainer = document.getElementById('image-preview-container');
-    let removedImages = [];
-    let fileArray = []; // Use a simple array as the source of truth
-
-    // --- Event Listener ---
-    imageInput.addEventListener('change', (e) => {
-        // Add newly selected files to our array
-        for (const file of e.target.files) {
-            fileArray.push(file);
-        }
-        // Sync the file input with our array and render previews
-        syncInputAndRender();
-    });
-
-    // --- Functions ---
-
-    function removeFile(index) {
-        // Remove the file from our array at the given index
-        fileArray.splice(index, 1);
-        // Re-sync and re-render
-        syncInputAndRender();
-    }
-
-    function syncInputAndRender() {
-        // Create a new DataTransfer object
-        const dataTransfer = new DataTransfer();
-        // Add all files from our array to the DataTransfer object
-        for (const file of fileArray) {
-            dataTransfer.items.add(file);
-        }
-        // Update the real file input's files list
-        imageInput.files = dataTransfer.files;
-        // Render the previews based on our array
-        renderPreviews();
-    }
-
-    function renderPreviews() {
-        // Clear the preview container
-        previewContainer.innerHTML = '';
-
-        // Render a preview for each file in our array
-        fileArray.forEach((file, i) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const previewCard = document.createElement('div');
-                previewCard.className = 'preview-image-card';
-
-                const imageWrapper = document.createElement('div');
-                imageWrapper.className = 'image-wrapper';
-
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.className = 'preview-image';
-
-                const removeBtn = document.createElement('button');
-                removeBtn.className = 'btn-remove-preview';
-                removeBtn.innerHTML = '<i class="fas fa-times"></i>';
-                removeBtn.type = 'button';
-                removeBtn.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    removeFile(i); // Call removeFile with the correct index
-                });
-
-                imageWrapper.appendChild(img);
-                imageWrapper.appendChild(removeBtn);
-                previewCard.appendChild(imageWrapper);
-                previewContainer.appendChild(previewCard);
-            };
-            reader.readAsDataURL(file);
+    $(document).ready(function() {
+        // === Add More Additional Images ===
+        $('#add-more-additional-images').click(function() {
+            $('#additional-images-container').append(`
+                <div class="input-group mb-3">
+                    <input type="file" class="form-control" name="images[]" accept="image/*">
+                    <button type="button" class="btn btn-danger remove-additional-image">Hapus</button>
+                </div>
+            `);
         });
-    }
 
-    function removeExistingImage(imageName, button) {
-        if (!removedImages.includes(imageName)) {
-            removedImages.push(imageName);
-            document.getElementById('removed-images').value = JSON.stringify(removedImages);
-        }
+        // === Remove New Additional Image Input ===
+        $(document).on('click', '.remove-additional-image', function() {
+            $(this).closest('.input-group').remove();
+        });
 
-        const imageCard = button.closest('.existing-image-card');
-        imageCard.style.animation = 'fadeOut 0.3s ease-out';
-        setTimeout(() => {
-            imageCard.remove();
-        }, 300);
-    }
+        // === Delete Existing Additional Image ===
+        $(document).on('click', '.delete-existing-image', function() {
+            const imageName = $(this).data('image-name');
+            const imageCard = $(this).closest('.existing-image-card');
+
+            Swal.fire({
+                title: "Apakah Anda yakin?",
+                text: "Gambar ini akan ditandai untuk dihapus saat disimpan.",
+                icon: "warning",
+                showCancelButton: true,
+                cancelButtonText: "Batal",
+                confirmButtonText: "Ya, Hapus",
+                confirmButtonColor: '#d33',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Add hidden input to track deleted image
+                    let removedImagesInput = $('input[name="removed_images"]');
+                    if (removedImagesInput.length === 0) {
+                        $('form').append('<input type="hidden" name="removed_images" value="">');
+                        removedImagesInput = $('input[name="removed_images"]');
+                    }
+
+                    let removedImages = [];
+                    if (removedImagesInput.val()) {
+                        removedImages = JSON.parse(removedImagesInput.val());
+                    }
+
+                    if (!removedImages.includes(imageName)) {
+                        removedImages.push(imageName);
+                        removedImagesInput.val(JSON.stringify(removedImages));
+                    }
+
+                    // Remove the card from view
+                    imageCard.fadeOut(300, function() {
+                        $(this).remove();
+
+                        // Check if no more images
+                        if ($('.existing-image-card').length === 0) {
+                            $('.row').first().html('<div class="col-12"><p class="text-muted">Tidak ada gambar tambahan.</p></div>');
+                        }
+                    });
+
+                    Swal.fire('Ditandai!', 'Gambar akan dihapus saat Anda menyimpan perubahan.', 'success');
+                }
+            });
+        });
+    });
 </script>
 @endpush
 
 <style>
-    .active {
-        background: #007bff;
-        color: white;
-    }
-
-    .breadcrumb {
-        margin-bottom: 20px;
-    }
-
-    .form-container {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 20px;
+    .card-img-top {
+        height: 150px;
+        object-fit: cover;
     }
 
     .form-row {
@@ -283,124 +308,5 @@
     textarea {
         height: 100px;
     }
-
-    .button-group {
-        text-align: right;
-        margin-top: 20px;
-    }
-
-    button {
-        padding: 10px 20px;
-        margin-left: 10px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .primary {
-        background: #007bff;
-        color: white;
-    }
-
-    /* Existing Image Card Styles */
-    .existing-image-card, .preview-image-card {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        border: 2px solid #e9ecef;
-    }
-
-    .existing-image-card:hover, .preview-image-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .image-wrapper {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .existing-image, .preview-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .existing-image-card:hover .existing-image,
-    .preview-image-card:hover .preview-image {
-        transform: scale(1.05);
-    }
-
-    .btn-remove-existing, .btn-remove-preview {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        border: none;
-        background: rgba(255, 255, 255, 0.95);
-        color: #dc3545;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 16px;
-        opacity: 0;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(4px);
-    }
-
-    .existing-image-card:hover .btn-remove-existing,
-    .preview-image-card:hover .btn-remove-preview {
-        opacity: 1;
-    }
-
-    .btn-remove-existing:hover, .btn-remove-preview:hover {
-        background: rgba(255, 255, 255, 1);
-        color: #dc3545;
-        transform: scale(1.15);
-        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
-    }
-
-    .btn-remove-existing i, .btn-remove-preview i {
-        font-size: 16px;
-        font-weight: 600;
-    }
-
-    /* Fade out animation for removed images */
-    @keyframes fadeOut {
-        from {
-            opacity: 1;
-            transform: scale(1);
-        }
-        to {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-    }
-
-    /* Add some spacing and responsiveness */
-    @media (max-width: 768px) {
-        .existing-image-card, .preview-image-card {
-            width: 100px;
-            height: 100px;
-        }
-    }
-
-    /* Optional: Add a subtle border to distinguish existing vs new images */
-    .existing-image-card {
-        border-color: #28a745;
-    }
-
-    .preview-image-card {
-        border-color: #007bff;
-    }
 </style>
+

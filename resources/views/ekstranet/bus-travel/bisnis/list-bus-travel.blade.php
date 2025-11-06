@@ -16,7 +16,7 @@
                 @endif
             </div>
             <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.create.bus-travel', ['business_id' => request('business_id')]) }}">
+                <a class="btn btn-sm btn-light-primary" href="{{ route('partner.create.bus-travel') }}">
                     <i class="ki-duotone ki-plus fs-2"></i>Tambah Bus & Travel
                 </a>
             </div>
@@ -73,10 +73,6 @@
                                 </td>
                                 <td>
                                     <div class="d-flex gap-1">
-                                        <a href="{{ route('partner.bus.departures.bus', $bus->id) }}"
-                                            class="btn btn-sm btn-light-info btn-icon">
-                                            <i class="fa fa-clock" aria-hidden="true"></i>
-                                        </a>
                                         <a href="{{ route('partner.show.bus-travel', $bus->id) }}"
                                            class="btn btn-sm btn-light-warning btn-icon">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
@@ -128,7 +124,7 @@
                 button.addEventListener('click', function() {
                     const busId = this.getAttribute('data-id');
                     const form = document.getElementById('form-delete');
-                    form.action = '{{ route('partner.delete.bus-travel', '__id') }}'.replace('__id', busId);
+                    form.action = '{{ route('partner.destroy.bus-travel', '__id') }}'.replace('__id', busId);
                 });
             });
         });

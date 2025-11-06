@@ -365,17 +365,54 @@ $isPemesananActive = in_array(Request::segment(2), [
 
                 {{-- Daftar Rekreasi --}}
                 @if (count($recreations) > 0)
-                    <a href="{{ route('partner.daftar-rekreasi') }}"
-                        class="menu-item {{ Request::segment(2) == 'daftar-rekreasi' ? 'here' : '' }} menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
+                    @php
+                        $isRekreasiActive = in_array(Request::segment(2), ['semua-rekreasi', 'daftar-paket-rekreasi']);
+                    @endphp
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $isRekreasiActive ? 'here show' : '' }}">
+                        <span class="menu-link {{ $isRekreasiActive ? 'main-accordion' : '' }}">
+                            <span class="menu-icon {{ $isRekreasiActive ? 'main-accordion' : '' }}">
                                 <i class="fa-solid fa-umbrella-beach"></i>
                             </span>
-                            <span class="menu-title">Daftar Rekreasi</span>
+                            <span class="menu-title {{ $isRekreasiActive ? 'main-accordion' : '' }}">Rekreasi</span>
+                            <span class="menu-arrow {{ $isRekreasiActive ? 'main-accordion' : '' }}"></span>
                         </span>
-
-                    </a>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'semua-rekreasi')
+                                    <a class="menu-link" href="{{ route('partner.recreation.all') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Semua Rekreasi</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.recreation.all') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Semua Rekreasi</span>
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'daftar-paket-rekreasi')
+                                    <a class="menu-link" href="{{ route('partner.recreation.packages') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Daftar Paket Rekreasi</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.recreation.packages') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Daftar Paket Rekreasi</span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 @endif
 
                 @if (count($clinic) > 0)
@@ -430,20 +467,57 @@ $isPemesananActive = in_array(Request::segment(2), [
                 @endif
 
                 @if (count($carRentals) > 0)
-                    <a href="{{ route('partner.daftar.kendaraan') }}"
-                        class="menu-item {{ Request::segment(2) == 'daftar-kendaraan' ? 'here' : '' }} menu-accordion">
-                        <!--begin:Menu link-->
-                        <span class="menu-link">
-                            <span class="menu-icon">
+                    @php
+                        $isCarRentalActive = in_array(Request::segment(2), ['semua-rental-mobil', 'daftar-kendaraan']);
+                    @endphp
+                    <div data-kt-menu-trigger="click" class="menu-item menu-accordion {{ $isCarRentalActive ? 'here show' : '' }}">
+                        <span class="menu-link {{ $isCarRentalActive ? 'main-accordion' : '' }}">
+                            <span class="menu-icon {{ $isCarRentalActive ? 'main-accordion' : '' }}">
                                 <i class="fas fa-car-side fs-3"></i>
                             </span>
-                            <span class="menu-title">Daftar kendaraan</span>
+                            <span class="menu-title {{ $isCarRentalActive ? 'main-accordion' : '' }}">Rental Mobil</span>
+                            <span class="menu-arrow {{ $isCarRentalActive ? 'main-accordion' : '' }}"></span>
                         </span>
-                        <!--end:Menu link-->
-                    </a>
+                        <div class="menu-sub menu-sub-accordion">
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'semua-rental-mobil')
+                                    <a class="menu-link" href="{{ route('partner.car_rental.all') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Semua Rental Mobil</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.car_rental.all') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Semua Rental Mobil</span>
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="menu-item initial menu-hover">
+                                @if (Request::segment(2) === 'daftar-kendaraan')
+                                    <a class="menu-link" href="{{ route('partner.daftar.kendaraan') }}" style="background-color: #C02425;">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot" style="background-color: white !important;"></span>
+                                        </span>
+                                        <span class="menu-title" style="color: white !important;">Daftar Kendaraan</span>
+                                    </a>
+                                @else
+                                    <a class="menu-link" href="{{ route('partner.daftar.kendaraan') }}">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title custom">Daftar Kendaraan</span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 @endif
                 @php
-                    $isBusTravelActive = in_array(Request::segment(2), ['daftar-bus-travel', 'bus-departures']);
+                    $isBusTravelActive = in_array(Request::segment(2), ['bisnis-bus-travel', 'daftar-bus-travel', 'bus-departures']);
                 @endphp
 
                 @if (count($busTravels) > 0)
@@ -470,6 +544,26 @@ $isPemesananActive = in_array(Request::segment(2), [
                     </span>
 
                     <div class="menu-sub menu-sub-accordion">
+                        <!-- Menu item: bisnis -->
+                        <div class="menu-item initial menu-hover">
+                            @if (Request::segment(2) === 'bisnis-bus-travel')
+                                <a class="menu-link" href="{{ route('partner.bisnis.bus-travel.index') }}"
+                                    style="background-color: #C02425;">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"
+                                            style="background-color: white !important;"></span>
+                                    </span>
+                                    <span class="menu-title" style="color: white !important;">Semua Bisnis</span>
+                                </a>
+                            @else
+                                <a class="menu-link" href="{{ route('partner.bisnis.bus-travel.index') }}">
+                                    <span class="menu-bullet">
+                                        <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title custom">Semua Bisnis</span>
+                                </a>
+                            @endif
+                        </div>
                         <!-- Menu item: Bus -->
                         <div class="menu-item initial menu-hover">
                             @if (Request::segment(2) === 'daftar-bus-travel')

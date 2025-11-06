@@ -32,6 +32,8 @@ use App\Http\Controllers\Partner\RiwayatBookingController;
 use App\Http\Controllers\Partner\ManagementHotelController;
 use App\Http\Controllers\Partner\DashboardPartnerController;
 use App\Http\Controllers\Partner\ManagementHostelController;
+use App\Http\Controllers\Partner\ManagementRecreationController;
+use App\Http\Controllers\Partner\ManagementCarRentalController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\HostelController as AdminHostelController;
@@ -472,6 +474,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('laporan/semua', [\App\Http\Controllers\Partner\LaporanController::class, 'index'])->name('partner.laporan.semua');
 
         Route::get('daftar-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.daftar-rekreasi');
+        Route::get('semua-rekreasi', [ManagementRecreationController::class, 'semuaRekreasi'])->name('partner.recreation.all');
+        Route::get('daftar-paket-rekreasi', [\App\Http\Controllers\RecreationController::class, 'list'])->name('partner.recreation.packages');
+        Route::get('profil-rekreasi/{id}', [ManagementRecreationController::class, 'profilRekreasi'])->name('partner.recreation.profile');
+        Route::put('profil-rekreasi/{id}', [ManagementRecreationController::class, 'updateProfilRekreasi'])->name('partner.recreation.profile.update');
         Route::get('tambah-rekreasi', [\App\Http\Controllers\RecreationController::class, 'create'])->name('recreation.create');
         Route::get('edit-rekreasi/{id}/edit', [\App\Http\Controllers\RecreationController::class, 'edit'])->name('recreation.edit');
         Route::put('update-rekreasi/{id}', [\App\Http\Controllers\RecreationController::class, 'update'])->name('data-rekreasi.update');
@@ -490,6 +496,10 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::post('riwayat-booking-health-beauty/{id}/cancel-verify', [RiwayatBookingController::class, 'batalVerifikasiHealthBeauty'])
             ->name('partner.health-beauty.cancel-verify');
 
+        Route::get('semua-rental-mobil', [ManagementCarRentalController::class, 'semuaRentalMobil'])->name('partner.car_rental.all');
+        Route::get('profil-rental-mobil/{id}', [ManagementCarRentalController::class, 'profilRentalMobil'])->name('partner.car_rental.profile');
+        Route::put('profil-rental-mobil/{id}', [ManagementCarRentalController::class, 'updateProfilRentalMobil'])->name('partner.car_rental.profile.update');
+
         Route::get('daftar-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'index'])->name('partner.daftar.kendaraan');
         Route::get('halaman-create', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanCreate'])->name('partner.halaman.create');
         Route::get('halaman-update', [\App\Http\Controllers\Partner\KendaraanController::class, 'halamanUpdate'])->name('partner.halaman.update');
@@ -500,6 +510,12 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
         Route::get('daftar-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'index'])->name('partner.daftar.bus-travel');
+        Route::get('bisnis-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisIndex'])->name('partner.bisnis.bus-travel.index');
+        Route::get('bisnis-bus-travel/create', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisCreate'])->name('partner.bisnis.bus-travel.create');
+        Route::post('bisnis-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisStore'])->name('partner.bisnis.bus-travel.store');
+        Route::get('bisnis-bus-travel/{id}/edit', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisEdit'])->name('partner.bisnis.bus-travel.edit');
+        Route::put('bisnis-bus-travel/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisUpdate'])->name('partner.bisnis.bus-travel.update');
+        Route::delete('bisnis-bus-travel/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisDestroy'])->name('partner.bisnis.bus-travel.destroy');
         Route::get('create-bus', [\App\Http\Controllers\Partner\BusTravelController::class, 'create'])->name('partner.create.bus-travel');
         Route::post('create-bus', [\App\Http\Controllers\Partner\BusTravelController::class, 'store'])->name('partner.store.bus-travel');
         Route::get('daftar-bus-travel/show/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'show'])->name('partner.show.bus-travel');
