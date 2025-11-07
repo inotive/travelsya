@@ -101,16 +101,12 @@ class RecreationController extends Controller
     {
         $category = DB::table('category_recreations')->get();
 
-        // $data = DB::table('recreation_has_packages')
-        //     ->join('recreations', 'recreation_has_packages.recreation_id', '=', 'recreations.id')  // Join ke tabel recreations
-        //     ->join('category_recreations', 'recreation_has_packages.category_recreation_id', '=', 'category_recreations.id')
-        //     ->where('recreations.user_id', Auth::id())
-        //     ->select('recreation_has_packages.*', 'category_recreations.name as category_name', 'recreations.business_name')
-        //     ->get();
-
         $data = RecreationPackages::with(['recreation.categoryRecreation'])
             ->whereHas('recreation', function ($query) {
                 $query->where('user_id', Auth::id());
+            })
+            ->when($request->has('business_id'), function ($query) use ($request) {
+                $query->where('recreation_id', $request->business_id);
             })
             ->get()
             ->map(function ($item) {
@@ -118,8 +114,6 @@ class RecreationController extends Controller
                 $item->business_name = $item->recreation->business_name ?? null;
                 return $item;
             });
-
-        // dd($data);
 
         return view('ekstranet.rekreasi.daftar-rekreasi', [
             'data' => $data,
