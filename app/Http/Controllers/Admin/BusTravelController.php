@@ -25,7 +25,7 @@ class BusTravelController extends Controller
 
         $bus_travels = DB::table('bus_travels')
         ->join('users', 'bus_travels.user_id', '=', 'users.id')
-        ->join('cities', 'bus_travels.city', '=', 'cities.city_id')
+        ->leftjoin('cities', 'bus_travels.city', '=', 'cities.city_id')
         ->select(
             'bus_travels.id as bus_travel_id',
             'bus_travels.phone as bus_travel_phone',
@@ -62,10 +62,10 @@ class BusTravelController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'address' => 'required',
-            'logo' => 'required|image|mimes:jpeg,jpg,png|max:2048',
+            'phone' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'nullable',
+            'logo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -83,10 +83,10 @@ class BusTravelController extends Controller
         DB::table('bus_travels')->insert([
             'business_name' => ucwords($request->name),
             'user_id' => $request->user_id,
-            'city' => $request->city,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'image' => $logoPath,
+            'city' => $request->city ?? null,
+            'phone' => $request->phone ?? null,
+            'address' => $request->address ?? null,
+            'image' => $logoPath ?? null,
             'is_active' => 1,
         ]);
 
@@ -127,15 +127,15 @@ class BusTravelController extends Controller
         $rules = [
             'name' => 'required',
             'user_id' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'address' => 'required',
-            'is_active' => 'required',
+            'phone' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'nullable',
+            'is_active' => 'nullable',
         ];
 
         // Only require logo if no existing logo in database
         if (!$bus_travel->image || $bus_travel->image == '-') {
-            $rules['logo'] = 'required|image|mimes:jpeg,jpg,png|max:2048';
+            $rules['logo'] = 'nullable|image|mimes:jpeg,jpg,png|max:2048';
         } else {
             $rules['logo'] = 'nullable|image|mimes:jpeg,jpg,png|max:2048';
         }
@@ -162,10 +162,10 @@ class BusTravelController extends Controller
         $bus_travel->update([
             'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
-            'city' => $request->city,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'image' => $logoPath,
+            'city' => $request->city ?? null,
+            'phone' => $request->phone ?? null,
+            'address' => $request->address ?? null,
+            'image' => $logoPath ?? null,
             'is_active' => $request->is_active,
         ]);
 

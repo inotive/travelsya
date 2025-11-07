@@ -179,7 +179,7 @@
                                     <p class="text-muted small mt-1">Preview logo</p>
                                 </div>
                                 <input type="file" class="form-control form-control-lg" id="logo"
-                                    name="logo" accept="image/jpeg,image/jpg,image/png" required />
+                                    name="logo" accept="image/jpeg,image/jpg,image/png" />
                                 <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
 
                                 @error('logo')
@@ -218,7 +218,7 @@
                           <div class="col-md-6">
                             <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
                             <input type="number" class="form-control form-control-lg" id="phone"
-                                placeholder="Masukan nomor telepon... " name="phone" required />
+                                placeholder="Masukan nomor telepon... " name="phone" />
 
                             @error('phone')
                                 <span class="text-danger mt-1" role="alert">
@@ -233,7 +233,7 @@
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
 
-                                <select class="js-example-basic-single form-control form-control-lg" name="city" id="city" required>
+                                <select class="js-example-basic-single form-control form-control-lg" name="city" id="city" >
                                     <option value="">--Pilih Kota/Kabupaten--</option>
                                     @foreach ($cities as $city)
                                         <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
@@ -253,7 +253,7 @@
 
                         <div class="col-12">
                           <label for="" class="required form-label">Alamat</label>
-                          <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                          <textarea name="address" id="address" cols="30" rows="5" class="form-control" ></textarea>
                       </div>
 
                         </div>
