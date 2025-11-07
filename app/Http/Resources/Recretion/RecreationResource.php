@@ -19,7 +19,10 @@ class RecreationResource extends JsonResource
             'id' => $this->id,
             'name' => $this->business_name,
             'image' => (isset($this->image) && isset($this->image->image)) ? asset('storage/' . $this->image->image) : asset('images/not_found.jpg'),
-            'location' => $this->kota ? $this->kota['city_name'] : 'Kota dihapus',
+            'location' => $this->whenLoaded('kota', 
+                $this->kota ? $this->kota->city_name : ($this->city ?? 'Kota dihapus'),
+                $this->city ?? 'Kota dihapus'
+            ),
             'unit_price' => $this->recreationPackages->first()->unit_price ?? null,
             'price' => $this->recreationPackages->first()->price ?? null,
             'rating_count' => $this->reviews_count,

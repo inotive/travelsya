@@ -206,7 +206,7 @@ class RecreationController extends Controller
                     'id' => $rec['id'],
                     'name' => $rec['business_name'],
                     'image' => $img,
-                    'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'location' => $rec['kota'] ? $rec['kota']['city_name'] : ($rec['city'] ?? 'Kota dihapus'),
                     'price' => $rec['recreationPackages'][0]['price'],
                     'rating_count' => count($rec['reviews']),
                     'avg_rating' => $rec->avgRating(),
@@ -253,7 +253,8 @@ class RecreationController extends Controller
     // new list
     public function list2()
     {
-        $recreations = Recreation::active()->select('id', 'business_name', 'category_recreation_id')
+        $recreations = Recreation::active()
+            ->select('id', 'business_name', 'category_recreation_id', 'city')
             ->withCount('reviews')
             ->with('image', 'recreationPackages', 'kota')
             ->get();

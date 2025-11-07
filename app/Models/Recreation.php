@@ -48,7 +48,34 @@ class Recreation extends Model
      */
     public function kota(): BelongsTo
     {
+        // Relasi default: menghubungkan kolom 'city' dengan 'city_id' di tabel cities
+        // Ini bekerja jika kolom 'city' berisi ID kota
         return $this->belongsTo(City::class, 'city', 'city_id');
+    }
+    
+    /**
+     * Get the city name either from the related City model or directly from the 'city' column
+     *
+     * @return string
+     */
+    public function getCityNameAttribute(): string
+    {
+        // Jika relasi kota berhasil dimuat, kembalikan nama kotanya
+        if ($this->relationLoaded('kota') && $this->kota) {
+            return $this->kota->city_name;
+        }
+        
+        // Cek apakah nilai 'city' adalah angka (city_id) atau string (kemungkinan nama kota)
+        if (is_numeric($this->city)) {
+            // Jika ini adalah ID kota, coba ambil nama kota dari database
+            $city = City::where('city_id', $this->city)->first();
+            if ($city) {
+                return $city->city_name;
+            }
+        }
+        
+        // Jika bukan angka atau tidak ditemukan di tabel cities, kembalikan nilai aslinya atau default
+        return $this->city ?? 'Kota dihapus';
     }
 
     /**

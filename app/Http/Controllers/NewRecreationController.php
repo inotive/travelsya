@@ -52,6 +52,7 @@ class NewRecreationController extends Controller
         }
 
         $data_partners = Recreation::Active()->with('reviews', 'kota')
+            ->select('id', 'business_name', 'category', 'city') // Tambahkan kolom 'city' untuk memastikan tersedia
             ->limit(10)
             ->get();
 
@@ -61,7 +62,7 @@ class NewRecreationController extends Controller
                 $item = [
                     'id' => $rec['id'],
                     'img' => optional($rec->image)->image ? Storage::url(Str::after($rec->image->image, 'public/')) : asset('images/health_default.png'),
-                    'lokasi' => $rec['kota']['city_name'] ?? 'Kota dihapus',
+                    'lokasi' => $rec['kota'] ? $rec['kota']['city_name'] : ($rec['city'] ?? 'Kota dihapus'),
                     'business_name' => $rec['business_name'],
                     'rate' => $rec->avgRating(),
                     'category' => $rec['category'],
@@ -114,7 +115,7 @@ class NewRecreationController extends Controller
                                             '</span>
 
                                             <span class="text-muted fw-semibold d-block fs-7">
-                                                ' . $recreation->name . ' - ' . ($recreation->recreation->kota->city_name ?? '-') .'
+                                                ' . $recreation->name . ' - ' . $recreation->recreation->city_name .'
                                             </span>
                                         </div>
                                     </div>
