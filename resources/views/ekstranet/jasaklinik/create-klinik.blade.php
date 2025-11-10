@@ -44,10 +44,11 @@
                                 <option value="">Pilih Klinik</option>
                                 @php
                                     $userClinics = \App\Models\Clinic::where('user_id', Auth::id())->get();
+                                    $selectedClinicFromQuery = request()->get('clinic_id');
                                 @endphp
                                 @foreach ($userClinics as $clinic)
                                     <option value="{{ $clinic->id }}"
-                                        {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}
+                                        {{ (old('clinic_id') == $clinic->id) || ($selectedClinicFromQuery && $selectedClinicFromQuery == $clinic->id) ? 'selected' : '' }}
                                         data-category="{{ $clinic->category }}">
                                         {{ $clinic->clinic_name }}
                                     </option>
@@ -346,6 +347,12 @@
                     }
                 }
             });
+
+            // Trigger change event on page load if a clinic is pre-selected (e.g., from query parameter)
+            let selectedClinic = $('#clinic_id').val();
+            if (selectedClinic) {
+                $('#clinic_id').trigger('change');
+            }
 
             // Fungsi untuk memuat kategori berdasarkan jenis bisnis
             function loadCategoriesByBusinessCategory(businessCategory) {

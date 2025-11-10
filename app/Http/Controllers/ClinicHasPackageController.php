@@ -568,7 +568,7 @@ class ClinicHasPackageController extends Controller
         $clinic = ClinicHasPackages::with('clinic')->find($id); // Ambil data klinik berdasarkan ID dengan relasi clinic
         $categories = CategoriesServices::all();
         $spesialis = Specialist::all();
-        $clinics = Clinic::all(); // Ambil semua klinik
+        $clinics = Clinic::where('user_id', Auth::id())->get(); // Ambil hanya klinik milik user yang sedang login
 
         // Fetch existing images for this clinic package
         $clinicImages = ClinicPackageImages::where('clinic_package_id', $id)->get();

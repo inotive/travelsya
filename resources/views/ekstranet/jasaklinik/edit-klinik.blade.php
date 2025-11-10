@@ -26,9 +26,14 @@
                             <div class="col-md-12">
                                 <label for="clinic_id" class="form-label required fs-6 fw-semibold mb-2">Klinik</label>
                                 <select name="clinic_id" id="clinic_id" class="form-control" required>
+                                    @php
+                                        $selectedClinicFromQuery = request()->get('clinic_id');
+                                        $existingClinicId = $clinic->clinic_id ?? '';
+                                        $currentSelection = $selectedClinicFromQuery ?? $existingClinicId;
+                                    @endphp
                                     @foreach ($clinics as $clinicItem)
                                         <option value="{{ $clinicItem->id }}"
-                                            {{ ($clinic->clinic_id ?? '') == $clinicItem->id ? 'selected' : '' }}
+                                            {{ ($currentSelection == $clinicItem->id) ? 'selected' : '' }}
                                             data-category="{{ $clinicItem->category }}">
                                             {{ $clinicItem->clinic_name }}
                                         </option>
