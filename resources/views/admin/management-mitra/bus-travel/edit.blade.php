@@ -228,15 +228,8 @@
             formData.append('_token', token);
             formData.append('_method', 'PUT');
 
-            // Check if logo is required (no existing logo in database)
-            let hasExistingLogo = $('#current-logo-preview').is(':visible');
-
             if (logo) {
                 formData.append('logo', logo);
-            } else if (!hasExistingLogo) {
-                // Show error if no logo selected and no existing logo
-                alert('Logo wajib diisi!');
-                return;
             }
 
             //ajax
