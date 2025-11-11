@@ -74,6 +74,7 @@
                                     <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
+                                    <th class="text-center">Jumlah Tiket</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Metode Pembayaran</th>
                                     <th class="text-center">Jenis Pembayaran</th>
@@ -95,6 +96,7 @@
                                         <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
+                                        <td class="text-center">{{ $booking->total_ticket }}</td>
                                         <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                         <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                         <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -143,6 +145,7 @@
                                     <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
+                                    <th class="text-center">Jumlah Tiket</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Metode Pembayaran</th>
                                     <th class="text-center">Jenis Pembayaran</th>
@@ -165,6 +168,7 @@
                                             <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
+                                            <td class="text-center">{{ $booking->total_ticket }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -185,25 +189,25 @@
 
                 <div class="tab-pane fade" id="belum-dipakai" role="tabpanel" aria-labelledby="belum-dipakai-tab">
                     <div class="bg-white p-4 rounded">
-                        <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
-                            id="kt_datatable_belum_dipakai">
-                            <thead>
-                                <tr class="fw-bold fs-6 text-gray-800">
-                                    <th class="text-center">No</th>
-                                    <th class="text-center">Nama Bisnis</th>
-                                    <th class="text-center">Customer</th>
-                                    <th class="text-center">Nomor Invoice</th>
-                                    <th class="text-center">Code Booking</th>
-                                    <th class="text-center">Paket Rekreasi</th>
-                                    <th class="text-center">Total Harga</th>
-                                    <th class="text-center">Metode Pembayaran</th>
-                                    <th class="text-center">Jenis Pembayaran</th>
-                                    <th class="text-center">Tanggal Pemesanan</th>
-                                    <th class="text-center">Tanggal Kadaluwarsa</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                                                    <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
+                                                        id="kt_datatable_belum_dipakai">
+                                                    <thead>
+                                                        <tr class="fw-bold fs-6 text-gray-800">
+                                                            <th class="text-center">No</th>
+                                                            <th class="text-center">Nama Bisnis</th>
+                                                            <th class="text-center">Customer</th>
+                                                            <th class="text-center">Nomor Invoice</th>
+                                                            <th class="text-center">Code Booking</th>
+                                                            <th class="text-center">Paket Rekreasi</th>
+                                                            <th class="text-center">Jumlah Tiket</th>
+                                                            <th class="text-center">Total Harga</th>
+                                                            <th class="text-center">Metode Pembayaran</th>
+                                                            <th class="text-center">Jenis Pembayaran</th>
+                                                            <th class="text-center">Tanggal Pemesanan</th>
+                                                            <th class="text-center">Tanggal Kadaluwarsa</th>
+                                                            <th class="text-center">Aksi</th>
+                                                        </tr>
+                                                    </thead>                            <tbody>
                                 @php $counter = 1; @endphp
                                 @foreach ($rekreasibookdates->reverse() as $booking)
                                     @if($booking->status == 'belum_dipakai')
@@ -217,6 +221,7 @@
                                             <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
+                                            <td class="text-center">{{ $booking->total_ticket }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -247,6 +252,7 @@
                                     <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Paket Rekreasi</th>
+                                    <th class="text-center">Jumlah Tiket</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Metode Pembayaran</th>
                                     <th class="text-center">Jenis Pembayaran</th>
@@ -269,6 +275,7 @@
                                             <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
                                             <td class="text-center">{{ $booking->package->name ?? 'Paket tidak ditemukan' }}</td>
+                                            <td class="text-center">{{ $booking->total_ticket }}</td>
                                             <td class="text-center">{{ General::rp($booking->rent_price) }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>

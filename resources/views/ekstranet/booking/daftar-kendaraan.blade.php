@@ -479,6 +479,7 @@
             // Konfigurasi DataTable untuk semua tab
             const dataTableConfig = {
                 "scrollY": "500px",
+                "scrollX": true,
                 "scrollCollapse": true,
                 "language": {
                     "lengthMenu": "Show _MENU_",
