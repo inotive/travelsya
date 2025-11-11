@@ -103,10 +103,71 @@ class NewHealthBeautyController extends Controller
         return $result;
     }
 
-    public function category($id){
+    public function category($id, Request $request){
+        $context = $request->get('context', 'health'); // Default ke health
+        
         if($id !== 'all'){
-            $data['packages'] = ClinicHasPackages::with('categoriesService')->where('categories_services_id', $id)->get();
-            $data['category'] = CategoriesServices::find($id);
+            // Mapping ID ke kategori yang sebenarnya aktif
+            // Karena ID 1,2,3 mengarah ke Threadlift,Peeling,Injection (yg tidak relevan), 
+            // saya akan mapping manual ID 1->Clinic, 2->Service, 3->Product
+            $actualCategoryId = $id;
+            if(is_numeric($id) && $id >= 1 && $id <= 3) {
+                $categoryNames = ['', 'Clinic', 'Service', 'Product']; // Indeks 1=Clinic, 2=Service, 3=Product
+                if(isset($categoryNames[$id])) {
+                    $actualCategory = CategoriesServices::where('name', $categoryNames[$id])->first();
+                    if($actualCategory) {
+                        $actualCategoryId = $actualCategory->id;
+                    }
+                }
+            }
+            
+            $query = ClinicHasPackages::with('categoriesService');
+
+            // Filter berdasarkan konteks
+            switch($context) {
+                case 'beauty':
+                    $query->whereHas('clinic', function($q) {
+                        $q->where(function($subq) {
+                            $subq->where('category', 'kecantikan')
+                                ->orWhere('category', 'Kecantikan')
+                                ->orWhere('category', 'KECANTIKAN')
+                                ->orWhere('category', 'beauty')
+                                ->orWhere('category', 'Beauty')
+                                ->orWhere('category', 'BEAUTY');
+                        });
+                    });
+                    break;
+                case 'spa_beauty':
+                    $query->whereHas('clinic', function($q) {
+                        $q->where(function($subq) {
+                            $subq->where('category', 'spa')
+                                ->orWhere('category', 'SPA')
+                                ->orWhere('category', 'Salon')
+                                ->orWhere('category', 'salon')
+                                ->orWhere('category', 'spa dan kecantikan')
+                                ->orWhere('category', 'Spa Dan Kecantikan')
+                                ->orWhere('category', 'SPA DAN KECANTIKAN');
+                        });
+                    });
+                    break;
+                case 'health':
+                default:
+                    $query->whereHas('clinic', function($q) {
+                        $q->where(function($subq) {
+                            $subq->where('category', 'kesehatan')
+                                ->orWhere('category', 'Kesehatan')
+                                ->orWhere('category', 'KESEHATAN')
+                                ->orWhere('category', 'health')
+                                ->orWhere('category', 'Health')
+                                ->orWhere('category', 'HEALTH');
+                        });
+                    });
+                    break;
+            }
+            
+            // Cari data paket berdasarkan kategori dan konteks
+            $data['packages'] = $query->where('categories_services_id', $actualCategoryId)->get();
+            $data['category'] = CategoriesServices::find($actualCategoryId);
 
             return view('pagesv2.health_beauty.category', $data);
         }else{
