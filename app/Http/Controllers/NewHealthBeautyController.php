@@ -265,7 +265,33 @@ class NewHealthBeautyController extends Controller
         $data['special_deals'] = $special_deals_health;
         $data['special_deals_beauty'] = $special_deals_beauty;
         $data['special_deals_spa_beauty'] = $special_deals_spa_beauty;
-        $data['categorises'] = collect($all_categories);  // untuk tab kesehatan
+        // Filter $all_categories untuk tab health hanya menampilkan kategori yang terkait dengan kesehatan
+        $health_related_categories = collect();
+        foreach ($all_categories as $category) {
+            $clinic_packages = $category->clinicHasPackages()->with(['clinic'])->get();
+            
+            $has_health_related_packages = $clinic_packages->contains(function($package) {
+                return $package->clinic && in_array(strtolower(trim($package->clinic->category)), ['kesehatan', 'health']);
+            });
+            
+            // Jika sebuah kategori memiliki paket yang terkait dengan klinik kesehatan, atau nama kategorinya adalah 'Clinic'
+            // dan terkait dengan klinik kesehatan, maka tambahkan ke health_related_categories
+            if ($has_health_related_packages || ($category->name === 'Clinic' && $clinic_packages->contains(function($package) {
+                return $package->clinic && in_array(strtolower(trim($package->clinic->category)), ['kesehatan', 'health']);
+            }))) {
+                $health_related_categories->push($category);
+            }
+        }
+        
+        $data['categorises'] = $health_related_categories;  // untuk tab kesehatan - hanya kategori yang terkait dengan kesehatan
+        
+        // Hanya kategori 'Clinic' untuk bagian 'Kebutuhan Kesehatan dan Kecantikan'
+        $data['clinic_categories'] = collect();
+        foreach ($all_categories as $category) {
+            if ($category->name === 'Clinic') {
+                $data['clinic_categories']->push($category);
+            }
+        }
         $data['service_categories'] = $service_categories;
         $data['product_categories'] = $product_categories;
         $data['partners'] = collect($partners);
