@@ -135,7 +135,7 @@
                                         </td>
                                         <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
-                                        <td class="text-center">{{ count($booking->transaction->detailTransactionBuses ?? []) }}</td>
+                                        <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
                                         <td class="text-center">{{ General::rp($booking->price) }}</td>
                                         <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                         <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -240,7 +240,7 @@
                                             </td>
                                             <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ count($booking->transaction->detailTransactionBuses ?? []) }}</td>
+                                            <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
                                             <td class="text-center">{{ General::rp($booking->price) }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -328,7 +328,7 @@
                                             </td>
                                             <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ count($booking->transaction->detailTransactionBuses ?? []) }}</td>
+                                            <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
                                             <td class="text-center">{{ General::rp($booking->price) }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -416,7 +416,7 @@
                                             </td>
                                             <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ count($booking->transaction->detailTransactionBuses ?? []) }}</td>
+                                            <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
                                             <td class="text-center">{{ General::rp($booking->price) }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                             <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
@@ -665,7 +665,7 @@
                     }
                 ],
 
-                "order": [[8, 'asc']]
+                "order": [[8, 'desc']]
             };
 
             // Initialize DataTables untuk setiap tab

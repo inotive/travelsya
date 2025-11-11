@@ -512,7 +512,18 @@ class RiwayatBookingController extends Controller
             });
         }
 
-        $busbookings = $busbookings->orderBy('created_at', 'desc')->get();
+        $allBookings = $busbookings->orderBy('created_at', 'desc')->get();
+
+        // Group by booking_id and get the first record of each group with ticket count
+        $busbookings = $allBookings->groupBy('booking_id')->map(function ($group) {
+            $firstBooking = $group->first();
+            // Add ticket count to the first booking
+            $firstBooking->ticket_count = $group->count();
+            return $firstBooking;
+        })->sortByDesc(function ($booking) {
+            // Sort by created_at in descending order (newest first)
+            return $booking->created_at;
+        })->values(); // Reset array keys
 
         return view('ekstranet.booking.bus-travel', compact('busbookings'));
     }
@@ -520,11 +531,14 @@ class RiwayatBookingController extends Controller
     public function verifikasiBus($id)
     {
         try {
+            // Find the booking
             $booking = DetailTransactionBus::findOrFail($id);
-            $booking->status = 'verified';
-            $booking->save();
 
-            return redirect()->back()->with('success', 'Booking bus travel berhasil diverifikasi.');
+            // Update all bookings with the same booking_id to verified
+            DetailTransactionBus::where('booking_id', $booking->booking_id)
+                ->update(['status' => 'verified']);
+
+            return redirect()->back()->with('success', 'Semua tiket dengan booking ID ' . $booking->booking_id . ' berhasil diverifikasi.');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
@@ -532,19 +546,38 @@ class RiwayatBookingController extends Controller
 
     public function batalVerifikasiBus($id)
     {
-        $booking = DetailTransactionBus::findOrFail($id);
-        $booking->status = 'pending';
-        $booking->save();
+        try {
+            // Find the booking
+            $booking = DetailTransactionBus::findOrFail($id);
 
-        return redirect()->back()->with('success', 'Verifikasi booking dibatalkan');
+            // Update all bookings with the same booking_id to pending
+            DetailTransactionBus::where('booking_id', $booking->booking_id)
+                ->update(['status' => 'pending']);
+
+            return redirect()->back()->with('success', 'Verifikasi untuk semua tiket dengan booking ID ' . $booking->booking_id . ' dibatalkan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function cetakBus($id, Request $request)
     {
         try {
-            $busBooking = DetailTransactionBus::findOrFail($id);
+            // Find the main booking
+            $mainBooking = DetailTransactionBus::findOrFail($id);
+
+            // Get all bookings with the same booking_id
+            $allBookings = DetailTransactionBus::where('booking_id', $mainBooking->booking_id)
+                ->with('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+                ->get();
+
+            // Prepare data with all bookings grouped
             $data = [
-                'data' => $busBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+                'mainData' => $mainBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user'),
+                'allBookings' => $allBookings,
+                'ticketCount' => $allBookings->count(),
+                'transaction' => $mainBooking, // For compatibility with existing view
+                'tickets' => $allBookings // For compatibility with existing view
             ];
 
             // For modal display, return partial view without full HTML structure
@@ -555,15 +588,10 @@ class RiwayatBookingController extends Controller
             // Regular view for direct access
             return view('user.order-detail.e-tiket-bus', $data);
         } catch (\Exception $e) {
+            if ($request->ajax() || $request->expectsJson()) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        // For modal display, return partial view without full HTML structure
-        if ($request->ajax() || $request->expectsJson()) {
-            return view('user.order-detail.e-tiket-bus-modal', $data);
-        }
-
-        // Regular view for direct access
-        return view('user.order-detail.e-tiket-bus-modal', $data);
     }
 }
