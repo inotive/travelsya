@@ -123,49 +123,7 @@ class NewHealthBeautyController extends Controller
             
             $query = ClinicHasPackages::with('categoriesService');
 
-            // Filter berdasarkan konteks
-            switch($context) {
-                case 'beauty':
-                    $query->whereHas('clinic', function($q) {
-                        $q->where(function($subq) {
-                            $subq->where('category', 'kecantikan')
-                                ->orWhere('category', 'Kecantikan')
-                                ->orWhere('category', 'KECANTIKAN')
-                                ->orWhere('category', 'beauty')
-                                ->orWhere('category', 'Beauty')
-                                ->orWhere('category', 'BEAUTY');
-                        });
-                    });
-                    break;
-                case 'spa_beauty':
-                    $query->whereHas('clinic', function($q) {
-                        $q->where(function($subq) {
-                            $subq->where('category', 'spa')
-                                ->orWhere('category', 'SPA')
-                                ->orWhere('category', 'Salon')
-                                ->orWhere('category', 'salon')
-                                ->orWhere('category', 'spa dan kecantikan')
-                                ->orWhere('category', 'Spa Dan Kecantikan')
-                                ->orWhere('category', 'SPA DAN KECANTIKAN');
-                        });
-                    });
-                    break;
-                case 'health':
-                default:
-                    $query->whereHas('clinic', function($q) {
-                        $q->where(function($subq) {
-                            $subq->where('category', 'kesehatan')
-                                ->orWhere('category', 'Kesehatan')
-                                ->orWhere('category', 'KESEHATAN')
-                                ->orWhere('category', 'health')
-                                ->orWhere('category', 'Health')
-                                ->orWhere('category', 'HEALTH');
-                        });
-                    });
-                    break;
-            }
-            
-            // Cari data paket berdasarkan kategori dan konteks
+            // Coba tanpa filter konteks dulu untuk mengecek apakah data Service/Product ada
             $data['packages'] = $query->where('categories_services_id', $actualCategoryId)->get();
             $data['category'] = CategoriesServices::find($actualCategoryId);
 
