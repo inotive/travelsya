@@ -1224,7 +1224,27 @@ HTML;
                 $booking_id_pulang = \Illuminate\Support\Str::random(6);
             }
 
+            // Fetch all seat reservations for this user and departure in advance
+            $seatReservations = BusCostumerHasChair::where('id_costumer', Auth::user()->id)
+                ->where('id_departure', $pergi->id)
+                ->where('date_pergi', $request->date_pergi)
+                ->orderBy('penumpang_ke')
+                ->get()->keyBy('penumpang_ke');
+
+            // Fetch return seat reservations if needed
+            $returnSeatReservations = collect();
+            if ((int)$data['is_pulang_pergi'] == 1) {
+                $returnSeatReservations = BusCostumerHasChair::where('id_costumer', Auth::user()->id)
+                    ->where('id_departure', $pulang->id)
+                    ->where('date_pulang', $request->date_pulang)
+                    ->orderBy('penumpang_ke')
+                    ->get()->keyBy('penumpang_ke');
+            }
+
             for ($i = 1; $i <= $data['jumlah_penumpang']; $i++) {
+                // Get seat number for this passenger
+                $seatReservation = $seatReservations->get($i);
+                
                 // Safely access relationship data
                 $pergiFrom = $pergi->from->city_name ?? 'Unknown';
                 $pergiTo = $pergi->to->city_name ?? 'Unknown';
@@ -1244,9 +1264,13 @@ HTML;
                     "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
                     "customer_phone" => $request['customer_phone_' . $i] ?? '',
                     "customer_email" => $request['customer_email_' . $i] ?? '',
+                    "seat_number" => $seatReservation ? $seatReservation->kursi_pergi : null,
                 ]);
 
                 if ((int)$data['is_pulang_pergi'] == 1) {
+                    // Get return trip seat number for this passenger
+                    $returnSeatReservation = $returnSeatReservations->get($i);
+
                     // Safely access relationship data for pulang
                     $pulangFrom = $pulang->from->city_name ?? 'Unknown';
                     $pulangTo = $pulang->to->city_name ?? 'Unknown';
@@ -1266,6 +1290,7 @@ HTML;
                         "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
                         "customer_phone" => $request['customer_phone_' . $i] ?? '',
                         "customer_email" => $request['customer_email_' . $i] ?? '',
+                        "seat_number" => $returnSeatReservation ? $returnSeatReservation->kursi_pulang : null,
                     ]);
                 }
             }

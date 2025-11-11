@@ -180,6 +180,13 @@
             color: #c02425;
         }
 
+        .info-row.harga .info-label,
+        .info-row.harga .info-value {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #c02425;
+        }
+
         /* Status Badge */
         .status-badge {
             display: inline-block;
@@ -384,6 +391,10 @@
                 <div class="info-row">
                     <span class="info-label">Nomor Kursi</span>
                     <span class="info-value">{{ $ticket->seat_number ?? 'N/A' }}</span>
+                </div>
+                <div class="info-row harga">
+                    <span class="info-label">Harga Tiket</span>
+                    <span class="info-value">Rp {{ number_format($ticket->price, 0, ',', '.') }}</span>
                 </div>
             </div>
         </div>

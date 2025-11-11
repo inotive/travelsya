@@ -577,26 +577,9 @@ class RiwayatBookingController extends Controller
             $totalPrice = $allBookings->sum('price');
             $totalAdminFee = $allBookings->sum('fee_admin');
 
-            // Fetch seat information from BusCostumerHasChair table based on the departure date
-            $departureDate = Carbon::parse($mainBooking->departure_time)->format('Y-m-d');
-            
-            // Get all seat reservations for this departure and date, ordered by passenger number
-            $seatReservations = BusCostumerHasChair::where('id_departure', $mainBooking->bus_departure_id)
-                ->where('date_pergi', $departureDate)
-                ->orderBy('penumpang_ke')
-                ->pluck('kursi_pergi', 'penumpang_ke'); // Getting seat numbers keyed by passenger number
-
-            // Map seat numbers to tickets based on the order they were created
-            foreach ($allBookings as $index => $booking) {
-                $passengerNumber = $index + 1; // First booking corresponds to passenger 1, etc.
-                
-                if ($seatReservations->has($passengerNumber)) {
-                    $booking->seat_number = $seatReservations->get($passengerNumber);
-                } else {
-                    // Fallback: try to match by array index if passenger number doesn't match
-                    $booking->seat_number = $seatReservations->values()->get($index) ?? 'N/A';
-                }
-            }
+            // Seat numbers are now stored directly in the detail_transaction_buses table, 
+            // so no need to fetch from BusCostumerHasChair table
+            // The seat_number field is directly available on each booking
 
             // Ensure duration is available in the main data record
             // If duration is not directly in DetailTransactionBus, get it from the related BusDeparture
