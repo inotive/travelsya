@@ -571,13 +571,16 @@ class RiwayatBookingController extends Controller
                 ->with('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
                 ->get();
 
+            $totalPrice = $allBookings->sum('price');
+            $totalAdminFee = $allBookings->sum('fee_admin');
+
             // Prepare data with all bookings grouped
             $data = [
-                'mainData' => $mainBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user'),
-                'allBookings' => $allBookings,
+                'data' => $mainBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user'),
+                'tickets' => $allBookings,
                 'ticketCount' => $allBookings->count(),
-                'transaction' => $mainBooking, // For compatibility with existing view
-                'tickets' => $allBookings // For compatibility with existing view
+                'totalPrice' => $totalPrice,
+                'totalAdminFee' => $totalAdminFee,
             ];
 
             // For modal display, return partial view without full HTML structure

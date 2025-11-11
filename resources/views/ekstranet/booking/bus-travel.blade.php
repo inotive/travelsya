@@ -110,6 +110,7 @@
                                     <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
                                     <th class="text-center">Jumlah Tiket</th>
+                                    <th class="text-center">Harga Tiket</th>
                                     <th class="text-center">Total Harga</th>
                                     <th class="text-center">Metode Pembayaran</th>
                                     <th class="text-center">Jenis Pembayaran</th>
@@ -137,6 +138,7 @@
                                         <td class="text-center">{{ $booking->booking_id }}</td>
                                         <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
                                         <td class="text-center">{{ General::rp($booking->price) }}</td>
+                                        <td class="text-center">{{ General::rp($booking->price * $booking->ticket_count) }}</td>
                                         <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
                                         <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>

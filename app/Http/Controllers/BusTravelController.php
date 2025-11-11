@@ -1219,7 +1219,10 @@ HTML;
                 $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
             }
 
-            $booking_id = \Illuminate\Support\Str::random(6);
+            $booking_id_pergi = \Illuminate\Support\Str::random(6);
+            if ((int)$data['is_pulang_pergi'] == 1) {
+                $booking_id_pulang = \Illuminate\Support\Str::random(6);
+            }
 
             for ($i = 1; $i <= $data['jumlah_penumpang']; $i++) {
                 // Safely access relationship data
@@ -1231,7 +1234,7 @@ HTML;
                     "bus_travel_id" => $pergi->busTravel->busTravel->id,
                     "bus_travel_has_bus_id" => $pergi->busTravel->id,
                     "bus_departure_id" => $pergi->id,
-                    "booking_id" => $booking_id,
+                    "booking_id" => $booking_id_pergi,
                     "departure_time" => $berangkat,
                     "from" => $pergiFrom,
                     "to" => $pergiTo,
@@ -1253,7 +1256,7 @@ HTML;
                         "bus_travel_id" => $pulang->busTravel->busTravel->id,
                         "bus_travel_has_bus_id" => $pulang->busTravel->id,
                         "bus_departure_id" => $pulang->id,
-                        "booking_id" => $booking_id,
+                        "booking_id" => $booking_id_pulang,
                         "departure_time" => $berangkatPulang,
                         "from" => $pulangFrom,
                         "to" => $pulangTo,

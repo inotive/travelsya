@@ -1,407 +1,619 @@
-@extends('layouts.user')
-
-@section('content-user')
-
-<style>
-    .bg-gradient-merah {
-        background: rgb(255, 238, 241);
-        background: linear-gradient(270deg, rgba(255, 238, 241, 1) 0%, rgba(255, 255, 255, 1) 50%);
-    }
-
-    .rating-label i {
-        font-size: 38px;
-    }
-
-    @media print {
-        body * {
-            visibility: hidden;
-        }
-        .invoice-container, .invoice-container * {
-            visibility: visible;
-        }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Isolated styles for modal content */
         .invoice-container {
-            position: absolute;
-            left: 0;
-            top: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #212529;
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .invoice-container * {
+            box-sizing: border-box;
+        }
+
+        /* Print Styles */
+        @media print {
+            .invoice-container {
+                background: white !important;
+                padding: 0 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .gradient-header,
+            .gradient-footer {
+                background: #c02425 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            .info-section {
+                page-break-inside: avoid;
+            }
+
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+        }
+
+        /* Header */
+        .gradient-header {
+            background: linear-gradient(135deg, #c02425 0%, #e74c3c 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-box {
+            background: white;
+            border-radius: 6px;
+            padding: 10px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon {
+            font-size: 50px;
+            color: #c02425 !important;
+        }
+
+        .company-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .company-info small {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .header-date {
+            font-weight: 600;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .invoice-number {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Info Sections */
+        .info-section {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            font-size: 11px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 14px;
+            color: #212529;
+        }
+
+        /* Route Section */
+        .route-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .route-display {
+            font-size: 24px;
+            font-weight: 700;
+            color: #c02425;
+            margin-bottom: 15px;
+        }
+
+        /* Price Box */
+        .price-box {
+            background: #f8f9fa;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .price-label {
+            font-size: 12px;
+            color: #6c757d;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .price-amount {
+            font-size: 28px;
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        /* Payment Table */
+        .payment-table {
             width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
         }
-        .no-print {
-            display: none !important;
+
+        .payment-table td {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
         }
-    }
-</style>
 
-{{-- Container --}}
-<div class="container invoice-container">
-    {{-- Row --}}
-    <div class="row">
-        {{-- Kolom Kiri (Menu) --}}
-        @include('user.user-navigation')
-        {{-- End Kolom Kiri --}}
+        .payment-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+        }
 
-        <div class="col-12 col-lg-7">
-            <div class="card">
-                {{-- Card Head --}}
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <div class="image-back">
-                            <img src="{{ asset('assets/media/svg/profile-account/order-history/down-2.svg') }}"
-                                alt="down" style="margin-right: 16px; margin-bottom: 8px;">
-                        </div>
-                        <div class="bungkus">
-                            <div class="h1 fw-bold mb-0">
-                                Rincian Pesanan
-                            </div>
-                            <div class="text mt-0">
-                                {{ $mainData->transaction->no_inv ?? 'Tidak ada' }}
-                            </div>
-                            <div class="text mt-1">
-                                <span class="badge badge-primary">Booking ID: {{ $mainData->booking_id }}</span>
-                                <span class="badge badge-success">{{ $ticketCount }} Tiket</span>
-                            </div>
-                        </div>
+        .payment-table tr:last-child td {
+            border-bottom: 2px solid #dee2e6;
+            padding-top: 15px;
+            font-weight: 700;
+            font-size: 18px;
+            color: #28a745;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Barcode Section */
+        .barcode-section {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .barcode-icon {
+            font-size: 60px;
+            color: #adb5bd;
+            margin-bottom: 10px;
+        }
+
+        .barcode-text {
+            color: #6c757d;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .barcode-code {
+            font-weight: 700;
+            font-size: 16px;
+            color: #212529;
+            letter-spacing: 2px;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            padding: 20px;
+        }
+
+        .warning-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 15px;
+            color: #856404;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .note-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .note-icon {
+            color: #c02425;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        .gradient-footer {
+            background: linear-gradient(135deg, #c02425 0%, #e74c3c 100%);
+            border-radius: 8px;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .footer-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-icon {
+            font-size: 24px;
+        }
+
+        .footer-text {
+            font-size: 13px;
+        }
+
+        .footer-note {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .route-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header-flex {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-right {
+                text-align: left;
+            }
+
+            .route-display {
+                font-size: 20px;
+            }
+
+            .price-amount {
+                font-size: 24px;
+            }
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-logo {
+            max-height: 70px;      /* adjust as needed */
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="invoice-container">
+        <!-- Header -->
+        <div class="gradient-header">
+            <div class="header-top text-center mb-3">
+                <img src="/assets/media/logos/logobaru.png" alt="Logo" class="header-logo">
+            </div>
+            <div class="header-flex">
+                <div class="header-left">
+                    <div class="logo-box">
+                        <i class="fas fa-bus logo-icon"></i>
                     </div>
-                    @php
-                        $reviewCount = $mainData->transaction->commentBusTravel;
-                    @endphp
-                    @if (!isset($reviewCount) && $mainData->transaction->status == 'PAID')
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#review"
-                            class="btn btn-outline btn-outline-danger border border-danger fw-bold no-print"
-                            style="padding: 12px 16px 12px 16px; border: 1px;">
-                            Berikan Review
-                        </a>
-                    @endif
+                    <div class="company-info">
+                        <h4 style="color: white">E-Ticket Bus Travel</h4>
+                        <small>E-ticket untuk Bus Travel</small>
+                    </div>
                 </div>
-                {{-- Card Body --}}
-                <div class="card-body">
-                    {{-- Row --}}
-                    <div class="row">
-                        {{-- kolom batas form --}}
-                        <div class="col-12">
-                            {{-- Bagian Tanggal Keberangkatan --}}
-                            <div class="row">
-                                <div class="col-12 col-lg-6 col-md-6 mb-4 mb-lg-0">
-                                    <div class="card mt-3 border border-1 text-center" style="background: #f4f4f4;">
-                                        <div class="info-wrapper-grup" style="padding: 10px 16px 10px 16px;">
-                                            <span class="text-gray-400 fs-8" style="margin-bottom: 6px">Tanggal Keberangkatan</span><br>
-                                            <span class="text fs-6 fw-bold" style="margin-bottom: 6px">
-                                                {{ \Carbon\Carbon::parse($mainData->departure_time)->format('d M Y') }}
-                                            </span><br>
-                                            <span class="text fs-8" style="margin-bottom: 6px">
-                                                {{ \Carbon\Carbon::parse($mainData->departure_time)->format('H:i') }}
-                                            </span><br>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-6 col-md-6">
-                                    <div class="card mt-3 border border-1 text-center" style="background: #f4f4f4;">
-                                        <div class="info-wrapper-grup" style="padding: 10px 16px 10px 16px;">
-                                            <span class="text-gray-400 fs-8" style="margin-bottom: 6px">Status Verifikasi</span><br>
-                                            <span class="text fs-6 fw-bold" style="margin-bottom: 6px">
-                                                @if(($mainData->status ?? 'pending') == 'verified')
-                                                    <span class="badge badge-success">Terverifikasi</span>
-                                                @else
-                                                    <span class="badge badge-warning">Belum Diverifikasi</span>
-                                                @endif
-                                            </span><br>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                <div class="header-right">
+                    <div class="header-date">{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</div>
+                    <div class="invoice-number">Invoice #{{ $data->booking_id }}</div>
+                </div>
+            </div>
+        </div>
 
-                            <div class="row">
-                                @php
-                                    $busImages = is_array($mainData->busTravel->image) ? $mainData->busTravel->image : json_decode($mainData->busTravel->image, true);
-                                    $firstImage = !empty($busImages) ? $busImages[0] : null;
-                                    $imagePath = $firstImage ? '/storage/buses/' . $firstImage : 'https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
-                                @endphp
-                                <div class="col-12 m-0">
-                                    {{-- Card-Bus --}}
-                                    <div class="card border border-1 mt-5 mb-5">
-                                        <div style="height: 250px; background: url('{{ $imagePath }}') center/cover no-repeat; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-                                        </div>
-                                        <div class="fw-bold fs-4 m-5">
-                                            {{ $mainData->busTravel->business_name }}
-                                        </div>
-                                    </div>
-                                </div>
+        <!-- Route & Price Overview -->
+        <div class="info-section">
+            <div class="route-section">
+                <div>
+                    <div class="info-label">Rute Perjalanan</div>
+                    <div class="route-display">{{ $data->from ?? '-' }} → {{ $data->to ?? '-' }}</div>
 
-                                {{-- Informasi Bus --}}
-                                <div class="col-12 mb-5">
-                                    <div class="card border border-1 mb-5">
-                                        <div class="fs-4 fw-bold m-5 mb-0">
-                                            Informasi Bus
-                                        </div>
-                                        <div class="m-5 d-flex align-items-center">
-                                            <img src="{{ $imagePath }}" alt="bus-travel-main"
-                                                style="width: 75px; height: 75px; object-fit: cover; border-radius: .475rem;">
-                                            <div class="text" style="margin-left: 16px">
-                                                <div class="fs-6 fw-bold mb-2">
-                                                    {{ $mainData->busTravel->business_name }} - {{ $mainData->busTravelHasBus->name ?? '-' }}
-                                                </div>
-                                                <div class="fs-8 text-gray-400">
-                                                    {{ $mainData->from ?? '-' }} → {{ $mainData->to ?? '-' }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Operator Bus</div>
+                        <div class="info-value">{{ $data->busTravel->business_name ?? 'Bus Travel' }}</div>
+                    </div>
 
-                                    {{-- Informasi Semua Penumpang --}}
-                                    @foreach ($allBookings as $k => $ticket)
-                                    <div class="card border border-1 mb-5">
-                                        <div class="fs-4 fw-bold m-5 mb-0">
-                                            Informasi Penumpang {{ $k + 1 }}
-                                            <span class="badge badge-light-primary ms-2">Kursi: {{ $ticket->seat_number ?? '-' }}</span>
-                                        </div>
-                                        <div class="m-5">
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Nama Penumpang</div>
-                                                <div class="fs-8 fw-bold">{{ $ticket->customer_name }}</div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Nomor Telepon</div>
-                                                <div class="fs-8 fw-bold">{{ $ticket->customer_phone }}</div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Alamat Email</div>
-                                                <div class="fs-8 fw-bold">{{ $ticket->customer_email }}</div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Kewarganegaraan</div>
-                                                <div class="fs-8 fw-bold">{{ $ticket->customer_country }}</div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Status Verifikasi</div>
-                                                <div class="fs-8 fw-bold">
-                                                    @if(($ticket->status ?? 'pending') == 'verified')
-                                                        <span class="badge badge-success">Terverifikasi</span>
-                                                    @else
-                                                        <span class="badge badge-warning">Pending</span>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
+                    <div class="info-item" style="margin-top: 15px;">
+                        <div class="info-label">Waktu Keberangkatan</div>
+                        <div class="info-value">{{ \Carbon\Carbon::parse($data->departure_time)->translatedFormat('d F Y, H:i') }}</div>
+                    </div>
 
-                                    {{-- Lokasi Bus Travel --}}
-                                    <div class="card border border-1 mb-5">
-                                        <div class="d-flex m-5">
-                                            <img src="{{ asset('assets/media/svg/profile-account/order-history/map.svg') }}"
-                                                style="width: 20px; height:20px; margin-right: 16px;" />
-                                            <div class="text-gray-400 fs-8">
-                                                {{ $mainData->busTravel->address }}
-                                            </div>
-                                        </div>
-                                    </div>
+                    <div class="info-item" style="margin-top: 15px;">
+                        <div class="info-label">Estimasi Durasi</div>
+                        <div class="info-value">{{ $data->duration ?? '-' }}</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="price-box">
+                        <div class="price-label">Total Pembayaran</div>
+                        <div class="price-amount">Rp {{ number_format($totalPrice + $totalAdminFee, 0, ',', '.') }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                    {{-- Ulasan Review --}}
-                                    @php
-                                        $rating_data = $mainData->transaction->commentBusTravel;
-                                        use Carbon\Carbon;
-                                        Carbon::setLocale('id');
-                                        $formatted_created_at = null;
-                                        if ($rating_data) {
-                                            $commentTime = Carbon::parse($rating_data->book_date);
-                                            $formatted_created_at = $commentTime->diffForHumans();
-                                        }
-                                    @endphp
-                                    <div class="card border border-1 mb-5">
-                                        <div class="fs-4 fw-bold m-5 mb-0">
-                                            Ulasan Review
-                                        </div>
-                                        @if (isset($rating_data))
-                                            <div class="m-5">
-                                                <div class="m-5 row">
-                                                    <div class="btn btn-icon btn-active-light-primary btn-custom w-30px h-30px w-md-40px h-md-40px"
-                                                        data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-                                                        data-kt-menu-placement="bottom-end">
-                                                        <div class="symbol symbol-50px">
-                                                            <div class="symbol-label fs-2 fw-bold bg-grey text-danger">
-                                                                {{ substr(Auth::user()->name, 0, 1) }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col ms-2">
-                                                        <div class="fs-6 fw-bold">
-                                                            {{ Auth::user()->name }}
-                                                        </div>
-                                                        <div class="fs-6 fw-light-grey-700">
-                                                            Ulasan
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row ms-0">
-                                                    <div class="col-4">
-                                                        <div class="rating">
-                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                <div class="rating-label {{ $i <= $rating_data->rate ? 'checked' : '' }} m-1">
-                                                                    <i class="ki-duotone ki-star fs-1"></i>
-                                                                </div>
-                                                            @endfor
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="fs-6 fw-light-grey-500">
-                                                            {{ $formatted_created_at ?? 'Data Tidak Ditemukan' }}
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6 ms-1 mt-2">
-                                                        <div class="fs-6 fw-light-grey-800">
-                                                            {{ $rating_data->comment }}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="m-5 text-center">
-                                                <p class="fs-6 fw-light-grey-500">Data Tidak Ditemukan</p>
-                                            </div>
-                                        @endif
-                                    </div>
+        <!-- Booking Information -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-ticket-alt"></i>
+                <span>Informasi Booking</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Kode Booking</div>
+                    <div class="info-value">{{ $data->booking_id }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Tanggal Booking</div>
+                    <div class="info-value">{{ \Carbon\Carbon::parse($data->transaction->created_at)->translatedFormat('d F Y, H:i') }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status Pembayaran</div>
+                    <div class="info-value">
+                        <span class="status-badge status-success">
+                            <i class="fas fa-check-circle"></i>
+                            {{ $data->transaction->status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                    {{-- Rincian Pembayaran --}}
-                                    <div class="card border border-1 mb-5">
-                                        <div class="fs-4 fw-bold m-5 mb-0">
-                                            Rincian Pembayaran
-                                        </div>
-                                        <div class="m-5">
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Status Transaksi</div>
-                                                @if ($mainData->transaction->status === 'EXPIRED')
-                                                    <div class="fs-8 fw-bold text-danger">Kadaluarsa</div>
-                                                @elseif ($mainData->transaction->status === 'PENDING')
-                                                    <div class="fs-8 fw-bold text-warning">Menunggu Pembayaran</div>
-                                                @elseif ($mainData->transaction->status === 'PAID')
-                                                    <div class="fs-8 fw-bold text-success">Lunas</div>
-                                                @else
-                                                    <div class="fs-8 fw-bold text-danger">Transaksi Gagal</div>
-                                                @endif
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Tanggal Transaksi</div>
-                                                <div class="fs-8 fw-bold">
-                                                    {{ \Carbon\Carbon::parse($mainData->transaction->created_at)->format('d M Y H:i') }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Metode Pembayaran</div>
-                                                <div class="fs-8 fw-bold">
-                                                    {{ str_replace('_', ' ', $mainData->transaction->payment_method ?? '-') }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Harga Per Tiket</div>
-                                                <div class="fs-8 fw-bold">
-                                                    Rp {{ number_format($mainData->price, 0, ',', '.') }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Jumlah Tiket</div>
-                                                <div class="fs-8 fw-bold">
-                                                    {{ $ticketCount }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Subtotal Tiket</div>
-                                                <div class="fs-8 fw-bold">
-                                                    Rp {{ number_format($mainData->price * $ticketCount, 0, ',', '.') }}
-                                                </div>
-                                            </div>
-                                            <div class="d-flex mb-1 justify-content-between">
-                                                <div class="fs-8">Biaya Penanganan</div>
-                                                <div class="fs-8 fw-bold">
-                                                    Rp {{ number_format(($mainData->fee_admin ?? 0) * $ticketCount + ($mainData->kode_unik ?? 0), 0, ',', '.') }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+        <!-- Bus Information -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-bus"></i>
+                <span>Informasi Bus</span>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Nama Bus</div>
+                    <div class="info-value">{{ $data->busTravelHasBus->name ?? '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Kelas</div>
+                    <div class="info-value">{{ $data->busTravelHasBus->class ?? '-' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Kapasitas</div>
+                    <div class="info-value">{{ $data->busTravelHasBus->number_seats ?? '-' }} Kursi</div>
+                </div>
+            </div>
+        </div>
 
-                            <div class="row">
-                                <div class="col-12">
-                                    {{-- Total Biaya --}}
-                                    <div class="card" style="background: #FFEEF1">
-                                        <div class="pembungkus d-flex justify-content-between">
-                                            <div class="text fs-4 fw-semibold" style="margin: 16px;">
-                                                Total Biaya
-                                            </div>
-                                            <div class="text fs-4 fw-bold" style="margin: 16px">
-                                                Rp {{ number_format($mainData->transaction->total, 0, ',', '.') }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                @if ($mainData->transaction->status === 'PENDING')
-                                    <div class="col-12 mt-4">
-                                        <div class="row">
-                                            <a href="{{ $mainData->transaction->link }}"
-                                                class="btn btn-danger btn-block no-print">Bayar</a>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
+        <!-- Passenger Information -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-user"></i>
+                <span>Informasi Penumpang ({{ $ticketCount }} Tiket)</span>
+            </div>
+            @foreach($tickets as $ticket)
+                <div class="info-grid" style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px;">
+                    <div class="info-item">
+                        <div class="info-label">Nama Penumpang</div>
+                        <div class="info-value">{{ $ticket->customer_name ?? $ticket->transaction->user->name ?? '-' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">No. Telepon</div>
+                        <div class="info-value">{{ $ticket->customer_phone ?? $ticket->transaction->user->phone ?? '-' }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Nomor Kursi</div>
+                        <div class="info-value">{{ $ticket->seat_number ?? 'N/A' }}</div>
+                    </div>
+                </div>
+            @endforeach
+            <div class="info-grid" style="padding-top: 15px;">
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ $data->customer_email ?? $data->transaction->user->email ?? '-' }}</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Payment Details -->
+        <div class="info-section">
+            <div class="section-title">
+                <i class="fas fa-receipt"></i>
+                <span>Rincian Pembayaran</span>
+            </div>
+            <div class="route-section">
+                <div>
+                    <table class="payment-table">
+                        <tr>
+                            <td>Biaya Tiket ({{ $ticketCount }}x)</td>
+                            <td>Rp {{ number_format($totalPrice, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Biaya Admin</td>
+                            <td>Rp {{ number_format($totalAdminFee, 0, ',', '.') }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Pembayaran</td>
+                            <td>Rp {{ number_format($totalPrice + $totalAdminFee, 0, ',', '.') }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <div class="info-item">
+                        <div class="info-label">Metode Pembayaran</div>
+                        <div class="info-value">{{ $data->transaction->payment_method }}</div>
+                    </div>
+                    <div class="info-item" style="margin-top: 15px;">
+                        <div class="info-label">Status</div>
+                        <div class="info-value status-badge status-success">
+                            <i class="fas fa-check-circle"></i>
+                            Pembayaran Berhasil
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        {{-- End Kolom Kanan --}}
-    </div>
-    {{-- End Row --}}
-</div>
-{{-- End Container --}}
 
-{{-- Review Modal --}}
-<div class="modal fade" tabindex="-1" id="review" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered mw-550px">
-        <div class="modal-content">
-            <div class="modal-header text-center">
-                <div class="fs-4 fw-bold m-3">{{ $mainData->busTravel->business_name }} -
-                    {{ $mainData->busTravelHasBus->name ?? '-' }}
+        <!-- Barcode -->
+        {{-- <div class="barcode-section">
+            <div class="barcode-icon">
+                <i class="fas fa-qrcode"></i>
+            </div>
+            <div class="barcode-text">Scan QR Code saat check-in</div>
+            <div class="barcode-code">{{ $data->booking_id }}</div>
+        </div> --}}
+
+        <!-- Important Notes -->
+        <div class="warning-box">
+            <div class="warning-title">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>Catatan Penting</span>
+            </div>
+            <div class="notes-grid">
+                <div class="note-item">
+                    <i class="fas fa-clock note-icon"></i>
+                    <span>Harap datang 30 menit sebelum keberangkatan</span>
                 </div>
-                <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
-                    aria-label="Close">
-                    <i class="ki-duotone ki-cross fs-1"><span class="path1"></span><span class="path2"></span></i>
+                <div class="note-item">
+                    <i class="fas fa-id-card note-icon"></i>
+                    <span>Bawa identitas diri (KTP/SIM) yang masih berlaku</span>
+                </div>
+                <div class="note-item">
+                    <i class="fas fa-ban note-icon"></i>
+                    <span>Tiket tidak dapat dikembalikan atau ditukar</span>
+                </div>
+                <div class="note-item">
+                    <i class="fas fa-heart note-icon"></i>
+                    <span>Pastikan kondisi kesehatan fit untuk perjalanan</span>
+                </div>
+                <div class="note-item">
+                    <i class="fas fa-suitcase note-icon"></i>
+                    <span>Barang bawaan menjadi tanggung jawab penumpang</span>
+                </div>
+                <div class="note-item">
+                    <i class="fas fa-shield-alt note-icon"></i>
+                    <span>Patuhi protokol kesehatan selama perjalanan</span>
                 </div>
             </div>
-            <form action="{{ route('profile.order-detail.bus-travel.rating') }}" method="POST">
-                @csrf
-                <input type="hidden" name="package_id" value="{{ $mainData->bus_travel_has_bus_id }}" />
-                <input type="hidden" name="transaction_id" value="{{ $mainData->transaction_id }}" />
-                <input type="hidden" name="bus_travel_id" value="{{ $mainData->bus_travel_id }}" />
-                <div class="modal-body text-center">
-                    <div>
-                        <div class="fs-4 fw-bold m-3 mb-5">Berikan Nilai Pada
-                            {{ $mainData->busTravel->business_name }} -
-                            {{ $mainData->busTravelHasBus->name ?? '-' }}
-                        </div>
-                    </div>
-                    <div class="rating text-center justify-content-center d-block">
-                        <input class="rating-input" name="rating" value="0" checked type="radio"
-                            id="kt_rating_input_0" />
-                        @for ($i = 1; $i <= 5; $i++)
-                        <label class="rating-label mb-2" for="kt_rating_input_{{ $i }}">
-                            <i class="ki-duotone ki-star"></i>
-                        </label>
-                        <input class="rating-input" name="rating" value="{{ $i }}" type="radio"
-                            id="kt_rating_input_{{ $i }}" />
-                        @endfor
-                    </div>
-                    <span id="ratingText" class="fw-bold fs-5 mt-3"></span>
-                    <div class="rounded d-flex flex-column p-3 mt-4">
-                        <label for="" class="fs-5 fw-semibold m-3 mb-5">Comment</label>
-                        <textarea class="form-control" name="comment" data-kt-autosize="true" rows="4"></textarea>
-                    </div>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="gradient-footer">
+            <div class="footer-grid">
+                <div class="footer-item">
+                    <i class="fab fa-whatsapp footer-icon"></i>
+                    <div class="footer-text">085247213909</div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="footer-item">
+                    <i class="fas fa-envelope footer-icon"></i>
+                    <div class="footer-text">travelsyawisataindonesia@gmail.com</div>
                 </div>
-            </form>
+                <div class="footer-item">
+                    <i class="fas fa-globe footer-icon"></i>
+                    <div class="footer-text">www.travelsya.com</div>
+                </div>
+            </div>
+            <div class="footer-note">
+                Terima kasih telah menggunakan layanan TRAVELSYA
+            </div>
         </div>
     </div>
-</div>
-
-@endsection
+</body>
+</html>
