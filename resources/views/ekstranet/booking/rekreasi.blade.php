@@ -63,7 +63,7 @@
                     <!-- Konten Tab -->
                     <div class="tab-content" id="booking-tab-content">
                         <div class="tab-pane fade show active" id="semua" role="tabpanel" aria-labelledby="semua-tab">
-                            <div class="table-responsive bg-white p-4 rounded">
+                            <div class="bg-white p-4 rounded">
                                 <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                                     id="kt_datatable_semua">
                             <thead>
@@ -132,7 +132,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="dipakai" role="tabpanel" aria-labelledby="dipakai-tab">
-                    <div class="table-responsive bg-white p-4 rounded">
+                    <div class="bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_dipakai">
                             <thead>
@@ -184,7 +184,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="belum-dipakai" role="tabpanel" aria-labelledby="belum-dipakai-tab">
-                    <div class="table-responsive bg-white p-4 rounded">
+                    <div class="bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_belum_dipakai">
                             <thead>
@@ -236,7 +236,7 @@
                 </div>
 
                 <div class="tab-pane fade" id="kadaluarsa" role="tabpanel" aria-labelledby="kadaluarsa-tab">
-                    <div class="table-responsive bg-white p-4 rounded">
+                    <div class="bg-white p-4 rounded">
                         <table class="table table-striped gy-7 gs-7 table-bordered table align-middle"
                             id="kt_datatable_kadaluarsa">
                             <thead>
@@ -449,6 +449,7 @@
         $(document).ready(function() {
             // Konfigurasi DataTable untuk semua tab
             const dataTableConfig = {
+                "scrollX": true,
                 "scrollY": "500px",
                 "scrollCollapse": true,
                 "language": {
