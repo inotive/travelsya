@@ -317,7 +317,7 @@ class HealthBeautyController extends Controller
                     'name' => $rec['clinic_name'],
                     'image' => isset($rec['image']) && isset($rec['image']['image']) ? asset('public/storage/images/clinic_package_images/' . $rec['image']['image'])  : asset('not_found.png'),
                     'location' => $rec['kota']['city_name'] ?? 'Kota dihapus',
-                    'category' => $rec['category'],
+                    'category' => 'Clinic',
                     'unit_price' => (int)$rec['packages'][0]['unit_price'],
                     'price' => $rec['packages'][0]['price'],
                     'rating_count' => count($rec['reviews']),
@@ -328,7 +328,7 @@ class HealthBeautyController extends Controller
             }
         }
 
-        $data['categories'] = $special->pluck('category')->unique()->toArray();
+        $data['categories'] = ['Clinic'];
         $data['special_deals'] = $cantik;
 
         return ResponseFormatter::success($data, 'Data successfully loaded');
