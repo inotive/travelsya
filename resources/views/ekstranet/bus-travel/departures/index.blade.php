@@ -6,7 +6,7 @@
 
 @section('content-admin')
     <div class="card">
-        <form action="{{ url()->current() }}" method="GET">
+        <form id="searchForm" method="GET" action="{{ route('partner.bus.departures.bus', ['busId' => $defaultBusId]) }}">
             <div class="card-header border-0 pt-6">
                 <div class="card-title">
                     <div class="d-flex align-items-center position-relative my-1">
@@ -19,12 +19,11 @@
                                     fill="black" />
                             </svg>
                         </span>
-                        <input type="text" id="searchInput" name="search" class="form-control form-control-solid w-250px ps-14"
-                            placeholder="Cari Jadwal" value="{{ $search ?? '' }}" />
+                        <input type="text" id="searchInput" name="search"
+                            class="form-control form-control-solid w-250px ps-14"
+                            placeholder="Cari Jadwal"
+                            value="{{ request('search') ?? '' }}" />
                     </div>
-                    {{-- <div class="d-flex align-items-center position-relative my-1 ms-5">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </div> --}}
                 </div>
                 <div class="card-toolbar">
                     <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
@@ -163,6 +162,20 @@
         </div>
     </div>
         @include('ekstranet.bus-travel.departures.modals')
+
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchForm = document.getElementById('searchForm');
+        let typingTimer;
+
+        searchInput.addEventListener('input', function() {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => {
+                searchForm.submit();
+            }, 600);
+        });
+    </script>
 @endsection
 
 @section('styles')

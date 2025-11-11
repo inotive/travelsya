@@ -85,15 +85,33 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-4">
-                                @if (!empty($busImages) && is_array($busImages))
+                                @if ($departure->busTravel->main_image)
+                                    {{-- Show main image (not clickable for gallery) --}}
+                                    <img src="{{ asset('storage/buses/main/' . $departure->busTravel->main_image) }}"
+                                        class="object-fit-contain w-100" style="max-height: 270px"
+                                        alt="{{ $departure->busTravel->name }}"
+                                        onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
+
+                                    {{-- Show gallery button if additional images exist --}}
+                                    @if (!empty($busImages) && is_array($busImages) && count($busImages) > 0)
+                                        <button type="button" class="btn btn-sm btn-primary mt-2 w-100" data-bs-toggle="modal" data-bs-target="#galleryModal">
+                                            <i class="fas fa-images me-1"></i> Lihat Galeri ({{ count($busImages) }} foto)
+                                        </button>
+                                    @endif
+
+                                @elseif (!empty($busImages) && is_array($busImages))
+                                    {{-- Fallback: show first additional image with gallery --}}
                                     <a href="#" data-bs-toggle="modal" data-bs-target="#galleryModal">
-                                        <img src="/storage/buses/{{ $busImages[0] }}"
-                                            class="object-fit-contain w-100" style="max-height: 270px" alt="{{ $departure->busTravel->name }}"
+                                        <img src="{{ asset('storage/buses/' . $busImages[0]) }}"
+                                            class="object-fit-contain w-100" style="max-height: 270px"
+                                            alt="{{ $departure->busTravel->name }}"
                                             onerror="this.src='https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'">
                                     </a>
                                 @else
+                                    {{-- Default placeholder image --}}
                                     <img src="https://images.unsplash.com/photo-1618805154647-7d89ac05926b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                                        class="object-fit-contain w-100" alt="Default Bus Image">
+                                        class="object-fit-contain w-100" style="max-height: 270px"
+                                        alt="Default Bus Image">
                                 @endif
                             </div>
                             <div class="col-8 d-flex flex-column">
@@ -112,7 +130,7 @@
                                 <hr>
                                 <div class="row p2">
                                     <div class="col-3 mb-4">
-                                        <span><i class="fa-solid fa-suitcase"></i></span>
+                                        <span><i class="fa-solid fa-suitcase" style="color: #4e4e57"></i></span>
                                         <span class="ms-2">Kapasitas
                                             {{ number_format($departure->busTravel->number_seats) }}
                                             Kursi</span>
@@ -301,8 +319,9 @@
             opacity: 1;
             border: 2px solid #dc3545; /* highlight selected thumb */
         }
-
-
+        .text-muted-custom {
+            color: #4e4e57 !important;
+        }
     </style>
 
 

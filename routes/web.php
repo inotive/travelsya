@@ -510,6 +510,12 @@ Route::middleware(['auth', 'role'])->group(function () {
         Route::get('get-model-kendaraan', [\App\Http\Controllers\Partner\KendaraanController::class, 'getCarModels']);
 
         Route::get('daftar-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'index'])->name('partner.daftar.bus-travel');
+        Route::get('bisnis-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisIndex'])->name('partner.bisnis.bus-travel.index');
+        Route::get('bisnis-bus-travel/create', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisCreate'])->name('partner.bisnis.bus-travel.create');
+        Route::post('bisnis-bus-travel', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisStore'])->name('partner.bisnis.bus-travel.store');
+        Route::get('bisnis-bus-travel/{id}/edit', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisEdit'])->name('partner.bisnis.bus-travel.edit');
+        Route::put('bisnis-bus-travel/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisUpdate'])->name('partner.bisnis.bus-travel.update');
+        Route::delete('bisnis-bus-travel/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'bisnisDestroy'])->name('partner.bisnis.bus-travel.destroy');
         Route::get('create-bus', [\App\Http\Controllers\Partner\BusTravelController::class, 'create'])->name('partner.create.bus-travel');
         Route::post('create-bus', [\App\Http\Controllers\Partner\BusTravelController::class, 'store'])->name('partner.store.bus-travel');
         Route::get('daftar-bus-travel/show/{id}', [\App\Http\Controllers\Partner\BusTravelController::class, 'show'])->name('partner.show.bus-travel');

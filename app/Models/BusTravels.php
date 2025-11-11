@@ -58,4 +58,9 @@ class BusTravels extends Model
             return 0;
         }
     }
+
+    public function cityDetail()
+    {
+        return $this->belongsTo(City::class, 'city', 'city_id');
+    }
 }

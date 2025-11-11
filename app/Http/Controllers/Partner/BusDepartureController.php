@@ -60,7 +60,7 @@ class BusDepartureController extends Controller
             });
         }
 
-        $departures = $departuresQuery->orderBy('departure_time', 'asc')->get();
+        $departures = $departuresQuery->orderBy('departure_time', 'desc')->get();
 
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id')->toArray();
 
@@ -111,8 +111,8 @@ class BusDepartureController extends Controller
                     });
                 });
             })
-            ->orderBy('departure_date', 'asc')
-            ->orderBy('departure_time', 'asc')
+            ->orderBy('departure_date', 'desc')
+            ->orderBy('departure_time', 'desc')
             ->get();
 
         $cities = City::orderBy('city_name', 'asc')->pluck('city_name', 'id');
