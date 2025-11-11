@@ -14,7 +14,9 @@ use App\Models\Hostel;
 use App\Models\HotelBookDate;
 use App\Models\Recreation;
 use App\Models\BusBooked;
+use App\Models\BusCostumerHasChair;
 use App\Models\Transaction;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class RiwayatBookingController extends Controller
@@ -569,14 +571,42 @@ class RiwayatBookingController extends Controller
             // Get all bookings with the same booking_id
             $allBookings = DetailTransactionBus::where('booking_id', $mainBooking->booking_id)
                 ->with('busTravel', 'busTravelHasBus', 'departure', 'transaction.user')
+                ->orderBy('id') // Order to maintain consistent ticket numbering
                 ->get();
 
             $totalPrice = $allBookings->sum('price');
             $totalAdminFee = $allBookings->sum('fee_admin');
 
+            // Fetch seat information from BusCostumerHasChair table based on the departure date
+            $departureDate = Carbon::parse($mainBooking->departure_time)->format('Y-m-d');
+            
+            // Get all seat reservations for this departure and date, ordered by passenger number
+            $seatReservations = BusCostumerHasChair::where('id_departure', $mainBooking->bus_departure_id)
+                ->where('date_pergi', $departureDate)
+                ->orderBy('penumpang_ke')
+                ->pluck('kursi_pergi', 'penumpang_ke'); // Getting seat numbers keyed by passenger number
+
+            // Map seat numbers to tickets based on the order they were created
+            foreach ($allBookings as $index => $booking) {
+                $passengerNumber = $index + 1; // First booking corresponds to passenger 1, etc.
+                
+                if ($seatReservations->has($passengerNumber)) {
+                    $booking->seat_number = $seatReservations->get($passengerNumber);
+                } else {
+                    // Fallback: try to match by array index if passenger number doesn't match
+                    $booking->seat_number = $seatReservations->values()->get($index) ?? 'N/A';
+                }
+            }
+
+            // Ensure duration is available in the main data record
+            // If duration is not directly in DetailTransactionBus, get it from the related BusDeparture
+            if (empty($mainBooking->duration) && $mainBooking->departure) {
+                $mainBooking->duration = $mainBooking->departure->duration;
+            }
+
             // Prepare data with all bookings grouped
             $data = [
-                'data' => $mainBooking->load('busTravel', 'busTravelHasBus', 'departure', 'transaction.user'),
+                'data' => $mainBooking,
                 'tickets' => $allBookings,
                 'ticketCount' => $allBookings->count(),
                 'totalPrice' => $totalPrice,
