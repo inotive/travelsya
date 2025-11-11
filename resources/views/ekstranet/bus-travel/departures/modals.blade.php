@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const timeParts = departureTime.split(':');
                             if (timeParts.length >= 2) {
                                 timeOnly = timeParts[0] + ':' + timeParts[1];
-                                parsedDate = new Date().toISOString().split('T')[0];
+                                parsedDate = departureDate;
                             }
                         }
                     }
@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const timeParts = departureTime.split(':');
                             if (timeParts.length >= 2) {
                                 timeOnly = timeParts[0] + ':' + timeParts[1];
-                                parsedDate = new Date().toISOString().split('T')[0];
+                                parsedDate = departureDate;
                             }
                         }
                     }
