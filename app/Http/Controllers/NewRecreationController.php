@@ -219,13 +219,13 @@ class NewRecreationController extends Controller
             $expire = Carbon::now()->addHours($package['expiry_date'])->format('Y-m-d H:i:s');
         }
 
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('recreation') . '-' . time();
-
         $service = Service::where('name', $data['service'])->first();
 
         if (!$service) {
             return redirect()->back()->with('error', 'service not found');
         }
+
+        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper($service->name) . '-' . time();
 
         $setting = new Setting();
 

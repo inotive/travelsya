@@ -184,6 +184,34 @@ class DashboardController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        // Data transaksi untuk modul Rekreasi (service_id 17)
+        $transaksiRekreasi = Transaction::with(['detailTransactionRecreation', 'user', 'services', 'historyPointOut'])
+            ->where('service_id', 17)
+            ->where('status', 'PAID')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Data transaksi untuk modul Health & Beauty (service_id 18)
+        $transaksiHealthBeauty = Transaction::with(['detailTransactionHealthBeauty', 'user', 'services', 'historyPointOut'])
+            ->where('service_id', 18)
+            ->where('status', 'PAID')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Data transaksi untuk modul Bus Travel (service_id 20)
+        $transaksiBusTravel = Transaction::with(['detailTransactionBus', 'user', 'services', 'historyPointOut'])
+            ->where('service_id', 20)
+            ->where('status', 'PAID')
+            ->orderByDesc('created_at')
+            ->get();
+
+        // Data transaksi untuk modul Car Rent (service_id 19)
+        $transaksiCarRent = Transaction::with(['detailTransactionCarRental', 'user', 'services', 'historyPointOut'])
+            ->where('service_id', 19)
+            ->where('status', 'PAID')
+            ->orderByDesc('created_at')
+            ->get();
+
 //            DB::table('transactions as t')
 //            ->join('services as s', 't.service_id', '=', 's.id')
 //            ->join('users as u', 't.user_id', '=', 'u.id')
@@ -200,7 +228,18 @@ class DashboardController extends Controller
 //            return (strpos(strtolower($item['service_name']), 'pulsa') !== false || strpos(strtolower($item['service_name']), 'data') !== false)
 //                && strpos(strtolower($item['service_name']), 'ppob-pulsa') === false;
 //        });
-        return view('admin.dashboard', compact('card','semuaTransaksi', 'transaksiHotel', 'transaksiHostel', 'transaksiTopUp', 'transaksiPPOB'));
+        return view('admin.dashboard', compact(
+            'card',
+            'semuaTransaksi', 
+            'transaksiHotel', 
+            'transaksiHostel', 
+            'transaksiTopUp', 
+            'transaksiPPOB',
+            'transaksiRekreasi',
+            'transaksiHealthBeauty',
+            'transaksiBusTravel', 
+            'transaksiCarRent'
+        ));
     }
 
     //    public function index(Request $request)
