@@ -71,7 +71,7 @@
                     <!-- Card Service -->
                     <a href="{{ route('health_beauty.category', ['id' => 2, 'context' => 'health']) }}" class="text-decoration-none">
                         <div class="card shadow rounded-4 d-flex flex-row align-items-center" style="width: 18rem; position: relative; overflow: hidden; height: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;">
-                            <img src="{{ asset('images/erik-mclean.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Service">
+                            <img src="{{ asset('images/Threadlift.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Service">
                             <div class="d-flex flex-column w-100 align-items-center justify-content-center" style="z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                                 <div class="carousel-tab d-flex align-items-center justify-content-center" style="height: 100%;">
                                     <h3 class="text-light fw-bold text-center">Service</h3>
@@ -83,7 +83,7 @@
                     <!-- Card Product -->
                     <a href="{{ route('health_beauty.category', ['id' => 3, 'context' => 'health']) }}" class="text-decoration-none">
                         <div class="card shadow rounded-4 d-flex flex-row align-items-center" style="width: 18rem; position: relative; overflow: hidden; height: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer;">
-                            <img src="{{ asset('images/erik-mclean.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Product">
+                            <img src="{{ asset('images/content-pixie.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Product">
                             <div class="d-flex flex-column w-100 align-items-center justify-content-center" style="z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                                 <div class="carousel-tab d-flex align-items-center justify-content-center" style="height: 100%;">
                                     <h3 class="text-light fw-bold text-center">Product</h3>
@@ -118,7 +118,7 @@
 
                     
                     <div class="card shadow rounded-4 d-flex flex-row align-items-center" style="width: 18rem; position: relative; overflow: hidden; height: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <img src="{{ asset('images/erik-mclean.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Service">
+                        <img src="{{ asset('images/Threadlift.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Service">
                         <div class="d-flex flex-column w-100 align-items-center justify-content-center" style="z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                             <div class="carousel-tab d-flex align-items-center justify-content-center" style="height: 100%;">
                                 <h3 class="text-light fw-bold text-center">Service</h3>
@@ -128,7 +128,7 @@
                     
                     <!-- Card Product -->
                     <div class="card shadow rounded-4 d-flex flex-row align-items-center" style="width: 18rem; position: relative; overflow: hidden; height: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <img src="{{ asset('images/erik-mclean.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Product">
+                        <img src="{{ asset('images/content-pixie.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Product">
                         <div class="d-flex flex-column w-100 align-items-center justify-content-center" style="z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                             <div class="carousel-tab d-flex align-items-center justify-content-center" style="height: 100%;">
                                 <h3 class="text-light fw-bold text-center">Product</h3>
@@ -143,7 +143,7 @@
                 <div class="card-container" style="display: flex; gap: 20px; margin-top: 20px;">
                     <!-- Card Clinic -->
                     <div class="card shadow rounded-4 d-flex flex-row align-items-center" style="width: 18rem; position: relative; overflow: hidden; height: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <img src="{{ asset('images/erik-mclean.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Clinic">
+                        <img src="{{ asset('images/Threadlift.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Clinic">
                         <div class="d-flex flex-column w-100 align-items-center justify-content-center" style="z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                             <div class="carousel-tab d-flex align-items-center justify-content-center" style="height: 100%;">
                                 <h3 class="text-light fw-bold text-center">Clinic</h3>
@@ -163,7 +163,7 @@
                     
                     <!-- Card Product -->
                     <div class="card shadow rounded-4 d-flex flex-row align-items-center" style="width: 18rem; position: relative; overflow: hidden; height: 150px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                        <img src="{{ asset('images/erik-mclean.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Product">
+                        <img src="{{ asset('images/content-pixie.jpg') }}" class="card-img-top" style="height: 150px; object-fit: cover; width: 100%;" alt="Product">
                         <div class="d-flex flex-column w-100 align-items-center justify-content-center" style="z-index: 1; position: absolute; top: 0; left: 0; right: 0; bottom: 0;">
                             <div class="carousel-tab d-flex align-items-center justify-content-center" style="height: 100%;">
                                 <h3 class="text-light fw-bold text-center">Product</h3>
