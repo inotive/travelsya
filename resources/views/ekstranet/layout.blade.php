@@ -14,7 +14,7 @@
 		<meta property="og:url" content="" />
 		<meta property="og:site_name" content="" />
 		<link rel="canonical" href="" />
-		<link rel="shortcut icon" href="{{asset('admin/assets/media/logos/favicon.ico')}}" />
+		<link rel="shortcut icon" href="{{asset('assets/media/logos/_Favicon.ico')}}" />
 		<meta name="csrf-token" content="{{ csrf_token() }}">
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
 		<!--begin::Fonts(mandatory for all pages)-->
