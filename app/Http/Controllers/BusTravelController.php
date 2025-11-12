@@ -993,215 +993,141 @@ HTML;
 
     public function request_transaction(Request $request)
     {
-        for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
-            $kursi_pergi_val = $request->{"kursi_pergi_$i"};
-            $kursi_pulang_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pulang_$i"} : null;
-
-            $data_kursi = [
-                'id_costumer' => auth()->user()->id,
-                'id_departure' => $request->ticket_pergi_id,
-                'penumpang_ke' => $i,
-                'is_pulang_pergi' => $request->is_pulang_pergi,
-                'date_pergi' => $request->date_pergi,
-                'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
-                'kursi_pergi' => $kursi_pergi_val,
-                'kursi_pulang' => $kursi_pulang_val,
-            ];
-
-            BusCostumerHasChair::create($data_kursi);
+        $user = Auth::user();
+        if (!$user) {
+            return ResponseFormatter::error([], 'User not authenticated', 401);
         }
 
+        // Move seat reservations into the transaction
+        DB::transaction(function () use ($request, $user) {
+            for ($i = 1; $i <= $request->jumlah_penumpang; $i++) {
+                $kursi_pergi_val = $request->{"kursi_pergi_$i"};
+                $kursi_pulang_val = $request->is_pulang_pergi == 1 ? $request->{"kursi_pulang_$i"} : null;
 
-        $validator = Validator::make($request->all(), [
-            'service' => 'required|string',
-            'payment' => 'required|string',
-            'ticket_pergi_id' => 'required',
-            'point' => 'required',
-            'date_pergi' => 'required|date',
-            'jumlah_penumpang' => 'required|integer',
-            'is_pulang_pergi' => 'required',
-            'is_same' => 'required',
-        ]);
+                $data_kursi = [
+                    'id_costumer' => $user->id,
+                    'id_departure' => $request->ticket_pergi_id,
+                    'penumpang_ke' => $i,
+                    'is_pulang_pergi' => $request->is_pulang_pergi,
+                    'date_pergi' => $request->date_pergi,
+                    'date_pulang' => $request->date_pulang ? $request->date_pulang : null,
+                    'kursi_pergi' => $kursi_pergi_val,
+                    'kursi_pulang' => $kursi_pulang_val,
+                    'is_active' => 1, // Assuming is_active should be set
+                ];
 
-        if ((int)$request->is_same == 0) {
+                BusCostumerHasChair::create($data_kursi);
+            }
+
             $validator = Validator::make($request->all(), [
-                'customer_call_1' => 'required',
-                'customer_name_1' => 'required',
-                'customer_phone_1' => 'required',
+                'service' => 'required|string',
+                'payment' => 'required|string',
+                'ticket_pergi_id' => 'required',
+                'point' => 'required',
+                'date_pergi' => 'required|date',
+                'jumlah_penumpang' => 'required|integer',
+                'is_pulang_pergi' => 'required',
+                'is_same' => 'required',
             ]);
 
-            if ($validator->fails()) {
-                return ResponseFormatter::error(
-                    [
-                        'response' => $validator->errors(),
-                    ],
-                    'Bus Travel process failed',
-                    500,
-                );
+            if ((int)$request->is_same == 0) {
+                $validator = Validator::make($request->all(), [
+                    'customer_call_1' => 'required',
+                    'customer_name_1' => 'required',
+                    'customer_phone_1' => 'required',
+                ]);
+
+                if ($validator->fails()) {
+                    return ResponseFormatter::error(['response' => $validator->errors()], 'Bus Travel process failed', 500);
+                }
+
+                $customer = [
+                    'name' => $request->customer_call_1 . ' ' . $request->customer_name_1,
+                    'phone' => $request->customer_phone_1,
+                    'email' => $request->customer_email_1,
+                ];
+            } else {
+                $customer = [
+                    'name' => Auth::user()->name,
+                    'phone' => Auth::user()->phone ?? '000000000000',
+                    'email' => Auth::user()->email,
+                ];
             }
 
-            $customer = [
-                'name' => $request->customer_call_1 . ' ' . $request->customer_name_1,
-                'phone' => $request->customer_phone_1,
-                'email' => $request->customer_email_1,
-            ];
-        } else {
-            $customer = [
-                'name' => Auth::user()->name,
-                'phone' => Auth::user()->phone ?? '000000000000',
-                'email' => Auth::user()->email,
-            ];
-        }
+            $data = $request->all();
+            $pulang = null;
+            $total = 0;
 
-        $data = $request->all();
+            if ((int) $data['is_pulang_pergi'] == 1) {
+                $validator = Validator::make($request->all(), [
+                    'date_pulang' => 'required|date',
+                    'ticket_pulang_id' => 'required',
+                ]);
 
-        $pulang = [];
+                if ($validator->fails()) {
+                    return ResponseFormatter::error(['response' => $validator->errors()], 'Bus & Travel process failed', 500);
+                }
 
-        $total = 0;
+                $pulang = BusDeparture::with(['busTravel.busTravel', 'from:id,city_name', 'to:id,city_name'])->find($data['ticket_pulang_id']);
 
-        if ((int) $data['is_pulang_pergi'] == 1) {
-            $validator = Validator::make($request->all(), [
-                'date_pulang' => 'required|date',
-                'ticket_pulang_id' => 'required',
+                if (!$pulang) {
+                    return ResponseFormatter::error(['message' => 'Paket tiket pulang tidak ditemukan'], 'Bus & Travel process failed', 500);
+                }
+
+                $total += $pulang->price;
+            }
+
+            $pergi = BusDeparture::with(['busTravel.busTravel:id,business_name', 'from:id,city_name', 'to:id,city_name'])->find($data['ticket_pergi_id']);
+
+            if (!$pergi) {
+                return ResponseFormatter::error(['message' => 'Paket tiket pergi tidak ditemukan'], 'Bus & Travel process failed', 500);
+            }
+
+            $total += $pergi->price;
+            $amount = $total * $data['jumlah_penumpang'];
+
+            $berangkat = Carbon::parse($data['date_pergi'] . ' ' . $pergi->departure_time)->format('Y-m-d H:i');
+            $berangkatPulang = $pulang ? Carbon::parse($data['date_pulang'] . ' ' . $pulang->departure_time)->format('Y-m-d H:i') : null;
+
+            $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('bus_travel') . '-' . time();
+            $service = Service::where('name', $data['service'])->first();
+
+            if (!$service) {
+                return ResponseFormatter::error([], 'Service not found', 500);
+            }
+
+            $setting = new Setting();
+            $feesData = $setting->getFees($data['point'], $service['id'], $request->user()->id, $amount);
+
+            $kode_unik = random_int(0, 999);
+            $fee = Fee::whereHas('service', fn($s) => $s->where('name', $data['service']))->first();
+            $adminFee = $fee ? ($fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100) : 0;
+
+            $fees = [['type' => 'Admin', 'value' => $adminFee], ['type' => 'Kode Unik', 'value' => $kode_unik]];
+            $saldoPointCustomer = 0;
+
+            if ($request->point == 1) {
+                $saldoPointCustomer = Auth::user()->point;
+                $fees = [['type' => 'Point', 'value' => $saldoPointCustomer]];
+            }
+
+            $business = $pergi->busTravel->busTravel->business_name ?? 'Deleted business';
+            $fromCity = $pergi->from->city_name ?? 'Unknown';
+            $toCity = $pergi->to->city_name ?? 'Unknown';
+            $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $fromCity . ' - ' . $toCity . ' untuk tanggal ' . $berangkat;
+
+            $payoutsXendit = $this->xendit->create([
+                'external_id' => $invoice,
+                'items' => [['product_id' => $data['ticket_pergi_id'], 'name' => $title, 'price' => $amount, 'quantity' => $data['jumlah_penumpang']]],
+                'amount' => $amount + $adminFee + $kode_unik,
+                'success_redirect_url' => route('user.orderHistory'),
+                'failure_redirect_url' => route('redirect.fail'),
+                'invoice_duration ' => 72000,
+                'should_send_email' => true,
+                'customer' => ['given_names' => $customer['name'], 'email' => $customer['email'], 'mobile_number' => $customer['phone']],
+                'fees' => $fees,
             ]);
 
-            if ($validator->fails()) {
-                return ResponseFormatter::error(
-                    [
-                        'response' => $validator->errors(),
-                    ],
-                    'Bus & Travel process failed',
-                    500,
-                );
-            }
-
-            // Ensure proper relationship loading
-            $pulang = BusDeparture::with([
-                'busTravel.busTravel',
-                'from:id,city_name',
-                'to:id,city_name'
-            ])->find($data['ticket_pulang_id']);
-
-            if (!$pulang) {
-                return ResponseFormatter::error(
-                    [
-                        'message' => 'Paket tiket pergi tidak ditemukan ',
-                    ],
-                    'Bus & Travel process failed',
-                    500,
-                );
-            }
-
-            $dateTimePulang = $data['date_pulang'] . ' ' . $pulang->departure_time;
-
-            $berangkatPulang =  Carbon::parse($dateTimePulang)->format('Y-m-d H:i');
-
-            $total += $pulang->price;
-        } else {
-            $berangkatPulang = null;
-        }
-
-        $data = $request->all();
-
-        // Ensure proper relationship loading with specific columns
-        $pergi = BusDeparture::with([
-            'busTravel.busTravel:id,business_name',
-            'from:id,city_name',
-            'to:id,city_name'
-        ])->find($data['ticket_pergi_id']);
-
-        if (!$pergi) {
-            return ResponseFormatter::error(
-                [
-                    'message' => 'Paket tiket pergi tidak ditemukan',
-                ],
-                'Bus & Travel process failed',
-                500,
-            );
-        }
-
-        $dateTimePergi = $data['date_pergi'] . ' ' . $pergi->departure_time;
-        $berangkat =  Carbon::parse($dateTimePergi)->format('Y-m-d H:i');
-
-        $invoice = 'INV-' . date('Ymd') . '-' . strtoupper('bus_travel') . '-' . time();
-
-        $service = Service::where('name', $data['service'])->first();
-
-        if (!$service) {
-            return ResponseFormatter::error([], 'Service not found', 500);
-        }
-
-        $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $service['id'], $request->user()->id, $pergi->price);
-
-        $kali = (int)$data['is_pulang_pergi'] == 1 ? 2 : 1;
-
-        $total += $pergi->price;
-
-        $amount = $total * $data['jumlah_penumpang'];
-
-        $kode_unik = random_int(0, 999);
-
-        $fee = Fee::whereHas('service', function ($s) use ($data) {
-            $s->where('name', $data['service']);
-        })->first();
-
-        $fees = [
-            [
-                'type' => 'Admin',
-                'value' => $fee->percent == 0 ? $fee->value : ($amount * $fee->value) / 100,
-            ],
-            [
-                'type' => 'Kode Unik',
-                'value' => $kode_unik,
-            ],
-        ];
-
-        $saldoPointCustomer = 0;
-        // Jika user menggunakan point untuk transaksi
-        if ($request->point == 1) {
-            $saldoPointCustomer = Auth::user()->point;
-            $fees = [
-                [
-                    'type' => 'Point',
-                    'value' => $saldoPointCustomer,
-                ],
-            ];
-        }
-
-        // Safely access relationship data
-        $business = $pergi->busTravel->busTravel->business_name ?? 'Deleted business';
-        $fromCity = $pergi->from->city_name ?? 'Unknown';
-        $toCity = $pergi->to->city_name ?? 'Unknown';
-
-        $title = 'Pembelian ticket ' . $business . ((int)$data['is_pulang_pergi'] == 1 ? ' Pulang Pergi ' : ' ') . $fromCity . ' - ' . $toCity . ' untuk tanggal ' . $berangkat;
-
-        // Create xendit
-        $payoutsXendit = $this->xendit->create([
-            'external_id' => $invoice,
-            'items' => [
-                [
-                    'product_id' => $data['ticket_pergi_id'],
-                    'name' => $title,
-                    'price' => $amount, // tanpa pajak
-                    'quantity' => $data['jumlah_penumpang'] * $kali,
-                ],
-            ],
-            'amount' => $amount + $fees[0]['value'] + $kode_unik, // include pajak
-            'success_redirect_url' => route('user.orderHistory'),
-            'failure_redirect_url' => route('redirect.fail'),
-            'invoice_duration ' => 72000,
-            'should_send_email' => true,
-            'customer' => [
-                'given_names' => $customer['name'],
-                'email' => $customer['email'],
-                'mobile_number' => $customer['phone'],
-            ],
-            'fees' => $fees,
-        ]);
-
-        // true buat trans
-        DB::transaction(function () use ($data, $berangkat, $berangkatPulang, $customer, $kode_unik, $invoice, $request, $payoutsXendit, $service, $amount, $fees, $pergi, $pulang, $saldoPointCustomer, $fromCity, $toCity) {
             $storeTransaction = Transaction::create([
                 'no_inv' => $invoice,
                 'req_id' => 'BNT-' . time(),
@@ -1211,44 +1137,32 @@ HTML;
                 'user_id' => Auth::user()->id,
                 'status' => $payoutsXendit['status'],
                 'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount + $fees[0]['value'] + $kode_unik,
+                'total' => $amount + $adminFee + $kode_unik,
             ]);
-            // Pengurangan Point
+
             if ($request->point == 1) {
-                $point = new Point();
-                $point->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
+                (new Point())->deductPoint($request->user()->id, $saldoPointCustomer, $storeTransaction->id);
             }
 
             $booking_id_pergi = \Illuminate\Support\Str::random(6);
-            if ((int)$data['is_pulang_pergi'] == 1) {
-                $booking_id_pulang = \Illuminate\Support\Str::random(6);
-            }
+            $booking_id_pulang = ((int)$data['is_pulang_pergi'] == 1) ? \Illuminate\Support\Str::random(6) : null;
 
-            // Fetch all seat reservations for this user and departure in advance
             $seatReservations = BusCostumerHasChair::where('id_costumer', Auth::user()->id)
                 ->where('id_departure', $pergi->id)
                 ->where('date_pergi', $request->date_pergi)
-                ->orderBy('penumpang_ke')
-                ->get()->keyBy('penumpang_ke');
+                ->orderBy('penumpang_ke')->get()->keyBy('penumpang_ke');
 
-            // Fetch return seat reservations if needed
             $returnSeatReservations = collect();
             if ((int)$data['is_pulang_pergi'] == 1) {
                 $returnSeatReservations = BusCostumerHasChair::where('id_costumer', Auth::user()->id)
-                    ->where('id_departure', $pulang->id)
+                    ->where('id_departure', $pergi->id) // Corrected to $pergi->id
+                    ->where('date_pergi', $request->date_pergi) // Added for specificity
                     ->where('date_pulang', $request->date_pulang)
-                    ->orderBy('penumpang_ke')
-                    ->get()->keyBy('penumpang_ke');
+                    ->orderBy('penumpang_ke')->get()->keyBy('penumpang_ke');
             }
 
             for ($i = 1; $i <= $data['jumlah_penumpang']; $i++) {
-                // Get seat number for this passenger
                 $seatReservation = $seatReservations->get($i);
-                
-                // Safely access relationship data
-                $pergiFrom = $pergi->from->city_name ?? 'Unknown';
-                $pergiTo = $pergi->to->city_name ?? 'Unknown';
-
                 DetailTransactionBus::create([
                     "transaction_id" => $storeTransaction->id,
                     "bus_travel_id" => $pergi->busTravel->busTravel->id,
@@ -1256,10 +1170,10 @@ HTML;
                     "bus_departure_id" => $pergi->id,
                     "booking_id" => $booking_id_pergi,
                     "departure_time" => $berangkat,
-                    "from" => $pergiFrom,
-                    "to" => $pergiTo,
+                    "from" => $pergi->from->city_name ?? 'Unknown',
+                    "to" => $pergi->to->city_name ?? 'Unknown',
                     "price" => $pergi->price,
-                    "fee_admin" => $fees[0]['value'] / $data['jumlah_penumpang'],
+                    "fee_admin" => $adminFee / $data['jumlah_penumpang'],
                     "kode_unik" => $kode_unik,
                     "customer_name" => ($request['customer_call_' . $i] ?? '') . ' ' . ($request['customer_name_' . $i] ?? ''),
                     "customer_phone" => $request['customer_phone_' . $i] ?? '',
@@ -1268,13 +1182,7 @@ HTML;
                 ]);
 
                 if ((int)$data['is_pulang_pergi'] == 1) {
-                    // Get return trip seat number for this passenger
                     $returnSeatReservation = $returnSeatReservations->get($i);
-
-                    // Safely access relationship data for pulang
-                    $pulangFrom = $pulang->from->city_name ?? 'Unknown';
-                    $pulangTo = $pulang->to->city_name ?? 'Unknown';
-
                     DetailTransactionBus::create([
                         "transaction_id" => $storeTransaction->id,
                         "bus_travel_id" => $pulang->busTravel->busTravel->id,
@@ -1282,8 +1190,8 @@ HTML;
                         "bus_departure_id" => $pulang->id,
                         "booking_id" => $booking_id_pulang,
                         "departure_time" => $berangkatPulang,
-                        "from" => $pulangFrom,
-                        "to" => $pulangTo,
+                        "from" => $pulang->from->city_name ?? 'Unknown',
+                        "to" => $pulang->to->city_name ?? 'Unknown',
                         "price" => $pulang->price,
                         "fee_admin" => 0,
                         "kode_unik" => $kode_unik,
@@ -1294,8 +1202,11 @@ HTML;
                     ]);
                 }
             }
+
+            // Redirect must be handled outside the transaction closure
+            session(['redirect_url' => $payoutsXendit['invoice_url']]);
         });
 
-        return redirect()->away($payoutsXendit['invoice_url']);
+        return redirect()->away(session('redirect_url'));
     }
 }

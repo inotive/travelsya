@@ -478,7 +478,6 @@ class RiwayatBookingController extends Controller
                 $busbookings->whereDate('departure_time', '<=', $end);
             }
         } else {
-            // Filter berdasarkan tanggal pemesanan (created_at dari transaction)
             if ($year != null) {
                 $busbookings->whereHas('transaction', function ($q) use ($year) {
                     $q->whereYear('created_at', $year);
@@ -577,7 +576,7 @@ class RiwayatBookingController extends Controller
             $totalPrice = $allBookings->sum('price');
             $totalAdminFee = $allBookings->sum('fee_admin');
 
-            // Seat numbers are now stored directly in the detail_transaction_buses table, 
+            // Seat numbers are now stored directly in the detail_transaction_buses table,
             // so no need to fetch from BusCostumerHasChair table
             // The seat_number field is directly available on each booking
 
