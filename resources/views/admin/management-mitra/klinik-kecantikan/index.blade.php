@@ -266,9 +266,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
+                                <label class="fs-6 fw-semibold mb-2">Nomor Telpon</label>
                                 <input type="number" class="form-control form-control-lg" id="phone"
-                                    placeholder="Masukan nomor telepon... " name="phone" required />
+                                    placeholder="Masukan nomor telepon... " name="phone" />
 
                                 @error('phone')
                                     <span class="text-danger mt-1" role="alert">
@@ -281,9 +281,9 @@
 
 
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
+                                <label class="fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
                                 <select class="js-example-basic-single form-control form-control-lg" name="city"
-                                    id="city" required>
+                                    id="city">
                                     <option value="">--Pilih Kota/Kabupaten--</option>
                                     @foreach ($cities as $city)
                                         <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
@@ -298,14 +298,14 @@
                                 @enderror
                             </div>
 
-                            <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                            <label class="fs-6 fw-semibold mb-2">Kategori</label>
                             <!--begin::Radio group-->
                             <div class="btn-group w-60" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
                                 <!--begin::Radio-->
                                 @foreach (App\Models\Clinic::CATEGORY as $key => $value)
                                     <label class="btn btn-outline btn-danger" data-kt-button="true">
                                         <input class="btn-check" type="radio" name="category"
-                                            value="{{ $key }}" required />
+                                            value="{{ $key }}" />
                                         {{ $value }}
                                     </label>
                                 @endforeach
@@ -313,14 +313,14 @@
                             </div>
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Alamat</label>
-                                <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                                <label for="" class="form-label">Alamat</label>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
+                                <label class="fs-6 fw-semibold mb-2">Waktu Buka</label>
                                 <input type="time" class="form-control form-control-lg" id="open"
-                                    placeholder="Masukan waktu buka..." name="open" required />
+                                    placeholder="Masukan waktu buka..." name="open" />
 
                                 @error('open')
                                     <span class="text-danger mt-1" role="alert">
@@ -330,9 +330,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                                <label class="fs-6 fw-semibold mb-2">Waktu Tutup</label>
                                 <input type="time" class="form-control form-control-lg" id="close"
-                                    placeholder="Masukan waktu tutup..." name="close" required />
+                                    placeholder="Masukan waktu tutup..." name="close" />
 
                                 @error('close')
                                     <span class="text-danger mt-1" role="alert">
@@ -342,8 +342,8 @@
                             </div>
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Deskripsi</label>
-                                <textarea name="description" id="description" cols="30" rows="5" class="form-control" required></textarea>
+                                <label for="" class="form-label">Deskripsi</label>
+                                <textarea name="description" id="description" cols="30" rows="5" class="form-control"></textarea>
 
                                 @error('description')
                                     <span class="text-danger mt-1" role="alert">
@@ -353,8 +353,8 @@
                             </div>
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Highlight</label>
-                                <textarea name="highlight" id="highlight" cols="30" rows="3" class="form-control" required></textarea>
+                                <label for="" class="form-label">Highlight</label>
+                                <textarea name="highlight" id="highlight" cols="30" rows="3" class="form-control"></textarea>
 
                                 @error('highlight')
                                     <span class="text-danger mt-1" role="alert">
@@ -364,11 +364,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Latitude</label>
+                                <label class="fs-6 fw-semibold mb-2">Latitude</label>
                                 <input type="text" class="form-control form-control-lg" id="lat"
                                     placeholder="Masukan latitude (contoh: -6.200000)" name="lat"
                                     pattern="^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$"
-                                    title="Masukkan latitude yang valid (-90 sampai 90)" required />
+                                    title="Masukkan latitude yang valid (-90 sampai 90)" />
 
                                 @error('lat')
                                     <span class="text-danger mt-1" role="alert">
@@ -378,11 +378,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Longitude</label>
+                                <label class="fs-6 fw-semibold mb-2">Longitude</label>
                                 <input type="text" class="form-control form-control-lg" id="ltd"
                                     placeholder="Masukan longitude (contoh: 106.816666)" name="ltd"
                                     pattern="^-?((1[0-7][0-9])|([1-9]?[0-9]))(\.[0-9]+)?$"
-                                    title="Masukkan longitude yang valid (-180 sampai 180)" required />
+                                    title="Masukkan longitude yang valid (-180 sampai 180)" />
 
                                 @error('ltd')
                                     <span class="text-danger mt-1" role="alert">
