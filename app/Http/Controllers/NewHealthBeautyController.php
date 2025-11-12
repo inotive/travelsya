@@ -351,6 +351,19 @@ class NewHealthBeautyController extends Controller
         $data['product_categories'] = $product_categories;
         $data['partners'] = collect($partners);
 
+        $data['categorises'] = $health_related_categories;  // untuk tab kesehatan - hanya kategori yang terkait dengan kesehatan
+
+        // Hanya kategori 'Clinic' untuk bagian 'Kebutuhan Kesehatan dan Kecantikan'
+        $data['clinic_categories'] = collect();
+        foreach ($all_categories as $category) {
+            if ($category->name === 'Clinic') {
+                $data['clinic_categories']->push($category);
+            }
+        }
+        $data['service_categories'] = $service_categories;
+        $data['product_categories'] = $product_categories;
+        $data['partners'] = collect($partners);
+
         return view('pagesv2.health_beauty.index', $data);
     }
 
