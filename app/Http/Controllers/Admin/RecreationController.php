@@ -80,18 +80,18 @@ class RecreationController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'user_id' => 'required',
-            'phone' => 'required',
-            'lat' => 'nullable',
-            'ltd' => 'nullable',
-            'city' => 'required',
-            'category_recreation_id' => 'required',
-            'address' => 'required',
-            'description' => 'required',
-            'open' => 'required',
-            'close' => 'required',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048'
+            'name' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+            'phone' => 'nullable|string',
+            'lat' => 'nullable|numeric',
+            'ltd' => 'nullable|numeric',
+            'city' => 'nullable|string',
+            'category_recreation_id' => 'nullable|exists:category_recreations,id',
+            'address' => 'nullable|string',
+            'description' => 'nullable|string',
+            'open' => 'nullable|date_format:H:i',
+            'close' => 'nullable|date_format:H:i',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
         if ($validator->fails()) {
@@ -106,17 +106,19 @@ class RecreationController extends Controller
         try {
             $recreationId = DB::table('recreations')->insertGetId([
                 'business_name' => ucwords($request->name),
-                'category_recreation_id' => $request->category_recreation_id,
+                'category_recreation_id' => $request->category_recreation_id ?? null,
                 'user_id' => $request->user_id,
-                'city' => $request->city,
-                'phone' => $request->phone,
-                'lat' => $request->lat,
-                'ltd' => $request->ltd,
-                'address' => $request->address,
-                'description' => $request->description,
-                'open' => $request->open,
-                'close' => $request->close,
+                'city' => $request->city ?? null,
+                'phone' => $request->phone ?? null,
+                'lat' => $request->lat ?? null,
+                'ltd' => $request->ltd ?? null,
+                'address' => $request->address ?? null,
+                'description' => $request->description ?? null,
+                'open' => $request->open ?? null,
+                'close' => $request->close ?? null,
                 'is_active' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             if($request->hasFile('image')) {
@@ -124,8 +126,9 @@ class RecreationController extends Controller
                 $imgName = time() . '.' . $image->getClientOriginalExtension();
                 $image->storeAs('recreation', $imgName, 'public');
                 recreationImages::create([
-                    'recreation_id' => "recreation/" . $recreationId,
-                    'image' => $imgName
+                    'recreation_id' => $recreationId,
+                    'image' => "recreation/" . $imgName,
+                    'main' => 1
                 ]);
             }
 
@@ -135,7 +138,11 @@ class RecreationController extends Controller
             return redirect()->back();
         } catch (\Exception $e) {
             DB::rollBack();
-            toast('Mitra creation failed. Please try again.', 'error');
+
+            // Log the actual error for debugging
+            \Log::error('Recreation creation failed: ' . $e->getMessage());
+
+            toast('Mitra creation failed: ' . $e->getMessage(), 'error');
             return redirect()
                 ->back()
                 ->withInput();
@@ -172,18 +179,18 @@ class RecreationController extends Controller
     public function update(Request $request, string $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'user_id' => 'required',
-            'phone' => 'required',
-            'lat' => 'nullable',
-            'ltd' => 'nullable',
-            'city' => 'required',
-            'address' => 'required',
-            'description' => 'required',
-            'open' => 'required',
-            'close' => 'required',
-            'is_active' => 'required',
-            'category_recreation_id' => 'required|exists:category_recreations,id',
+            'name' => 'required|string',
+            'user_id' => 'required|exists:users,id',
+            'phone' => 'nullable|string',
+            'lat' => 'nullable|numeric',
+            'ltd' => 'nullable|numeric',
+            'city' => 'nullable|string',
+            'address' => 'nullable|string',
+            'description' => 'nullable|string',
+            'open' => 'nullable|date_format:H:i',
+            'close' => 'nullable|date_format:H:i',
+            'is_active' => 'nullable|boolean',
+            'category_recreation_id' => 'nullable|exists:category_recreations,id',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
         ]);
 
