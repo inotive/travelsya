@@ -23,7 +23,7 @@ class CarRentalController extends Controller
 
         $car_rentals = DB::table('car_rentals')
         ->join('users', 'car_rentals.user_id', '=', 'users.id')
-        ->join('cities', 'car_rentals.city', '=', 'cities.city_id')
+        ->leftJoin('cities', 'car_rentals.city', '=', 'cities.city_id')
         ->select(
             'car_rentals.id as car_rental_id',
             'car_rentals.phone as car_rental_phone',

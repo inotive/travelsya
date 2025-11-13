@@ -44,9 +44,9 @@
                                 </td>
                                 <td class="text-center">
                                     {{ $rental->business_name }}</td>
-                                <td class="text-center">{{ $rental->city_name }}</td>
+                                <td class="text-center">{{ $rental->city_name ?? '-' }}</td>
 
-                                <td class="text-center">{{ $rental->address }}</td>
+                                <td class="text-center">{{ $rental->address ?? '-' }}</td>
 
                                 <td class="text-center">
                                     @if($rental->kebijakan_rental_mobil)
@@ -56,7 +56,7 @@
                                     @endif
                                 </td>
 
-                                <td class="text-center">{{ $rental->car_rental_phone }}</td>
+                                <td class="text-center">{{ $rental->car_rental_phone ?? '-' }}</td>
 
                                 <td class="text-center">
                                     @if ($rental->car_rentals_is_active)
