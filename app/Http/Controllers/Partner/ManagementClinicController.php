@@ -140,8 +140,10 @@ class ManagementClinicController extends Controller
             ->select('clinic_has_packages.*');
             
         // Filter by specific clinic if clinic_id is provided in the request
+        $selectedClinicId = null;
         if (request()->has('clinic_id') && request()->get('clinic_id') != '') {
             $query->where('clinic_has_packages.clinic_id', request()->get('clinic_id'));
+            $selectedClinicId = request()->get('clinic_id');
         }
         
         $clinics = $query->get();
@@ -152,6 +154,9 @@ class ManagementClinicController extends Controller
         $cities = \App\Models\City::all();
         $categories = \App\Models\CategoriesServices::all();
         
-        return view('ekstranet.jasaklinik.list-klinik', compact('clinics', 'spesialis', 'users', 'cities', 'categories'));
+        // Get user's clinics for the dropdown
+        $userClinics = \App\Models\Clinic::where('user_id', Auth::id())->get();
+        
+        return view('ekstranet.jasaklinik.list-klinik', compact('clinics', 'spesialis', 'users', 'cities', 'categories', 'userClinics', 'selectedClinicId'));
     }
 }

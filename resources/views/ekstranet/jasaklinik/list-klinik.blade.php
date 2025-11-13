@@ -5,8 +5,13 @@
     <div class="card mb-5 mb-xl-8">
         <div class="card-header">
             <div class="card-toolbar">
-                <a class="btn btn-sm btn-light-primary" href="{{ route('clinics.create') }}">
-                    <i class="ki-duotone ki-plus fs-2"></i>Tambah Jasa Kecantikan</a>
+                @if(isset($selectedClinicId) && $selectedClinicId)
+                    <a class="btn btn-sm btn-light-primary" href="{{ route('clinics.create') }}?clinic_id={{ $selectedClinicId }}">
+                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Jasa Kecantikan</a>
+                @else
+                    <a class="btn btn-sm btn-light-primary" href="{{ route('clinics.create') }}">
+                        <i class="ki-duotone ki-plus fs-2"></i>Tambah Jasa Kecantikan</a>
+                @endif
             </div>
         </div>
         <!--begin::Body-->

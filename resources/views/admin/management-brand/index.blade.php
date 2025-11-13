@@ -346,6 +346,8 @@
                     "scrollX": true,
                     "responsive": true,
                     "autoWidth": false,
+                    "pageLength": 10, // Default entries per page
+                    "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]], // Options for entries per page
                     "columnDefs": [
                         { "width": "10%", "targets": 0 },
                         { "width": "30%", "targets": 1 },
@@ -353,11 +355,22 @@
                         { "width": "20%", "targets": 3 }
                     ],
                     "language": {
-                        "lengthMenu": "Show _MENU_",
+                        "lengthMenu": "Tampilkan _MENU_ entri per halaman",
+                        "zeroRecords": "Tidak ditemukan data yang cocok",
+                        "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
+                        "infoEmpty": "Tidak ada entri yang tersedia",
+                        "infoFiltered": "(difilter dari _MAX_ total entri)",
+                        "search": "Cari:",
+                        "paginate": {
+                            "first": "Pertama",
+                            "last": "Terakhir",
+                            "next": "Berikutnya",
+                            "previous": "Sebelumnya"
+                        }
                     },
-                    "dom": "<'row'" +
-                        "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                        "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    "dom": "<'row mb-3'" +
+                        "<'col-sm-12 col-md-6 d-flex align-items-center justify-content-start'l>" +
+                        "<'col-sm-12 col-md-6 d-flex align-items-center justify-content-end'f>" +
                         ">" +
                         "<'table-responsive'tr>" +
                         "<'row'" +
