@@ -80,11 +80,11 @@
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#verified"
                             type="button" role="tab" aria-controls="verified" aria-selected="false">
-                        Sudah Diverifikasi
+                        Sudah Dipakai
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#pending"
                             type="button" role="tab" aria-controls="pending" aria-selected="false">
-                        Belum Diverifikasi
+                        Belum Dipakai
                     </button>
                     <button class="nav-tab-simple" data-bs-toggle="pill" data-bs-target="#expired"
                             type="button" role="tab" aria-controls="expired" aria-selected="false">
@@ -107,8 +107,13 @@
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
+                                    <th class="text-center">Jumlah Tiket</th>
+                                    <th class="text-center">Harga Tiket</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
                                     <th class="text-center">Status</th>
@@ -129,8 +134,13 @@
                                         <td class="text-center">
                                             {{ $booking->busTravelHasBus->name ?? '-' }}
                                         </td>
+                                        <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                         <td class="text-center">{{ $booking->booking_id }}</td>
-                                        <td class="text-center">{{ General::rp($booking->price ) }}</td>
+                                        <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
+                                        <td class="text-center">{{ General::rp($booking->price) }}</td>
+                                        <td class="text-center">{{ General::rp($booking->price * $booking->ticket_count) }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                        <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                         <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                         <td class="text-center">
@@ -202,8 +212,12 @@
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
+                                    <th class="text-center">Jumlah Tiket</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
                                     <th class="text-center">Status</th>
@@ -226,8 +240,12 @@
                                             <td class="text-center">
                                                 {{ $booking->busTravelHasBus->name ?? '-' }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ General::rp($booking->price ) }}</td>
+                                            <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
+                                            <td class="text-center">{{ General::rp($booking->price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -278,8 +296,12 @@
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
+                                    <th class="text-center">Jumlah Tiket</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
                                     <th class="text-center">Status</th>
@@ -306,8 +328,12 @@
                                             <td class="text-center">
                                                 {{ $booking->busTravelHasBus->name ?? '-' }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
+                                            <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
                                             <td class="text-center">{{ General::rp($booking->price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -358,8 +384,12 @@
                                     <th class="text-center">Bus Travel</th>
                                     <th class="text-center">Customer</th>
                                     <th class="text-center">Bus</th>
+                                    <th class="text-center">Nomor Invoice</th>
                                     <th class="text-center">Code Booking</th>
+                                    <th class="text-center">Jumlah Tiket</th>
                                     <th class="text-center">Total Harga</th>
+                                    <th class="text-center">Metode Pembayaran</th>
+                                    <th class="text-center">Jenis Pembayaran</th>
                                     <th class="text-center">Tanggal Pemesanan</th>
                                     <th class="text-center">Waktu Keberangkatan</th>
                                     <th class="text-center">Status</th>
@@ -386,8 +416,12 @@
                                             <td class="text-center">
                                                 {{ $booking->busTravelHasBus->name ?? '-' }}
                                             </td>
+                                            <td class="text-center">{{ $booking->transaction->no_inv ?? '' }}</td>
                                             <td class="text-center">{{ $booking->booking_id }}</td>
-                                            <td class="text-center">{{ General::rp($booking->price ) }}</td>
+                                            <td class="text-center">{{ $booking->ticket_count ?? 1 }}</td>
+                                            <td class="text-center">{{ General::rp($booking->price) }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_method ?? '' }}</td>
+                                            <td class="text-center">{{ $booking->transaction->payment_channel ?? '' }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->created_at)->format('d F Y') }}</td>
                                             <td class="text-center">{{ \Carbon\Carbon::parse($booking->departure_time)->format('d F Y H:i') }}</td>
                                             <td class="text-center">
@@ -633,7 +667,7 @@
                     }
                 ],
 
-                "order": [[8, 'asc']]
+                "order": [[8, 'desc']]
             };
 
             // Initialize DataTables untuk setiap tab

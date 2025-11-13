@@ -124,32 +124,22 @@ class BusTravelController extends Controller
     {
         $bus_travel = BusTravels::findOrFail($id);
 
-        $rules = [
-            'name' => 'required',
-            'user_id' => 'required',
-            'phone' => 'nullable',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'user_id' => 'required|integer|exists:users,id',
+            'phone' => 'nullable|string|max:20',
             'city' => 'nullable',
-            'address' => 'nullable',
-            'is_active' => 'nullable',
-        ];
-
-        // Only require logo if no existing logo in database
-        if (!$bus_travel->image || $bus_travel->image == '-') {
-            $rules['logo'] = 'nullable|image|mimes:jpeg,jpg,png|max:2048';
-        } else {
-            $rules['logo'] = 'nullable|image|mimes:jpeg,jpg,png|max:2048';
-        }
-
-        $validator = Validator::make($request->all(), $rules);
+            'address' => 'nullable|string|max:255',
+            'is_active' => 'nullable|boolean',
+            'logo' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
+        ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        // Handle logo upload - keep existing logo if no new one uploaded
-        $logoPath = $bus_travel->image; // Keep existing logo by default
+        $logoPath = $bus_travel->image; // Keep existing logo
         if ($request->hasFile('logo')) {
-            // Delete old logo if exists
             if ($bus_travel->image && Storage::disk('public')->exists($bus_travel->image)) {
                 Storage::disk('public')->delete($bus_travel->image);
             }
@@ -160,21 +150,20 @@ class BusTravelController extends Controller
         }
 
         $bus_travel->update([
-            'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
+            'user_id' => $request->user_id,
             'city' => $request->city ?? null,
             'phone' => $request->phone ?? null,
             'address' => $request->address ?? null,
-            'image' => $logoPath ?? null,
-            'is_active' => $request->is_active,
+            'image' => $logoPath,
+            'is_active' => $request->is_active ?? $bus_travel->is_active,
         ]);
-
 
         toast('Mitra has been updated', 'success');
         return response()->json([
             'success' => true,
-            'message' => 'Data Berhasil Diudapte!',
-            'data'    => $bus_travel
+            'message' => 'Mitra berhasil diperbarui',
+            'data' => $bus_travel
         ]);
     }
 

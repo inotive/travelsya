@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\General;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\BusCostumerHasChair;
 use App\Models\BusDeparture;
 use App\Models\BusRoute;
 use App\Models\BusTravelHasBus;
@@ -426,41 +427,77 @@ class BusTravelController extends Controller
 
             $booking_id = \Illuminate\Support\Str::random(6);
 
-            DetailTransactionBus::create([
-                "transaction_id" => $storeTransaction->id,
-                "bus_travel_id" => $pergi['busTravel']['busTravel']['id'],
-                "bus_travel_has_bus_id" => $pergi['busTravel']['id'],
-                "bus_departure_id" => $pergi['id'],
-                "booking_id" => $booking_id,
-                "departure_time" => $berangkat,
-                "from" => $pergi['from']['name'],
-                "to" => $pergi['to']['name'],
-                "price" => $pergi['price'],
-                "fee_admin" => $fees[0]['value'],
-                "kode_unik" => $kode_unik,
-                "customer_name" => $customer['name'] ?? '-',
-                "customer_phone" => $customer['phone'] ?? '-',
-                "customer_email" => $customer['email'] ?? '-',
-            ]);
+            // Get seat reservations for this user, departure, and date
+            $departureDate = Carbon::parse($berangkat)->format('Y-m-d');
+            $seatReservations = BusCostumerHasChair::where('id_costumer', Auth::user()->id)
+                ->where('id_departure', $pergi['id'])
+                ->where('date_pergi', $departureDate)
+                ->where('is_active', 1)
+                ->orderBy('penumpang_ke')
+                ->get();
 
-            if ((int)$data['is_pulang_pergi'] == 1) {
+            // Create multiple detail transaction records for multiple passengers
+            for ($i = 0; $i < $data['jumlah_penumpang']; $i++) {
+                $seatNumber = null;
+                if (isset($seatReservations[$i])) {
+                    $seatNumber = $seatReservations[$i]->kursi_pergi;
+                }
+
                 DetailTransactionBus::create([
                     "transaction_id" => $storeTransaction->id,
-                    "bus_travel_id" => $pulang['busTravel']['busTravel']['id'],
-                    "bus_travel_has_bus_id" => $pulang['busTravel']['id'],
-                    "bus_departure_id" => $pulang['id'],
+                    "bus_travel_id" => $pergi['busTravel']['busTravel']['id'],
+                    "bus_travel_has_bus_id" => $pergi['busTravel']['id'],
+                    "bus_departure_id" => $pergi['id'],
                     "booking_id" => $booking_id,
-                    "departure_time" => $berangkatPulang,
-                    "from" => $pulang['from']['name'],
-                    "to" => $pulang['to']['name'],
-                    "price" => $pulang['price'],
-                    "fee_admin" => 0,
-                    // "duration" => $data['duration'],
+                    "departure_time" => $berangkat,
+                    "from" => $pergi['from']['name'],
+                    "to" => $pergi['to']['name'],
+                    "price" => $pergi['price'],
+                    "fee_admin" => $fees[0]['value'],
                     "kode_unik" => $kode_unik,
                     "customer_name" => $customer['name'] ?? '-',
                     "customer_phone" => $customer['phone'] ?? '-',
                     "customer_email" => $customer['email'] ?? '-',
+                    "seat_number" => $seatNumber,
                 ]);
+            }
+
+            if ((int)$data['is_pulang_pergi'] == 1) {
+                // Get seat reservations for the return trip if available
+                $returnDepartureDate = $berangkatPulang ? Carbon::parse($berangkatPulang)->format('Y-m-d') : null;
+                $returnSeatReservations = $returnDepartureDate ? BusCostumerHasChair::where('id_costumer', Auth::user()->id)
+                    ->where('id_departure', $pulang['id'])
+                    ->where('date_pulang', $returnDepartureDate) // Using date_pulang for return trip
+                    ->where('is_active', 1)
+                    ->orderBy('penumpang_ke')
+                    ->get() : collect();
+
+                // Create multiple detail transaction records for return trip for multiple passengers
+                for ($i = 0; $i < $data['jumlah_penumpang']; $i++) {
+                    $returnSeatNumber = null;
+                    if (isset($returnSeatReservations[$i])) {
+                        $returnSeatNumber = $returnSeatReservations[$i]->kursi_pulang;
+                    }
+
+                    DetailTransactionBus::create([
+                        "transaction_id" => $storeTransaction->id,
+                        "bus_travel_id" => $pulang['busTravel']['busTravel']['id'],
+                        "bus_travel_has_bus_id" => $pulang['busTravel']['id'],
+                        "bus_departure_id" => $pulang['id'],
+                        "booking_id" => $booking_id,
+                        "departure_time" => $berangkatPulang,
+                        "from" => $pulang['from']['name'],
+                        "to" => $pulang['to']['name'],
+                        "price" => $pulang['price'],
+                        "fee_admin" => 0,
+                        // "duration" => $data['duration'],
+                        "kode_unik" => $kode_unik,
+                        "customer_name" => $customer['name'] ?? '-',
+                        "customer_phone" => $customer['phone'] ?? '-',
+                        "customer_email" => $customer['email'] ?? '-',
+                        "seat_number" => $returnSeatNumber,
+                    ]);
+                }
             }
         });
 
