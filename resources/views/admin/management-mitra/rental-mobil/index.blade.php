@@ -44,9 +44,9 @@
                                 </td>
                                 <td class="text-center">
                                     {{ $rental->business_name }}</td>
-                                <td class="text-center">{{ $rental->city_name }}</td>
+                                <td class="text-center">{{ $rental->city_name ?? '-' }}</td>
 
-                                <td class="text-center">{{ $rental->address }}</td>
+                                <td class="text-center">{{ $rental->address ?? '-' }}</td>
 
                                 <td class="text-center">
                                     @if($rental->kebijakan_rental_mobil)
@@ -56,7 +56,7 @@
                                     @endif
                                 </td>
 
-                                <td class="text-center">{{ $rental->car_rental_phone }}</td>
+                                <td class="text-center">{{ $rental->car_rental_phone ?? '-' }}</td>
 
                                 <td class="text-center">
                                     @if ($rental->car_rentals_is_active)
@@ -208,9 +208,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
+                                <label class="fs-6 fw-semibold mb-2">Nomor Telpon</label>
                                 <input type="number" class="form-control form-control-lg" id="phone"
-                                    placeholder="Masukan nomor telepon... " name="phone" required />
+                                    placeholder="Masukan nomor telepon... " name="phone" />
 
                                 @error('phone')
                                     <span class="text-danger mt-1" role="alert">
@@ -223,9 +223,9 @@
 
 
                             <div class="col-md-12">
-                                <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
+                                <label class="fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
                                 <select class="js-example-basic-single form-control form-control-lg" name="city"
-                                    id="city" required>
+                                    id="city">
                                     <option value="">--Pilih Kota/Kabupaten</option>
                                     @foreach ($cities as $city)
                                         <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
@@ -245,13 +245,13 @@
 
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Alamat</label>
-                                <textarea name="address" id="address" cols="30" rows="5" class="form-control" required></textarea>
+                                <label for="" class="form-label">Alamat</label>
+                                <textarea name="address" id="address" cols="30" rows="5" class="form-control"></textarea>
                             </div>
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Kebijakan Rental Mobil</label>
-                                <textarea name="kebijakan_rental_mobil" id="kebijakan_rental_mobil" cols="30" rows="5" class="form-control" required placeholder="Masukkan kebijakan rental mobil..."></textarea>
+                                <label for="" class="form-label">Kebijakan Rental Mobil</label>
+                                <textarea name="kebijakan_rental_mobil" id="kebijakan_rental_mobil" cols="30" rows="5" class="form-control" placeholder="Masukkan kebijakan rental mobil..."></textarea>
                                 @error('kebijakan_rental_mobil')
                                     <span class="text-danger mt-1" role="alert">
                                         <strong>{{ $message }}</strong>

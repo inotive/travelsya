@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Throwable;
 
 class CarRentalController extends Controller
@@ -193,7 +194,7 @@ class CarRentalController extends Controller
                     'chairs' => $val['number_seats'],
                     'transmisi' => $val['category'],
                     'category_rent' => $val['catgeory_rent'] == 'Tidak Dengan Driver' ? 'Lepas Kunci' : 'Dengan Driver',
-                    'image' => $val['image_url'] ? asset('storage/' . $val['image_url']) : asset('images/not_found.jpg'),
+                    'image' => $val['image_url'] ? asset('storage/' . (Str::startsWith($val['image_url'], 'cars/') ? $val['image_url'] : 'cars/' . $val['image_url'])) : asset('images/not_found.jpg'),
                     'price' => $val['rental_price_per_day'],
                 ];
 
@@ -268,7 +269,7 @@ class CarRentalController extends Controller
                 'seats'       => $firstVendor->number_seats ?? null,
                 'price'       => $firstVendor->rental_price_per_day ?? null,
                 'transmission'=> $firstVendor->category ?? null,
-                'image'       => !empty($firstVendor->image_url) ? asset('storage/' . $firstVendor->image_url) : asset('images/not_found.jpg'),
+                'image'       => !empty($firstVendor->image_url) ? asset('storage/' . (Str::startsWith($firstVendor->image_url, 'cars/') ? $firstVendor->image_url : 'cars/' . $firstVendor->image_url)) : asset('images/not_found.jpg'),
             ];
 
             $subVendors = [];
@@ -502,9 +503,25 @@ class CarRentalController extends Controller
 
     public function detail_car($id)
     {
-        $car = CarRentalHasCars::with('carModel', 'brand', 'carRental')->find($id);
+        $car = CarRentalHasCars::with('carModel', 'brand', 'carRental', 'images')->find($id);
 
         if ($car) {
+            $images = [];
+            if ($car->images->isNotEmpty()) {
+                foreach ($car->images as $image) {
+                    $images[] = asset('storage/' . (Str::startsWith($image->image_url, 'cars/') ? $image->image_url : 'cars/' . $image->image_url));
+                }
+            }
+
+            if ($car->image_url) {
+                array_unshift($images, asset('storage/' . (Str::startsWith($car->image_url, 'cars/') ? $car->image_url : 'cars/' . $car->image_url)));
+            }
+
+            if (empty($images)) {
+                $images[] = asset('images/not_found.jpg');
+            }
+
+
             $data = [
                 'id' => $car['id'],
                 'service' => 'car-rent',
@@ -514,8 +531,10 @@ class CarRentalController extends Controller
                 'category_rent' => $car['category_rent'] == 'Tidak Dengan Driver' ? 'Lepas Kunci' : 'Dengan Sopir',
                 'chairs' => $car['number_seats'],
                 'transmisi' => $car['category'],
-                'image' => $car['image_url'] ? asset('storage/' . $car['image_url']) : asset('images/not_found.jpg'),
+                'images' => $images,
                 'price' => $car['rental_price_per_day'],
+                'pickup_location' => $car['pickup_location'],
+                'rental_policy' => $car['carRental']['kebijakan_rental_mobil'] ?? null,
             ];
 
             return ResponseFormatter::success($data, 'Data successfully loaded');

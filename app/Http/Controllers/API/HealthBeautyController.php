@@ -368,7 +368,7 @@ class HealthBeautyController extends Controller
             }
         }
 
-        $category = CategoriesServices::select('id', 'name')->get();
+        $category = CategoriesServices::select('id', 'name')->whereIn('name', ['Service', 'Product'])->get();
 
         $data['categories'] = $category;
         $data['special_deals'] = $cantik;

@@ -23,7 +23,7 @@ class CarRentalController extends Controller
 
         $car_rentals = DB::table('car_rentals')
         ->join('users', 'car_rentals.user_id', '=', 'users.id')
-        ->join('cities', 'car_rentals.city', '=', 'cities.city_id')
+        ->leftJoin('cities', 'car_rentals.city', '=', 'cities.city_id')
         ->select(
             'car_rentals.id as car_rental_id',
             'car_rentals.phone as car_rental_phone',
@@ -58,10 +58,10 @@ class CarRentalController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'address' => 'required',
-            'kebijakan_rental_mobil' => 'required',
+            'phone' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'nullable',
+            'kebijakan_rental_mobil' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -113,10 +113,10 @@ class CarRentalController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'address' => 'required',
-            'kebijakan_rental_mobil' => 'required',
+            'phone' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'nullable',
+            'kebijakan_rental_mobil' => 'nullable',
             'is_active' => 'required'
         ]);
 
