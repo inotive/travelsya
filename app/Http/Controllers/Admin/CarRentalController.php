@@ -58,10 +58,10 @@ class CarRentalController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'address' => 'required',
-            'kebijakan_rental_mobil' => 'required',
+            'phone' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'nullable',
+            'kebijakan_rental_mobil' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -113,10 +113,10 @@ class CarRentalController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
-            'phone' => 'required',
-            'city' => 'required',
-            'address' => 'required',
-            'kebijakan_rental_mobil' => 'required',
+            'phone' => 'nullable',
+            'city' => 'nullable',
+            'address' => 'nullable',
+            'kebijakan_rental_mobil' => 'nullable',
             'is_active' => 'required'
         ]);
 
