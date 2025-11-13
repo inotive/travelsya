@@ -24,6 +24,18 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="city" class="form-label">Kota / Kabupaten</label>
+                        <select class="form-select" id="city" name="city">
+                            <option selected disabled>Pilih Kota/Kabupaten</option>
+                            @if(isset($cities))
+                                @foreach($cities as $city)
+                                    <option value="{{ $city->city_id }}" {{ old('city', $carRental->city) == $city->city_id ? 'selected' : '' }}>{{ $city->city_name }}</option>
+                                @endforeach
+                            @endif
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="kebijakan_rental_mobil" class="form-label">Kebijakan Rental Mobil</label>
                         <textarea class="form-control" id="kebijakan_rental_mobil" name="kebijakan_rental_mobil" rows="3">{{ $carRental->kebijakan_rental_mobil }}</textarea>
                     </div>
@@ -33,7 +45,10 @@
                         <label class="form-check-label" for="is_active">Aktif</label>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <div class="d-flex">
+                        <a href="{{ route('partner.car_rental.all') }}" class="btn btn-secondary me-2">Kembali</a>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
                 </form>
             </div>
         </div>

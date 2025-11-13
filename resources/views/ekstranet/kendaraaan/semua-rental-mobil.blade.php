@@ -23,7 +23,7 @@
                                     <div class="col-12">
                                         <h3 class="fw-bold text-primary">{{ $carRental->business_name }}</h3>
                                         <div class="row">
-                                            <div class="col-6"><h6 class="fw-medium">{{ $carRental->city->city_name ?? 'N/A' }}</h6></div>
+                                            <div class="col-6"><h6 class="fw-medium">{{ $carRental->kota ? $carRental->kota->city_name : 'N/A' }}</h6></div>
                                             <div class="col-6 d-flex justify-content-end">
                                                 <div class="rating">
                                                     @for($i = 0; $i < 5; $i++)
