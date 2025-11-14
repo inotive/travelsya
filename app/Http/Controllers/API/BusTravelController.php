@@ -7,6 +7,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\BusDeparture;
 use App\Models\BusRoute;
+use App\Models\City;
 use App\Models\BusTravelHasBus;
 use App\Models\BusTravelRating;
 use App\Models\BusTravels;
@@ -33,13 +34,25 @@ class BusTravelController extends Controller
         $this->point = $point;
     }
 
-    public function city(){
-        $city = BusRoute::get()->pluck('name');
+    public function city(Request $request)
+    {
+        if ($request->from_city_id) {
+            $city = BusDeparture::with('to')
+                ->where('from_city_id', $request->from_city_id)
+                ->get()
+                ->pluck('to')
+                ->unique('id')
+                ->values();
+        } else {
+            $from = BusDeparture::with('from')->get()->pluck('from');
+            $to = BusDeparture::with('to')->get()->pluck('to');
+            $city = $from->merge($to)->unique('id')->values();
+        }
+
 
         return ResponseFormatter::success(
             $city,
             'Load data success',
-            20,
         );
     }
 
@@ -150,10 +163,10 @@ class BusTravelController extends Controller
         $pergi = BusDeparture::with('busTravel', 'from', 'to')
             ->has('busTravel')
             ->whereHas('from', function ($f) use ($from) {
-                $f->where('name', 'like', $from);
+                $f->where('cities.city_name', 'like', $from);
             })
             ->whereHas('to', function ($t) use ($to) {
-                $t->where('name', 'like', $to);
+                $t->where('cities.city_name', 'like', $to);
             })
             ->get();
 
@@ -163,10 +176,10 @@ class BusTravelController extends Controller
             $pulang = BusDeparture::with('busTravel', 'from', 'to')
                 ->has('busTravel')
                 ->whereHas('to', function ($f) use ($from) {
-                    $f->where('name', 'like', $from);
+                    $f->where('cities.city_name', 'like', $from);
                 })
                 ->whereHas('from', function ($t) use ($to) {
-                    $t->where('name', 'like', $to);
+                    $t->where('cities.city_name', 'like', $to);
                 })
                 ->get();
         }
