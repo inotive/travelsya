@@ -223,16 +223,8 @@ class CarRentalController extends Controller
             $filter = 'semua';
         }
 
-        // Determine rental type
-        $type = $withDriver ? 'Dengan Driver' : null;
-
         // Build query
         $brands = Brand::with(['vendor.carModel', 'vendor.brand', 'vendor.carRental'])
-            ->when($type, function ($query, $type) {
-                $query->whereHas('vendor', function ($q) use ($type) {
-                    $q->where('category_rent', $type);
-                });
-            })
             ->when($transmisi, function ($query, $transmisi) {
                 $query->whereHas('vendor', function ($q) use ($transmisi) {
                     $q->where('category', $transmisi);
@@ -246,8 +238,28 @@ class CarRentalController extends Controller
                         });
                     });
                 });
-            })
-            ->get();
+            });
+
+        // Apply with_driver filter conditionally
+        if ($withDriver) {
+            // Only show cars with driver
+            $brands->whereHas('vendor', function ($q) {
+                $q->where(function ($query) {
+                    $query->where('category_rent', 'Dengan Driver')
+                          ->orWhere('category_rent', 'Dengan Supir');
+                });
+            });
+        } else {
+            // Only show cars without driver
+            $brands->whereHas('vendor', function ($q) {
+                $q->where(function ($query) {
+                    $query->where('category_rent', 'Tidak Dengan Driver')
+                          ->orWhere('category_rent', 'Lepas Kunci');
+                });
+            });
+        }
+
+        $brands = $brands->get();
 
         $result = [
             'brand' => [],
