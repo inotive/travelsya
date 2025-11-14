@@ -129,9 +129,7 @@ class BusTravelController extends Controller
 
         if ($validator->fails()) {
             return ResponseFormatter::error(
-                [
-                    'response' => $validator->errors(),
-                ],
+                ['response' => $validator->errors()],
                 'Bus & Travel process failed',
                 500,
             );
@@ -139,99 +137,91 @@ class BusTravelController extends Controller
 
         if ((int)$request->is_pulang_pergi == 1) {
             $validator = Validator::make($request->all(), [
-                'date_pulang' => 'required',
+                'date_pulang' => 'required|date',
             ]);
 
             if ($validator->fails()) {
                 return ResponseFormatter::error(
-                    [
-                        'response' => $validator->errors(),
-                    ],
+                    ['response' => $validator->errors()],
                     'Bus & Travel process failed',
                     500,
                 );
             }
         }
 
-        $from = '%' . $request->kota_awal . '%';
-        $to = '%' . $request->kota_tujuan . '%';
-        $date = $request->date_pergi;
-        $date_pulang = $request->date_pulang;
-        $qty = $request->jumlah_penumpang;
-        $pp = $request->is_pulang_pergi;
-
-        $pergi = BusDeparture::with('busTravel', 'from', 'to')
-            ->has('busTravel')
-            ->whereHas('from', function ($f) use ($from) {
-                $f->where('cities.city_name', 'like', $from);
-            })
-            ->whereHas('to', function ($t) use ($to) {
-                $t->where('cities.city_name', 'like', $to);
-            })
-            ->get();
-
+        $pergi = $this->findBuses($request->kota_awal, $request->kota_tujuan, $request->date_pergi);
         $pulang = [];
 
-        if ((int)$pp == 1) {
-            $pulang = BusDeparture::with('busTravel', 'from', 'to')
-                ->has('busTravel')
-                ->whereHas('to', function ($f) use ($from) {
-                    $f->where('cities.city_name', 'like', $from);
-                })
-                ->whereHas('from', function ($t) use ($to) {
-                    $t->where('cities.city_name', 'like', $to);
-                })
-                ->get();
+        if ((int)$request->is_pulang_pergi == 1) {
+            $pulang = $this->findBuses($request->kota_tujuan, $request->kota_awal, $request->date_pulang);
         }
 
-        $newData['is_pulang_pergi'] = $pp;
+        $newData['is_pulang_pergi'] = $request->is_pulang_pergi;
         $newData['kota_awal'] = $request->kota_awal;
         $newData['kota_tujuan'] = $request->kota_tujuan;
-        $newData['date_pergi'] = $request->date;
+        $newData['date_pergi'] = $request->date_pergi;
         $newData['date_pulang'] = $request->date_pulang;
         $newData['jumlah_penumpang'] = $request->jumlah_penumpang;
-        $newData['pergi'] = $this->formatBus($pergi, $date);
-        $newData['pulang'] = $this->formatBus($pulang, $date_pulang);
+        $newData['pergi'] = $pergi;
+        $newData['pulang'] = $pulang;
 
         return ResponseFormatter::success($newData, 'Data successfully loaded');
     }
 
-    public function formatSingleBus($collection, $date = null)
+    public function findBuses($from, $to, $date)
     {
-        $available = General::busAvailableTicket($collection, $date);
-        $item = [
-            'id' => $collection['id'],
-            'business_name' => $collection['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
-            'class' => $collection['busTravel']['class'],
-            'departure_point' => $collection['from']['name'] ?? 'Deleted point',
-            'departure_time' => Carbon::parse($collection['departure_time'])->format('H:i'),
-            'arrival_point' => $collection['to']['name'] ?? 'Deleted point',
-            'arrival_time' => Carbon::parse($collection['departure_time'])->addHours($collection['duration'] ?? 1)->format('H:i'),
-            'price' => $collection['price'],
-            // 'available_tickets' => $collection['busTravel']['number_seats'] ?? 0,
-            'available_tickets' => $available,
+        $busData = [];
+        $dayMap = [
+            'Monday' => 'senin',
+            'Tuesday' => 'selasa',
+            'Wednesday' => 'rabu',
+            'Thursday' => 'kamis',
+            'Friday' => 'jumat',
+            'Saturday' => 'sabtu',
+            'Sunday' => 'minggu',
         ];
 
-        return $item;
+        for ($i = 0; $i < 7; $i++) {
+            $currentDate = Carbon::parse($date)->addDays($i);
+            $dayName = $currentDate->format('l');
+            $indonesianDayName = $dayMap[$dayName];
+
+            $departures = BusDeparture::with('busTravel.busTravel', 'from', 'to')
+                ->where('from_city_id', $from)
+                ->where('to_city_id', $to)
+                ->where('days', 'like', '%' . $indonesianDayName . '%')
+                ->get();
+            
+            if ($departures->isNotEmpty()) {
+                $busData[] = [
+                    'date' => $currentDate->toDateString(),
+                    'departures' => $this->formatBus($departures, $currentDate->toDateString()),
+                ];
+            }
+        }
+
+        return $busData;
     }
 
     public function formatBus($collections, $date = null)
     {
         $newTicket = [];
 
-        foreach ($collections as $key => $val) {
-            $available = General::busAvailableTicket($val, $date);
+        foreach ($collections as $val) {
+            $departureTime = Carbon::parse($date . ' ' . $val->departure_time);
+            $arrivalTime = $departureTime->copy()->addHours($val->duration);
+
             $item = [
-                'id' => $val['id'],
-                'business_name' => $val['busTravel']['busTravel']['business_name'] ?? 'Deleted business',
-                'class' => $val['busTravel']['class'],
-                'departure_point' => $val['from']['name'] ?? 'Deleted point',
-                'departure_time' => Carbon::parse($val['departure_time'])->format('H:i'),
-                'arrival_point' => $val['to']['name'] ?? 'Deleted point',
-                'arrival_time' => Carbon::parse($val['departure_time'])->addHours($val['duration'] ?? 1)->format('H:i'),
-                'price' => $val['price'],
-                // 'available_tickets' => $val['busTravel']['number_seats'] ?? 0,
-                'available_tickets' => $available,
+                'id' => $val->id,
+                'business_name' => $val->busTravel->busTravel->business_name ?? 'Deleted business',
+                'class' => $val->busTravel->class,
+                'departure_point' => $val->titik_naik,
+                'departure_time' => $departureTime->format('Y-m-d H:i:s'),
+                'arrival_point' => $val->titik_turun,
+                'arrival_time' => $arrivalTime->format('Y-m-d H:i:s'),
+                'duration' => $val->duration,
+                'price' => $val->price,
+                'available_tickets' => General::busAvailableTicket($val, $date),
             ];
 
             array_push($newTicket, $item);
