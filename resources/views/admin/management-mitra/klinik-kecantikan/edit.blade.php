@@ -47,9 +47,8 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Nomor Telepon</label>
-                        <input type="number" class="form-control form-control-lg phone-edit" id="phone-edit"
-                            required />
+                        <label class="fs-6 fw-semibold mb-2">Nomor Telepon</label>
+                        <input type="number" class="form-control form-control-lg phone-edit" id="phone-edit" />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-phone-edit"></div>
                         @error('phone')
                             <span class="text-danger mt-1" role="alert">
@@ -59,7 +58,7 @@
                     </div>
 
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Active</label>
+                        <label class="fs-6 fw-semibold mb-2">Active</label>
                         <select class="form-select form-select-solid is_active-edit" name="is-active-edit"
                             id="is_active-edit">
                             <option value="1">Yes</option>
@@ -74,9 +73,10 @@
                     </div>
 
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Kota</label>
+                        <label class="fs-6 fw-semibold mb-2">Kota</label>
                         <select class="js-example-basic-single form-control form-control-lg city-edit" name="city"
                             id="city-edit">
+                            <option value="">--Pilih Kota/Kabupaten--</option>
                             @foreach ($cities as $city)
                                 <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
                             @endforeach
@@ -89,13 +89,13 @@
                     </div>
 
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                        <label class="fs-6 fw-semibold mb-2">Kategori</label>
                         <div class="btn-group w-100" data-kt-buttons="true" data-kt-buttons-target="[data-kt-button]">
 
                             @foreach (App\Models\Clinic::CATEGORY as $key => $value)
                                 <label class="btn btn-outline btn-danger {{ (isset($clinic) && $clinic->category == $key) ? 'active' : '' }}" data-kt-button="true">
                                     <input class="btn-check" type="radio" name="category" value="{{ $key }}"
-                                        {{ (isset($clinic) && $clinic->category == $key) ? 'checked' : '' }} required />
+                                        {{ (isset($clinic) && $clinic->category == $key) ? 'checked' : '' }} />
                                     {{ $value }}
                                 </label>
                             @endforeach
@@ -109,50 +109,50 @@
                     </div>
 
                     <div class="col-12">
-                        <label for="" class="required form-label">Alamat</label>
+                        <label for="" class="form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
-                        <input type="time" class="form-control form-control-lg open-edit" id="open-edit" required />
+                        <label class="fs-6 fw-semibold mb-2">Waktu Buka</label>
+                        <input type="time" class="form-control form-control-lg open-edit" id="open-edit" />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-open-edit"></div>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
-                        <input type="time" class="form-control form-control-lg close-edit" id="close-edit" required />
+                        <label class="fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                        <input type="time" class="form-control form-control-lg close-edit" id="close-edit" />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-close-edit"></div>
                     </div>
 
                     <div class="col-12">
-                        <label for="" class="required form-label">Deskripsi</label>
+                        <label for="" class="form-label">Deskripsi</label>
                         <textarea id="description-edit" cols="30" rows="5" class="form-control description-edit"></textarea>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-description-edit"></div>
                     </div>
 
                     <div class="col-12">
-                        <label for="" class="required form-label">Highlight</label>
+                        <label for="" class="form-label">Highlight</label>
                         <textarea id="highlight-edit" cols="30" rows="3" class="form-control highlight-edit"></textarea>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-highlight-edit"></div>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Latitude</label>
+                        <label class="fs-6 fw-semibold mb-2">Latitude</label>
                         <input type="text" class="form-control form-control-lg lat-edit" id="lat-edit"
                             placeholder="Masukan latitude (contoh: -6.200000)"
                             pattern="^-?([1-8]?[0-9](\.[0-9]+)?|90(\.0+)?)$"
-                            title="Masukkan latitude yang valid (-90 sampai 90)" required />
+                            title="Masukkan latitude yang valid (-90 sampai 90)" />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-lat-edit"></div>
                     </div>
 
                     <div class="col-md-6">
-                        <label class="required fs-6 fw-semibold mb-2">Longitude</label>
+                        <label class="fs-6 fw-semibold mb-2">Longitude</label>
                         <input type="text" class="form-control form-control-lg ltd-edit" id="ltd-edit"
                             placeholder="Masukan longitude (contoh: 106.816666)"
                             pattern="^-?((1[0-7][0-9])|([1-9]?[0-9]))(\.[0-9]+)?$"
-                            title="Masukkan longitude yang valid (-180 sampai 180)" required />
+                            title="Masukkan longitude yang valid (-180 sampai 180)" />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-ltd-edit"></div>
                     </div>
                 </div>

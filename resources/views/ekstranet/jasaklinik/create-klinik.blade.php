@@ -44,10 +44,11 @@
                                 <option value="">Pilih Klinik</option>
                                 @php
                                     $userClinics = \App\Models\Clinic::where('user_id', Auth::id())->get();
+                                    $selectedClinicFromQuery = request()->get('clinic_id');
                                 @endphp
                                 @foreach ($userClinics as $clinic)
                                     <option value="{{ $clinic->id }}"
-                                        {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}
+                                        {{ (old('clinic_id') == $clinic->id) || ($selectedClinicFromQuery && $selectedClinicFromQuery == $clinic->id) ? 'selected' : '' }}
                                         data-category="{{ $clinic->category }}">
                                         {{ $clinic->clinic_name }}
                                     </option>
@@ -347,108 +348,122 @@
                 }
             });
 
+            // Trigger change event on page load if a clinic is pre-selected (e.g., from query parameter)
+            let selectedClinic = $('#clinic_id').val();
+            if (selectedClinic) {
+                $('#clinic_id').trigger('change');
+            }
+
             // Fungsi untuk memuat kategori berdasarkan jenis bisnis
             function loadCategoriesByBusinessCategory(businessCategory) {
-                $.ajax({
-                    url: '{{ route('get.categories.by.clinic') }}',
-                    type: 'GET',
-                    data: {
-                        business_category: businessCategory
-                    },
-                    success: function(data) {
-                        console.log("Categories Data:", data);
-                        $('#categories_services_id').empty();
-                        if (data.length > 0) {
-                            $('#categories_services_id').append(
-                                '<option value="">Pilih Kategori</option>');
+                // Check business category and load specific categories for health and beauty
+                if (businessCategory && businessCategory.toLowerCase() === 'kesehatan') {
+                    loadCategoriesForKesehatan();
+                } else if (businessCategory && businessCategory.toLowerCase() === 'kecantikan') {
+                    loadCategoriesForKecantikan();
+                } else {
+                    // Load all categories for other business types
+                    $.ajax({
+                        url: '{{ route('get.categories.by.clinic') }}',
+                        type: 'GET',
+                        data: {
+                            business_category: businessCategory
+                        },
+                        success: function(data) {
+                            console.log("Categories Data:", data);
+                            $('#categories_services_id').empty();
+                            if (data.length > 0) {
+                                $('#categories_services_id').append(
+                                    '<option value="">Pilih Kategori</option>');
 
-                            // Kelompokkan kategori berdasarkan tipe
-                            const clinicCategories = data.filter(category => category.name ===
-                                'Clinic');
-                            const serviceCategories = data.filter(category => category.name ===
-                                'Service');
-                            const productCategories = data.filter(category => category.name ===
-                                'Product');
-                            const otherCategories = data.filter(category =>
-                                category.name !== 'Clinic' &&
-                                category.name !== 'Service' &&
-                                category.name !== 'Product'
-                            );
+                                // Kelompokkan kategori berdasarkan tipe
+                                const clinicCategories = data.filter(category => category.name ===
+                                    'Clinic');
+                                const serviceCategories = data.filter(category => category.name ===
+                                    'Service');
+                                const productCategories = data.filter(category => category.name ===
+                                    'Product');
+                                const otherCategories = data.filter(category =>
+                                    category.name !== 'Clinic' &&
+                                    category.name !== 'Service' &&
+                                    category.name !== 'Product'
+                                );
 
-                            // Tambahkan optgroup untuk Clinic
-                            if (clinicCategories.length > 0) {
-                                const clinicGroup = $('<optgroup label="Clinic"></optgroup>');
-                                $.each(clinicCategories, function(key, category) {
-                                    let option = $("<option>", {
-                                        value: category.id,
-                                        text: category.name
+                                // Tambahkan optgroup untuk Clinic
+                                if (clinicCategories.length > 0) {
+                                    const clinicGroup = $('<optgroup label="Clinic"></optgroup>');
+                                    $.each(clinicCategories, function(key, category) {
+                                        let option = $("<option>", {
+                                            value: category.id,
+                                            text: category.name
+                                        });
+                                        clinicGroup.append(option);
                                     });
-                                    clinicGroup.append(option);
-                                });
-                                $('#categories_services_id').append(clinicGroup);
-                            }
+                                    $('#categories_services_id').append(clinicGroup);
+                                }
 
-                            // Tambahkan optgroup untuk Service
-                            if (serviceCategories.length > 0) {
-                                const serviceGroup = $('<optgroup label="Service"></optgroup>');
-                                $.each(serviceCategories, function(key, category) {
-                                    let option = $("<option>", {
-                                        value: category.id,
-                                        text: category.name
+                                // Tambahkan optgroup untuk Service
+                                if (serviceCategories.length > 0) {
+                                    const serviceGroup = $('<optgroup label="Service"></optgroup>');
+                                    $.each(serviceCategories, function(key, category) {
+                                        let option = $("<option>", {
+                                            value: category.id,
+                                            text: category.name
+                                        });
+                                        serviceGroup.append(option);
                                     });
-                                    serviceGroup.append(option);
-                                });
-                                $('#categories_services_id').append(serviceGroup);
-                            }
+                                    $('#categories_services_id').append(serviceGroup);
+                                }
 
-                            // Tambahkan optgroup untuk Product
-                            if (productCategories.length > 0) {
-                                const productGroup = $('<optgroup label="Product"></optgroup>');
-                                $.each(productCategories, function(key, category) {
-                                    let option = $("<option>", {
-                                        value: category.id,
-                                        text: category.name
+                                // Tambahkan optgroup untuk Product
+                                if (productCategories.length > 0) {
+                                    const productGroup = $('<optgroup label="Product"></optgroup>');
+                                    $.each(productCategories, function(key, category) {
+                                        let option = $("<option>", {
+                                            value: category.id,
+                                            text: category.name
+                                        });
+                                        productGroup.append(option);
                                     });
-                                    productGroup.append(option);
-                                });
-                                $('#categories_services_id').append(productGroup);
-                            }
+                                    $('#categories_services_id').append(productGroup);
+                                }
 
-                            // Tambahkan optgroup untuk kategori lainnya
-                            if (otherCategories.length > 0) {
-                                const otherGroup = $('<optgroup label="Lainnya"></optgroup>');
-                                $.each(otherCategories, function(key, category) {
-                                    let option = $("<option>", {
-                                        value: category.id,
-                                        text: category.name
+                                // Tambahkan optgroup untuk kategori lainnya
+                                if (otherCategories.length > 0) {
+                                    const otherGroup = $('<optgroup label="Lainnya"></optgroup>');
+                                    $.each(otherCategories, function(key, category) {
+                                        let option = $("<option>", {
+                                            value: category.id,
+                                            text: category.name
+                                        });
+                                        otherGroup.append(option);
                                     });
-                                    otherGroup.append(option);
-                                });
-                                $('#categories_services_id').append(otherGroup);
+                                    $('#categories_services_id').append(otherGroup);
+                                }
                             }
+                            // Inisialisasi ulang Select2 setelah memuat opsi
+                            $('#categories_services_id').select2({
+                                placeholder: "Pilih kategori...",
+                                tags: false,
+                                allowClear: true,
+                                dropdownParent: $('#categories_services_id').parent()
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error loading categories:", error);
+                            $('#categories_services_id').empty().append(
+                                '<option value="">Gagal memuat kategori</option>');
+
+                            // Inisialisasi ulang Select2 meskipun terjadi error
+                            $('#categories_services_id').select2({
+                                placeholder: "Pilih kategori...",
+                                tags: false,
+                                allowClear: true,
+                                dropdownParent: $('#categories_services_id').parent()
+                            });
                         }
-                        // Inisialisasi ulang Select2 setelah memuat opsi
-                        $('#categories_services_id').select2({
-                            placeholder: "Pilih atau ketik kategori baru...",
-                            tags: true,
-                            allowClear: true,
-                            dropdownParent: $('#categories_services_id').parent()
-                        });
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error loading categories:", error);
-                        $('#categories_services_id').empty().append(
-                            '<option value="">Gagal memuat kategori</option>');
-
-                        // Inisialisasi ulang Select2 meskipun terjadi error
-                        $('#categories_services_id').select2({
-                            placeholder: "Pilih atau ketik kategori baru...",
-                            tags: true,
-                            allowClear: true,
-                            dropdownParent: $('#categories_services_id').parent()
-                        });
-                    }
-                });
+                    });
+                }
             }
 
             // Inisialisasi Select2 untuk spesialis
@@ -491,5 +506,138 @@
                 }
             });
         });
+        
+        // Fungsi untuk memuat kategori khusus untuk Kesehatan (hanya Clinic)
+        function loadCategoriesForKesehatan() {
+            $.ajax({
+                url: '{{ route('get.categories.by.clinic') }}',
+                type: 'GET',
+                data: {
+                    business_category: 'kesehatan'
+                },
+                success: function(data) {
+                    // Filter hanya kategori Clinic
+                    const clinicCategories = data.filter(category => 
+                        category.name.toLowerCase() === 'clinic'
+                    );
+                    
+                    populateCategoriesWithSpecificOptions(clinicCategories);
+                    
+                    // Set kategori "Clinic" sebagai default jika tersedia
+                    if (clinicCategories.length > 0) {
+                        const clinicId = clinicCategories[0].id;
+                        $('#categories_services_id').val(clinicId).trigger('change');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading categories for kesehatan:", error);
+                    $('#categories_services_id').empty().append(
+                        '<option value="">Gagal memuat kategori</option>');
+
+                    // Inisialisasi ulang Select2 meskipun terjadi error
+                    $('#categories_services_id').select2({
+                        placeholder: "Pilih kategori...",
+                        tags: false,
+                        allowClear: true,
+                        dropdownParent: $('#categories_services_id').parent()
+                    });
+                }
+            });
+        }
+        
+        // Fungsi helper untuk populate categories dengan opsi spesifik
+        function populateCategoriesWithSpecificOptions(categories) {
+            // Hancurkan Select2 yang sudah ada
+            if ($('#categories_services_id').hasClass("select2-hidden-accessible")) {
+                $('#categories_services_id').select2('destroy');
+            }
+            
+            $('#categories_services_id').empty();
+            
+            if (categories.length > 0) {
+                $('#categories_services_id').append('<option value="">Pilih Kategori</option>');
+                
+                // Kelompokkan kategori berdasarkan tipe
+                const clinicCategories = categories.filter(category => category.name === 'Clinic');
+                const serviceCategories = categories.filter(category => category.name === 'Service');
+                const productCategories = categories.filter(category => category.name === 'Product');
+                const otherCategories = categories.filter(category => 
+                    category.name !== 'Clinic' && 
+                    category.name !== 'Service' && 
+                    category.name !== 'Product'
+                );
+                
+                // Function helper untuk menambahkan optgroup
+                function addOptGroup(categories, label) {
+                    if (categories.length > 0) {
+                        const group = $(`<optgroup label="${label}"></optgroup>`);
+                        $.each(categories, function(key, category) {
+                            let option = $("<option>", {
+                                value: category.id,
+                                text: category.name
+                            });
+                            group.append(option);
+                        });
+                        $('#categories_services_id').append(group);
+                    }
+                }
+
+                // Tambahkan semua optgroup
+                addOptGroup(clinicCategories, 'Clinic');
+                addOptGroup(serviceCategories, 'Service');
+                addOptGroup(productCategories, 'Product');
+                addOptGroup(otherCategories, 'Lainnya');
+                
+            } else {
+                $('#categories_services_id').append('<option value="">Tidak ada kategori tersedia</option>');
+            }
+            
+            // Inisialisasi ulang Select2 setelah memuat opsi
+            $('#categories_services_id').select2({
+                placeholder: "Pilih kategori...",
+                tags: false,
+                allowClear: true,
+                dropdownParent: $('#categories_services_id').parent()
+            });
+        }
+        
+        // Fungsi untuk memuat kategori khusus untuk Kecantikan (Service dan Product)
+        function loadCategoriesForKecantikan() {
+            $.ajax({
+                url: '{{ route('get.categories.by.clinic') }}',
+                type: 'GET',
+                data: {
+                    business_category: 'kecantikan'
+                },
+                success: function(data) {
+                    // Filter kategori Service dan Product
+                    const filteredCategories = data.filter(category => 
+                        category.name.toLowerCase() === 'service' || 
+                        category.name.toLowerCase() === 'product'
+                    );
+                    
+                    populateCategoriesWithSpecificOptions(filteredCategories);
+                    
+                    // Set kategori "Service" sebagai default jika tersedia
+                    if (filteredCategories.length > 0) {
+                        const serviceId = filteredCategories[0].id;
+                        $('#categories_services_id').val(serviceId).trigger('change');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error loading categories for kecantikan:", error);
+                    $('#categories_services_id').empty().append(
+                        '<option value="">Gagal memuat kategori</option>');
+
+                    // Inisialisasi ulang Select2 meskipun terjadi error
+                    $('#categories_services_id').select2({
+                        placeholder: "Pilih kategori...",
+                        tags: false,
+                        allowClear: true,
+                        dropdownParent: $('#categories_services_id').parent()
+                    });
+                }
+            });
+        }
     </script>
 @endpush

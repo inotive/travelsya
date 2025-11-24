@@ -29,6 +29,7 @@ class DetailTransactionBus extends Model
         'customer_email',
         'customer_phone',
         'status',
+        'seat_number',
     ];
 
     /**

@@ -109,6 +109,22 @@
                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_top_up">Top UP
                                 ({{ count($transaksiTopUp) }})</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_rekreasi">Rekreasi
+                                ({{ count($transaksiRekreasi) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_health_beauty">Health & Beauty
+                                ({{ count($transaksiHealthBeauty) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_bus_travel">Bus & Travel
+                                ({{ count($transaksiBusTravel) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_car_rent">Rental Mobil
+                                ({{ count($transaksiCarRent) }})</a>
+                        </li>
                         {{--                        @foreach ($services as $key => $service) --}}
                         {{--                        <li class="nav-item"> --}}
                         {{--                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_{{$key}}">{{ucfirst($service->name)}}</a> --}}
@@ -397,8 +413,236 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Tab content untuk Rekreasi -->
+                    <div class="tab-pane fade" id="kt_tab_pane_rekreasi" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_rekreasi">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiRekreasi as $rekreasi)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($rekreasi->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $rekreasi->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($rekreasi->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $rekreasi->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Tiket Rekreasi 
+                                                {{ $rekreasi->detailTransactionRecreation->first()->recreationPackage->recreation->business_name ?? '-'}} 
+                                                Paket {{ $rekreasi->detailTransactionRecreation->first()->recreationPackage->name ?? '-' }}
+                                            </td>
+                                            <td class="text-center">{{ $rekreasi->payment_method . ' - ' . $rekreasi->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($rekreasi->total - ($rekreasi->detailTransactionRecreation->first()->fee_admin ?? 0) - ($rekreasi->detailTransactionRecreation->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($rekreasi->detailTransactionRecreation->first()->fee_admin ?? 0) + ($rekreasi->detailTransactionRecreation->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($rekreasi->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($rekreasi->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi rekreasi</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Rekreasi-->
+                    
+                    <!--begin::Tab content for Health & Beauty-->
+                    <div class="tab-pane fade" id="kt_tab_pane_health_beauty" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_health_beauty">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiHealthBeauty as $hb)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($hb->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $hb->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($hb->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $hb->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Paket Kesehatan & Kecantikan 
+                                                {{ $hb->detailTransactionHealthBeauty->first()->clinic->clinic_name ?? '-'}} 
+                                                Paket {{ $hb->detailTransactionHealthBeauty->first()->clinicPackage->name ?? '-' }}
+                                            </td>
+                                            <td class="text-center">{{ $hb->payment_method . ' - ' . $hb->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($hb->total - ($hb->detailTransactionHealthBeauty->first()->fee_admin ?? 0) - ($hb->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($hb->detailTransactionHealthBeauty->first()->fee_admin ?? 0) + ($hb->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($hb->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($hb->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi health & beauty</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Health & Beauty-->
+                    
+                    <!--begin::Tab content for Bus Travel-->
+                    <div class="tab-pane fade" id="kt_tab_pane_bus_travel" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_bus_travel">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiBusTravel as $bus)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($bus->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $bus->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($bus->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $bus->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Tiket Bus 
+                                                {{ $bus->detailTransactionBus->first()->busTravel->name ?? '-'}} 
+                                                Rute {{ $bus->detailTransactionBus->first()->busDeparture->kotaAwal->city_name ?? '-'}} - {{ $bus->detailTransactionBus->first()->busDeparture->kotaTujuan->city_name ?? '-'}}
+                                            </td>
+                                            <td class="text-center">{{ $bus->payment_method . ' - ' . $bus->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($bus->total - ($bus->detailTransactionBus->first()->fee_admin ?? 0) - ($bus->detailTransactionBus->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($bus->detailTransactionBus->first()->fee_admin ?? 0) + ($bus->detailTransactionBus->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($bus->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($bus->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi bus travel</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Bus Travel-->
+                    
+                    <!--begin::Tab content for Car Rent-->
+                    <div class="tab-pane fade" id="kt_tab_pane_car_rent" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_car_rent">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiCarRent as $car)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($car->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $car->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($car->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $car->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Rental Mobil 
+                                                {{ $car->detailTransactionCarRental->first()->carRentalHasCar->carRental->name ?? '-'}} 
+                                                {{ $car->detailTransactionCarRental->first()->carRentalHasCar->carModel->name ?? '-'}}
+                                            </td>
+                                            <td class="text-center">{{ $car->payment_method . ' - ' . $car->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($car->total - ($car->detailTransactionCarRental->first()->fee_admin ?? 0) - ($car->detailTransactionCarRental->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($car->detailTransactionCarRental->first()->fee_admin ?? 0) + ($car->detailTransactionCarRental->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($car->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($car->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi rental mobil</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Car Rent-->
+                    
                 </div>
-
             </div>
         </div>
     </div>

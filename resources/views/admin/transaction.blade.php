@@ -85,25 +85,29 @@
                                     $totalHarga = 0;
                                     foreach ($transactions as $transaction) {
                                         if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10])) {
+                                            $detail = $transaction->detailTransactionPPOB?->first();
                                             $totalHarga +=
                                                 $transaction->total -
-                                                ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) -
-                                                ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0);
+                                                ($detail->fee_travelsya ?? 0) -
+                                                ($detail->kode_unik ?? 0);
                                         } elseif (in_array($transaction->service_id, [1, 2, 11, 12])) {
+                                            $detail = $transaction->detailTransactionTopUp?->first();
                                             $totalHarga +=
                                                 $transaction->total -
-                                                ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) -
-                                                ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0);
+                                                ($detail->fee_travelsya ?? 0) -
+                                                ($detail->kode_unik ?? 0);
                                         } elseif ($transaction->service_id == 8) {
+                                            $detail = $transaction->detailTransactionHotel?->first();
                                             $totalHarga +=
                                                 $transaction->total -
-                                                ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) -
-                                                ($transaction->detailTransactionHotel->first()->kode_unik ?? 0);
+                                                ($detail->fee_admin ?? 0) -
+                                                ($detail->kode_unik ?? 0);
                                         } elseif ($transaction->service_id == 7) {
+                                            $detail = $transaction->detailTransactionHostel?->first();
                                             $totalHarga +=
                                                 $transaction->total -
-                                                ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) -
-                                                ($transaction->detailTransactionHostel->first()->kode_unik ?? 0);
+                                                ($detail->fee_admin ?? 0) -
+                                                ($detail->kode_unik ?? 0);
                                         }
                                     }
                                 @endphp
@@ -121,22 +125,27 @@
                                     $totalBiayaLayanan = 0;
                                     foreach ($transactions as $transaction) {
                                         if (in_array($transaction->service_id, [3, 4, 5, 6, 9, 10])) {
+                                            $detail = $transaction->detailTransactionPPOB?->first();
                                             $totalBiayaLayanan +=
-                                                ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) +
-                                                ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0);
+                                                ($detail->fee_travelsya ?? 0) + ($detail->kode_unik ?? 0);
                                         } elseif (in_array($transaction->service_id, [1, 2, 11, 12])) {
+                                            $detail = $transaction->detailTransactionTopUp?->first();
                                             $totalBiayaLayanan +=
-                                                ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) +
-                                                ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0);
+                                                ($detail->fee_travelsya ?? 0) + ($detail->kode_unik ?? 0);
                                         } elseif ($transaction->service_id == 8) {
-                                            $totalBiayaLayanan +=
-                                                ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) +
-                                                ($transaction->detailTransactionHotel->first()->kode_unik ?? 0);
+                                            $detail = $transaction->detailTransactionHotel?->first();
+                                            $totalBiayaLayanan += ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
                                         } elseif ($transaction->service_id == 7) {
-                                            $totalBiayaLayanan +=
-                                                ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) +
-                                                ($transaction->detailTransactionHostel->first()->kode_unik ?? 0);
+                                            $detail = $transaction->detailTransactionHostel?->first();
+                                            $totalBiayaLayanan += ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
                                         }
+                                    }
+                                @endphp
+
+                                @php
+                                    $totalPotonganPoint = 0;
+                                    foreach ($transactions as $transaction) {
+                                        $totalPotonganPoint += $transaction->historyPoint?->first()->point ?? 0;
                                     }
                                 @endphp
                                 Rp. {{ number_format($totalBiayaLayanan, 0, ',', '.') }}
@@ -152,7 +161,7 @@
                                 @php
                                     $totalPotonganPoint = 0;
                                     foreach ($transactions as $transaction) {
-                                        $totalPotonganPoint += $transaction->historyPoint->first()->point ?? 0;
+                                        $totalPotonganPoint += $transaction->historyPoint?->first()->point ?? 0;
                                     }
                                 @endphp
                                 Rp. {{ number_format($totalPotonganPoint, 0, ',', '.') }}
@@ -307,47 +316,104 @@
                                             </div>
                                         </td>
                                         <td>
-                                            @if ($transaction->services->name == 'pln')
-                                                @currency($transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'hotel')
-                                                @currency($transaction->total - ($transaction->detailTransactionHotel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHotel->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'hostel')
-                                                @currency($transaction->total - ($transaction->detailTransactionHostel->first()->fee_admin ?? 0) - ($transaction->detailTransactionHostel->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'bus-travel')
-                                                @currency($transaction->total - ($transaction->detailTransactionBus->first()->fee_admin ?? 0) - ($transaction->detailTransactionBus->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'car-rent')
-                                                @currency($transaction->total - ($transaction->detailTransactionCarRent->first()->fee_admin ?? 0) - ($transaction->detailTransactionCarRent->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'health-beauty')
-                                                @currency($transaction->total - ($transaction->detailTransactionHealthBeauty->first()->fee_admin ?? 0) - ($transaction->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'recreation')
-                                                @currency($transaction->total - ($transaction->detailTransactionRecreation->first()->fee_admin ?? 0) - ($transaction->detailTransactionRecreation->first()->kode_unik ?? 0))
-                                            @else
-                                                @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
-                                            @endif
+                                            @php
+                                                $harga = 0;
+                                                if ($transaction->services->name == 'pln') {
+                                                    $detail = $transaction->detailTransactionPPOB?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_travelsya ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'hotel') {
+                                                    $detail = $transaction->detailTransactionHotel?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_admin ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'hostel') {
+                                                    $detail = $transaction->detailTransactionHostel?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_admin ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'bus-travel') {
+                                                    $detail = $transaction->detailTransactionBus?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_admin ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'car-rent') {
+                                                    $detail = $transaction->detailTransactionCarRent?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_admin ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'health-beauty') {
+                                                    $detail = $transaction->detailTransactionHealthBeauty?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_admin ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'recreation') {
+                                                    $detail = $transaction->detailTransactionRecreation?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_admin ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                } else {
+                                                    $detail = $transaction->detailTransactionTopUp?->first();
+                                                    $harga =
+                                                        $transaction->total -
+                                                        ($detail->fee_travelsya ?? 0) -
+                                                        ($detail->kode_unik ?? 0);
+                                                }
+                                            @endphp
+                                            @currency($harga)
                                         </td>
                                         <td class="text-success fw-bold">
-                                            @if ($transaction->services->name == 'pln')
-                                                @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'hotel')
-                                                @currency(($transaction->detailTransactionHotel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHotel->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'hostel')
-                                                @currency(($transaction->detailTransactionHostel->first()->fee_admin ?? 0) + ($transaction->detailTransactionHostel->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'bus-travel')
-                                                @currency(($transaction->detailTransactionBus->first()->fee_admin ?? 0) + ($transaction->detailTransactionBus->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'car-rent')
-                                                @currency(($transaction->detailTransactionCarRent->first()->fee_admin ?? 0) + ($transaction->detailTransactionCarRent->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'health-beauty')
-                                                @currency(($transaction->detailTransactionHealthBeauty->first()->fee_admin ?? 0) + ($transaction->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
-                                            @elseif($transaction->services->name == 'recreation')
-                                                @currency(($transaction->detailTransactionRecreation->first()->fee_admin ?? 0) + ($transaction->detailTransactionRecreation->first()->kode_unik ?? 0))
-                                            @else
-                                                @currency(($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
-                                            @endif
+                                            @php
+                                                $biayaLayanan = 0;
+                                                if ($transaction->services->name == 'pln') {
+                                                    $detail = $transaction->detailTransactionPPOB?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_travelsya ?? 0) + ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'hotel') {
+                                                    $detail = $transaction->detailTransactionHotel?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'hostel') {
+                                                    $detail = $transaction->detailTransactionHostel?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'bus-travel') {
+                                                    $detail = $transaction->detailTransactionBus?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'car-rent') {
+                                                    $detail = $transaction->detailTransactionCarRent?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'health-beauty') {
+                                                    $detail = $transaction->detailTransactionHealthBeauty?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
+                                                } elseif ($transaction->services->name == 'recreation') {
+                                                    $detail = $transaction->detailTransactionRecreation?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_admin ?? 0) + ($detail->kode_unik ?? 0);
+                                                } else {
+                                                    $detail = $transaction->detailTransactionTopUp?->first();
+                                                    $biayaLayanan =
+                                                        ($detail->fee_travelsya ?? 0) + ($detail->kode_unik ?? 0);
+                                                }
+                                            @endphp
+                                            @currency($biayaLayanan)
                                         </td>
                                         <td class="text-danger fw-bold">
                                             Rp.
-                                            {{ number_format($transaction->historyPoint->first()->point ?? 0, 0, ',', '.') }}
+                                            {{ number_format($transaction->historyPoint?->first()->point ?? 0, 0, ',', '.') }}
                                         </td>
+
                                         <td>
                                             Rp. {{ number_format($transaction->total, 0, ',', '.') }}
                                         </td>

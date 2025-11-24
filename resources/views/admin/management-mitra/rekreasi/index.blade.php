@@ -213,11 +213,11 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Nomor Telpon</label>
+                                <label class="fs-6 fw-semibold mb-2">Nomor Telpon</label>
                                 <input type="number"
                                     class="form-control form-control-lg @error('phone') is-invalid @enderror"
                                     value="{{ old('phone') }}" id="phone" placeholder="Masukan nomor telepon... "
-                                    name="phone" required />
+                                    name="phone" />
 
                                 @error('phone')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
@@ -225,7 +225,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="fs-6 fw-semibold mb-2">Latitude.</label>
+                                <label class="fs-6 fw-semibold mb-2">Latitude</label>
                                 <input class="form-control form-control-lg @error('lat') is-invalid @enderror"
                                     value="{{ old('lat') }}" placeholder="lat" type="number" step="any"
                                     name="lat" />
@@ -235,7 +235,7 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="fs-6 fw-semibold mb-2">Longitude.</label>
+                                <label class="fs-6 fw-semibold mb-2">Longitude</label>
                                 <input class="form-control form-control-lg @error('ltd') is-invalid @enderror"
                                     value="{{ old('ltd') }}" placeholder="ltd" type="number" step="any"
                                     name="ltd" />
@@ -245,14 +245,14 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
+                                <label class="fs-6 fw-semibold mb-2">Kota / Kabupaten</label>
 
                                 <select
                                     class="js-example-basic-single form-control form-control-lg @error('city') is-invalid @enderror"
-                                    name="city" id="city" required>
+                                    name="city" id="city">
                                     <option value="">--Pilih Kota/Kabupaten--</option>
                                     @foreach ($cities as $city)
-                                        <option value="{{ $city->city_id }}">{{ $city->city_name }}</option>
+                                        <option value="{{ $city->city_id }}" {{ old('city') == $city->city_id ? 'selected' : '' }}>{{ $city->city_name }}</option>
                                     @endforeach
                                 </select>
 
@@ -263,10 +263,10 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Kategori</label>
+                                <label class="fs-6 fw-semibold mb-2">Kategori</label>
                                 <select name="category_recreation_id"
                                     class="form-select @error('category_recreation_id') is-invalid @enderror"
-                                    aria-label="Default select example" required>
+                                    aria-label="Default select example">
                                     <option value="">--Pilih Kategori--</option>
                                     @foreach ($category as $item)
                                         <option value="{{ $item->id }}"
@@ -275,13 +275,13 @@
                                     @endforeach
                                 </select>
                                 @error('category_recreation_id')
-                                    <div class="alert alert-danger mt-1"></div>
+                                    <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label class="required fs-6 fw-semibold mb-2">Gambar</label>
+                                    <label class="fs-6 fw-semibold mb-2">Gambar</label>
                                     <div id="image-preview" class="mb-2" style="display: none;">
                                         <img id="preview-img" src="" alt="Preview" style="max-width: 200px; max-height: 150px; border-radius: 5px; border: 1px solid #ddd;">
                                         <p class="text-muted small mt-1">Preview gambar</p>
@@ -296,36 +296,36 @@
                             </div>
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Alamat</label>
+                                <label for="" class="form-label">Alamat</label>
                                 <textarea name="address" id="address" cols="30" rows="5"
-                                    class="form-control @error('address') is-invalid @enderror" required>{{ old('address') }}</textarea>
+                                    class="form-control @error('address') is-invalid @enderror">{{ old('address') }}</textarea>
                                 @error('address')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-12">
-                                <label for="" class="required form-label">Deskripsi</label>
+                                <label for="" class="form-label">Deskripsi</label>
                                 <textarea name="description" id="description" cols="30" rows="5"
-                                    class="form-control @error('description') is-invalid @enderror" required>{{ old('description') }}</textarea>
+                                    class="form-control @error('description') is-invalid @enderror">{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Waktu Buka</label>
+                                <label class="fs-6 fw-semibold mb-2">Waktu Buka</label>
                                 <input type="time" class="form-control form-control-lg @error('open') is-invalid @enderror"
-                                    value="{{ old('open') }}" id="open" name="open" required>
+                                    value="{{ old('open') }}" id="open" name="open">
                                 @error('open')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
 
                             <div class="col-md-6">
-                                <label class="required fs-6 fw-semibold mb-2">Waktu Tutup</label>
+                                <label class="fs-6 fw-semibold mb-2">Waktu Tutup</label>
                                 <input type="time" class="form-control form-control-lg @error('close') is-invalid @enderror"
-                                    value="{{ old('close') }}" id="close" name="close" required>
+                                    value="{{ old('close') }}" id="close" name="close">
                                 @error('close')
                                     <div class="alert alert-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -368,51 +368,70 @@
 
     @push('add-script')
         <script>
+            // Wait for jQuery to be loaded
+            if (typeof jQuery === 'undefined') {
+                console.error('jQuery is not loaded. Please ensure jQuery is included before this script.');
+            }
+
             $(document).ready(function() {
-                $('#kt_datatable_zero_configuration').DataTable({
-                    "scrollY": "500px",
-                    "scrollCollapse": true,
-                    "language": {
-                        "lengthMenu": "Show _MENU_",
-                    },
-                    "dom": "<'row'" +
-                        "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-                        "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-                        ">" +
+                // Initialize DataTable
+                if ($.fn.DataTable) {
+                    $('#kt_datatable_zero_configuration').DataTable({
+                        "scrollY": "500px",
+                        "scrollCollapse": true,
+                        "language": {
+                            "lengthMenu": "Show _MENU_",
+                        },
+                        "dom": "<'row'" +
+                            "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                            "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                            ">" +
+                            "<'table-responsive'tr>" +
+                            "<'row'" +
+                            "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                            "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                            ">"
+                    });
+                }
 
-                        "<'table-responsive'tr>" +
-
-                        "<'row'" +
-                        "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-                        "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-                        ">"
-                });
-
-
+                // Initialize Select2 if available
+                if ($.fn.select2) {
+                    $('.js-example-basic-single').select2({
+                        dropdownParent: $('#create'),
+                        placeholder: '--Pilih Kota/Kabupaten--',
+                        allowClear: true
+                    });
+                }
             });
 
+            // Modal handling
             document.addEventListener("DOMContentLoaded", function() {
                 @if ($errors->any() || session('openModal'))
-                    var myModal = new bootstrap.Modal(document.getElementById('create'));
-                    myModal.show();
+                    if (typeof bootstrap !== 'undefined') {
+                        var myModal = new bootstrap.Modal(document.getElementById('create'));
+                        myModal.show();
+                    }
                 @endif
-            });
 
-            // Image preview functionality for create form
-            document.getElementById('image').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                const previewDiv = document.getElementById('image-preview');
-                const previewImg = document.getElementById('preview-img');
+                // Image preview functionality for create form
+                const imageInput = document.getElementById('image');
+                if (imageInput) {
+                    imageInput.addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        const previewDiv = document.getElementById('image-preview');
+                        const previewImg = document.getElementById('preview-img');
 
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        previewImg.src = e.target.result;
-                        previewDiv.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    previewDiv.style.display = 'none';
+                        if (file && previewDiv && previewImg) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                previewImg.src = e.target.result;
+                                previewDiv.style.display = 'block';
+                            };
+                            reader.readAsDataURL(file);
+                        } else if (previewDiv) {
+                            previewDiv.style.display = 'none';
+                        }
+                    });
                 }
             });
         </script>
