@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('bus_travel_has_buses', function (Blueprint $table) {
-            $table->longText('tos')->change();
+            $table->longText('tos')->nullable()->change();
         });
     }
 
