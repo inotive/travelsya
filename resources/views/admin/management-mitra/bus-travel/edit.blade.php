@@ -42,7 +42,7 @@
                         </div>
                         <input type="file" class="form-control form-control-lg logo-edit" id="logo-edit"
                             name="logo" accept="image/jpeg,image/jpg,image/png"/>
-                        <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
+                        <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG | Maksimal ukuran: 2MB</div>
                         <small class="text-muted">Kosongkan jika tidak ingin mengubah logo</small>
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-logo-edit"></div>
 

@@ -95,4 +95,15 @@ class Hostel extends Model
     {
         return $this->hasMany(DetailTransactionHostel::class);
     }
+
+    /**
+     * Get the image URL for the hostel.
+     *
+     * @param  string|null  $value
+     * @return string|null
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
+    }
 }

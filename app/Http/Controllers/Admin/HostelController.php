@@ -66,6 +66,7 @@ class HostelController extends Controller
             'user_id' => 'required',
             'city' => 'required',
             // 'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
 
         ]);
 
@@ -74,6 +75,13 @@ class HostelController extends Controller
                 ->back()
                 ->withErrors($validator)
                 ->withInput()->with('openModal', true);;
+        }
+
+        // Handle image upload jika ada
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('hostels', 'public');
         }
 
         DB::table('hostels')->insert([
@@ -93,7 +101,8 @@ class HostelController extends Controller
             'checkout' => '12:00',
             'star' => $request->star,
             'website' => $request->website,
-            'property' => '-'
+            'property' => '-',
+            'image' => $imagePath
         ]);
         // Hostel::create([
         //     'name' => ucwords($request->name),
@@ -163,11 +172,27 @@ class HostelController extends Controller
             'user_id' => 'required',
             'city' => 'required',
             'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
 
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        // Handle image upload jika ada
+        $imagePath = $hostel->image; // Pertahankan gambar lama jika tidak ada gambar baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($hostel->image) {
+                $oldImagePath = storage_path('app/public/' . $hostel->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->store('hostels', 'public');
         }
 
         // //check if validation fails
@@ -180,6 +205,7 @@ class HostelController extends Controller
             'city' => $request->city,
             'star' => $request->star,
             'website' => $request->website,
+            'image' => $imagePath,
 
         ]);
         // $hostel->update([

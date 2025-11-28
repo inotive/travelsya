@@ -133,6 +133,14 @@
                         </div>
                         <!--end::Radio group-->
                     </div>
+
+                    <!--begin::Input group for image upload-->
+                    <div class="col-md-12">
+                        <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Hotel</label>
+                        <input class="form-control form-control-lg" type="file" id="image-edit" name="image" accept="image/*" />
+                        <div class="form-text">Pilih gambar logo atau gambar utama hotel (opsional)</div>
+                    </div>
+                    <!--end::Input group for image upload-->
                 </div>
                 <!--end::Input group-->
                 <!--begin::Actions-->
@@ -206,24 +214,32 @@
         let website = $('#website-edit').val();
         let star = $('input[name="star-edit"]:checked').val();
         let city = $('#city-edit').val();
+        let image = document.getElementById('image-edit').files[0];
         let token   = $("meta[name='csrf-token']").attr("content");
+
+        // Create FormData object to handle file upload
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('user_id', user_id);
+        formData.append('is_active', is_active);
+        formData.append('address', address);
+        formData.append('website', website);
+        formData.append('star', star);
+        formData.append('city', city);
+        if(image) {
+            formData.append('image', image);
+        }
+        formData.append('_token', token);
+        formData.append('_method', 'PUT');
 
         //ajax
         $.ajax({
-
             url: `/admin/management-mitra/hotel/${hotel_id}`,
-            type: "PUT",
+            type: "POST", // Use POST method since we're using _method to simulate PUT
             cache: false,
-            data: {
-                "name": name,
-                "user_id": user_id,
-                "is_active": is_active,
-                "address": address,
-                "website": website,
-                "star": star,
-                "city": city,
-                "_token": token
-            },
+            contentType: false,
+            processData: false,
+            data: formData,
             success:function(response){
 
                 $('#modal-edit').modal('hide');
@@ -234,60 +250,13 @@
 
                 const message = error.responseJSON;
                 $('.is-invalid').removeClass('is-invalid').next().empty();
-                
+
                 if(message) {
                     for (const key in message) {
                         $(`#${key}-edit`).addClass('is-invalid').next().html(message[key]);
                     }
                 }
-
-                // if(error.responseJSON.name[0]) {
-
-                //     //show alert
-                //     $('#alert-name-edit').removeClass('d-none');
-                //     $('#alert-name-edit').addClass('d-block');
-                //     //add message to alert
-                //     $('#alert-name-edit').html(error.responseJSON.name[0]);
-                // }
-
-                // if(error.responseJSON.user_id[0]) {
-                //     $('#alert-user_id-edit').removeClass('d-none');
-                //     $('#alert-user_id-edit').addClass('d-block');
-                //     $('#alert-user_id-edit').html(error.responseJSON.user_id[0]);
-                // }
-
-                // if(error.responseJSON.star[0]) {
-                //     $('#alert-star-edit').removeClass('d-none');
-                //     $('#alert-star-edit').addClass('d-block');
-                //     $('#alert-star-edit').html(error.responseJSON.star[0]);
-                // }
-                // if(error.responseJSON.website[0]) {
-                //     $('#alert-website-edit').removeClass('d-none');
-                //     $('#alert-website-edit').addClass('d-block');
-                //     $('#alert-website-edit').html(error.responseJSON.website[0]);
-                // }
-                // if(error.responseJSON.name[0]) {
-                //     $('#alert-user_id-edit').removeClass('d-none');
-                //     $('#alert-user_id-edit').addClass('d-block');
-                //     $('#alert-user_id-edit').html(error.responseJSON.name[0]);
-                // }
-                // if(error.responseJSON.is_active[0]) {
-                //     $('#alert-is_active-edit').removeClass('d-none');
-                //     $('#alert-is_active-edit').addClass('d-block');
-                //     $('#alert-is_active-edit').html(error.responseJSON.is_active[0]);
-                // }
-                // if(error.responseJSON.city[0]) {
-                //     $('#alert-city-edit').removeClass('d-none');
-                //     $('#alert-city-edit').addClass('d-block');
-                //     $('#alert-city-edit').html(error.responseJSON.city[0]);
-                // }
-                // if(error.responseJSON.address[0]) {
-                //     $('#alert-address-edit').removeClass('d-none');
-                //     $('#alert-address-edit').addClass('d-block');
-                //     $('#alert-address-edit').html(error.responseJSON.address[0]);
-                // }
             }
-
         });
 
     });

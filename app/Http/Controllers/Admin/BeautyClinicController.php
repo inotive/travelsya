@@ -70,20 +70,12 @@ class BeautyClinicController extends Controller
             'lat' => 'nullable',
             'ltd' => 'nullable',
             'category' => 'nullable',
-            // 'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        $imageName = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('media/clinic', $imageName);
-        }
-
 
         $clinic = new Clinic();
         $clinic->clinic_name = $request->input('name');
@@ -99,8 +91,19 @@ class BeautyClinicController extends Controller
         $clinic->ltd = $request->input('ltd');
         $clinic->is_active = 1; // Assuming new clinics are active by default
         $clinic->category = $request->input('category');
-        // $clinic->image = $imageName;
         $clinic->save();
+
+        // Handle image upload jika ada
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('clinics', 'public');
+
+            // Simpan gambar ke tabel clinic_images dan tandai sebagai gambar utama
+            $clinic->images()->create([
+                'image' => $imagePath,
+                'main' => 1
+            ]);
+        }
 
 
         toast('Mitra has been created', 'success');
@@ -127,8 +130,6 @@ class BeautyClinicController extends Controller
 
     public function update(Request $request, string $id)
     {
-
-
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'user_id' => 'required',
@@ -143,25 +144,14 @@ class BeautyClinicController extends Controller
             'ltd' => 'nullable',
             'is_active' => 'nullable',
             'category' => 'nullable',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-
         $clinic = Clinic::findOrFail($id);
-
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->storeAs('public/clinic', $imageName);
-            $imageName = 'clinic/' . $imageName; // Ubah ini
-        } else {
-            $imageName = $clinic->image;
-        }
 
         $clinic->update([
             'user_id' => $request->user_id,
@@ -177,8 +167,30 @@ class BeautyClinicController extends Controller
             'ltd' => $request->ltd,
             'is_active' => $request->is_active,
             'category' => $request->category,
-            'image' => $imageName,
         ]);
+
+        // Handle image upload jika ada
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            $oldImage = $clinic->image; // Ambil gambar utama lama
+            if ($oldImage) {
+                $oldImagePath = storage_path('app/public/' . $oldImage->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+                // Hapus record gambar lama dari database
+                $oldImage->delete();
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->store('clinics', 'public');
+
+            // Simpan gambar baru ke tabel clinic_images dan tandai sebagai gambar utama
+            $clinic->images()->create([
+                'image' => $imagePath,
+                'main' => 1
+            ]);
+        }
 
 
         toast('Mitra has been updated', 'success');

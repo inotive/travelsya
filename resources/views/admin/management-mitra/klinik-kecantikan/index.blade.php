@@ -188,55 +188,13 @@
                         <!--end::Heading-->
                         <!--begin::Input group-->
                         <div class="row g-9 mb-8">
-                            <!--begin::Label-->
-                            {{-- <label class="col-lg-4 col-form-label fw-semibold fs-6">Logo</label> --}}
-                            <!--end::Label-->
-                            <!--begin::Image input-->
-                            {{-- <div class="d-flex align-items-center flex-column">
-                            <div class="image-input image-input-outline m-5" data-kt-image-input="true">
-                                <!--begin::Image preview wrapper-->
-                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url('')">
-                                </div>
-                                <!--end::Image preview wrapper-->
-
-                                <!--begin::Edit button-->
-                                <label
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="change" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Change image">
-                                    <i class="ki-duotone ki-pencil fs-6"><span class="path1"></span><span
-                                            class="path2"></span></i>
-
-                                    <!--begin::Inputs-->
-                                    <input type="file" name="image" accept=".png, .jpg, .jpeg" />
-                                    <input type="hidden" name="image_remove" />
-                                    <!--end::Inputs-->
-                                </label>
-                                <!--end::Edit button-->
-
-                                <!--begin::Cancel button-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Cancel image">
-                                    <i class="ki-outline ki-cross fs-3"></i>
-                                </span>
-                                <!--end::Cancel button-->
-
-                                <!--begin::Remove button-->
-                                <span
-                                    class="btn btn-icon btn-circle btn-color-muted btn-active-color-primary w-25px h-25px bg-body shadow"
-                                    data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-dismiss="click"
-                                    title="Remove image">
-                                    <i class="ki-outline ki-cross fs-3"></i>
-                                </span>
-                                <!--end::Remove button-->
+                            <!--begin::Input group for image upload-->
+                            <div class="col-md-12">
+                                <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Klinik</label>
+                                <input class="form-control form-control-lg" type="file" id="image" name="image" accept="image/*" />
+                                <div class="form-text">Pilih gambar logo atau gambar utama klinik (opsional)</div>
                             </div>
-                            <!--begin::Hint-->
-                        <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
-                        <!--end::Hint-->
-                        </div>  --}}
-                            <!--end::Image input-->
+                            <!--end::Input group for image upload-->
 
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Nama</label>

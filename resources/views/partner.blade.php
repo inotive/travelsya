@@ -22,7 +22,7 @@
         </div>
 
         <!-- Hotels -->
-        @if(count($hotels) > 0)
+        @if($hotels->count() > 0)
         <div class="pt-10 pb-5">
             <h3 class="fs-2x fw-bold mb-5">Mitra Hotel</h3>
             <div class="row py-5" x-data>
@@ -31,7 +31,7 @@
                         <div class="card-xl-stretch me-md-6">
                             <a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
                                 <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                    style="background-image: url('{{ isset($hotel['image']) && $hotel['image'] ? asset('storage/' . $hotel['image']) : asset('assets/media/avatars/blank.png') }}')">
+                                    style="background-image: url('{{ $hotel->image ? asset('storage/' . $hotel->image) : asset('assets/media/avatars/blank.png') }}')">
                                 </div>
                                 <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                     <i class="bi bi-eye-fill fs-2x text-white"></i>
@@ -40,12 +40,12 @@
                             <div class="mt-5">
                                 <div class="h-40px">
                                     <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">
-                                        {{ $hotel['name'] ?? 'N/A' }}
+                                        {{ $hotel->name ?? 'N/A' }}
                                     </a>
                                 </div>
-                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $hotel['address'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $hotel['email'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $hotel['website'] ?? '-' }}</p>
+                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $hotel->address ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $hotel->email ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $hotel->website ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -55,7 +55,7 @@
         @endif
 
         <!-- Hostels -->
-        @if(count($hostels) > 0)
+        @if($hostels->count() > 0)
         <div class="pt-5 pb-5">
             <h3 class="fs-2x fw-bold mb-5">Mitra Hostel</h3>
             <div class="row py-5" x-data>
@@ -64,7 +64,7 @@
                         <div class="card-xl-stretch me-md-6">
                             <a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
                                 <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                    style="background-image: url('{{ isset($hostel['image']) && $hostel['image'] ? asset('storage/' . $hostel['image']) : asset('assets/media/avatars/blank.png') }}')">
+                                    style="background-image: url('{{ $hostel->image ? asset('storage/' . $hostel->image) : asset('assets/media/avatars/blank.png') }}')">
                                 </div>
                                 <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                     <i class="bi bi-eye-fill fs-2x text-white"></i>
@@ -73,12 +73,12 @@
                             <div class="mt-5">
                                 <div class="h-40px">
                                     <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">
-                                        {{ $hostel['name'] ?? 'N/A' }}
+                                        {{ $hostel->name ?? 'N/A' }}
                                     </a>
                                 </div>
-                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $hostel['address'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $hostel['email'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $hostel['website'] ?? '-' }}</p>
+                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $hostel->address ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $hostel->email ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $hostel->website ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
         @endif
 
         <!-- Health & Beauty -->
-        @if(count($clinics) > 0)
+        @if($clinics->count() > 0)
         <div class="pt-5 pb-5">
             <h3 class="fs-2x fw-bold mb-5">Mitra Health & Beauty</h3>
             <div class="row py-5" x-data>
@@ -97,7 +97,7 @@
                         <div class="card-xl-stretch me-md-6">
                             <a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
                                 <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                    style="background-image: url('{{ isset($clinic['image']) && $clinic['image'] ? asset('storage/' . $clinic['image']) : asset('assets/media/avatars/blank.png') }}')">
+                                    style="background-image: url('{{ $clinic->image ? asset('storage/' . $clinic->image->image) : asset('assets/media/avatars/blank.png') }}')">
                                 </div>
                                 <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                     <i class="bi bi-eye-fill fs-2x text-white"></i>
@@ -106,12 +106,12 @@
                             <div class="mt-5">
                                 <div class="h-40px">
                                     <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">
-                                        {{ $clinic['name'] ?? 'N/A' }}
+                                        {{ $clinic->clinic_name ?? 'N/A' }} <!-- clinic->name tidak ada, field nya clinic_name -->
                                     </a>
                                 </div>
-                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $clinic['address'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $clinic['email'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $clinic['website'] ?? '-' }}</p>
+                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $clinic->address ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $clinic->user_email ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Telp: {{ $clinic->phone ?? $clinic->user_phone ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
         @endif
 
         <!-- Rental Mobil -->
-        @if(count($rentals) > 0)
+        @if($rentals->count() > 0)
         <div class="pt-5 pb-5">
             <h3 class="fs-2x fw-bold mb-5">Mitra Rental Mobil</h3>
             <div class="row py-5" x-data>
@@ -130,7 +130,7 @@
                         <div class="card-xl-stretch me-md-6">
                             <a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
                                 <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                    style="background-image: url('{{ isset($rental['image']) && $rental['image'] ? asset('storage/' . $rental['image']) : asset('assets/media/avatars/blank.png') }}')">
+                                    style="background-image: url('{{ $rental->image ? asset('storage/' . $rental->image) : asset('assets/media/avatars/blank.png') }}')">
                                 </div>
                                 <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                     <i class="bi bi-eye-fill fs-2x text-white"></i>
@@ -139,12 +139,12 @@
                             <div class="mt-5">
                                 <div class="h-40px">
                                     <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">
-                                        {{ $rental['name'] ?? 'N/A' }}
+                                        {{ $rental->business_name ?? 'N/A' }} <!-- field name di CarRental adalah business_name -->
                                     </a>
                                 </div>
-                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $rental['address'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $rental['email'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $rental['website'] ?? '-' }}</p>
+                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $rental->address ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $rental->user_email ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Telp: {{ $rental->phone ?? $rental->user_phone ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -154,7 +154,7 @@
         @endif
 
         <!-- Rekreasi -->
-        @if(count($recreations) > 0)
+        @if($recreations->count() > 0)
         <div class="pt-5 pb-5">
             <h3 class="fs-2x fw-bold mb-5">Mitra Rekreasi</h3>
             <div class="row py-5" x-data>
@@ -163,7 +163,7 @@
                         <div class="card-xl-stretch me-md-6">
                             <a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
                                 <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                    style="background-image: url('{{ isset($recreation['image']) && $recreation['image'] ? asset('storage/' . $recreation['image']) : asset('assets/media/avatars/blank.png') }}')">
+                                    style="background-image: url('{{ $recreation->image ? asset('storage/' . $recreation->image->image) : asset('assets/media/avatars/blank.png') }}')">
                                 </div>
                                 <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                     <i class="bi bi-eye-fill fs-2x text-white"></i>
@@ -172,12 +172,12 @@
                             <div class="mt-5">
                                 <div class="h-40px">
                                     <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">
-                                        {{ $recreation['name'] ?? 'N/A' }}
+                                        {{ $recreation->business_name ?? 'N/A' }} <!-- field name di Recreation adalah business_name -->
                                     </a>
                                 </div>
-                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $recreation['address'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $recreation['email'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $recreation['website'] ?? '-' }}</p>
+                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $recreation->address ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $recreation->email ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $recreation->website ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
@@ -187,7 +187,7 @@
         @endif
 
         <!-- Bus & Travel -->
-        @if(count($busTravels) > 0)
+        @if($busTravels->count() > 0)
         <div class="pt-5 pb-5">
             <h3 class="fs-2x fw-bold mb-5">Mitra Bus & Travel</h3>
             <div class="row py-5" x-data>
@@ -196,7 +196,7 @@
                         <div class="card-xl-stretch me-md-6">
                             <a href="#" class="d-block overlay w-full" data-fslightbox="lightbox-hot-sales">
                                 <div class="overlay-wrapper bgi-no-repeat bgi-position-center bgi-size-cover card-rounded min-h-175px"
-                                    style="background-image: url('{{ isset($busTravel['image']) && $busTravel['image'] ? asset('storage/' . $busTravel['image']) : asset('assets/media/avatars/blank.png') }}')">
+                                    style="background-image: url('{{ $busTravel->image ? asset('storage/' . $busTravel->image) : asset('assets/media/avatars/blank.png') }}')">
                                 </div>
                                 <div class="overlay-layer card-rounded bg-dark bg-opacity-25">
                                     <i class="bi bi-eye-fill fs-2x text-white"></i>
@@ -205,12 +205,12 @@
                             <div class="mt-5">
                                 <div class="h-40px">
                                     <a href="#" class="fs-4 text-dark fw-bold text-hover-primary text-dark lh-base">
-                                        {{ $busTravel['name'] ?? 'N/A' }}
+                                        {{ $busTravel->business_name ?? 'N/A' }} <!-- field name di BusTravels adalah business_name -->
                                     </a>
                                 </div>
-                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $busTravel['address'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $busTravel['email'] ?? '-' }}</p>
-                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $busTravel['website'] ?? '-' }}</p>
+                                <p class="fs-6 text-gray-600 text-dark mt-3">{{ $busTravel->address ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Email: {{ $busTravel->email ?? '-' }}</p>
+                                <p class="fs-7 text-gray-800 text-dark mb-0">Website: {{ $busTravel->website ?? '-' }}</p>
                             </div>
                         </div>
                     </div>

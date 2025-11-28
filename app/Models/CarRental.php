@@ -19,7 +19,18 @@ class CarRental extends Model
         'phone',
         'address',
         'kebijakan_rental_mobil',
+        'image',
     ];
+
+    /**
+     * Get the user that owns the CarRental
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the kota that owns the CarRental

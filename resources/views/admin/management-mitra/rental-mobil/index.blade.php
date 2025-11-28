@@ -168,7 +168,7 @@
                 <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                     <!--begin:Form-->
                     <form id="kt_modal_new_target_form" class="form" method="post"
-                        action="{{ route('admin.rental-mobil.store') }}">
+                        action="{{ route('admin.rental-mobil.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="id" id="id">
                         <!--begin::Heading-->
@@ -261,6 +261,15 @@
 
                         </div>
                         <!--end::Input group-->
+
+                        <!--begin::Input group for image upload-->
+                        <div class="fv-row mb-8">
+                            <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Rental Mobil</label>
+                            <input class="form-control form-control-lg" type="file" id="image" name="image" accept="image/*" />
+                            <div class="form-text">Pilih gambar logo atau gambar utama rental mobil (opsional)</div>
+                        </div>
+                        <!--end::Input group for image upload-->
+
                         <!--begin::Actions-->
                         <div class="text-center">
                             <div class="row">
