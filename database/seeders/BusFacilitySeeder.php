@@ -32,10 +32,41 @@ class BusFacilitySeeder extends Seeder
             [
                 'name' => 'Wi-Fi'
             ],
+            [
+                'name' => 'AC'
+            ],
+            [
+                'name' => 'Stop Kontak'
+            ],
+            [
+                'name' => 'Charger USB'
+            ],
+            [
+                'name' => 'Recliner Seat'
+            ],
+            [
+                'name' => 'Snack'
+            ],
+            [
+                'name' => 'Air Mineral'
+            ],
+            [
+                'name' => 'Bantal dan Guling'
+            ],
+            [
+                'name' => 'Karaoke'
+            ],
+            [
+                'name' => 'Audio Player'
+            ],
         ];
 
         foreach ($items as $item) {
-            BusFacility::create($item);
+            // Cek apakah fasilitas sudah ada, jika belum maka tambahkan
+            BusFacility::firstOrCreate(
+                ['name' => $item['name']], // kondisi pencarian
+                $item // data yang akan diisi jika belum ada
+            );
         }
     }
 }
