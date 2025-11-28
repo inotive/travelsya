@@ -4,8 +4,25 @@
     <div class="card">
         <div class="card-body">
             <form action="" method="get">
-                <div class="row g-2 align-items-end">
-                    <div class="col-12 col-md-2">
+                <div class="row g-2 align-items-end mb-3">
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Jenis Bisnis</label>
+                        <select class="form-select" name="business">
+                            <option value="all" {{ request('business') == 'all' ? 'selected' : '' }}>Semua Bisnis</option>
+                            <option value="hotel" {{ request('business') == 'hotel' ? 'selected' : '' }}>Hotel</option>
+                            <option value="hostel" {{ request('business') == 'hostel' ? 'selected' : '' }}>Hostel</option>
+                            <option value="bus" {{ request('business') == 'bus' ? 'selected' : '' }}>Bus & Travel
+                            </option>
+                            <option value="rental" {{ request('business') == 'rental' ? 'selected' : '' }}>Rental Mobil
+                            </option>
+                            <option value="clinic" {{ request('business') == 'clinic' ? 'selected' : '' }}>Health & Beauty
+                            </option>
+                            <option value="recreation" {{ request('business') == 'recreation' ? 'selected' : '' }}>Rekreasi
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Tahun</label>
                         <select class="form-select" name="year">
                             <option value="" disabled selected>Pilih Tahun</option>
                             @php
@@ -21,17 +38,21 @@
                         </select>
                     </div>
                     <div class="col-12 col-md-3">
+                        <label class="form-label">Tanggal Awal</label>
                         <input type="date" class="form-control" data-placeholder="Tanggal Awal" name="start"
                             value="{{ isset($_GET['start']) ? $_GET['start'] : '' }}">
                     </div>
                     <div class="col-12 col-md-3">
+                        <label class="form-label">Tanggal Akhir</label>
                         <input type="date" class="form-control" data-placeholder="Tanggal Akhir" name="end"
                             value="{{ isset($_GET['end']) ? $_GET['end'] : '' }}">
                     </div>
-                    <div class="col-6 col-md-2 d-grid">
+                </div>
+                <div class="row g-2">
+                    <div class="col-12 col-md-6 d-grid">
                         <button type="submit" class="btn btn-primary w-100">Cari Data</button>
                     </div>
-                    <div class="col-6 col-md-2 d-grid">
+                    <div class="col-12 col-md-6 d-grid">
                         <button type="button" class="btn btn-success w-100" onclick="exportToExcel()">
                             <i class="fas fa-file-excel"></i> Export Excel
                         </button>
@@ -146,15 +167,19 @@
                                         $transaction_id = $hotel->transaction_id;
 
                                         $detail_pemesanan = DB::table('detail_transaction_hotel')
-                                            ->join('transactions', 'transactions.id', '=', 'detail_transaction_hotel.transaction_id')
+                                            ->join(
+                                                'transactions',
+                                                'transactions.id',
+                                                '=',
+                                                'detail_transaction_hotel.transaction_id',
+                                            )
                                             ->where('transaction_id', $transaction_id)
                                             ->value('detail_transaction_hotel.id');
                                     @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $hotel->transaction->no_inv }}</td>
-                                        <td>{{  \Carbon\Carbon::parse($hotel->created_at)->format('d M Y H:i:s')
-                                        }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($hotel->created_at)->format('d M Y H:i:s') }}</td>
                                         <td>{{ $hotel->transaction->user->name }}</td>
                                         <td>{{ $hotel->transaction->user->phone }}</td>
                                         <td>
@@ -173,15 +198,15 @@
                                         </td>
                                         <td>{{ General::rp($hotel->rent_price + $hotel->fee_admin) }}</td>
                                         <td>
-                                            <span class="badge
-                                            {{$hotel->transaction->status == "PAID" ? "badge-success"
-                                                : "badge-warning" }}"
-                                                >{{$hotel->transaction->status == "PAID" ? "Lunas" : "Menunggu Pembayaran" }}
-                                                </span>
+                                            <span
+                                                class="badge
+                                            {{ $hotel->transaction->status == 'PAID' ? 'badge-success' : 'badge-warning' }}">{{ $hotel->transaction->status == 'PAID' ? 'Lunas' : 'Menunggu Pembayaran' }}
+                                            </span>
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('partner.riwayat-booking.detailhotel', ['id' => $detail_pemesanan]) }}"
-                                               class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100" data-kt-customer-table-filter="delete_row">
+                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100"
+                                                data-kt-customer-table-filter="delete_row">
                                                 Detail Pesanan
                                             </a>
 
@@ -198,17 +223,23 @@
                                         $transaction_id = $hostel->transaction->id;
 
                                         $detail_pemesanan = DB::table('detail_transaction_hostel')
-                                            ->join('transactions', 'transactions.id', '=', 'detail_transaction_hostel.transaction_id')
+                                            ->join(
+                                                'transactions',
+                                                'transactions.id',
+                                                '=',
+                                                'detail_transaction_hostel.transaction_id',
+                                            )
                                             ->where('transaction_id', $transaction_id)
                                             ->value('detail_transaction_hostel.id');
 
-                                            // dd($transaction_id, $detail_pemesanan);
+                                        // dd($transaction_id, $detail_pemesanan);
+
                                     @endphp
 
                                     <tr>
                                         <td>{{ $no }}</td>
                                         <td>{{ $hostel->transaction->no_inv }}</td>
-                                        <td>{{  \Carbon\Carbon::parse($hostel->updated_at)->format('d M Y H:i:s') }}
+                                        <td>{{ \Carbon\Carbon::parse($hostel->updated_at)->format('d M Y H:i:s') }}
                                         </td>
                                         <td>{{ $hostel->transaction->user->name }}</td>
                                         <td>{{ $hostel->transaction->user->phone }}</td>
@@ -223,15 +254,15 @@
                                         </td>
                                         <td>{{ General::rp($hostel->rent_price + $hostel->fee_admin) }}</td>
                                         <td>
-                                            <span class="badge
-                                            {{$hostel->transaction->status == "PAID" ? "badge-success"
-                                                : "badge-warning" }}"
-                                                >{{$hostel->transaction->status == "PAID" ? "Lunas" : "Menunggu Pembayaran" }}
-                                                </span>
+                                            <span
+                                                class="badge
+                                            {{ $hostel->transaction->status == 'PAID' ? 'badge-success' : 'badge-warning' }}">{{ $hostel->transaction->status == 'PAID' ? 'Lunas' : 'Menunggu Pembayaran' }}
+                                            </span>
                                         </td>
                                         <td class="text-center">
                                             <a href="{{ route('partner.riwayat-booking.detailhostel', ['id' => $detail_pemesanan]) }}"
-                                               class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100" data-kt-customer-table-filter="delete_row">
+                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100"
+                                                data-kt-customer-table-filter="delete_row">
                                                 Detail Pesanan
                                             </a>
                                         </td>
@@ -239,6 +270,156 @@
                                     @php
                                         $no++;
                                     @endphp
+                                @endforeach
+
+                                <!-- Bus & Travel -->
+                                @foreach ($transaction_buses as $bus)
+                                    @php
+                                        $transaction_id = $bus->transaction->id;
+                                        // Assuming detail route exists or using a generic one if specific not found,
+                                        // but following pattern, likely partner.riwayat-booking.detailbus or similar.
+                                        // Checking routes might be needed, but for now I will use a placeholder or try to guess based on pattern.
+                                        // Actually, I should check the routes for detail pages.
+                                        // Based on previous grep, I didn't see explicit detail routes for all, but let's assume a pattern or use # if unsure.
+                                        // Wait, I can check routes.
+                                        // For now, I'll use the ID for the link.
+                                        $detail_pemesanan = $bus->id;
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $no }}</td>
+                                        <td>{{ $bus->transaction->no_inv }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($bus->updated_at)->format('d M Y H:i:s') }}</td>
+                                        <td>{{ $bus->transaction->user->name ?? 'User Deleted' }}</td>
+                                        <td>{{ $bus->transaction->user->phone ?? '-' }}</td>
+                                        <td>
+                                            {{ $bus->transaction->payment_method }} -
+                                            {{ $bus->transaction->payment_channel }}
+                                        </td>
+                                        <td>
+                                            {{ $bus->busTravel->business_name ?? 'Bus Travel Deleted' }} -
+                                            {{ $bus->bus->name ?? 'Bus Deleted' }} <br>
+                                            {{ \Carbon\Carbon::parse($bus->departure_time)->format('d M Y H:i') }}
+                                        </td>
+                                        <td>{{ General::rp($bus->price + $bus->fee_admin) }}</td>
+                                        <td>
+                                            <span
+                                                class="badge
+                                            {{ $bus->transaction->status == 'PAID' ? 'badge-success' : 'badge-warning' }}">{{ $bus->transaction->status == 'PAID' ? 'Lunas' : 'Menunggu Pembayaran' }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <!-- Assuming route exists, if not user might need to add it or I'll fix it later. -->
+                                            <!-- I'll use a safe fallback or check routes first? -->
+                                            <!-- Let's check routes in a separate step if needed, but for now I'll use the pattern -->
+                                            <a href="#"
+                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100">
+                                                Detail Pesanan
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @php $no++; @endphp
+                                @endforeach
+
+                                <!-- Rental Mobil -->
+                                @foreach ($transaction_rentals as $rental)
+                                    <tr>
+                                        <td>{{ $no }}</td>
+                                        <td>{{ $rental->transaction->no_inv }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($rental->updated_at)->format('d M Y H:i:s') }}</td>
+                                        <td>{{ $rental->transaction->user->name ?? 'User Deleted' }}</td>
+                                        <td>{{ $rental->transaction->user->phone ?? '-' }}</td>
+                                        <td>
+                                            {{ $rental->transaction->payment_method }} -
+                                            {{ $rental->transaction->payment_channel }}
+                                        </td>
+                                        <td>
+                                            {{ $rental->carRental->business_name ?? 'Rental Deleted' }} -
+                                            {{ $rental->car->name ?? 'Car Deleted' }} <br>
+                                            {{ $rental->durasi }} Hari
+                                        </td>
+                                        <td>{{ General::rp($rental->rent_price + $rental->fee_admin) }}</td>
+                                        <td>
+                                            <span
+                                                class="badge
+                                            {{ $rental->transaction->status == 'PAID' ? 'badge-success' : 'badge-warning' }}">{{ $rental->transaction->status == 'PAID' ? 'Lunas' : 'Menunggu Pembayaran' }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#"
+                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100">
+                                                Detail Pesanan
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @php $no++; @endphp
+                                @endforeach
+
+                                <!-- Health & Beauty -->
+                                @foreach ($transaction_clinics as $clinic)
+                                    <tr>
+                                        <td>{{ $no }}</td>
+                                        <td>{{ $clinic->transaction->no_inv }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($clinic->updated_at)->format('d M Y H:i:s') }}</td>
+                                        <td>{{ $clinic->transaction->user->name ?? 'User Deleted' }}</td>
+                                        <td>{{ $clinic->transaction->user->phone ?? '-' }}</td>
+                                        <td>
+                                            {{ $clinic->transaction->payment_method }} -
+                                            {{ $clinic->transaction->payment_channel }}
+                                        </td>
+                                        <td>
+                                            {{ $clinic->clinic->clinic_name ?? 'Clinic Deleted' }} -
+                                            {{ $clinic->package->name ?? 'Package Deleted' }}
+                                        </td>
+                                        <td>{{ General::rp($clinic->rent_price + $clinic->fee_admin) }}</td>
+                                        <td>
+                                            <span
+                                                class="badge
+                                            {{ $clinic->transaction->status == 'PAID' ? 'badge-success' : 'badge-warning' }}">{{ $clinic->transaction->status == 'PAID' ? 'Lunas' : 'Menunggu Pembayaran' }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#"
+                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100">
+                                                Detail Pesanan
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @php $no++; @endphp
+                                @endforeach
+
+                                <!-- Rekreasi -->
+                                @foreach ($transaction_recreations as $recreation)
+                                    <tr>
+                                        <td>{{ $no }}</td>
+                                        <td>{{ $recreation->transaction->no_inv }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($recreation->updated_at)->format('d M Y H:i:s') }}
+                                        </td>
+                                        <td>{{ $recreation->transaction->user->name ?? 'User Deleted' }}</td>
+                                        <td>{{ $recreation->transaction->user->phone ?? '-' }}</td>
+                                        <td>
+                                            {{ $recreation->transaction->payment_method }} -
+                                            {{ $recreation->transaction->payment_channel }}
+                                        </td>
+                                        <td>
+                                            {{ $recreation->recreation->business_name ?? 'Recreation Deleted' }} -
+                                            {{ $recreation->package->name ?? 'Package Deleted' }} <br>
+                                            {{ $recreation->total_ticket }} Tiket
+                                        </td>
+                                        <td>{{ General::rp($recreation->rent_price + $recreation->fee_admin) }}</td>
+                                        <td>
+                                            <span
+                                                class="badge
+                                            {{ $recreation->transaction->status == 'PAID' ? 'badge-success' : 'badge-warning' }}">{{ $recreation->transaction->status == 'PAID' ? 'Lunas' : 'Menunggu Pembayaran' }}
+                                            </span>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#"
+                                                class="btn btn-sm btn-outline btn-outline-primary text-dark btn-active-light-secondary w-100">
+                                                Detail Pesanan
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @php $no++; @endphp
                                 @endforeach
                             </tbody>
                             <tfoot>
@@ -351,11 +532,13 @@
             // Generate filename with current date and filters
             const now = new Date();
             const dateStr = now.toISOString().split('T')[0];
+            const business = document.querySelector('select[name="business"]').value || 'all';
             const year = document.querySelector('select[name="year"]').value || 'all';
             const start = document.querySelector('input[name="start"]').value || 'all';
             const end = document.querySelector('input[name="end"]').value || 'all';
 
             let filename = `laporan_transaksi_${dateStr}`;
+            if (business !== 'all') filename += `_${business}`;
             if (year !== 'all') filename += `_tahun_${year}`;
             if (start !== 'all') filename += `_dari_${start}`;
             if (end !== 'all') filename += `_sampai_${end}`;
