@@ -209,9 +209,10 @@ class ManagementHostelController extends Controller
 
         $file = $request->file('image');
         $fileName = $file->hashName();
-        $file->storeAs('media/hostel', $fileName);
+        $file->storeAs('media/hostel', $fileName, 'public');
+        $imagePath = 'media/hostel/' . $fileName; // Prepare path for DB
 
-        HostelImage::create(['hostel_id' => $id, 'image' => $fileName, 'main' => 0]);
+        HostelImage::create(['hostel_id' => $id, 'image' => $imagePath, 'main' => 0]);
 
         toast('Upload foto berhasil', 'success');
         return redirect()->back();
@@ -241,7 +242,7 @@ class ManagementHostelController extends Controller
     public function destroyphotoHostel($id)
     {
         $hostelImage = HostelImage::findOrFail($id);
-        Storage::delete('media/hostel/' . $hostelImage->image);
+        Storage::disk('public')->delete('media/hostel/' . $hostelImage->image);
 
         $hostelImage->delete();
 
@@ -394,7 +395,9 @@ class ManagementHostelController extends Controller
         $image = HostelRoomImages::find($imageId);
 
         if ($image) {
-            Storage::delete('public/' . $image->image);
+            // Asumsikan path di kolom image sudah termasuk 'media/hostel/' atau sejenisnya
+            // dan disimpan di disk 'public'
+            Storage::disk('public')->delete($image->image);
 
             $image->delete();
 
@@ -424,7 +427,7 @@ class ManagementHostelController extends Controller
     public function destroyimage($id, hostelImage $hostelImage)
     {
         $hostelImage = hostelImage::findOrFail($id);
-        Storage::delete('media/hostel/' . $hostelImage->image);
+        Storage::disk('public')->delete('media/hostel/' . $hostelImage->image);
 
         $hostelImage->delete();
 

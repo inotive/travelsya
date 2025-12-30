@@ -416,6 +416,13 @@
                                 @enderror
                             </div>
 
+                            <!--begin::Input group for image upload-->
+                            <div class="col-md-12">
+                                <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Hostel</label>
+                                <input class="form-control form-control-lg" type="file" id="image" name="image" accept="image/*" />
+                                <div class="form-text">Pilih gambar logo atau gambar utama hostel (opsional)</div>
+                            </div>
+                            <!--end::Input group for image upload-->
 
                             {{-- <input type="hidden" name="category" value="Harian"> --}}
 
@@ -602,6 +609,13 @@
                                 placeholder="Masukan website">
                         </div>
 
+                        <!--begin::Input group for image upload-->
+                        <div class="col-md-12">
+                            <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Hostel</label>
+                            <input class="form-control form-control-lg" type="file" id="image-edit" name="image" accept="image/*" />
+                            <div class="form-text">Pilih gambar logo atau gambar utama hostel (opsional)</div>
+                        </div>
+                        <!--end::Input group for image upload-->
 
                         {{-- <input type="hidden" name="category" value="Harian"> --}}
 

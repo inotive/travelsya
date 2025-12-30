@@ -62,10 +62,18 @@ class CarRentalController extends Controller
             'city' => 'nullable',
             'address' => 'nullable',
             'kebijakan_rental_mobil' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        // Handle image upload jika ada
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('car_rentals', 'public');
         }
 
         DB::table('car_rentals')->insert([
@@ -75,6 +83,7 @@ class CarRentalController extends Controller
             'phone' => $request->phone,
             'address' => $request->address,
             'kebijakan_rental_mobil' => $request->kebijakan_rental_mobil,
+            'image' => $imagePath,
             'is_active' => 1,
         ]);
 
@@ -117,7 +126,8 @@ class CarRentalController extends Controller
             'city' => 'nullable',
             'address' => 'nullable',
             'kebijakan_rental_mobil' => 'nullable',
-            'is_active' => 'required'
+            'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
@@ -126,6 +136,22 @@ class CarRentalController extends Controller
 
 
         $car_rental = CarRental::findOrFail($id);
+
+        // Handle image upload jika ada
+        $imagePath = $car_rental->image; // Pertahankan gambar lama jika tidak ada gambar baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($car_rental->image) {
+                $oldImagePath = storage_path('app/public/' . $car_rental->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->store('car_rentals', 'public');
+        }
+
         $car_rental->update([
             'user_id' => $request->user_id,
             'business_name' => ucwords($request->name),
@@ -134,6 +160,7 @@ class CarRentalController extends Controller
             'address' => $request->address,
             'kebijakan_rental_mobil' => $request->kebijakan_rental_mobil,
             'is_active' => $request->is_active,
+            'image' => $imagePath,
         ]);
 
 

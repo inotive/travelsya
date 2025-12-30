@@ -82,6 +82,15 @@
                       <div class="alert alert-danger mt-1 d-none"></div>
                   </div>
 
+                  <div class="col-12">
+                      <div class="mb-2">
+                          <img id="current-image" src="" alt="Gambar Rental Mobil" style="max-width: 200px; max-height: 200px;" onerror="this.src='{{ asset('assets/media/avatars/blank.png') }}'; this.onerror=null;">
+                      </div>
+                      <label class="fs-6 fw-semibold mb-2">Ganti Gambar Rental Mobil</label>
+                      <input class="form-control form-control-lg" type="file" id="image-edit" name="image" accept="image/*" />
+                      <div class="form-text">Pilih gambar logo atau gambar utama rental mobil (kosongkan jika tidak ingin mengganti)</div>
+                  </div>
+
 
 
               </div>
@@ -113,6 +122,8 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+// Menambahkan enctype="multipart/form-data" secara dinamis ke form
+$('#modal-edit form').attr('enctype', 'multipart/form-data');
 
 $(document).ready(function() {
     $('body').on('click', '#btn-edit-rental', function() {
@@ -136,6 +147,13 @@ $(document).ready(function() {
 
                 $('#phone-edit').val(response.data.phone);
 
+                // Menampilkan gambar saat ini
+                if(response.data.image) {
+                    $('#current-image').attr('src', `{{ asset("storage/") }}${response.data.image}`);
+                } else {
+                    $('#current-image').attr('src', '{{ asset("assets/media/avatars/blank.png") }}');
+                }
+
                 $('#modal-edit').modal('show');
 
             }
@@ -144,92 +162,67 @@ $(document).ready(function() {
 
     $('#update').click(function(e) {
 
-    e.preventDefault();
+        e.preventDefault();
 
+        // Membuat FormData untuk mengirim file
+        let formData = new FormData();
+        formData.append('name', $('#name-edit').val());
+        formData.append('user_id', $('#user_id-edit').val());
+        formData.append('is_active', $('#is_active-edit').val());
+        formData.append('address', $('#address-edit').val());
+        formData.append('kebijakan_rental_mobil', $('#kebijakan_rental_mobil-edit').val());
+        formData.append('city', $('#city-edit').val());
+        formData.append('phone', $('#phone-edit').val());
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+        formData.append('_method', 'PUT'); // Tambahkan ini untuk metode PUT
 
-    //define variable
-    let rental_id = $('#rental_id').val();
-    let user_id = $('#user_id-edit').val();
-    let name = $('#name-edit').val();
-    let is_active = $('#is_active-edit').val();
-    let address = $('#address-edit').val();
-    let kebijakan_rental_mobil = $('#kebijakan_rental_mobil-edit').val();
-    let city = $('#city-edit').val();
-    let phone = $('#phone-edit').val();
-    let token   = $("meta[name='csrf-token']").attr("content");
+        // Tambahkan file gambar jika dipilih
+        if ($('#image-edit')[0].files[0]) {
+            formData.append('image', $('#image-edit')[0].files[0]);
+        }
 
+        let rental_id = $('#rental_id').val();
 
+        // Tambahkan CSRF token ke formData sebagai hidden field
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+        formData.append('_method', 'PUT');  // Menentukan bahwa ini adalah permintaan PUT
 
-    //ajax
-    $.ajax({
-        url: `/admin/management-mitra/rental-mobil/${rental_id}`,
-        type: "PUT",
-        cache: false,
-        data: {
-            "name": name,
-            "user_id": user_id,
-            "is_active": is_active,
-            "address": address,
-            "kebijakan_rental_mobil": kebijakan_rental_mobil,
-            "city": city,
-            "phone": phone,
-            "_token": token
-        },
-        success: function(response) {
-            $('#modal-edit').modal('hide');
-            location.reload();
-        },
-        error: function(errors) {
+        $.ajax({
+            url: `/admin/management-mitra/rental-mobil/${rental_id}`,
+            type: "POST",  // Tetap gunakan POST karena kita menambahkan _method PUT
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                $('#modal-edit').modal('hide');
+                location.reload();
+            },
+            error: function(errors) {
 
-            // console.log(`berikut errornya`, errors);
+                // console.log(`berikut errornya`, errors);
 
-            const messages = errors.responseJSON;
-            $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
+                const messages = errors.responseJSON;
+                $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none');
 
-            if(messages) {
-                for (const key in messages) {
-                    $(`.${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                if(messages) {
+                    for (const key in messages) {
+                        if(key !== 'image') {
+                            $(`.${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                        } else {
+                            // Untuk error image khusus
+                            $('#image-edit').addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                        }
+                    }
                 }
             }
 
-
-            // if (error.responseJSON.name[0]) {
-
-            //     //show alert
-            //     $('#alert-name-edit').removeClass('d-none');
-            //     $('#alert-name-edit').addClass('d-block');
-            //     $('#alert-user_id-edit').removeClass('d-none');
-            //     $('#alert-user_id-edit').addClass('d-block');
-            //     $('#alert-website-edit').removeClass('d-none');
-            //     $('#alert-website-edit').addClass('d-block');
-            //     $('#alert-star-edit').removeClass('d-none');
-            //     $('#alert-star-edit').addClass('d-block');
-            //     $('#alert-is_active-edit').removeClass('d-none');
-            //     $('#alert-is_active-edit').addClass('d-block');
-            //     $('#alert-address-edit').removeClass('d-none');
-            //     $('#alert-address-edit').addClass('d-block');
-            //     $('#alert-city-edit').removeClass('d-none');
-            //     $('#alert-city-edit').addClass('d-block');
-
-
-            //     //add message to alert
-            //     $('#alert-name-edit').html(error.responseJSON.name[0]);
-            //     $('#alert-user_id-edit').html(error.responseJSON.name[0]);
-            //     $('#alert-website-edit').html(error.responseJSON.name[0]);
-            //     $('#alert-star-edit').html(error.responseJSON.name[0]);
-            //     $('#alert-is_active-edit').html(error.responseJSON.name[0]);
-            //     $('#alert-address-edit').html(error.responseJSON.name[0]);
-            //     $('#alert-city-edit').html(error.responseJSON.name[0]);
-            // }
-
-        }
-
-    });
+        });
     });
 
 
 
-})
+});
 
 
 </script>

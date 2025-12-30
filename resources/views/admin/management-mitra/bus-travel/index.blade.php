@@ -180,7 +180,7 @@
                                 </div>
                                 <input type="file" class="form-control form-control-lg" id="logo"
                                     name="logo" accept="image/jpeg,image/jpg,image/png" />
-                                <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG</div>
+                                <div class="form-text">Format yang diperbolehkan: JPG, JPEG, PNG | Maksimal ukuran: 2MB</div>
 
                                 @error('logo')
                                     <span class="text-danger mt-1" role="alert">

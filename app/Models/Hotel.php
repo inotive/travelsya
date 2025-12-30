@@ -22,6 +22,17 @@ class Hotel extends Model
 
     protected $guarded = [];
 
+    /**
+     * Get the image URL for the hotel.
+     *
+     * @param  string|null  $value
+     * @return string|null
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
+    }
+
 
     public function getFacilitiesAttribute($value)
     {

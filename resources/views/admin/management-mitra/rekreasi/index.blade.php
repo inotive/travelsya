@@ -38,7 +38,7 @@
                                 <td>{{ $loop->iteration }}</td>
 
                                 <td class="text-center">
-                                    <img src="{{ $recreation->images != null && $recreation->images != '-' ? asset('storage/' . $recreation->images) : 'https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg' }}"
+                                    <img src="https://static.vecteezy.com/system/resources/previews/000/627/584/non_2x/vector-hotel-icon-symbol-sign.jpg"
                                         alt="" style="width: 25px; height: 25px;">
                                     {{ $recreation->name }}
                                 </td>

@@ -122,7 +122,7 @@
         <!--begin::Modal dialog-->
         <div class="modal-dialog modal-dialog-centered mw-650px">
             <!--begin:Form-->
-            <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('admin.hotel.store') }}">
+            <form id="kt_modal_new_target_form" class="form" method="post" action="{{ route('admin.hotel.store') }}" enctype="multipart/form-data">
                 @csrf
                 <!--begin::Modal content-->
                 <div class="modal-content">
@@ -254,6 +254,14 @@
                                 </div>
                                 <!--end::Radio group-->
                             </div>
+
+                            <!--begin::Input group for image upload-->
+                            <div class="col-md-12">
+                                <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Hotel</label>
+                                <input class="form-control form-control-lg" type="file" id="image" name="image" accept="image/*" />
+                                <div class="form-text">Pilih gambar logo atau gambar utama hotel (opsional)</div>
+                            </div>
+                            <!--end::Input group for image upload-->
                         </div>
                         <!--end::Input group-->
                     </div>

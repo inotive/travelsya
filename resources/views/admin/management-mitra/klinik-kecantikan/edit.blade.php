@@ -155,6 +155,14 @@
                             title="Masukkan longitude yang valid (-180 sampai 180)" />
                         <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-ltd-edit"></div>
                     </div>
+
+                    <!--begin::Input group for image upload-->
+                    <div class="col-md-12">
+                        <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Klinik</label>
+                        <input class="form-control form-control-lg" type="file" id="image-edit" name="image" accept="image/*" />
+                        <div class="form-text">Pilih gambar logo atau gambar utama klinik (opsional)</div>
+                    </div>
+                    <!--end::Input group for image upload-->
                 </div>
                 <!--end::Input group-->
                 <!--begin::Actions-->
@@ -244,50 +252,40 @@
             let ltd = $('#ltd-edit').val();
             let token = $("meta[name='csrf-token']").attr("content");
             let category = $('input[name="category"]:checked').val();
-            let image = $('#image-edit').val();
+            let image = document.getElementById('image-edit').files[0]; // Get the file object
+
+            // Create FormData object to handle file upload
+            let formData = new FormData();
+            formData.append('name', name);
+            formData.append('user_id', user_id);
+            formData.append('is_active', is_active);
+            formData.append('address', address);
+            formData.append('city', city);
+            formData.append('phone', phone);
+            formData.append('open', open);
+            formData.append('close', close);
+            formData.append('description', description);
+            formData.append('highlight', highlight);
+            formData.append('lat', lat);
+            formData.append('ltd', ltd);
+            formData.append('category', category);
+            if(image) {
+                formData.append('image', image);
+            }
+            formData.append('_token', token);
+            formData.append('_method', 'PUT');
+
             // Clear previous alerts
             $('.alert').addClass('d-none').html('');
-
-            console.log({
-                clinic_id,
-                user_id,
-                name,
-                is_active,
-                address,
-                city,
-                phone,
-                open,
-                close,
-                description,
-                highlight,
-                lat,
-                ltd,
-                token,
-                category
-            });
 
             // AJAX request to update clinic data
             $.ajax({
                 url: `/admin/management-mitra/klinik-kecantikan/${clinic_id}`,
-                type: "PUT",
+                type: "POST", // Use POST method since we're using _method to simulate PUT
                 cache: false,
-                data: {
-                    "name": name,
-                    "user_id": user_id,
-                    "is_active": is_active,
-                    "address": address,
-                    "city": city,
-                    "phone": phone,
-                    "open": open,
-                    "close": close,
-                    "description": description,
-                    "highlight": highlight,
-                    "lat": lat,
-                    "ltd": ltd,
-                    "_token": token,
-                    "category": category,
-                    "image": image
-                },
+                contentType: false,
+                processData: false,
+                data: formData,
                 success: function(response) {
                     console.log('Update successful:', response);
                     $('#modal-edit').modal('hide');

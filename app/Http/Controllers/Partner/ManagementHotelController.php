@@ -163,7 +163,7 @@ class ManagementHotelController extends Controller
         $hotel_id = $hotelRoom->hotel->id;
 
         foreach ($hotelRoomImageFiles as $imageFile) {
-            $path = $imageFile->store('media/hotel/'); 
+            $path = $imageFile->store('media/hotel/', 'public');
             $filename = basename($path);
 
             DB::table('hotel_room_images')->insert([
@@ -197,10 +197,13 @@ class ManagementHotelController extends Controller
     public function storePhotoHotel($id, Request $request)
     {
 
-        $image = $request->file('image')->store('media/hotel');
+        $fileName = $request->file('image')->hashName(); // Generate unique filename
+        $request->file('image')->storeAs('media/hotel', $fileName, 'public'); // Store to storage/app/public/media/hotel/
+        $imagePath = 'media/hotel/' . $fileName; // Prepare path for DB
+
         HotelImage::create([
             'hotel_id' => $id,
-            'image' => $image,
+            'image' => $imagePath, // Save the path to DB
             'main' => 0
         ]);
 
@@ -222,18 +225,27 @@ class ManagementHotelController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-
         $hotelImage = HotelImage::find($id);
 
         if ($hotelImage) {
+            // Pastikan hotel_id dari gambar cocok dengan hotel_id yang dikirimkan
+            if ($hotelImage->hotel_id != $request->hotel_id) {
+                 return response()->json(['error' => 'Gambar Hotel tidak terkait dengan Hotel yang dipilih'], 400);
+            }
+
+            // Hapus status main dari semua gambar lain di hotel ini
             HotelImage::where('hotel_id', $request->hotel_id)
                 ->update([
                     'main' => 0
                 ]);
+
+            // Set gambar ini sebagai main
             $hotelImage->update([
                 'main' => 1,
             ]);
 
+            // Kita tidak perlu lagi mengupdate kolom 'image' di tabel 'hotels'
+            // karena view partner.blade.php sekarang mengambil gambar dari relasi mainHotelImage
 
             toast('Foto Utama Hotel berhasil diperbarui', 'success');
 
@@ -247,7 +259,7 @@ class ManagementHotelController extends Controller
     {
 
         $hotelImage = HotelImage::findOrFail($id);
-        Storage::delete($hotelImage->image);
+        Storage::disk('public')->delete($hotelImage->image);
 
         $hotelImage->delete();
 
@@ -344,9 +356,9 @@ class ManagementHotelController extends Controller
             $imageFiles = $request->file('hotel_room_images',[]);
 
             foreach ($imageFiles as $index => $imageFile) {
-                $path = $imageFile->store('public/media/hotel/');
+                $path = $imageFile->store('media/hotel/', 'public');
                 $filename = basename($path);
-    
+
                 $imageData = [
                     'hotel_id' => $hotel_id,
                     'hotel_room_id' => $hotelRoom->id,
@@ -354,7 +366,7 @@ class ManagementHotelController extends Controller
                 ];
                 if (isset($hotelRoom->hotelroomimage[$index])) {
                     $existingImage = $hotelRoom->hotelroomimage[$index];
-                    Storage::delete('public/' . $existingImage->image);
+                    Storage::disk('public')->delete($existingImage->image);
                     $existingImage->update($imageData);
                 } else {
                     DB::table('hotel_room_images')->insert($imageData);

@@ -47,10 +47,18 @@ class HotelController extends Controller
             'website' => 'required',
             'user_id' => 'required',
             'city' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        // Handle image upload jika ada
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('hotels', 'public');
         }
 
         DB::table('hotels')->insert(
@@ -63,7 +71,8 @@ class HotelController extends Controller
                 'address' => $request->address,
                 'city' => $request->city,
                 'star' => $request->star,
-                'website' => $request->website
+                'website' => $request->website,
+                'image' => $imagePath
             ]
         );
 
@@ -104,10 +113,26 @@ class HotelController extends Controller
             'user_id'   => 'required',
             'city'      => 'required',
             'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
+        }
+
+        // Handle image upload jika ada
+        $imagePath = $hotel->image; // Pertahankan gambar lama jika tidak ada gambar baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($hotel->image) {
+                $oldImagePath = storage_path('app/public/' . $hotel->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->store('hotels', 'public');
         }
 
         $hotel->update([
@@ -123,6 +148,7 @@ class HotelController extends Controller
             'lon'         => $request->long_ltd,
             'lat'         => $request->ltd,
             'description' => $request->description,
+            'image'       => $imagePath,
         ]);
 
         toast('Hotel Has Been Updated', 'success');
