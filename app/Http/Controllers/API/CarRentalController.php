@@ -546,6 +546,7 @@ class CarRentalController extends Controller
                 'images' => $images,
                 'price' => $car['rental_price_per_day'],
                 'pickup_location' => $car['pickup_location'],
+                'description' => $car['description'],
                 'rental_policy' => $car['carRental']['kebijakan_rental_mobil'] ?? null,
             ];
 

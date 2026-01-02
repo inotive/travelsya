@@ -410,8 +410,8 @@ class TransactionController extends Controller
                 'payment_method' => $recreation->payment_method,
                 'payment_channel' => $recreation->payment_channel,
                 'status' => $recreation->status == 'Berhasil' ? 'PAID' : $recreation->status,
-                'fee_admin' => $recreation->fee_admin,
-                'total' => $recreation->grand_total,
+                'fee_admin' => $detailTransaction->fee_admin,
+                'total' => $recreation->total,
                 'received_point' => $receivedPoint,
                 'used_point' => $usedPoint,
                 'review' => $review,
@@ -455,8 +455,8 @@ class TransactionController extends Controller
                 'payment_method' => $recreation->payment_method,
                 'payment_channel' => $recreation->payment_channel,
                 'status' => $recreation->status == 'Berhasil' ? 'PAID' : $recreation->status,
-                'fee_admin' => $recreation->fee_admin,
-                'total' => $recreation->grand_total,
+                'fee_admin' => $detailTransaction->fee_admin,
+                'total' => $recreation->total,
                 'received_point' => $receivedPoint,
                 'used_point' => $usedPoint,
                 'review' => $review,
@@ -500,8 +500,8 @@ class TransactionController extends Controller
                 'payment_method' => $recreation->payment_method,
                 'payment_channel' => $recreation->payment_channel,
                 'status' => $recreation->status == 'Berhasil' ? 'PAID' : $recreation->status,
-                'fee_admin' => $recreation->fee_admin,
-                'total' => $recreation->grand_total,
+                'fee_admin' => $detailTransaction->fee_admin,
+                'total' => $recreation->total,
                 'received_point' => $receivedPoint,
                 'used_point' => $usedPoint,
                 'review' => $review,
@@ -524,6 +524,9 @@ class TransactionController extends Controller
                     'comment' => $item->comment
                 ];
             });
+
+            // Calculate total fee_admin from all tickets
+            $totalFeeAdmin = $detailTransaction->sum('fee_admin');
 
             $responseTransaction = [
                 'tickets' => [],
@@ -553,8 +556,8 @@ class TransactionController extends Controller
                     'payment_method' => $bus->payment_method,
                     'payment_channel' => $bus->payment_channel,
                     'status' => $bus->status == 'Berhasil' ? 'PAID' : $bus->status,
-                    'fee_admin' => $bus->fee_admin,
-                    'total' => $bus->grand_total,
+                    'fee_admin' => $d->fee_admin,
+                    'total' => $bus->total,
                     'received_point' => $receivedPoint,
                     'used_point' => $usedPoint,
                     'review' => $review,
