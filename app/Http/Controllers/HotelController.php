@@ -2,19 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DetailTransaction;
-use App\Models\Facility;
+use App\Models\Fee;
+use Carbon\Carbon;
 use App\Models\Guest;
 use App\Models\Hotel;
-use App\Models\HotelBookDate;
-use App\Models\HotelRoom;
-use App\Models\Transaction;
+use App\Models\Product;
 use App\Services\Point;
-use App\Services\Setting;
-use App\Services\Travelsya;
+use App\Helpers\General;
+use App\Models\Facility;
 use App\Services\Xendit;
+use App\Models\HotelRoom;
+use App\Services\Setting;
+use App\Models\Transaction;
+use App\Services\Travelsya;
 use Illuminate\Http\Request;
+use App\Models\HotelBookDate;
+use App\Models\DetailTransaction;
+use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\DetailTransactionHotel;
+use App\Models\HotelRating;
 
 class HotelController extends Controller
 {
@@ -28,100 +37,86 @@ class HotelController extends Controller
 
     public function index(Request $request)
     {
-        // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating');
 
-        // if ($request->name)
-        //     $hotels->where('name', 'like', '%' . $request->name . '%');
+        $checkin = Carbon::parse($request->start);
+        $duration = $request->duration;
+        $checkout = $checkin->copy()->addDay($duration);
 
-        // if ($request->location)
-        //     $hotels->where('city', 'like', '%' . $request->location . '%');
-
-        // $hotelsget = $hotels->withCount(["hotelRoom as price_avg" => function ($q) {
-        //     $q->select(DB::raw('coalesce(avg(sellingprice),0)'));
-        // }])->withCount(["hotelRating as rating_avg" => function ($q) {
-        //     $q->select(DB::raw('coalesce(avg(rate),0)'));
-        // }])->withCount("hotelRating as rating_count")->get();
-
-        // dd($hostelsget);
-        // $cities = Hotel::distinct()->pluck('city');
-        // $params = $request->all();
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = strtotime($request->start);
-        // $params['city'] = ($request->location) ?: '';
-        // $params['name'] = ($request->name) ?: '';
-
-        // return view('hotel.index', ['hotels' => $hotelsget, 'cities' => $cities, 'params' => $params]);
-
-
-        // $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
-        //     ->withAvg('hotelRating', 'rate')
-        //     ->orderByDesc('hotel_rating_avg_rate');
-        $hotels = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+        $hotels = Hotel::where('hotels.is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating', 'hotelroomFacility')
             ->whereHas('hotelRoom', function ($query) use ($request) {
-                $query->where([
-                    ['totalroom', '>', $request->room],
-                    ['guest', '>=', 3],
-                ]);
-            })->where(function ($query) use ($request) {
+                $query->where(
+                    'totalroom',
+                    '>=',
+                    $request->room,
+                );
+            })
+            ->where(function ($query) use ($request) {
                 $query->where('hotels.city', 'like', '%' . $request->location . '%')
                     ->orWhere('hotels.name', 'like', '%' . $request->location . '%');
+            })
+            ->whereRaw('(
+                SELECT COUNT(*) FROM hotel_rooms hr WHERE hr.hotel_id = hotels.id
+            ) - (
+                SELECT COALESCE(SUM(room), 0) FROM detail_transaction_hotel dth WHERE dth.hotel_id = hotels.id
+                AND (? < dth.reservation_end OR ? = dth.reservation_end)  -- Include reservations ending on the current day
+                AND ? >= dth.reservation_start
+            ) > 0', [$checkout->format('Y-m-d'), $checkout->format('Y-m-d'), $checkin->format('Y-m-d')]);
+
+
+        if ($request->has('facility')) {
+            $hotels->whereHas('hotelroomFacility', function ($query) use ($request) {
+                $query->whereIn('facility_id', $request->facility);
             });
-
-        if ($request->has('harga')) {
-            if ($request->harga == 'tertinggi') {
-                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->orderByDesc('sellingprice');
-                });
-            }
-
-            if ($request->harga == 'terendah') {
-                $hotels->whereHas('hotelRoom', function ($query) use ($request) {
-                    $query->orderBy('sellingprice');
-                });
-            }
         }
 
         if ($request->has('star')) {
-            $hotels->where('star', $request->star);
+            $hotels->whereIn('star', $request->star);
         }
 
-        $hotels = $hotels->get();
+        if ($request->has('harga')) {
+            $orderDirection = $request->harga === 'tertinggi' ? 'desc' : 'asc';
 
+            $hotels->select('hotels.*', DB::raw('MIN(hotel_rooms.sellingprice) as min_price'))
+                ->leftJoin('hotel_rooms', 'hotel_rooms.hotel_id', '=', 'hotels.id')
+                ->groupBy('hotels.id')
+                ->orderBy('min_price', $orderDirection);
+        }
+
+        //        dd($hotels->get());
+        $hotels = $hotels->paginate(10)->appends(request()->query());
         $hotelDetails = [];
 
         foreach ($hotels as $hotel) {
-            $minPrice = $hotel->hotelRoom->min('sellingprice');
-            $maxPrice = $hotel->hotelRoom->max('sellingprice');
+            $minPrice        = $hotel->hotelRoom->min('sellingprice');
+            $maxPrice        = $hotel->hotelRoom->max('sellingprice');
             $jumlahTransaksi = $hotel->hotelRating->count();
-            $totalRating = $hotel->hotelRating->sum('rate');
+            $totalRating     = $hotel->hotelRating->sum('rate');
 
             // Rating 5
             if ($jumlahTransaksi > 0) {
-                $avgRating = $totalRating / $jumlahTransaksi;
+                $avgRating    = $totalRating / $jumlahTransaksi;
                 $resultRating = ($avgRating / 10) * 5;
             } else {
-                $avgRating = 0;
+                $avgRating    = 0;
                 $resultRating = 0;
             }
 
             $hotelDetails[$hotel->id] = [
-                'min_price' => $minPrice,
-                'max_price' => $maxPrice,
-                'total_rating' => $totalRating,
+                'min_price'     => $minPrice,
+                'max_price'     => $maxPrice,
+                'total_rating'  => $totalRating,
                 'result_rating' => $resultRating,
-                'star_rating' => floor($resultRating),
+                'star_rating'   => floor($resultRating),
             ];
         }
 
-        $data['hotels'] = $hotels;
+        $data['hotels']       = $hotels;
         $data['hotelDetails'] = $hotelDetails;
         $data['request'] = $request->all();
         $data['facilities'] = Facility::all();
         $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
-        $data['listHotel'] = Hotel::all();
+        $data['listHotel'] = Hotel::where('is_active', 1)->get();
 
-        // dd($hotels);
-        // dd($hotelPrices);
         return view('hotel.list-hotel', $data);
     }
 
@@ -157,7 +152,7 @@ class HotelController extends Controller
         //        return view('hotel.show', compact('hotelget', 'params', 'cities'));
 
 
-        $hotel = Hotel::with('hotelRoom', 'hotelImage', 'hotelRating')
+        $hotel = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelImage', 'hotelRating')
             ->findOrFail($id_hotel);
 
         $minPrice = $hotel->hotelRoom->min('sellingprice');
@@ -174,6 +169,25 @@ class HotelController extends Controller
             $resultRating = 0;
         }
 
+        $ratings  = DB::table('hotel_ratings')->join('users', 'hotel_ratings.users_id', '=', 'users.id')
+            ->where('hotel_id', $id_hotel)
+            ->select('hotel_ratings.*', 'hotel_ratings.created_at as created', 'users.*')
+            ->limit(30)
+            ->get();
+
+        Carbon::setLocale('id');
+        // $formatted_created_at = null;
+
+        if ($ratings->isNotEmpty()) {
+            // Menggunakan first() untuk mendapatkan satu baris hasil
+            $rating = $ratings->first();
+            // $data['formatted_created_at'] = Carbon::parse($rating->created_at)->diffForHumans();
+        }
+
+        $data['avg_rate'] = $ratings->avg('rate');
+
+        $data['rating'] = $ratings;
+
         $data['request'] = $request->all();
         $data['detailHotel'] = $hotel;
         $data['min_price'] = $minPrice;
@@ -182,10 +196,14 @@ class HotelController extends Controller
         $data['result_rating'] = $resultRating;
         $data['star_rating'] = floor($resultRating);
 
-        $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
-        $data['listHotel'] = Hotel::all();
+        $data['ewallets'] = Product::where('is_active', 1)
+            ->where('category', 'ewallet')
+            ->where('service_id', 11)
+            ->distinct('name')
+            ->pluck('name');
 
-        // dd($data['hotel']);
+        $data['citiesHotel'] = Hotel::distinct()->select('city')->get();
+        $data['listHotel'] = Hotel::where('is_active', 1)->get();
 
         return view('hotel.show', $data);
     }
@@ -197,118 +215,66 @@ class HotelController extends Controller
 
     public function reservation(Request $request, $idroom)
     {
-        // $hotelRoom = HotelRoom::with(['hotel' => function ($q1) {
-        //     $q1->withCount(["hotelRating as rating_avg" => function ($q) {
-        //         $q->select(DB::raw('coalesce(avg(rate),0)'));
-        //     }]);
-        // }], 'hotelBookDate')->find($idroom);
-
-        // $params['start_date'] = strtotime($request->start);
-        // $params['end_date'] = date('d-m-Y', strtotime("+" . $request->duration . " days", strtotime($request->start)));
-        // $params['room'] = ($request->room) ?: '';
-        // $params['guest'] = ($request->guest) ?: '';
-        // $params['duration'] = ($request->duration) ?: '';
-        // dd($hotelRoom);
-        // return view('hotel.reservation', compact('hotelRoom', 'params'));
-
-
         $hotelRoom = HotelRoom::with('hotel')->findOrFail($idroom);
-
-        // $minPrice = $hotel->hotelRoom->min('sellingprice');
-        // $maxPrice = $hotel->hotelRoom->max('sellingprice');
-        // $jumlahTransaksi = $hotel->hotelRating->count();
-        // $totalRating = $hotel->hotelRating->sum('rate');
-
-        // // Rating 5
-        // if ($jumlahTransaksi > 0) {
-        //     $avgRating = $totalRating / $jumlahTransaksi;
-        //     $resultRating = ($avgRating / 10) * 5;
-        // } else {
-        //     $avgRating = 0;
-        //     $resultRating = 0;
-        // }
 
         $data['params'] = $request->all();
         $data['hotelRoom'] = $hotelRoom;
+
         $point = new Point;
         $data['point'] = $point->cekPoint(auth()->user()->id);
-        // $data['min_price'] = $minPrice;
-        // $data['max_price'] = $maxPrice;
-        // $data['total_rating'] = $totalRating;
-        // $data['result_rating'] = $resultRating;
-        // $data['star_rating'] = floor($resultRating);
 
+        $setting = new Setting();
+        $fees = $setting->getFees($data['point'], 8, $request->user()->id, $hotelRoom->sellingprice);
+
+        $data['uniqueCode'] = rand(111, 999);
+        $data['grandTotal'] = $hotelRoom->sellingprice + $fees[0]['value'] + $data['uniqueCode'];
+        $data['feeAdmin'] = $fees[0]['value'];
 
         return view('hotel.reservation', $data);
     }
 
     public function request(Request $request)
     {
-        // $data = $request->all();
-
-        // $hotel = $this->travelsya->requestHotel([
-        //     "service" => $data['service'],
-        //     "payment" => $data['payment_method'],
-        //     "hotel_room_id" => $data['hostel_room_id'],
-        //     "point" => 0,
-        //     "guest" => [
-        //         [
-        //             "type_id" => "KTP",
-        //             "identity" => 123456,
-        //             "name" => $data['name']
-        //         ]
-        //     ],
-        //     "start" => $data['start'],
-        //     "end" => $data['end'],
-        //     "url" => "linkproduct"
-
-        // ]);
-
-        // dd($data);
-
-        // if ($hotel['meta']['code'] != 200) {
-        //     toast($hotel['meta']['message'], 'error');
-        //     return redirect()->back();
-        // }
-
-        // return redirect()->to($hotel['data']['invoice_url'])->send();
-
         $data = $request->all();
-
-        // dd($data);
-        $hotel = HotelRoom::with('hotel.service')->find($data['hostel_room_id']);
-        $invoice = "INV-" . date('Ymd') . "-" . strtoupper($hotel->hotel->service->name) . "-" . time();
+        $hotel = HotelRoom::with('hotel.service')->find($request->hostel_room_id);
+        $invoice = "INV-" . date('Ymd') . "-Hotel-" . time();
         $setting = new Setting();
-        $fees = $setting->getFees($data['point'], $hotel->hotel->service_id, $request->user()->id, $hotel->sellingprice);
 
-        //cekpoint
-        // if (!$fees) return ResponseFormatter::error(null, 'Point invalid');
-        // $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days) - 1 ?: 1;
-        // if ($qty < 0) return ResponseFormatter::error(null, 'Date must be forward');
-        // $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees);
-        if (!$fees) return 'Point invalid';
-        $qty = (date_diff(date_create($data['start']), date_create($data['end']))->days);
-        if ($qty < 0) return 'Date must be forward';
-        $amount = $setting->getAmount($hotel->sellingprice, $qty, $fees, $data['room']);
+        $sellingPrice = $hotel->sellingprice;
+        $currentPoint = $request->inputPoint == "on" ? $request->pointFee : 0;
 
-        // dd($data);
+        $fee = Fee::where('service_id', 8)->first();
+        $fees = [
+            [
+                'type' => 'Fee Admin',
+                'value' => $fee->value,
+            ],
+            [
+                'type' => 'Kode Unik',
+                'value' => $request->uniqueCode,
+            ],
+        ];
+        $saldoPointCustomer = 0;
 
-        // cek book date
-        $checkBook = HotelBookDate::where("hotel_room_id", $data['hostel_room_id'])->where('start', '>=', $data['start'])->where('end', "<=", $data['end'])->first();
+        if ($request->inputPoint == "on") {
+            $saldoPointCustomer = Auth::user()->point;
+            array_push($fees, [
+                'type' => 'Point',
+                'value' => -$saldoPointCustomer,
+            ]);
+        }
+        $qty = (date_diff(date_create($request->start), date_create($request->end))->days);
+        if ($qty <= 0) return 'Date must be forward';
+        $amount = $setting->getAmount($sellingPrice, $qty, $fees, $request->room);
 
-        // if ($checkBook) {
-        //     return ResponseFormatter::error($checkBook, 'Book dates is not available');
-        // }
-
-        // ceate xendit
         $payoutsXendit = $this->xendit->create([
             'external_id' => $invoice,
             'items' => [
                 [
-                    "product_id" => $data['hostel_room_id'],
-                    "name" => $hotel['name'],
-                    "price" => $hotel->sellingprice,
-                    "quantity" => $qty,
+                    "product_id" => $request->hostel_room_id,
+                    "name" => $hotel->name,
+                    "price" =>   $sellingPrice * $qty * $request->room,
+                    "quantity" => 1,
                 ]
             ],
             'amount' => $amount,
@@ -324,57 +290,46 @@ class HotelController extends Controller
             'fees' => $fees
         ]);
 
+        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel, $saldoPointCustomer) {
 
-        // true buat trans
-        DB::transaction(function () use ($data, $invoice, $request, $payoutsXendit, $qty, $amount, $fees, $hotel) {
-
+            // dd($uniqueCode);
             $storeTransaction = Transaction::create([
-                'no_inv' => $invoice,
-                'req_id' => 'HTL-' . time(),
-                'service' => $hotel->hotel->service->name,
-                'service_id' => $hotel->hotel->service_id,
-                // 'payment' => $payoutsXendit['payment'],
+                'no_inv'     => $invoice,
+                'req_id'     => 'HTL-' . time(),
+                'service'    => 'HOTEL',
+                'service_id' => 8,
                 'payment' => 'xendit',
                 'user_id' => $request->user()->id,
-                'status' => $payoutsXendit['status'],
-                'link' => $payoutsXendit['invoice_url'],
-                'total' => $amount
+                'status'  => $payoutsXendit['status'],
+                'link'    => $payoutsXendit['invoice_url'],
+                'total'   => $amount
             ]);
 
-
+            $helper = new General();
             // true buat detail
-            $storeDetailTransaction = DetailTransaction::create([
-                'transaction_id' => $storeTransaction->id,
-                'hotel_room_id' => $data['hostel_room_id'],
-                "qty" => $qty,
-                "price" => $hotel->sellingprice
+
+            $storeDetailTransaction = DetailTransactionHotel::create([
+                'transaction_id'    => $storeTransaction->id,
+                'hotel_id'          => $data['hotel_id'],
+                'hotel_room_id'     => $data['hostel_room_id'],
+                "booking_id"        => $helper->generateRandomString(6),
+                "reservation_start" => Carbon::parse($data['start'])->format('Y-m-d'),
+                "reservation_end"   => Carbon::parse($data['end'])->format('Y-m-d'),
+                "guest"             => $data['total_guest'],
+                "room"              => $data['room'],
+                "rent_price"        => $hotel->sellingprice,
+                "fee_admin"         => $fees[0]['value'],
+                "kode_unik"         => $data['uniqueCode'],
+                "guest_name"         => $data['nama_lengkap'],
+                "guest_email"         => $data['email'],
+                "guest_handphone"         => $data['no_telfon'],
+                "created_at"        => Carbon::now(),
             ]);
 
-
-            // true buat bookdate
-            $storeBookDate = HotelBookDate::create([
-                'start' => date_create($data['start']),
-                'end' => date_create($data['end']),
-                'hotel_room_id' => $data["hostel_room_id"],
-                'transaction_id' => $storeTransaction->id
-            ]);
-
-            // true buat guest
-            // foreach ($data['guest'] as $guest) {
-            //     $storeGuest = Guest::create([
-            //         'transaction_id' => $storeTransaction->id,
-            //         // 'type_id' => $guest['type_id'],
-            //         // 'identity' => $guest['identity'],
-            //         'name' => $guest['name'],
-            //         'email' => $guest['email'],
-            //         'phone' => $guest['phone'],
-            //     ]);
-            // }
-
-            if ($data['point']) {
+            if ($request->inputPoint == "on") {
                 //deductpoint
                 $point = new Point;
-                $point->deductPoint($request->user()->id, abs($fees[1]['value']), $storeTransaction->id);
+                $point->deductPoint($request->user()->id, abs($saldoPointCustomer), $storeTransaction->id);
             }
         });
 
@@ -406,7 +361,7 @@ class HotelController extends Controller
 
     public function favoriteHotel()
     {
-        $hotels = Hotel::with('hotelRoom', 'hotelRating')->get();
+        $hotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelRating')->get();
 
         // Hitung total rating untuk setiap hotel dan simpan dalam array asosiatif
         $hotelRatings = [];
@@ -423,7 +378,7 @@ class HotelController extends Controller
         $sortedHotelIds = array_keys($hotelRatings);
 
         // Ambil data hotel dengan urutan rating terbesar
-        $favoriteHotels = Hotel::with('hotelRoom', 'hotelRating')
+        $favoriteHotels = Hotel::where('is_active', 1)->with('hotelRoom', 'hotelRating')
             ->whereIn('id', $sortedHotelIds)
             ->limit(4)
             ->get();

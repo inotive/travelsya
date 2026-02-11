@@ -59,24 +59,24 @@
                             </div>
                         </div>
 
-                        <div class="card card-bordered px-5">
-                            <div class="my-3 text-center">
-                                <div class="my-5">
-                                    <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-55px p-3 bg-danger rounded-circle bg-opacity-15 my-5" />
-                                    <p>E-tiket</p>
-                                </div>
+{{--                        <div class="card card-bordered px-5">--}}
+{{--                            <div class="my-3 text-center">--}}
+{{--                                <div class="my-5">--}}
+{{--                                    <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-55px p-3 bg-danger rounded-circle bg-opacity-15 my-5" />--}}
+{{--                                    <p>E-tiket</p>--}}
+{{--                                </div>--}}
 
-                                <div class="my-5">
-                                    <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-55px p-3 bg-danger rounded-circle bg-opacity-15 my-5" />
-                                    <p>Bukti Pembayaran</p>
-                                </div>
+{{--                                <div class="my-5">--}}
+{{--                                    <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-55px p-3 bg-danger rounded-circle bg-opacity-15 my-5" />--}}
+{{--                                    <p>Bukti Pembayaran</p>--}}
+{{--                                </div>--}}
 
-                                <div class="my-5">
-                                    <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-55px p-3 bg-danger rounded-circle bg-opacity-15 my-5" />
-                                    <p>Hapus Riwayat</p>
-                                </div>
-                            </div>
-                        </div>
+{{--                                <div class="my-5">--}}
+{{--                                    <img alt="" src="{{asset('assets/media/products-categories/icon-hostel.png')}}" class="w-55px p-3 bg-danger rounded-circle bg-opacity-15 my-5" />--}}
+{{--                                    <p>Hapus Riwayat</p>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                     </div>
                     <div class="d-flex justify-content-between text-center mt-5 gap-4 bg-danger py-4 rounded-2  bg-opacity-15">
                         <div class="fw-bold fs-5 px-5">Total Biaya</div>

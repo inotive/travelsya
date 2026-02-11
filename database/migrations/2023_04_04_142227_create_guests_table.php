@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('guests', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained();
+            $table->unsignedBigInteger('transaction_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
             $table->string('name');
             $table->string('identity')->nullable();
             $table->string('type_id')->nullable();

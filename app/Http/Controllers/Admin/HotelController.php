@@ -18,13 +18,13 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $users = DB::table('users')->where('role',1)->get();
+        $users = DB::table('users')->where('role', 1)->get();
         $hotels = DB::table('hotels')
-            ->join('services', 'services.id', '=', 'hotels.service_id')
             ->join('users', 'users.id', '=', 'hotels.user_id')
-            ->select('hotels.*', 'services.name as service_name', 'users.name as user_name')
+            ->select('hotels.*', 'users.name as user_name', 'users.image')
             ->get();
-        return view('admin.management-mitra.hotel.index',compact('users', 'hotels'));
+        // dd($hotels);
+        return view('admin.management-mitra.hotel.index', compact('users', 'hotels'));
     }
 
     /**
@@ -41,32 +41,41 @@ class HotelController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' =>'required',
-            'address' =>'required',
-            'star' =>'required',
-            'website' =>'required',
-            'user_id' =>'required',
-            'city' =>'required',
+            'name' => 'required',
+            'address' => 'required',
+            'star' => 'required',
+            'website' => 'required',
+            'user_id' => 'required',
+            'city' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
+        // Handle image upload jika ada
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('hotels', 'public');
+        }
+
         DB::table('hotels')->insert(
             [
-            'user_id' => $request->user_id,
-            'is_active' => 1,
-            'checkin' => "11:00:00",
-            'checkout' => "12:00:00",
-            'service_id' => 8,
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'star' => $request->star,
-            'website' => $request->website
+                'user_id' => $request->user_id,
+                'is_active' => 1,
+                'checkin' => "11:00:00",
+                'checkout' => "12:00:00",
+                'name' => $request->name,
+                'address' => $request->address,
+                'city' => $request->city,
+                'star' => $request->star,
+                'website' => $request->website,
+                'image' => $imagePath
             ]
         );
+
         toast('Hotel Has Been Added', 'success');
 
         return redirect()->route('admin.hotel.index')->with('success', 'Data Berhasil Disimpan');
@@ -98,30 +107,48 @@ class HotelController extends Controller
     public function update(Request $request, Hotel $hotel)
     {
         $validator = Validator::make($request->all(), [
-        'name' =>'required',
-        'address' =>'required',
-        'star' =>'required',
-        'website' =>'required',
-        'user_id' =>'required',
-        'city' =>'required',
-        'is_active' =>'required',
+            'name'      => 'required',
+            'address'   => 'required',
+            'star'      => 'required',
+            'user_id'   => 'required',
+            'city'      => 'required',
+            'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
+        // Handle image upload jika ada
+        $imagePath = $hotel->image; // Pertahankan gambar lama jika tidak ada gambar baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($hotel->image) {
+                $oldImagePath = storage_path('app/public/' . $hotel->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->store('hotels', 'public');
+        }
+
         $hotel->update([
-            'user_id' => $request->user_id,
-            'is_active' => $request->is_active,
-            'checkin' => "11:00:00",
-            'checkout' => "12:00:00",
-            'service_id' => 8,
-            'name' => $request->name,
-            'address' => $request->address,
-            'city' => $request->city,
-            'star' => $request->star,
-            'website' => $request->website,
+            'user_id'     => $request->user_id,
+            'is_active'   => $request->is_active,
+            'checkin'     => "11:00:00",
+            'checkout'    => "12:00:00",
+            'name'        => $request->name,
+            'address'     => $request->address,
+            'city'        => $request->city,
+            'star'        => $request->star,
+            'website'     => $request->website,
+            'lon'         => $request->long_ltd,
+            'lat'         => $request->ltd,
+            'description' => $request->description,
+            'image'       => $imagePath,
         ]);
 
         toast('Hotel Has Been Updated', 'success');

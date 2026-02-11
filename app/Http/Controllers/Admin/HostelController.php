@@ -31,7 +31,7 @@ class HostelController extends Controller
 
         $hostels = DB::table('hostels')
             ->join('users', 'users.id', '=', 'hostels.user_id')
-            ->select('hostels.*', 'users.name as user_name')
+            ->select('hostels.*',  'users.name as user_name', 'users.image')
             ->get();
 
         $ratings = DB::table('ratings')
@@ -56,30 +56,42 @@ class HostelController extends Controller
         ]);
     }
 
-    public function storeMitra(Request $request)
+    public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'address' => 'required',
             'star' => 'required',
-            'website' => 'required',
+            // 'website' => 'required',
             'user_id' => 'required',
             'city' => 'required',
-            'is_active' => 'required',
+            // 'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
 
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return redirect()
+                ->back()
+                ->withErrors($validator)
+                ->withInput()->with('openModal', true);;
         }
+
+        // Handle image upload jika ada
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('hostels', 'public');
+        }
+
         DB::table('hostels')->insert([
             'name' => ucwords($request->name),
             'user_id' => $request->user_id,
             'is_active' => 1,
-            'service_id' => 7,
+            // 'service_id' => 7,
             'city' => $request->city,
             'kecamatan' => '-',
-            'address' => $request->alamat,
+            'address' => $request->address,
             'description' => '-',
             'facilities' => '-',
             'lat' => '-',
@@ -89,14 +101,15 @@ class HostelController extends Controller
             'checkout' => '12:00',
             'star' => $request->star,
             'website' => $request->website,
-            'property' => '-'
+            'property' => '-',
+            'image' => $imagePath
         ]);
         // Hostel::create([
-        //     'name' => ucwords($request->name), 
-        //     'user_id' => $request->user_id, 
+        //     'name' => ucwords($request->name),
+        //     'user_id' => $request->user_id,
         //     'is_active' => 1,
-        //     'service_id' => 7, 
-        //     'city' => $request->city, 
+        //     'service_id' => 7,
+        //     'city' => $request->city,
         //     'kecamatan' => '-',
         //     'address' => $request->alamat,
         //     'description' => '-',
@@ -156,10 +169,10 @@ class HostelController extends Controller
             'name' => 'required',
             'address' => 'required',
             'star' => 'required',
-            'website' => 'required',
             'user_id' => 'required',
             'city' => 'required',
             'is_active' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240', // Validasi untuk file gambar (10MB)
 
         ]);
 
@@ -167,24 +180,39 @@ class HostelController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
+        // Handle image upload jika ada
+        $imagePath = $hostel->image; // Pertahankan gambar lama jika tidak ada gambar baru
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($hostel->image) {
+                $oldImagePath = storage_path('app/public/' . $hostel->image);
+                if (file_exists($oldImagePath)) {
+                    unlink($oldImagePath);
+                }
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->store('hostels', 'public');
+        }
+
         // //check if validation fails
         DB::table('hostels')->where('id', $hostel->id)->update([
             'user_id' => $request->user_id,
             'is_active' => $request->is_active,
-            'checkin' => "11:00",
-            'checkout' => "12:00",
-            'service_id' => 7,
+            // 'service_id' => 7,
             'name' => $request->name,
             'address' => $request->address,
             'city' => $request->city,
             'star' => $request->star,
             'website' => $request->website,
+            'image' => $imagePath,
+
         ]);
         // $hostel->update([
         //     'user_id' => $request->user_id,
         //     'is_active' => 1,
-        //     'checkin' => "11:00:00",
-        //     'checkout' => "12:00:00",
+        //     'checkin' => "11:00",
+        //     'checkout' => "12:00",
         //     'service_id' => 7,
         //     'name' => $request->name,
         //     'address' => $request->address,
@@ -314,7 +342,7 @@ class HostelController extends Controller
             '2' => $query->where('rate', 2)->count(),
             '1' => $query->where('rate', 1)->count(),
         ];
-        
+
 
 
         return view('admin.management-mitra.rating.index', compact('ratings', 'hostel_id', 'avg_rate', 'total_review', 'ratingCounts'));

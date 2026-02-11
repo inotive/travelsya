@@ -14,7 +14,7 @@
                 <form class="form w-100" method="post" novalidate="novalidate" id="kt_sign_in_form"  action="{{route('register')}}">
                     <!--begin::Heading-->
                     @csrf
-                    <div class="text-center mb-11">
+                    <div class="mb-11">
                         <!--begin::Title-->
                         <h1 class="text-dark fw-bolder mb-3">
                             Daftar Akun
@@ -96,7 +96,7 @@
 
                     <!--begin::Sign up-->
                     <div class="text-gray-500 text-center fw-semibold fs-6">
-                        Have a Member?
+                        Sudah memiliki akun ?
 
                         <a href="{{route('login')}}" class="link-primary">
                             Sign In
@@ -115,16 +115,6 @@
                 <div class="me-10">
                 </div>
                 <!--end::Languages-->
-
-                <!--begin::Links-->
-                <div class="d-flex fw-semibold text-primary fs-base gap-5">
-                    <a href="../../../pages/team.html" target="_blank">Terms</a>
-
-                    <a href="../../../pages/pricing/column.html" target="_blank">Plans</a>
-
-                    <a href="../../../pages/contact.html" target="_blank">Contact Us</a>
-                </div>
-                <!--end::Links-->
             </div>
             <!--end::Footer-->
         </div>

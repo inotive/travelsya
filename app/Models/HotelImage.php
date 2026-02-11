@@ -19,6 +19,11 @@ class HotelImage extends Model
 
     public function hotel()
     {
-        $this->belongsTo(Hotel::class);
+        return $this->belongsTo(Hotel::class);
+    }
+
+    public function hotelroomImage()
+    {
+        return $this->hasMany(HotelRoomImage::class);
     }
 }

@@ -12,8 +12,10 @@ return new class extends Migration {
     {
         Schema::create('detail_transaction_top_up', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id');
-            $table->foreignId('product_id');
+            $table->unsignedBigInteger('transaction_id');
+            $table->unsignedBigInteger('product_id');
+            $table->foreign('transaction_id')->references('id')->on('transactions')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->string('nomor_telfon');
             $table->integer('total_tagihan');
             $table->integer('fee_travelsya');

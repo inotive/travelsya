@@ -14,7 +14,7 @@
 		<meta property="og:url" content="" />
 		<meta property="og:site_name" content="" />
 		<link rel="canonical" href="" />
-		<link rel="shortcut icon" href="{{asset('admin/assets/media/logos/favicon.ico')}}" />
+		<link rel="shortcut icon" href="{{asset('assets/media/logos/_Favicon.ico')}}" />
 		<meta name="csrf-token" content="{{ csrf_token() }}">
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
 		<!--begin::Fonts(mandatory for all pages)-->
@@ -23,6 +23,7 @@
 		<!--begin::Vendor Stylesheets(used for this page only)-->
 		<link href="{{asset('admin/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css')}}" rel="stylesheet" type="text/css" />
 		<link href="{{asset('admin/assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 		<!--end::Vendor Stylesheets-->
 		<!--begin::Global Stylesheets Bundle(mandatory for all pages)-->
 		<link href="{{asset('admin/assets/plugins/global/plugins.bundle.css')}}" rel="stylesheet" type="text/css" />
@@ -33,15 +34,74 @@
 		@stack("add-style")
         <style>
             .menu-item .menu-link .menu-title{
-                font-size : 14px;
-                font-weight : 400;
+                font-size : 15px;
+                font-weight : 450;
             }
 
         </style>
+
+<style>
+	.menu-item.menu-accordion:hover {
+			background-color: #C02425;
+			color: white !important;
+			border-radius: 4px;
+	}
+
+	.menu-item:hover .menu-icon i,
+	.menu-item:hover .menu-title,
+	.menu-item:hover .menu-arrow {
+			color: white !important; /* Ganti dengan warna putih yang diinginkan */
+	}
+
+
+	.menu-item.menu-accordion.hover .show{
+			background-color: #C02425;
+			color: white !important;
+			border-radius: 4px;
+	}
+
+	.menu-sub.menu-accordion:hover{
+			background-color: #C02425;
+			border-radius: 4px;
+	}
+
+
+
+	.menu-item.here {
+			background-color: #C02425;
+			color: white; /* Warna teks ketika aktif */
+			border-radius: 4px;
+	}
+
+	.menu-item.here .menu-icon i,
+	.menu-item.here .menu-title,
+	.menu-item.here .menu-arrow {
+			color: white !important; /* Ganti dengan warna putih yang diinginkan */
+	}
+
+
+	.menu-item:active .menu-icon i,
+	.menu-item:active .menu-title,
+	.menu-item:active .menu-arrow {
+			color: white !important; /* Ganti dengan warna putih yang diinginkan */
+	}
+
+
+</style>
+<style>
+	@media only screen and (max-width: 768px) {
+			.app-sidebar-logo-default {
+					display: none;
+			}
+			.app-sidebar-logo-minimize {
+					display: block;
+			}
+	}
+</style>
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+	<body id="kt_app_body" data-kt-app-layout="light-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
 		<!--begin::Theme mode setup on page load-->
 		<script>var defaultThemeMode = "light"; var themeMode; if ( document.documentElement ) { if ( document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if ( localStorage.getItem("data-bs-theme") !== null ) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
 		<!--end::Theme mode setup on page load-->
@@ -74,7 +134,7 @@
                                         <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Home</a>
+                                                <a href="{{route('partner.dashboard')}}" class="text-muted text-hover-primary">Konfigurasi</a>
                                             </li>
                                             <!--end::Item-->
                                             <!--begin::Item-->
@@ -84,7 +144,7 @@
                                             <!--end::Item-->
                                             <!--begin::Item-->
                                             <li class="breadcrumb-item text-muted">
-												<a href="{{$url}}" class="text-muted text-hover-primary">{{$title}}</a>
+												<a href="{{$url}}" class="text-muted text-hover-primary">{{$subTitle ?? $title}}</a>
 												</li>
                                             <!--end::Item-->
 
@@ -157,6 +217,7 @@
 		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZonesLow.js"></script>
 		<script src="https://cdn.amcharts.com/lib/5/geodata/worldTimeZoneAreasLow.js"></script> --}}
 		<script src="{{asset('admin/assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used for this page only)-->
 		<script src="{{asset('admin/assets/js/custom/utilities/search/horizontal.js')}}"></script>
@@ -172,6 +233,43 @@
 
 		<!--end::Custom Javascript-->
 		<!--end::Javascript-->
+		
+		<script>
+			@if(Session::has('success'))
+				toastr.success("{{ Session::get('success') }}");
+			@endif
+			
+			@if(Session::has('error'))
+				toastr.error("{{ Session::get('error') }}");
+			@endif
+			
+			@if(Session::has('info'))
+				toastr.info("{{ Session::get('info') }}");
+			@endif
+			
+			@if(Session::has('warning'))
+				toastr.warning("{{ Session::get('warning') }}");
+			@endif
+			
+			// Toastr configuration
+			toastr.options = {
+				"closeButton": true,
+				"debug": false,
+				"newestOnTop": true,
+				"progressBar": true,
+				"positionClass": "toast-top-right",
+				"preventDuplicates": false,
+				"onclick": null,
+				"showDuration": "300",
+				"hideDuration": "1000",
+				"timeOut": "5000",
+				"extendedTimeOut": "1000",
+				"showEasing": "swing",
+				"hideEasing": "linear",
+				"showMethod": "fadeIn",
+				"hideMethod": "fadeOut"
+			}
+		</script>
 
 		@stack("add-script")
 	</body>

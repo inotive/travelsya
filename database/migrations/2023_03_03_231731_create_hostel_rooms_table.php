@@ -15,24 +15,21 @@ return new class extends Migration
     {
         Schema::create('hostel_rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('hostel_id')->constrained();
+            $table->unsignedBigInteger('hostel_id');
+            $table->foreign('hostel_id')->references('id')->on('hostels')->onDelete('cascade');
+
             $table->string('name');
             $table->string('description')->nullable();
             $table->integer('price');
             $table->integer('sellingprice');
-            $table->text('facilities')->nullable();
             $table->string('bed_type')->nullable();
-            $table->string('guest');
+            $table->string('max_guest')->comment('Maximal Guest');
             $table->integer('roomsize')->nullable();
             $table->integer('maxextrabed')->nullable();
             $table->integer('extrabedprice')->nullable();
             $table->integer('totalroom');
             $table->string('roomtype')->nullable();
             $table->string('furnish')->nullable();
-            $table->string('image_1');
-            $table->string('image_2')->nullable();
-            $table->string('image_3')->nullable();
-            $table->string('image_4')->nullable();
             $table->integer('is_active');
             $table->softDeletes();
             $table->timestamps();

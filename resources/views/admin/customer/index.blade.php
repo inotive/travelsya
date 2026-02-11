@@ -29,30 +29,30 @@
                     <!--end::Table head-->
                     <!--begin::Table body-->
                     <tbody>
-                    @foreach($customers as $customer)
-                        <tr>
-                            <td>
-                                <div class="text-dark fw-bold  mb-1 fs-6">{{$loop->iteration}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold  mb-1 fs-6">{{$customer->email}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->name}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->phone}}</div>
-                            </td>
-                            <td>
-                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->point}}</div>
-                            </td>
-                        </tr>
-                    @endforeach
+{{--                    @foreach($customers as $customer)--}}
+{{--                        <tr>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold  mb-1 fs-6">{{$loop->iteration}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold  mb-1 fs-6">{{$customer->email}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->name}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->phone}}</div>--}}
+{{--                            </td>--}}
+{{--                            <td>--}}
+{{--                                <div class="text-dark fw-bold  d-block mb-1 fs-6">{{$customer->point}}</div>--}}
+{{--                            </td>--}}
+{{--                        </tr>--}}
+{{--                    @endforeach--}}
 
                     </tbody>
                     <!--end::Table body-->
                 </table>
-                {{$customers->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}
+{{--                {{$customers->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}--}}
                 <!--end::Table-->
             </div>
             <!--end::Table container-->

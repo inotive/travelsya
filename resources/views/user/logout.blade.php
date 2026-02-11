@@ -1,23 +1,45 @@
 <script>
-    const button = document.getElementById('kt_docs_sweetalert_basic');
+const button = document.getElementById('kt_docs_sweetalert_basic');
 
-button.addEventListener('click', e =>{
+button.addEventListener('click', async (e) => {
     e.preventDefault();
 
-    Swal.fire({
+    const { isConfirmed } = await Swal.fire({
         title: 'Konfirmasi Logout',
-        text: "Apakah anda yakin ingin logout?",
+        text: 'Apakah anda yakin ingin logout?',
         icon: 'question',
         showCancelButton: true,
         cancelButtonText: 'Batal',
         confirmButtonText: 'Ya, Logout!',
         customClass: {
-            confirmButton: "btn btn-primary",
-            cancelButton: "btn btn-danger",
-        }
+            confirmButton: 'btn btn-primary',
+            cancelButton: 'btn btn-danger',
+        },
     });
+
+    if (isConfirmed) {
+        try {
+            const response = await fetch('/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+            });
+
+            if (response.ok) {
+                // Redirect atau lakukan tindakan lain setelah logout berhasil
+                window.location.href = '/login';
+            } else {
+                console.error('Logout Gagal');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
 });
 </script>
+
 
 {{-- <div class="modal fade" tabindex="-1" id="kt_modal_1">
     <div class="modal-dialog">

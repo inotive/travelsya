@@ -2,7 +2,14 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\UnauthorizedException;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -44,5 +51,40 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Throwable  $exception
+     * @return \Illuminate\Http\Response
+     */
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof UnauthorizedException)
+            $exception = new NotFoundHttpException();
+
+        if ($request->expectsJson()) {
+            if ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException)  {
+                return response()->json([ 'message' => 'Endpoint tidak ditemukan.'], 404);
+            } else if ($exception instanceof AuthenticationException) {
+                return response()->json([ 'message' => 'Token tidak valid.'], 401);
+            } else if ($exception instanceof AuthorizationException) {
+                return response()->json([ 'message' => $exception->getMessage()], 403);
+            } else if ($exception instanceof ValidationException) {
+                $errors = [];
+                foreach ($exception->errors() as $field => $message) {
+                    $errors[$field] = $message[0];
+                }
+                return response()->json([ 'message' => 'Data yang dimasukkan tidak valid.', 'data' => $errors], 422);
+            } else if ($exception instanceof ModelNotFoundException) {
+                return response()->json([ 'message' => 'Data tidak ditemukan.'], 404);
+            } else if ($exception instanceof CustomException) {
+                return response()->json(['message' => $exception->getMessage()], $exception->getCode());
+            }
+        }
+
+        return parent::render($request, $exception);
     }
 }

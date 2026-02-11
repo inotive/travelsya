@@ -59,6 +59,7 @@ class Hostel extends Model
         return $this->hasMany(Rating::class);
     }
 
+
     /**
      * Get the service that owns the Product
      *
@@ -78,5 +79,31 @@ class Hostel extends Model
     public function hostelRule()
     {
         return $this->hasMany(HostelRule::class);
+    }
+
+    public function hostelroomImage()
+    {
+        return $this->hasMany(HostelRoomImages::class);
+    }
+
+    public function hostelRating()
+    {
+        return $this->hasMany(HostelRating::class);
+    }
+
+    public function hostelReservation()
+    {
+        return $this->hasMany(DetailTransactionHostel::class);
+    }
+
+    /**
+     * Get the image URL for the hostel.
+     *
+     * @param  string|null  $value
+     * @return string|null
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->image ? asset('storage/' . $this->image) : null;
     }
 }
