@@ -65,6 +65,16 @@ class HostelRoom extends Model
     }
 
     /**
+     * Get all of the detailTransaction for the Product
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function detailTransactionHostel()
+    {
+        return $this->hasMany(DetailTransactionHostel::class, 'id', 'hostel_room_id');
+    }
+
+    /**
      * Get the hostel that owns the HostelRoom
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -76,6 +86,16 @@ class HostelRoom extends Model
 
     public function bookDate()
     {
-        return $this->hasMany(BookDate::class)->select('id', 'transaction_id', 'hostel_room_id', 'start', 'end');
+        return $this->hasMany(DetailTransactionHostel::class);
+    }
+
+    public function hostelroomImage()
+    {
+        return $this->hasMany(HostelRoomImages::class);
+    }
+
+    public function hostelFacilities()
+    {
+        return $this->hasMany(HostelRoomFacility::class);
     }
 }

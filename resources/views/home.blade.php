@@ -1,4 +1,5 @@
-@extends('layouts.web') @section('content-web')
+@extends('layouts.web')
+@section('content-web')
     @include('layouts.include.carousel')
 
     <!-- start::Menubar -->
@@ -266,6 +267,11 @@
                     id: 1,
                     name: "unfurnished",
                     label: "Unfurnished"
+                },
+                {
+                    id: 0,
+                    name: "semifurnished",
+                    label: "Semi Furnish"
                 }
             ]
         }
@@ -345,7 +351,7 @@
             url: "{{ route('favorite.hotel') }}",
             type: "GET",
             success: function(responseHotel) {
-               dummyFavoriteHotel = responseHotel
+                dummyFavoriteHotel = responseHotel
             },
         });
 
@@ -406,7 +412,7 @@
             email: "-",
             telp: "-",
             website: "-"
-        },]
+        }, ]
 
         var today = new Date();
         $(".js-daterangepicker").daterangepicker({

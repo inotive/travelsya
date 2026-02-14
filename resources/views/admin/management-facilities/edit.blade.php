@@ -10,7 +10,7 @@
                     <i class="ki-duotone ki-cross fs-1">
                         <span class="path1"></span>
                         <span class="path2"></span>
-                        <span aria-hidden="true">&times;</span>
+                        {{-- <span aria-hidden="true">&times;</span> --}}
 
                     </i>
                 </div>
@@ -114,7 +114,7 @@
             cache: false,
             success: function(response) {
                 $('#facility_id').val(response.data.id);
-                $('#image-preview').attr('src', response.data.icon);
+                $('#image-preview').attr('src', '{{ asset('storage') }}' + '/' + response.data.icon);
                 $('#image-preview').show();
                 $('#edit-name').val(response.data.name);
 

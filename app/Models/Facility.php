@@ -13,14 +13,20 @@ class Facility extends Model
 
     protected $guarded = [];
 
-    public function facility()
+    // protected function icon(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn ($icon) => asset('/storage/facilities/' . $icon),
+    //     );
+    // }
+
+    public function hotelroomFacility()
     {
-        return $this->belongsToMany(HotelRoom::class, 'hotel_room_facility');
+        return $this->hasMany(HotelRoomFacility::class);
     }
-    protected function icon(): Attribute
+
+    public function hostelroomFacility()
     {
-        return Attribute::make(
-            get: fn ($icon) => asset('/storage/facilities/' . $icon),
-        );
+        return $this->hasMany(HostelRoomFacility::class);
     }
 }

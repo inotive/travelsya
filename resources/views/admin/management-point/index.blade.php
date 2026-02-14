@@ -1,111 +1,57 @@
-@extends('admin.layout',['title' => 'Point','url'=> '#'])
+@extends('admin.layout', ['title' => 'Point', 'url' => '#'])
 
 @section('content-admin')
-<!--begin::Tables Widget 11-->
-<div class="card mb-5 mb-xl-8">
-    <!--begin::Header-->
-    <div class="card-header border-0 pt-5">
-        <h3 class="card-title align-items-start flex-column">
-            <span class="card-label fw-bold fs-3 mb-1">List Point</span>
-        </h3>
-       {{-- <div class="card-toolbar">
+    <!--begin::Tables Widget 11-->
+    <div class="card mb-5 mb-xl-8">
+        <!--begin::Header-->
+        <div class="card-header border-0 pt-5">
+            <h3 class="card-title align-items-start flex-column">
+                <span class="card-label fw-bold fs-3 mb-1">List Point</span>
+            </h3>
+            {{-- <div class="card-toolbar">
            <a class="btn btn-sm btn-light-primary" data-bs-toggle="modal" data-bs-target="#create">
-           <i class="ki-duotone ki-plus fs-2"></i>New Point</a>
-       </div> --}}
+           <i class="ki-duotone ki-plus fs-2"></i>New Point</a> --}}
+        </div>
     </div>
     <!--end::Header-->
-        <!--begin::Body-->
-        <div class="card-body py-3">
-            <!--begin::Table container-->
-            <div class="table-responsive">
-                <div class="table-responsive">
-                    <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
-                        <thead>
-                        <tr class="fw-bold fs-6 text-gray-800">
-                            <th>No.</th>
-                            <th class="text-center">Layanan</th>
-                            <th class="text-center">Kelipatan Transaksi</th>
-                            <th class="text-center">Jumlah Point Yang Di Dapat Oleh Customer</th>
-                            <th>Aksi</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @php
-                            $i = 1;
-                        @endphp
-                        @foreach($points as $point)
+    <!--begin::Body-->
+    <div class="card-body py-3">
+        <!--begin::Table container-->
+        <div class="table-responsive">
+            <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
+                <thead>
+                    <tr class="fw-bold fs-6 text-gray-800">
+                        <th>No.</th>
+                        <th class="text-center">Layanan</th>
+                        <th class="text-center">Kelipatan Transaksi</th>
+                        <th class="text-center">Jumlah Point Yang Di Dapat Oleh Customer</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($points as $point)
                         <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td class="text-center">{{strtoupper($point->service->name)}}</td>
-                            <td class="text-center">Rp. {{number_format($point->multiple,0,',','.')}}</td>
-                            <td class="text-center">{{$point->value}} Point / {{General::rp($point->multiple)}}</td>
-                            <td><button class="btn btn-sm btn-primary" data-id="{{$point->id}}" data-categoryid="{{$point->category_id}}" data-multiple="{{$point->multiple}}" data-value="{{$point->value}}" data-bs-toggle="modal" data-bs-target="#edit">Edit Data</button></td>
-                        </tbody>
-                        @endforeach
-                    </table>
-{{--                <!--begin::Table-->--}}
-{{--                <table class="table align-middle gs-0 gy-4">--}}
-{{--                    <!--begin::Table head-->--}}
-{{--                    <thead>--}}
-{{--                        <tr class="fw-bold text-muted bg-light">--}}
-{{--                            <th class="min-w-75px ps-4 rounded-start">Category</th>--}}
-{{--                            <th class="min-w-125px">Name</th>--}}
-{{--                            <th class="min-w-125px">Value</th>--}}
-{{--                            <th class="min-w-125px">Percent</th>--}}
-{{--                            <th class="min-w-150px text-end rounded-end"></th>--}}
-{{--                        </tr>--}}
-{{--                    </thead>--}}
-{{--                    <!--end::Table head-->--}}
-{{--                    <!--begin::Table body-->--}}
-{{--                    <tbody>--}}
-{{--                        @foreach($points as $point)--}}
-{{--                        <tr>--}}
-{{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->category}}</div>--}}
-{{--                            </td>--}}
-{{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->name}}</div>--}}
-{{--                            </td>--}}
-{{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary mb-1 fs-6">{{$point->value}}</div>--}}
-{{--                            </td>--}}
-{{--                            <td>--}}
-{{--                                <div class="text-dark fw-bold text-hover-primary d-block mb-1 fs-6">{{($point->is_percent) ? "Yes" : "No"}}--}}
-{{--                                </div>--}}
-{{--                            </td>--}}
-{{--                            <td class="text-end">--}}
-{{--                                <a class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 btn-edit"--}}
-{{--                                    data-id="{{$point->id}}" data-category="{{$point->category}}" data-name="{{$point->name}}" data-value="{{$point->value}}" data-is_percent="{{$point->is_percent}}" data-bs-toggle="modal" data-bs-target="#edit">--}}
-{{--                                    <i class="ki-duotone ki-pencil fs-2">--}}
-{{--                                        <span class="path1"></span>--}}
-{{--                                        <span class="path2"></span>--}}
-{{--                                    </i>--}}
-{{--                                </a>--}}
-{{--                            </td>--}}
-{{--                        </tr>--}}
-{{--                        @endforeach--}}
-{{--                    </tbody>--}}
-{{--                    <tfoot>--}}
-{{--                        <tr>--}}
-{{--                            <td>--}}
-{{--                                {{$points->appends(request()->input())->links('vendor.pagination.bootstrap-5')}}--}}
-{{--                            </td>--}}
-{{--                        </tr>--}}
-{{--                        </tfoot>--}}
-{{--                    <!--end::Table body-->--}}
-{{--                </table>--}}
-{{--                <!--end::Table-->--}}
-            </div>
-            <!--end::Table container-->
+                            <td>{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ strtoupper($point->service->name) }}</td>
+                            <td class="text-center">Rp. {{ number_format($point->multiple, 0, ',', '.') }}</td>
+                            <td class="text-center">{{ $point->value }} Point / {{ General::rp($point->multiple) }}</td>
+                            <td class="text-center"><button class="btn btn-sm btn-primary" data-id="{{ $point->id }}"
+                                    data-categoryid="{{ $point->category_id }}" data-multiple="{{ $point->multiple }}"
+                                    data-value="{{ $point->value }}" data-bs-toggle="modal" data-bs-target="#edit">Edit
+                                    Data</button></td>
+                    @endforeach
+                </tbody>
+            </table>
+            {{--                <!--end::Table--> --}}
         </div>
-        <!--begin::Body-->
-</div>
-<!--end::Tables Widget 11-->
-
-
-{{-- modal --}}
-<!--begin::Modal - New Target-->
-{{-- <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
+        <!--end::Table container-->
+    </div>
+    <!--begin::Body-->
+    </div>
+    <!--end::Tables Widget 11-->
+    {{-- modal --}}
+    <!--begin::Modal - New Target-->
+    {{-- <div class="modal fade" id="create" tabindex="-1" aria-hidden="true">
     <!--begin::Modal dialog-->
     <div class="modal-dialog modal-dialog-centered mw-650px">
         <!--begin::Modal content-->
@@ -139,7 +85,7 @@
                         <div class="col-md-12 fv-row">
                             <label class="required fs-6 fw-semibold mb-2">Category</label>
                             <select class="form-select form-select-solid" name="service_id">
-                                @foreach($services as $service)
+                                @foreach ($services as $service)
                                 <option value="{{$service->id}}">{{$service->name}}</option>
                                 @endforeach
                             </select>
@@ -194,126 +140,178 @@
     </div>
     <!--end::Modal dialog-->
 </div> --}}
-<!--end::Modal - New Target-->
+    <!--end::Modal - New Target-->
 
 
-<!--begin::Modal - New Target-->
-<div class="modal fade" id="edit" tabindex="-1" aria-hidden="true">
-    <!--begin::Modal dialog-->
-    <div class="modal-dialog modal-dialog-centered mw-650px">
-        <!--begin::Modal content-->
-        <div class="modal-content rounded">
-            <!--begin::Modal header-->
-            <div class="modal-header pb-0 border-0 justify-content-end">
-                <!--begin::Close-->
-                <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
-                    <i class="ki-duotone ki-cross fs-1">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                    </i>
+    <!--begin::Modal - New Target-->
+    <div class="modal fade" id="edit" tabindex="-1" aria-hidden="true">
+        <!--begin::Modal dialog-->
+        <div class="modal-dialog modal-dialog-centered mw-650px">
+            <!--begin::Modal content-->
+            <div class="modal-content rounded">
+                <!--begin::Modal header-->
+                <div class="modal-header pb-0 border-0 justify-content-end">
+                    <!--begin::Close-->
+                    <div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+                        <i class="ki-duotone ki-cross fs-1">
+                            <span class="path1"></span>
+                            <span class="path2"></span>
+                        </i>
+                    </div>
+                    <!--end::Close-->
                 </div>
-                <!--end::Close-->
-            </div>
-            <!--begin::Modal header-->
-            <!--begin::Modal body-->
-            <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
-                <!--begin:Form-->
-                <form id="kt_modal_new_target_form" class="form" method="post" action="{{route('admin.point.update')}}">
-                    @method('put')
-                    @csrf
-                    <input type="hidden" name="id" id="id">
-                    <!--begin::Heading-->
-                    <div class="mb-13 text-center">
-                        <!--begin::Title-->
-                        <h1 class="mb-3">Update Point</h1>
-                        <!--end::Title-->
-                    </div>
-                    <!--end::Heading-->
-                    <!--begin::Input group-->
-                    <div class="row g-9 mb-8">
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Kelipatan</label>
-                            <input type="text" name="multiple" id="multiple" class="form-control form-control-solid"  placeholder="Kelipatan">
-                            @error('multiple')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
+                <!--begin::Modal header-->
+                <!--begin::Modal body-->
+                <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
+                    <!--begin:Form-->
+                    <form id="kt_modal_new_target_form" class="form" method="post"
+                        action="{{ route('admin.point.update') }}" onsubmit="return false;">
+                        @method('put')
+                        @csrf
+                        <input type="hidden" name="id" id="id">
+
+                        <!--begin::Heading-->
+                        <div class="mb-13 text-center">
+                            <h1 class="mb-3">Setting Point Yang Diperoleh Customer</h1>
                         </div>
-                        <div class="col-md-6 fv-row">
-                            <label class="required fs-6 fw-semibold mb-2">Value</label>
-                            <input type="text" name="value" id="value" class="form-control form-control-solid"  placeholder="Value">
-                            @error('value')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{$message}}</strong>
-                                </span>
-                            @enderror
+                        <!--end::Heading-->
+
+                        <!--begin::Input group-->
+                        <div class="row g-9 mb-8">
+                            <div class="col-md-12">
+                                <label class="form-label required">Kelipatan Transaksi</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1">Rp.</span>
+                                    <input type="text" name="multiple" id="multiple" class="form-control"
+                                        placeholder="Masukan kelipatan transaksi">
+                                </div>
+                                <div id="alert-multiple" class="text-danger mt-1 d-none"></div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label required">Jumlah Point Yang Akan Diterima Setiap Kelipatan
+                                    Transaksi</label>
+                                <div class="input-group">
+                                    <input type="text" name="value" id="value" class="form-control"
+                                        placeholder="Masukan Jumlah Point">
+                                    <span class="input-group-text" id="basic-addon1">Point</span>
+                                </div>
+                                <div id="alert-value" class="text-danger mt-1 d-none"></div>
+                            </div>
                         </div>
-                    </div>
-                    <!--end::Input group-->
-                    <!--begin::Actions-->
-                    <div class="text-center">
-                        <button type="reset" id="kt_modal_new_target_cancel" class="btn btn-light me-3">Cancel</button>
-                        <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary">
-                            <span class="indicator-label">Submit</span>
-                            <span class="indicator-progress">Please wait...
-                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-                        </button>
-                    </div>
-                    <!--end::Actions-->
-                </form>
-                <!--end:Form-->
+                        <!--end::Input group-->
+
+                        <!--begin::Actions-->
+                        <div class="d-flex justify-content-between">
+                            <button type="reset" id="kt_modal_new_target_cancel"
+                                class="btn btn-light me-3 w-100">Cancel</button>
+                            <button type="submit" id="kt_modal_new_target_submit" class="btn btn-primary w-100">Simpan
+                                Perubahan</button>
+                        </div>
+                        <!--end::Actions-->
+                    </form>
+                    <!--end:Form-->
+                </div>
+                <!--end::Modal body-->
             </div>
-            <!--end::Modal body-->
+            <!--end::Modal content-->
         </div>
-        <!--end::Modal content-->
+        <!--end::Modal dialog-->
     </div>
-    <!--end::Modal dialog-->
-</div>
-<!--end::Modal - New Target-->
+    <!--end::Modal - New Target-->
 @endsection
 
 @push('add-script')
-<script>
- $(function() {
-    $('#edit').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget);
-        var id = button.data('id');
-        var multiple = button.data('multiple');
-        var name = button.data('name');
-        var value = button.data('value');
-        var is_percent = button.data('is_percent');
+    <script>
+        $(function() {
+            $('#edit').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // The button that triggered the modal
+                var id = button.data('id');
+                var multiple = button.data('multiple');
+                var name = button.data('name');
+                var value = button.data('value');
+                var is_percent = button.data('is_percent');
 
-        var modal = $(this);
-        modal.find('#id').val(id);
-        modal.find('#name').val(name);
-        modal.find('#multiple').val(multiple);
-        modal.find('#value').val(value);
+                var modal = $(this);
+                modal.find('#id').val(id);
+                modal.find('#name').val(name);
+                modal.find('#multiple').val(multiple);
+                modal.find('#value').val(value);
 
-        $(`#percent option[value=${is_percent}]`).attr('selected','selected');
+                // Optionally set the is_percent field if you have it
+                $(`#percent option[value=${is_percent}]`).attr('selected', 'selected');
+            });
 
-    });
-});
- $(document).ready( function () {
-     $('#kt_datatable_zero_configuration').DataTable({
-         "scrollY": "500px",
-         "scrollCollapse": true,
-         "language": {
-             "lengthMenu": "Show _MENU_",
-         },
-         "dom":
-             "<'row'" +
-             "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
-             "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
-             ">" +
+            // Submit button click event to handle form submission via AJAX
+            $('#kt_modal_new_target_submit').click(function(e) {
+                e.preventDefault(); // Prevent the form from submitting normally
 
-             "<'table-responsive'tr>" +
+                let id = $('#id').val();
+                let multiple = $('#multiple').val();
+                let value = $('#value').val();
+                let token = $("meta[name='csrf-token']").attr("content");
 
-             "<'row'" +
-             "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
-             "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
-             ">"
-     });
- } );
-</script>
+                // Reset any existing error messages
+                $('#alert-multiple').addClass('d-none').removeClass('d-block');
+                $('#alert-value').addClass('d-none').removeClass('d-block');
+
+                // Make the AJAX request to update the point
+                $.ajax({
+                    url: `/admin/point`, // Update this URL if necessary
+                    type: 'PUT',
+                    data: {
+                        "id": id,
+                        "multiple": multiple,
+                        "value": value,
+                        "_token": token
+                    },
+                    success: function(response) {
+                        // On success, close the modal and reload the page
+                        $('#kt_modal_new_target_form')[0].reset(); // Reset form fields
+                        $('#edit').modal('hide'); // Hide the modal
+                        location.reload(); // Reload the page to reflect changes
+                    },
+                    error: function(error) {
+                        console.log("Validation Error", error);
+
+                        // Check if the error response contains validation messages
+                        if (error.responseJSON && error.responseJSON.errors) {
+                            // Handle validation error messages
+                            if (error.responseJSON.errors.multiple) {
+                                $('#alert-multiple').removeClass('d-none').addClass('d-block')
+                                    .html(error.responseJSON.errors.multiple[
+                                    0]); // Show the error message for 'multiple'
+                            }
+                            if (error.responseJSON.errors.value) {
+                                $('#alert-value').removeClass('d-none').addClass('d-block')
+                                    .html(error.responseJSON.errors.value[
+                                    0]); // Show the error message for 'value'
+                            }
+                        }
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            $('#kt_datatable_zero_configuration').DataTable({
+                "scrollY": "500px",
+                "scrollCollapse": true,
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom": "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+        });
+    </script>
 @endpush

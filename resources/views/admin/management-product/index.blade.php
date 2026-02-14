@@ -24,14 +24,14 @@
                 <table class="table-row-dashed fs-6 gy-5 table-bordered table align-middle" id="kt_datatable_zero_configuration">
                     <thead>
                     <tr class="fw-bold fs-6 text-gray-800">
-                        <th>No.</th>
-                        <th>Category</th>
-                        <th>Kode</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Harga Pokok</th>
-                        <th>Harga Jual (+Admin)</th>
-                        <th>Status</th>
+                        <th class="text-center">No.</th>
+                        <th class="text-center">Category</th>
+                        <th class="text-center">Kode</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Harga Pokok</th>
+                        <th class="text-center">Harga Jual (+Admin)</th>
+                        <th class="text-center">Status</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -40,14 +40,14 @@
                     @endphp
                     @foreach($products as $product)
                         <tr>
-                            <td>{{$i++}}</td>
-                            <td>{{strtoupper($product->category)}}</td>
-                            <td>{{$product->kode}}</td>
-                            <td>{{$product->name}}</td>
-                            <td>{{$product->description}}</td>
-                            <td>Rp. {{number_format($product->price,0,',','.')}}</td>
-                            <td>Rp. {{number_format($product->price+2500,0,',','.')}}</td>
-                            <td><span class="badge badge-{{$product->is_active == 1 ? 'success' : 'danger'}}">{{$product->is_active == 1 ? 'Aktif' : 'Non Aktif'}}</span></td>
+                            <td class="text-center">{{$i++}}</td>
+                            <td class="text-center">{{strtoupper($product->category)}}</td>
+                            <td class="text-center">{{$product->kode}}</td>
+                            <td class="text-center">{{$product->name}}</td>
+                            <td class="text-center">{{$product->description}}</td>
+                            <td class="text-center">Rp. {{number_format($product->price,0,',','.')}}</td>
+                            <td class="text-center">Rp. {{number_format($product->price+2500,0,',','.')}}</td>
+                            <td class="text-center"><span class="badge badge-{{$product->is_active == 1 ? 'success' : 'danger'}}">{{$product->is_active == 1 ? 'Aktif' : 'Non Aktif'}}</span></td>
                         </tr>
                     @endforeach
                     </tbody>

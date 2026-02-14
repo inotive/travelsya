@@ -17,11 +17,31 @@ class Role
     public function handle(Request $request, Closure $next): Response
     {
         $user = Auth::user();
+
+        \Log::info('Role middleware executing', [
+            'user_id' => $user?->id,
+            'email' => $user?->email,
+            'role' => $user?->role,
+            'path' => $request->path(),
+            'ip' => $request->ip()
+        ]);
+
         if ($user->role == 2) {
+            \Log::info('User role 2 detected, invalidating session and redirecting', [
+                'user_id' => $user->id,
+                'email' => $user->email
+            ]);
+
             $request->session()->invalidate();
             $request->session()->regenerateToken();
             return redirect('/');
         }
+
+        \Log::info('User allowed to continue', [
+            'user_id' => $user->id,
+            'role' => $user->role
+        ]);
+
         return $next($request);
     }
 }

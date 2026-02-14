@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaction_id')->constrained();
             $table->foreignId('hotel_room_id')->constrained();
+            $table->foreignId('hotel_id')->constrained();
             $table->date('start');
             $table->date('end');
             $table->softDeletes();

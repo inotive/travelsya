@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Transaction extends Model
@@ -26,6 +29,62 @@ class Transaction extends Model
     {
         return $this->hasMany(DetailTransaction::class);
     }
+
+    public function detailTransactionPPOB()
+    {
+        return $this->hasMany(DetailTransactionPPOB::class, 'transaction_id', 'id');
+    }
+    public function detailTransactionTopUp()
+    {
+        return $this->hasMany(DetailTransactionTopUp::class);
+    }
+
+    public function detailTransactionHotel()
+    {
+        return $this->hasMany(DetailTransactionHotel::class);
+    }
+
+    public function detailTransactionHostel()
+    {
+        return $this->hasMany(DetailTransactionHostel::class);
+    }
+
+
+    /**
+     * Get the detailTransactionRecreation that owns the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function detailTransactionRecreation(): BelongsTo
+    {
+        return $this->belongsTo(detailTransactionRecreation::class, 'id', 'transaction_id');
+    }
+
+    public function detailTransactionClinic(): BelongsTo
+    {
+        return $this->belongsTo(DetailTransactionHealthBeauty::class, 'id', 'transaction_id');
+    }
+
+    /**
+     * Get all of the detailTransactionBus for the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function detailTransactionBus(): HasMany
+    {
+        return $this->hasMany(DetailTransactionBus::class, 'transaction_id', 'id');
+    }
+
+    public function detailTransactionCarRent(): BelongsTo
+    {
+        return $this->belongsTo(DetailTransactionCarRental::class, 'id', 'transaction_id');
+    }
+
+    public function detailTransactionHealthBeauty(): BelongsTo
+    {
+        return $this->belongsTo(DetailTransactionHealthBeauty::class, 'id', 'transaction_id');
+    }
+
 
     /**
      * Get all of the product for the Transaction
@@ -68,6 +127,41 @@ class Transaction extends Model
     }
 
     /**
+     * Get the comment associated with the Transaction
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function comment(): HasOne
+    {
+        return $this->hasOne(ClinicRating::class, 'transaction_id', 'id');
+    }
+
+    public function commentRecreation(): HasOne
+    {
+        return $this->hasOne(RecreationRatings::class, 'transaction_id', 'id');
+    }
+
+    public function commentCarRent(): HasOne
+    {
+        return $this->hasOne(CarRentalRating::class, 'transaction_id', 'id');
+    }
+
+    public function commentBusTravel(): HasOne
+    {
+        return $this->hasOne(BusTravelRating::class, 'transaction_id', 'id');
+    }
+
+    public function historyPointIN()
+    {
+        return $this->hasMany(HistoryPoint::class)->where('flow', 'debit');
+    }
+
+    public function historyPointOut()
+    {
+        return $this->hasMany(HistoryPoint::class)->where('flow', 'credit');
+    }
+
+    /**
      * Get the category that owns the Product
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -75,5 +169,10 @@ class Transaction extends Model
     public function services()
     {
         return $this->belongsTo(Service::class, 'service_id', 'id');
+    }
+
+    public function hostelRating()
+    {
+        return $this->hasMany(HostelRating::class);
     }
 }

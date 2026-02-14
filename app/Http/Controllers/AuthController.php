@@ -117,4 +117,6 @@ class AuthController extends Controller
 
         return redirect()->route('login.view', ['message' => 'Password has been reset']);
     }
+
+    
 }

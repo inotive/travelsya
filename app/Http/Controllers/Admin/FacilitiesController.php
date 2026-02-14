@@ -7,6 +7,7 @@ use App\Models\Facility;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -42,22 +43,20 @@ class FacilitiesController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            $errorMessages = $validator->errors()->all();
+            toast($errorMessages, 'error');
+            return redirect()->back();
         }
 
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            
-            // Simpan gambar dengan nama yang di-hash
-            $image->storeAs('public/facilities/', $image->hashName());
-            
-            // Lanjutkan dengan logika lain terkait pengunggahan file jika ada
+            $image = $request->file('image')->store('facilities', 'public');
         } else {
-            return response()->json(['error' => 'Tidak ada file yang diunggah'], 422);
+            toast('Tidak ada file yang diunggah', 'error');
+            return redirect()->back();
         }
 
         Facility::create([
-            'icon' => $image->hashName(),
+            'icon' => $image,
             'name' => $request->name,
         ]);
 
@@ -91,27 +90,31 @@ class FacilitiesController extends Controller
      */
     public function update(Request $request, Facility $facility)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'name' => 'required',
-        //     'icon' => 'required'
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
-        // ]);
+        ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json($validator->errors(), 422);
-        // }
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         if ($request->hasFile('image')) {
+            $oldImagePath = 'public/' . $facility->icon;
+            if (Storage::exists($oldImagePath)) {
+                Storage::delete($oldImagePath);
+                Log::info('File deleted successfully: ' . $oldImagePath);
+            } else {
+                Log::info('File not found: ' . $oldImagePath);
+            }
+
 
             //upload new image
-            $image = $request->file('image');
-            $image->storeAs('public/facilities/', $image->hashName());
-
-            //delete old image
-            Storage::delete('public/facilities/' . $facility->image);
+            $image = $request->file('image')->store('facilities', 'public');
 
             DB::table('facilities')->where('id', $facility->id)->update([
-                'icon' => $image->hashName(),
+                'icon' => $image,
                 'name' => $request->name,
             ]);
         } else {
@@ -135,7 +138,7 @@ class FacilitiesController extends Controller
      */
     public function destroy(Facility $facility)
     {
-        Storage::delete('public/facilities/' . $facility->image);
+        Storage::delete('public/' . $facility->image);
         $facility->delete();
 
         toast('Facilities has been deleted', 'success');

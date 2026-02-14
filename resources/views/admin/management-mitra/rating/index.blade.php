@@ -30,7 +30,7 @@
                             <!--begin::Actions-->
                             <div class="d-flex my-4 flex-column mt-0 m-5">
                                 <a href="#"
-                                    class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ number_format($avg_rate, 1) }}
+                                    class="text-gray-900 text-hover-primary fs-1 fw-bold me-1">{{ number_format($avg_rate, 1) }} ()
                                     / 5</a>
                                 <span class="fw-semibold fs-7 text-gray-700">Dari {{ $total_review }} Review</span>
                                 <!--begin::Menu-->
@@ -92,7 +92,7 @@
             <!--begin::Card body-->
             @foreach ($ratings as $rating)
                 <div class="d-flex flex-wrap flex-sm-nowrap border border-secondary p-3 m-18 mt-1"
-                    style="border-radius: 20px;" >
+                    style="border-radius: 20px;">
                     <!--begin: Pic-->
 
                     <div class="me-15 mb-1">
@@ -109,8 +109,6 @@
                         <div class="d-flex justify-content-between align-items-start flex-wrap mb-2">
                             <!--begin::User-->
                             <div class="d-flex flex-column">
-
-
                                 <!--begin::Name-->
                                 <div class="d-flex align-items-center mb-2 mt-5">
                                     <a href="#"
@@ -172,7 +170,7 @@
 
                                     @php
                                         $createdAt = \Carbon\Carbon::parse($rating->createdat);
-                                    $formattedDate = $createdAt->Format('d F Y');
+                                        $formattedDate = $createdAt->Format('d F Y');
                                     @endphp
                                 </div>
                                 <!--end::Stats-->

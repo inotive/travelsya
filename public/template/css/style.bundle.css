@@ -56918,7 +56918,7 @@ router-outlet {
 
 [data-kt-app-layout=light-sidebar] .app-sidebar .menu .menu-item .menu-link.active {
     transition: color .2s ease;
-    background-color: var(--bs-app-sidebar-light-menu-link-bg-color-active);
+    background-color: black;
     color: var(--bs-primary)
 }
 

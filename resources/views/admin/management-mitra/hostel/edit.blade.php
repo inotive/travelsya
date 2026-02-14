@@ -32,27 +32,16 @@
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input type="text" class="form-control form-control-lg name-edit" id="name-edit" required />
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-name-edit"></div>
-
-                        @error('name')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
-                        <label class="required fs-6 fw-semibold mb-2">Vendor User</label>
+                        <label class="required fs-6 fw-semibold mb-2">Mitra</label>
                         <select class="form-select form-select-solid user_id-edit" id="user_id-edit">
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-user_id-edit"></div>
-                        @error('user_id')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Active</label>
@@ -60,23 +49,18 @@
                             <option value="1">Yes</option>
                             <option value="0">No</option>
                         </select>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
-                        @error('is_active')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-12">
                         <label for="" class="form-label">Alamat</label>
                         <textarea id="address-edit" cols="30" rows="5" class="form-control address-edit"></textarea>
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-address-edit"></div>
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
                     <div class="col-md-12">
                         <label for="website" class="form-label">Website</label>
                         <input type="text" id="website-edit" class="form-control website-edit"
                             placeholder="Masukan website">
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-website-edit"></div>
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
 
                     <div class="col-md-12">
@@ -86,12 +70,17 @@
                             <option value="Samarinda">Samarinda</option>
                             <option value="Banjarmasin">Banjarmasin</option>
                         </select>
-                        @error('city')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
+                        <div class="alert alert-danger mt-1 d-none"></div>
                     </div>
+
+                    <!--begin::Input group for image upload-->
+                    <div class="col-md-12">
+                        <label class="fs-6 fw-semibold mb-2">Logo/ Gambar Hostel</label>
+                        <input class="form-control form-control-lg" type="file" id="image-edit" name="image" accept="image/*" />
+                        <div class="form-text">Pilih gambar logo atau gambar utama hostel (opsional)</div>
+                    </div>
+                    <!--end::Input group for image upload-->
+
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Bintang</label>
 
@@ -229,6 +218,7 @@
 
 
         let hostel_id = $(this).data('id');
+        $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none')
 
         $.ajax({
             url: `/admin/management-mitra/hostel/${hostel_id}`,
@@ -273,85 +263,47 @@
         let website = $('#website-edit').val();
         let star = $('input[name=star-edit]:checked').val();
         let city = $('#city-edit').val();
+        let image = document.getElementById('image-edit').files[0];
         let token = $("meta[name='csrf-token']").attr("content");
+
+        // Create FormData object to handle file upload
+        let formData = new FormData();
+        formData.append('name', name);
+        formData.append('user_id', user_id);
+        formData.append('is_active', is_active);
+        formData.append('address', address);
+        formData.append('website', website);
+        formData.append('star', star);
+        formData.append('city', city);
+        if(image) {
+            formData.append('image', image);
+        }
+        formData.append('_token', token);
+        formData.append('_method', 'PUT');
 
         //ajax
         $.ajax({
-
             url: `/admin/management-mitra/hostel/${hostel_id}`,
-            type: "PUT",
+            type: "POST", // Use POST method since we're using _method to simulate PUT
             cache: false,
-            data: {
-                "name": name,
-                "user_id": user_id,
-                "is_active": is_active,
-                "address": address,
-                "website": website,
-                "star": star,
-                "city": city,
-                "_token": token
-            },
+            contentType: false,
+            processData: false,
+            data: formData,
             success: function(response) {
-
                 $('#modal-edit').modal('hide');
                 location.reload();
-
-                //data post
-                // let hotel = `
-                //     <tr id="index_${response.data.id}">
-                //         <td>${response.data.user_id}</td>
-                //         <td>${response.data.name}</td>
-                //         <td>${response.data.address}</td>
-                //         <td>${response.data.website}</td>
-                //         <td>${response.data.star}</td>
-                //         <td>${response.data.is_active}</td>
-                //         <td>${response.data.city}</td>
-                //         <td class="text-center">
-                //             <a href="javascript:void(0)" id="btn-edit-post" data-id="${response.data.id}" class="btn btn-primary btn-sm">EDIT</a>
-                //             <a href="javascript:void(0)" id="btn-delete-post" data-id="${response.data.id}" class="btn btn-danger btn-sm">DELETE</a>
-                //         </td>
-                //     </tr>
-                // `;
-                // $(`#index_${response.data.id}`).replaceWith(hotel);
-                // $('#modal-edit').modal('hide');
-                // location.reload();
-
-
             },
-            error: function(error) {
+            error: function(errors) {
+                console.error(errors.responseJSON);
+                $(`.is-invalid`).removeClass('is-invalid').next().empty().addClass('d-none')
+                const messages = errors.responseJSON;
 
-                if (error.responseJSON.name[0]) {
-
-                    //show alert
-                    $('#alert-name-edit').removeClass('d-none');
-                    $('#alert-name-edit').addClass('d-block');
-                    $('#alert-user_id-edit').removeClass('d-none');
-                    $('#alert-user_id-edit').addClass('d-block');
-                    $('#alert-website-edit').removeClass('d-none');
-                    $('#alert-website-edit').addClass('d-block');
-                    $('#alert-star-edit').removeClass('d-none');
-                    $('#alert-star-edit').addClass('d-block');
-                    $('#alert-is_active-edit').removeClass('d-none');
-                    $('#alert-is_active-edit').addClass('d-block');
-                    $('#alert-address-edit').removeClass('d-none');
-                    $('#alert-address-edit').addClass('d-block');
-                    $('#alert-city-edit').removeClass('d-none');
-                    $('#alert-city-edit').addClass('d-block');
-
-
-                    //add message to alert
-                    $('#alert-name-edit').html(error.responseJSON.name[0]);
-                    $('#alert-user_id-edit').html(error.responseJSON.name[0]);
-                    $('#alert-website-edit').html(error.responseJSON.name[0]);
-                    $('#alert-star-edit').html(error.responseJSON.name[0]);
-                    $('#alert-is_active-edit').html(error.responseJSON.name[0]);
-                    $('#alert-address-edit').html(error.responseJSON.name[0]);
-                    $('#alert-city-edit').html(error.responseJSON.name[0]);
+                if(messages) {
+                    for (const key in messages) {
+                        $(`#${key}-edit`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                    }
                 }
-
             }
-
         });
-
     });
 </script>

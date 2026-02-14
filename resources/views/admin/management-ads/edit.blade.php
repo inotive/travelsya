@@ -45,60 +45,40 @@
                     <div class="col-md-12">
                         <label class="required fs-6 fw-semibold mb-2">Nama</label>
                         <input class="form-control form-control-lg edit-name" id="edit-name"
-                            placeholder="Masukan nama hostel" name="name" required />
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-name"></div>
+                            placeholder="Masukan nama hostel" name="name" />
+                        <div class="alert alert-danger mt-1 d-none"></div>
 
-                        @error('name')
-                            <span class="text-danger mt-1" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
                     </div>
                     <div class="row g-9 mb-8">
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">URL</label>
-                            <input class="form-control form-control-lg edit-icon" id="edit-url"
-                                placeholder="Masukan nama hostel" name="url" required />
-                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-url"></div>
-
-                            @error('url')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <input class="form-control form-control-lg edit-icon edit-url" id="edit-url"
+                                placeholder="Masukan website" name="url" />
+                                <div class="alert alert-danger mt-1 d-none"></div>
                         </div>
 
                         {{-- IMAGE --}}
                         
                         <div class="col-md-12 ">
                             <label class="required fs-6 fw-semibold mb-2">Gambar</label>
-                            <img id="image-preview" src="" alt="Preview Gambar"
-                                style="max-width: 200px; display: none;">
-                            <input type="file" name="image" class="form-control image-file" id="image-file"
+                            <div>
+                                <img class="mb-2" id="image-preview" alt="Preview Gambar" width="75">
+                            </div>
+                            <input type="file" name="image" class="form-control edit-image" id="image-file"
                                 accept="image/*">
-                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-url"></div>
-                            @error('image')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <div class="alert alert-danger mt-1 d-none"></div>
                         </div>
 
 
 
                         <div class="col-md-12">
                             <label class="required fs-6 fw-semibold mb-2">Active</label>
-                            <select class="form-select form-select-solid is_active-edit" name="is_active"
+                            <select class="form-select form-select-solid edit-is_active" name="is_active"
                                 id="is_active-edit">
                                 <option value="1">Yes</option>
                                 <option value="0">No</option>
                             </select>
-                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-edit-is_active"></div>
-                            @error('is_active')
-                                <span class="text-danger mt-1" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
+                            <div class="alert alert-danger mt-1 d-none"></div>
                         </div>
 
 
@@ -142,21 +122,29 @@
 
 <script>
 
+    $('#image-file').change(function (e) { 
+        e.preventDefault();
+        const value = URL.createObjectURL(event.target.files[0]);
+        $('#image-preview').attr('src', value);
+    });
     
 
     $('body').on('click', '#btn-edit-post', function() {
         let ads_id = $(this).data('id');
+        let currentUrl = window.location.origin; 
+        
 
         $.ajax({
             url: `/admin/ads/${ads_id}`,
             type: "GET",
             cache: false,
             success: function(response) {
+                let imagePath = `${currentUrl}/media/ads/${response.data.image}`; 
                 $('#ads_id').val(response.data.id);
                 $('#edit-url').val(response.data.url);
                 $('#edit-name').val(response.data.name);
                 $('#is_active-edit').val(response.data.is_active);
-                $('#image-preview').attr('src', response.data.image);
+                $('#image-preview').attr('src', imagePath);
                 $('#image-preview').show();
 
                 $('#modal-edit').modal('show');
@@ -193,22 +181,32 @@
                 $('#modal-edit').modal('hide');
                 location.reload();
             },
-            error: function(error) {
-                if (error.responseJSON && error.responseJSON.name && error.responseJSON.name[0]) {
-                    // Show alert
-                    $('#alert-edit-url').removeClass('d-none').addClass('d-block');
-                    $('#alert-edit-name').removeClass('d-none').addClass('d-block');
-                    $('#alert-edit-image').removeClass('d-none').addClass('d-block');
-                    $('#alert-edit-is_active').removeClass('d-none').addClass('d-block');
-
-
-                    // Add message to alert
-                    $('#alert-edit-url').html(error.responseJSON.name[0]);
-                    $('#alert-edit-name').html(error.responseJSON.name[0]);
-                    $('#alert-edit-image').html(error.responseJSON.name[0]);
-                    $('#alert-edit-is_active').html(error.responseJSON.name[0]);
-
+            error: function(errors) {
+                console.info(errors);
+                const messages = errors.responseJSON;
+                $('.is-invalid').removeClass('is-invalid').next().empty().addClass('d-none');
+                
+                if(messages) {
+                    for (const key in messages) {
+                        $(`.edit-${key}`).addClass('is-invalid').next().removeClass('d-none').html(messages[key]);
+                    }
                 }
+
+                // if (error.responseJSON && error.responseJSON.name && error.responseJSON.name[0]) {
+                //     // Show alert
+                //     $('#alert-edit-url').removeClass('d-none').addClass('d-block');
+                //     $('#alert-edit-name').removeClass('d-none').addClass('d-block');
+                //     $('#alert-edit-image').removeClass('d-none').addClass('d-block');
+                //     $('#alert-edit-is_active').removeClass('d-none').addClass('d-block');
+
+
+                //     // Add message to alert
+                //     $('#alert-edit-url').html(error.responseJSON.name[0]);
+                //     $('#alert-edit-name').html(error.responseJSON.name[0]);
+                //     $('#alert-edit-image').html(error.responseJSON.name[0]);
+                //     $('#alert-edit-is_active').html(error.responseJSON.name[0]);
+
+                // }
             }
         });
     });

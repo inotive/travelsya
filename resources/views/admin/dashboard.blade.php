@@ -1,4 +1,4 @@
-@extends('admin.layout',['title' => 'Dashboard',"url" => "#"])
+@extends('admin.layout', ['title' => 'Dashboard', 'url' => '#'])
 
 @section('content-admin')
     <div class="row gy-5 g-xl-10">
@@ -7,11 +7,18 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3  class="card-title fw-bold text-success fs-5  d-block">Jumlah Partner</h3>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Mitra (Hotel & Hostel)</h3>
                     <div class="py-1">
-                        <span  class=" fw-bold text-dark fs-8  d-block">Keseluruhan</span>
-                        <span class="text-dark fs-1 fw-bold me-2">{{$card['partner']}}</span>
-                        <span class="fw-semibold text-muted fs-7">Partner</span>
+                        <span class=" fw-bold text-dark fs-8  d-block">Keseluruhan</span>
+                        <div class="py-1">
+                            {{-- <span class="text-dark fs-1 fw-bold me-2">10 Partner</span> --}}
+                            <span class="text-dark fs-1 fw-bold me-2">{{ $card['partner'] }}</span>
+
+                            {{--                        <span class="text-dark fs-1 fw-bold me-2">{{$card['guest']}}</span> --}}
+
+                            <span class="fw-semibold text-muted fs-7">Partner</span>
+                        </div>
+                        {{--                        <span class="text-dark fs-1 fw-bold me-2">{{$card['partner']}}</span> --}}
                     </div>
                 </div>
                 <!--end:: Body-->
@@ -23,11 +30,13 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3  class="card-title fw-bold text-success fs-5  d-block">Jumlah Transaksi</h3>
-                    <span  class=" fw-bold text-dark fs-8  d-block">Hari Ini</span>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Jumlah Transaksi</h3>
+                    <span class=" fw-bold text-dark fs-8  d-block">Hari Ini</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-1 fw-bold me-2">{{$card['transactionToday']}}</span>
+                        {{-- <span class="text-dark fs-1 fw-bold me-2">103123</span> --}}
+
+                        <span class="text-dark fs-1 fw-bold me-2">{{ $card['transactionToday'] }}</span>
 
                         <span class="fw-semibold text-muted fs-7">Transaksi</span>
                     </div>
@@ -41,11 +50,16 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3  class="card-title fw-bold text-success fs-5  d-block">Pendapatan Transaksi</h3>
-                    <span  class=" fw-bold text-dark fs-8  d-block">Hari Ini</span>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Pendapatan Transaksi</h3>
+                    <span class=" fw-bold text-dark fs-8  d-block">Hari Ini</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-5 fw-bold me-2">{{General::rp((int)$card['sumDayTransaction'])}}</span>
+                        {{-- <span class="text-dark fs-1 fw-bold me-2">103123</span> --}}
+                        <span class="text-dark fs-2 fw-bold me-2">{{ $card['sumDayTransaction'] }}</span>
+
+                        {{--                        <span class="text-dark fs-1 fw-bold me-2">{{$card['transactionToday']}}</span> --}}
+
+                        {{--                        <span class="text-dark fs-5 fw-bold me-2">{{General::rp((int)$card['sumDayTransaction'])}}</span> --}}
                     </div>
                 </div>
                 <!--end:: Body-->
@@ -57,11 +71,14 @@
             <div class="card bg-light-success card-xl-stretch mb-xl-8">
                 <!--begin::Body-->
                 <div class="card-body my-3">
-                    <h3  class="card-title fw-bold text-success fs-5  d-block">Pendapatan Transaksi</h3>
-                    <span  class=" fw-bold text-dark fs-8  d-block">Bulan Ini</span>
+                    <h3 class="card-title fw-bold text-success fs-5  d-block">Pendapatan Transaksi</h3>
+                    <span class=" fw-bold text-dark fs-8  d-block">Bulan Ini</span>
 
                     <div class="py-1">
-                        <span class="text-dark fs-5 fw-bold me-2">{{General::rp((int)$card['sumMonthTransaction'])}}</span>
+                        <span class="text-dark fs-2 fw-bold me-2">{{ $card['sumMonthTransaction'] }}</span>
+
+                        {{--                        <span class="text-dark fs-1 fw-bold me-2">{{$card['transactionToday']}}</span> --}}
+                        {{--                        <span class="text-dark fs-5 fw-bold me-2">{{General::rp((int)$card['sumMonthTransaction'])}}</span> --}}
                     </div>
                 </div>
                 <!--end:: Body-->
@@ -73,320 +90,585 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header">
-                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-5 fs-6 fw-bold text-dark">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_all">PPOB</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_all">Pulsa & Data</a>
-                        </li>
-{{--                        @foreach($services as $key => $service)--}}
-{{--                        <li class="nav-item">--}}
-{{--                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_{{$key}}">{{ucfirst($service->name)}}</a>--}}
-{{--                        </li>--}}
-{{--                        @endforeach--}}
-                    </ul>
-                </div>
+
                 <div class="card-body">
+                    <ul class="nav nav-tabs nav-line-tabs nav-line-tabs-2x my-3 fs-6  text-danger">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_all">Semua Transaksi
+                                ({{ count($semuaTransaksi) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_penginapan">Penginapan
+                                ({{ count($transaksiHotel) + count($transaksiHostel) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_ppob">Tagihan
+                                ({{ count($transaksiPPOB) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_top_up">Top UP
+                                ({{ count($transaksiTopUp) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_rekreasi">Rekreasi
+                                ({{ count($transaksiRekreasi) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_health_beauty">Health & Beauty
+                                ({{ count($transaksiHealthBeauty) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_bus_travel">Bus & Travel
+                                ({{ count($transaksiBusTravel) }})</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_car_rent">Rental Mobil
+                                ({{ count($transaksiCarRent) }})</a>
+                        </li>
+                        {{--                        @foreach ($services as $key => $service) --}}
+                        {{--                        <li class="nav-item"> --}}
+                        {{--                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_{{$key}}">{{ucfirst($service->name)}}</a> --}}
+                        {{--                        </li> --}}
+                        {{--                        @endforeach --}}
+                    </ul>
                     <div class="tab-content" id="myTabContent">
                         <div class="tab-pane fade show active" id="kt_tab_pane_all" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
+                                    id="kt_datatable_zero_configuration">
                                     <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal</th>
-                                        <th>Invoice</th>
-                                        <th>Code Booking</th>
-                                        <th>Customer</th>
-                                        <th>Layanan</th>
-                                        <th>Check IN</th>
-                                        <th>Check Out</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
-                                        <th>Fee Admin</th>
-                                        <th>Status</th>
-                                    </tr>
+                                        <tr class="fw-bold text-gray-800">
+                                            <th>Tanggal</th>
+                                            <th>Invoice</th>
+                                            <th>Produk</th>
+                                            <th>Customer</th>
+                                            <th>Deskripsi</th>
+                                            <th>Metode Pembayaran</th>
+                                            <th>Harga</th>
+                                            <th>Biaya layanan</th>
+                                            <th>Potongan Point</th>
+                                            <th>Grand Total</th>
+
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($transactions as $key => $transaction)
-                                        <tr>
-                                            <td>{{date('d/m/y',strtotime($transaction->created_at))}}</td>
-                                            <td>{{$transaction->no_inv}}</td>
-                                            <td>{{$transaction->req_id}}</td>
-                                            <td>{{$transaction->user->name}}</td>
-                                            <td>{{strtoupper($transaction->service)}}</td>
-                                            @if(isset($transaction->bookDate) && count($transaction->bookDate) != 0)
-                                            <td>{{$transaction->bookDate[0]->start}}</td>
-                                            <td>{{$transaction->bookDate[0]->end}}</td>
-                                            @else
-                                            <td></td>
-                                            <td></td>
-                                            @endif
-                                            <td>{{$transaction->payment_method - $transaction->payment_channel}}</td>
-                                            <td>{{number_format($transaction->total,0,',','.')}}</td>
-                                            <td>{{number_format($transaction->total * 15 / 100,0,',','.')}}</td>
-                                            <td><span class="badge {{($transaction->status == 'PAID') ? 'badge-success' : 'badge-danger'}} ">Rp. {{($transaction->status == "PAID" ? "Lunas" : $transaction->status)}}</span></td>
-                                        </tr>
-                                            @php
-                                        if($key == 4) break;
-                                        @endphp
+                                        {{-- @foreach ($transactions as $key => $transaction) --}}
+                                        @foreach ($semuaTransaksi as $all)
+                                            <tr>
+                                                <td>{{ \Carbon\Carbon::parse($all->created_at)->format('d M Y h:i') }}</td>
+                                                <td>{{ $all->no_inv }}</td>
+                                                <td>
+                                                    <span class="badge badge-rounded badge-primary">
+                                                        {{ strtoupper($all->services->name) }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $all->user->name }}</td>
+                                                <td>
+                                                    @if (in_array($all->service_id, [3, 4, 5, 6, 9, 10]))
+                                                        Pembayaran
+                                                        Tagihan {{ strtoupper($all->services->name ?? '-') }}
+                                                        Ke Nomor
+                                                        Pelanggan
+                                                        {{ $all->detailTransactionPPOB->first()->nomor_pelanggan ?? '-' }}
+                                                    @elseif(in_array($all->service_id, [1, 2, 11, 12]))
+                                                        Pembelian
+                                                        {{ strtoupper($all->detailTransactionTopUp->first()->product->description ?? '-') }}
+                                                        Ke
+                                                        Nomor
+                                                        {{ $all->detailTransactionTopUp->first()->nomor_telfon ?? '-' }}
+                                                    @elseif($all->service_id == 8)
+                                                        Reservasi Hostel
+                                                        {{ $all->detailTransactionHotel->first()->hotel->name ?? '-' }}
+                                                        Pada Kamar
+                                                        {{ $all->detailTransactionHotel->first()->hotelRoom?->name ?? '-' }}
+                                                    @elseif($all->service_id == 7)
+                                                        Reservasi Hostel
+                                                        {{ $all->detailTransactionHostel->first()->hostel->name ?? '-' }}
+                                                        Pada Kamar
+                                                        {{ $all->detailTransactionHostel->first()->hostelRoom?->name ?? '-' }}
+                                                    @endif
+                                                </td>
+                                                <td>{!! $all->payment_method ? str_replace('_', ' ', $all->payment_method) : '-' !!}</td>
+                                                <td>
+                                                    @if (in_array($all->service_id, [3, 4, 5, 6, 9, 10]))
+                                                        @currency($all->total - ($all->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($all->detailTransactionPPOB->first()->kode_unik ?? 0) )
+                                                    @elseif(in_array($all->service_id, [1, 2, 11, 12]))
+                                                        @currency($all->total - ($all->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                    @elseif($all->service_id == 8)
+                                                        @currency($all->total - ($all->detailTransactionHotel->first()->fee_admin ?? 0) - ($all->detailTransactionHotel->first()->kode_unik ?? 0))
+                                                    @elseif($all->service_id == 7)
+                                                        @currency($all->total - ($all->detailTransactionHostel->first()->fee_admin ?? 0) - ($all->detailTransactionHostel->first()->kode_unik ?? 0))
+                                                    @endif
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    @if (in_array($all->service_id, [3, 4, 5, 6, 9, 10]))
+                                                        @currency(($all->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($all->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                                    @elseif(in_array($all->service_id, [1, 2, 11, 12]))
+                                                        @currency(($all->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($all->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                    @elseif($all->service_id == 8)
+                                                        @currency(($all->detailTransactionHotel->first()->fee_admin ?? 0) + ($all->detailTransactionHotel->first()->kode_unik ?? 0))
+                                                    @elseif($all->service_id == 7)
+                                                        @currency(($all->detailTransactionHostel->first()->fee_admin ?? 0) + ($all->detailTransactionHostel->first()->kode_unik ?? 0))
+                                                    @endif
+                                                </td>
+                                                <td class="text-danger fw-bold">
+                                                    @currency($all->historyPointOut->first()->point ?? 0)
+                                                </td>
+                                                <td>@currency($all->total)</td>
+                                            </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-{{--                        @foreach($services as $key => $service)--}}
-{{--                        @php--}}
-{{--                        $catId = $service->id;--}}
-{{--                        $filterTransactions = array_filter($transactions->toArray(),function($val) use ($catId){--}}
-{{--                        return ($val['service_id'] == $catId);--}}
-{{--                    });--}}
-{{--                        @endphp--}}
-{{--                        <div class="tab-pane fade" id="kt_tab_pane_{{$key}}" role="tabpanel">--}}
-{{--                            <div class="table-responsive">--}}
-{{--                                <table class="table table-bordered">--}}
-{{--                                    <thead>--}}
-{{--                                    <tr class="fw-bold fs-6 text-gray-800">--}}
-{{--                                        <th>Tanggal</th>--}}
-{{--                                        <th>Invoice</th>--}}
-{{--                                        <th>Code Booking</th>--}}
-{{--                                        <th>Customer</th>--}}
-{{--                                        <th>Check IN</th>--}}
-{{--                                        <th>Check Out</th>--}}
-{{--                                        <th>Metode Pembayaran</th>--}}
-{{--                                        <th>Grand Total</th>--}}
-{{--                                        <th>Status</th>--}}
-{{--                                    </tr>--}}
-{{--                                    </thead>--}}
-{{--                                    <tbody>--}}
-
-{{--                                    @forelse($filterTransactions as $key2 => $transaction)--}}
-{{--                                        <tr>--}}
-{{--                                            <td>{{date('d/m/y',strtotime($transaction["created_at"]))}}</td>--}}
-{{--                                            <td>{{$transaction['no_inv']}}</td>--}}
-{{--                                            <td>{{$transaction['req_id']}}</td>--}}
-{{--                                            <td>{{$transaction['user']['name']}}</td>--}}
-{{--                                            @if(isset($transaction['book_date'])  && count($transaction['book_date']) != 0)--}}
-{{--                                            <td>{{$transaction['book_date'][0]['start']}}</td>--}}
-{{--                                            <td>{{$transaction['book_date'][0]['end']}}</td>--}}
-{{--                                            @else--}}
-{{--                                            <td></td>--}}
-{{--                                            <td></td>--}}
-{{--                                            @endif--}}
-{{--                                            <td>{{$transaction['payment_channel']}}</td>--}}
-{{--                                            <td>{{$transaction['total']}}</td>--}}
-{{--                                            <td><span class="badge {{($transaction['status'] == 'SUCCESS') ? 'badge-success' : 'badge-danger'}} ">{{($transaction['status'] == "SUCCESS" ? "Lunas" : $transaction['status'])}}</span></td>--}}
-{{--                                        </tr>--}}
-{{--                                    @php--}}
-{{--                                    if($key2 == 4) break;--}}
-{{--                                    @endphp--}}
-{{--                                    @empty--}}
-{{--                                        <tr>--}}
-{{--                                            <td colspan="8" class="text-center">Not found</td>--}}
-{{--                                        </tr>--}}
-{{--                                    @endforelse--}}
-{{--                                    </tbody>--}}
-{{--                                </table>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        @endforeach--}}
-                        <div class="tab-pane fade" id="kt_tab_pane_6" role="tabpanel">
+                    </div>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade" id="kt_tab_pane_penginapan" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
+                                    id="kt_datatable_zero_configuration">
                                     <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal</th>
-                                        <th>Invoice</th>
-                                        <th>Code Booking</th>
-                                        <th>Customer</th>
-                                        <th>Check IN</th>
-                                        <th>Check Out</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Grand Total</th>
-                                        <th>Status</th>
-                                    </tr>
+                                        <tr class="fw-bold text-gray-800" >
+                                            <th>Tanggal</th>
+                                            <th>Invoice</th>
+                                            <th>Produk</th>
+                                            <th>Customer</th>
+                                            <th>Nama Ruangan</th>
+                                            <th>Jumlah Ruangan</th>
+                                            <th>Waktu Sewa</th>
+                                            <th>Grand Total</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($transaksiHotel as $hotel)
+                                            <tr>
+                                                <td>{{ $hotel['created_at'] }}</td>
+                                                <td>{{ $hotel['no_inv'] }}</td>
+                                                <td>
+                                                    <span class="badge badge-rounded badge-primary">
+                                                        {{ strtoupper($hotel->services->name ?? '-') }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $hotel->user->name ?? '-' }}</td>
+                                                @foreach ($hotel->detailTransactionHotel as $itemHotel)
+                                                    <td>{{ $itemHotel->hotelRoom->name ?? '-' }}</td>
+                                                    <td>{{ $itemHotel->room ?? '-' }}</td>
+                                                    @php
+                                                        $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_start);
+                                                        $reservasi_end = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHotel->reservation_end);
 
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>CTB1</td>
-                                            <td>Customer {{$i}}</td>
-                                            <td>23 Mei 2023 12:00</td>
-                                            <td>25 Mei 2023 14:00</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 1.500.000</td>
-                                            <td><span class="badge badge-success">Lunas</span></td>
-                                        </tr>
-                                    @endfor
+                                                        $durationInDays = $reservasi_start->diffInDays($reservasi_end);
+                                                    @endphp
+                                                    <td>{{ $durationInDays }} Hari</td>
+                                                @endforeach
+                                                <td>Rp. {{number_format($hotel->total,2,',','.')}}</td>
+                                            </tr>
+                                        @endforeach
+
+                                        @foreach ($transaksiHostel as $hostel)
+                                            <tr>
+                                                <td>{{ $hostel['created_at'] }}</td>
+                                                <td>{{ $hostel['no_inv'] }}</td>
+                                                <td>
+                                                    <span class="badge badge-rounded badge-primary">
+                                                        {{ strtoupper($hostel->services->name ?? '-') }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $hostel->user->name ?? '-' }}</td>
+                                                @foreach ($hostel->detailTransactionHostel as $itemHostel)
+                                                    <td>{{ $itemHostel->hostelRoom->name ?? '-' }}</td>
+                                                    <td>{{ $itemHostel->room ?? '-' }}</td>
+                                                    @php
+                                                        $reservasi_start = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHostel->reservation_start);
+                                                        $reservasi_end = \Carbon\Carbon::createFromFormat('Y-m-d', $itemHostel->reservation_end);
+
+                                                        $durationInMonths = $reservasi_start->diffInMonths($reservasi_end);
+                                                    @endphp
+                                                    <td>{{ $durationInMonths }} Bulan</td>
+                                                @endforeach
+                                                <td>Rp. {{number_format($hostel->total,2,',','.')}}</td>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
+
                                 </table>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_7" role="tabpanel">
+                    </div>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade" id="kt_tab_pane_ppob" role="tabpanel">
                             <div class="table-responsive">
-                                <table class="table table-bordered">
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
+                                    id="kt_datatable_zero_configuration">
                                     <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal Transaksi</th>
-                                        <th>Invoice</th>
-                                        <th>Produk</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
+                                        <tr class="fw-bold text-gray-800">
+                                            <th>Transaksi Dibuat</th>
+                                            <th>Invoice</th>
+                                            <th>Produk</th>
+                                            <th>Customer</th>
+                                            <th>Deskripsi</th>
+                                            <th>Metode Pembayaran</th>
+                                            <th>Harga</th>
+                                            <th>Biaya Layanan</th>
+                                            <th>Potongan Point</th>
+                                            <th>Grand Total</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
+                                        {{-- @foreach ($transactions as $key => $transaction) --}}
+                                        @foreach ($transaksiPPOB as $transaction)
+                                            <tr>
+                                                <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y h:i') }}
+                                                </td>
+                                                <td>{{ $transaction->no_inv }}</td>
+                                                <td>
+                                                    <span class="badge badge-rounded badge-primary">
+                                                        {{ strtoupper($transaction->services->name ?? '-') }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $transaction->user->name }}</td>
+                                                <td>Pembayaran Tagihan
+                                                    {{ strtoupper($transaction->services->name ?? '-') }}
+                                                    Ke Nomor
+                                                    Pelanggan
+                                                    {{ $transaction->detailTransactionPPOB->first()->nomor_pelanggan ?? '-' }}
+                                                    {{ $transaction['transaction_desc'] }}</td>
 
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>Pulsa XL - {{random_int(5000,100000)}}</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 10.000</td>
-                                            <td><span class="badge badge-success">Berhasil</span></td>
-                                            <td><button class="btn btn-outline btn-sm btn-outline btn-outline-primary btn-active-primary-secondary w-100">Lihat Transaksi</button></td>
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_8" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal Transaksi</th>
-                                        <th>Invoice</th>
-                                        <th>Produk</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
+                                                <td>{{ $transaction->payment_method . ' - ' . $transaction->payment_channel }}
+                                                </td>
+                                                <td>
+                                                    @currency( $transaction->total - ($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    @currency(($transaction->detailTransactionPPOB->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionPPOB->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-danger fw-bold">
+                                                    @currency($transaction->historyPointOut->first()->point ?? 0)
+                                                </td>
+                                                <td>@currency($transaction->total)</td>
+                                        @endforeach
 
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>Pulsa XL - {{random_int(5000,100000)}}</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 10.000</td>
-                                            <td><span class="badge badge-success">Berhasil</span></td>
-                                            <td><button class="btn btn-outline btn-sm btn-outline btn-outline-primary btn-active-primary-secondary w-100">Lihat Transaksi</button></td>
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_9" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal Transaksi</th>
-                                        <th>Invoice</th>
-                                        <th>Produk</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
 
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>Pulsa XL - {{random_int(5000,100000)}}</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 10.000</td>
-                                            <td><span class="badge badge-success">Berhasil</span></td>
-                                            <td><button class="btn btn-outline btn-sm btn-outline btn-outline-primary btn-active-primary-secondary w-100">Lihat Transaksi</button></td>
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_10" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal Transaksi</th>
-                                        <th>Invoice</th>
-                                        <th>Produk</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>Pulsa XL - {{random_int(5000,100000)}}</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 10.000</td>
-                                            <td><span class="badge badge-success">Berhasil</span></td>
-                                            <td><button class="btn btn-outline btn-sm btn-outline btn-outline-primary btn-active-primary-secondary w-100">Lihat Transaksi</button></td>
-                                        </tr>
-                                    @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="kt_tab_pane_11" role="tabpanel">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                    <tr class="fw-bold fs-6 text-gray-800">
-                                        <th>Tanggal Transaksi</th>
-                                        <th>Invoice</th>
-                                        <th>Produk</th>
-                                        <th>Metode Pembayaran</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    @for($i = 0; $i < 10; $i++)
-                                        <tr>
-                                            <td>20 Mei 2023</td>
-                                            <td>INV-001</td>
-                                            <td>Pulsa XL - {{random_int(5000,100000)}}</td>
-                                            <td>BCA</td>
-                                            <td>Rp. 10.000</td>
-                                            <td><span class="badge badge-success">Berhasil</span></td>
-                                            <td><button class="btn btn-outline btn-sm btn-outline btn-outline-primary btn-active-primary-secondary w-100">Lihat Transaksi</button></td>
-                                        </tr>
-                                    @endfor
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade" id="kt_tab_pane_top_up" role="tabpanel">
+                            <div class="table-responsive">
+                                <table class="table-row-dashed display gy-5 table-bordered table align-middle" style="font-size: 11px;"
+                                    id="kt_datatable_zero_configuration">
+                                    <thead>
+                                        <tr class="fw-bold  text-gray-800">
+                                            <th>Tanggal</th>
+                                            <th>Invoice</th>
+                                            <th>Produk</th>
+                                            <th>Customer</th>
+                                            <th>Deskripsi</th>
+                                            <th>Metode Pembayaran</th>
+                                            <th>Harga</th>
+                                            <th>Biaya Layanan</th>
+                                            <th>Potongan Point</th>
+                                            <th>Grand Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{-- @foreach ($transactions as $key => $transaction) --}}
+                                        @foreach ($transaksiTopUp as $transaction)
+                                            <tr>
+                                                <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y h:i') }}
+                                                </td>
+                                                <td>{{ $transaction->no_inv }}</td>
+                                                <td>
+                                                    <span class="badge badge-rounded badge-primary">
+                                                        {{ strtoupper($transaction->services->name ?? '-') }}
+                                                    </span>
+                                                </td>
+                                                <td>{{ $transaction->user->name }}</td>
+                                                <td>
+                                                    Pembelian
+                                                    {{ strtoupper($transaction->detailTransactionTopUp->first()->product->description ?? '-') }}
+                                                    Ke
+                                                    Nomor
+                                                    {{ $transaction->detailTransactionTopUp->first()->nomor_telfon ?? '-' }}
+                                                    {{ $transaction['transaction_desc'] }}</td>
+                                                <td>{{ $transaction->payment_method . ' - ' . $transaction->payment_channel }}
+                                                </td>
+                                                <td>
+                                                    @currency($transaction->total - ($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) - ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-success fw-bold">
+                                                    @currency(($transaction->detailTransactionTopUp->first()->fee_travelsya ?? 0) + ($transaction->detailTransactionTopUp->first()->kode_unik ?? 0))
+                                                </td>
+                                                <td class="text-danger fw-bold">
+                                                    @currency($transaction->historyPointOut->first()->point ?? 0)
+                                                </td>
+                                                <td>@currency($transaction->total)</td>
+                                        @endforeach
 
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tab content untuk Rekreasi -->
+                    <div class="tab-pane fade" id="kt_tab_pane_rekreasi" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_rekreasi">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiRekreasi as $rekreasi)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($rekreasi->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $rekreasi->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($rekreasi->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $rekreasi->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Tiket Rekreasi 
+                                                {{ $rekreasi->detailTransactionRecreation->first()->recreationPackage->recreation->business_name ?? '-'}} 
+                                                Paket {{ $rekreasi->detailTransactionRecreation->first()->recreationPackage->name ?? '-' }}
+                                            </td>
+                                            <td class="text-center">{{ $rekreasi->payment_method . ' - ' . $rekreasi->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($rekreasi->total - ($rekreasi->detailTransactionRecreation->first()->fee_admin ?? 0) - ($rekreasi->detailTransactionRecreation->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($rekreasi->detailTransactionRecreation->first()->fee_admin ?? 0) + ($rekreasi->detailTransactionRecreation->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($rekreasi->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($rekreasi->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi rekreasi</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Rekreasi-->
+                    
+                    <!--begin::Tab content for Health & Beauty-->
+                    <div class="tab-pane fade" id="kt_tab_pane_health_beauty" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_health_beauty">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiHealthBeauty as $hb)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($hb->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $hb->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($hb->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $hb->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Paket Kesehatan & Kecantikan 
+                                                {{ $hb->detailTransactionHealthBeauty->first()->clinic->clinic_name ?? '-'}} 
+                                                Paket {{ $hb->detailTransactionHealthBeauty->first()->clinicPackage->name ?? '-' }}
+                                            </td>
+                                            <td class="text-center">{{ $hb->payment_method . ' - ' . $hb->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($hb->total - ($hb->detailTransactionHealthBeauty->first()->fee_admin ?? 0) - ($hb->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($hb->detailTransactionHealthBeauty->first()->fee_admin ?? 0) + ($hb->detailTransactionHealthBeauty->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($hb->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($hb->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi health & beauty</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Health & Beauty-->
+                    
+                    <!--begin::Tab content for Bus Travel-->
+                    <div class="tab-pane fade" id="kt_tab_pane_bus_travel" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_bus_travel">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiBusTravel as $bus)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($bus->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $bus->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($bus->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $bus->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Tiket Bus 
+                                                {{ $bus->detailTransactionBus->first()->busTravel->name ?? '-'}} 
+                                                Rute {{ $bus->detailTransactionBus->first()->busDeparture->kotaAwal->city_name ?? '-'}} - {{ $bus->detailTransactionBus->first()->busDeparture->kotaTujuan->city_name ?? '-'}}
+                                            </td>
+                                            <td class="text-center">{{ $bus->payment_method . ' - ' . $bus->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($bus->total - ($bus->detailTransactionBus->first()->fee_admin ?? 0) - ($bus->detailTransactionBus->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($bus->detailTransactionBus->first()->fee_admin ?? 0) + ($bus->detailTransactionBus->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($bus->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($bus->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi bus travel</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Bus Travel-->
+                    
+                    <!--begin::Tab content for Car Rent-->
+                    <div class="tab-pane fade" id="kt_tab_pane_car_rent" role="tabpanel">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-rounded table-striped border gy-7" id="kt_datatable_zero_configuration_car_rent">
+                                <thead>
+                                    <tr class="fw-semibold fs-6 text-gray-800 border-bottom-2 border-gray-200">
+                                        <th class="text-center">Tanggal</th>
+                                        <th class="text-center">Invoice</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Customer</th>
+                                        <th class="text-center">Deskripsi</th>
+                                        <th class="text-center">Metode Pembayaran</th>
+                                        <th class="text-center">Harga</th>
+                                        <th class="text-center">Biaya Layanan</th>
+                                        <th class="text-center">Potongan Point</th>
+                                        <th class="text-center">Grand Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($transaksiCarRent as $car)
+                                        <tr>
+                                            <td class="text-center">{{ \Carbon\Carbon::parse($car->created_at)->format('d M Y h:i') }}</td>
+                                            <td class="text-center">{{ $car->no_inv }}</td>
+                                            <td class="text-center">
+                                                <span class="badge badge-rounded badge-primary">
+                                                    {{ strtoupper($car->services->name ?? '-') }}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">{{ $car->user->name ?? '-' }}</td>
+                                            <td class="text-center">
+                                                Pembelian Rental Mobil 
+                                                {{ $car->detailTransactionCarRental->first()->carRentalHasCar->carRental->name ?? '-'}} 
+                                                {{ $car->detailTransactionCarRental->first()->carRentalHasCar->carModel->name ?? '-'}}
+                                            </td>
+                                            <td class="text-center">{{ $car->payment_method . ' - ' . $car->payment_channel ?? '-' }}</td>
+                                            <td class="text-center">
+                                                @currency($car->total - ($car->detailTransactionCarRental->first()->fee_admin ?? 0) - ($car->detailTransactionCarRental->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-success fw-bold">
+                                                @currency(($car->detailTransactionCarRental->first()->fee_admin ?? 0) + ($car->detailTransactionCarRental->first()->kode_unik ?? 0))
+                                            </td>
+                                            <td class="text-danger fw-bold">
+                                                @currency($car->historyPointOut->first()->point ?? 0)
+                                            </td>
+                                            <td class="text-center">@currency($car->total)</td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="10" class="text-center">Tidak ada data transaksi rental mobil</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--end::Tab content for Car Rent-->
+                    
                 </div>
             </div>
-
         </div>
     </div>
 @endsection
+@push('add-script')
+    <script>
+        $(document).ready(function() {
+            new DataTable('table.display', {
+                "sScrollXInner": "100%",
+                "language": {
+                    "lengthMenu": "Show _MENU_",
+                },
+                "dom":
+                    "<'row'" +
+                    "<'col-sm-6 d-flex align-items-center justify-conten-start'l>" +
+                    "<'col-sm-6 d-flex align-items-center justify-content-end'f>" +
+                    ">" +
+
+                    "<'table-responsive'tr>" +
+
+                    "<'row'" +
+                    "<'col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start'i>" +
+                    "<'col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end'p>" +
+                    ">"
+            });
+
+        });
+    </script>
+@endpush

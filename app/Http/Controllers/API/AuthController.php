@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Helpers\ResponseFormatter;
+use App\Helpers\UploadFile;
 use App\Http\Controllers\Controller;
-use App\Mail\SendTokenResetPassword;
+use App\Http\Mail\SendTokenResetPassword;
 use App\Models\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -13,11 +14,14 @@ use Exception;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
+    use UploadFile;
+
     public function register(Request $request)
     {
         try {
@@ -37,10 +41,13 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'role' => 2
+                'role' => 2,
+                'is_active' => 1,
+                'point' => 0,
             ]);
 
             $token = $user->createToken('auth_token')->plainTextToken;
+
             return ResponseFormatter::success([
                 'user' => $user,
                 'access_token' => $token,
@@ -70,13 +77,28 @@ class AuthController extends Controller
 
             if (!Auth::attempt($request->only('email', 'password'))) {
                 return ResponseFormatter::error([
-                    'message' => 'Unauthorized'
+                    'message' => 'Email atau Password Salah'
                 ], 'Authentication Failed', 401);
             }
 
             $user = User::where('email', $request['email'])->firstOrFail();
 
+
             $token = $user->createToken('auth_token')->plainTextToken;
+
+            $user = [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "email_verified_at" => null,
+                "image" => env('APP_URL') . '/storage/public/users/' . $user->image,
+                "phone" => $user->phone,
+                "point" => $user->point * 10 / 100,
+                "role" => $user->role,
+                "is_active" => $user->is_active,
+                "created_at" => $user->created_at,
+                "updated_at" => $user->updated_at
+            ];
 
             return ResponseFormatter::success([
                 'user' => $user,
@@ -129,6 +151,7 @@ class AuthController extends Controller
                 unset($data['old_password']);
                 $data['password'] = Hash::make($data['password']);
             }
+            $data['phone'] = $request->phone;
             $update = $user->update($data);
             if ($update) {
                 return ResponseFormatter::success($user, "User update success");
@@ -141,6 +164,39 @@ class AuthController extends Controller
                 'message' => 'Something wrong',
             ], 'User update Failed', 500);
         }
+    }
+
+    public function updatePhoto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'image' => 'image|required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()
+                ->json(['errors' => $validator->errors()], 422);
+        }
+
+        $user = User::findOrFail(auth()->id());
+
+
+        if ($request->hasFile('image')) {
+            Storage::disk('public')->delete('profile/' . $user->image);
+            $image = $this->storeFile($request->file('image'), 'public/users');
+        }
+
+        $user->image = $image;
+        $user->save();
+
+        return response()->json([
+            "meta" => [
+                "status" => "success",
+                "statusCode" => 200
+            ],
+            "data" => [
+                'message' => 'Photo Anda telah berhasil diperbarui'
+            ]
+        ], 200);
     }
 
     public function sendTokenPassword(Request $request)
@@ -158,26 +214,28 @@ class AuthController extends Controller
         }
 
         $check = PasswordReset::where('email', $data['email'])->first();
-        if ($check)
+
+        if ($check) {
             $check->delete();
+        }
 
         // Generate random code
         $data['token'] = (string)mt_rand(100000, 999999);
 
-        // return $data;
         // create token
         $createToken = PasswordReset::create($data);
 
-        if (!$createToken)
+        if (!$createToken) {
             exit('Token create failed');
+        }
 
-        //send email
+        // //send email
         $mail = Mail::to($data['email'])->send(new SendTokenResetPassword($createToken->token));
 
         if ($mail) {
-            return ResponseFormatter::success(null, "Token sent to email");
+            return ResponseFormatter::success([], "Token sent to email");
         } else {
-            return ResponseFormatter::error(null, "Token sent failed");
+            return ResponseFormatter::error([], "Token sent failed");
         }
     }
 
@@ -258,5 +316,15 @@ class AuthController extends Controller
         } else {
             return ResponseFormatter::error(null, "User failed");
         }
+    }
+
+    public function totalPointsAvailable()
+    {
+
+
+        return response()->json([
+            'currentPoint' => Auth::user()->point,
+            'totalPointAvailable' => Auth::user()->point * 10 / 100 ?? 0
+        ]);
     }
 }

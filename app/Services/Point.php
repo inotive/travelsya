@@ -45,6 +45,21 @@ class Point
             'flow' => "credit"
         ]);
     }
+    public function pakaiPoint($id, $point, $transid)
+    {
+        $user = User::find($id);
+
+        $sumpoint = $user->point - $point;
+        $update = $user->update(['point' => $sumpoint < 0 ? 0 : $sumpoint]);
+
+        HistoryPoint::create([
+            'user_id' => $user->id,
+            'point' => $point,
+            'transaction_id' => $transid,
+            'date' => now(),
+            'flow' => "debit"
+        ]);
+    }
 
     public function cekPoint($id)
     {
@@ -55,8 +70,12 @@ class Point
 
     public function calculatePoint($amount, $categoryid)
     {
-        $point = ModelsPoint::where('service_id', $categoryid)->first();
+        $point = \App\Models\Point::where('service_id', $categoryid)->first();
 
-        return ($amount / $point->multiple) * $point->value;
+        return round(($amount / $point->multiple) * $point->value);
+    }
+
+    public function pointTerpakai($total, $fee, $kodeUnik){
+        return ($total + $fee + $kodeUnik) * 0.1;
     }
 }

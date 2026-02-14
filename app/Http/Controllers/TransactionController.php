@@ -81,7 +81,6 @@ class TransactionController extends Controller
     {
         try {
             $data = $request->all();
-            dd($request->all());
             $hostel = $this->travelsya->requestHostel([
                 "service" => $data['service'],
                 "payment" => $data['payment_method'],

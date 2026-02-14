@@ -36,7 +36,7 @@
                                 <td class="text-center">{{ $ad->name }}</td>
                                 <td class="text-center">{{ $ad->url }}</td>
                                 <td class="text-center">
-                                    <img src="{{ asset($ad->image) }}" class="rounded" style="width: 150px">
+                                    <img src="{{ asset('media/ads/'. $ad->image) }}" class="rounded" width="50">
                                 </td>
                                 <td class="text-center">
                                     @if ($ad->is_active)
@@ -45,9 +45,6 @@
                                     <span class="badge badge-danger">Tidak Aktif</span>
                                     @endif
                                 </td>
-                                
-
-
                                 <td class="text-center">
                                     <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-125px py-4"
                                         data-kt-menu="true" style="">
@@ -268,7 +265,7 @@
                             <div class="form-group">
                                 <label class="font-weight-bold">Gambar Iklan</label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
-                            
+
                                 <!-- error message untuk title -->
                                 @error('image')
                                     <div class="alert alert-danger mt-2">
@@ -277,39 +274,48 @@
                                 @enderror
                             </div>
                             <div class="col-md-12">
-                                
-                                <label class="required fs-6 fw-semibold mb-2">Nama</label>
-                                <input class="form-control form-control-lg" id="name"
-                                    placeholder="Masukan nama Iklan" name="name" required />
 
+                                <label class="required fs-6 fw-semibold mb-2">Nama</label>
+                                <input class="form-control form-control-lg @error('name') is-invalid @enderror" id="name"
+                                    placeholder="Masukan nama Iklan" name="name" />
+
+                                <!-- error message untuk title -->
                                 @error('name')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
                             <div class="col-12">
                                 <label for="" class="form-label">Link</label>
-                                <input type="text" name="url" class="form-control" placeholder="Masukan website" required>
+                                <input type="text" name="url" class="form-control @error('url') is-invalid @enderror" placeholder="Masukan website">
+
+                                <!-- error message untuk title -->
+                                @error('url')
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
                             <div class="col-md-12">
                                 <label class="required fs-6 fw-semibold mb-2">Active</label>
-                                <select class="form-select form-select-solid is_active-edit" name="is_active" id="is_active-edit">
+                                <select class="form-select form-select-solid is_active @error('is_active') is-invalid @enderror" name="is_active" id="is_active">
                                     <option value="1">Yes</option>
                                     <option value="0">No</option>
                                 </select>
-                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active-edit"></div>
+                                <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-is_active"></div>
+                                <!-- error message untuk title -->
                                 @error('is_active')
-                                    <span class="text-danger mt-1" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
+                                    <div class="alert alert-danger mt-2">
+                                        {{ $message }}
+                                    </div>
                                 @enderror
                             </div>
 
 
                             {{-- <input type="hidden" name="category" value="Harian"> --}}
 
-                        
+
                         </div>
                         <!--end::Input group-->
                         <!--begin::Actions-->
@@ -345,10 +351,10 @@
 
     {{-- MODAL EDIT --}}
 
-    
+
 
     @push('add-script')
-        
+
         <script>
             $(document).ready(function() {
                 $('#kt_datatable_zero_configuration').DataTable({
@@ -371,6 +377,13 @@
                 });
 
 
+            });
+
+            document.addEventListener("DOMContentLoaded", function() {
+                @if ($errors->any() || session('openModal'))
+                    var myModal = new bootstrap.Modal(document.getElementById('create'));
+                    myModal.show();
+                @endif
             });
         </script>
     @endpush

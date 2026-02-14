@@ -13,11 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        
+
         Schema::create('hotels', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->foreignId('service_id')->constrained();
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->string('city')->nullable();

@@ -21,8 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
         'role',
-        'point'
+        'point',
+        'image',
+        'is_active',
     ];
 
     /**
@@ -46,7 +49,7 @@ class User extends Authenticatable
 
     public function transaction()
     {
-        return $this->belongsTo(Transaction::class);
+        return $this->hasMany(Transaction::class);
     }
 
     /**
@@ -73,4 +76,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(HistoryPoint::class);
     }
-}
+
+    public function hotelRating()
+    {
+        return $this->hasMany(HotelRating::class);
+    }
+
+    public function clinic()
+    {
+        return $this->hasOne(Clinic::class);
+    }
+
+    public function rentals()
+    {
+        return $this->hasMany(CarRental::class);
+    }
+
+    public function recreations()
+    {
+        return $this->hasMany(Recreation::class);
+    }
+
+    public function bus_travels()
+    {
+        return $this->hasMany(BusTravels::class);
+    }
+}   
